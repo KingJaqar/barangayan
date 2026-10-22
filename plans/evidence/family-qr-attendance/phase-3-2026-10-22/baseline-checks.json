@@ -1,0 +1,109 @@
+[
+  {
+    "name": "android-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "apps/resident-android-mobile/tsconfig.json"
+    ],
+    "exit": 2,
+    "seconds": 64.1,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-android-types.log"
+  },
+  {
+    "name": "android-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--workspace=@barangayan/mobile"
+    ],
+    "exit": 0,
+    "seconds": 90.3,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-android-lint.log"
+  },
+  {
+    "name": "shared-tests",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--workspace=@barangayan/shared",
+      "--",
+      "src/schemas/household-attendance.test.ts",
+      "src/schemas/household-attendance-responses.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 11.1,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-shared-tests.log"
+  },
+  {
+    "name": "android-tests",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--root",
+      "apps/resident-android-mobile"
+    ],
+    "exit": 0,
+    "seconds": 9.9,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-android-tests.log"
+  },
+  {
+    "name": "web-types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--workspace=@barangayan/resident-web"
+    ],
+    "exit": 0,
+    "seconds": 12.0,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-web-types.log"
+  },
+  {
+    "name": "web-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--workspace=@barangayan/resident-web",
+      "--",
+      "src/hooks/use-qr-checkins.ts",
+      "src/lib/qr-checkin.ts",
+      "src/components/emergency/qr-scanner-dialog.tsx",
+      "src/components/emergency/qr-upload-fallback.tsx"
+    ],
+    "exit": 0,
+    "seconds": 61.0,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-web-lint.log"
+  },
+  {
+    "name": "ios-types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--workspace=@barangayan/resident-ios"
+    ],
+    "exit": 0,
+    "seconds": 21.9,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-ios-types.log"
+  },
+  {
+    "name": "ios-tests",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--workspace=@barangayan/resident-ios",
+      "--",
+      "tests/qr.test.ts",
+      "tests/resident-api.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 9.1,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\baseline-ios-tests.log"
+  }
+]

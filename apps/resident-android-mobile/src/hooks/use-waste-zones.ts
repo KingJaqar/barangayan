@@ -6,21 +6,23 @@ export type WasteZoneOption = { id: string; name: string };
 
 /**
  * Fetches active waste-collection zones for the incident report form's zone
- * picker (ticket 15 — links trash-related reports to a zone_id so they can
- * finally be grouped/scored by zone). Only fetched when a trash-related
- * category is selected — see reports/new.tsx.
+ * picker. The form displays them for trash-related categories only.
  */
-export function useWasteZones(barangayId: string | null): { zones: WasteZoneOption[]; isLoading: boolean } {
+export function useWasteZones(barangayId: string | null): { zones: WasteZoneOption[]; isLoading: boolean; error: string | null; retry: () => void } {
   const [zones, setZones] = useState<WasteZoneOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     if (!barangayId) {
       setZones([]);
       setIsLoading(false);
       return;
     }
     setIsLoading(true);
+    setError(null);
     supabase
       .from('waste_zones')
       .select('id, name')
@@ -28,11 +30,18 @@ export function useWasteZones(barangayId: string | null): { zones: WasteZoneOpti
       .eq('is_active', true)
       .is('deleted_at', null)
       .order('sort_order', { ascending: true })
-      .then(({ data }) => {
-        setZones(data ?? []);
+      .then(({ data, error: queryError }) => {
+        if (cancelled) return;
+        if (queryError) setError('Collection zones could not be loaded. Please try again.');
+        else setZones(data ?? []);
+        setIsLoading(false);
+      }, () => {
+        if (cancelled) return;
+        setError('Collection zones could not be loaded. Please try again.');
         setIsLoading(false);
       });
-  }, [barangayId]);
+    return () => { cancelled = true; };
+  }, [barangayId, attempt]);
 
-  return { zones, isLoading };
+  return { zones, isLoading, error, retry: () => setAttempt(value => value + 1) };
 }

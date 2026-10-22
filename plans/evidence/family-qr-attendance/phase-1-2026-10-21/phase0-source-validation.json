@@ -1,0 +1,138 @@
+[
+  {
+    "path": "AGENTS.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "CLAUDE.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/CLAUDE.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/AGENTS.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/CLAUDE.md",
+    "state": "unchanged"
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "state": "changed"
+  },
+  {
+    "path": "plans/Family_QR_Attendance_Context_Index.md",
+    "state": "changed"
+  },
+  {
+    "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0046_household_members.sql",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0136_account_deletion_state.sql",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/functions/generate-household-qr/index.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/functions/delete-my-account/delete-v2.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/src/schemas/household.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/src/schemas/emergency-qr.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/package.json",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/tests/resident_household_conditional.test.sql",
+    "state": "unchanged"
+  }
+]

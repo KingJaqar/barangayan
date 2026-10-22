@@ -1,0 +1,122 @@
+[
+  {
+    "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "start": 1,
+    "end": 200,
+    "characters": 7609,
+    "next": 201,
+    "complete": false
+  },
+  {
+    "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "start": 201,
+    "end": 400,
+    "characters": 9135,
+    "next": 401,
+    "complete": false
+  },
+  {
+    "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "start": 401,
+    "end": 600,
+    "characters": 9764,
+    "next": 601,
+    "complete": false
+  },
+  {
+    "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "start": 601,
+    "end": 761,
+    "characters": 7505,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+    "start": 1,
+    "end": 200,
+    "characters": 8489,
+    "next": 201,
+    "complete": false
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+    "start": 201,
+    "end": 241,
+    "characters": 2027,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+    "start": 1,
+    "end": 180,
+    "characters": 7599,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+    "start": 1,
+    "end": 133,
+    "characters": 5145,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/components/shared/auth-gate.tsx",
+    "start": 1,
+    "end": 34,
+    "characters": 1635,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/hooks/use-scoped-read.ts",
+    "start": 1,
+    "end": 97,
+    "characters": 3824,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/lib/auth/get-optional-user.ts",
+    "start": 1,
+    "end": 67,
+    "characters": 2796,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/lib/auth/sign-out.ts",
+    "start": 1,
+    "end": 50,
+    "characters": 2160,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/lib/supabase/client.ts",
+    "start": 1,
+    "end": 13,
+    "characters": 569,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/lib/supabase/server.ts",
+    "start": 1,
+    "end": 42,
+    "characters": 1525,
+    "next": null,
+    "complete": true
+  },
+  {
+    "path": "apps/resident-web/src/lib/household-feedback.ts",
+    "start": 1,
+    "end": 34,
+    "characters": 1582,
+    "next": null,
+    "complete": true
+  }
+]

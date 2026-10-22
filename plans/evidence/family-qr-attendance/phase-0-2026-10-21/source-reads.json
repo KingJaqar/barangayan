@@ -1,0 +1,647 @@
+{
+  "AGENTS.md": {
+    "path": "AGENTS.md",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": []
+  },
+  "CLAUDE.md": {
+    "path": "CLAUDE.md",
+    "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "CLAUDE.md",
+        "start": 1,
+        "end": 1,
+        "characters": 11,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/admin-web/AGENTS.md": {
+    "path": "apps/admin-web/AGENTS.md",
+    "sha256": "EC1B6E023814AE1A510B02EA62229E5EB035D75E39E3335D5EA7F5CE5654D567",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/admin-web/AGENTS.md",
+        "start": 1,
+        "end": 9,
+        "characters": 674,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/admin-web/CLAUDE.md": {
+    "path": "apps/admin-web/CLAUDE.md",
+    "sha256": "D631D88045F74623D568ADFB4783B72E3D1B732330D749BC6C72E6648D4581D3",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/admin-web/CLAUDE.md",
+        "start": 1,
+        "end": 1,
+        "characters": 11,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/admin-web/package.json": {
+    "path": "apps/admin-web/package.json",
+    "sha256": "778D52C0834502F5BD0C6B00AE0044ECD57E86941197C667211004DFFDAE270E",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/admin-web/package.json",
+        "start": 1,
+        "end": 50,
+        "characters": 1416,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/admin-web/src/actions/admin-record-actions.ts": {
+    "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+    "sha256": "AD328B855BB3E5B0B82E4F264FDBC0CD888CB9C8F036F07167D078C27ED33DFC",
+    "inspection": "39-80: generic mutation auth, RPC call and error mappings"
+  },
+  "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx": {
+    "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+    "sha256": "F6E2200FF6D947230E7BDF9CEAFB3B3DF0E93109D2D26C6609934C570FE0BC9B",
+    "inspection": "61-118,165-205: direct update, boolean editor and record workspace; add RPC discovered at 265"
+  },
+  "apps/admin-web/src/app/(admin)/households-residents/page.tsx": {
+    "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "sha256": "D23EE623B915B9217F55662841B17EC39DD93122EDC0EDC271EA05DF784FD553",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+        "start": 1,
+        "end": 28,
+        "characters": 1771,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts": {
+    "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+    "sha256": "945CE4A31164933C7D626BC6C9777A9FDDBF72326D2D5149AE23B9B5E846F87C",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+        "start": 1,
+        "end": 37,
+        "characters": 2001,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/admin-web/src/lib/admin-tables/record-config.ts": {
+    "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+    "sha256": "CAA0C56E8D9DCEEE2A7949045D90D7B1515747E2658CBA96FD76DA9F9324E45C",
+    "inspection": "Household editable allowlist lines 64-68"
+  },
+  "apps/resident-android-mobile/package.json": {
+    "path": "apps/resident-android-mobile/package.json",
+    "sha256": "37F814F883736F55D36252A62689F4257DC47A6775315329D9F411917E35CF7B",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/package.json",
+        "start": 1,
+        "end": 66,
+        "characters": 2058,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx": {
+    "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+    "sha256": "1DACCFE6611FBDE62061B5D96E2540BA4FACC98715FB9FAD9184EEF5BF179328",
+    "inspection": "830-885: whole-profile save and roster writer; narrow discovery of household validation/edit handlers"
+  },
+  "apps/resident-android-mobile/src/components/drrm/household-code.tsx": {
+    "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+    "sha256": "14B5E589122A6F8022AF04C7A93A2EE66C43C569C6BD4AB8DCEFE15CF36991EB",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+        "start": 1,
+        "end": 35,
+        "characters": 2481,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/components/family-content.tsx": {
+    "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+    "sha256": "F60B04EE317783BE9C7793960DEB26921A3429B046F5659ED7064E62B1D3D672",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+        "start": 1,
+        "end": 74,
+        "characters": 7252,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/components/household-qr-modal.tsx": {
+    "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+    "sha256": "0A3F3BD192A0FF4629816D11BB360E2A7BA26B74F98948099877D4F5E72363E2",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+        "start": 1,
+        "end": 16,
+        "characters": 951,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx": {
+    "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+    "sha256": "67F5F0C85DEF82DF251F5374EDA4D6392B8452D2B4442BE1D87A68F02083D270",
+    "inspection": "31-129: effect cleanup, barcode validation, direct scan and household-update consumer"
+  },
+  "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts": {
+    "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+    "sha256": "6DC32483CE1509AB188DB082E671773D230A16E484DCD7F4013C9808C63BEF3F",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+        "start": 1,
+        "end": 154,
+        "characters": 5826,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts": {
+    "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+    "sha256": "EF8534CEF9C9C824FE11C27B158C6EEC7F0668C507015B06947478205A28C44D",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+        "start": 1,
+        "end": 126,
+        "characters": 3721,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-android-mobile/src/lib/emergency-cache.ts": {
+    "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "sha256": "BD969BF75165BEB72E7BB949FF29AA18B8EAFC509FA51067C6CA4A11670C2949",
+    "inspection": "38-86: persisted queue data access and clear helpers"
+  },
+  "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs": {
+    "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+    "sha256": "D6F296B3514B5F406D0E7DAE3AD63A9B5331C4C90662D3BD9062E0256FFACEB5",
+    "inspection": "1-42: existing UI harness inventory and mocked image/check-in boundaries; no behavioral pass claimed"
+  },
+  "apps/resident-ios-mobile/package.json": {
+    "path": "apps/resident-ios-mobile/package.json",
+    "sha256": "A8F875B0407E66840706FCD4EDEDB79547CDBA8E9CC016CD130353D30EB1A944",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-ios-mobile/package.json",
+        "start": 1,
+        "end": 61,
+        "characters": 1777,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/resident-ios-mobile/src/data/resident-api.ts": {
+    "path": "apps/resident-ios-mobile/src/data/resident-api.ts",
+    "sha256": "35AA81BBD0AA1B7ED98375FDC89C4D00E684D04ABAC12828CF4BD016BBE779A8",
+    "inspection": "629-660: center RPC, unknown-commit reconciliation and legacy history read; full large API not packed"
+  },
+  "apps/resident-ios-mobile/src/features/profile/household.ts": {
+    "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+    "sha256": "6A366E2C7FFE588E0D4AADB7BFDEDA0E338F75140AB6C6A72FB11D04ADC6CA46",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+        "start": 1,
+        "end": 94,
+        "characters": 5074,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-ios-mobile/src/features/qr/payloads.ts": {
+    "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "sha256": "8187D1DC65E946FAFF08EDB0CAB2A61F1E4E7E5705B362EAF3AD267A1A9D64E8",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+        "start": 1,
+        "end": 51,
+        "characters": 3074,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-web/AGENTS.md": {
+    "path": "apps/resident-web/AGENTS.md",
+    "sha256": "63F2C50380ED6303237CCE215CE27AF1D620D094C215E28D1B1538A3C070E3BB",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-web/AGENTS.md",
+        "start": 1,
+        "end": 9,
+        "characters": 674,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/resident-web/CLAUDE.md": {
+    "path": "apps/resident-web/CLAUDE.md",
+    "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-web/CLAUDE.md",
+        "start": 1,
+        "end": 1,
+        "characters": 11,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/resident-web/package.json": {
+    "path": "apps/resident-web/package.json",
+    "sha256": "460B994A5A185AC6497154A5113DA3D57A3758F8BB3054D61613D6C25784315E",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-web/package.json",
+        "start": 1,
+        "end": 52,
+        "characters": 1401,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "apps/resident-web/src/components/emergency/household-qr-dialog.tsx": {
+    "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "sha256": "E2E2AD6713450AD5FDB3A1C8E858DC84E94C5BA3C8FAA6CD02DB40D4CEA1A163",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+        "start": 1,
+        "end": 119,
+        "characters": 5152,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-web/src/hooks/use-family-members.ts": {
+    "path": "apps/resident-web/src/hooks/use-family-members.ts",
+    "sha256": "FE56A894C4D979EDF44E609E1B14A7EB9520388012BA6F24D7138F22A53DC25D",
+    "inspection": "103-134: direct roster write and error handling; caller discovery 54-86"
+  },
+  "apps/resident-web/src/hooks/use-qr-checkins.ts": {
+    "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+    "sha256": "1C00FA129C875F40F813484CB601980F7E026C4E814267B972558ED0026BF541",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+        "start": 1,
+        "end": 100,
+        "characters": 3976,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "apps/resident-web/src/lib/qr-checkin.ts": {
+    "path": "apps/resident-web/src/lib/qr-checkin.ts",
+    "sha256": "FD855B54F39B53F30131E734294DA1AC5E1F189D39082E83C158C875742166A6",
+    "inspection": "37-end: direct check-in plus blanket status consumer and user messages"
+  },
+  "package-lock.json": {
+    "path": "package-lock.json",
+    "sha256": "0B8E5D22A6E9EC2A39608B1CF3E5D04C80C2685714B21A320C2B05D7B498EFCB",
+    "inspection": "Relevant locked package entries; complete parsed JSON, not a full text read"
+  },
+  "package.json": {
+    "path": "package.json",
+    "sha256": "F05EA72034CDA86E5063E3E1DAE73B26BC1F97840E656B3417B9CEAAD814F343",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "package.json",
+        "start": 1,
+        "end": 20,
+        "characters": 390,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "packages/shared/package.json": {
+    "path": "packages/shared/package.json",
+    "sha256": "001625A5CD8D59380A32E2C392E7E3153EDDDB409FC4D744AC3EA39E0A600AEE",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "packages/shared/package.json",
+        "start": 1,
+        "end": 20,
+        "characters": 491,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "packages/shared/src/schemas/emergency-qr.ts": {
+    "path": "packages/shared/src/schemas/emergency-qr.ts",
+    "sha256": "B8D7D5CC0BAA3080839CFD896FCB1CAC90FD87F3D26874C1E87492431B8C47C8",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "packages/shared/src/schemas/emergency-qr.ts",
+        "start": 1,
+        "end": 34,
+        "characters": 1267,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "packages/shared/src/schemas/household.ts": {
+    "path": "packages/shared/src/schemas/household.ts",
+    "sha256": "649EE31B82FC0D2791EA352A59C3BFC5EEF0A711979B04782852596296C0A224",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "packages/shared/src/schemas/household.ts",
+        "start": 1,
+        "end": 41,
+        "characters": 971,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "packages/shared/vitest.config.ts": {
+    "path": "packages/shared/vitest.config.ts",
+    "sha256": "AB62155F398C51EAB4E82C644AD2C943E15FE60E4EE983ECAA916F4567D93E9F",
+    "inspection": "Complete 8 lines; shared command inventory only"
+  },
+  "plans/Family_QR_Attendance_Context_Index.md": {
+    "path": "plans/Family_QR_Attendance_Context_Index.md",
+    "sha256": "FAD03A24BB260F454A3492F770CC37AFDD6E7B4228535EE55913CCB5BD56904A",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "plans/Family_QR_Attendance_Context_Index.md",
+        "start": 1,
+        "end": 98,
+        "characters": 10889,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md": {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "sha256": "EEF56761546FAEFFBC483B617D17DB24195EC9C8DB394C7D2C128B4347396FF2",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+        "start": 1,
+        "end": 118,
+        "characters": 11895,
+        "complete": false,
+        "reused": true
+      },
+      {
+        "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+        "start": 119,
+        "end": 187,
+        "characters": 11514,
+        "complete": false,
+        "reused": true
+      },
+      {
+        "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+        "start": 188,
+        "end": 246,
+        "characters": 11914,
+        "complete": false,
+        "reused": true
+      },
+      {
+        "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+        "start": 247,
+        "end": 281,
+        "characters": 6256,
+        "complete": true,
+        "reused": true
+      }
+    ]
+  },
+  "supabase/config.toml": {
+    "path": "supabase/config.toml",
+    "sha256": "5A23277A8F8768D83CF6274BD877DC703E71A76D7B5E7EE76ED64464447C6820",
+    "inspection": "Lines 1-55 and existing dirty status; no secret values"
+  },
+  "supabase/functions/delete-my-account/delete-v2.ts": {
+    "path": "supabase/functions/delete-my-account/delete-v2.ts",
+    "sha256": "E8E978E7608308BDAF3F8B4A2E5D1EDC9CDB1F0153C1C411115F704C2AC2431B",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/functions/delete-my-account/delete-v2.ts",
+        "start": 1,
+        "end": 67,
+        "characters": 3793,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/functions/delete-my-account/index.ts": {
+    "path": "supabase/functions/delete-my-account/index.ts",
+    "sha256": "AB9008B1195E81B4ABF022FC980A45009F769801171BF064CA04CEA1876F960E",
+    "inspection": "1-101,102-end: current v1/v2 dispatch, erasure/soft Auth deletion and v1 ban; imported Apple/storage helpers not needed for Phase 0 contract changes"
+  },
+  "supabase/functions/export-my-data/export-v2.ts": {
+    "path": "supabase/functions/export-my-data/export-v2.ts",
+    "sha256": "A303A29D8DCE4D83F125663F8A307CDA2C973A8C1C8BC58B33536D95E2E12B91",
+    "inspection": "40-91: export allowlist and sections, including member/legacy check-in sections; pagination internals not changed or certified"
+  },
+  "supabase/functions/export-my-data/index.ts": {
+    "path": "supabase/functions/export-my-data/index.ts",
+    "sha256": "003D4410498389246F3E495B369918148D08E9D6D8D57D3ED1CE4705608BB9FD",
+    "inspection": "1-90,106-end: v1/v2 dispatch, owner scope, result fields"
+  },
+  "supabase/functions/generate-household-qr/index.ts": {
+    "path": "supabase/functions/generate-household-qr/index.ts",
+    "sha256": "5DC380091FFD9030845BD3B1FB4357A6AAACD8B8B1965F377749B3715C48B7A5",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/functions/generate-household-qr/index.ts",
+        "start": 1,
+        "end": 138,
+        "characters": 5016,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/migrations/0045_evacuation_center_checkins.sql": {
+    "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+    "sha256": "8C7227A915051F90B4A05863A41E80434690FB1460646A828C55D72534D1202C",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+        "start": 1,
+        "end": 50,
+        "characters": 2154,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/migrations/0046_household_members.sql": {
+    "path": "supabase/migrations/0046_household_members.sql",
+    "sha256": "21E7EEDF8AF78811301ADDB43D8030CED9B673BE759691B6C664841D47B63F00",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/migrations/0046_household_members.sql",
+        "start": 1,
+        "end": 58,
+        "characters": 2088,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/migrations/0052_household_admin_management.sql": {
+    "path": "supabase/migrations/0052_household_admin_management.sql",
+    "sha256": "C73BDD9564B86A71445B4AE81497C16134EBFD6F6C79E133BF3C5C8F70996581",
+    "inspection": "Household admin APIs and historical trigger discovery lines 14-219; current API bodies verified in 0093"
+  },
+  "supabase/migrations/0093_resident_ios_backend_safety.sql": {
+    "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+    "sha256": "92A47F905E7344B64CC218A323CC6CB2488C487F15207BC62B9A514C5E45B6FF",
+    "inspection": "Trigger timing 94-99 and admin add/update/remove bodies 104-244"
+  },
+  "supabase/migrations/0110_admin_table_browse_projections.sql": {
+    "path": "supabase/migrations/0110_admin_table_browse_projections.sql",
+    "sha256": "C1270164A661639AC1690226D49050D85D5B3D54D019FA7830B94EAF898EF966",
+    "inspection": "Household browse/summary definitions 224-254"
+  },
+  "supabase/migrations/0115_admin_record_lifecycle.sql": {
+    "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+    "sha256": "C0DB58CDA7FF27EF5D813B446F5FB78CC08A9555B78452BD1EAF21D07E47B598",
+    "inspection": "Archive/view generation discovery; active-admin and archive guards/mirror 31-115; generic branches verified against 0129 and hosted effective definition"
+  },
+  "supabase/migrations/0121_resident_ios_write_boundaries.sql": {
+    "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+    "sha256": "8B1FBABD7332AD3638C455B204493BEB3253C744C769D6C50A24032CB1CAF26E",
+    "inspection": "Identity/fresh-auth helper 13-39; check-in operation 225-262; v1 erasure verified against complete hosted body"
+  },
+  "supabase/migrations/0123_resident_household_conditional_save.sql": {
+    "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "sha256": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+        "start": 1,
+        "end": 118,
+        "characters": 6716,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/migrations/0129_admin_record_sheet_edit_parity.sql": {
+    "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+    "sha256": "FF0D2BF1CBC2B70987D08029924146AB026A15441990114BFF6CFC0861EC8489",
+    "inspection": "1-45,95-154: authorization, editable attendance, lock order, household save/delete/archive/restore branches"
+  },
+  "supabase/migrations/0133_full_versioned_request_record_editor.sql": {
+    "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+    "sha256": "059472C21DE4A378F86D2E53AD80430576CCD87CF74B3B32CA2B3056D51DEE55",
+    "inspection": "1-20,73-87: subsequent generic mutation patch; preserve unrelated body changes"
+  },
+  "supabase/migrations/0136_account_deletion_state.sql": {
+    "path": "supabase/migrations/0136_account_deletion_state.sql",
+    "sha256": "88A5012543E07C04E37A27FAEE5959ECFC0F23DD8024F7C682C5883DC9ED172B",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/migrations/0136_account_deletion_state.sql",
+        "start": 1,
+        "end": 142,
+        "characters": 9719,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/tests/resident_household_conditional.test.sql": {
+    "path": "supabase/tests/resident_household_conditional.test.sql",
+    "sha256": "DCC4FD2707809D0977ADD745AE3DF7D299AE0356DC3324465E32E2394B0AA6DF",
+    "inspection": "complete packet entry; or complete direct read reused after normalized equivalence",
+    "ranges": [
+      {
+        "path": "supabase/tests/resident_household_conditional.test.sql",
+        "start": 1,
+        "end": 75,
+        "characters": 6792,
+        "complete": true,
+        "reused": false
+      }
+    ]
+  },
+  "supabase/tests/resident_ios_phase3_concurrency.mjs": {
+    "path": "supabase/tests/resident_ios_phase3_concurrency.mjs",
+    "sha256": "7C377EC8D16926804AB5A11E98D6EDEEB11834CAF2AB67B19F5358BE9DB8CEC0",
+    "inspection": "1-60: disposable-db safety boundary, Docker invocation and independent-connection harness; not run"
+  }
+}

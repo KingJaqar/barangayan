@@ -1,0 +1,90 @@
+{
+  "packet": "tmp\\family-attendance-phase4-20261022\\final-owned.xml",
+  "sha256": "9b3abedb6783f9ebc1a6e7bc99946bc3d0b97e0c49d2c574d459e208a3ce6e9b",
+  "version": "1.18.1",
+  "sources": [
+    {
+      "path": "packages/shared/src/schemas/household-attendance.test.ts",
+      "sha256": "1555634ca1b0f6e62089fc03515c68eee28f6244c4ad26540900e4f1c87c5c8f",
+      "lines": 67,
+      "characters": 4987
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97",
+      "lines": 128,
+      "characters": 7473
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/pause.sql",
+      "sha256": "442635efd92a60f92727e1ce4444dcd34a2ffe38b0751f975d5aa5453b7ce181",
+      "lines": 11,
+      "characters": 552
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/resume.sql",
+      "sha256": "369608cbfb6e1057a59f989dc6e30a634224ba8190f4c6df250e54d68d42d7d6",
+      "lines": 11,
+      "characters": 520
+    },
+    {
+      "path": "supabase/tests/household_attendance_recovery.mjs",
+      "sha256": "638a2060b71933cf122cf20eb3669afdf71d813070710fdb62e41486efcc4839",
+      "lines": 94,
+      "characters": 7406
+    }
+  ],
+  "omissions": [],
+  "security": "enabled, no suspicious files",
+  "source_equivalence": true,
+  "completed_reads": [
+    {
+      "entry": 0,
+      "start": 1,
+      "end": 67,
+      "characters": 4987,
+      "next_entry": 1
+    },
+    {
+      "entry": 1,
+      "start": 1,
+      "end": 128,
+      "characters": 7473,
+      "next_entry": 2
+    },
+    {
+      "entry": 2,
+      "start": 1,
+      "end": 11,
+      "characters": 552,
+      "next_entry": 3
+    },
+    {
+      "entry": 3,
+      "start": 1,
+      "end": 11,
+      "characters": 520,
+      "next_entry": 4
+    },
+    {
+      "entry": 4,
+      "start": 1,
+      "end": 94,
+      "characters": 7406,
+      "next_entry": 5
+    }
+  ],
+  "extraction_groups": [
+    [
+      0
+    ],
+    [
+      1
+    ],
+    [
+      2,
+      3,
+      4
+    ]
+  ]
+}

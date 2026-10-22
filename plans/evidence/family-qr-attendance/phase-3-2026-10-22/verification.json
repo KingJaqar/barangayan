@@ -1,0 +1,516 @@
+{
+  "date": "2026-10-22 Asia/Manila",
+  "phase": 3,
+  "source_identities": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.ts",
+      "before_sha256": null,
+      "sha256": "61556698978baa4256a5c8975da1d7eea4590310a0abc05a8991ab29624eeb4c",
+      "status": "new"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.test.ts",
+      "before_sha256": null,
+      "sha256": "263ca0610e7b8cae2f29c595868931ba3bbbc82aa5e24ecb90d57c2979b97f0f",
+      "status": "new"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "before_sha256": null,
+      "sha256": "344b6ca9c2ddd36f8eafa343bd0f10c6bb60b3806b0057fc859947269bd8a208",
+      "status": "new"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "before_sha256": "6dc32483ce1509ab188db082e671773d230a16e484dcd7f4013c9808c63bef3f",
+      "sha256": "ed261da13bc24510d5829240298d39d26d902c5e663955203e66e7998a44a77a",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+      "before_sha256": "ef8534cef9c9c824fe11c27b158c6eec7f0668c507015b06947478205a28c44d",
+      "sha256": null,
+      "status": "removed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "before_sha256": "bd969bf75165beb72e7bb949ff29aa18b8eafc509fa51067c6ca4a11670c2949",
+      "sha256": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "before_sha256": "14b5e589122a6f8022af04c7a93a2ee66c43c569c6bd4ab8dcefe15cf36991eb",
+      "sha256": "763a084c9df68448baca85971c9a5c19a64f62013c4daac976760f69bd6128b8",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "before_sha256": "f60b04ee317783be9c7793960deb26921a3429b046f5659ed7064e62b1d3d672",
+      "sha256": "63d89e1176151bf984eb8072a7fa926ec5fd862ce9d7133f917ff1825c1d0ce8",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "before_sha256": "a814e6d614bd4641358c76060067323663103f4f23a6d37f668ad9e4c9593780",
+      "sha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "before_sha256": "0a3f3bd192a0ff4629816d11bb360e2a7ba26b74f98948099877d4f5e72363e2",
+      "sha256": "e53edc8291ecd89648aef25ff98f7eaac13e0795f42c2e4da1215e350d16bfae",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "before_sha256": "67f5f0c85def82df251f5374eda4d6392b8452d2b4442be1d87a68f02083d270",
+      "sha256": "3a7d2b66dcaa53dee07dc74f679320630b79abaeb600131649ab9b2a4e8d161b",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "before_sha256": "419509d412b499df92eed6a9d68de575a9b126bd423860c2ccfd1aaf7d4991aa",
+      "sha256": "b563926a027abfd9a25d869e840b5bd3be76ec801557f7eb76d598a07e0befd8",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "before_sha256": "1daccfe6611fbde62061b5d96e2540ba4facc98715fb9fad9184eef5bf179328",
+      "sha256": "ba392be564402d2cb225fd9aa36ea2aa45545a11a8bec2ae610d6e5f59952d09",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "before_sha256": "d6f296b3514b5f406d0e7dae3ad63a9b5331c4c90662d3bd9062e0256ffaceb5",
+      "sha256": "d786293565d4b94e1a0e1a98dea32112dca18a689ec50b2b124a11ff84e2f318",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "before_sha256": "3286e91a97a437302db3321a35474b13e8b6f23369b29cd1374267f7bf374016",
+      "sha256": "614601e3d1df69403fce05ada776384405d83bf4b3c51ad0f1c979f4418ef27b",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+      "before_sha256": "1c00fa129c875f40f813484cb601980f7e026c4e814267b972558ed0026bf541",
+      "sha256": null,
+      "status": "removed"
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "before_sha256": "fd855b54f39b53f30131e734294da1ac5e1f189d39082e83c158c875742166a6",
+      "sha256": "e3b4a4d59104479ef1926abb999dd42540d019effec5cf264e54a5c64f7fc770",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "before_sha256": "1060514b2ba4092ed6c9234f5a362d7fbb7ea34537dce830d74108cc7a242d4c",
+      "sha256": "bb032f97166597f1b04627884e19edb6ece02a7b271b5c2ddfb254e644c5c5a8",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "before_sha256": "5ba886d74f1c6b64de28033222be38ef5cf0d1d7b2187eaca19ed4e53ee46174",
+      "sha256": "aff07ded02491dc090a5f2e89020cd3f049006eef1f88c524875e0c1173af5c8",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "before_sha256": "ddb77bc2e3b8df29b9901a54e328358586cee801699a6e763f7d2cc0eb99c17a",
+      "sha256": "8ec79e3c50b15ea04d66bed541e34849024af81686914ea8532bd839c7db0c8d",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "before_sha256": "35aa81bbd0aa1b7ed98375fdc89c4d00e684d04abac12828cf4bd016bbe779a8",
+      "sha256": "65b4e413b1dfab194012af133db237065b2e78b360536549aaf77b1914c77ecc",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/schemas.ts",
+      "before_sha256": "6bb9312165553bc9f77fbaf17a5b28c75adca21ffa97029672e2371e473d5557",
+      "sha256": "86175584cc991910c4177ae5280ad746c8bc140b67be791e7df2ade5b53566e7",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/lib/errors.ts",
+      "before_sha256": "76fabb6a25ffb805fde0db08b5de4009f9f4a13b1afb46d1536ccc41eb279b55",
+      "sha256": "eb65453254cc5b427a41b55b62872b2f0eeee94e4d1731a8fd3f3df6b53845d0",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/qr-section.tsx",
+      "before_sha256": "2f6f10beeb07337dd5e7133ef037e906e713f0241c19f43a11e4e8f7f6c89319",
+      "sha256": "bc9c6433a55bbd1fe027595f5d61fb5977333c13bd9054a99c6e3315c7c69cda",
+      "status": "changed"
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/qr.test.ts",
+      "before_sha256": "559f0075b15698c6316c7a324574054addc6d7db77a3eb6761c7ba339049e37d",
+      "sha256": "336157b5548872fb1b84abe2597563bbafa2b627c05dfc732e41b3d8467437ae",
+      "status": "changed"
+    },
+    {
+      "path": "scripts/resident-web-feedback-regression.cjs",
+      "before_sha256": "606fbe5b9d7e733c98d35d886b22a9b4cb346ca58f8c61345d64d7214f71fcab",
+      "sha256": "ecce0d245949afb733d5b6c7a2a4344a04e79ace0271f149054d13a5939443c2",
+      "status": "changed"
+    }
+  ],
+  "prerequisites": [
+    {
+      "phase": 1,
+      "sources": [
+        {
+          "path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+          "match": true
+        },
+        {
+          "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/index.ts",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/schemas/household-attendance.test.ts",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/schemas/household-attendance.ts",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/types/database.ts",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/types/household-attendance.database.ts",
+          "match": true
+        },
+        {
+          "path": "plans/Family_QR_Attendance_Context_Index.md",
+          "match": false
+        },
+        {
+          "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+          "match": false
+        },
+        {
+          "path": "supabase/functions/export-my-data/export-v2.ts",
+          "match": true
+        },
+        {
+          "path": "supabase/functions/export-my-data/index.ts",
+          "match": true
+        },
+        {
+          "path": "supabase/migrations/20261021111056_household_attendance.sql",
+          "match": true
+        },
+        {
+          "path": "supabase/tests/household_attendance.test.sql",
+          "match": true
+        },
+        {
+          "path": "supabase/tests/household_attendance_concurrency.mjs",
+          "match": true
+        },
+        {
+          "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+          "match": true
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "sources": [
+        {
+          "path": "apps/admin-web/package.json",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/lib/supabase/client.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/src/lib/household-attendance.ts",
+          "match": true
+        },
+        {
+          "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+          "match": true
+        },
+        {
+          "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+          "match": true
+        },
+        {
+          "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+          "match": true
+        },
+        {
+          "path": "package-lock.json",
+          "match": true
+        },
+        {
+          "path": "packages/shared/src/schemas/household-attendance.ts",
+          "match": true
+        },
+        {
+          "path": "supabase/migrations/20261021111056_household_attendance.sql",
+          "match": true
+        }
+      ]
+    }
+  ],
+  "unowned_snapshot_changes": [],
+  "lockfile_unchanged": true,
+  "new_dependencies": [],
+  "remote_mutations": false,
+  "status": "Partially complete \u2014 implementation/local verification complete; authenticated staging and physical-camera gates pending",
+  "selected_plan_section_only": true,
+  "android_type_diagnostics_match_baseline": true,
+  "checks": [
+    {
+      "name": "android-types",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "apps/resident-android-mobile/tsconfig.json"
+      ],
+      "exit": 2,
+      "seconds": 63.0,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-types.log"
+    },
+    {
+      "name": "android-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/mobile"
+      ],
+      "exit": 0,
+      "seconds": 31.3,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-lint.log"
+    },
+    {
+      "name": "android-tests",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "apps/resident-android-mobile"
+      ],
+      "exit": 0,
+      "seconds": 9.0,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-tests.log"
+    },
+    {
+      "name": "web-types",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--workspace=@barangayan/resident-web"
+      ],
+      "exit": 0,
+      "seconds": 9.7,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-web-types.log"
+    },
+    {
+      "name": "web-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/resident-web",
+        "--",
+        "src/lib/qr-checkin.ts",
+        "src/components/emergency/qr-scanner-dialog.tsx",
+        "src/components/emergency/qr-upload-fallback.tsx",
+        "src/components/emergency/scan-content.tsx"
+      ],
+      "exit": 0,
+      "seconds": 17.6,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-web-lint.log"
+    },
+    {
+      "name": "ios-types",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--workspace=@barangayan/resident-ios"
+      ],
+      "exit": 0,
+      "seconds": 23.8,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-types.log"
+    },
+    {
+      "name": "ios-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--workspace=@barangayan/resident-ios",
+        "--",
+        "tests/qr.test.ts",
+        "tests/resident-api.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 8.4,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-tests.log"
+    },
+    {
+      "name": "ios-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/resident-ios",
+        "--",
+        "src/data/resident-api.ts",
+        "src/data/schemas.ts",
+        "src/lib/errors.ts",
+        "src/features/qr/qr-section.tsx",
+        "tests/qr.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 68.4,
+      "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-lint.log"
+    }
+  ],
+  "followup_checks": {
+    "android_lint": {
+      "exit": 0,
+      "log": "logs/verified-android-lint.log"
+    },
+    "household_tests": {
+      "exit": 0,
+      "tests": 6,
+      "log": "logs/verified-household-tests.log"
+    },
+    "settings_browser": {
+      "exit": 0,
+      "groups": 12,
+      "log": "logs/settings-ui-verified.log"
+    },
+    "family_browser": {
+      "exit": 0,
+      "groups": 13,
+      "log": "logs/ui-verified.log"
+    },
+    "android_build": {
+      "exit": 0,
+      "log": "logs/candidate-export.log",
+      "directory": "export-candidate"
+    },
+    "android_typecheck": {
+      "exit": 2,
+      "preexisting_diagnostics": 3,
+      "log": "logs/verified-android-types.log"
+    },
+    "web_contracts": {
+      "exit": 0,
+      "groups": 4,
+      "log": "logs/web-cutover-unit-fixed.log"
+    },
+    "web_browser_contract_syntax": {
+      "exit": 0,
+      "note": "Full Web legacy browser/DB suite not run; local stack unavailable"
+    }
+  },
+  "manifests": {
+    "initial": "bb30e395d64985f3eb0174b19ec30171c2ff5c7600b1da0268950532b9675583",
+    "review": "e71cc768e3852dd99aaabc39226e859eae652a1bc91719c5ddb9c23166e45d45"
+  },
+  "native": {
+    "installed_version": "1.0.0",
+    "version_code": 1,
+    "last_installed": "2026-10-15",
+    "android": "12",
+    "serial": "127.0.0.1:16384",
+    "transport": "Synthetic auth/profile/transport, actual current Family components; no production requests",
+    "font_scale_original": 1.0,
+    "font_scale_tested": 1.3,
+    "font_scale_restored": 1.0,
+    "physical_camera": "pending manual verification",
+    "warning_log": "logs/native-runtime.log",
+    "test_server_stopped": true,
+    "test_adb_forward_absent": true
+  },
+  "manual_gates": [
+    "Actual authenticated staff-to-Android holder/partial arrival and departure on coordinated staging candidate",
+    "Physical staff camera decoding displayed native QR at both sizes",
+    "Full candidate native Auth/logout/account-switch/navigation/keyboard/bottom-tab and deployed request-count checks"
+  ],
+  "evidence_root": "tmp\\family-attendance-phase3-20261022",
+  "commits": false,
+  "pushes": false,
+  "deployment": false,
+  "remote_migrations": false,
+  "data_deleted": false,
+  "final_artifact_hashes": [
+    {
+      "path": "tmp\\family-attendance-phase3-20261022\\export-candidate\\metadata.json",
+      "sha256": "e4388a313b0c632df9517d9fb6978318b95610d5c1d233109eab055f44a9c0ce"
+    },
+    {
+      "path": "tmp\\family-attendance-phase3-20261022\\export-candidate\\_expo\\static\\js\\android\\entry-ec71d9058c332970c19fd5dc9e8298fa.hbc",
+      "sha256": "d7ced160394a6b9a0ffc6c6a37f10eb30122d40f2ff50d42cb329064562c4e7c"
+    }
+  ],
+  "final_owned_identity_recheck": true,
+  "owned_diff_new_trailing_whitespace": []
+}

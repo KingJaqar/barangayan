@@ -1,0 +1,1152 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/AGENTS.md, apps/CLAUDE.md, packages/AGENTS.md, packages/CLAUDE.md, apps/resident-android-mobile/**/AGENTS.md, apps/resident-android-mobile/**/CLAUDE.md, packages/shared/**/AGENTS.md, packages/shared/**/CLAUDE.md, .gitignore, apps/resident-android-mobile/.gitignore, packages/shared/.gitignore, package.json, tsconfig.json, eslint.config.js, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/metro.config.js, apps/resident-android-mobile/tsconfig.json, apps/resident-android-mobile/eslint.config.js, apps/resident-android-mobile/vitest.config.ts, packages/shared/package.json, packages/shared/tsconfig.json, packages/shared/vitest.config.ts, packages/shared/src/index.ts, apps/resident-android-mobile/src/app/_layout.tsx, apps/resident-android-mobile/src/app/**/_layout.tsx, apps/resident-android-mobile/src/components/app-tabs.tsx, apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/map-view.tsx, apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts, apps/resident-android-mobile/src/lib/*.test.ts, apps/resident-android-mobile/tests/*.mjs
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, .git/**, **/.expo/**, **/ios/**, **/android/**, **/dist/**, **/.next*/**, **/build/**, **/coverage/**, **/.cache/**, **/.turbo/**, tmp/**, repomix output files/**, **/*.tsbuildinfo, **/*.log, **/*.map, **/*.xml, .aws/**, .codex/**, .claude/**, **/.env*, **/*.pem, **/*.key, **/*.p8, **/*.p12, **/*.jks, **/*.keystore, **/credentials*.json, **/*service-account*.json, **/*.jpg, **/*.jpeg, **/*.webp, **/*.gif, **/*.mp4, **/*.pdf
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            _layout.tsx
+          home/
+            emergency-info/
+              _layout.tsx
+            _layout.tsx
+          maps/
+            _layout.tsx
+          reports/
+            _layout.tsx
+          services/
+            _layout.tsx
+          settings/
+            _layout.tsx
+          _layout.tsx
+        (auth)/
+          _layout.tsx
+        _layout.tsx
+      components/
+        app-tabs.tsx
+        map-view.tsx
+        resident-header.tsx
+      hooks/
+        use-floating-tab-inset.ts
+      lib/
+        account-setup-status.test.ts
+        auth-cleanup.test.ts
+        birthday-wheel.test.ts
+        center-presentation.test.ts
+        emergency-alert-filter.test.ts
+        floating-tab-layout.test.ts
+        google-auth-flow.test.ts
+        google-auth.test.ts
+        home-request.test.ts
+        horizontal-scroll.test.ts
+        leaflet-assets.test.ts
+        login-error.test.ts
+        map-presentation.test.ts
+        offline-routing.test.ts
+        password-recovery.test.ts
+        pkce-crypto.test.ts
+        resident-reduced-motion.test.ts
+        resident-search.test.ts
+        resident-theme.test.ts
+        search-history.test.ts
+        sensitive-auth.test.ts
+        setup-navigation.test.ts
+        setup-refresh.test.ts
+        setup-request.test.ts
+        valid-id.test.ts
+    tests/
+      document-forms-ui.mjs
+      drrm-centers-ui.mjs
+      drrm-hub-alerts-ui.mjs
+      drrm-scan-family-ui.mjs
+      health-presentation-ui.mjs
+      help-legal-about-ui.mjs
+      home-presentation-ui.mjs
+      maps-presentation-ui.mjs
+      reports-announcements-ui.mjs
+      request-document-presentation-ui.mjs
+      request-tracking-navigation.mjs
+      resident-search-history-ui.mjs
+      resident-search-lifecycle.mjs
+      resident-shell-lifecycle.mjs
+      services-lists-ui.mjs
+      services-tab-stability.mjs
+      settings-profile-ui.mjs
+      tracking-payment-ui.mjs
+      verification-sensitive-ui.mjs
+    .gitignore
+    app.config.js
+    app.json
+    eslint.config.js
+    metro.config.js
+    package.json
+    tsconfig.json
+    vitest.config.ts
+packages/
+  shared/
+    src/
+      index.ts
+    package.json
+    tsconfig.json
+    vitest.config.ts
+.gitignore
+AGENTS.md
+CLAUDE.md
+eslint.config.js
+package.json
+tsconfig.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/lib/center-presentation.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { centerOccupancy } from &apos;./center-presentation&apos;;</file><file path="apps/resident-android-mobile/src/lib/emergency-alert-filter.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { ALERT_MONTHS, ALERT_PERIODS, EMPTY_ALERT_DATE, alertDateLabel, alertYearOptions, matchesEmergencyAlert, type AlertDateFilter, type AlertPeriod } from &apos;./emergency-alert-filter&apos;;
+⋮----
+// Independent copy of the old screen predicate, retained as a behavior oracle.
+function previousPredicate(at: string, period: AlertPeriod, filter: AlertDateFilter, now: Date)</file><file path="apps/resident-android-mobile/src/lib/home-request.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { homeGreeting, homeRequestSummary, homeTimestamp } from &apos;./home-request&apos;;</file><file path="apps/resident-android-mobile/src/lib/horizontal-scroll.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { horizontalScrollEdges, horizontalScrollTarget } from &apos;./horizontal-scroll&apos;;</file><file path="apps/resident-android-mobile/src/lib/map-presentation.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { isMapPosition, readMapMessage } from &apos;./map-presentation&apos;;</file><file path="apps/resident-android-mobile/tests/document-forms-ui.mjs">// Actual React components and shared validation/submission code, with local-only
+// platform, account, picker and transport adapters. This does not certify Android.
+⋮----
+plugins: [</file><file path="apps/resident-android-mobile/tests/drrm-centers-ui.mjs">// Real Centers, shell, native wrapper and bundled Leaflet. Location/routing/native
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+// Shared values notify subscribers; timings are recorded, not native frame measurements.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=&gt;
+const frame=()</file><file path="apps/resident-android-mobile/tests/drrm-hub-alerts-ui.mjs">// Real Phase9 components, theme/font primitives and reduced-motion hook.
+// Only native/platform APIs are adapted. No network, live records or actual dialer.
+⋮----
+plugins: [
+⋮----
+const render = async (patch =
+const button = name =&gt; page.getByRole(&apos;button&apos;,
+⋮----
+// Changes are drafts until Apply, and closing the picker discards that draft.
+⋮----
+// Exercise actual native-scroll callbacks through their scrollable RN Web surface.
+const scrollWheel = async (label, index) =&gt;
+⋮----
+// Let the expanding panel settle before clicking an action that moves with it.</file><file path="apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs">// Real guide, scanner, sheets, household hook, validation, theme, font and motion.
+// Only native APIs/data transport are synthetic; no live records, permission prompts or sharing.
+⋮----
+plugins: [
+⋮----
+const render = (patch =
+const button = name =&gt; page.getByRole(&apos;button&apos;,
+const noDialogs = ()
+const close = async name =&gt;
+⋮----
+// Content stays intact until the exit finishes; removing it early shrinks the moving sheet.
+⋮----
+// Reverse an exit before completion: the native Modal must stay mounted and return to rest.
+⋮----
+const panelTransform=()</file><file path="apps/resident-android-mobile/tests/health-presentation-ui.mjs">// Actual Health routes, medical hook, schemas, theme and motion. Only data/native APIs are synthetic.
+⋮----
+setup(b)
+⋮----
+const button = (n) =&gt; page.getByRole(&apos;button&apos;,
+const render = (patch =
+⋮----
+// Replace fixture registrations with complete authoritative records.</file><file path="apps/resident-android-mobile/tests/help-legal-about-ui.mjs">// Real routes, content hooks, Markdown renderer, primitives and motion controller.
+// Only remote/device boundaries are synthetic; this does not qualify Android rendering.
+⋮----
+window.notify=table=&gt;
+⋮----
+const settle=()
+const go=async s=&gt;
+const tab=name=&gt;page.getByRole(&apos;tab&apos;,
+const button=name=&gt;page.getByRole(&apos;button&apos;,</file><file path="apps/resident-android-mobile/tests/home-presentation-ui.mjs">// Optional workspace-only reads avoid the native bundler&apos;s Windows ancestor-directory
+// enumeration. Package resolution still uses the installed versions; no permission is broadened.
+function resolveFixtureSource(args)
+⋮----
+// Render the actual Home, summary, controls, text, theme and status logic. Only platform,
+// preferences, navigation and network are synthetic adapters; this is not native qualification.
+⋮----
+plugins: [
+⋮----
+const cards = () =&gt; page.getByRole(&apos;button&apos;,
+const right = () =&gt; page.getByRole(&apos;button&apos;,
+const left = () =&gt; page.getByRole(&apos;button&apos;,
+const close = () =&gt; page.getByRole(&apos;button&apos;,
+⋮----
+// Use real web Animated at normal durations to exercise cancellation and reopen ownership.
+⋮----
+// The first response removes its own retry control; resolve the remaining control afresh.</file><file path="apps/resident-android-mobile/tests/maps-presentation-ui.mjs">// Real Maps + data hooks + native wrapper + bundled Leaflet. Browser/native/transport
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=&gt;
+const frame=()
+⋮----
+// Regression harness uses the actual wrapper, including legacy default presentation.</file><file path="apps/resident-android-mobile/tests/reports-announcements-ui.mjs">// Real components, data hooks and unread provider; synthetic transport/native adapters only.
+// This fixture does not qualify Android map, URI permissions, native gestures or frame timing.
+⋮----
+function source(p)
+⋮----
+await build(
+⋮----
+async function render(values,remount=true)</file><file path="apps/resident-android-mobile/tests/request-document-presentation-ui.mjs">// Actual React components and shared validation/submission code, with local-only
+// platform, account, picker and transport adapters. This does not certify Android.
+⋮----
+plugins: [</file><file path="apps/resident-android-mobile/tests/request-tracking-navigation.mjs">// Use the reducers shipped with this app&apos;s Expo Router, including tab history and
+// unhandled Back bubbling. This checks navigation state, without a native renderer.
+⋮----
+const options = routeNames =&gt; (
+const stackOptions = tab =&gt; options([...fs.readFileSync(path.join(appRoutes, tab, &apos;_layout.tsx&apos;), &apos;utf8&apos;)
+.matchAll(/&lt;Stack\.Screen\s+name=&quot;([^&quot;]+)&quot;/g)].map(match
+⋮----
+function navigationFixture()
+⋮----
+const focused = ()
+const setStack = (tab, child) =&gt;
+⋮----
+function selectTab(tab)
+function open(href)
+⋮----
+// First navigation into an unvisited tab initializes its stack at the target.
+⋮----
+function back()
+return
+⋮----
+// Called by the Home UI test with the URL captured from the actual summary CTA.
+export function verifyRequestTrackingNavigation(homeHref)
+⋮----
+nav.back(); // Header Back and Android Back dispatch the same GO_BACK action.
+⋮----
+// Prove the fixture reproduces the reported stale state with the old Home URL.</file><file path="apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs">// Real shell/header/inset components; navigation, account and native animation are
+// local fixtures. This verifies React lifecycle, not native routing or motion timing.
+⋮----
+plugins: [</file><file path="apps/resident-android-mobile/tests/services-lists-ui.mjs">// Real screen, lists, status/fee contracts, text, panels, chips and overflow controls.
+// Data/session/router and native animation adapters are explicit synthetic fixtures.
+⋮----
+plugins: [
+⋮----
+const tab = name =&gt; page.getByRole(&apos;tab&apos;,
+const requestRows = () =&gt; page.getByRole(&apos;button&apos;,
+⋮----
+// Refresh retains the mounted scroller and its offset, including while verification is checked.</file><file path="apps/resident-android-mobile/tests/settings-profile-ui.mjs">// Actual Settings/Profile and preference providers; native APIs and remote records are synthetic.
+⋮----
+const root=createRoot(document.getElementById(&apos;root&apos;));let generation=0;window.renderFixture=()=&gt;root.render(&lt;ThemePreferenceProvider key=
+⋮----
+const button=name=&gt;page.getByRole(&apos;button&apos;,
+const settle=async()
+const go=async screen=&gt;</file><file path="apps/resident-android-mobile/tests/tracking-payment-ui.mjs">// Actual components/controllers/contracts, isolated transport and native adapters.
+// Synthetic browser evidence supplements Android; it cannot certify native behavior.
+⋮----
+plugins: [
+⋮----
+const render=async patch=&gt;</file><file path="apps/resident-android-mobile/tests/verification-sensitive-ui.mjs">// Real screen controllers/primitives/schemas. Only device and remote boundaries are synthetic.
+⋮----
+plugins: [
+⋮----
+const button = name =&gt; page.getByRole(&apos;button&apos;,
+const settle = ()
+const set = async changes =&gt;
+const reset = async screen =&gt;
+const back = async () =&gt;</file><file path="apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+export default function EmergencyInfoLayout()
+⋮----
+{/* index.tsx builds its own tab-bar header — same fix as Settings/Maps. */}</file><file path="apps/resident-android-mobile/src/app/(app)/home/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+export default function HomeLayout()</file><file path="apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+export default function MapsLayout()
+⋮----
+{/* index.tsx builds its own header — same fix as Settings. */}</file><file path="apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts">import { usePathname } from &apos;expo-router&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { useFloatingTabLayout } from &apos;./use-floating-tab-layout&apos;;
+⋮----
+/**
+ * Shared visibility and scroll clearance for the bottom tabs.
+ * Section subtabs use the same pathname; detail and form routes get no bar.
+ * Includes the measured bar, 12dp bottom offset, top gap and Android safe area.
+ */
+export function useFloatingTabInset(ignoreMapHide = false)</file><file path="apps/resident-android-mobile/src/lib/account-setup-status.test.ts">import { createClient, type User } from &apos;@supabase/supabase-js&apos;;
+import type { Database, ResidentAccountSetupStatus } from &apos;@barangayan/shared&apos;;
+import { describe, expect, it, vi } from &apos;vitest&apos;;
+import { loadAccountSetupStatus } from &apos;./account-setup-status&apos;;
+import { accountSettingsRows, deletionConfirmation, passwordMode } from &apos;./sensitive-auth&apos;;
+⋮----
+function fixture(profile: object | null, options:
+const load = (client: ReturnType&lt;typeof fixture&gt;[&apos;client&apos;], account = user)</file><file path="apps/resident-android-mobile/src/lib/auth-cleanup.test.ts">import { createClient } from &apos;@supabase/supabase-js&apos;;
+import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+// Qualify the installed SDK&apos;s local cleanup contract, including a failed
+// server revoke. All session fields below are synthetic and kept in memory.</file><file path="apps/resident-android-mobile/src/lib/birthday-wheel.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { birthdayIso, birthdayParts, daysInBirthdayMonth, limitBirthday } from &apos;./birthday-wheel&apos;;</file><file path="apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts">import { beforeEach, describe, expect, it, vi } from &apos;vitest&apos;;
+import { useFloatingTabInset as readFloatingTabInset } from &apos;../hooks/use-floating-tab-inset&apos;;
+⋮----
+// Every section and its subtabs keep the same floating bar clearance.</file><file path="apps/resident-android-mobile/src/lib/google-auth-flow.test.ts">import { describe, expect, it, vi } from &apos;vitest&apos;;
+import { GoogleAuthFlow, parseGoogleAttempt, type GoogleAttempt } from &apos;./google-auth-flow&apos;;
+import { SetupRequestGate } from &apos;./setup-request&apos;;
+function fixture(intent: GoogleAttempt[&apos;intent&apos;] = &apos;sign_up&apos;)
+⋮----
+return</file><file path="apps/resident-android-mobile/src/lib/google-auth.test.ts">import { beforeEach, describe, expect, it, vi } from &apos;vitest&apos;;
+import { GOOGLE_ATTEMPT_KEY } from &apos;./google-auth-flow&apos;;
+⋮----
+// The real Android adapter (google-auth.ts) over an in-memory store, browser and
+// Auth client. Synthetic identifiers only; no network, URL code or token is stored.
+type FakeUser = { id: string; identities: { provider: string }[]; app_metadata: Record&lt;string, unknown&gt;; last_sign_in_at: string };
+⋮----
+const token = (sub: string, amr:
+const user = (id: string, google = true): FakeUser =&gt; (
+const signedIn = (id: string, method = &apos;password&apos;, at = Date.now() - 3_600_000) =&gt; (
+⋮----
+// The SDK installs the exchanged session before returning, whoever it belongs to.
+⋮----
+const success = async () =&gt; (
+⋮----
+// A deletion confirmation never unlocks first-password setup.</file><file path="apps/resident-android-mobile/src/lib/leaflet-assets.test.ts">import { readFileSync } from &apos;node:fs&apos;;
+import { createRequire } from &apos;node:module&apos;;
+import { dirname, resolve } from &apos;node:path&apos;;
+import { describe, expect, it } from &apos;vitest&apos;;
+import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE, LEAFLET_VERSION } from &apos;../components/leaflet-assets&apos;;
+⋮----
+const read = (path: string)</file><file path="apps/resident-android-mobile/src/lib/login-error.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { loginErrorMessage } from &apos;./login-error&apos;;</file><file path="apps/resident-android-mobile/src/lib/offline-routing.test.ts">import { createHash } from &apos;node:crypto&apos;;
+import { readFileSync } from &apos;node:fs&apos;;
+import { resolve } from &apos;node:path&apos;;
+import { describe, expect, it } from &apos;vitest&apos;;
+import { ROUTING_PROFILES, planEvacuationRoute, type RoutingGraph } from &apos;@barangayan/shared/src/lib/evacuation-routing&apos;;
+import {
+  ROUTING_AREA_ID,
+  STORE_FILES,
+  acceptConditions,
+  activatePack,
+  addAvoidance,
+  avoidedEdgeIds,
+  localRoutingInputs,
+  nearestEdge,
+  openStore,
+  parseAvoidance,
+  parseState,
+  parseStoredConditions,
+  serializeAvoidance,
+  utf8ByteLength,
+  verifyPack,
+  type LocalAvoidanceRecord,
+  type PackFiles,
+  type RoutingStorage,
+  type StoredConditions,
+} from &apos;./offline-routing&apos;;
+⋮----
+const NOW = ()
+⋮----
+const sha256Hex = (text: string)
+const sha256 = async (text: string)
+⋮----
+/** In-memory storage; `failAfter` throws on the n-th mutating call to simulate a force-stop. */
+class MemoryStorage implements RoutingStorage
+⋮----
+private mutate()
+async readText(path: string)
+async writeText(path: string, text: string)
+async removeFile(path: string)
+async removeDirectory(path: string)
+async moveDirectory(from: string, to: string)
+async moveFile(from: string, to: string)
+async list(directory: string)
+async sha256(text: string)
+⋮----
+/** A pack for a later graph version: one segment renamed (same OSM way and geometry). */
+function nextPack(version = &apos;ampid-1@2026-11-01#aaaaaaaaaaaa&apos;, renamedEdgeId = BUNDLED_GRAPH.edges[0].id): PackFiles
+⋮----
+function snapshot(options:
+⋮----
+function storedConditions(raw: unknown): StoredConditions
+⋮----
+async function installed(storage = new MemoryStorage())
+⋮----
+/** A bundle that is neither the corrupt active graph nor the previous one. */
+function newerBundleOther(): PackFiles
+⋮----
+async function upgradeWith(fetchConditions: () =&gt; Promise&lt;unknown&gt;, avoidance: LocalAvoidanceRecord[] = [], withConditions = true)
+⋮----
+const plan = (closed: string[], avoid: string[]) =&gt;</file><file path="apps/resident-android-mobile/src/lib/password-recovery.test.ts">import { afterEach, describe, expect, it, vi } from &apos;vitest&apos;;
+⋮----
+import { PasswordRecoveryFlow, recoveryErrorMessage } from &apos;./password-recovery&apos;;
+import { authSetupRequests } from &apos;./setup-request&apos;;
+⋮----
+function fixture()</file><file path="apps/resident-android-mobile/src/lib/pkce-crypto.test.ts">import { describe, expect, it, vi } from &apos;vitest&apos;;
+import { createHash, randomFillSync, webcrypto } from &apos;node:crypto&apos;;
+import { createClient } from &apos;@supabase/supabase-js&apos;;
+import { installPKCECrypto } from &apos;./pkce-crypto&apos;;
+⋮----
+// PKCE storage may add the flow ID/recovery suffix; compare the actual
+// verifier string used by this SDK, held only in this test&apos;s memory.</file><file path="apps/resident-android-mobile/src/lib/resident-reduced-motion.test.ts">import { beforeEach, describe, expect, it, vi } from &apos;vitest&apos;;
+import { useResidentReducedMotion } from &apos;../hooks/use-resident-reduced-motion&apos;;</file><file path="apps/resident-android-mobile/src/lib/resident-search.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { Database } from &apos;@barangayan/shared&apos;;
+import { normalizeSearchQuery, queryResidentSearch, searchExpression, searchPattern } from &apos;./resident-search&apos;;
+⋮----
+function fixture(options:
+⋮----
+const client =
+⋮----
+const signal = ()</file><file path="apps/resident-android-mobile/src/lib/resident-theme.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { ACCENT_COLORS } from &apos;../../../../packages/shared/src/constants/theme-colors&apos;;
+import { getResidentTheme } from &apos;../constants/resident-theme&apos;;
+⋮----
+function contrast(first: string, second: string): number
+⋮----
+const luminance = (hex: string) =&gt; [1, 3, 5].reduce((sum, start, index) =&gt;</file><file path="apps/resident-android-mobile/src/lib/search-history.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { cleanHistory, createSearchHistoryStore, searchSuggestions, SEARCH_HISTORY_LIMIT } from &apos;./search-history&apos;;
+⋮----
+function fixture()</file><file path="apps/resident-android-mobile/src/lib/sensitive-auth.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import type { ResidentAccountSetupStatus, ResidentSetupLoad } from &apos;@barangayan/shared&apos;;
+import { parseGoogleAttempt, type GoogleAttempt } from &apos;./google-auth-flow&apos;;
+import { accountSettingsRows, deletionConfirmation, FRESH_AUTH_WINDOW_MS, passwordMode, reauthenticationState, sessionClaims } from &apos;./sensitive-auth&apos;;
+⋮----
+const token = (claims: object) =&gt; `header.$
+const oauthToken = (at: number, sub = &apos;a&apos;, extra: object =
+const attempt = (change: Partial&lt;GoogleAttempt&gt; =
+const state = (a: GoogleAttempt | null, accessToken: string, purpose: &apos;set_password&apos; | &apos;delete_account&apos; = &apos;set_password&apos;, userId = &apos;a&apos;)
+const ready = (status: Partial&lt;ResidentAccountSetupStatus&gt;): ResidentSetupLoad =&gt; (</file><file path="apps/resident-android-mobile/src/lib/setup-navigation.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { residentSetupRoute, type ResidentAccountSetupStatus } from &apos;@barangayan/shared&apos;;
+import { callbackNavigation, isNativeAuthCallback, markNativeCallbackHandedOff, nativeCallbackPending, reauthReturnTarget, setupAllowsApp, setupDestination } from &apos;./setup-navigation&apos;;
+⋮----
+function decide(status: ResidentAccountSetupStatus, intent: Parameters&lt;typeof residentSetupRoute&gt;[0][&apos;intent&apos;]=&apos;sign_in&apos;)</file><file path="apps/resident-android-mobile/src/lib/setup-refresh.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { residentSetupFailure, type ResidentSetupLoad } from &apos;@barangayan/shared&apos;;
+import { isBackgroundRefresh, refreshFailureOutcome, safeReadRetryDelay } from &apos;./setup-refresh&apos;;</file><file path="apps/resident-android-mobile/src/lib/setup-request.test.ts">import { afterEach, describe, expect, it, vi } from &apos;vitest&apos;;
+import { SetupOwner, SetupRequestGate, SetupTimeout, SetupWriteBoundary, readResendDeadline, resendSeconds } from &apos;./setup-request&apos;;</file><file path="apps/resident-android-mobile/src/lib/valid-id.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { normalizeBirthDate, parseIdText } from &apos;../../../../supabase/functions/extract-resident-id/id-text&apos;;
+import { idPhotoBytes } from &apos;./id-photo-bytes&apos;;</file><file path="apps/resident-android-mobile/tests/resident-search-history-ui.mjs">plugins: [</file><file path="apps/resident-android-mobile/tests/resident-search-lifecycle.mjs">await build(
+⋮----
+const set = q
+const wait = ()
+const count = ()</file><file path="apps/resident-android-mobile/tests/services-tab-stability.mjs">// Render the real Services screen and shared verification rules. Only data hooks,
+// navigation and the document feeds are fixtures; layout uses React Native Web.
+⋮----
+plugins: [
+⋮----
+// Real changes and failures must still replace the compact status with guidance.</file><file path="apps/resident-android-mobile/.gitignore"># @generated expo-cli sync-2b81b286409207a5da26e14c78851eb30d8ccbdb
+# The following patterns were generated by expo-cli
+
+expo-env.d.ts
+# @end expo-cli</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="apps/resident-android-mobile/tsconfig.json">{
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [
+        &quot;./src/*&quot;
+      ],
+      &quot;@/assets/*&quot;: [
+        &quot;./assets/*&quot;
+      ]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;.expo/types/**/*.ts&quot;,
+    &quot;expo-env.d.ts&quot;
+  ]
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="packages/shared/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/app/(app)/health/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+{/* index.tsx builds its own segmented-control header — same fix as Settings. */}
+⋮----
+{/* register.tsx builds its own green header. */}</file><file path="apps/resident-android-mobile/src/app/(app)/_layout.tsx">import { View } from &apos;react-native&apos;;
+import { StatusBar } from &apos;expo-status-bar&apos;;
+import AppTabs from &apos;@/components/app-tabs&apos;;
+import { ResidentHeader } from &apos;@/components/resident-header&apos;;
+import { UnreadCountsProvider } from &apos;@/hooks/use-unread-counts&apos;;
+import { ResidentSearchProvider } from &apos;@/hooks/use-resident-search&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { FloatingTabLayoutProvider } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export default function AppLayout()</file><file path="apps/resident-android-mobile/src/components/resident-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { router, usePathname } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { Keyboard, Pressable, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { NotificationBell } from &apos;@/components/notification-bell&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useSearchDraft } from &apos;@/hooks/use-resident-search&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+⋮----
+/** Stays mounted across navigation so the expanding search keeps its input. */
+⋮----
+const closeSearch = () =&gt;
+⋮----
+onPress=
+⋮----
+onSubmitEditing=
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =&gt;</file><file path="apps/resident-android-mobile/eslint.config.js">// https://docs.expo.dev/guides/using-eslint/
+⋮----
+// All instances in this codebase are legitimate: loading-state resets, hydration
+// flags, derived-state initialisation from async data, and refetch-on-mount.
+// The rule fires for any synchronous setState call inside an effect body, which
+// is an overly broad heuristic for React Native projects where these patterns are
+// idiomatic and do not cause observable cascading-render problems.
+⋮----
+// React Native renders &amp;apos; literally — it is not HTML. Contractions in
+// user-facing text are not XSS vectors on native; the rule exists for the web DOM.
+⋮----
+// Animated.Value must be passed into Animated.View&apos;s style prop, which is
+// evaluated during render. The canonical React Native Animated pattern requires
+// this; there is no alternative that avoids touching .current in JSX.
+⋮----
+// Mutating `.value` on a Reanimated useSharedValue() is the canonical Reanimated
+// API, not an unsafe render-time mutation. The rule can recognize SharedValues via
+// its enableCustomTypeDefinitionForReanimated option, but that only self-enables
+// when it detects the Reanimated Babel plugin in the active compile pipeline —
+// which never happens under plain ESLint (no Babel transform pass runs here), so
+// it fires unconditionally on every `.value` assignment.</file><file path="packages/shared/tsconfig.json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2020&quot;,
+    &quot;lib&quot;: [&quot;ES2020&quot;],
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;strict&quot;: true,
+    &quot;declaration&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;rewriteRelativeImportExtensions&quot;: true
+  },
+  &quot;include&quot;: [&quot;src/**/*.ts&quot;, &quot;scripts/**/*.mts&quot;]
+}</file><file path="eslint.config.js">// https://docs.expo.dev/guides/using-eslint/</file><file path="tsconfig.json">{
+  &quot;compilerOptions&quot;: {},
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;
+}</file><file path="apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+{/* index.tsx builds its own segmented-control header — same fix as Settings. */}
+⋮----
+{/* Submit new incident — builds its own header (Profile-screen style), same fix as index.
+          Lateral push, same as the equivalent &quot;next step&quot; pushes in Services/_layout —
+          it&apos;s a forward step the resident can back-swipe out of. */}
+⋮----
+{/* Incident detail / tracking — builds its own header (Request Tracking-screen style), same fix as above. */}</file><file path="apps/resident-android-mobile/src/app/(app)/services/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+⋮----
+// Native Stack nested inside the &quot;Services&quot; NativeTabs tab, so screens here (Document
+// Detail, Request Form, Payment, Request Tracking detail) can push over the
+// Documents/Requests/Logs segmented-control index screen — see Expo Router&apos;s guidance on
+// nesting a Stack inside NativeTabs for header + push support.
+⋮----
+{/* index.tsx builds its own segmented-control header — the native Stack header
+          would otherwise show a stray &quot;index&quot; title above it (same fix as Settings). */}
+⋮----
+{/* Sequential flow steps get a lateral push — each is a &quot;next step&quot; the resident
+          can also back-swipe out of. The two arrival/confirmation screens (pay-at-pickup
+          confirmation, payment success receipt) get a softer fade-from-bottom reveal
+          instead, matching their &quot;you&apos;ve arrived&quot; feel. */}</file><file path="apps/resident-android-mobile/src/app/(auth)/_layout.tsx">import { Stack, useRouter, useSegments } from &apos;expo-router&apos;;
+import { useCallback, useEffect } from &apos;react&apos;;
+import { Alert, BackHandler } from &apos;react-native&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+⋮----
+// Mounted for signed-out users and password recovery — see the root _layout.tsx.
+// Blank titles + native back button, approximating the design file&apos;s
+// minimal back-chevron header without a bespoke header component.
+⋮----
+const recoveryOptions = (title: string) =&gt; (
+⋮----
+{/* login/register render their own AuthHeader (green bar + back chevron) —
+          the native Stack header would otherwise stack a second header above it. */}</file><file path="apps/resident-android-mobile/src/components/app-tabs.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Tabs, usePathname } from &apos;expo-router&apos;;
+import type { BottomTabBarProps } from &apos;expo-router/js-tabs&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { Platform, Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { CountBadge } from &apos;@/components/count-badge&apos;;
+import { DrrmTabIcon } from &apos;@/components/drrm-tab-icon&apos;;
+import { HomeTabIcon } from &apos;@/components/home-tab-icon&apos;;
+import { ServicesTabIcon } from &apos;@/components/services-tab-icon&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+export default function ResidentTabs()
+⋮----
+// Switching Android tabs should replace the scene in place. Crossfading
+// different layouts briefly overlays the outgoing content under the new
+// header and makes the screen appear to jump. The bar indicator still slides.
+⋮----
+{/* Root screens scroll beneath the bar and reserve clearance for their controls. */}</file><file path="apps/resident-android-mobile/metro.config.js">// Metro config for the npm-workspaces monorepo.
+// Metro&apos;s default config only watches apps/resident-android-mobile, so it can&apos;t resolve
+// @barangayan/shared out of the box — this is the fix (see the plan&apos;s
+// &quot;Pre-Development Technical Risk Mitigations&quot;).
+⋮----
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+⋮----
+// Other tools create and delete short-lived refs under .git; if one vanishes while
+// the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+⋮----
+// `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
+// only sees the hoisted `entities@4` at the workspace root — which dropped the old
+// `lib/maps/*.json` layout that `markdown-it@10` (pulled in by
+// react-native-markdown-display) still `require`s. Redirect that legacy subpath to
+// markdown-it&apos;s own nested `entities@2` copy, leaving entities@4 consumers untouched.
+⋮----
+config.resolver.resolveRequest = (context, moduleName, platform) =&gt;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path=".gitignore"># Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# Supabase env files for apps/mobile (real values) — examples stay committed
+.env
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+.next-*/</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/src/app/_layout.tsx">import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname, useRouter } from &apos;expo-router&apos;;
+⋮----
+import { useFonts } from &apos;expo-font&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+⋮----
+import { AnimatedSplashOverlay } from &apos;@/components/animated-icon&apos;;
+import { AuthProvider, useAuth } from &apos;@/hooks/use-auth&apos;;
+import {
+  NotificationPreferencesProvider,
+  useNotificationPreferences,
+} from &apos;@/hooks/use-notification-preferences&apos;;
+import { useNotificationRealtime } from &apos;@/hooks/use-notification-realtime&apos;;
+import { FontPreferenceProvider } from &apos;@/hooks/use-font-preference&apos;;
+import { ProfileProvider, useProfile } from &apos;@/hooks/use-profile&apos;;
+import { SafeAreaProvider } from &apos;react-native-safe-area-context&apos;;
+import { ThemePreferenceProvider, useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+import { registerPushToken } from &apos;@/lib/push-notifications&apos;;
+import { View } from &apos;react-native&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { EmergencyEntryLink } from &apos;@/components/emergency-entry-link&apos;;
+import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from &apos;@/lib/setup-navigation&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export default function RootLayout()
+⋮----
+{/* ProfileProvider sits inside AuthProvider so it can access the session for its
+          initial fetch, and outside ThemePreferenceProvider / ThemedRoot so every screen
+          in the tree shares one cached profile — avatar updates propagate immediately. */}
+⋮----
+{/* Needs both session (AuthProvider) and profile (ProfileProvider), and must stay
+          outside ThemePreferenceProvider since it has no dependency on theme state. */}
+⋮----
+{/* Needs session/profile (via useAuth/useProfile inside), so it has to nest under
+          AuthProvider — everything below, including React Navigation&apos;s own DarkTheme/
+          DefaultTheme, resolves through this instead of the raw OS scheme, so &quot;App
+          Theme&quot; in Settings is genuinely app-wide, not just our own ThemedView/ThemedText
+          components. */}
+⋮----
+{/* Font style, same session-scoping rules as accent color — needs profile/session,
+          nests wherever in this tree as long as it&apos;s above ThemedText&apos;s consumers. */}
+⋮----
+/**
+ * Keeps the push-notification delivery engine alive for the whole app session: registers
+ * this device&apos;s token whenever a real session exists and push is enabled, and opens the
+ * realtime channels that turn DB events into local notifications. Renders nothing of its
+ * own — purely a side-effect wrapper around the two notification hooks.
+ */
+function NotificationProvider(
+⋮----
+function ThemedRoot()
+⋮----
+// Session restoration can wait on a token refresh while offline. After this long the splash
+// lifts so the public evacuation-centers entry is reachable (DRRM routing plan R6).
+⋮----
+// Gates (app) vs (auth) on real Supabase session state — Expo Router&apos;s current
+// recommended auth pattern (Stack.Protected), not a manual redirect effect. The splash
+// overlay stays up until the initial session check resolves, so the app never flashes
+// signed-out content before we actually know the answer.
+function SplashGatedNavigator()
+⋮----
+// The public emergency screen is never covered by the splash or the restoration error.
+⋮----
+{/* Keep the navigation tree mounted so a cold callback survives session
+          restoration. Individual screens wait for Auth before doing any work. */}
+⋮----
+// Other/malformed links use the existing Router handling.
+⋮----
+// Android may restore the previous task route on process death, and a cold start
+// into the existing task starts Expo Router at the root. Hand the actual native
+// callback to its existing validated, deduplicated handler.
+⋮----
+// Recovery retains its own auth stack; resident setup comes from fresh server
+// state and creation origin, including after a cold restart or token refresh.
+⋮----
+// Deliberately NOT symmetric (authReachable is not just &quot;!appReachable&quot;). Guest
+// browsing (&quot;I&apos;ll Sign In Later&quot;) needs (app) reachable with no session, AND (auth)
+// to stay reachable too (a guest has no session, so `!session` already covers this —
+// isGuest doesn&apos;t need to appear in this half at all). That&apos;s what keeps the existing
+// auto-redirect behavior intact: the moment a guest actually logs in, session becomes
+// truthy, authReachable flips to false while (auth)/login is the active route, and
+// Stack.Protected redirects them into (app) automatically — same mechanism the
+// Recovery flow already relies on, no extra plumbing needed. If this were written as
+// `!appReachable` instead, isGuest would make (auth) permanently unreachable the
+// instant guest mode starts, breaking guest -&gt; login entirely.
+⋮----
+{/* Unconditionally reachable — it only redirects into whichever of (app)/(auth) is
+          actually reachable below, so it doesn&apos;t need its own guard. */}
+⋮----
+{/* Public emergency entry: outside every guard, so emergency access never depends on
+          authentication (DRRM routing plan R6, invariant 9). */}</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+{/* index.tsx builds its own colored header (matching the reference screenshot) —
+          the native Stack header would otherwise show a stray &quot;index&quot; title above it. */}
+⋮----
+{/* Logout removes account routes from history and returns to the guest overview. */}</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 5,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file><file path="apps/resident-android-mobile/src/components/map-view.tsx">/**
+ * MapView — React Native WebView wrapping a self-contained Leaflet map page.
+ *
+ * Architecture:
+ *   - The WebView loads an inline HTML string (no file server needed).
+ *   - Leaflet JS + CSS are inlined from the app bundle (leaflet-assets.ts), so the page
+ *     makes no script/style CDN requests (DRRM routing plan R6). Online OpenStreetMap tiles
+ *     are optional (`showTiles`); the Centers map draws the routing pack&apos;s vector roads
+ *     instead when offline.
+ *   - Communication uses the typed bridge from @barangayan/shared/types/map-bridge:
+ *       RN → WebView: injectJavaScript(JSON.stringify(MapBridgeInboundMessage))
+ *       WebView → RN: window.ReactNativeWebView.postMessage(JSON.stringify(MapBridgeOutboundMessage))
+ *   - On web (Expo Web), react-native-webview is unavailable — a styled placeholder
+ *     is rendered instead.
+ */
+⋮----
+import type { LatLng, MapBridgeInboundMessage, MapLngLat, MapMarker } from &apos;@barangayan/shared&apos;;
+import { isPointInPolygon } from &apos;@barangayan/shared&apos;;
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { forwardRef, useEffect, useImperativeHandle, useRef } from &apos;react&apos;;
+import type { ViewStyle } from &apos;react-native&apos;;
+import { Platform, StyleSheet, Text, View } from &apos;react-native&apos;;
+import type NativeWebView from &apos;react-native-webview&apos;;
+⋮----
+import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from &apos;@/components/leaflet-assets&apos;;
+import { isMapPosition, readMapMessage, type LocalMapInboundMessage, type MapPresentation } from &apos;@/lib/map-presentation&apos;;
+⋮----
+export interface MapViewHandle {
+  fitAll: () =&gt; void;
+  fitBoundary: () =&gt; void;
+  flyTo: (position: FocusPosition) =&gt; void;
+  zoomIn: () =&gt; void;
+  zoomOut: () =&gt; void;
+}
+⋮----
+/**
+ * Fallback focus when no barangay boundary is loaded yet (e.g. a guest with no profile,
+ * or before the boundary fetch resolves) — the bounding-box center of Barangay Ampid I,
+ * San Mateo, Rizal, this pilot&apos;s only onboarded barangay. This is a UI default, not
+ * app logic keyed to a hardcoded barangay id (AGENTS.md §0) — once boundary data loads
+ * for any barangay, SET_BOUNDARY overrides this immediately.
+ */
+⋮----
+/**
+ * Exported so screens can offer a &quot;reset to Ampid I&quot; action (e.g. a &quot;Maps&quot; button
+ * that recenters on this pilot barangay) without duplicating the coordinates.
+ */
+⋮----
+// react-native-webview is not available on Expo Web — dynamic import guards the
+// native-only require so the web bundle never fails to parse this module.
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+⋮----
+// ── Leaflet inline HTML ──────────────────────────────────────────────────────
+// Self-contained page: inlines the bundled Leaflet, exposes a postMessage listener for
+// MapBridgeInboundMessage commands, and sends MapBridgeOutboundMessage back via
+// window.ReactNativeWebView.postMessage.
+//
+// Marker colour is determined by `kind`: a category id resolves to the colour in the
+// CATEGORY_COLORS map (populated by SET_MARKERS payloads), otherwise the default teal.
+⋮----
+// ── Props ────────────────────────────────────────────────────────────────────
+⋮----
+export interface FocusPosition {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
+⋮----
+export interface MapUserLocation {
+  position: LatLng;
+  accuracyMeters: number | null;
+  pending: boolean;
+}
+⋮----
+export interface MapViewProps {
+  /** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+  presentation?: MapPresentation;
+  /** Presentation dismissal only; never called for picker, marker or routing taps. */
+  onBackgroundTap?: () =&gt; void;
+  markers: MapMarker[];
+  center?: LatLng;
+  /** Center + zoom to fly the map to a specific position. */
+  focusPosition?: FocusPosition;
+  /** Map from marker `kind` to hex colour — used for custom icon colours. */
+  kindColors?: Record&lt;string, string&gt;;
+  /**
+   * A barangay&apos;s boundary geometry — rendered as a red outline and used to fit the
+   * map&apos;s view. Takes priority over `center`/marker-based fitting while set.
+   */
+  boundary?: Polygon | MultiPolygon | null;
+  /** Changing this value forces the map to re-fit to the current boundary. */
+  boundaryRefitKey?: number;
+  /**
+   * Incident Reports&apos; &quot;pin your location&quot; mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+  picker?: { enabled: boolean; position: LatLng | null };
+  /** Registration is advisory; Settings keeps the default hard constraint. */
+  constrainPicker?: boolean;
+  /** Fires with the pin&apos;s new position once it passes the `boundary` check (if any). */
+  onPickerMoved?: (position: LatLng) =&gt; void;
+  /** Fires when a tap/drag landed outside `boundary` and was rejected. */
+  onPickerRejected?: (attemptedPosition: LatLng) =&gt; void;
+  /** The resident&apos;s location marker and accuracy circle; `pending` = awaiting confirmation. */
+  userLocation?: MapUserLocation | null;
+  onMarkerTap?: (markerId: string) =&gt; void;
+  onMapReady?: () =&gt; void;
+  onMapError?: () =&gt; void;
+  /** Overrides the default 158px top clearance of Leaflet&apos;s zoom (+/-) control. */
+  zoomControlTop?: number;
+  /** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+  showTiles?: boolean;
+  /** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+  packMap?: FeatureCollection&lt;Geometry, { layer: string; kind: string | null; walkable: boolean | null }&gt; | null;
+  /** Verified closures, the resident&apos;s blocked segments and the segment being marked ([lng, lat] lines). */
+  roadMarks?: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } | null;
+  /** Route polyline, fitted into view when it changes; null clears it. */
+  route?: LatLng[] | null;
+  /** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+  routePadding?: { top: number; bottom: number };
+  /** While set, plain taps are reported here instead of placing the picker pin. */
+  onMapTap?: ((position: LatLng) =&gt; void) | null;
+  style?: ViewStyle;
+}
+⋮----
+/** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+⋮----
+/** Presentation dismissal only; never called for picker, marker or routing taps. */
+⋮----
+/** Center + zoom to fly the map to a specific position. */
+⋮----
+/** Map from marker `kind` to hex colour — used for custom icon colours. */
+⋮----
+/**
+   * A barangay&apos;s boundary geometry — rendered as a red outline and used to fit the
+   * map&apos;s view. Takes priority over `center`/marker-based fitting while set.
+   */
+⋮----
+/** Changing this value forces the map to re-fit to the current boundary. */
+⋮----
+/**
+   * Incident Reports&apos; &quot;pin your location&quot; mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+⋮----
+/** Registration is advisory; Settings keeps the default hard constraint. */
+⋮----
+/** Fires with the pin&apos;s new position once it passes the `boundary` check (if any). */
+⋮----
+/** Fires when a tap/drag landed outside `boundary` and was rejected. */
+⋮----
+/** The resident&apos;s location marker and accuracy circle; `pending` = awaiting confirmation. */
+⋮----
+/** Overrides the default 158px top clearance of Leaflet&apos;s zoom (+/-) control. */
+⋮----
+/** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+⋮----
+/** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+⋮----
+/** Verified closures, the resident&apos;s blocked segments and the segment being marked ([lng, lat] lines). */
+⋮----
+/** Route polyline, fitted into view when it changes; null clears it. */
+⋮----
+/** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+⋮----
+/** While set, plain taps are reported here instead of placing the picker pin. */
+⋮----
+function userLocationMessage(location: MapUserLocation | null | undefined): MapBridgeInboundMessage
+⋮----
+// ── Component ────────────────────────────────────────────────────────────────
+⋮----
+// Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
+⋮----
+// Last picker position that passed the boundary check — what an out-of-boundary
+// tap/drag snaps back to. Seeded from `picker.position` so the very first fix
+// (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
+⋮----
+function sendMessage(msg: LocalMapInboundMessage)
+⋮----
+// Push new markers whenever the prop changes (after the map is ready).
+⋮----
+// Re-center whenever the user&apos;s location changes.
+⋮----
+// Fly to a specific position + zoom when focusPosition changes.
+⋮----
+// Draw/update the boundary outline whenever it changes.
+⋮----
+// Toggle picker mode / move the pin whenever the prop changes. A position supplied
+// this way (as opposed to a user tap/drag) is trusted as-is — it&apos;s what
+// lastAcceptedPickerPosRef snaps back to on a rejected move.
+⋮----
+// Depending on the primitive fields (not `picker` itself) avoids re-sending on every
+// render when a caller passes an inline object literal, e.g. `picker={{ enabled, position }}`.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Keyed on primitives so an inline object from the caller doesn&apos;t resend every render.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Incoming messages from the WebView.
+function handleMessage(event:
+⋮----
+// A map that becomes ready after a fix arrived still receives the latest location.
+⋮----
+// Reject: snap the pin back to the last position that was inside the boundary.
+⋮----
+// ── Web fallback ─────────────────────────────────────────────────────────
+⋮----
+// ── Native render ────────────────────────────────────────────────────────
+⋮----
+// Lets Leaflet&apos;s own pan/pinch-zoom gestures inside the WebView win the touch
+// responder over an ancestor ScrollView (e.g. the incident detail screen&apos;s Location
+// card) instead of the outer list &quot;stealing&quot; the drag as a page-scroll — without
+// this, dragging the map on Android feels stuck/jumpy whenever MapView is nested
+// inside a scrollable parent. No effect when there&apos;s no scrollable ancestor (the
+// Maps tab, the full-screen location picker).</file><file path="packages/shared/src/index.ts"></file></files></repomix>

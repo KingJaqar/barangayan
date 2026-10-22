@@ -37,9 +37,9 @@ export function RoadMarkCard({
 }) {
   const theme = useTheme();
   return (
-    <View style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+    <View style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
       <View style={styles.header}>
-        <Ionicons name="remove-circle-outline" size={18} color={theme.accentRed} />
+        <Ionicons name="remove-circle-outline" size={18} color={theme.resident.danger} />
         <ThemedText type="smallBold" style={styles.flex}>
           Block a road you cannot pass
         </ThemedText>
@@ -51,7 +51,7 @@ export function RoadMarkCard({
         Tap the road on the map. It is avoided by routes on this phone only and is not reported to the barangay.
       </ThemedText>
       {noRoadAtTap ? (
-        <ThemedText type="small" style={{ color: theme.accentRed }}>
+        <ThemedText type="small" style={{ color: theme.resident.danger }}>
           No road within 25 m of that spot. Tap closer to the road line.
         </ThemedText>
       ) : null}
@@ -65,13 +65,14 @@ export function RoadMarkCard({
             accessibilityRole="button"
             disabled={busy}
             onPress={onConfirm}
-            style={[styles.button, { backgroundColor: theme.accentRed }]}>
-            {busy ? <ActivityIndicator size="small" color="#FFFFFF" /> : <ThemedText type="smallBold" style={styles.buttonText}>Block road</ThemedText>}
+            accessibilityState={{ disabled: busy, busy }}
+            style={[styles.button, { backgroundColor: theme.resident.danger }]}>
+            {busy ? <ActivityIndicator size="small" color={theme.resident.onDanger} /> : <ThemedText type="smallBold" style={{ color: theme.resident.onDanger }}>Block road</ThemedText>}
           </Pressable>
         </View>
       ) : null}
       {error ? (
-        <ThemedText type="small" style={{ color: theme.accentRed }}>
+        <ThemedText type="small" style={{ color: theme.resident.danger }}>
           {error}
         </ThemedText>
       ) : null}
@@ -88,7 +89,7 @@ export function RoadMarkCard({
                 </ThemedText>
               </View>
               <Pressable accessibilityRole="button" disabled={busy} onPress={() => onRemove(record.id)} hitSlop={6}>
-                <ThemedText type="smallBold" style={{ color: theme.primary }}>
+                <ThemedText type="smallBold" style={{ color: theme.resident.accentText, minHeight: 44, paddingVertical: 10 }}>
                   Remove
                 </ThemedText>
               </Pressable>
@@ -116,19 +117,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   confirmRow: {
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
   },
   button: {
+    minHeight: 44,
+    justifyContent: 'center',
     borderRadius: 10,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two,
     minWidth: 96,
     alignItems: 'center',
-  },
-  buttonText: {
-    color: '#FFFFFF',
   },
   list: {
     maxHeight: 132,

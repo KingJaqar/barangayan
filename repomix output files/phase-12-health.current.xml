@@ -1,0 +1,1531 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/AGENTS.md, apps/CLAUDE.md, packages/AGENTS.md, packages/CLAUDE.md, apps/resident-android-mobile/**/AGENTS.md, apps/resident-android-mobile/**/CLAUDE.md, packages/shared/**/AGENTS.md, packages/shared/**/CLAUDE.md, .gitignore, apps/resident-android-mobile/.gitignore, packages/shared/.gitignore, package.json, tsconfig.json, eslint.config.js, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/metro.config.js, apps/resident-android-mobile/tsconfig.json, apps/resident-android-mobile/eslint.config.js, apps/resident-android-mobile/vitest.config.ts, packages/shared/package.json, packages/shared/tsconfig.json, packages/shared/vitest.config.ts, packages/shared/src/index.ts, apps/resident-android-mobile/src/app/**/health/**/*.tsx, apps/resident-android-mobile/src/components/family-member-modal.tsx, apps/resident-android-mobile/src/components/birthday-calendar-modal.tsx, apps/resident-android-mobile/src/components/segmented-control.tsx, apps/resident-android-mobile/src/components/filter-chips.tsx, apps/resident-android-mobile/src/components/primary-button.tsx, apps/resident-android-mobile/src/hooks/use-medical-drives.ts, apps/resident-android-mobile/src/hooks/use-profile.ts, apps/resident-android-mobile/src/hooks/use-profile-household-members.ts, apps/resident-android-mobile/src/lib/birthday-wheel*.ts, packages/shared/src/constants/drive-types.ts, packages/shared/src/schemas/drive-registration*.ts, packages/shared/src/schemas/household.ts
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, .git/**, **/.expo/**, **/ios/**, **/android/**, **/dist/**, **/.next*/**, **/build/**, **/coverage/**, **/.cache/**, **/.turbo/**, tmp/**, repomix output files/**, **/*.tsbuildinfo, **/*.log, **/*.map, **/*.xml, .aws/**, .codex/**, .claude/**, **/.env*, **/*.pem, **/*.key, **/*.p8, **/*.p12, **/*.jks, **/*.keystore, **/credentials*.json, **/*service-account*.json, **/*.jpg, **/*.jpeg, **/*.webp, **/*.gif, **/*.mp4, **/*.pdf
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            _layout.tsx
+            index.tsx
+            register.tsx
+      components/
+        birthday-calendar-modal.tsx
+        family-member-modal.tsx
+        filter-chips.tsx
+        primary-button.tsx
+        segmented-control.tsx
+      hooks/
+        use-medical-drives.ts
+        use-profile-household-members.ts
+        use-profile.ts
+      lib/
+        birthday-wheel.test.ts
+        birthday-wheel.ts
+    .gitignore
+    app.config.js
+    app.json
+    eslint.config.js
+    metro.config.js
+    package.json
+    tsconfig.json
+    vitest.config.ts
+packages/
+  shared/
+    src/
+      constants/
+        drive-types.ts
+      schemas/
+        drive-registration-result.test.ts
+        drive-registration.test.ts
+        drive-registration.ts
+        household.ts
+      index.ts
+    package.json
+    tsconfig.json
+    vitest.config.ts
+.gitignore
+AGENTS.md
+CLAUDE.md
+eslint.config.js
+package.json
+tsconfig.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/family-member-modal.tsx">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { ScanFamilySheet } from &apos;@/components/drrm/scan-family-sheet&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ProfileHouseholdMemberInput = { id?: string; name: string; relation: string; role: string };
+⋮----
+export function FamilyMemberModal({ visible, initial, onClose, onSave, onDelete }: {
+visible: boolean; initial: ProfileHouseholdMemberInput | null; onClose: ()
+⋮----
+async function submit(remove = false)
+⋮----
+&lt;View style=</file><file path="apps/resident-android-mobile/src/components/filter-chips.tsx">import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface FilterChip&lt;K extends string&gt; { key: K; label: string; color: string }
+⋮----
+onPress=</file><file path="apps/resident-android-mobile/src/hooks/use-profile-household-members.ts">import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+⋮----
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+⋮----
+/**
+ * RFC-4122 v4 UUID — see the matching comment in settings/profile.tsx.
+ * profiles.household_members (jsonb) is mirrored by a DB trigger into the
+ * canonical household_members table, whose `id` column is a real `uuid`;
+ * a non-UUID client id makes that trigger&apos;s `::uuid` cast fail with
+ * &quot;invalid input syntax for type uuid&quot;.
+ */
+function genId(): string
+⋮----
+export type ProfileHouseholdMember = {
+  id: string;
+  name: string;
+  relation: string;
+  role?: string;
+};
+⋮----
+type UseProfileHouseholdMembersResult = {
+  members: ProfileHouseholdMember[];
+  isLoading: boolean;
+  error: string | null;
+  refetch: () =&gt; Promise&lt;void&gt;;
+  addMember: (member: { name: string; relation: string; role?: string }) =&gt; Promise&lt;ProfileHouseholdMember | null&gt;;
+  updateMember: (id: string, updates: Partial&lt;ProfileHouseholdMember&gt;) =&gt; Promise&lt;ProfileHouseholdMember | null&gt;;
+  removeMember: (id: string) =&gt; Promise&lt;boolean&gt;;
+};
+⋮----
+export function useProfileHouseholdMembers(): UseProfileHouseholdMembersResult
+⋮----
+const persistMembers = async (next: ProfileHouseholdMember[]): Promise&lt;boolean&gt; =&gt;
+⋮----
+// The sheet owns recoverable save feedback; a failed mutation must not disable Retry.
+⋮----
+const addMember = async (input:
+⋮----
+const updateMember = async (id: string, updates: Partial&lt;ProfileHouseholdMember&gt;): Promise&lt;ProfileHouseholdMember | null&gt; =&gt;
+⋮----
+const removeMember = async (id: string): Promise&lt;boolean&gt; =&gt;</file><file path="apps/resident-android-mobile/src/lib/birthday-wheel.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { birthdayIso, birthdayParts, daysInBirthdayMonth, limitBirthday } from &apos;./birthday-wheel&apos;;</file><file path="apps/resident-android-mobile/src/lib/birthday-wheel.ts">export type BirthdayParts = { year: number; month: number; day: number };
+export function daysInBirthdayMonth(year: number, month: number): number
+export function birthdayIso(
+export function birthdayParts(value: string, today = new Date()): BirthdayParts
+/** Month/year changes keep a real date, including leap days and today&apos;s limit. */
+export function limitBirthday(parts: BirthdayParts, today = new Date()): BirthdayParts
+export function birthdayLabel(value: string): string</file><file path="apps/resident-android-mobile/.gitignore"># @generated expo-cli sync-2b81b286409207a5da26e14c78851eb30d8ccbdb
+# The following patterns were generated by expo-cli
+
+expo-env.d.ts
+# @end expo-cli</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="apps/resident-android-mobile/tsconfig.json">{
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [
+        &quot;./src/*&quot;
+      ],
+      &quot;@/assets/*&quot;: [
+        &quot;./assets/*&quot;
+      ]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;.expo/types/**/*.ts&quot;,
+    &quot;expo-env.d.ts&quot;
+  ]
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="packages/shared/src/constants/drive-types.ts">/**
+ * The `drive_type` Postgres enum (0035_medical_drives.sql) reflected in TypeScript —
+ * the generated `Database` types don&apos;t include Postgres enums at all (see the empty
+ * `Enums` block in ../types/database.ts), so this hand-maintained union is the single
+ * source of truth for both the mobile Health screen and the admin web Health screen.
+ * Keep in sync with the `create type public.drive_type as enum (...)` list and the
+ * `v_prefix := case v_drive.type ...` block inside `register_for_drive` if either changes.
+ */
+⋮----
+export type DriveType = (typeof DRIVE_TYPES)[number];
+⋮----
+/** Display label, brand color, and applicant-number prefix per drive type. */</file><file path="packages/shared/src/schemas/drive-registration-result.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { residentDriveRegistrationResultSchema } from &apos;./drive-registration&apos;;</file><file path="packages/shared/src/schemas/drive-registration.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { driveRegistrationSchema } from &apos;./drive-registration&apos;;</file><file path="packages/shared/src/schemas/household.ts">import { z } from &apos;zod&apos;;
+⋮----
+export type HouseholdMemberRelation = (typeof HOUSEHOLD_MEMBER_RELATIONS)[number];
+⋮----
+export type HouseholdMemberRole = (typeof HOUSEHOLD_MEMBER_ROLES)[number];
+⋮----
+export type HouseholdMemberFormValues = z.infer&lt;typeof householdMemberSchema&gt;;
+⋮----
+export type HouseholdSearchParams = z.infer&lt;typeof householdSearchSchema&gt;;</file><file path="packages/shared/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/app/(app)/health/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+⋮----
+{/* index.tsx builds its own segmented-control header — same fix as Settings. */}
+⋮----
+{/* register.tsx builds its own green header. */}</file><file path="apps/resident-android-mobile/src/components/birthday-calendar-modal.tsx">/**
+ * Birthday Calendar Picker — shared by the resident Profile screen and the
+ * account Register screen.
+ *
+ * A calendar grid instead of free-text date entry — no more malformed dates
+ * from manual typing. Styled to match the health screen&apos;s DriveCalendar /
+ * MonthYearPicker (green-bordered grid, circular day cells, tap-the-month-
+ * label-to-jump) rather than either platform&apos;s native date dialog, so the
+ * picker looks and behaves the same on iOS and Android and never touches
+ * react-native&apos;s deprecated DateTimePicker `onChange` prop.
+ */
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { Modal, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Colors, Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+const PRIMARY_GREEN = Colors.light.primary; // #0F6E5B — always brand green
+⋮----
+/** Zero-pad to 2 digits — used when hand-assembling grid-cell ISO dates. */
+const pad2 = (n: number)
+⋮----
+/** Date → YYYY-MM-DD, using local calendar fields (not toISOString, which is UTC). */
+export function dateToIso(date: Date): string
+⋮----
+/** YYYY-MM-DD → local Date at noon (avoids UTC-midnight rollover across timezones). */
+export function isoToLocalDate(iso: string): Date
+⋮----
+const maxMonthInMaxYear = today.getMonth() + 1; // 1-indexed
+⋮----
+// Default the picker to 25 years ago (a reasonable adult birth year) when
+// no birthday is set yet, rather than opening on the current month.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function changeMonth(delta: 1 | -1)
+⋮----
+// Build the 42-cell grid (6 rows × 7 cols) — same layout as DriveCalendar.
+const firstWeekday = new Date(viewYear, viewMonth - 1, 1).getDay(); // 0=Sun
+⋮----
+type Cell = { iso: string; day: number; inMonth: boolean };
+⋮----
+{/* Month header — tap to jump to any year/month */}
+⋮----
+onPress=
+⋮----
+{/* Day-of-week headers */}
+⋮----
+{/* Day grid */}
+⋮----
+const YEAR_CHIP_WIDTH = 68; // width + gap, kept in sync with bymStyles.yearChip
+⋮----
+/** Year (scrollable list, 1900…current) + 4×3 month grid — jumps `viewYear`/`viewMonth` far in one tap. */
+⋮----
+// Center the current year in the visible strip.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps</file><file path="apps/resident-android-mobile/src/hooks/use-medical-drives.ts">import { DRIVE_TYPE_CONFIG, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type ResidentDriveRegistrationResult, type DriveType } from &apos;@barangayan/shared&apos;;
+import { useFocusEffect } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useState } from &apos;react&apos;;
+⋮----
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+⋮----
+export interface MedicalDrive {
+  id: string;
+  barangay_id: string;
+  title: string;
+  type: DriveType;
+  drive_date: string;   // YYYY-MM-DD
+  time_start: string;   // HH:MM:SS
+  time_end: string;     // HH:MM:SS
+  location: string;
+  eligible_criteria: string;
+  stock_label: string;  // &quot;Remaining Stock&quot; | &quot;Remaining Slots&quot; | …
+  stock_unit: string;   // &quot;doses&quot; | &quot;slots&quot; | …
+  stock_total: number;
+  stock_remaining: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+⋮----
+drive_date: string;   // YYYY-MM-DD
+time_start: string;   // HH:MM:SS
+time_end: string;     // HH:MM:SS
+⋮----
+stock_label: string;  // &quot;Remaining Stock&quot; | &quot;Remaining Slots&quot; | …
+stock_unit: string;   // &quot;doses&quot; | &quot;slots&quot; | …
+⋮----
+export interface DriveRegistration {
+  id: string;
+  drive_id: string;
+  user_id: string;
+  applicant_number: string;
+  age: number;
+  is_pwd: boolean;
+  comorbidities: string[];
+  prior_dose_date: string | null;
+  status: string; // drive_registration_status
+  created_at: string;
+  updated_at: string;
+  // Joined from medical_drives when fetching &quot;My Registrations&quot;
+  drive?: MedicalDrive | null;
+}
+⋮----
+status: string; // drive_registration_status
+⋮----
+// Joined from medical_drives when fetching &quot;My Registrations&quot;
+⋮----
+export type RegisterForDriveResult = ResidentDriveRegistrationResult;
+⋮----
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
+/**
+ * Powers the Health tab&apos;s Active Medical Drives and My Registrations panels.
+ *
+ * @param selectedDate  ISO date string (YYYY-MM-DD) for the calendar&apos;s active day.
+ * @param typeFilter    Drive-type filter key, or &apos;all&apos; for no filter.
+ */
+export function useMedicalDrives({
+  selectedDate,
+  typeFilter,
+}: {
+  selectedDate: string;
+  typeFilter: DriveType | &apos;all&apos;;
+})
+⋮----
+// Unique per hook instance — see use-my-incidents.ts&apos;s instanceId comment for why.
+⋮----
+/**
+   * Map of YYYY-MM-DD → array of up to 3 hex color strings, one per distinct
+   * drive type scheduled that day.  Used by DriveCalendar to render colored dots.
+   */
+⋮----
+/** All active drives for an entire calendar month (used by month-view filter). */
+⋮----
+// ── Fetch drives for the selected date (and type filter) ──────────────────
+⋮----
+// ── Fetch dates in a calendar month that have at least one drive ──────────
+/**
+   * Fetches drive_date + type for every active drive in the given month and
+   * builds monthEventMap: date → up-to-3 unique hex colors (one per drive type).
+   * The calendar renders colored dots from this map.
+   */
+⋮----
+const pad = (n: number)
+⋮----
+// Store up to 3 distinct colors per date so the calendar can render dots
+⋮----
+// ── Fetch ALL drives for an entire calendar month (month-view filter) ─────
+/**
+   * Fetches every active drive in the given month ordered chronologically.
+   * Respects the current typeFilter.  Call this when the user activates the
+   * &quot;All Medical Drives for [Month]&quot; filter button.
+   */
+⋮----
+// Non-fatal: month view gracefully handles empty state
+⋮----
+// ── Fetch the authenticated user&apos;s registrations (with drive details) ─────
+⋮----
+// Non-fatal: guest users land here; the UI gracefully handles no registrations.
+⋮----
+// ── Resolve the resident&apos;s barangay for the drive-updates channel filter ──
+⋮----
+// ── Realtime: any resident registering decrements stock_remaining on the drive ──
+⋮----
+// ── Realtime: the signed-in resident&apos;s own registration list ──────────────
+⋮----
+// Initial fetch + refetch on every screen focus — covers offline/reconnect gaps that
+// the realtime subscriptions above might miss. Fires on first focus too, so it
+// replaces the old mount-time useEffect pair.
+⋮----
+// ── Atomic registration via the server-side RPC ───────────────────────────
+⋮----
+// Refresh both drives (stock_remaining changed) and registrations list
+⋮----
+// Active drives panel (date-filtered)
+⋮----
+// Calendar event color dots
+⋮----
+// Month-view panel (all drives in a month)
+⋮----
+// My Registrations panel
+⋮----
+// Actions</file><file path="apps/resident-android-mobile/eslint.config.js">// https://docs.expo.dev/guides/using-eslint/
+⋮----
+// All instances in this codebase are legitimate: loading-state resets, hydration
+// flags, derived-state initialisation from async data, and refetch-on-mount.
+// The rule fires for any synchronous setState call inside an effect body, which
+// is an overly broad heuristic for React Native projects where these patterns are
+// idiomatic and do not cause observable cascading-render problems.
+⋮----
+// React Native renders &amp;apos; literally — it is not HTML. Contractions in
+// user-facing text are not XSS vectors on native; the rule exists for the web DOM.
+⋮----
+// Animated.Value must be passed into Animated.View&apos;s style prop, which is
+// evaluated during render. The canonical React Native Animated pattern requires
+// this; there is no alternative that avoids touching .current in JSX.
+⋮----
+// Mutating `.value` on a Reanimated useSharedValue() is the canonical Reanimated
+// API, not an unsafe render-time mutation. The rule can recognize SharedValues via
+// its enableCustomTypeDefinitionForReanimated option, but that only self-enables
+// when it detects the Reanimated Babel plugin in the active compile pipeline —
+// which never happens under plain ESLint (no Babel transform pass runs here), so
+// it fires unconditionally on every `.value` assignment.</file><file path="packages/shared/src/schemas/drive-registration.ts">import { z } from &apos;zod&apos;;
+⋮----
+// Explicit projection strips legacy or unexpected private fields before resident
+// confirmation state is populated during a coordinated client/schema release.
+⋮----
+export type ResidentDriveRegistrationResult = z.infer&lt;typeof residentDriveRegistrationResultSchema&gt;;
+⋮----
+/**
+ * Submission shape for registering in a Medical/Vaccination Drive (Module 10).
+ * The database snapshots the existing weighted eligibility score from these
+ * inputs in administrator-protected storage; clients never submit a score.
+ */
+⋮----
+/** For multi-dose vaccines — omitted/undefined for a first dose. */
+⋮----
+export type DriveRegistrationInput = z.infer&lt;typeof driveRegistrationSchema&gt;;</file><file path="packages/shared/tsconfig.json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2020&quot;,
+    &quot;lib&quot;: [&quot;ES2020&quot;],
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;strict&quot;: true,
+    &quot;declaration&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;rewriteRelativeImportExtensions&quot;: true
+  },
+  &quot;include&quot;: [&quot;src/**/*.ts&quot;, &quot;scripts/**/*.mts&quot;]
+}</file><file path="eslint.config.js">// https://docs.expo.dev/guides/using-eslint/</file><file path="tsconfig.json">{
+  &quot;compilerOptions&quot;: {},
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;
+}</file><file path="apps/resident-android-mobile/src/components/primary-button.tsx">import { useEffect, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+interface ButtonContentProps extends Omit&lt;PressableProps, &apos;style&apos;&gt; {
+  label: string;
+  leadingIcon?: ReactNode;
+  loading?: boolean;
+}
+⋮----
+type ButtonVariant = &apos;primary&apos; | &apos;secondary&apos; | &apos;destructive&apos;;
+export type PrimaryButtonProps = ButtonContentProps &amp; (
+  | { presentation?: &apos;default&apos;; variant?: ButtonVariant }
+  | { presentation: &apos;resident&apos;; variant?: ButtonVariant | &apos;destructiveFilled&apos; | &apos;secondaryAccent&apos;; compact?: boolean; appearance?: &apos;default&apos; | &apos;requestForm&apos; }
+);
+⋮----
+/** The green pill button used throughout the design file (Login, Register, Verify, etc.).
+ * &apos;destructive&apos; is the red-outlined variant for cancel/undo-style actions (e.g. cancelling
+ * a pending payment) — same shape as &apos;secondary&apos; but in theme.accentRed.
+ * Resident confirmation dialogs use &apos;destructiveFilled&apos; for the reference&apos;s filled action. */
+export function PrimaryButton(</file><file path="apps/resident-android-mobile/src/hooks/use-profile.ts">import { AccountRequestScope, type Tables } from &apos;@barangayan/shared&apos;;
+import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+import { createContext, createElement, useCallback, useContext, useEffect, useRef, useState } from &apos;react&apos;;
+import { AppState } from &apos;react-native&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { safeReadRetryDelay } from &apos;@/lib/setup-refresh&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export type Profile = Tables&lt;&apos;profiles&apos;&gt; &amp; {
+  barangays: (Pick&lt;Tables&lt;&apos;barangays&apos;&gt;, &apos;name&apos; | &apos;boundary&apos;&gt; &amp; {
+    barangay_localities: Pick&lt;Tables&lt;&apos;barangay_localities&apos;&gt;, &apos;display_name&apos; | &apos;city&apos; | &apos;province&apos;&gt; | null;
+  }) | null;
+};
+const cacheKey = (id: string) =&gt; `resident_profile_v2:$
+export async function clearProfileCache(userId?: string)
+interface ProfileContextValue { profile: Profile | null; isLoading: boolean; error: string | null; refetch: () =&gt; void; }
+⋮----
+export function ProfileProvider(
+⋮----
+const load = (attempt: number) =&gt; supabase.from(&apos;profiles&apos;).select(&apos;*, barangays(name, boundary, barangay_localities(display_name, city, province))&apos;)
+.eq(&apos;id&apos;, userId).maybeSingle().then(async (
+⋮----
+// A newer refetch, sign-out or account switch invalidates this ticket.
+⋮----
+// Offline demographic data is useful; cached approval is never trusted.
+⋮----
+} catch { /* Offline cache is optional. */ }
+⋮----
+export function useProfile()</file><file path="apps/resident-android-mobile/metro.config.js">// Metro config for the npm-workspaces monorepo.
+// Metro&apos;s default config only watches apps/resident-android-mobile, so it can&apos;t resolve
+// @barangayan/shared out of the box — this is the fix (see the plan&apos;s
+// &quot;Pre-Development Technical Risk Mitigations&quot;).
+⋮----
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+⋮----
+// Other tools create and delete short-lived refs under .git; if one vanishes while
+// the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+⋮----
+// `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
+// only sees the hoisted `entities@4` at the workspace root — which dropped the old
+// `lib/maps/*.json` layout that `markdown-it@10` (pulled in by
+// react-native-markdown-display) still `require`s. Redirect that legacy subpath to
+// markdown-it&apos;s own nested `entities@2` copy, leaving entities@4 consumers untouched.
+⋮----
+config.resolver.resolveRequest = (context, moduleName, platform) =&gt;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path=".gitignore"># Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# Supabase env files for apps/mobile (real values) — examples stay committed
+.env
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+.next-*/</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/src/components/segmented-control.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useMemo, useState, useEffect, useRef, type ComponentProps } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  Easing,
+  cancelAnimation,
+} from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Colors, Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+export interface SegmentOption&lt;Key extends string&gt; {
+  key: Key;
+  label: string;
+  icon?: ComponentProps&lt;typeof Ionicons&gt;[&apos;name&apos;];
+}
+⋮----
+export interface SegmentedControlProps&lt;Key extends string&gt; {
+  segments: SegmentOption&lt;Key&gt;[];
+  activeKey: Key;
+  onChange: (key: Key) =&gt; void;
+  activeColor?: &apos;primary&apos; | &apos;accentRed&apos;;
+  variant?: &apos;filled&apos; | &apos;outline&apos; | &apos;underline&apos;;
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  sizing?: &apos;equal&apos; | &apos;content&apos;;
+}
+⋮----
+export function SegmentedControl&lt;Key extends string&gt;(props: SegmentedControlProps&lt;Key&gt;)
+⋮----
+accessibilityState=
+⋮----
+// Critically damped — settles on the target segment with zero overshoot/bounce.</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 5,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file><file path="apps/resident-android-mobile/src/app/(app)/health/index.tsx">import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+/**
+ * Health &amp; Medical Drive screen — Module 10.
+ *
+ * Active Medical Drives segment:
+ *   Calendar (with per-type color dots)
+ *   →  &quot;All Medical Drives for [Month]&quot; toggle filter
+ *   →  Horizontal scrollable category filter (with edge chevrons)
+ *   →  date header card  →  drive cards  →  /health/register (full-screen)
+ *
+ * My Registrations segment:
+ *   List of drive_registrations joined with medical_drives, grouped by status.
+ *
+ * Design tokens sampled from the reference screenshot:
+ *   Primary green  #0F6E5B  (=Colors.light.primary, matches theme.primary)
+ *   Progress green #22C55E  (healthier, distinct from brand primary)
+ *   Calendar border 1.5 px green, 16 px radius
+ *   Date-header card: 1.5 px green border, 12 px radius, bold green text
+ *   Drive card: white bg, 16 px radius, iOS shadow / Android elevation 3
+ */
+import { DRIVE_TYPES, DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  TextInput,
+  View,
+} from &apos;react-native&apos;;
+import { useSafeAreaInsets, SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Colors, Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { type DriveRegistration, type DriveType, type MedicalDrive, useMedicalDrives } from &apos;@/hooks/use-medical-drives&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+// ─── Constants ───────────────────────────────────────────────────────────────
+⋮----
+// #0F6E5B brand-green fallback — only used for module-level config defaults below
+// (DRIVE_TYPE_CONFIG.all, REG_STATUS_CONFIG.all/confirmed, STATUS_CYCLE&apos;s confirmed step),
+// which are built once at import time and can&apos;t read the per-account accent color.
+// Every component below shadows this with `const PRIMARY_GREEN = theme.primary;` right
+// after its useTheme() call, so the resident&apos;s chosen accent (Settings &gt; App Theme)
+// actually shows up here — see the shadow comment at each component for the &quot;why&quot;.
+⋮----
+type DriveTypeFilter = DriveType | &apos;all&apos;;
+⋮----
+/**
+ * Visual config for every drive type (color, label) — sourced from
+ * @barangayan/shared&apos;s DRIVE_TYPE_CONFIG (the single source of truth also used by the
+ * admin web Health screen), plus the &apos;all&apos; pseudo-type this screen&apos;s filter chips add.
+ */
+⋮----
+// Fallback only — HorizontalCategoryNav overrides this with the live accent color
+// (theme.primary) at render time since this object is built once at import.
+⋮----
+/**
+ * Flat ordered list of all filter keys for the horizontal category nav.
+ * &apos;all&apos; leads, followed by every drive type in canonical order.
+ */
+⋮----
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+⋮----
+/** &quot;2026-08-08&quot; → Date at local noon (avoids UTC-midnight timezone shifts). */
+function parseLocalDate(iso: string): Date
+⋮----
+/** Zero-pad to 2 digits. */
+const pad2 = (n: number)
+⋮----
+/** Today as YYYY-MM-DD in local time. */
+function localToday(): string
+⋮----
+/** &quot;HH:MM:SS&quot; → &quot;8:00 AM&quot; */
+function fmt12h(t: string): string
+⋮----
+/** &quot;2026-08-08&quot; → &quot;Aug 8&quot; */
+function fmtShortDate(iso: string): string
+⋮----
+/** &quot;2026-08-08&quot; → &quot;Saturday, August 8&quot; */
+function fmtFullDate(iso: string): string
+⋮----
+// ─── MonthYearPicker ──────────────────────────────────────────────────────────
+⋮----
+/** Short 3-letter abbreviations shown in the picker grid. */
+⋮----
+/**
+ * Centered dialog that lets the user pick any month + year and jump to it.
+ * Year range: current year − 1 to current year + 5 (navigable with arrows).
+ */
+⋮----
+initialMonth: number;   // 1-indexed
+⋮----
+todayMonth: number;     // 1-indexed
+⋮----
+// Shadows the module-level fallback with the resident&apos;s live accent color (Settings &gt;
+// App Theme) — theme.primary already resolves to it (see use-theme.ts).
+⋮----
+// Local year browsed inside the picker (separate from the calendar&apos;s currentMonth)
+⋮----
+// Reset picker year whenever the dialog reopens
+⋮----
+{/* Backdrop */}
+⋮----
+{/* Centered card */}
+⋮----
+{/* Header */}
+⋮----
+{/* Year navigation row */}
+⋮----
+onPress=
+⋮----
+{/* Divider */}
+⋮----
+{/* 4 × 3 month grid */}
+⋮----
+const m = idx + 1; // 1-indexed
+⋮----
+// color applied inline at the usage site with the live accent — see PRIMARY_GREEN
+// shadowing comment in MonthYearPicker above.
+⋮----
+// 4 per row: (100% − 3 gaps) / 4; using percentage-ish via flex basis
+⋮----
+// ─── DriveCalendar ───────────────────────────────────────────────────────────
+⋮----
+/**
+ * Calendar widget with per-type color dots under each day number.
+ *
+ * `eventDateMap` maps YYYY-MM-DD → array of up to 3 hex colors, one per
+ * distinct drive type scheduled on that date.  The calendar renders a row of
+ * colored dots so users can identify drive categories at a glance.
+ */
+⋮----
+currentMonth,      // { year, month } where month is 1-indexed
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// Month/year picker visibility
+⋮----
+// Today&apos;s year + month for &quot;current month&quot; ring in the picker grid
+⋮----
+const todayMonth = todayDate.getMonth() + 1; // 1-indexed
+⋮----
+// Build the 42-cell grid (6 rows × 7 cols)
+const firstWeekday = new Date(year, month - 1, 1).getDay(); // 0=Sun
+⋮----
+type Cell = { date: string; day: number; inMonth: boolean };
+⋮----
+// Trailing days from previous month
+⋮----
+// Current month
+⋮----
+// Leading days from next month
+⋮----
+{/* Month/year picker dialog */}
+⋮----
+{/* Month header */}
+⋮----
+&lt;Pressable onPress=
+⋮----
+{/* Day-of-week headers */}
+⋮----
+{/* Event accent — thin colored bar(s) at bottom of circle */}
+⋮----
+// color applied inline at the usage site with the live accent.
+⋮----
+// Circle is tighter; event accents live inside it at the bottom
+⋮----
+// Thin colored accent bars pinned to the bottom edge of the circle
+⋮----
+// ─── Horizontal Category Navigation ──────────────────────────────────────────
+⋮----
+/**
+ * A single horizontally-scrollable row of category filter chips.
+ * Chevron buttons on the left/right edges signal scrollability and
+ * allow tap-to-scroll for accessibility.  Chevrons fade when the list
+ * is already scrolled to that edge.
+ */
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// Track scroll position + dimensions via refs (no re-render needed)
+⋮----
+/** Tap a chevron to scroll the list by ~120 px in that direction. */
+⋮----
+{/* Left edge chevron */}
+⋮----
+{/* Scrollable chip row */}
+⋮----
+// &apos;all&apos; is brand-colored (live accent), not the fixed drive-type palette.
+⋮----
+{/* Color dot for inactive non-&quot;all&quot; chips */}
+⋮----
+{/* Right edge chevron */}
+⋮----
+// backgroundColor applied inline at each usage site with the live accent.
+⋮----
+// ─── Drive Card ───────────────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+{/* ── Row 1: title + type badge ─────────────────────────────────── */}
+⋮----
+{/* ── Row 2: date · time · location (icon-prefixed, one line) ──── */}
+⋮----
+
+⋮----
+{/* ── Row 3: eligibility (icon-prefixed) ───────────────────────── */}
+⋮----
+{/* ── Row 4: stock label + count + action (all one row) ─────────── */}
+⋮----
+{/* Action button pushed to the right */}
+⋮----
+{/* ── Progress bar (slim, no extra margin row) ──────────────────── */}
+⋮----
+// Row 1 — title + badge
+⋮----
+// Rows 2 &amp; 3 — icon-prefixed meta lines
+⋮----
+// backgroundColor applied inline at the usage site with the live accent.
+⋮----
+// Row 4 — stock + action
+⋮----
+// Shared action text (Register / Registered / Full)
+⋮----
+// ─── Registration Modal ───────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// Slide in / out animation
+⋮----
+{/* Backdrop */}
+⋮----
+{/* Drag handle */}
+⋮----
+{/* Drive heading */}
+⋮----
+/* ── Success state ─────────────────────────────────────────────── */
+⋮----
+/* ── Form state ────────────────────────────────────────────────── */
+⋮----
+// color applied inline at the usage site with the live accent.
+⋮----
+// ─── Registration Status Filter ───────────────────────────────────────────────
+⋮----
+// &apos;all&apos;/&apos;confirmed&apos; colors here are fallbacks only — RegStatusFilterBar overrides them
+// with the live accent color at render time since this object is built once at import.
+⋮----
+/**
+ * Horizontally-scrollable status filter chips — same design as HorizontalCategoryNav
+ * in the Active Medical Drives segment.
+ */
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// &apos;all&apos;/&apos;confirmed&apos; are brand-colored (live accent), not the fixed status palette.
+⋮----
+// ─── Registration Detail Bottom Sheet ────────────────────────────────────────
+⋮----
+/**
+ * Status cycle definition — the four ordered lifecycle states a registration
+ * moves through.  Each step carries its colour, a short label, and a one-liner
+ * description used in the status-timeline inside the detail sheet.
+ */
+⋮----
+// Fallback only — RegistrationDetailSheet overrides this with the live accent color
+// at render time since this array is built once at import.
+⋮----
+/**
+ * Full-detail bottom sheet for a single DriveRegistration.
+ *
+ * Layout (top → bottom inside the sheet):
+ *   • Drag handle
+ *   • Drive title + type badge header
+ *   • ── Registration Info ── (applicant #, registered-on date)
+ *   • ── Drive Details ──     (date, time, location, eligibility, stock)
+ *   • ── Status Timeline ──   (vertical stepper showing the full cycle)
+ *   • Close button
+ */
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// Reset to off-screen first so every open animates from the bottom,
+// regardless of where the previous close animation left the value.
+⋮----
+// Reset to fully visible first so every close animates from the resting
+// position, regardless of where a previous animation left the value.
+⋮----
+// If cancelled, only show steps up-to-and-including cancelled (remove attended)
+⋮----
+// Formatted registered-on date
+⋮----
+{/* Backdrop */}
+⋮----
+{/* Animated sheet */}
+⋮----
+{/* ── Drag handle ──────────────────────────────────────────────── */}
+⋮----
+{/* ── Scrollable content ───────────────────────────────────────── */}
+⋮----
+{/* ══ Header: title + type badge ══════════════════════════════ */}
+⋮----
+{/* ══ Section: Registration Info ══════════════════════════════ */}
+⋮----
+{/* Applicant number — prominent */}
+⋮----
+{/* Divider */}
+⋮----
+{/* Registered-on */}
+⋮----
+{/* ══ Section: Drive Details ══════════════════════════════════ */}
+⋮----
+{/* Date */}
+⋮----
+{/* Time */}
+⋮----
+{/* Location */}
+⋮----
+{/* Eligibility */}
+⋮----
+{/* Stock */}
+⋮----
+{/* Slim progress bar */}
+⋮----
+{/* Drive title + type badge */}
+⋮----
+{/* Date · time · location */}
+⋮----
+{/* Bottom row: applicant # · status pill · chevron hint */}
+⋮----
+{/* ── Registration detail bottom sheet ──────────────────────────── */}
+⋮----
+// Outer scroll content — sections render directly inside
+⋮----
+// ─── Root Screen ─────────────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
+⋮----
+// Guests have no registrations: the My Registrations segment is hidden for them.
+⋮----
+// Re-fetch calendar event dots whenever the visible month changes
+⋮----
+// Re-fetch month drives whenever month view is active or context changes.
+// `fetchMonthDrives` is recreated when `typeFilter` changes, so this
+// effect re-runs automatically when the user changes the category filter.
+⋮----
+const handleMonthChange = (delta: 1 | -1) =&gt;
+⋮----
+/** Called when the user picks a month+year from the picker dialog. */
+const handleJumpTo = (year: number, month: number) =&gt;
+⋮----
+const handleDateSelect = (date: string) =&gt;
+⋮----
+// Tapping a specific date exits month-view and shows that date&apos;s drives
+⋮----
+// Snap visible month if user taps a trailing/leading cell from adjacent month
+⋮----
+const handleRegister = (drive: MedicalDrive) =&gt;
+⋮----
+// Navigate to the full-screen Applicant Registration form.
+⋮----
+// ── Drive list to render (date-view vs month-view) ────────────────────────
+⋮----
+{/* ── Segmented control ────────────────────────────────────────────── */}
+⋮----
+{/* ── Active Medical Drives ─────────────────────────────────────────── */}
+⋮----
+{/* ════════════════════════════════════════════════════════════════
+              SECTION 1 — Calendar
+          ════════════════════════════════════════════════════════════════ */}
+⋮----
+{/* Section divider */}
+⋮----
+{/* ════════════════════════════════════════════════════════════════
+              SECTION 2 — Month toggle + category filters
+          ════════════════════════════════════════════════════════════════ */}
+⋮----
+{/* Filter bar — month toggle + chips on one row */}
+⋮----
+{/* Month-view icon toggle (compact square button) */}
+⋮----
+{/* Vertical separator */}
+⋮----
+{/* Chip scroll — fills remaining width */}
+⋮----
+{/* Month-view active label — slim single-line indicator */}
+⋮----
+{/* ════════════════════════════════════════════════════════════════
+              SECTION 3 — Date / Month header
+          ════════════════════════════════════════════════════════════════ */}
+⋮----
+/* Month-view — single pill row: calendar icon · Month · Year */
+⋮----
+/* Date-view — single pill row: weekday · dot · month day · Today tag */
+⋮----
+{/* Weekday */}
+⋮----
+{/* Separator dot */}
+⋮----
+{/* Month + day */}
+⋮----
+{/* &quot;Today&quot; tag — right-aligned via flex spacer */}
+⋮----
+{/* Section divider */}
+⋮----
+{/* ════════════════════════════════════════════════════════════════
+              SECTION 4 — Drive list
+          ════════════════════════════════════════════════════════════════ */}
+⋮----
+isRegistered=
+⋮----
+{/* ── My Registrations ─────────────────────────────────────────────── */}
+⋮----
+// ─── Section layout styles ────────────────────────────────────────────────────
+⋮----
+// ─── Filter panel (Section 2) ─────────────────────────────────────────────────
+⋮----
+// Single-row bar containing the month icon button + chip scroll
+⋮----
+// Compact square icon-only toggle on the left of the bar
+⋮----
+// Thin vertical rule between the icon button and the chip scroll
+⋮----
+// Slim indicator shown below the bar when month-view is active
+⋮----
+// ─── Date header card (Section 3) ────────────────────────────────────────────
+⋮----
+// Shared single-row pill container
+⋮----
+// Primary label (weekday name or month name)
+⋮----
+// Secondary label (short month + day number)
+⋮----
+// Small separator dot between weekday and month-day
+⋮----
+// &quot;Today&quot; right-aligned compact tag
+⋮----
+// Month-view: year pill next to month name</file><file path="apps/resident-android-mobile/src/app/(app)/health/register.tsx">import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+import { residentDriveRegistrationResultSchema } from &apos;@barangayan/shared&apos;;
+/**
+ * Applicant Registration — Module 10.
+ *
+ * Full-screen form that lets a signed-in resident register for a specific
+ * medical drive.  Opened by navigating to  /health/register?driveId=&lt;uuid&gt;.
+ *
+ * Design tokens sampled from the reference screenshot:
+ *   Primary green    #0F6E5B   (header, accents, submit button)
+ *   Progress green   #22C55E   (stock bar fill)
+ *   Light-green card #EAF4F0   (applicant-number preview card)
+ *   Light-green bdr  #B2D8CC
+ *   Page background  #F2F4F7   (off-white sheet)
+ *   Card background  #FFFFFF
+ *   Muted text       #60646C
+ *
+ * Layout hierarchy:
+ *   ┌─────────────────────────────┐
+ *   │  Green header + back arrow  │
+ *   ├─────────────────────────────┤
+ *   │  ScrollView                 │
+ *   │   DriveInfoCard             │
+ *   │   ApplicantNumberCard       │
+ *   │   RegisteringForSection     │
+ *   │   EligibilitySection        │
+ *   │   PrivacyConsentCard        │
+ *   ├─────────────────────────────┤
+ *   │  SubmitButton (fixed)       │
+ *   └─────────────────────────────┘
+ */
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from &apos;@barangayan/shared&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Easing,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  TextInput,
+  View,
+} from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Fonts, Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { type MedicalDrive } from &apos;@/hooks/use-medical-drives&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ─── Design tokens ───────────────────────────────────────────────────────────
+⋮----
+// Live-accent note: the module-level `s`/`ps`/`cbS` StyleSheets are built once at import
+// time and can&apos;t read the per-account accent color (Settings &gt; App Theme). Every component
+// below declares `const PRIMARY_GREEN = theme.primary;` right after its useTheme() call,
+// and moves any style that needs the live color out of the static StyleSheet into an
+// inline override at the usage site.
+⋮----
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+⋮----
+const pad3 = (n: number)
+⋮----
+/** &quot;HH:MM:SS&quot; → &quot;8:00 AM&quot; */
+function fmt12h(t: string): string
+⋮----
+/** &quot;2026-08-08&quot; → &quot;Aug 8&quot; */
+function fmtShortDate(iso: string): string
+⋮----
+/** ISO birth_date → age in full years (null if no birth_date). */
+function computeAge(birthDate: string | null | undefined): number | null
+⋮----
+/** &quot;Juan Dela Cruz&quot; → &quot;JD&quot; */
+function getInitials(fullName: string): string
+⋮----
+/** Preview applicant number (next-in-line, simplified display). */
+function previewApplicantNumber(drive: MedicalDrive): string
+⋮----
+// ─── Comorbidities ───────────────────────────────────────────────────────────
+⋮----
+type Comorbidity = (typeof COMORBIDITY_OPTIONS)[number];
+⋮----
+// ─── Dose History ─────────────────────────────────────────────────────────────
+⋮----
+type DoseOption = (typeof DOSE_OPTIONS)[number];
+⋮----
+// ─── Subcomponents ───────────────────────────────────────────────────────────
+⋮----
+/** Themed card with shadow. */
+function Card(
+⋮----
+// ─── CheckboxRow ─────────────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the live-accent note at the top of this file.
+⋮----
+// ─── DoseHistoryTabs ─────────────────────────────────────────────────────────
+⋮----
+// ─── Household member type (mirrors the shape stored in profiles.household_members) ──
+⋮----
+// Either the resident themselves or one of their household members.
+⋮----
+// ─── Main screen ─────────────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the live-accent note at the top of this file.
+⋮----
+// ── Remote data ────────────────────────────────────────────────────────────
+⋮----
+// ── Applicant selector ─────────────────────────────────────────────────────
+⋮----
+// Household members parsed from the profile JSONB column.
+⋮----
+// Derived display values for the currently selected applicant.
+⋮----
+// ── Form state ─────────────────────────────────────────────────────────────
+⋮----
+// Age override: always needed for household members (they have no birth_date);
+// also used for the resident when their profile has no birth_date.
+⋮----
+// Reset age override whenever the selection changes so stale numbers don&apos;t carry over.
+⋮----
+// ── Submission ─────────────────────────────────────────────────────────────
+⋮----
+// ── Success animation ──────────────────────────────────────────────────────
+⋮----
+// ── Fetch drive ────────────────────────────────────────────────────────────
+⋮----
+// ── Derived values ─────────────────────────────────────────────────────────
+⋮----
+// Age logic:
+//   • Resident selected + has birth_date  → computed automatically
+//   • Resident selected + no birth_date   → ageOverride input shown
+//   • Household member selected           → ageOverride input always shown
+⋮----
+// Map dose-history tab to prior_dose_date sentinel
+⋮----
+// For 2nd Dose / Booster we pass a non-null sentinel;
+// real implementations would show a date-picker.
+return &apos;2025-01-01&apos;; // placeholder — signals a prior dose exists
+⋮----
+// ── Comorbidity toggle ─────────────────────────────────────────────────────
+⋮----
+// &quot;None&quot; clears all others and toggles itself
+⋮----
+// Selecting any real comorbidity deselects &quot;None&quot;
+⋮----
+// ── Submit ─────────────────────────────────────────────────────────────────
+⋮----
+// ─────────────────────────────────────────────────────────────────────────
+//  Render helpers
+// ─────────────────────────────────────────────────────────────────────────
+⋮----
+/** Formats the confirmed applicant number from the server into the short display form.
+   *  Server returns e.g. &quot;VAC-20260808-0039&quot; → we show &quot;#VAC-039&quot;.
+   */
+⋮----
+// ─────────────────────────────────────────────────────────────────────────
+//  Loading skeleton
+// ─────────────────────────────────────────────────────────────────────────
+⋮----
+&lt;ScreenHeader onBack=
+⋮----
+// ─────────────────────────────────────────────────────────────────────────
+//  Success state
+// ─────────────────────────────────────────────────────────────────────────
+⋮----
+{/* ✓ circle */}
+⋮----
+{/* Applicant number card */}
+⋮----
+// ─────────────────────────────────────────────────────────────────────────
+//  Registration form
+// ─────────────────────────────────────────────────────────────────────────
+⋮----
+{/* ── Fixed green header ──────────────────────────────────────────────── */}
+⋮----
+{/* ── Scrollable body ─────────────────────────────────────────────────── */}
+⋮----
+{/* ── 1. Drive info card ────────────────────────────────────────────── */}
+⋮----
+{/* Title + type badge */}
+⋮----
+{/* Date · time · location */}
+⋮----
+
+⋮----
+{/* Stock row + progress bar */}
+⋮----
+{/* ── 2. Applicant number preview ───────────────────────────────────── */}
+⋮----
+{/* ── 3. Registering for ───────────────────────────────────────────── */}
+⋮----
+{/* Profile selector — tap to open household picker */}
+⋮----
+{/* Profile details for the selected applicant */}
+⋮----
+{/* Name */}
+⋮----
+{/* Age — computed for resident with birth_date; manual input for members or
+                 resident without birth_date */}
+⋮----
+{/* Address — only shown for the resident (members share the household address) */}
+⋮----
+{/* Edit in Profile link */}
+⋮----
+{/* ── Applicant picker sheet ─────────────────────────────────────────── */}
+⋮----
+{/* ── 4. Eligibility Information ────────────────────────────────────── */}
+⋮----
+{/* PWD toggle */}
+⋮----
+{/* Comorbidities */}
+⋮----
+{/* 2-column grid — 3 rows of 2 */}
+⋮----
+onToggle=
+⋮----
+{/* Dose History */}
+⋮----
+{/* ── 5. Privacy consent ───────────────────────────────────────────── */}
+⋮----
+{/* Shield + notice text */}
+⋮----
+{/* Consent checkbox */}
+⋮----
+{/* Inline error */}
+⋮----
+{/* ── Fixed submit button ──────────────────────────────────────────────── */}
+⋮----
+// ─── ApplicantPickerSheet ─────────────────────────────────────────────────────
+// Bottom-sheet modal that lists the resident themselves + their household members
+// so the user can choose who they are registering for.
+//
+// Animation design:
+//   Open  — spring (damping 22, stiffness 220) for the sheet + 180 ms fade-in for
+//            the backdrop.  Gives a natural, elastic snap-into-place feel.
+//   Close — 260 ms ease-in-cubic slide-down + 200 ms backdrop fade, then the Modal
+//            is unmounted so there are no phantom touch targets left behind.
+⋮----
+// Shadows the module-level fallback — see the live-accent note at the top of this file.
+⋮----
+// `modalVisible` lags behind the `visible` prop so the exit animation can
+// finish before the Modal actually unmounts.
+⋮----
+// Sheet slides from off-screen (large positive Y) up to 0.
+// 700 is safely below any device viewport.
+⋮----
+// Reset position before mounting so we always slide in from below.
+⋮----
+// Spring gives the sheet a natural, slightly elastic feel on the way up.
+⋮----
+// Animate out, then unmount the Modal.
+⋮----
+easing: Easing.bezier(0.4, 0, 1, 1), // ease-in cubic — feels intentional, not sluggish
+⋮----
+// Trigger the exit animation; the useEffect above handles the actual close.
+function handleClose()
+⋮----
+{/* ── Animated backdrop ─────────────────────────────────────────────── */}
+⋮----
+{/* ── Animated sheet ────────────────────────────────────────────────── */}
+⋮----
+{/* Handle */}
+⋮----
+{/* ── Resident (self) row ────────────────────────────────────────── */}
+⋮----
+{/* ── Household members ──────────────────────────────────────────── */}
+⋮----
+onPress=
+⋮----
+// Layout-only; the rgba background color is set inline so it can be driven by
+// the Animated opacity value without conflicting with useNativeDriver.
+⋮----
+// rowSelected/avatarCircle background applied inline at each usage site with the live
+// accent — see the live-accent note at the top of this file.
+⋮----
+// backgroundColor applied inline at the usage site with the live accent.
+⋮----
+// ─── ScreenHeader ─────────────────────────────────────────────────────────────
+⋮----
+// Shadows the module-level fallback — see the live-accent note at the top of this file.
+⋮----
+// ─── ProfileRow ──────────────────────────────────────────────────────────────
+⋮----
+// ─── Styles ──────────────────────────────────────────────────────────────────
+⋮----
+// ── Header ─────────────────────────────────────────────────────────────────
+// backgroundColor applied inline in ScreenHeader with the live accent — mirrors
+// the Profile screen header (same green bar overlapping the status bar).
+⋮----
+// ── Body scroll ────────────────────────────────────────────────────────────
+⋮----
+// ── Drive info card ────────────────────────────────────────────────────────
+⋮----
+// ── Applicant number card ──────────────────────────────────────────────────
+⋮----
+// appNumLabel/appNumValue color applied inline with the live accent — see the shadow
+// note at the top of this file.
+⋮----
+// ── Registering for ────────────────────────────────────────────────────────
+⋮----
+// color/backgroundColor applied inline with the live accent.
+⋮----
+// Profile detail rows
+⋮----
+// color applied inline with the live accent.
+⋮----
+// ── Eligibility ────────────────────────────────────────────────────────────
+⋮----
+// ── Privacy card ───────────────────────────────────────────────────────────
+⋮----
+// ── Error ──────────────────────────────────────────────────────────────────
+⋮----
+// ── Submit ─────────────────────────────────────────────────────────────────
+⋮----
+// ── Success state ──────────────────────────────────────────────────────────
+⋮----
+// color applied inline with the live accent.
+⋮----
+// color applied inline with the live accent.
+⋮----
+// color applied inline with the live accent.
+⋮----
+// backgroundColor applied inline with the live accent.</file><file path="packages/shared/src/index.ts"></file></files></repomix>

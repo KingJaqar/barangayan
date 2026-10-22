@@ -1,433 +1,283 @@
-import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
-import type { Tables } from '@barangayan/shared';
-import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
 import { Ionicons } from '@expo/vector-icons';
+import type { Tables } from '@barangayan/shared';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
-import { Fragment, useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
-import { Card } from '@/components/card';
-import { Divider } from '@/components/divider';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+import { ServicesTabIcon } from '@/components/services-tab-icon';
 import { GuestPrompt } from '@/components/guest-prompt';
-import { StatusBadge } from '@/components/status-badge';
+import { HomeAction } from '@/components/home/home-action';
+import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
+import { MaxContentWidth } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
+import { homeGreeting, homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
 import { supabase } from '@/lib/supabase';
 
-type ServiceRequest = Tables<'service_requests'> & {
-  document_types: Pick<Tables<'document_types'>, 'name'> | null;
-};
 type Announcement = Tables<'announcements'>;
-
 const QUICK_ACTIONS = [
-  { label: 'Documents', description: 'Request a document', href: '/services' as const, icon: 'document-text-outline' as const },
-  { label: 'Report', description: 'Report an issue', href: '/reports' as const, icon: 'warning-outline' as const },
-  { label: 'Emergency', description: 'Emergency information', href: '/drrm' as const, icon: 'medkit-outline' as const },
-  { label: 'Maps', description: 'Open barangay maps', href: '/maps' as const, icon: 'location-outline' as const },
-  { label: 'Health', description: 'Open health services', href: '/health' as const, icon: 'heart-outline' as const },
-];
-
-/** "TODAY, 9:00 AM" for same-day announcements, else "AUG 6, 2026, 9:00 AM". Deliberately
- * not packages/shared's formatDateTime — that has no relative-day logic and the design
- * specifically calls for "TODAY". */
-function formatAnnouncementTimestamp(iso: string): string {
-  const date = new Date(iso);
-  const now = new Date();
-  const isToday =
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth() &&
-    date.getDate() === now.getDate();
-
-  const time = new Intl.DateTimeFormat('en-PH', { timeStyle: 'short' }).format(date);
-  const day = isToday
-    ? 'TODAY'
-    : new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium' }).format(date).toUpperCase();
-  return `${day}, ${time}`;
-}
+  { label: 'Documents', description: 'Request a document', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+  { label: 'Report', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+  { label: 'Emergency', description: 'Emergency information', href: '/drrm', icon: 'drrm', tone: 'danger', foreground: 'onDanger' },
+  { label: 'Maps', description: 'Open barangay maps', href: '/maps', icon: 'location-outline', tone: 'info', foreground: 'onInfo' },
+  { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
+] as const;
 
 export default function HomeScreen() {
   const { session } = useAuth();
+  const userId = session?.user.id ?? null;
   const { profile } = useProfile();
-  const theme = useTheme();
+  const { resident } = useTheme();
+  const router = useRouter();
   const bottomTabInset = useFloatingTabInset();
-
-  const [requests, setRequests] = useState<ServiceRequest[]>([]);
-  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const reducedMotion = useResidentReducedMotion(true);
+  const { width, fontScale } = useWindowDimensions();
+  const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
+  const [requestRetry, setRequestRetry] = useState(0);
+  const [announcementRetry, setAnnouncementRetry] = useState(0);
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const requestKey = JSON.stringify([userId, requestRetry]);
+  const [requestResult, setRequestResult] = useState<{ key: string; items: HomeRequest[]; error: string | null } | null>(null);
+  const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<HomeRequest | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const pendingTracking = useRef<string | null>(null);
+  const homeActive = useRef(true);
+  const requestTargets = useRef(new Map<string, View>());
 
   useEffect(() => {
-    // Real guest browsing per the 0005 migration's anon RLS policy — this must run
-    // regardless of session, or a guest would never see the Announcements preview.
-    supabase
-      .from('announcements')
-      .select('*')
-      .order('published_at', { ascending: false })
-      .limit(1)
-      .then(({ data }) => setAnnouncement(data?.[0] ?? null));
-  }, []);
+    let active = true;
+    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
+    Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1))
+      .then(({ data, error }) => {
+        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
+      });
+    return () => { active = false; };
+  }, [announcementRetry]);
 
   useEffect(() => {
-    // Personal data — service_requests stays authenticated + auth.uid()-scoped, so this
-    // only runs (and only can succeed) once a real session exists.
-    if (!session) {
-      setRequests([]);
-      return;
+    if (!userId) return;
+    let active = true;
+    // Preserve the existing authenticated resident scope and latest-three limit.
+    Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
+      .order('created_at', { ascending: false }).limit(3))
+      .then(({ data, error }) => {
+        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
+      });
+    return () => { active = false; };
+  }, [userId, requestKey]);
+
+  useEffect(() => {
+    pendingTracking.current = null;
+    setSheetOpen(false);
+    setSelectedRequest(null);
+  }, [userId]);
+
+  useFocusEffect(useCallback(() => {
+    homeActive.current = true;
+    const listener = AppState.addEventListener('change', state => {
+      homeActive.current = state === 'active';
+      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); }
+    });
+    return () => { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
+  }, []));
+
+  const requests = requestResult?.key === requestKey ? requestResult : null;
+  const news = newsResult?.retry === announcementRetry ? newsResult : null;
+  const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
+  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || 'Resident';
+  const announcement = news?.item;
+  const announcementTone = announcement?.category === 'emergency' ? resident.danger
+    : announcement?.category === 'health' ? resident.rose : resident.accentText;
+
+  function closeSheet() { pendingTracking.current = null; setSheetOpen(false); }
+  function afterDismiss() {
+    const id = pendingTracking.current;
+    pendingTracking.current = null;
+    if (!homeActive.current) return;
+    // Keep tracking in Home's stack so Back removes it without changing Services.
+    if (id && selected?.id === id) router.push(`/home/requests/${id}`);
+    else {
+      const target = selected ? requestTargets.current.get(selected.id) : null;
+      if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, 'focus'); }
     }
+  }
 
-    supabase
-      .from('service_requests')
-      .select('*, document_types(name)')
-      .eq('resident_id', session.user.id)
-      .order('created_at', { ascending: false })
-      .limit(3)
-      .then(({ data }) => setRequests((data as ServiceRequest[]) ?? []));
-  }, [session]);
-
-  return (
-    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
-        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + Spacing.three }]}>
-          <ProfileCompletionBanner />
-        <View style={styles.profileRow}>
-          {session ? (
-            <View style={styles.profileInfo}>
-              <Avatar
-                fullName={profile?.full_name ?? 'Resident'}
-                imageUrl={(profile as any)?.avatar_url ?? null}
-                size={56}
-              />
-              <View style={styles.profileText}>
-                <ThemedText type="smallBold" style={styles.profileNameFont}>
-                  {profile?.full_name ?? 'Resident'}
-                </ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  {profile?.barangays?.name ?? 'Barangayan'}
-                </ThemedText>
-              </View>
-            </View>
-          ) : (
-            <Link href="/(auth)/login" asChild>
-              <Pressable style={styles.profileInfo}>
-                <Avatar icon="person" color={theme.accentRed} size={56} />
-                <ThemedText type="smallBold" style={styles.profileNameFont}>
-                  Login
-                </ThemedText>
-              </Pressable>
-            </Link>
-          )}
-        </View>
-
-        <View style={styles.sectionIntro}>
-          <ThemedText type="heading" style={styles.introTitle} accessibilityRole="header">How can we help?</ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
-            Your barangay services, a tap away.
-          </ThemedText>
-        </View>
-        <View style={styles.quickActionsRow}>
-          {QUICK_ACTIONS.map((action, index) => (
-            <Link key={action.label} href={action.href} asChild>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={action.label}
-                accessibilityHint={action.description}
-                android_ripple={{ color: theme.backgroundSelected }}
-                style={styles.quickActionPressable}>
-                <View style={[styles.quickActionIcon, { backgroundColor: index === 0 ? theme.primary : theme.backgroundElement }]}>
-                  <Ionicons name={action.icon} size={24} color={index === 0 ? theme.onPrimary : theme.primary} />
-                </View>
-                <ThemedText type="smallBold" style={styles.quickActionLabel}>
-                  {action.label}
-                </ThemedText>
-              </Pressable>
-            </Link>
-          ))}
-        </View>
-
-        <View style={styles.sectionHeader}>
-          <ThemedText type="heading" style={styles.sectionTitle} accessibilityRole="header">Active Requests</ThemedText>
-          <Link href="/services" asChild>
-            <Pressable accessibilityRole="button" accessibilityLabel="View all requests" style={styles.sectionLink}>
-              <ThemedText type="smallBold" themeColor="primary">View All</ThemedText>
-              <Ionicons name="chevron-forward" size={16} color={theme.primary} />
-            </Pressable>
-          </Link>
-        </View>
-
-        {!session ? (
-          <GuestPrompt label="Log in to see your requests." />
-        ) : requests.length === 0 ? (
-          <ThemedView type="backgroundElement" style={styles.emptyCard}>
-            <Ionicons name="document-text-outline" size={28} color={theme.text} />
-            <ThemedText type="smallBold">Your requests will appear here</ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
-              No requests yet — tap &quot;Request Document&quot; to get started.
-            </ThemedText>
-          </ThemedView>
-        ) : (
-          <Card style={[styles.requestsCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-            {requests.map((request, index) => (
-              <Fragment key={request.id}>
-                <Link href={`/services/requests/${request.id}`} asChild>
-                  <Pressable accessibilityRole="button" android_ripple={{ color: theme.backgroundSelected }} style={styles.requestRow}>
-                    <View style={[styles.requestIconBox, { backgroundColor: theme.backgroundElement }]}>
-                      <Ionicons name={getDocumentIcon(request.document_types?.name ?? '')} size={22} color={theme.primary} />
-                    </View>
-                    <View style={styles.requestInfo}>
-                      <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={styles.requestTitle}>
-                        {request.document_types?.name ?? 'Document Request'}
-                      </ThemedText>
-                      <ThemedText type="small" themeColor="textSecondary" style={styles.requestReference}>
-                        Ref #{request.reference_number}
-                      </ThemedText>
-                      <View style={styles.requestStatus}>
-                        <StatusBadge status={request.status} />
-                        <View style={[styles.requestArrow, { backgroundColor: theme.primary }]}>
-                          <Ionicons name="arrow-forward" size={16} color={theme.onPrimary} />
-                        </View>
-                      </View>
-                    </View>
-                  </Pressable>
-                </Link>
-                {index < requests.length - 1 ? <Divider /> : null}
-              </Fragment>
-            ))}
-          </Card>
-        )}
-
-        <View style={styles.sectionHeader}>
-          <ThemedText type="heading" style={styles.sectionTitle} accessibilityRole="header">Latest Announcements</ThemedText>
-          <Link href="/announcements" asChild>
-            <Pressable accessibilityRole="button" accessibilityLabel="View all announcements" style={styles.sectionLink}>
-              <ThemedText type="smallBold" themeColor="primary">View All</ThemedText>
-              <Ionicons name="chevron-forward" size={16} color={theme.primary} />
-            </Pressable>
-          </Link>
-        </View>
-
-        {announcement ? (
-          <ThemedView style={[styles.announcementCard, { borderColor: theme.backgroundSelected }]}>
-            {announcement.image_url ? (
-              <Image source={{ uri: announcement.image_url }} style={styles.announcementImage} contentFit="cover" />
-            ) : null}
-            <View style={styles.announcementBody}>
-              <View style={[styles.categoryPill, { backgroundColor: theme.backgroundElement }]}>
-                <Ionicons name="megaphone-outline" size={14} color={theme.primary} />
-                <ThemedText type="smallBold" style={styles.categoryLabel}>
-                  {announcement.category}
-                </ThemedText>
-              </View>
-              <ThemedText type="heading" numberOfLines={2} ellipsizeMode="tail" style={styles.announcementTitle}>
-                {announcement.title}
-              </ThemedText>
-              <ThemedText type="small" themeColor="textSecondary" numberOfLines={2} style={styles.announcementPreview}>
-                {announcement.body}
-              </ThemedText>
-              <View style={[styles.announcementMeta, { borderTopColor: theme.backgroundSelected }]}>
-                <Ionicons name="time-outline" size={14} color={theme.textSecondary} />
-                <ThemedText type="small" themeColor="textSecondary" style={styles.announcementMetaText}>
-                  {formatAnnouncementTimestamp(announcement.published_at)}
-                </ThemedText>
-              </View>
-            </View>
-          </ThemedView>
-        ) : (
-          <ThemedView type="backgroundElement" style={styles.emptyCard}>
-            <ThemedText type="small" themeColor="textSecondary">
-              No announcements yet.
-            </ThemedText>
-          </ThemedView>
-        )}
-      </ScrollView>
+  return <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: resident.card }]}>
+    <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}>
+      <View style={styles.inset}><ProfileCompletionBanner /></View>
+      <View style={styles.identitySection}>
+        {userId ? <View style={styles.identity}>
+          <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} />
+          <View style={styles.locationGroup}>
+            <Ionicons name="location-outline" size={16} color={resident.accentText} accessible={false} />
+            <ThemedText style={[styles.location, { color: resident.text }]}>{profile?.barangays?.name ?? 'Barangayan'}</ThemedText>
+          </View>
+        </View> : <HomeAction reducedMotion={reducedMotion} hitSlop={4} accessibilityLabel="Log in" onPress={() => router.push('/(auth)/login')} style={styles.identity}>
+          <Avatar icon="person" size={36} foregroundColor={resident.onAccent} />
+          <ThemedText style={[styles.location, { color: resident.text }]}>Log in</ThemedText>
+        </HomeAction>}
+        <ThemedText accessibilityRole="header" style={[styles.greeting, { color: resident.text }]}>{homeGreeting(new Date().getHours())}, {userId ? firstName : 'neighbor'}</ThemedText>
       </View>
-    </SafeAreaView>
-  );
+      <View style={styles.quickActions}>
+        {QUICK_ACTIONS.map(action => <HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+          accessibilityLabel={action.label} accessibilityHint={action.description} onPress={() => router.push(action.href)} style={[styles.quickAction, compactActions && styles.compactAction]}>
+          <View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === 'accent' && resident.accentNeedsOutline ? 1 : 0 }]}>
+            {action.href === '/services'
+              ? <ServicesTabIcon size={24} color={resident[action.foreground]} />
+              : action.icon === 'drrm'
+              ? <DrrmTabIcon size={24} color={resident[action.foreground]} />
+              : <Ionicons name={action.icon} size={24} color={resident[action.foreground]} accessible={false} />}
+          </View>
+          <ThemedText style={[styles.quickLabel, { color: resident.text }]}>{action.label}</ThemedText>
+        </HomeAction>)}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push('/services')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!userId ? <View style={styles.inset}><GuestPrompt label="Log in to see your requests." /></View>
+          : !requests ? <HomeListState loading label="Loading your requests…" />
+          : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
+          : requests.items.length === 0 ? <HomeListState label="Your requests will appear here. Tap Documents to request a document." />
+          : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
+            {requests.items.map(request => {
+              const summary = homeRequestSummary(request);
+              const title = request.document_types?.name ?? 'Document request';
+              return <HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                <View style={styles.requestTop}>
+                  <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
+                    <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
+                  </View>
+                  <View style={styles.requestInfo}>
+                    <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{title}</ThemedText>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>#{request.reference_number}</ThemedText>
+                  </View>
+                </View>
+                <View style={styles.requestProgress}>
+                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+                  </View>
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                </View>
+              </HomeAction>;
+            })}
+          </ScrollableChevronRow>}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Around the barangay</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Latest announcements</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all announcements" onPress={() => router.push('/announcements')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!news ? <HomeListState loading label="Loading announcements…" />
+          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+          : announcement ? <View style={styles.shelf}>
+            <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+              style={({ pressed }) => [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+              <View style={styles.newsMeta}>
+                <View style={styles.categoryGroup}>
+                  <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                </View>
+                <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+              </View>
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? <ThemedText style={[styles.reference, { color: resident.muted }]}>Announcement image unavailable.</ThemedText>
+                : <Image source={{ uri: announcement.image_url }} contentFit="cover" style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                : null}
+              <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+            </HomeAction>
+          </View> : <HomeListState label="No announcements yet." />}
+      </View>
+    </ScrollView>
+    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+  </SafeAreaView>;
+}
+
+function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () => void }) {
+  const { resident } = useTheme();
+  return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+    {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+    <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+    {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+  </View>;
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-
-  contentWrapper: {
-    flex: 1,
-  },
-  content: {
-    padding: Spacing.three,
-    paddingTop: Spacing.four,
-    gap: 12,
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    alignSelf: 'center',
-  },
-  profileRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  profileInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  profileText: {
-    flex: 1,
-  },
-  profileNameFont: {
-    fontSize: 18,
-    lineHeight: 24,
-  },
-  sectionIntro: {
-    marginTop: Spacing.two,
-    gap: Spacing.one,
-  },
-  introTitle: {
-    fontSize: 26,
-    lineHeight: 34,
-  },
-  quickActionsRow: {
-    flexDirection: 'row',
-    gap: Spacing.one,
-  },
-  quickActionPressable: {
-    flex: 1,
-    minWidth: 0,
-    alignItems: 'center',
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.two,
-    overflow: 'hidden',
-    gap: Spacing.one,
-  },
-  quickActionIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: Spacing.three,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  quickActionLabel: {
-    fontSize: 11,
-    lineHeight: 16,
-    textAlign: 'center',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: Spacing.two,
-    marginTop: Spacing.two,
-  },
-  sectionTitle: {
-    flex: 1,
-  },
-  sectionLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    minHeight: 44,
-    paddingLeft: Spacing.two,
-  },
-  emptyCard: {
-    padding: 12,
-    gap: Spacing.two,
-    borderRadius: Spacing.three,
-  },
-  requestsCard: {
-    borderWidth: 1,
-  },
-  requestRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-    padding: 12,
-  },
-  requestIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  requestInfo: {
-    flex: 1,
-    minWidth: 0,
-    gap: Spacing.half,
-  },
-  requestReference: {
-    fontSize: 12,
-    lineHeight: 16,
-  },
-  requestTitle: {
-    fontSize: 15,
-    lineHeight: 20,
-  },
-  requestStatus: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Spacing.two,
-  },
-  requestArrow: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  announcementCard: {
-    borderRadius: Spacing.three,
-    borderWidth: 1,
-    overflow: 'hidden',
-  },
-  announcementImage: {
-    width: '100%',
-    aspectRatio: 2.4,
-  },
-  categoryPill: {
-    alignSelf: 'flex-start',
-    maxWidth: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.half,
-    borderRadius: Spacing.four,
-  },
-  categoryLabel: {
-    flexShrink: 1,
-    fontSize: 12,
-    lineHeight: 18,
-    textTransform: 'capitalize',
-  },
-  announcementBody: {
-    padding: 12,
-    gap: 6,
-  },
-  announcementTitle: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  announcementPreview: {
-    lineHeight: 20,
-  },
-  announcementMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    paddingTop: 6,
-  },
-  announcementMetaText: {
-    flex: 1,
-    fontSize: 12,
-    lineHeight: 18,
-  },
+  safeArea: { flex: 1 },
+  content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 36 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: '800', letterSpacing: -0.7 },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 28 },
+  quickAction: { flex: 1, alignItems: 'center', paddingVertical: 4, gap: 6, minWidth: 0 },
+  compactAction: { flex: 0, width: '33.333333%' },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+  section: { marginBottom: 28 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 44, justifyContent: 'flex-end' },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: 'row', gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: 'auto', paddingTop: 10 },
+  segments: { flexDirection: 'row', gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: '600' },
+  newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  categoryGroup: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: 'right', flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: '700', textTransform: 'capitalize', flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
 });

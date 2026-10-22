@@ -5,6 +5,10 @@ export default function HomeLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
+        name="requests/[requestId]"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
         name="emergency-info"
         options={{
           headerShown: false,

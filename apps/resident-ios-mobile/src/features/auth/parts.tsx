@@ -41,13 +41,14 @@ const NOTICE_COPY: Record<SignedOutNotice, string> = {
   'logged-out': 'You have been logged out.',
   'session-ended': 'Your session has ended. Log in again to continue.',
   'access-denied': 'This account cannot use the resident app. Log in with a resident account.',
+  'account-deleted': 'Your account deletion is complete and you have been logged out.',
 };
 
 /** One-time feedback for why the resident is back at the signed-out entry. */
 export function SignedOutBanner() {
   const { notice, dismissNotice, session } = useResident();
   if (!notice || session) return null;
-  return <View style={{ gap: space[2] }}><Notice message={NOTICE_COPY[notice]} tone={notice === 'logged-out' ? 'primary' : 'danger'} />
+  return <View style={{ gap: space[2] }}><Notice message={NOTICE_COPY[notice]} tone={notice === 'logged-out' || notice === 'account-deleted' ? 'primary' : 'danger'} />
     <Action label="Dismiss" secondary onPress={dismissNotice} /></View>;
 }
 

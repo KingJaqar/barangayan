@@ -1,0 +1,75 @@
+
+> @barangayan/web@0.1.0 test:tables
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/refund-handler.test.ts (19 tests) 63ms
+ ✓ tests/table-browse/notify.test.ts (6 tests) 319ms
+ ✓ tests/table-browse/browse-state.test.ts (51 tests) 40ms
+ ✓ tests/search/map-search.test.ts (3 tests) 4ms
+ ✓ tests/table-browse/operations.test.ts (3 tests) 316ms
+ ✓ tests/table-browse/content-archive.test.ts (4 tests) 347ms
+ ✓ tests/table-browse/pilot.test.ts (6 tests) 315ms
+ ✓ tests/table-browse/queries.test.ts (16 tests) 509ms
+ ✓ tests/search/search.test.ts (13 tests) 442ms
+ ✓ tests/table-browse/household-attendance-web.test.ts (6 tests) 21ms
+ ✓ tests/profile/schema.test.ts (8 tests) 22ms
+ ✓ tests/table-browse/record-options.test.ts (7 tests) 1652ms
+ ❯ tests/table-browse/record-lifecycle.test.ts (11 tests | 1 failed) 52ms
+   ✓ record detail edit boundaries > populates structured resident values and sends only changed fields 3ms
+   ✓ record detail edit boundaries > reads joined current values and includes table-editable sheet fields 2ms
+   ✓ record detail edit boundaries > routes attendance through its dedicated workflow 3ms
+   ✓ record detail edit boundaries > validates coordinates, lookup identities and submitted timestamps 2ms
+   ✓ record detail edit boundaries > uses matching server and browser archive defaults for direct entry and search 17ms
+   ✓ record detail edit boundaries > configures all eight requested screens and rejects unexpected fields on every screen 1ms
+   × record detail edit boundaries > keeps versioned request snapshots and collected payment amounts protected 12ms
+     → expected [ 'reference_number', 'status', …(5) ] to deeply equal [ 'payment_method', 'payment_status' ]
+   ✓ record detail edit boundaries > supports both request payment editors for contract 1 1ms
+   ✓ record detail edit boundaries > supports both request payment editors for contract 2 1ms
+   ✓ record detail edit boundaries > validates numeric, date, contact, stock and time changes before saving 6ms
+   ✓ record detail edit boundaries > trims text, preserves explicit nulls and validates choice and list values 1ms
+ ✓ tests/auth/session-guards.test.tsx (7 tests) 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/table-browse/record-lifecycle.test.ts > record detail edit boundaries > keeps versioned request snapshots and collected payment amounts protected
+AssertionError: expected [ 'reference_number', 'status', …(5) ] to deeply equal [ 'payment_method', 'payment_status' ]
+
+- Expected
++ Received
+
+  [
++   "reference_number",
++   "status",
++   "requester_notes",
+    "payment_method",
+    "payment_status",
++   "created_at",
++   "status_change_reason",
+  ]
+
+ ❯ tests/table-browse/record-lifecycle.test.ts:51:73
+     49|   it('keeps versioned request snapshots and collected payment amounts …
+     50|     const request = { id: 'fixture', contract_version: 2 };
+     51|     expect(editableFields('requests', request).map(field => field.key)…
+       |                                                                         ^
+     52|     expect(() => validateRecordPatch('requests', request, { requester_…
+     53|     expect(() => validateRecordPatch('transactions', { id: 'fixture', …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 159 passed (160)
+   Start at  13:19:09
+   Duration  5.31s (transform 3.36s, setup 0ms, collect 15.28s, tests 4.17s, environment 4ms, prepare 7.37s)
+
+npm error Lifecycle script `test:tables` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --config vitest.config.ts

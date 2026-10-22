@@ -1,0 +1,11 @@
+# Exact local Phase 3 harness sources
+
+These are audit copies of the actual scripts used from `tmp/family-web-phase3-20261022/`, not application code or a staging deployment tool. `manifest.json` records their original paths and hashes. Copy them back to those paths when replaying. Run from the repository root with existing Node/Python/Brave/Docker dependencies; no package installation is required.
+
+The driver uses only the disposable database `family_attendance_restore0139_20261022`, the existing local Supabase Docker network and a loopback-only PostgREST container. Its signing key is deliberately synthetic and is unrelated to any application credential. Setup requires an empty disposable schema rehearsed through the current restored attendance migrations. Never redirect this harness to a hosted/real-data target.
+
+1. `python tmp/family-web-phase3-20261022/browser-db.py setup` creates this task's synthetic household/staff/centers and test API. If the existing test container is stopped, start that specific container instead of recreating it.
+2. For a replay against the existing synthetic fixture, use the driver's `reset` command. It clears only its fixed synthetic household visits/receipts and removes any archived synthetic member after references are gone, allowing the original IDs to be seeded again. Do not run SQL fixture cleanup against resident data.
+3. Run the driver's `run`, `run boundary`, and `run visual` commands in that order. Boundary temporarily uses 30 synthetic members and restores zero; visual follows the main flow's three-person result. The driver refreshes Docker's dynamic loopback port on each run. The full main flow uses real component/RPC/SQL behavior; Auth is synthetic, and no physical staff-camera or deployed-session pass is implied.
+
+Stop the temporary test API afterward. Preserve the database/fixtures when auditing recorded stays. Browser reports and screenshots are in the parent evidence folder; full diagnostics and earlier failed attempts remain in the original recovery root. The standalone browser bundle supplies Next environment definitions and uses the real installed React/UI components. It is separate from the historical RW-LT-05 full browser fixture, whose older selectors and PNG/PATCH assumptions are not current acceptance evidence.

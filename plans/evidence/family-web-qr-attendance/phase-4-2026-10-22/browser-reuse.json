@@ -1,0 +1,51 @@
+[
+  {
+    "source": "tmp/family-web-phase3-20261022/browser.mjs",
+    "source_sha256": "87e90bed730105e8ac9d3da88fc29d6a3dd1f5008d26655effb559621b306d83",
+    "target": "tmp/family-web-phase4-20261022/browser.mjs",
+    "sha256": "b96ad0185d85d5817af846df0f5d70c21114648f61de84132bbc4f03abb58cd5",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/browser-client.ts",
+    "source_sha256": "1cb5d6a7995357a1145280d5f7b01858271caf5bbbfcba8fcf32138df8bea609",
+    "target": "tmp/family-web-phase4-20261022/browser-client.ts",
+    "sha256": "714332c6835e9dc7c9c4bf7da99354567374a9d6f451230a674f449d21365987",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/browser-fixture.tsx",
+    "source_sha256": "8b3deac1e01b9e1b8222033b1da9137c9315987f88e8baf201fd5ac4923dea89",
+    "target": "tmp/family-web-phase4-20261022/browser-fixture.tsx",
+    "sha256": "98aaf5de3cd978f63ac0c7f1e9d8e9d76e75568cd64ca16a1ff82f7198d51d83",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/browser-db.py",
+    "source_sha256": "f450582ed7da5a496452e297f2b45a1dc07514dea1718d8e750efc8c82ba0c27",
+    "target": "tmp/family-web-phase4-20261022/browser-db.py",
+    "sha256": "29311b3096a0ee9b0e25a4ddfd10b38787982696acebac4a1f978a524f72f6d5",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/boundary.mjs",
+    "source_sha256": "8c7b27384a1472b56231a5a26b86e446ad674f2ceef744b030ad743f0d2fd30a",
+    "target": "tmp/family-web-phase4-20261022/boundary.mjs",
+    "sha256": "c55920cc46a4b86b72afadcf1cce887331b7e4ee4f01ee79d4ec70d941d0027b",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/visual.mjs",
+    "source_sha256": "f25ffadca72dcce9e8eb7c7843a4baa0dab56c4d86732a1f6537347dd3655c88",
+    "target": "tmp/family-web-phase4-20261022/visual.mjs",
+    "sha256": "5374ec596097594f3473b172ec73db3f3b9b6de5456ac85ee99b28863604ab02",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  },
+  {
+    "source": "tmp/family-web-phase3-20261022/reset.sql",
+    "source_sha256": "d2e16d5f6aa8280ba39df6d2065be1e9e8a7f1edd05346d2f7f358c2051b8782",
+    "target": "tmp/family-web-phase4-20261022/reset.sql",
+    "sha256": "d2e16d5f6aa8280ba39df6d2065be1e9e8a7f1edd05346d2f7f358c2051b8782",
+    "changes": "Only phase/work/output/database/container identifiers; setup prints observed dynamic port."
+  }
+]

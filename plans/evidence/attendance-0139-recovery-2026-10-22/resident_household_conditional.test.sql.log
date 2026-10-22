@@ -1,0 +1,45 @@
+BEGIN
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+INSERT 0 1
+ok 1 - Anonymous cannot save a household
+ok 2 - No service-role shortcut
+SET
+b6123000-0000-0000-0000-000000000001
+ok 3 - The first save into an empty household succeeds and trims names
+ok 4 - Canonical mirror rows match the saved list
+RESET
+UPDATE 1
+SET
+b6123000-0000-0000-0000-000000000001
+ok 5 - A stale editor is rejected
+ok 6 - The stale save wrote nothing
+ok 7 - A current snapshot is accepted
+ok 8 - Attendance is preserved for a retained member
+ok 9 - The retained member was updated
+ok 10 - A removed member is removed from the mirror
+ok 11 - A non-array list is rejected
+ok 12 - A malformed snapshot is rejected
+ok 13 - A client id must be a UUID
+ok 14 - A blank name is rejected
+ok 15 - More than thirty members is rejected
+ok 16 - A duplicate id is rejected
+b6123000-0000-0000-0000-000000000002
+ok 17 - A member id owned by another profile is rejected
+RESET
+ok 18 - The foreign member stays with its owner
+ok 19 - The rejected save created nothing
+SET
+b6123000-0000-0000-0000-000000000003
+ok 20 - Staff cannot use the resident operation
+RESET
+UPDATE 1
+SET
+b6123000-0000-0000-0000-000000000002
+ok 21 - A deleted resident cannot save
+
+ok 22 - No identity is denied
+RESET
+1..22
+ROLLBACK

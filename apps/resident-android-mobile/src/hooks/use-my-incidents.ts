@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { IncidentStatus } from '@/constants/incident-status';
 import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/lib/supabase';
+import { uniqueChannelName } from '@/lib/realtime-channel';
 
 export type MyIncidentRow = Tables<'incidents'> & {
   incident_categories: {
@@ -107,15 +108,17 @@ export function useMyIncidents(options: {
   // unmounted, so without this the stale card stays on screen. Cheap, and correct even
   // when Realtime is unavailable (offline, publication misconfigured, socket dropped).
   const isFirstFocus = useRef(true);
+  const focusedQuery = useRef(buildQuery);
   useFocusEffect(
     useCallback(() => {
-      if (isFirstFocus.current) {
+      if (isFirstFocus.current || focusedQuery.current !== buildQuery) {
         // The mount effect below already runs the initial fetch.
         isFirstFocus.current = false;
+        focusedQuery.current = buildQuery;
         return;
       }
       fetchIncidents(false);
-    }, [fetchIncidents]),
+    }, [fetchIncidents, buildQuery]),
   );
 
   useEffect(() => {
@@ -142,7 +145,7 @@ export function useMyIncidents(options: {
 
     // Live: re-fetch when any of the user's incidents change (admin updates status).
     const channel = supabase
-      .channel(`my-incidents:${userId}:${instanceId}`)
+      .channel(uniqueChannelName(`my-incidents:${userId}:${instanceId}`))
       .on(
         'postgres_changes',
         {
@@ -152,8 +155,10 @@ export function useMyIncidents(options: {
           filter: `reporter_id=eq.${userId}`,
         },
         () => {
-          buildQuery().then(({ data }) => {
-            if (!cancelled) setIncidents(data ?? []);
+          buildQuery().then(({ data, error: queryError }) => {
+            if (cancelled) return;
+            if (queryError) setError(queryError.message);
+            else { setError(null); setIncidents(data ?? []); }
           });
         },
       )

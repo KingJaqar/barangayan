@@ -425,6 +425,12 @@ verify_jwt = true
 [functions.evacuation-route]
 verify_jwt = false
 
+# The notification sender is run by a scheduler, not by a signed-in resident: any resident's
+# JWT would pass gateway verification, so the function checks a shared secret itself and
+# refuses to run when none is configured (Resident iOS plan Phase 17).
+[functions.send-notifications]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

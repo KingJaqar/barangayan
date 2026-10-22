@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -12,10 +13,12 @@ import { useTheme } from '@/hooks/use-theme';
  * header (back chevron + centered title on a theme.primary bar, safe-area aware).
  * Pass `onBack` to override the default `router.back()`.
  */
-export function AuthHeader({ title, onBack }: { title: string; onBack?: () => void }) {
+export function AuthHeader({ title, onBack, presentation = 'default' }: { title: string; onBack?: () => void; presentation?: 'default' | 'resident' }) {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+
+  if (presentation === 'resident') return <ServiceScreenHeader title={title} onBack={onBack} />;
 
   return (
     <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>

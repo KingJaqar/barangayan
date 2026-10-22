@@ -1,0 +1,102 @@
+{
+  "version": "1.18.1",
+  "command": [
+    "node",
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "supabase/runbooks/family-attendance/README.md,supabase/runbooks/family-attendance/preflight.sql,plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/rehearsal.py,plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/preflight-checks.py,plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md,plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/README.md",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/.git/**,tmp/**",
+    "--style",
+    "xml",
+    "--parsable-style",
+    "--output",
+    "C:\\Users\\User\\barangayan\\tmp\\family-web-phase4-20261022\\closure.xml"
+  ],
+  "selectors": [
+    "supabase/runbooks/family-attendance/README.md",
+    "supabase/runbooks/family-attendance/preflight.sql",
+    "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/rehearsal.py",
+    "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/preflight-checks.py",
+    "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md",
+    "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/README.md"
+  ],
+  "sources": [
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/preflight-checks.py",
+      "sha256": "e1c585d002ffc197aaa32df65013b5b1b7c14e76fdd809d4237860f695c4bc91"
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/README.md",
+      "sha256": "a50cea6e5bf62dfc05cbb882cc4adb8ee489af822cf6b579a0f93d3c939cbc87"
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/rehearsal.py",
+      "sha256": "357bb83536881ce0ed6dcc4e2256bb36c248c4602d2b9d398bf54d36ca23f555"
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md",
+      "sha256": "4b6ad0fa9b116be033d29e8783072919dcfa731379ac0b2f52abe84271ccc595"
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/preflight.sql",
+      "sha256": "214c380acaf62936aa85f3651120b601c1e00ca47fd4b5cceeb5efd0b32b5fb3"
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/README.md",
+      "sha256": "a3be13070f09720a81ff31063edce4f65177e25cd3585adb4ece2598b6f59f92"
+    }
+  ],
+  "packet_sha256": "63fd2024e842cf4ac700390585c09e658a1149acd07c0c39eff80233eecd7b05",
+  "chunks": [
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/preflight-checks.py",
+      "start": 1,
+      "end": 34,
+      "characters": 2432,
+      "next": null
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/README.md",
+      "start": 1,
+      "end": 16,
+      "characters": 3540,
+      "next": null
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/rehearsal.py",
+      "start": 1,
+      "end": 151,
+      "characters": 11756,
+      "next": null
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md",
+      "start": 1,
+      "end": 58,
+      "characters": 11867,
+      "next": 59
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md",
+      "start": 59,
+      "end": 84,
+      "characters": 5984,
+      "next": null
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/preflight.sql",
+      "start": 1,
+      "end": 102,
+      "characters": 5437,
+      "next": null
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/README.md",
+      "start": 1,
+      "end": 37,
+      "characters": 8405,
+      "next": null
+    }
+  ]
+}

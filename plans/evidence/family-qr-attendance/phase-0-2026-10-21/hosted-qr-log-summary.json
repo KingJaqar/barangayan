@@ -1,0 +1,20 @@
+{
+  "result": [
+    {
+      "content_type": "application/json",
+      "count": 2,
+      "error_code": "WORKER_RESOURCE_LIMIT",
+      "max_ms": "150113",
+      "min_ms": "150111",
+      "status": "546"
+    },
+    {
+      "content_type": "application/json",
+      "count": 1,
+      "error_code": "IDLE_TIMEOUT",
+      "max_ms": "150662",
+      "min_ms": "150662",
+      "status": "504"
+    }
+  ]
+}

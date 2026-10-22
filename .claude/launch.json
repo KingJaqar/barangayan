@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "resident-ios-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "apps/resident-ios-mobile", "run", "start:web", "--", "--port", "8083", "--clear"],
+      "port": 8083
+    }
+  ]
+}

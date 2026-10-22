@@ -1,122 +1,54 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect } from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
 
-/**
- * Centered confirmation for a successful cancel action (cancel payment / cancel
- * request) — same centered-card visual language as PaymentSuccessModal, but generic
- * over title/message so it can be reused for any "you just did X, here's confirmation"
- * moment instead of a plain Alert.alert(), which reads as an OS-level dialog rather
- * than something that belongs to the app.
- *
- * The card springs/fades in on mount (Reanimated) purely for polish — dismissal stays
- * manual via the "OK" button, which is what actually clears the caller's local state.
- */
-export function ActionSuccessModal({
-  visible,
-  title,
-  message,
-  onConfirm,
-}: {
+/** Presentation only: the caller reports success and owns acknowledgement/navigation. */
+export function ActionSuccessModal({ visible, title, message, amountLabel, onConfirm }: {
   visible: boolean;
   title: string;
   message: string;
+  amountLabel?: string;
   onConfirm: () => void;
 }) {
-  const theme = useTheme();
-  const scale = useSharedValue(0.85);
-  const opacity = useSharedValue(0);
-
+  const { resident } = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const [mounted, setMounted] = useState(visible);
+  const [content, setContent] = useState({ title, message, amountLabel });
+  const progress = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    if (visible) {
-      scale.value = withSpring(1, { damping: 14, stiffness: 180 });
-      opacity.value = withTiming(1, { duration: 180 });
-    } else {
-      scale.value = 0.85;
-      opacity.value = 0;
-    }
-  }, [visible, scale, opacity]);
-
-  const cardAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ scale: scale.value }],
-  }));
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
-      <View style={styles.backdrop}>
-        <Animated.View style={[styles.card, { backgroundColor: theme.backgroundElement }, cardAnimatedStyle]}>
-          <View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }]}>
-            <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
-              <Ionicons name="checkmark" size={32} color={theme.onPrimary} />
-            </View>
-          </View>
-          <ThemedText type="title" style={styles.title}>
-            {title}
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.caption}>
-            {message}
-          </ThemedText>
-          <View style={styles.buttonRow}>
-            <PrimaryButton label="OK" onPress={onConfirm} />
-          </View>
-        </Animated.View>
-      </View>
-    </Modal>
-  );
+    if (visible) setContent({ title, message, amountLabel });
+  }, [visible, title, message, amountLabel]);
+  useEffect(() => {
+    if (visible) setMounted(true);
+    const animation = Animated.timing(progress, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true });
+    animation.start(({ finished }) => { if (finished && !visible) setMounted(false); });
+    return () => animation.stop();
+  }, [visible, reducedMotion, progress]);
+  return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent onRequestClose={onConfirm}>
+    <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: progress }]} />
+    <ScrollView contentContainerStyle={styles.overlay} keyboardShouldPersistTaps="handled">
+      <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Acknowledge confirmation" accessibilityRole="button" onPress={onConfirm} />
+      <Animated.View accessibilityViewIsModal style={[styles.card, { backgroundColor: resident.card, opacity: progress, transform: [{ scale: reducedMotion ? 1 : progress.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }] }]}>
+        <View style={[styles.check, { backgroundColor: resident.accentSoft }]}><Ionicons name="checkmark-circle-outline" size={40} color={resident.accentText} accessible={false} /></View>
+        <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{content.title}</ThemedText>
+        {content.amountLabel ? <ThemedText style={[styles.amount, { color: resident.accentText }]}>{content.amountLabel}</ThemedText> : null}
+        <ThemedText style={[styles.caption, { color: resident.muted }]}>{content.message}</ThemedText>
+        <PrimaryButton presentation="resident" label="OK" onPress={onConfirm} />
+      </Animated.View>
+    </ScrollView>
+  </Modal>;
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: Spacing.four,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 340,
-    borderRadius: Spacing.three,
-    padding: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.one,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 5,
-  },
-  checkOuter: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.one,
-  },
-  checkInner: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  caption: {
-    textAlign: 'center',
-    marginBottom: Spacing.two,
-  },
-  buttonRow: {
-    width: '100%',
-  },
+  overlay: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
+  card: { width: '100%', maxWidth: 340, borderRadius: 24, padding: 24, gap: 12 },
+  check: { width: 64, height: 64, borderRadius: 32, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: 19, lineHeight: 25, fontWeight: '800', textAlign: 'center' },
+  amount: { fontSize: 24, lineHeight: 30, fontWeight: '800', textAlign: 'center' },
+  caption: { fontSize: 14.5, lineHeight: 20, textAlign: 'center', marginBottom: 12 },
 });

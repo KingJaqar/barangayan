@@ -1,0 +1,20 @@
+[
+  {
+    "suite": "supabase/tests/household_attendance.test.sql",
+    "exit": 0,
+    "assertions": 83,
+    "passed": true
+  },
+  {
+    "suite": "supabase/tests/household_attendance_boundaries.test.sql",
+    "exit": 0,
+    "assertions": 30,
+    "passed": true
+  },
+  {
+    "suite": "supabase/tests/resident_household_conditional.test.sql",
+    "exit": 0,
+    "assertions": 22,
+    "passed": true
+  }
+]

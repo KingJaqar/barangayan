@@ -1,11 +1,12 @@
 import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { BackHandler, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AuthHeader } from '@/components/auth-header';
+import { ActionSuccessModal } from '@/components/services/action-success-modal';
 import { GoogleButton } from '@/components/google-button';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PrimaryButton } from '@/components/primary-button';
@@ -15,8 +16,6 @@ import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
-import { useFontPreference } from '@/hooks/use-font-preference';
-import { getMobileFontFamily } from '@/constants/fonts';
 import { clearGoogleReauthentication, googleReauthentication } from '@/lib/google-auth';
 import { passwordMode, type ReauthenticationState } from '@/lib/sensitive-auth';
 import { authSetupRequests } from '@/lib/setup-request';
@@ -59,45 +58,14 @@ function ResultPopup({
   title?: string;
   subtitle?: string;
 }) {
-  const theme = useTheme();
-  const scale = useSharedValue(0.85);
-
+  const dismiss = useRef(onDismiss);
+  useEffect(() => { dismiss.current = onDismiss; }, [onDismiss]);
   useEffect(() => {
     if (!visible) return;
-    scale.value = 0.85;
-    scale.value = withSpring(1, { damping: 14, stiffness: 220 });
-    const timer = setTimeout(onDismiss, 2200);
+    const timer = setTimeout(() => dismiss.current(), 2200);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
-
-  const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-
-  if (!visible) return null;
-
-  return (
-    <Modal transparent visible={visible} animationType="none" statusBarTranslucent onRequestClose={onDismiss}>
-      <Animated.View entering={FadeIn.duration(160)} exiting={FadeOut.duration(140)} style={[styles.popupBackdrop, { backgroundColor: theme.text + '73' }]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onDismiss} accessibilityLabel="Dismiss" />
-        <Animated.View
-          style={[
-            cardStyle,
-            styles.popupCard,
-            { backgroundColor: theme.background, borderColor: theme.backgroundSelected, shadowColor: theme.text },
-          ]}>
-          <View style={[styles.popupIconWrap, { backgroundColor: theme.primary }]}>
-            <Ionicons name="checkmark" size={30} color={theme.onPrimary} />
-          </View>
-          <ThemedText type="heading" style={styles.popupTitle}>
-            {title}
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.popupSubtitle}>
-            {subtitle}
-          </ThemedText>
-        </Animated.View>
-      </Animated.View>
-    </Modal>
-  );
+  return <ActionSuccessModal visible={visible} title={title} message={subtitle} onConfirm={onDismiss} />;
 }
 
 // Mode comes from the server-maintained password state: true → change with the
@@ -116,9 +84,7 @@ export default function ChangePasswordScreen() {
 }
 
 function ChangeOrManagePassword() {
-  const { fontId } = useFontPreference();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { session, setup, refreshCompletion, setPasswordRecovery, setupRefreshError } = useAuth();
   const mode = passwordMode(setup);
@@ -132,6 +98,7 @@ function ChangeOrManagePassword() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const updating = useRef(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const hasEnteredBothPasswords = newPassword.length > 0 && confirmPassword.length > 0;
@@ -151,6 +118,7 @@ function ChangeOrManagePassword() {
   }
 
   async function handleUpdate() {
+    if (updating.current) return;
     setError(null);
     setFieldErrors({});
 
@@ -170,6 +138,7 @@ function ChangeOrManagePassword() {
       return;
     }
 
+    updating.current = true;
     setLoading(true);
     try {
       // Supabase's updateUser() doesn't check the old password — re-authenticate first so a
@@ -209,31 +178,18 @@ function ChangeOrManagePassword() {
     } catch {
       setError('Check your connection and try again.');
     } finally {
+      updating.current = false;
       setLoading(false);
     }
   }
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
-      <View style={{ flex: 1, backgroundColor: theme.background }}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable
-            onPress={() => {
-              if (router.canGoBack()) router.back();
-              else router.replace('/settings');
-            }}
-            style={styles.backBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              {mode === 'manage' ? 'Manage Password' : mode === 'recover_only' ? 'Set Password' : 'Change Password'}
-            </ThemedText>
-          </View>
-        </View>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
+      <View style={{ flex: 1, backgroundColor: theme.resident.card }}>
+        <AuthHeader presentation="resident" title={mode === 'manage' ? 'Manage Password' : mode === 'recover_only' ? 'Set Password' : 'Change Password'} onBack={() => {
+          if (router.canGoBack()) router.back();
+          else router.replace('/settings');
+        }} />
 
         {!session ? (
           <View style={styles.content}>
@@ -248,9 +204,9 @@ function ChangeOrManagePassword() {
                   ? 'Your password status could not be loaded. Retry before changing it.'
                   : 'Your account has no password and no linked Google sign-in to confirm it is you. Use password recovery to set a password through your email.'}
             </ThemedText>
-            {mode === 'error' ? <PrimaryButton label="Retry" onPress={() => { void refreshCompletion(); }} /> : null}
+            {mode === 'error' ? <PrimaryButton presentation="resident" label="Retry" onPress={() => { void refreshCompletion(); }} /> : null}
             {mode === 'recover_only' ? (
-              <PrimaryButton label="Recover password by email" onPress={handleForgotPassword} />
+              <PrimaryButton presentation="resident" label="Recover password by email" onPress={handleForgotPassword} />
             ) : null}
           </View>
         ) : (
@@ -260,8 +216,9 @@ function ChangeOrManagePassword() {
                 style={[
                   styles.introCard,
                   styles.passwordIntroCard,
-                  { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
+                  { backgroundColor: theme.resident.surface, borderColor: theme.resident.border },
                 ]}>
+                <Ionicons name="information-circle-outline" size={18} color={theme.resident.accentText} />
                 <ThemedText type="small" themeColor="textSecondary" style={styles.intro}>
                   {mode === 'manage'
                     ? 'Your account has an existing password we cannot confirm. Enter it to change it, or recover it by email if you do not know it.'
@@ -277,13 +234,12 @@ function ChangeOrManagePassword() {
               <View
                 style={[
                   styles.fieldsCard,
-                  { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
                 ]}>
-                <TextField
-                  style={{ fontFamily: getMobileFontFamily(fontId) }}
+                <TextField presentation="resident"
                   label="Current Password"
                   required
                   value={currentPassword}
+                  editable={!loading}
                   onChangeText={setCurrentPassword}
                   error={fieldErrors.currentPassword}
                   autoCapitalize="none"
@@ -296,27 +252,27 @@ function ChangeOrManagePassword() {
                   accessibilityRole="link"
                   accessibilityState={{ disabled: loading }}
                   style={[styles.forgotLink, { opacity: loading ? 0.5 : 1 }]}>
-                  <ThemedText type="link" style={{ color: theme.primary, fontWeight: '600' }}>
+                  <ThemedText type="link" style={{ color: theme.resident.accentText, fontWeight: '600' }}>
                     Forgot Password?
                   </ThemedText>
                 </Pressable>
-                <View style={[styles.divider, { backgroundColor: theme.backgroundSelected }]} />
-                <TextField
-                  style={{ fontFamily: getMobileFontFamily(fontId) }}
+                <View style={[styles.divider, { backgroundColor: theme.resident.border }]} />
+                <TextField presentation="resident"
                   label="New Password"
                   required
                   value={newPassword}
+                  editable={!loading}
                   onChangeText={setNewPassword}
                   autoCapitalize="none"
                   autoComplete="new-password"
                   {...fieldStatus(newPassword, fieldErrors.newPassword, validateNewPassword, 'Password strength: good')}
                   passwordVisibility={{ visible: showNew, onToggle: () => setShowNew((v) => !v) }}
                 />
-                <TextField
-                  style={{ fontFamily: getMobileFontFamily(fontId) }}
+                <TextField presentation="resident"
                   label="Confirm New Password"
                   required
                   value={confirmPassword}
+                  editable={!loading}
                   onChangeText={setConfirmPassword}
                   error={confirmPasswordError}
                   autoCapitalize="none"
@@ -328,9 +284,9 @@ function ChangeOrManagePassword() {
                     <Ionicons
                       name={passwordsMatch ? 'checkmark-circle-outline' : 'alert-circle-outline'}
                       size={16}
-                      color={passwordsMatch ? theme.accentGreen : theme.accentRed}
+                      color={passwordsMatch ? theme.resident.success : theme.resident.danger}
                     />
-                    <ThemedText type="small" style={{ color: passwordsMatch ? theme.accentGreen : theme.accentRed }}>
+                    <ThemedText type="small" style={{ color: passwordsMatch ? theme.resident.success : theme.resident.danger }}>
                       {passwordsMatch ? 'Passwords match' : "Passwords don't match"}
                     </ThemedText>
                   </View>
@@ -338,20 +294,18 @@ function ChangeOrManagePassword() {
               </View>
 
               {error ? (
-                <Animated.View
-                  entering={FadeIn.duration(150)}
-                  exiting={FadeOut.duration(150)}
-                  style={[styles.errorBanner, { backgroundColor: theme.background, borderColor: theme.accentRed }]}>
-                  <Ionicons name="alert-circle-outline" size={18} color={theme.accentRed} />
-                  <ThemedText type="small" themeColor="accentRed" style={styles.errorText}>
+                <View accessibilityLiveRegion="polite"
+                  style={[styles.errorBanner, { backgroundColor: theme.resident.card, borderColor: theme.resident.danger }]}>
+                  <Ionicons name="alert-circle-outline" size={18} color={theme.resident.danger} />
+                  <ThemedText type="small" style={[styles.errorText, { color: theme.resident.danger }]}>
                     {error}
                   </ThemedText>
-                </Animated.View>
+                </View>
               ) : null}
 
-              <PrimaryButton label="Update Password" loading={loading} onPress={handleUpdate} />
+              <PrimaryButton presentation="resident" label="Update Password" loading={loading} onPress={handleUpdate} />
               {mode === 'manage' ? (
-                <PrimaryButton
+                <PrimaryButton presentation="resident"
                   label="Recover password by email"
                   variant="secondary"
                   disabled={loading}
@@ -374,7 +328,6 @@ function ChangeOrManagePassword() {
  * right before updateUser and consumed afterwards (or when the resident leaves). */
 function FirstPasswordFromSettings() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { refreshCompletion } = useAuth();
   const [reauth, setReauth] = useState<ReauthenticationState | 'checking'>('checking');
@@ -424,7 +377,7 @@ function FirstPasswordFromSettings() {
           onSkip={() => { leave(); }}
           onBack={() => { leave(); }}
         />
-        {notice ? <ThemedText accessibilityLiveRegion="polite" style={{ padding: Spacing.three, backgroundColor: theme.background }}>{notice}</ThemedText> : null}
+        {notice ? <ThemedText accessibilityLiveRegion="polite" style={{ padding: Spacing.three, backgroundColor: theme.resident.card }}>{notice}</ThemedText> : null}
         <ResultPopup
           visible={showSuccess}
           title="Password Set"
@@ -436,18 +389,12 @@ function FirstPasswordFromSettings() {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
-      <View style={{ flex: 1, backgroundColor: theme.background }}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable onPress={leave} style={styles.backBtn} accessibilityRole="button" accessibilityLabel="Go back" hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>Set Password</ThemedText>
-          </View>
-        </View>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
+      <View style={{ flex: 1, backgroundColor: theme.resident.card }}>
+        <AuthHeader presentation="resident" title="Set Password" onBack={leave} />
         <ScrollView contentContainerStyle={styles.content}>
-          <View style={[styles.introCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+          <View style={[styles.introCard, { backgroundColor: theme.resident.surface, borderColor: theme.resident.border }]}>
+            <Ionicons name="information-circle-outline" size={18} color={theme.resident.accentText} />
             <ThemedText type="small" themeColor="textSecondary" style={styles.intro}>
               Your account does not have a password yet. To protect it, first confirm it is you with the same
               Google account. You will then have 5 minutes to set your password.
@@ -475,116 +422,15 @@ function FirstPasswordFromSettings() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-  },
-  content: {
-    padding: Spacing.three,
-    gap: Spacing.two + Spacing.one,
-  },
-  passwordContent: {
-    gap: Spacing.two,
-  },
-  passwordIntroCard: {
-    paddingVertical: Spacing.two,
-  },
-  introCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    borderWidth: 1,
-    borderRadius: Spacing.three,
-    padding: Spacing.two + Spacing.one,
-  },
-  intro: {
-    flex: 1,
-    lineHeight: 20,
-  },
-  fieldsCard: {
-    borderWidth: 1,
-    borderRadius: Spacing.three,
-    padding: Spacing.two + Spacing.one,
-    paddingVertical: Spacing.two,
-    gap: Spacing.two,
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginVertical: Spacing.half,
-  },
-  forgotLink: {
-    alignSelf: 'flex-end',
-    minHeight: 44,
-    justifyContent: 'center',
-    marginVertical: -Spacing.one,
-  },
-  passwordMatchIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-  },
-  errorBanner: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.two,
-    borderWidth: 1,
-    borderRadius: Spacing.two,
-    padding: Spacing.two + Spacing.one,
-  },
-  errorText: {
-    flex: 1,
-    lineHeight: 18,
-  },
-  popupBackdrop: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: Spacing.four,
-  },
-  popupCard: {
-    width: '100%',
-    maxWidth: 320,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: Spacing.four,
-    paddingVertical: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.one,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  popupIconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.two,
-  },
-  popupTitle: {
-    textAlign: 'center',
-  },
-  popupSubtitle: {
-    textAlign: 'center',
-    lineHeight: 18,
-  },
+  content: { padding: 16, gap: 16, paddingBottom: 24 },
+  passwordContent: { gap: 16 },
+  passwordIntroCard: { paddingVertical: 12 },
+  introCard: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderWidth: 1, borderRadius: 16, padding: 12 },
+  intro: { flex: 1, fontSize: 14, lineHeight: 20 },
+  fieldsCard: { gap: 12 },
+  divider: { height: StyleSheet.hairlineWidth },
+  forgotLink: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center', marginTop: -8 },
+  passwordMatchIndicator: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  errorBanner: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderWidth: 1, borderRadius: 16, padding: 12 },
+  errorText: { flex: 1, lineHeight: 20 },
 });

@@ -1,0 +1,5 @@
+PASS parse-center-qr-rules
+PASS staff-confirmation-cutover
+PASS household-feedback-wording
+PASS ownership-and-contracts
+{"pass":4,"fail":0}

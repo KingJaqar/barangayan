@@ -1,0 +1,19 @@
+{
+  "phase0_checklist_items": 6,
+  "scope": "Phase 0 only; discovery/schema/check inventories per plan section 6.0(6)",
+  "packet_source_count": 34,
+  "sources_changed_before_edit": [],
+  "packet_xml_parse_and_normalized_equivalence": "pass",
+  "instruction_inventory": "root plus admin-web and resident-web; no Android/shared/backend nested files found",
+  "existing_test_inventory": [
+    "supabase/tests/resident_household_conditional.test.sql",
+    "supabase/tests/admin_record_lifecycle.test.sql",
+    "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+    "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+    "supabase/tests/resident_ios_phase3_backend.test.sql",
+    "supabase/tests/resident_ios_phase3_concurrency.mjs",
+    "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs"
+  ],
+  "behavior_tests": "not run: Docker API 500 and bounded diagnostic timeout; no hosted fixtures",
+  "typecheck_lint_build": "not run: Phase 0 documentation and discovery only; no app/SQL implementation edits"
+}

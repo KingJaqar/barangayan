@@ -1,0 +1,115 @@
+BEGIN
+1..56
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+UPDATE 2
+UPDATE 1
+INSERT 0 2
+UPDATE 1
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+ALTER TABLE
+INSERT 0 1
+ALTER TABLE
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+UPDATE 2
+CREATE FUNCTION
+GRANT
+CREATE FUNCTION
+GRANT
+ok 1 - Deletion requests have row level security
+ok 2 - Residents cannot read deletion requests directly
+ok 3 - Anonymous cannot erase records
+ok 4 - A signed-in resident can request erasure of their own records
+ok 5 - Residents cannot set the deletion state
+ok 6 - The service role can set the deletion state
+ok 7 - Neither deletion routine is anonymous-executable
+ok 8 - Without a session the request is refused
+SET
+SET
+SET
+ok 9 - A session without a recent authentication is refused
+ok 10 - The refusal is repeatable and changes nothing
+RESET
+ok 11 - A refused request erased nothing
+ok 12 - A refused request recorded nothing
+SET
+SET
+ok 13 - An old authentication timestamp is refused
+RESET
+SET
+{"sub" : "b1800000-0000-0000-0000-00000000000a", "role" : "authenticated", "amr" : [{"method" : "password", "timestamp" : 1792636545}]}
+ok 14 - A fresh authentication erases and reports the first step
+RESET
+ok 15 - Household members are erased
+ok 16 - The one ID submission a version 2 request depends on is kept
+ok 17 - It holds only tombstones instead of the ID type and file paths
+ok 18 - Request attachments are erased
+ok 19 - Medical drive registrations are erased
+ok 20 - Evacuation check-ins are erased
+ok 21 - Push tokens are erased
+ok 22 - Announcement read marks are erased
+ok 23 - Notification preferences are erased
+ok 24 - The notification inbox is erased
+ok 25 - Notification events are erased
+ok 26 - The profile keeps only a neutral name
+ok 27 - Name parts, contact, address, birth date, avatar, ID fields and locations are cleared and the profile is marked deleted
+ok 28 - Both document requests are kept
+ok 29 - A version 1 request loses its free text and ID file reference
+ok 30 - A version 2 request loses its free text and supporting details but keeps its immutable payload, catalog purpose and verified ID reference
+ok 31 - Its payment record is kept
+ok 32 - The incident report is kept without its reporter link or photos
+ok 33 - A corroboration is kept; its author is now an anonymous profile
+ok 34 - Another resident household is untouched
+ok 35 - Another resident ID submission is untouched
+ok 36 - Another resident registration is untouched
+ok 37 - Another resident inbox is untouched
+ok 38 - Another resident request text is untouched
+ok 39 - Another resident profile is untouched
+ok 40 - The request is recorded at the first step
+SET
+SET
+ok 41 - A retry after the profile was erased needs no fresh authentication and converges
+RESET
+ok 42 - The retry is counted
+SET
+ok 43 - Storage cleanup advances the state
+ok 44 - The state never moves backwards
+ok 45 - A failure is recorded as needing attention
+ok 46 - The recorded reason is bounded
+ok 47 - An unknown state is refused
+ok 48 - A deletion that was never requested cannot be completed
+ok 49 - A retry after a failure resumes forward
+ok 50 - Only the final step reports completed
+ok 51 - A completed deletion is never reopened
+RESET
+ok 52 - Completion is timestamped
+SET
+SET
+ok 53 - A request after completion reports completed and does nothing
+SET
+SET
+ok 54 - An account already anonymized by the old flow has nothing to resume
+RESET
+SET
+SET
+SET
+ok 55 - A deleted account cannot file a document request
+ok 56 - A deleted account cannot register a device
+RESET
+ROLLBACK

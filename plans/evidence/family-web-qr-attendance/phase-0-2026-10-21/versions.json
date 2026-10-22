@@ -1,0 +1,69 @@
+{
+  "lock_sha256": "0B8E5D22A6E9EC2A39608B1CF3E5D04C80C2685714B21A320C2B05D7B498EFCB",
+  "packages": {
+    "node_modules/next": {
+      "locked": "16.3.0",
+      "installed": "16.3.0"
+    },
+    "node_modules/react": {
+      "locked": "19.2.3",
+      "installed": "19.2.3"
+    },
+    "apps/resident-web/node_modules/react": {
+      "locked": "19.2.8",
+      "installed": "19.2.8"
+    },
+    "apps/admin-web/node_modules/react": {
+      "locked": "19.2.8",
+      "installed": "19.2.8"
+    },
+    "node_modules/react-dom": {
+      "locked": "19.2.3",
+      "installed": "19.2.3"
+    },
+    "apps/resident-web/node_modules/react-dom": {
+      "locked": "19.2.8",
+      "installed": "19.2.8"
+    },
+    "apps/admin-web/node_modules/react-dom": {
+      "locked": "19.2.8",
+      "installed": "19.2.8"
+    },
+    "node_modules/@supabase/ssr": {
+      "locked": "0.12.4",
+      "installed": "0.12.4"
+    },
+    "node_modules/@supabase/supabase-js": {
+      "locked": "2.112.1",
+      "installed": "2.112.1"
+    },
+    "node_modules/qrcode.react": {
+      "locked": "4.2.0",
+      "installed": "4.2.0"
+    },
+    "node_modules/html5-qrcode": {
+      "locked": "2.3.8",
+      "installed": "2.3.8"
+    },
+    "node_modules/zod": {
+      "locked": "3.25.76",
+      "installed": "3.25.76"
+    },
+    "node_modules/vitest": {
+      "locked": "3.2.7",
+      "installed": "3.2.7"
+    },
+    "node_modules/typescript": {
+      "locked": "6.0.3",
+      "installed": "6.0.3"
+    },
+    "apps/resident-web/node_modules/typescript": {
+      "locked": "5.9.3",
+      "installed": "5.9.3"
+    },
+    "apps/admin-web/node_modules/typescript": {
+      "locked": "5.9.3",
+      "installed": "5.9.3"
+    }
+  }
+}

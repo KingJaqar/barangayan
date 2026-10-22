@@ -82,21 +82,26 @@ export function usePaymongoSource(requestId: string) {
           return;
         }
 
-        if (!data?.paymentId || !data?.qrImageUrl) {
-          setErrorMessage('PayMongo did not return a QR code.');
+        if (typeof data?.paymentId !== 'string' || !data.paymentId ||
+          typeof data.paymentIntentId !== 'string' || !data.paymentIntentId ||
+          typeof data.qrImageUrl !== 'string' || !data.qrImageUrl ||
+          typeof data.expiresAt !== 'number' || !Number.isFinite(data.expiresAt) ||
+          typeof data.documentFeeCentavos !== 'number' || !Number.isSafeInteger(data.documentFeeCentavos) || data.documentFeeCentavos < 0 ||
+          typeof data.amountCentavos !== 'number' || !Number.isSafeInteger(data.amountCentavos) || data.amountCentavos < 0) {
+          setErrorMessage('The payment provider returned incomplete details. Go back and retry.');
           setStatus('error');
           return;
         }
 
         setSource({
-          paymentId: data.paymentId as string,
-          paymentIntentId: data.paymentIntentId as string,
-          qrImageUrl: data.qrImageUrl as string,
+          paymentId: data.paymentId,
+          paymentIntentId: data.paymentIntentId,
+          qrImageUrl: data.qrImageUrl,
           // Expiry comes from the Edge Function (30 minutes, PayMongo's dynamic QR PH
           // window) rather than being guessed client-side.
-          expiresAt: (data.expiresAt as number) ?? Date.now() + 30 * 60 * 1000,
-          documentFeeCentavos: (data.documentFeeCentavos as number) ?? 0,
-          amountCentavos: (data.amountCentavos as number) ?? 0,
+          expiresAt: data.expiresAt,
+          documentFeeCentavos: data.documentFeeCentavos,
+          amountCentavos: data.amountCentavos,
         });
         setStatus('pending');
       })

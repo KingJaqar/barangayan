@@ -1,0 +1,44 @@
+[
+  {
+    "suite": "household_attendance.test.sql",
+    "result": "pass",
+    "assertions": 83,
+    "sha256": "67aabd3f1e154d5409040e9d08081939703ea7298e707e5dc015f0435f426215"
+  },
+  {
+    "suite": "household_attendance_boundaries.test.sql",
+    "result": "pass",
+    "assertions": 30,
+    "sha256": "813acca07e59c02bcd4eef15622ba363af0bd22582919ff3b0becf2c021f1698"
+  },
+  {
+    "suite": "admin_household_attendance_projection_web.test.sql",
+    "result": "pass",
+    "assertions": 27,
+    "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca"
+  },
+  {
+    "suite": "resident_household_conditional.test.sql",
+    "result": "pass",
+    "assertions": 22,
+    "sha256": "dcc4fd2707809d0977add745ae3df7d299ae0356dc3324465e32e2394b0aa6df"
+  },
+  {
+    "suite": "resident_ios_phase18_account_deletion.test.sql",
+    "result": "pass",
+    "assertions": 56,
+    "sha256": "7664b90e39eb6f7ee1c150b20bea27951385c38b460c9e99c6f4f66690f3f231"
+  },
+  {
+    "suite": "household_attendance_receipt_exports.test.sql",
+    "result": "pass",
+    "assertions": 16,
+    "sha256": "c9f42b6b658a1094f582d43c520b585252cb4c2809bea17a4b267d925fffc932"
+  },
+  {
+    "suite": "admin_record_lifecycle.test.sql",
+    "result": "pass",
+    "assertions": 153,
+    "sha256": "e203f022fb42b37d150fb5bebc30ef6e4275c67ebd3627b164de19bd396c409c"
+  }
+]

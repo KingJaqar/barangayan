@@ -1,0 +1,39 @@
+{
+  "packet": "tmp/family-web-phase2-20261021/session-feedback.xml",
+  "sha256": "117ba4e0b68c472fe4b21e1b7cdeeb5b107a97ada391067dacefd57fc4ee5394",
+  "sources": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "sha256": "fcb1234f3673ae067524efd2549c095e9e8aa73dd1c9fa8ea63eca5dad12ddca"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sha256": "4bf791692d458561c7c5583d562b6d50eb7806a3f8d26a3f1c53f94ca243ea80"
+    }
+  ],
+  "chunks": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "start": 1,
+      "end": 121,
+      "characters": 10091,
+      "next": null
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "start": 1,
+      "end": 200,
+      "characters": 9921,
+      "next": 201
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "start": 201,
+      "end": 332,
+      "characters": 5071,
+      "next": null
+    }
+  ],
+  "security": "passed",
+  "omissions": []
+}

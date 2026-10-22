@@ -1,0 +1,886 @@
+{
+  "date": "2026-10-21",
+  "timezone": "Asia/Manila",
+  "head": "187a2ab331dd6dce1cfa54d397fc245d1232a9a0",
+  "baseline": {
+    "path": "tmp/resident-android-magicpatterns-phase-16-20261021/baseline.json",
+    "sha256": "9248907d61dc2d03c41db0a7a8ca1ac5c687172cfae82d1ee573992645a30f9b",
+    "bytes": 58271
+  },
+  "ownedFiles": [
+    "apps/resident-android-mobile/src/components/services/document-guide-content.tsx",
+    "apps/resident-android-mobile/tests/document-forms-ui.mjs",
+    "apps/resident-android-mobile/tests/request-document-presentation-ui.mjs",
+    "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+    "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md"
+  ],
+  "changedBaselineFiles": [
+    {
+      "path": "apps/resident-android-mobile/src/components/services/document-guide-content.tsx",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/document-forms-ui.mjs",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-document-presentation-ui.mjs",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "owned": true
+    },
+    {
+      "path": "plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md",
+      "owned": true
+    }
+  ],
+  "unexpectedChanges": [],
+  "suppliedPacketUnchanged": true,
+  "fixtureFinal": [
+    {
+      "file": "document-forms-ui.mjs",
+      "initialExit": 1,
+      "finalStatus": "pass",
+      "groups": [
+        "Guide preserves all charter content/stored numbering, independent accordions, null personnel and four widths with dark/custom accent/font",
+        "Current form validates intentionally, keeps drafts through refresh, handles picker cancel/error, removes renter evidence and submits once",
+        "Business/DTI, residency, general and full-range CTC fields remain available",
+        "Legacy image branch submits one upload/attempt and retains payment destination",
+        "Guide keeps verification and guest login gates/destinations"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-document-forms-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\document-forms-ui",
+      "logSha256": "ca924b3db652bc7f9d34d55b6d2a1e7cb31f3702063fc23188bc3f479d09bf89"
+    },
+    {
+      "file": "drrm-centers-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "grouped real center rows; unknown/full occupancy; managed extra facility; existing sort semantics",
+        "row opens same selected route/map state; shared provider hides/reveals actual bar with accessibility exclusion",
+        "actual bundled Leaflet zoom/marker/background; five M07 cycles; no routing/picker dispatch from dismissals",
+        "empty/search/error and retry stay visible without suppressing routing diagnostics",
+        "blur/list reset, focus restoration, two background cycles; offline refresh visibility follows focus",
+        "actual location-status pending/poor accuracy confirmation, rejection and denied-permission recovery actions",
+        "all simultaneous stale/closure/blocked-road/service warnings survive collapse; real street-choice and mark/remove action dispatch; no-route text",
+        "320–412 widths/dark/extreme accent/serif/reduced mode; public shared Centers has no resident bar or reveal"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-drrm-centers-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\drrm-centers-ui",
+      "logSha256": "52994b1003d40f3fe4e7f66ca9f5cf2d49ac60d176cef0b37da54e9badb23477"
+    },
+    {
+      "file": "drrm-hub-alerts-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "managed steps/body fallback, single-open state, unknown icons/JSON, missing dial number, one dispatch while pending and visible dialer failure",
+        "offline data retained with error/retry; repeated accordion changes keep listener count stable; dark/custom/font render",
+        "Hub loading, empty and unavailable sources remain separately visible",
+        "date drafts/apply/collapse, independent period AND date, applied summary and clear without period reset",
+        "scroll wheel month/day partial matching, timeline years from 2026, no typed-year input and Clear",
+        "Alerts cached error/retry, loading, source-empty and filtered-empty feedback",
+        "open picker advances at New Year; reopening catches up through 2029 without typed or content-derived years",
+        "reduced motion removes geometry interpolation, five reversal cycles, compact widths and all owned accessibility listeners cleaned on unmount; no console errors/warnings"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-drrm-hub-alerts-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\drrm-hub-alerts-ui",
+      "logSha256": "1d0b0502c140ba8d8c12c5f75a59882df48a13066138a12e88e00f78e55f9330"
+    },
+    {
+      "file": "drrm-scan-family-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "managed guide content survives refresh error, offline badge and real Retry",
+        "denied/permanent permission recovery, settings, schema-invalid scan and close",
+        "wrong-barangay rejection and synchronous repeated-event lock: one check-in and household update",
+        "camera mount-error retry, two background cycles and focus-loss release",
+        "close/reopen during in-flight scan blocks resubmission and stale household update; queued/error feedback and permission API exception",
+        "stable validated QR, alphabetical picker, selected payload, share failure/cancel and denied/failed/successful gallery adapters",
+        "center loading/empty/error/Retry retains truthful QR disabled state",
+        "real household hook: async failure retains input; busy prevents close/duplicate; UUID/JSONB payload and profile refresh; add/update",
+        "confirmed remove/cancel, external Profile update, unknown role preservation and real read Retry",
+        "authoritative inline/full server QR image, authenticated source and image-error Retry",
+        "all ten offered fonts keep form reachable; malformed JSON blocks editing; account switch clears prior members",
+        "interrupted slide exit reopens without stale unmount or position jump; picker uses opacity only",
+        "320/360/400/412 light/dark/extreme accents/serif overflow; five sheet cycles; reduced motion <=100ms; resource cleanup"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-drrm-scan-family-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\drrm-scan-family-ui",
+      "logSha256": "8d9f09be4ce9e99df6df948eb138bbf7fb9bedc2e1622119677ad6d00f0209e8"
+    },
+    {
+      "file": "health-presentation-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "calendar visibility is local; month/year jump, month-wide and category queries retained",
+        "four registration status filters; authoritative detail, pinned Close and five retained M04 exits",
+        "date/month/registrations errors remain visible with user-driven retry",
+        "compact width, dark mode, extreme accent and selected serif list renders",
+        "member/self switching, age reset, None/multiple comorbidities and consent retain scroll/form identity",
+        "five rapid submit events dispatch one RPC; exact server number/Pending status; success motion does not replay on theme",
+        "stock/duplicate/server errors preserve consent and retry; vaccination-only dose date validates and sends actual date",
+        "malformed server result cannot show success; full stock and missing profile have explicit safe states",
+        "missing drive ID, failed drive fetch/retry and actual guest gate remain recoverable",
+        "compact short-height dark/serif/extreme-accent form; reduced-motion picker Back cycles; channel ownership after navigation"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-health-presentation-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\health-presentation-ui",
+      "logSha256": "4bc1780eef195620d5f57bdcc0db698626243367c068f7698934d16dc78c126d"
+    },
+    {
+      "file": "help-legal-about-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "all seven labels/filter selections and overflow reachable; real FAQ hook retains tenant/active/deleted/order constraints",
+        "long full article/newlines, deleted article and Back to originating Help/Search",
+        "Help loading/error/manual retry and empty data",
+        "full stored Markdown including tail/headings/list/emphasis/link dispatch; both legal tabs; missing body; explicit error/retry",
+        "Mission/Vision wait sequence/rapid reversal settles on latest choice; history expands immediately; all17developers/bios/contacts/actual version; presentation dispatches no extra queries",
+        "same-record content refresh preserves selected purpose and expanded history without remounting them",
+        "reduced motion removes purpose/history geometric animation;10font choices in light/dark extreme accents at320/360/412browser widths remain rendered (native font scale/fidelity unqualified)",
+        "each route and rendered Markdown headings inherit all10selected font mappings in both themes; header keeps Gideon; one Back header per route",
+        "single purpose, About partial failure/retry and empty state; repeated route mount/unmount removes all channels and motion listeners"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-help-legal-about-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\help-legal-about-ui",
+      "logSha256": "6bd77629af214ed64cb2bb81f8bd7750f0ce33d9027980ef904423739dd482d3"
+    },
+    {
+      "file": "home-presentation-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "Actual latest-three/latest-one query shapes and measured chevrons at both boundaries",
+        "Home → tracking → Back → Services, repeated 3 times (unvisited Services)",
+        "Home → tracking → Back → Services, repeated 3 times (visited Services)",
+        "Same request in both tabs preserves independent stacks; Services Back restores its original root",
+        "Control reproduces the original loop when Home opens the Services-owned URL",
+        "Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries",
+        "Five quick actions, See all/news destinations and 320/360/400/412 theme/font/extreme-accent layouts without reloads",
+        "Single-card no-overflow/cancelled history and normal/reduced sheet targets, background close and theme change while open",
+        "Short 320px viewport and long summary title retain reachable Close and full-tracking controls",
+        "Profile-completion, authenticated empty and guest states",
+        "Visible database/transport failures and explicit independent retry recovery",
+        "Loading state, late previous-account response isolation, focus/unmount listener cleanup and no console warnings/errors"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-home-presentation-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\home-presentation-ui",
+      "logSha256": "d673cee641e0d22815df953af6e7581168dd381aa4e784987440e9d47674d612"
+    },
+    {
+      "file": "maps-presentation-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "actual Leaflet zoom/selected pin/500ms target and latest card; no picker/routing event from selection or close",
+        "five marker/background-dismiss cycles return operable controls",
+        "rapid selection keeps only latest card; five rapid zoom taps retain cumulative target",
+        "multi-select/filter visibility retains predicates; incident search preserved through layer switch; truthful unavailable center search",
+        "dark/extreme accents/selected serif/320–412px; measured attribution, no theme/layout refit or query fan-out",
+        "GPS failure visible, explicit retry/user dot/accuracy circle, foreground permission recheck",
+        "empty and source-error/retry remain visible and operable",
+        "reduced overlay durations <=100ms; permission tooltip unmounts after fade; two foreground cycles keep one channel/listener without extra queries",
+        "legacy picker accepts/rejects/snaps correctly; routing priority; no background event; default zoom controls retained",
+        "offline vector basemap/route/closures render without tiles; shared/public default path preserved"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-maps-presentation-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\maps-presentation-ui",
+      "logSha256": "b0503565cef70165f9389e2d11533de588565601c5c84aefda6196f9b96a9dbe"
+    },
+    {
+      "file": "reports-announcements-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "all statuses, Active predicates, resolved toggle/bulk persistence and zero-count disable",
+        "five rapid tab cycles retain one feed subscription, unique topics during delayed removal and one initial query per filter change",
+        "guest gate and report source error/retry",
+        "Search news deep-open marks once, failed read recovery and five sheet open/close cycles",
+        "schema minimum/counters, waste zones, picker cancel/size error, duplicate submit lock and original return destination",
+        "picker rejection, optional address, confirm and cancel wiring (native map adapter)",
+        "detail load failure/retry and withdrawal confirmation cancel",
+        "portrait/landscape originals, wrapping carousel and full-screen arrows/counters, five viewer cycles",
+        "one confirm RPC during five rapid taps, expired withdrawal and terminal action guards",
+        "corrected address preserved, five interrupted picker exits, 280/200ms configuration and provider cleanup",
+        "dark/custom light accent/selected font and 320–412px overflow checks",
+        "all three target screens: 320–412px, light/dark custom accents and selected serif without page overflow"
+      ],
+      "diagnostics": [
+        "\"shadow*\" style props are deprecated. Use \"boxShadow\".",
+        "props.pointerEvents is deprecated. Use style.pointerEvents"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-reports-announcements-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\reports-announcements-ui",
+      "logSha256": "45e97b17f6b868703e471f758dc20994c5dbe4cce069aa083a28a98a23aa4be1"
+    },
+    {
+      "file": "request-document-presentation-ui.mjs",
+      "initialExit": 1,
+      "finalStatus": "pass",
+      "groups": [
+        "Light reference composition: 108×72 ID beside details; text-only 44dp Edit action",
+        "Full-width purpose selector, purpose-sheet selection, borderless notes group and multiline notes",
+        "Existing refresh, drafts, picker cancellation, renter evidence and one-attempt submission behavior preserved",
+        "320/360/400/412 widths and dark/extreme account accent retain reachable controls",
+        "Business/DTI, job seeker, CTC large inputs and general-service fields preserved",
+        "Legacy guides retain every stored requirement without overflow; empty lists omit the panel; v2 keeps its charter checklist"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-request-document-presentation-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\request-document-presentation-ui",
+      "logSha256": "6ff560acb75efd63cad84c5f3b61043a12583e94666052bc7e7eb255c1564c2a"
+    },
+    {
+      "file": "request-tracking-navigation.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "Home → tracking → Back → Services, repeated 3 times (unvisited Services)",
+        "Home → tracking → Back → Services, repeated 3 times (visited Services)",
+        "Same request in both tabs preserves independent stacks; Services Back restores its original root",
+        "Control reproduces the original loop when Home opens the Services-owned URL"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-request-tracking-navigation.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\request-tracking-navigation",
+      "logSha256": "c1bdd09619e1fe5ecec4489ae731e40e41b80060f78ecf4f16fbb25170360a84"
+    },
+    {
+      "file": "resident-search-history-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "suggestion selection saves search",
+        "blank input shows recent searches",
+        "typing filters recent suggestions",
+        "remove recent suggestion",
+        "clear all recent searches"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-resident-search-history-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\resident-search-history-ui",
+      "logSha256": "75df24a3baa90930a94ca0108ea2cd8059ebf8ab2a2fa118cdca6151b02a0ecc"
+    },
+    {
+      "file": "resident-search-lifecycle.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "blank query makes no calls",
+        "typing debounce",
+        "normalized-query deduplication",
+        "abort old request",
+        "late response ignored",
+        "revisiting query hides stale results",
+        "error and explicit retry",
+        "leaving search cancels",
+        "missing tenant fails closed",
+        "account change clears draft",
+        "history restores per account",
+        "recent selection promotes query",
+        "remove and clear history",
+        "guest searches are not saved"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-resident-search-lifecycle.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\resident-search-lifecycle",
+      "logSha256": "8a9910ecba65ffc489532c60e8a4e9e863213224e98dbfbd9e135d5f1a891c35"
+    },
+    {
+      "file": "resident-shell-lifecycle.mjs",
+      "initialExit": 1,
+      "finalStatus": "pass",
+      "groups": [
+        "six navigation actions and selected states",
+        "Settings/Announcements have no primary selection",
+        "keyboard removes/restores bar and measured clearance",
+        "Search/detail routes have no bar or phantom inset",
+        "appearance changes do not refocus Search",
+        "Search draft survives return",
+        "providers remain mounted once",
+        "one keyboard listener pair, cleaned on unmount"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-resident-shell-lifecycle.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\resident-shell-lifecycle",
+      "logSha256": "53da058f9c7e7a598d1339bb45dfa0e7e5066ec48f10285a88aa9b83cdae7daf"
+    },
+    {
+      "file": "services-lists-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "Catalog wording, free/fixed/per-page/assessment fees and guide destination",
+        "All filters/statuses, paid/waived mapping, tracking route, legacy/SLA branches, refresh and channel stability",
+        "Real Requests scroller survives profile/data refresh with unchanged scroll offset",
+        "320/360/400/412 widths, light/dark/custom accents and preference refresh preserve rows/scroller/queries; overflow arrows stop at both edges",
+        "Logs preserve ledger/free/unknown fees and noninteractive rows; New request opens Documents",
+        "Empty/error/retry and checking/pending/verification-error guidance stay reachable",
+        "Guest has only Documents, with public catalog error/retry/empty and channel cleanup"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-services-lists-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\services-lists-ui",
+      "logSha256": "1631883ce759fdfe06d3b882eae744137b08485f6b05960138e5d48d493fbf32"
+    },
+    {
+      "file": "services-tab-stability.mjs",
+      "initialExit": 1,
+      "finalStatus": "pass",
+      "groups": [
+        "Three background refreshes keep the document list at the same position",
+        "Refresh failures still show retry guidance",
+        "Changed verification status still shows verification guidance"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-services-tab-stability.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\services-tab-stability",
+      "logSha256": "787c1944f560ef338fef26d45412e273574945f95e31535d55a9e123a3660bb8"
+    },
+    {
+      "file": "settings-profile-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "20 presets/10 fonts and real preference providers persist theme/accent/font",
+        "extreme custom color accepted; duplicate and invalid hex recover; Cancel/Back dismiss",
+        "format chooser makes no request; PDF/JSON adapters used; password deletion cancellation makes no delete request",
+        "avatar saves immediately without erasing dirty fields; household stays local until explicit save; five synchronous taps cause one profile write",
+        "invalid/save error/photo picker error preserve inputs and recovery",
+        "five option-sheet open/close cycles, employment and birthday dismissal, compact widths have no document overflow",
+        "malformed household data cannot be silently overwritten by a profile save",
+        "custom color cap displays recoverable feedback",
+        "push retains unregister side effect; SMS remains local without a remote write",
+        "Google-confirmed deletion Cancel consumes confirmation without a delete request",
+        "reduced-motion dismissal works; logout keeps device dark mode and resets account accent"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-settings-profile-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\settings-profile-ui",
+      "logSha256": "5bb3c5ee64e7a826750ee65a4072485f024d92e5cadbae478645f64d59fe3667"
+    },
+    {
+      "file": "tracking-payment-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "method dispatch retains the existing RPC and route",
+        "business QR eligibility and existing page limit remain enforced",
+        "pickup confirmation follows both RPCs; rerender/theme changes do not repeat writes",
+        "tracking routes, terminal/waived/refunded branches, and load error recovery",
+        "tracking timing panel renders all three authoritative SLA values",
+        "QR decoration stops on blur, background, reduced motion and real expiry",
+        "actual provider hook rejects invented expiry and retains paid-during-cancel race",
+        "receipt uses paid server data, preserves tracking destination, and reports native export failure",
+        "success acknowledgement closes and provider channels clean up",
+        "long content fits 320/360/400/412 widths in dark/extreme accent"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-tracking-payment-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\tracking-payment-ui",
+      "logSha256": "1541b7bed0d526483fd1dcdd554a2394597207f277c6f9f55985d6a0ddb0bacf"
+    },
+    {
+      "file": "verification-sensitive-ui.mjs",
+      "initialExit": 0,
+      "finalStatus": "pass",
+      "groups": [
+        "ID image-only/size/cancel, OCR manual correction, date cancellation, Back draft, failed publication/retry stable ID and rapid-submit lock",
+        "five picker/Back cycles and synthetic camera deny/cancel/ready/capture with actual OCR-success rendering",
+        "authoritative ID verified status and replacement/Settings navigation",
+        "email send/OTP/expired feedback/input retention/cooldown/real response callback/address mismatch",
+        "password complexity/eyes, incorrect old credential and wrong-owner guards, rapid-write lock and success acknowledgement",
+        "legacy manage/recover-only and Google mismatch/fresh gate/first-password cancellation",
+        "location rejection/manual address versus late geocode/save error/rapid write lock/map retry/GPS denial/outside saved-point gate",
+        "compact/light/dark/extreme accents/fonts and reduced-motion variants; default setup/auth controls; listener cleanup and zero captured diagnostics"
+      ],
+      "diagnostics": [],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\logs\\fixture-verification-sensitive-ui.log",
+      "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-android-magicpatterns-phase-16-20261021\\fixtures\\verification-sensitive-ui",
+      "logSha256": "2f60e3ac1722f8c4677fbf697b64cb7cb9affb16b23d292db5aebf0e2000b580"
+    }
+  ],
+  "bundleComparison": {
+    "baseline": {
+      "path": "tmp\\resident-android-magicpatterns-phase-16-20261021\\export-permitted\\_expo\\static\\js\\android\\entry-9c7b0396791a70ee3f6fd0a5e36e42b3.hbc",
+      "sha256": "da51e8d3424e7320999df624a7f5519a3150a80f02cd072502d49984c7129694",
+      "bytes": 8251348
+    },
+    "final": {
+      "path": "tmp\\resident-android-magicpatterns-phase-16-20261021\\export-final\\_expo\\static\\js\\android\\entry-e05dd253c633a5d87c38e0abe4bdf0cd.hbc",
+      "sha256": "9d73ba90b1127871df487b043eba2c7dee863d5e0e5518c31b3bacc2c96127a6",
+      "bytes": 8251995
+    },
+    "deltaBytes": 647,
+    "baselineAssetCount": 53,
+    "finalAssetCount": 53,
+    "baselineAssetBytes": 6453724,
+    "finalAssetBytes": 6453724,
+    "assetContentIdentical": true
+  },
+  "checks": {
+    "baseline": {
+      "typecheck": "pass",
+      "lint": "pass",
+      "androidUnit": "25 files / 260 tests pass",
+      "shared": "34 files / 527 tests pass",
+      "export": "pass outside sandbox"
+    },
+    "final": {
+      "typecheck": "pass",
+      "lint": "pass",
+      "androidUnit": "25 files / 260 tests pass",
+      "shared": "34 files / 527 tests pass",
+      "export": "pass outside sandbox"
+    }
+  },
+  "native": "pending manual verification: read-only reviewed ADB inventory empty; user chose to finish available work and leave native pending",
+  "phase14": "not met: stored verified-ID image/type/version requires additional query scope decision",
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/center-presentation.test.ts",
+      "sha256": "57cedf9a9314c396cf4a2335b5973814fc6be20325473a9fba71cb2dcb49ddd3",
+      "bytes": 852
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-alert-filter.test.ts",
+      "sha256": "9dfbae95c429632b3d9f9b7ede97376f9b03fa5aaaa746b23730a5617cd238e1",
+      "bytes": 4091
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "sha256": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+      "bytes": 2672
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/horizontal-scroll.test.ts",
+      "sha256": "9d6876bba287f6bb437237ae512a69124ac8843d8f3a084deb64105acf28f655",
+      "bytes": 1440
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/map-presentation.test.ts",
+      "sha256": "7cf4bbb32bf3da6382e9bfe46ff4bf94c1f10fe43f1bea96d3633aab85f121c7",
+      "bytes": 1702
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/document-forms-ui.mjs",
+      "sha256": "8520d5d9baa20199b5b00ca3ba36135d5a572e1d843b96102ef363378d5fe9ac",
+      "bytes": 19263
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "sha256": "2438a0be7496b2b61288daf048e2c61052624afc9149e5add2dea19dca997f78",
+      "bytes": 20939
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-hub-alerts-ui.mjs",
+      "sha256": "0d993af949392bd2a72d4b7a9c913ad67912a2f28308b8bb6ef6dc4854fa13d1",
+      "bytes": 18486
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "sha256": "d6f296b3514b5f406d0e7dae3ad63a9b5331c4c90662d3bd9062e0256ffaceb5",
+      "bytes": 31086
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+      "sha256": "b92b7e1e35f7873080fac47a936308db54fefb900218072fff2e3f47ee7c4e60",
+      "bytes": 24322
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/help-legal-about-ui.mjs",
+      "sha256": "3846a1a6197ee7d73f030661d3eb793484d83a4cc952ecbb570a4c4cffdef765",
+      "bytes": 20188
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "sha256": "c75c93ce23ce9eaf02a8fa9d2e2ca219ef5ab0dc773e805805c4ad38162e501d",
+      "bytes": 21659
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "sha256": "0c1f0587a6ad989f413919fb15e76c4b736f4e84e4df35e0302bbf8c985d0f11",
+      "bytes": 21478
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "sha256": "ded6444df422df3049898bb8425725da2c69e09f68d8f155c094496b6ca17ff1",
+      "bytes": 26201
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-document-presentation-ui.mjs",
+      "sha256": "567ad4d22e9eb732ee04480cce4105c9b6db4044d2b57080f4f21c9b1abd68b8",
+      "bytes": 18540
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+      "sha256": "2aa4f6685e4217d8417b2230f4ffa67bfe576dfae80f5c442c771951e78fc547",
+      "bytes": 5755
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "sha256": "a2a1ff2302978a59ba85f3da76dd266b705fc8bd547666aa1967a1b381017f17",
+      "bytes": 11167
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-lists-ui.mjs",
+      "sha256": "a369d73b17227cb1917dd3172f1d7b31c2f40ef6ea14979ce20069d7817cfdf3",
+      "bytes": 19632
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "sha256": "3286e91a97a437302db3321a35474b13e8b6f23369b29cd1374267f7bf374016",
+      "bytes": 20877
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+      "sha256": "801a33a3a60add649ad7ff66422220f8cb2a9da7f3d0d68aa488d1af33446f14",
+      "bytes": 19994
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "sha256": "144fdb4e96d5e893a57b2ee594bba919b07425f4cc5cad97b942d8bb6d99da01",
+      "bytes": 27714
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx",
+      "sha256": "9c035dffd415c9361a5a56385472b656835596f9aef02947795da285dc27b7c7",
+      "bytes": 366
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/_layout.tsx",
+      "sha256": "bd1e9f8d93ee260977226e3bb4c716026d24bfdc07844dc01499baa0eb7aae24",
+      "bytes": 506
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx",
+      "sha256": "dfd1110226b0ba0ca82ac9746014738b84b00721962a1c65c56801f5c6fa84aa",
+      "bytes": 271
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "sha256": "7f77208b7b72759f2da17b16ace7051fada122db64d1f85df516522c4e47c0bb",
+      "bytes": 1016
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/account-setup-status.test.ts",
+      "sha256": "c0662f2c90a02f233927db061af79e3e0d9ec658fc932692d993aaaa66cd4040",
+      "bytes": 5044
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/auth-cleanup.test.ts",
+      "sha256": "829a8b2ef98c7fefba04717fb000303716285af4c329f97276f6cfd43d247e09",
+      "bytes": 1849
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/birthday-wheel.test.ts",
+      "sha256": "5be425679faa2a63d59da12bec1eedd3c990cee7597d1ed54a225447c92adc4c",
+      "bytes": 1254
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+      "sha256": "e3f84f47bf83042e5560bd2b3b7f489082bcd117ab0983c79b3cd7af93b97499",
+      "bytes": 4303
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/google-auth-flow.test.ts",
+      "sha256": "f5e537f7e9ea5b513d1befbf523efc40af93575fc5a993b8d2e6ed971d4fc385",
+      "bytes": 7482
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/google-auth.test.ts",
+      "sha256": "e5fdc1a9e588219f34e3363785e0c564e20c8f33ae857cec8267b52cce3593d5",
+      "bytes": 6824
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/leaflet-assets.test.ts",
+      "sha256": "1560b69ee69d75c450fb48d2b143980ba17859c0df91993c159c6996e6e4efa7",
+      "bytes": 926
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/login-error.test.ts",
+      "sha256": "54765a8d4515cfac8da09bbd451bee6b8d353f57f65a87dcdf99d846f8c552c6",
+      "bytes": 1192
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/offline-routing.test.ts",
+      "sha256": "a9aa1719cf1a2de46f06170984401e8d4e1a4621e8bf25ef08e0d4c9e65ce2b8",
+      "bytes": 22935
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/password-recovery.test.ts",
+      "sha256": "f6fae0649729528413b41eb53ca657a9d01194b967dd1248a6f43a314f683bb6",
+      "bytes": 7953
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/pkce-crypto.test.ts",
+      "sha256": "953be688fdb7abf72ad3dbd1bea04beef3c81558bd33fbfc5f527e94d00e0c89",
+      "bytes": 2631
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/resident-reduced-motion.test.ts",
+      "sha256": "7cd6038a964e8ff355f99d8a996d0c182347b606c11164a8308380f2e7a5dc56",
+      "bytes": 3052
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/resident-search.test.ts",
+      "sha256": "ca49d5d8011534559ccf864918f304ba93ae0309e4c6595a83730231205da628",
+      "bytes": 4960
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/resident-theme.test.ts",
+      "sha256": "1004951068c358a29ac4e1148ec0d8fa560fae36874846fff73e8200622ba8d6",
+      "bytes": 2645
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/search-history.test.ts",
+      "sha256": "4e3f2145e595787c8ec80a54e315f33d49899ff4393cf51bbc95427e9dd788c9",
+      "bytes": 2963
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/sensitive-auth.test.ts",
+      "sha256": "096b9bd9be35547412eef16f0bcdd1da3eea77bdb0304cc4105b5b2aea6bf1ed",
+      "bytes": 7223
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-navigation.test.ts",
+      "sha256": "d81b537ee6bb46d56e273856d02a6ec15558a69ac4b878479287b5344ae8d46d",
+      "bytes": 6729
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-refresh.test.ts",
+      "sha256": "6e80f731083f3aff39962883a81143204e0d242877c1f9c535eacf1afd17bf03",
+      "bytes": 2255
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-request.test.ts",
+      "sha256": "3538366a640e5cf236139a2e96c8f2bbbb21ef250103826553e98fdfa30716c2",
+      "bytes": 4183
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/valid-id.test.ts",
+      "sha256": "75916b7be0af96e7bbf095c585b7e71f2dc0802f67f82368254e96e723c4e0e2",
+      "bytes": 2113
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-history-ui.mjs",
+      "sha256": "eca3d41c2b03aa967df2c92d01c00ff6f9dd7a2a8d75003be35ef12d0498f393",
+      "bytes": 5746
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-lifecycle.mjs",
+      "sha256": "2cb93f07893e6daba1dfa89e69baaa7a1f064fa01ac0ad3f194b0e091c680b22",
+      "bytes": 7205
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "sha256": "4d6ac69e07d82115223386ae0c05fd284f7abf764617aebaa02c7e9497bde5b9",
+      "bytes": 7475
+    },
+    {
+      "path": "apps/resident-android-mobile/.gitignore",
+      "sha256": "3202f058e939c007c575baa96b8c774cbdc6c7e8677b30dc92540de43e1eaa8d",
+      "bytes": 156
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "sha256": "e5e40c5ce355e7ecae13a5de27e0f2a6cb44d12e988f6e73ad201527302e13d6",
+      "bytes": 454
+    },
+    {
+      "path": "apps/resident-android-mobile/tsconfig.json",
+      "sha256": "09570b139a14ee71947b40b6ef8d639323603fd031bf253d32f449a77d3ab58e",
+      "bytes": 318
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+      "bytes": 142
+    },
+    {
+      "path": "packages/shared/vitest.config.ts",
+      "sha256": "ab62155f398c51eab4e82c644ad2c943e15fe60e4ee983ecaa916f4567d93e9f",
+      "bytes": 156
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/_layout.tsx",
+      "sha256": "d726cce2b2e40fee036af4a0f6f73c6e430c4eb4f067170815d39ac996ab88d5",
+      "bytes": 509
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "sha256": "b7d2f509727a757b33385eeb5b74435d2da8c5cb53fbeb75c24f446962d3d259",
+      "bytes": 996
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "sha256": "f72bd16d93ee9b8ed2fdea20da947f8b6fcadfd8ae73b323fa4e2bf62132401a",
+      "bytes": 10423
+    },
+    {
+      "path": "apps/resident-android-mobile/eslint.config.js",
+      "sha256": "7bafa023a1892f5876fe3bfc766bcac3da246a8ea347ca007b6ec0d970813886",
+      "bytes": 1818
+    },
+    {
+      "path": "packages/shared/tsconfig.json",
+      "sha256": "35043ded061de9e214f5af7cc7a22d28fff7c1a19f839d84ccc9c1453f611291",
+      "bytes": 377
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "225141396674acb97230d5bf04dcda031205b9ff0f9a4b2c77f29a4cc2fa2a33",
+      "bytes": 253
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "93b9bdce1c00805826ec26adc2cdb9e59177a4ab899b77e0fe2bf759af2707c7",
+      "bytes": 63
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx",
+      "sha256": "be80c9cf421a59cb79c8c122cbdf7e9c5935bdf7d22cbd358a81e6d15a2ac7a2",
+      "bytes": 885
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/_layout.tsx",
+      "sha256": "f29762b050f03aa1d3bda570b6015441cb45c17b088e9e3c6531c3cfd51e5aed",
+      "bytes": 1958
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "sha256": "22de541455a70f00e29033ddba4493ad94dcf88ddfa0a28a2d51b5a826361941",
+      "bytes": 2740
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "7e32bc00bf6e43b935a6b7ad22c3d11e5d1ed1c1a6d04636e93f635cf4acec26",
+      "bytes": 9193
+    },
+    {
+      "path": "apps/resident-android-mobile/metro.config.js",
+      "sha256": "a115031592d874d6f6cab841343647c74720debe71e9071f3d3aa49c8cfd3d68",
+      "bytes": 2854
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+      "bytes": 491
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "6c46d9058f323f04fd38b11dad75c592e4eb6a6f057ef282c6a6a8c87f1f37a3",
+      "bytes": 605
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "sha256": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6",
+      "bytes": 9053
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b",
+      "bytes": 2058
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx",
+      "sha256": "6a6c75f4ba962703263cd5c095cba80ebd849d76e9eeac0bcdca4274dddd461a",
+      "bytes": 2084
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "sha256": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3",
+      "bytes": 1295
+    },
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "bytes": 410
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "sha256": "ef66c60b7bf0e102de30cb29c00ace58288c94dd9762eec640c6a8f0ede2a125",
+      "bytes": 41471
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "b25029b04b2b65bbec56d76c26bae36e9a1d4fb6476df266673e23315a14ce24",
+      "bytes": 2206
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/document-guide-content.tsx",
+      "sha256": "2276ab50ce2e889ae8967908383fcbc691c8eb5913cd70e6aabdec458e3214f6",
+      "bytes": 7152
+    },
+    {
+      "path": "plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md",
+      "sha256": "33a4238a3a8ae79732fb8c1e8ae9d58685954731671c00d993e1d7e5520b6800",
+      "bytes": 301983
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "sha256": "acfd0afceaabcb25549194cdbcded344a0deff9c06dd96d9ff57fbc969858c4b",
+      "bytes": 2289
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/card.tsx",
+      "sha256": "372cd1da7fcbc49dab9cfdbba12836cbda75a7fced4e19948717a83719f53903",
+      "bytes": 1189
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/themed-text.tsx",
+      "sha256": "e0b6aa65059477fc8f4040bdb791ebe0a69265d66232a200f39980a4b9b14666",
+      "bytes": 2583
+    },
+    {
+      "path": "packages/shared/src/lib/service-catalog.ts",
+      "sha256": "1377c6c75ffbe9527475866c5184b290463a54ddaee21635ca530fc453c5126a",
+      "bytes": 6538
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "05e7a26a1f7fcbc046e4b331a6abae2a2987b7df91094c36a0027e76a33dcf9a",
+      "bytes": 667584
+    },
+    {
+      "path": "plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md",
+      "sha256": "b70f3c9bd79301f2a7e68c5f7cfb7d6c25f4fa47a47ba15ac20a8c63740a3fc5",
+      "bytes": 31524
+    },
+    {
+      "path": "plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md",
+      "sha256": "812d2b6a8f15dcb015044a62d480078069882bcbb590af73e1a954cad9bde8cc",
+      "bytes": 27436
+    }
+  ]
+}

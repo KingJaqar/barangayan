@@ -1,0 +1,113 @@
+[
+  {
+    "name": "android-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "apps/resident-android-mobile/tsconfig.json"
+    ],
+    "exit": 2,
+    "seconds": 63.0,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-types.log"
+  },
+  {
+    "name": "android-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--workspace=@barangayan/mobile"
+    ],
+    "exit": 0,
+    "seconds": 31.3,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-lint.log"
+  },
+  {
+    "name": "android-tests",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--root",
+      "apps/resident-android-mobile"
+    ],
+    "exit": 0,
+    "seconds": 9.0,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-android-tests.log"
+  },
+  {
+    "name": "web-types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--workspace=@barangayan/resident-web"
+    ],
+    "exit": 0,
+    "seconds": 9.7,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-web-types.log"
+  },
+  {
+    "name": "web-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--workspace=@barangayan/resident-web",
+      "--",
+      "src/lib/qr-checkin.ts",
+      "src/components/emergency/qr-scanner-dialog.tsx",
+      "src/components/emergency/qr-upload-fallback.tsx",
+      "src/components/emergency/scan-content.tsx"
+    ],
+    "exit": 0,
+    "seconds": 17.6,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-web-lint.log"
+  },
+  {
+    "name": "ios-types",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--workspace=@barangayan/resident-ios"
+    ],
+    "exit": 0,
+    "seconds": 23.8,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-types.log"
+  },
+  {
+    "name": "ios-tests",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--workspace=@barangayan/resident-ios",
+      "--",
+      "tests/qr.test.ts",
+      "tests/resident-api.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 8.4,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-tests.log"
+  },
+  {
+    "name": "ios-lint",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--workspace=@barangayan/resident-ios",
+      "--",
+      "src/data/resident-api.ts",
+      "src/data/schemas.ts",
+      "src/lib/errors.ts",
+      "src/features/qr/qr-section.tsx",
+      "tests/qr.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 68.4,
+    "log": "tmp\\family-attendance-phase3-20261022\\logs\\final-ios-lint.log"
+  }
+]

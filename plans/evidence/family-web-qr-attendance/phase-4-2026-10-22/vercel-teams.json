@@ -1,0 +1,10 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"result\": {\n    \"teams\": [\n      {\n        \"name\": \"Barangayan\",\n        \"slug\": \"barangayan\",\n        \"id\": \"team_6b0TR8mzj8rxhZsgs2DVd1y6\",\n        \"saml\": {}\n      }\n    ],\n    \"pagination\": {\n      \"count\": 1,\n      \"prev\": 1787228659726\n    }\n  }\n}"
+    }
+  ],
+  "structuredContent": null,
+  "isError": false
+}

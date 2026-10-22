@@ -1,0 +1,213 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+
+const app = path.resolve(import.meta.dirname, '..');
+const require = createRequire(path.join(app, 'package.json'));
+const { build } = require('esbuild');
+const { chromium } = require('playwright');
+const root = path.join(app, 'src').replaceAll('\\', '/');
+const shared = path.resolve(app, '../../packages/shared/src').replaceAll('\\', '/');
+const out = process.env.TEST_ARTIFACTS_DIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'resident-services-lists-'));
+fs.mkdirSync(out, { recursive: true });
+
+// Real screen, lists, status/fee contracts, text, panels, chips and overflow controls.
+// Data/session/router and native animation adapters are explicit synthetic fixtures.
+const mocks = {
+  'react-native': `import React from 'react';import {Pressable as WebPressable,View as WebView} from 'react-native-web';export * from 'react-native-web';export const Pressable=React.forwardRef(({accessibilityState,...props},ref)=><WebPressable {...props} ref={ref} aria-selected={accessibilityState?.selected} aria-busy={accessibilityState?.busy}/>);export const View=React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...props},ref)=><WebView {...props} ref={ref} aria-hidden={accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'||undefined}/>);`,
+  '@barangayan/shared': `export * from '${shared}/lib/service-catalog.ts';export * from '${shared}/lib/request-status.ts';export * from '${shared}/lib/format.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS} from '${shared}/constants/theme-fonts.ts';`,
+  'expo-router': `import React,{useEffect} from 'react';export const useRouter=()=>({push:href=>window.fixture.routes.push(href)});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>useEffect(fn,[fn]);export const Link=({href,children})=>{if(Array.isArray(children.props.style))throw new Error('Expo Router v57 Slot rejects child style arrays');return React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});};`,
+  '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:false});`,
+  '@/hooks/use-profile': `export const useProfile=()=>window.fixture.profileState;`,
+  '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.fontId});`,
+  '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
+  '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+  '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+  './agency-sla-status': `import React from 'react';import {Text} from 'react-native';export const AgencySlaStatus=({requestId})=><Text>Agency processing clock: {requestId}</Text>;`,
+  '@/lib/supabase': `export const supabase={from(table){let kind=table==='document_types'?'catalog':'requests';const query={select(columns){if(columns.includes('payments('))kind='logs';return query;},eq(){return query;},order(){return query;},then(done){window.fixture.queries.push(kind);return Promise.resolve().then(()=>done({data:window.fixture.fail[kind]?null:structuredClone(kind==='catalog'?window.fixture.documents:window.fixture.requests),error:window.fixture.fail[kind]?{}:null}));}};return query;},channel(name){const channel={name,on(event,filter,callback){channel.callback=callback;return channel;},subscribe(){window.fixture.channels.set(name,channel);return channel;}};return channel;},removeChannel(channel){window.fixture.channels.delete(channel.name);}};`,
+  'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View,createAnimatedComponent:component=>component};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const interpolateColor=(value,input,output)=>output[value>=.5?1:0];export const Easing={bezier:()=>undefined};`,
+  '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size,style})=><View style={[{width:size,height:size,flexShrink:0},style]}/>;`,
+  'expo-image': `export {Image} from 'react-native';`,
+  'react-native-svg': `import React from 'react';export default function Svg({accessible,...props}){return <svg {...props}/>;}export const Path=props=><path {...props}/>;`,
+  'react-native-safe-area-context': `export {View as SafeAreaView} from 'react-native';`,
+};
+
+await build({
+  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';
+    const profile={id:'synthetic-resident',id_verification_status:'verified',approved_id_submission_id:'synthetic-id',current_id_submission_id:'synthetic-id',id_repair_required:false};
+    const documents=[{id:'fixed',name:'Certificate of Indigency',service_kind:'indigency',contract_version:2,processing_target_minutes:15,fee_centavos:10000},{id:'business',name:'Issuance of Barangay Clearance for Business Establishments',service_kind:'business',contract_version:2,processing_target_minutes:15,fee_centavos:0},{id:'pages',name:'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)',service_kind:'certified_true_copy',contract_version:2,processing_target_minutes:15,fee_centavos:1000},{id:'free',name:'Free legacy service',contract_version:1,processing_target_hours:24,fee_centavos:0}];
+    const statuses=[['submitted','unpaid'],['submitted','paid'],['submitted','waived'],['in_progress','paid'],['ready_for_pickup','paid'],['completed','paid'],['cancelled','unpaid']];
+    const requests=statuses.map(([status,payment_status],index)=>({id:'request-'+index,status,payment_status,reference_number:'SYNTHETIC-'+index,created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-19T00:00:00Z',document_types:{name:'Service '+index,processing_target_hours:24,fee_centavos:10000},timing_model:index===6?'legacy':'agency_minutes_v1',contract_version:2,fee_assessment_state:index===0?'page_count_required':'assessed',assessed_amount_centavos:index===0?null:index===2?0:10000,payments:index===1?[{status:'paid',document_fee_centavos:7500,amount_centavos:7500}]:[]}));
+    window.fixture={session:{user:{id:'synthetic-resident'}},profileState:{profile,isLoading:false,error:null,refetch:()=>{window.fixture.retries++;}},mode:'light',accent:'#0F6E5B',fontId:'system',documents,requests,fail:{},channels:new Map(),queries:[],routes:[],retries:0};
+    const root=createRoot(document.getElementById('root'));let generation=0;window.renderServices=()=>root.render(<Services key={generation}/>);window.resetServices=()=>{generation++;window.renderServices();};window.refreshLists=()=>{for(const channel of window.fixture.channels.values())channel.callback();};window.renderServices();`, resolveDir: app, loader: 'tsx' },
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
+  define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
+  plugins: [{ name: 'fixtures', setup(b) {
+    b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : args.path === 'react-native' ? { path: require.resolve('react-native-web') } : undefined);
+    b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
+  } }],
+});
+
+const browserOptions = { headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE };
+if (!browserOptions.executablePath && !fs.existsSync(chromium.executablePath())) browserOptions.channel = 'chrome';
+const browser = await chromium.launch(browserOptions);
+const passed = [];
+const errors = [];
+let page;
+try {
+  page = await browser.newPage({ viewport: { width: 360, height: 640 } });
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
+  await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+  const tab = name => page.getByRole('tab', { name, exact: true });
+  const requestRows = () => page.getByRole('button', { name: /^Service \d+$/ });
+  await page.getByText('Available Documents', { exact: true }).waitFor();
+  await page.getByText('No payment required', { exact: true }).waitFor();
+  await page.getByText('₱10.00 per page', { exact: true }).waitFor();
+  await page.getByText('See Attached Tax Code (depends on the kind of transaction)', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Certificate of Indigency', exact: true }).click();
+  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/services/fixed');
+  await page.screenshot({ path: path.join(out, 'documents-light.png') });
+  await page.getByRole('button', { name: 'Collapse ID verification status', exact: true }).click();
+  assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
+  await page.getByRole('button', { name: 'Show ID verification status', exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.profileState.isLoading=true;window.renderServices(); });
+  await page.getByRole('button', { name: 'Show ID verification status', exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.profileState.isLoading=false;window.renderServices(); });
+  await page.getByRole('button', { name: 'Show ID verification status', exact: true }).click();
+  await page.getByText('Valid ID Verified', { exact: true }).waitFor();
+  passed.push('Catalog wording, free/fixed/per-page/assessment fees and guide destination');
+
+  await tab('Requests').click();
+  await requestRows().first().waitFor();
+  assert.equal(await requestRows().count(), 7);
+  assert.equal(await page.getByText('My Requests', { exact: true }).count(), 0);
+  assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
+  await tab('Active').click();
+  assert.equal(await requestRows().count(), 4);
+  await tab('Pending Payment').click();
+  assert.equal(await requestRows().count(), 1);
+  await tab('Paid').click();
+  assert.equal(await requestRows().count(), 2, 'Paid includes waived fees');
+  await tab('Processing').click();
+  assert.equal(await requestRows().count(), 1);
+  await requestRows().click();
+  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/services/requests/request-3');
+  const queries = await page.evaluate(() => window.fixture.queries.length);
+  for (let visit = 0; visit < 5; visit++) {
+    await page.evaluate(() => { window.fixture.profileState.isLoading=true;window.renderServices(); });
+    assert.equal(await tab('Processing').getAttribute('aria-selected'), 'true');
+    assert.equal(await page.getByText('Checking ID verification…', { exact: true }).count(), 0);
+    await page.evaluate(() => { window.fixture.profileState.isLoading=false;window.renderServices(); });
+  }
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), queries, 'Profile refresh must not reload requests');
+  await page.evaluate(() => window.refreshLists());
+  assert.equal(await tab('Processing').getAttribute('aria-selected'), 'true');
+  assert.equal(await page.evaluate(() => window.fixture.channels.size), 1);
+  await tab('Pickup').click();
+  assert.equal(await requestRows().count(), 1);
+  await tab('History').click();
+  assert.equal(await requestRows().count(), 2);
+  await page.getByText('Previous timing model', { exact: true }).waitFor();
+  await tab('Active').click();
+  assert.equal(await requestRows().count(), 4, 'Leaving Active clears its subfilter');
+  await page.screenshot({ path: path.join(out, 'requests-active-light.png') });
+  passed.push('All filters/statuses, paid/waived mapping, tracking route, legacy/SLA branches, refresh and channel stability');
+
+  // Refresh retains the mounted scroller and its offset, including while verification is checked.
+  await tab('All').first().click();
+  await page.evaluate(() => {
+    const row=Array.from(document.querySelectorAll('[role=button]')).find(el=>el.getAttribute('aria-label')==='Service 0');
+    let scroll=row.parentElement;
+    while(scroll && !(scroll.scrollHeight>scroll.clientHeight && getComputedStyle(scroll).overflowY==='auto'))scroll=scroll.parentElement;
+    if(!scroll)throw new Error('Requests vertical scroller missing');
+    window.requestScroller=scroll;scroll.scrollTop=60;
+  });
+  await page.evaluate(() => { window.fixture.profileState.isLoading=true;window.renderServices();window.refreshLists(); });
+  assert.equal(await page.evaluate(() => window.requestScroller.isConnected), true);
+  assert.equal(await page.evaluate(() => window.requestScroller.scrollTop), 60);
+  await page.evaluate(() => { window.fixture.profileState.isLoading=false;window.renderServices(); });
+  passed.push('Real Requests scroller survives profile/data refresh with unchanged scroll offset');
+
+  const preferenceQueries = await page.evaluate(() => window.fixture.queries.length);
+  for (const [width, mode, accent, fontId] of [[320,'dark','#ffffff','georgia'],[400,'light','#2563eb','system'],[360,'dark','#c2410c','tahoma'],[412,'light','#000000','times-new-roman']]) {
+    await page.setViewportSize({ width, height: 640 });
+    await page.evaluate(({mode,accent,fontId}) => { Object.assign(window.fixture,{mode,accent,fontId});window.renderServices(); }, {mode,accent,fontId});
+    assert.equal(await requestRows().count(), 7);
+    assert.equal(await page.evaluate(() => window.requestScroller.isConnected), true);
+    assert.equal(await page.evaluate(() => window.fixture.channels.size), 1);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({ path: path.join(out, `requests-${width}-${mode}.png`) });
+  }
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), preferenceQueries);
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.evaluate(() => { window.requestScroller.scrollTop=0; });
+  const rightArrow=page.getByRole('button',{name:'Scroll request filters right',exact:true});
+  await rightArrow.waitFor();
+  await rightArrow.click();
+  await rightArrow.waitFor({state:'hidden'});
+  const leftArrow=page.getByRole('button',{name:'Scroll request filters left',exact:true});
+  await leftArrow.click();
+  await leftArrow.waitFor({state:'hidden'});
+  passed.push('320/360/400/412 widths, light/dark/custom accents and preference refresh preserve rows/scroller/queries; overflow arrows stop at both edges');
+
+  await tab('Logs').click();
+  await page.getByText('₱75.00', { exact: true }).waitFor();
+  assert.equal(await page.getByText('Recent activity', { exact: true }).count(), 0);
+  assert.equal(await page.getByText('Latest updates on your requests', { exact: true }).count(), 0);
+  assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
+  await page.getByText('Free', { exact: true }).waitFor();
+  await page.getByText('₱10.00 per page — enter total pages to continue', { exact: true }).waitFor();
+  assert.equal(await requestRows().count(), 0, 'Logs must remain noninteractive');
+  await page.screenshot({ path: path.join(out, 'logs-light.png') });
+  await tab('Requests').click();
+  await page.getByRole('button', { name: 'Start a new document request', exact: true }).click();
+  await page.getByText('Available Documents', { exact: true }).waitFor();
+  passed.push('Logs preserve ledger/free/unknown fees and noninteractive rows; New request opens Documents');
+
+  await tab('Requests').click();
+  await page.evaluate(() => { window.fixture.requests=[];window.refreshLists(); });
+  await page.getByText('No requests here yet', { exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.fail.requests=true;window.refreshLists(); });
+  await page.getByText('Could not load your requests. Reconnect and retry.', { exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.fail.requests=false; });
+  await page.getByRole('button', { name: 'Retry requests', exact: true }).click();
+  await page.getByText('No requests here yet', { exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.profileState.error='Could not refresh your profile.';window.renderServices(); });
+  const retriesBefore = await page.evaluate(() => window.fixture.retries);
+  await page.getByRole('button', { name: 'Retry verification check', exact: true }).click();
+  assert.equal(await page.evaluate(() => window.fixture.retries), retriesBefore + 1);
+  await page.evaluate(() => { window.fixture.profileState.error=null;window.fixture.profileState.profile=null;window.fixture.profileState.isLoading=true;window.renderServices(); });
+  await page.getByText('Checking ID verification…', { exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.profileState.isLoading=false;window.fixture.profileState.profile={id_verification_status:'pending'};window.renderServices(); });
+  await page.getByText('Your ID is awaiting verification. Requests are available after approval.', { exact: true }).waitFor();
+  passed.push('Empty/error/retry and checking/pending/verification-error guidance stay reachable');
+
+  await page.evaluate(() => { window.fixture.session=null;window.resetServices(); });
+  await page.getByText('Available Documents', { exact: true }).waitFor();
+  assert.equal(await tab('Requests').count(), 0);
+  assert.equal(await tab('Logs').count(), 0);
+  assert.equal(await page.evaluate(() => window.fixture.channels.size), 1, 'Only the public catalog channel remains');
+  await page.evaluate(() => { window.fixture.fail.catalog=true;window.refreshLists(); });
+  await page.getByRole('button', { name: 'Retry catalog', exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.fail.catalog=false; });
+  await page.getByRole('button', { name: 'Retry catalog', exact: true }).click();
+  await page.getByText('Available Documents', { exact: true }).waitFor();
+  await page.evaluate(() => { window.fixture.documents=[];window.refreshLists(); });
+  await page.getByText('No documents available yet', { exact: true }).waitFor();
+  passed.push('Guest has only Documents, with public catalog error/retry/empty and channel cleanup');
+
+  assert.deepEqual(errors, []);
+  fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ passed, errors, adapters: ['Synthetic Supabase/session/profile data', 'React Native Web layout', 'Immediate reduced-motion Reanimated adapter', 'SLA child stub; actual SLA covered by shared contracts'] }, null, 2));
+  console.log(JSON.stringify({ passed, errors }));
+} catch (error) {
+  if (page) {
+    await page.screenshot({ path: path.join(out, 'failure.png') });
+    fs.writeFileSync(path.join(out, 'failure.html'), await page.content());
+    fs.writeFileSync(path.join(out, 'failure-console.json'), JSON.stringify(errors));
+  }
+  throw error;
+} finally { await browser.close(); }

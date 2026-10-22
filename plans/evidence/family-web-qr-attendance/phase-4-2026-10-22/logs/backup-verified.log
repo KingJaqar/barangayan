@@ -1,0 +1,22 @@
+{
+  "result": "pass",
+  "database": "family_attendance_web4_20261022",
+  "restored_database": "family_attendance_web4_backup_20261022",
+  "backup_sha256": "8e499baa1277c482f19b7c531f926f1bb63784fb60ae361332876c4f32b94fd1",
+  "rows": {
+    "stays": 2,
+    "legacy": 1,
+    "members": 1,
+    "profiles": 2,
+    "receipts": 3
+  },
+  "checks": [
+    "full schema/data restore to separate empty database",
+    "exact legacy/profile/member/stay/receipt row equality",
+    "function/view ownership/ACL equality",
+    "paused grants preserved through backup",
+    "resume original receipt replay leaves subsequent visit active"
+  ],
+  "synthetic_only": true,
+  "diagnostic": "Initial post-restore assertion assumed holder at index zero; diagnosed actual member-first ordering and completed verification by kind without recreating fixtures or repeating restore."
+}

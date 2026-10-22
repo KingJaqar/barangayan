@@ -1,0 +1,387 @@
+[
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "packages/shared/src/index.ts",
+    "expected": "1f4a259f4ad809897a8b8ecd14d224df7d7719c418ae75fbd84db0b07eadcd42",
+    "actual": "1f4a259f4ad809897a8b8ecd14d224df7d7719c418ae75fbd84db0b07eadcd42",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/tests/toast-location-search-browser.mjs",
+    "expected": "99931caa8ba7cbdbf2d475b5acd0d0b4c6f519b53697209349648fe0ffff2d99",
+    "actual": "99931caa8ba7cbdbf2d475b5acd0d0b4c6f519b53697209349648fe0ffff2d99",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/hooks/use-family-members.ts",
+    "expected": "c00f05428736ba3d7425a529e889c1691d8a5b35bc1e2cc6d0a8eb4b3207648f",
+    "actual": "c00f05428736ba3d7425a529e889c1691d8a5b35bc1e2cc6d0a8eb4b3207648f",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/lib/household-feedback.ts",
+    "expected": "c67719af013b82d4e425388492a69211caa401ab5fb0f747839cda3c086afda3",
+    "actual": "c67719af013b82d4e425388492a69211caa401ab5fb0f747839cda3c086afda3",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/lib/supabase/client.ts",
+    "expected": "94f4b7c88c6ea008eae35015a8130b934ef3d15a76aa0c24f51ac61a80664248",
+    "actual": "94f4b7c88c6ea008eae35015a8130b934ef3d15a76aa0c24f51ac61a80664248",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/components/emergency/emergency.module.css",
+    "expected": "2d764f09294ad83d3a00ff9c79c5258c6c4a3e6501fcecf0cc6b198fb1784866",
+    "actual": "2d764f09294ad83d3a00ff9c79c5258c6c4a3e6501fcecf0cc6b198fb1784866",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+    "expected": "64d26beeedf6a645bbe38db85bfc1e9d69b3d7a23ad06ff49016807afe830b63",
+    "actual": "64d26beeedf6a645bbe38db85bfc1e9d69b3d7a23ad06ff49016807afe830b63",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+    "expected": "8f34c0005a10a1b81e09d543f8fd30f493bde8502471e3a7d115ff5c800d5bb7",
+    "actual": "8f34c0005a10a1b81e09d543f8fd30f493bde8502471e3a7d115ff5c800d5bb7",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "expected": "5b8e1fbfa70e293932dca5a3b65331f1e9f1b9a18fc2bc6c3f93099a4c45cfcb",
+    "actual": "5b8e1fbfa70e293932dca5a3b65331f1e9f1b9a18fc2bc6c3f93099a4c45cfcb",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "expected": "e5396599346f8bfc640bde691c56997f3caf3c6a5d6ecce8ce10a7f9e84dbe41",
+    "actual": "e5396599346f8bfc640bde691c56997f3caf3c6a5d6ecce8ce10a7f9e84dbe41",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+    "expected": "74ae01cf6282488b4d31b30dc9a076f5e0b4bb50218c8b379234468bb0192b19",
+    "actual": "74ae01cf6282488b4d31b30dc9a076f5e0b4bb50218c8b379234468bb0192b19",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/admin-web/src/lib/household-attendance.ts",
+    "expected": "1a74226d0fb1ec3b60056989c95f068232fee5d206d2d4656a23eee91b2a176f",
+    "actual": "1a74226d0fb1ec3b60056989c95f068232fee5d206d2d4656a23eee91b2a176f",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/src/lib/household.ts",
+    "expected": "fcefb9013cd6e98822f6e14f849d51379f2a88348d3a48e3ae1e844b2decb817",
+    "actual": "fcefb9013cd6e98822f6e14f849d51379f2a88348d3a48e3ae1e844b2decb817",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "apps/resident-web/tests/household.test.ts",
+    "expected": "7b9f208b755856c60b10f3508e0ec1158250178820a0fe862e484ce1d10594d4",
+    "actual": "7b9f208b755856c60b10f3508e0ec1158250178820a0fe862e484ce1d10594d4",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "packages/shared/src/lib/attendance-request.ts",
+    "expected": "cfa36f0391014575f175313fcc052f623f209c62b77e46364a8a318064b18929",
+    "actual": "cfa36f0391014575f175313fcc052f623f209c62b77e46364a8a318064b18929",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-3-2026-10-22/sources.final.json",
+    "path": "packages/shared/src/lib/attendance-request.test.ts",
+    "expected": "d54265cc894ac710f248db80af780e1b95dcc2965eb36dd1e9fddafede2a491b",
+    "actual": "d54265cc894ac710f248db80af780e1b95dcc2965eb36dd1e9fddafede2a491b",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/package.json",
+    "expected": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944",
+    "actual": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+    "expected": "6d4a7a35fb94375ddd90f12dbecca8bbc10955460f36a4d5dcb60591b1703f41",
+    "actual": "6d4a7a35fb94375ddd90f12dbecca8bbc10955460f36a4d5dcb60591b1703f41",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+    "expected": "4bf791692d458561c7c5583d562b6d50eb7806a3f8d26a3f1c53f94ca243ea80",
+    "actual": "4bf791692d458561c7c5583d562b6d50eb7806a3f8d26a3f1c53f94ca243ea80",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "expected": "20f529eb5d8a4d8de88f67fabb737ffdb7c26e35f1592f897c94cb13a0940bec",
+    "actual": "20f529eb5d8a4d8de88f67fabb737ffdb7c26e35f1592f897c94cb13a0940bec",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+    "expected": "85a1ea2256c928481a16a03026ffe3016ff1a8be936ca2d981b89cb3f57b3f70",
+    "actual": "85a1ea2256c928481a16a03026ffe3016ff1a8be936ca2d981b89cb3f57b3f70",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+    "expected": "4c7d06e058b633b2112ce7f23022f0af983db5bac47da15664163a7eb2f0ec1e",
+    "actual": "4c7d06e058b633b2112ce7f23022f0af983db5bac47da15664163a7eb2f0ec1e",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+    "expected": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7",
+    "actual": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+    "expected": "71c1c11d8ad5b8a86291248e26080268e63d9c5dd9e59a58797a9402f3e970a1",
+    "actual": "71c1c11d8ad5b8a86291248e26080268e63d9c5dd9e59a58797a9402f3e970a1",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/lib/supabase/client.ts",
+    "expected": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95",
+    "actual": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+    "expected": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa",
+    "actual": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+    "expected": "fcb1234f3673ae067524efd2549c095e9e8aa73dd1c9fa8ea63eca5dad12ddca",
+    "actual": "fcb1234f3673ae067524efd2549c095e9e8aa73dd1c9fa8ea63eca5dad12ddca",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+    "expected": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820",
+    "actual": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+    "expected": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7",
+    "actual": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/lib/household-attendance.ts",
+    "expected": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2",
+    "actual": "1a74226d0fb1ec3b60056989c95f068232fee5d206d2d4656a23eee91b2a176f",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+    "expected": "87afb13f8c09566257f35ea04b304bbdc01fabaad69b6b5a4c3fd61330361a7c",
+    "actual": "87afb13f8c09566257f35ea04b304bbdc01fabaad69b6b5a4c3fd61330361a7c",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+    "expected": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba",
+    "actual": null,
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+    "expected": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca",
+    "actual": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "package-lock.json",
+    "expected": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "actual": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "packages/shared/src/schemas/household-attendance.ts",
+    "expected": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace",
+    "actual": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/sources.json",
+    "path": "supabase/migrations/20261021111056_household_attendance.sql",
+    "expected": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e",
+    "actual": null,
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "AGENTS.md",
+    "expected": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "CLAUDE.md",
+    "expected": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+    "actual": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "package-lock.json",
+    "expected": "0B8E5D22A6E9EC2A39608B1CF3E5D04C80C2685714B21A320C2B05D7B498EFCB",
+    "actual": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/index.ts",
+    "expected": "709B037C661E61831A75F298F7475C1419A075D6B459DD1028C07A4C764EF7C1",
+    "actual": "1f4a259f4ad809897a8b8ecd14d224df7d7719c418ae75fbd84db0b07eadcd42",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/types/database.ts",
+    "expected": "DC5820B0D290D3754C8596BCF3E422178A4DEB0BD4B9E0CFD386763CCB9976BB",
+    "actual": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/types/household-attendance.database.ts",
+    "expected": "EFBFFAA3008213BBE0A37965ABCAD40BC7F7F5E4A3F1CB999373A075D8A65B60",
+    "actual": "efbffaa3008213bbe0a37965abcad40bc7f7f5e4a3f1cb999373a075d8a65b60",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/schemas/household-attendance.ts",
+    "expected": "25AE9521711F65BCE2043F4EC2482B1FC420C9C029156462BD4EA164E24C3ACE",
+    "actual": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/schemas/household-attendance.test.ts",
+    "expected": "D0B41EB8CDF76E56928C8548A0A9DCC2509188966A87F21E74D170A3C6F28B6D",
+    "actual": "1555634ca1b0f6e62089fc03515c68eee28f6244c4ad26540900e4f1c87c5c8f",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+    "expected": "BA5FF727729CCC02B764C29781B4F09BE90B729EC436D155554A2CC5DA10ACCE",
+    "actual": "ba5ff727729ccc02b764c29781b4f09be90b729ec436d155554a2cc5da10acce",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/migrations/20261021111056_household_attendance.sql",
+    "expected": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E",
+    "actual": null,
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/tests/household_attendance.test.sql",
+    "expected": "67AABD3F1E154D5409040E9D08081939703EA7298E707E5DC015F0435F426215",
+    "actual": "67aabd3f1e154d5409040e9d08081939703ea7298e707e5dc015f0435f426215",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/tests/household_attendance_boundaries.test.sql",
+    "expected": "813ACCA07E59C02BCD4EEF15622BA363AF0BD22582919FF3B0BECF2C021F1698",
+    "actual": "813acca07e59c02bcd4eef15622ba363af0bd22582919ff3b0becf2c021f1698",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/tests/household_attendance_concurrency.mjs",
+    "expected": "0E28782D0C5B35EEDC521AB5BA11038F910C40A5FDC2529EEFF1F6E2B8B770DD",
+    "actual": "0e28782d0c5b35eedc521ab5ba11038f910c40a5fdc2529eeff1f6e2b8b770dd",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+    "expected": "721E519CA2B1D7F90EB8E3A3E4FC9637A9E49A1C0924A8F54FC4CF191D3A86A9",
+    "actual": "721e519ca2b1d7f90eb8e3a3e4fc9637a9e49a1c0924a8f54fc4cf191d3a86a9",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/functions/export-my-data/index.ts",
+    "expected": "EA8A7A7B83ADA037B43A3F472ACF4CFADE45FAD6848F47718437FD2A10B72D63",
+    "actual": "ea8a7a7b83ada037b43a3f472acf4cfade45fad6848f47718437fd2a10b72d63",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "supabase/functions/export-my-data/export-v2.ts",
+    "expected": "25BB5C80B0EDE7DACA443BD98D96F78ADA3464FC325DBF66F46463B27915DB27",
+    "actual": "25bb5c80b0ede7daca443bd98d96f78ada3464fc325dbf66f46463b27915db27",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+    "expected": "069079FE00384649CB9B7EAC4693726AA4ABA57873CDA8A723E0D084EB312C7A",
+    "actual": "069079fe00384649cb9b7eac4693726aa4aba57873cda8a723e0d084eb312c7a",
+    "state": "unchanged"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+    "expected": "CAA0C56E8D9DCEEE2A7949045D90D7B1515747E2658CBA96FD76DA9F9324E45C",
+    "actual": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7",
+    "state": "changed/missing"
+  },
+  {
+    "ledger": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/sources.json",
+    "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+    "expected": "FEF6616B9A66AC0FE7E4A1E2305C0315BE2681808A86D94E055D5CBE30E1662C",
+    "actual": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa",
+    "state": "changed/missing"
+  }
+]

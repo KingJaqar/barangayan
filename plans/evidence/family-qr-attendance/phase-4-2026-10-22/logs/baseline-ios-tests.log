@@ -1,0 +1,17 @@
+
+> @barangayan/resident-ios@1.0.0 test
+> vitest run tests/qr.test.ts tests/resident-api.test.ts tests/export-function.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-ios-mobile
+
+ ✓ tests/export-function.test.ts (15 tests) 42ms
+ ✓ tests/resident-api.test.ts (19 tests) 108ms
+ ✓ tests/qr.test.ts (30 tests) 2110ms
+   ✓ QR image (A26-005…007, A27-002; P15-T05 proves QR output) > writes a valid 1-bit PNG whose pixels are the symbol with a four-module quiet zone  1713ms
+
+ Test Files  3 passed (3)
+      Tests  64 passed (64)
+   Start at  10:08:25
+   Duration  6.55s (transform 1.32s, setup 0ms, collect 4.91s, tests 2.26s, environment 1ms, prepare 807ms)
+

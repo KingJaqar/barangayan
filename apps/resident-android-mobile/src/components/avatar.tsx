@@ -26,6 +26,7 @@ export function Avatar({
   size = 48,
   icon,
   color,
+  foregroundColor,
 }: {
   fullName?: string;
   /** Public URL of the resident's profile photo. When set, renders the photo
@@ -36,9 +37,12 @@ export function Avatar({
   icon?: keyof typeof Ionicons.glyphMap;
   /** Overrides the default theme.primary background — e.g. theme.accentRed for guest. */
   color?: string;
+  /** Optional readable foreground for resident controls with unrestricted saved accents. */
+  foregroundColor?: string;
 }) {
   const theme = useTheme();
   const backgroundColor = color ?? theme.primary;
+  const foreground = foregroundColor ?? theme.onPrimary;
 
   return (
     <View
@@ -54,11 +58,11 @@ export function Avatar({
           cachePolicy="memory-disk"
         />
       ) : icon ? (
-        <Ionicons name={icon} size={size * 0.5} color={theme.onPrimary} />
+        <Ionicons name={icon} size={size * 0.5} color={foreground} />
       ) : (
         <ThemedText
           type="smallBold"
-          style={[styles.initials, { color: theme.onPrimary, fontSize: size * 0.33 }]}>
+          style={[styles.initials, { color: foreground, fontSize: size * 0.33 }]}>
           {getInitials(fullName ?? '?')}
         </ThemedText>
       )}

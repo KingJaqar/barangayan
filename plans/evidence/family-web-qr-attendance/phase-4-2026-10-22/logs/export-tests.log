@@ -1,0 +1,24 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan
+
+ ✓ tmp/family-attendance-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts (15 tests) 40ms
+ ✓ apps/resident-ios-mobile/tests/export-function.test.ts (15 tests) 41ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tmp/family-web-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts [ tmp/family-web-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts ]
+Error: Cannot find module '../src/features/privacy/export-contract' imported from 'C:/Users/User/barangayan/tmp/family-web-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts'
+ ❯ tmp/family-web-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts:3:1
+
+
+Caused by: Error: Failed to load url ../src/features/privacy/export-contract (resolved id: ../src/features/privacy/export-contract) in C:/Users/User/barangayan/tmp/family-web-phase4-20261022/before/apps/resident-ios-mobile/tests/export-function.test.ts. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/config.js:22739:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  30 passed (30)
+   Start at  13:26:55
+   Duration  13.12s (transform 557ms, setup 0ms, collect 619ms, tests 81ms, environment 1ms, prepare 981ms)
+

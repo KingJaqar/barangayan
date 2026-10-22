@@ -1,0 +1,169 @@
+{
+  "scope": "Phase 0 documentation/discovery only",
+  "checks": [
+    {
+      "check": "Only Phase 0 plan section changed",
+      "passed": true
+    },
+    {
+      "check": "Exactly six completed Phase 0 gates",
+      "passed": true
+    },
+    {
+      "check": "A01-A17 definitions preserved",
+      "passed": true
+    },
+    {
+      "check": "A01 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A02 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A03 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A04 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A05 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A06 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A07 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A08 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A09 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A10 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A11 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A12 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A13 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A14 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A15 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A16 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "A17 coverage is unique and still pending",
+      "passed": true
+    },
+    {
+      "check": "Phase 1-4 status unchanged",
+      "passed": true
+    },
+    {
+      "check": "Index records Phase 0 completion",
+      "passed": true
+    },
+    {
+      "check": "Packet product sources, instructions and lockfile unchanged",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "All additional inventoried product sources unchanged",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "contracts.before.xml preserved packet identity",
+      "passed": true
+    },
+    {
+      "check": "contracts.before.xml exact intended/actual manifest",
+      "passed": true
+    },
+    {
+      "check": "contracts.before.xml bounded extractions",
+      "passed": true
+    },
+    {
+      "check": "contracts.before.xml no missing read continuation",
+      "passed": true
+    },
+    {
+      "check": "contracts.before.xml source bytes unchanged except owned plan/index",
+      "passed": true
+    },
+    {
+      "check": "consumers.before.xml preserved packet identity",
+      "passed": true
+    },
+    {
+      "check": "consumers.before.xml exact intended/actual manifest",
+      "passed": true
+    },
+    {
+      "check": "consumers.before.xml bounded extractions",
+      "passed": true
+    },
+    {
+      "check": "consumers.before.xml no missing read continuation",
+      "passed": true
+    },
+    {
+      "check": "consumers.before.xml source bytes unchanged except owned plan/index",
+      "passed": true
+    },
+    {
+      "check": "Changed Markdown links resolve",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Hosted new RPC names have no collision",
+      "passed": true
+    },
+    {
+      "check": "Archive guard drift evidenced",
+      "passed": true
+    },
+    {
+      "check": "Attendance and receipt absence evidenced",
+      "passed": true
+    },
+    {
+      "check": "QR failure outcomes recorded without fabricated success",
+      "passed": true
+    }
+  ],
+  "passed": 39,
+  "failed": 0,
+  "final_plan_sha256": "79CC96B438142C1D197B5D065F98A56EE6D20EEC4BB1D75187E6CCBF9A8EB72F",
+  "final_index_sha256": "1249343DA42DCEFE61DF1C500C0029211520ACDC0B71484D54648F4F8F1AFE7D",
+  "behavioral_acceptance": "A01-A17 pending implementation; no runtime pass claimed"
+}

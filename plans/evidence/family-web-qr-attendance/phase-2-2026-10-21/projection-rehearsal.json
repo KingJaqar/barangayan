@@ -1,0 +1,17 @@
+{
+  "restore_projection_prerequisite": "BEGIN\nCREATE VIEW\nCREATE VIEW\nCREATE VIEW\nCOMMIT\n",
+  "full_migration": "BEGIN\nDO\nCREATE VIEW\nREVOKE\nGRANT\nNOTIFY\nCOMMIT\n",
+  "admin_household_attendance_projection_web.test.sql": {
+    "pass": true,
+    "assertions": 27
+  },
+  "household_attendance.test.sql": {
+    "pass": true,
+    "assertions": 83
+  },
+  "admin_record_lifecycle.test.sql": {
+    "pass": true,
+    "assertions": 153
+  },
+  "migration_sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+}

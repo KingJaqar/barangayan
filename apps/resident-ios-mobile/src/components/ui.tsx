@@ -157,6 +157,23 @@ export function StatusBadge({ label, icon, tone }: { label: string; icon: IconNa
     <SymbolIcon name={icon} color={color} size={13} /><Text style={[type.caption, { color }]}>{label}</Text>
   </View>;
 }
+/** A collapsible section (A50). The header is one button that announces expanded or collapsed; its content is mounted only while open. */
+export function Accordion({ title, detail, children, defaultOpen = false }: { title: string; detail?: string; children: ReactNode; defaultOpen?: boolean }) {
+  const colors = useColors();
+  const type = useType();
+  const [open, setOpen] = useState(defaultOpen);
+  return <View style={{ gap: space[3] }}>
+    <Pressable accessibilityRole="button" accessibilityLabel={detail ? `${title}, ${detail}` : title} accessibilityState={{ expanded: open }} accessibilityHint={open ? 'Collapses this section' : 'Expands this section'} onPress={() => setOpen((value) => !value)}
+      style={({ pressed }) => ({ minHeight: layout.listRowMin, flexDirection: 'row', alignItems: 'center', gap: space[3], opacity: pressed ? 0.6 : 1 })}>
+      <View style={{ flex: 1, gap: space[1] }}>
+        <Text accessibilityRole="header" style={[type.headline, { color: colors.textPrimary }]}>{title}</Text>
+        {detail && <Text style={[type.footnote, { color: colors.textSecondary }]}>{detail}</Text>}
+      </View>
+      <SymbolIcon name={open ? 'chevron.up' : 'chevron.down'} color={colors.textTertiary} size={14} />
+    </Pressable>
+    {open && children}
+  </View>;
+}
 export function Destination({ title, detail, href }: { title: string; detail?: string; href: Href }) {
   const colors = useColors();
   const type = useType();

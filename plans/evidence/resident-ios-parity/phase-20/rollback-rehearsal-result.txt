@@ -1,0 +1,98 @@
+== clone ==
+NOTICE:  database "p20_rollback" does not exist, skipping
+clone p20_rollback ready; last applied migration in the clone: 0117
+== stage A: hosted state (repository migrations 0118-0134 on the 0117 clone) ==
+  applied 0118_resident_front_id_submission.sql
+  applied 0119_admin_profile_and_verified_association.sql
+  applied 0120_flood_shadow_runs.sql
+  applied 0121_resident_ios_write_boundaries.sql
+  applied 0122_resident_apple_account_setup.sql
+  applied 0123_resident_household_conditional_save.sql
+  applied 0124_unreferenced_upload_objects.sql
+  applied 0125_automatic_document_request_payments.sql
+  applied 0126_restore_automatic_request_submission.sql
+  applied 0127_admin_resident_document_requests.sql
+  applied 0128_admin_personal_profile_editing.sql
+  applied 0129_admin_record_sheet_edit_parity.sql
+  applied 0130_resident_directory_admin_visibility.sql
+  applied 0131_request_editor_admin_resident_options.sql
+  applied 0132_request_payment_column_editors.sql
+  applied 0133_full_versioned_request_record_editor.sql
+  applied 0134_medical_applicant_email.sql
+  rls_isolation                                    ok=17   not_ok=0   errors=0
+  resident_ios_phase3_requests                     ok=28   not_ok=0   errors=0
+  resident_ios_phase3_storage                      ok=24   not_ok=0   errors=0
+  resident_ios_tenant_write_guards                 ok=7    not_ok=0   errors=0
+  resident_household_conditional                   ok=22   not_ok=0   errors=0
+  automatic_document_payments                      ok=65   not_ok=0   errors=0
+  resident_account_setup                           ok=30   not_ok=0   errors=0
+  resident_apple_account_setup                     ok=37   not_ok=0   errors=0
+  resident_front_id_submission                     ok=26   not_ok=0   errors=0
+  resident_profile_conflict                        ok=16   not_ok=0   errors=0
+  trusted_evidence_locality                        ok=11   not_ok=0   errors=0
+  unreferenced_upload_objects                      ok=7    not_ok=0   errors=0
+  resident_directory_admin_visibility              ok=21   not_ok=0   errors=0
+  google_minimal_profiles                          ok=42   not_ok=0   errors=0
+  document_charter_forms                           ok=41   not_ok=0   errors=0
+A baseline: 394 assertions ok, 0 failing/erroring
+  leftover objects before 0135/0136 (functions, tables, triggers): 0 0 0 
+== stage B: forward 0135 and 0136 ==
+  applied 0135_resident_notifications.sql
+  applied 0136_account_deletion_state.sql
+  resident_ios_phase17_notifications               ok=121  not_ok=0   errors=0
+  resident_ios_phase18_account_deletion            ok=56   not_ok=0   errors=0
+  resident_ios_phase3_backend                      ok=86   not_ok=0   errors=0
+  service_foundations                              ok=115  not_ok=0   errors=0
+B new suites: 378 assertions ok, 0 failing/erroring
+  rls_isolation                                    ok=17   not_ok=0   errors=0
+  resident_ios_phase3_requests                     ok=28   not_ok=0   errors=0
+  resident_ios_phase3_storage                      ok=24   not_ok=0   errors=0
+  resident_ios_tenant_write_guards                 ok=7    not_ok=0   errors=0
+  resident_household_conditional                   ok=22   not_ok=0   errors=0
+  automatic_document_payments                      ok=65   not_ok=0   errors=0
+  resident_account_setup                           ok=30   not_ok=0   errors=0
+  resident_apple_account_setup                     ok=37   not_ok=0   errors=0
+  resident_front_id_submission                     ok=26   not_ok=0   errors=0
+  resident_profile_conflict                        ok=16   not_ok=0   errors=0
+  trusted_evidence_locality                        ok=11   not_ok=0   errors=0
+  unreferenced_upload_objects                      ok=7    not_ok=0   errors=0
+  resident_directory_admin_visibility              ok=21   not_ok=0   errors=0
+  google_minimal_profiles                          ok=42   not_ok=0   errors=0
+  document_charter_forms                           ok=41   not_ok=0   errors=0
+B baseline suites with 0135/0136 live: 394 assertions ok, 0 failing/erroring
+== stage C: rollback ==
+  rollback-0135-0136.sql applied
+  leftover objects (functions, tables, triggers): 0 0 0 
+  rls_isolation                                    ok=17   not_ok=0   errors=0
+  resident_ios_phase3_requests                     ok=28   not_ok=0   errors=0
+  resident_ios_phase3_storage                      ok=24   not_ok=0   errors=0
+  resident_ios_tenant_write_guards                 ok=7    not_ok=0   errors=0
+  resident_household_conditional                   ok=22   not_ok=0   errors=0
+  automatic_document_payments                      ok=65   not_ok=0   errors=0
+  resident_account_setup                           ok=30   not_ok=0   errors=0
+  resident_apple_account_setup                     ok=37   not_ok=0   errors=0
+  resident_front_id_submission                     ok=26   not_ok=0   errors=0
+  resident_profile_conflict                        ok=16   not_ok=0   errors=0
+  trusted_evidence_locality                        ok=11   not_ok=0   errors=0
+  unreferenced_upload_objects                      ok=7    not_ok=0   errors=0
+  resident_directory_admin_visibility              ok=21   not_ok=0   errors=0
+  google_minimal_profiles                          ok=42   not_ok=0   errors=0
+  document_charter_forms                           ok=41   not_ok=0   errors=0
+C baseline after rollback: 394 assertions ok, 0 failing/erroring
+  Android/web v1 deletion RPC still present: 1
+  push token objects still present (push_tokens table, upsert_push_token): 1 1
+== stage C2: the guard refuses to roll back while a deletion is unfinished ==
+  applied 0135_resident_notifications.sql
+  applied 0136_account_deletion_state.sql
+  refused as designed (rollback_refused)
+  state table still intact after the refusal: 1
+== stage D: roll forward again after the rollback (clone currently has 0135/0136 re-applied) ==
+  resident_ios_phase17_notifications               ok=121  not_ok=0   errors=0
+  resident_ios_phase18_account_deletion            ok=56   not_ok=0   errors=0
+  resident_ios_phase3_backend                      ok=86   not_ok=0   errors=0
+  service_foundations                              ok=115  not_ok=0   errors=0
+D new suites after roll-forward: 378 assertions ok, 0 failing/erroring
+== cleanup ==
+clone p20_rollback dropped
+REHEARSAL RESULT: PASS
+exit 0

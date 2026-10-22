@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
 interface UnreadCountsValue {
+  readStateError: boolean;
+  retryReadState: () => void;
   /** Live status count — the resident's own open + in_progress incidents. Not an
    * unread/notification count, so there's no mark-as-read for it. */
   activeReportsCount: number;
@@ -33,6 +35,8 @@ interface UnreadCountsValue {
 }
 
 const UnreadCountsContext = createContext<UnreadCountsValue>({
+  readStateError: false,
+  retryReadState: () => {},
   activeReportsCount: 0,
   resolvedUnreadCount: 0,
   announcementsUnreadCount: 0,
@@ -61,8 +65,11 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   // Announcement ids not yet marked read by this resident — kept around so
   // markAnnouncementsRead() knows exactly which ids to upsert without a second round-trip.
   const [unreadAnnouncementIds, setUnreadAnnouncementIds] = useState<string[]>([]);
+  const [incidentCountsError, setIncidentCountsError] = useState(false);
+  const [announcementCountsError, setAnnouncementCountsError] = useState(false);
 
   const refetchIncidentCounts = useCallback(() => {
+    setIncidentCountsError(false);
     if (!userId) {
       setActiveReportsCount(0);
       setResolvedUnreadCount(0);
@@ -73,7 +80,8 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
       .select('status, resolved_read_at')
       .is('deleted_at', null)
       .eq('reporter_id', userId)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) { setIncidentCountsError(true); return; }
         const rows = data ?? [];
         setActiveReportsCount(
           rows.filter((r) => r.status === 'open' || r.status === 'in_progress').length,
@@ -81,10 +89,11 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
         setResolvedUnreadCount(
           rows.filter((r) => r.status === 'resolved' && !r.resolved_read_at).length,
         );
-      });
+      }, () => setIncidentCountsError(true));
   }, [userId]);
 
   const refetchAnnouncementCounts = useCallback(() => {
+    setAnnouncementCountsError(false);
     if (!userId) {
       setAnnouncementsUnreadCount(0);
       setUnreadAnnouncementIds([]);
@@ -93,14 +102,15 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
     Promise.all([
       supabase.from('announcements').select('id').is('deleted_at', null),
       supabase.from('announcement_reads').select('announcement_id').eq('resident_id', userId),
-    ]).then(([{ data: announcements }, { data: reads }]) => {
+    ]).then(([{ data: announcements, error: announcementsError }, { data: reads, error: readsError }]) => {
+      if (announcementsError || readsError) { setAnnouncementCountsError(true); return; }
       const readIds = new Set((reads ?? []).map((r) => r.announcement_id));
       const unreadIds = (announcements ?? [])
         .map((a) => a.id)
         .filter((id) => !readIds.has(id));
       setUnreadAnnouncementIds(unreadIds);
       setAnnouncementsUnreadCount(unreadIds.length);
-    });
+    }, () => setAnnouncementCountsError(true));
   }, [userId]);
 
   useEffect(() => {
@@ -141,12 +151,13 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
 
   const markResolvedRead = useCallback(async () => {
     if (!userId) return;
-    await supabase
+    const { error } = await supabase
       .from('incidents')
       .update({ resolved_read_at: new Date().toISOString() })
       .eq('reporter_id', userId)
       .eq('status', 'resolved')
       .is('resolved_read_at', null);
+    if (error) throw new Error('Read status could not be saved.');
     refetchIncidentCounts();
   }, [userId, refetchIncidentCounts]);
 
@@ -158,11 +169,12 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const markIncidentRead = useCallback(
     async (incidentId: string) => {
       if (!userId) return;
-      await supabase
+      const { error } = await supabase
         .from('incidents')
         .update({ resolved_read_at: new Date().toISOString() })
         .eq('id', incidentId)
         .eq('reporter_id', userId);
+      if (error) throw new Error('Read status could not be saved.');
       refetchIncidentCounts();
     },
     [userId, refetchIncidentCounts],
@@ -171,11 +183,12 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const markIncidentUnread = useCallback(
     async (incidentId: string) => {
       if (!userId) return;
-      await supabase
+      const { error } = await supabase
         .from('incidents')
         .update({ resolved_read_at: null })
         .eq('id', incidentId)
         .eq('reporter_id', userId);
+      if (error) throw new Error('Read status could not be saved.');
       refetchIncidentCounts();
     },
     [userId, refetchIncidentCounts],
@@ -183,12 +196,13 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
 
   const markAnnouncementsRead = useCallback(async () => {
     if (!userId || unreadAnnouncementIds.length === 0) return;
-    await supabase
+    const { error } = await supabase
       .from('announcement_reads')
       .upsert(
         unreadAnnouncementIds.map((announcement_id) => ({ resident_id: userId, announcement_id })),
         { onConflict: 'resident_id,announcement_id' },
       );
+    if (error) throw new Error('Read status could not be saved.');
     refetchAnnouncementCounts();
   }, [userId, unreadAnnouncementIds, refetchAnnouncementCounts]);
 
@@ -199,12 +213,13 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const markAnnouncementRead = useCallback(
     async (announcementId: string) => {
       if (!userId) return;
-      await supabase
+      const { error } = await supabase
         .from('announcement_reads')
         .upsert(
           { resident_id: userId, announcement_id: announcementId },
           { onConflict: 'resident_id,announcement_id' },
         );
+      if (error) throw new Error('Read status could not be saved.');
       refetchAnnouncementCounts();
     },
     [userId, refetchAnnouncementCounts],
@@ -213,11 +228,12 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const markAnnouncementUnread = useCallback(
     async (announcementId: string) => {
       if (!userId) return;
-      await supabase
+      const { error } = await supabase
         .from('announcement_reads')
         .delete()
         .eq('resident_id', userId)
         .eq('announcement_id', announcementId);
+      if (error) throw new Error('Read status could not be saved.');
       refetchAnnouncementCounts();
     },
     [userId, refetchAnnouncementCounts],
@@ -226,6 +242,8 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   return (
     <UnreadCountsContext.Provider
       value={{
+        readStateError: incidentCountsError || announcementCountsError,
+        retryReadState: () => { refetchIncidentCounts(); refetchAnnouncementCounts(); },
         activeReportsCount,
         resolvedUnreadCount,
         announcementsUnreadCount,

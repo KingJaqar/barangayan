@@ -1,0 +1,42 @@
+[
+  {
+    "path": "package-lock.json",
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+  },
+  {
+    "path": "apps/resident-web/package.json",
+    "sha256": "460b994a5a185ac6497154a5113da3d57a3758f8bb3054d61613d6c25784315e"
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944"
+  },
+  {
+    "path": "packages/shared/src/schemas/household-attendance.ts",
+    "sha256": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97"
+  },
+  {
+    "path": "packages/shared/src/types/household-attendance.database.ts",
+    "sha256": "efbffaa3008213bbe0a37965abcad40bc7f7f5e4a3f1cb999373a075d8a65b60"
+  },
+  {
+    "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "sha256": "0fb386afec26e4f399d804b1708fcba514b5f20612b3dd3aeee3a065aab63982"
+  },
+  {
+    "path": "supabase/migrations/0137_household_attendance.sql",
+    "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+  },
+  {
+    "path": "supabase/migrations/0138_admin_household_attendance_projection.sql",
+    "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+  },
+  {
+    "path": "supabase/migrations/0140_restore_household_attendance.sql",
+    "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44"
+  },
+  {
+    "path": "supabase/migrations/0141_attendance_receipt_export_access.sql",
+    "sha256": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2"
+  }
+]

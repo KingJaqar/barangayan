@@ -1,0 +1,31 @@
+{
+  "packet": "tmp/family-attendance-phase4-20261022/restore.xml",
+  "sha256": "95b10c98f0a4d513160088522e2eccb72097ac2c1eec97ec974c2f978ad4020a",
+  "version": "1.18.1",
+  "source": {
+    "path": "supabase/migrations/0140_restore_household_attendance.sql",
+    "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44"
+  },
+  "security": "enabled; no suspicious files",
+  "source_equivalence": true,
+  "omissions": [],
+  "compression": false,
+  "reader": {
+    "new_ranges": [
+      {
+        "start": 1,
+        "end": 22
+      },
+      {
+        "start": 548,
+        "end": 553
+      },
+      {
+        "start": 851,
+        "end": 871
+      }
+    ],
+    "unchanged_reused": "Remaining 0137/0138 bodies text-equal after the explicit inspected deletion-v2 anchor replacement and removal of top-level transaction wrappers; equality assertions in restore-chain.py passed. Prior body analysis/test identities reused.",
+    "dependencies": "0139 erase_own_account_records lines 678\u2013729 original source confirms the new anchor precedes profile JSON cleanup. 464 SQL/21 races/recovery and 17 real-REST groups rerun on restored schema."
+  }
+}

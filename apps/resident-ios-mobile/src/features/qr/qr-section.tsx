@@ -35,7 +35,7 @@ export function QrSection() {
 
   return <>
     <Body heading>QR check-in guide</Body>
-    <Body tone="secondary">Follow these steps to check in at an evacuation center.</Body>
+    <Body tone="secondary">Show your Family QR to barangay staff and confirm who is present. Scanning a center code does not record attendance.</Body>
     <ContentNotice />
     <ContentStatus resource={resource} retry={() => void resource.refresh()} />
     {bundled && <Body role="footnote" tone="secondary">Your barangay has not published QR guidance that this device could load. This general guidance is built into the app.</Body>}
@@ -75,7 +75,7 @@ export function QrSection() {
   </>;
 }
 
-/** The resident's newest stored check-ins, read from the server, so a confirmation is still visible after the scanner closes. */
+/** Historical scan logs remain readable, clearly distinguished from staff attendance. */
 function RecentCheckIns({ refreshKey }: { refreshKey: number }) {
   const api = useApi();
   const resource = useResource('recent-check-ins', (signal) => api.recentCheckIns(signal));
@@ -85,9 +85,10 @@ function RecentCheckIns({ refreshKey }: { refreshKey: number }) {
   if (resource.error && !resource.data) return <ErrorState message={resource.error} retry={() => void refresh()} />;
   const rows = resource.data ?? [];
   return <Card>
-    <Body role="headline">Your recent check-ins</Body>
+    <Body role="headline">Legacy scan history</Body>
+    <Body role="footnote" tone="secondary">These older scans are not staff-confirmed attendance.</Body>
     {rows.length === 0
-      ? <Body tone="secondary">You have not checked in at an evacuation center yet.</Body>
+      ? <Body tone="secondary">No legacy scans recorded.</Body>
       : rows.map((row) => <View key={row.id} accessible accessibilityLabel={`${row.evacuation_centers?.name ?? 'Evacuation center'}, ${formatRelativeTime(row.checked_in_at)}`} style={{ gap: space[1] }}>
         <Body role="callout">{row.evacuation_centers?.name ?? 'Evacuation center'}</Body>
         <Body role="footnote" tone="secondary">{formatRelativeTime(row.checked_in_at)}</Body>

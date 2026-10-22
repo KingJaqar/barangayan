@@ -1,0 +1,7 @@
+{
+  "result": "pass",
+  "row_columns": 9,
+  "foreign_keys": 6,
+  "public_operations": 4,
+  "rls_tables": 2
+}

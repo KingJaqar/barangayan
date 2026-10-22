@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
-import { AnimatedAppear } from '@/components/services/animated-appear';
+import { Card } from '@/components/card';
 import { SkeletonBlock } from '@/components/services/skeleton';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ServiceErrorToast } from '@/components/services/service-error-toast';
@@ -78,7 +78,6 @@ function RequestFormContent() {
   const { profile } = useProfile();
   const theme = useTheme();
   const { fontId } = useFontPreference();
-  const cardTheme = { borderColor: theme.backgroundSelected, shadowColor: theme.text };
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
@@ -89,6 +88,7 @@ function RequestFormContent() {
   const [notice, setNotice] = useState<{ message: string } | null>(null);
   const dismissNotice = useCallback(() => setNotice(null), []);
   const [submitting, setSubmitting] = useState(false);
+  const busy = useRef(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
 
@@ -154,7 +154,7 @@ function RequestFormContent() {
   }
 
   async function handleSubmit() {
-    if (!doc || !session) return;
+    if (busy.current || !doc || !session) return;
     dismissNotice();
     if (!profile) {
       setNotice({ message: residentServiceError(new Error('authentication_required')) });
@@ -170,10 +170,12 @@ function RequestFormContent() {
       return;
     }
 
+    busy.current = true;
     setSubmitting(true);
 
     const { path: idDocumentPath, error: uploadError } = await uploadIdDocument(session.user.id);
     if (uploadError) {
+      busy.current = false;
       setSubmitting(false);
       setNotice({ message: uploadError });
       return;
@@ -183,7 +185,7 @@ function RequestFormContent() {
       const data = await attempt.submit(supabase, { documentTypeId: doc.id, purposeCode: 'legacy', requesterNotes: result.data.requesterNotes, legacyIdPath: idDocumentPath ?? undefined, details: {}, attachments: [] });
       router.replace(`/services/payment/${data.id}`);
     } catch (failure) { setNotice({ message: residentServiceError(failure) }); }
-    finally { setSubmitting(false); }
+    finally { busy.current = false; setSubmitting(false); }
   }
 
   if (loadError) return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole="alert">{loadError}</ThemedText><PrimaryButton label="Retry loading service" onPress={() => { setLoadError(null); setDoc(undefined); setReload(value => value + 1); }}/><PrimaryButton label="Back to Services" variant="secondary" onPress={() => router.replace('/services')}/></View></SafeAreaView>;
@@ -197,15 +199,19 @@ function RequestFormContent() {
   if (catalogContract(doc)) return <CharterRequestForm key={doc.id} doc={doc}/>;
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.resident.card }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <ServiceScreenHeader title="Request Document" backLabel="Back to document" compact />
-        <ScrollView contentContainerStyle={styles.content}>
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
-            <ThemedText type="small" style={{ color: theme.primary }}>
+        <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <ThemedText accessibilityRole="header" style={styles.title}>{doc.name}</ThemedText>
+          <Card variant="resident" style={styles.section}>
+            <ThemedText type="smallBold">
               Purpose of Request
             </ThemedText>
             <TextField
+              presentation="resident"
+              accessibilityLabel="Purpose of Request"
+              editable={!submitting}
               placeholder="e.g. Employment requirement"
               value={notes}
               onChangeText={setNotes}
@@ -214,38 +220,36 @@ function RequestFormContent() {
               style={{ minHeight: 64, fontFamily: getMobileFontFamily(fontId) }}
             />
 
-          </ThemedView>
+          </Card>
 
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
+          <Card variant="resident" style={styles.section}>
             <View style={styles.rowBetween}>
-              <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+              <ThemedText type="smallBold">
                 Resident Details
               </ThemedText>
-              <ThemedText type="link" onPress={() => router.push('/settings/profile')}>
-                Edit in Profile
-              </ThemedText>
+              <PrimaryButton presentation="resident" label="Edit in Profile" variant="secondary" disabled={submitting} onPress={() => router.push('/settings/profile')} />
             </View>
             <View style={styles.chipRow}>
               <Chip icon="person-outline" label={profile?.full_name ?? '—'} />
               <Chip icon="call-outline" label={profile?.mobile_number ?? 'No mobile number on file'} />
             </View>
-          </ThemedView>
+          </Card>
 
-          <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline, cardTheme]}>
-            <Ionicons name="storefront-outline" size={18} color={theme.primary} />
+          <Card variant="resident" style={styles.noticeCard}>
+            <Ionicons name="storefront-outline" size={18} color={theme.resident.accentText} />
             <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
               You&apos;ll pick up this document in person at the Barangay Hall once it&apos;s ready.
             </ThemedText>
-          </ThemedView>
+          </Card>
 
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
-            <ThemedText type="small">Valid ID Upload</ThemedText>
+          <Card variant="resident" style={styles.section}>
+            <ThemedText type="smallBold">Valid ID Upload</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
               Please upload a clear copy of a government-issued ID.
             </ThemedText>
 
             {pickedIdImage ? (
-              <AnimatedAppear style={styles.idPreview}>
+              <View style={styles.idPreview}>
                 <ThemedText type="smallBold">Uploaded ID preview</ThemedText>
                 <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
                 <View style={styles.idPreviewFooter}>
@@ -253,16 +257,17 @@ function RequestFormContent() {
                     {displayName(pickedIdImage)}
                   </ThemedText>
                 </View>
-                <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />
-              </AnimatedAppear>
+                <PrimaryButton presentation="resident" label="Upload Again" variant="secondary" disabled={submitting} onPress={handlePickFile} />
+              </View>
             ) : (
-              <AnimatedAppear>
+              <View>
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel="Upload a valid ID image"
+                  disabled={submitting}
                   onPress={handlePickFile}
                   style={({ pressed }) => [pressed && styles.dropZonePressed]}>
-                  <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
+                  <View style={[styles.dropZone, { borderColor: theme.resident.controlBorder, backgroundColor: theme.resident.surface }]}>
                     <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
                     <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
                     <ThemedText type="small" themeColor="textSecondary">
@@ -270,27 +275,27 @@ function RequestFormContent() {
                     </ThemedText>
                   </View>
                 </Pressable>
-              </AnimatedAppear>
+              </View>
             )}
             {idUploadError ? (
-              <AnimatedAppear>
-                <ThemedText type="small" themeColor="accentRed">
+              <View>
+                <ThemedText type="small" style={{ color: theme.resident.danger }}>
                   {idUploadError}
                 </ThemedText>
-              </AnimatedAppear>
+              </View>
             ) : null}
-          </ThemedView>
+          </Card>
 
         </ScrollView>
 
-        <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected }]}>
+        <View style={[styles.footer, { backgroundColor: theme.resident.card, borderTopColor: theme.resident.border }]}>
           <View style={styles.feeRow}>
             <ThemedText type="small">Processing Fee</ThemedText>
             <ThemedText type="smallBold">
               {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
             </ThemedText>
           </View>
-          <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
+          <PrimaryButton presentation="resident" label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
         </View>
       </View>
       <ServiceErrorToast notice={notice} onDismiss={dismissNotice} />
@@ -304,30 +309,18 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
   content: {
-    padding: Spacing.three,
-    gap: Spacing.two,
+    padding: 20,
+    gap: 20,
   },
 
-  /* Design-system recipes (shared literally across the Services screens) */
-  shadowSm: {
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
   hairline: {
     borderWidth: 1,
   },
-  sectionLabel: {
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-    fontSize: 12,
-  },
+  title: { fontSize: 21, lineHeight: 26, fontWeight: '800', letterSpacing: -0.4 },
 
   section: {
-    padding: 12,
-    borderRadius: Spacing.three,
-    gap: Spacing.one,
+    padding: 16,
+    gap: 8,
   },
   rowBetween: {
     flexDirection: 'row',
@@ -355,8 +348,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-    padding: 12,
-    borderRadius: Spacing.three,
+    padding: 16,
   },
   noticeText: {
     flex: 1,
@@ -372,7 +364,6 @@ const styles = StyleSheet.create({
   },
   dropZonePressed: {
     opacity: 0.9,
-    transform: [{ scale: 0.98 }],
   },
   idPreview: {
     marginTop: Spacing.two,
@@ -397,8 +388,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   footer: {
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
 

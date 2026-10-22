@@ -1,0 +1,50 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 44ms
+ ✓ src/lib/model-exclusions.test.ts (10 tests) 14ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 16ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 16ms
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 30ms
+ ✓ src/lib/model-activation.test.ts (12 tests) 23ms
+ ✓ src/lib/device-location.test.ts (29 tests) 55ms
+ ✓ src/lib/format.test.ts (17 tests) 70ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 48ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 14ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 20ms
+ ✓ src/schemas/payment.test.ts (9 tests) 22ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 25ms
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 27ms
+ ✓ src/schemas/routing-conditions.test.ts (11 tests) 27ms
+ ✓ src/schemas/household-attendance.test.ts (23 tests) 69ms
+ ✓ src/lib/flood-validation.test.ts (12 tests) 34ms
+ ✓ src/lib/flood-shadow.test.ts (57 tests) 147ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 385ms
+ ✓ src/schemas/staff.test.ts (9 tests) 14ms
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 33ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 29ms
+ ✓ src/lib/service-catalog.test.ts (10 tests) 25ms
+ ✓ src/lib/evacuation-route-service.test.ts (44 tests) 40ms
+ ✓ src/lib/routing-pack-builder.test.ts (25 tests) 553ms
+   ✓ coverage buffer > stays within 6 m of the exact 150 m buffer  428ms
+ ✓ src/lib/service-request-validation.test.ts (12 tests) 20ms
+ ✓ src/lib/resident-account-setup.test.ts (15 tests) 32ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 33ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 5ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 33ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 32ms
+ ✓ src/lib/haversine.test.ts (4 tests) 8ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 72ms
+ ✓ src/schemas/drive-registration-result.test.ts (5 tests) 7ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 7ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 7ms
+
+ Test Files  36 passed (36)
+      Tests  569 passed (569)
+   Start at  20:30:17
+   Duration  8.18s (transform 19.13s, setup 0ms, collect 62.06s, tests 2.03s, environment 13ms, prepare 67.14s)
+

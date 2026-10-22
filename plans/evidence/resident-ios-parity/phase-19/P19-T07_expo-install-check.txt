@@ -1,0 +1,23 @@
+env: load .env.development.local .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL EXPO_PUBLIC_BARANGAY_ID EXPO_PUBLIC_ENVIRONMENT
+The following packages should be updated for best compatibility with the installed expo version:
+  @expo/metro-runtime@57.0.8 - expected version: ~57.0.17
+  @expo/ui@57.0.9 - expected version: ~57.0.25
+  expo@57.0.10 - expected version: ~57.0.30
+  expo-application@57.0.2 - expected version: ~57.0.3
+  expo-camera@57.0.3 - expected version: ~57.0.6
+  expo-crypto@57.0.3 - expected version: ~57.0.4
+  expo-file-system@57.0.2 - expected version: ~57.0.7
+  expo-linking@57.0.5 - expected version: ~57.0.13
+  expo-location@57.0.8 - expected version: ~57.0.21
+  expo-media-library@57.0.3 - expected version: ~57.0.5
+  expo-notifications@57.0.11 - expected version: ~57.0.23
+  expo-print@57.0.1 - expected version: ~57.0.2
+  expo-router@57.0.10 - expected version: ~57.0.28
+  expo-sharing@57.0.13 - expected version: ~57.0.23
+  expo-splash-screen@57.0.5 - expected version: ~57.0.10
+  expo-web-browser@57.0.2 - expected version: ~57.0.3
+  react-native@0.86.2 - expected version: 0.86.3
+  eslint-config-expo@57.0.1 - expected version: ~57.0.2
+Your project may not work correctly until you install the expected versions of the packages.
+Found outdated dependencies

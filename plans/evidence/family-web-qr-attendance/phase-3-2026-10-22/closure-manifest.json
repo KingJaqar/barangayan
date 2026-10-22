@@ -1,0 +1,136 @@
+{
+  "packet_sha256": "f39e21f0b321e338735a3c6ce1bed76e5d516feb196a95404bc2108955ce0248",
+  "sources": [
+    {
+      "path": "packages/shared/src/index.ts",
+      "before": "709b037c661e61831a75f298f7475c1419a075d6b459dd1028c07a4c764ef7c1",
+      "sha256": "1f4a259f4ad809897a8b8ecd14d224df7d7719c418ae75fbd84db0b07eadcd42"
+    },
+    {
+      "path": "apps/resident-web/tests/toast-location-search-browser.mjs",
+      "before": "5b5e850329db05ceae41c171d94edffa0f4d9894020d2ca37e75e32a39ae41a7",
+      "sha256": "99931caa8ba7cbdbf2d475b5acd0d0b4c6f519b53697209349648fe0ffff2d99"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "before": "fe56a894c4d979edf44e609e1b14a7eb9520388012ba6f24d7138f22a53dc25d",
+      "sha256": "c00f05428736ba3d7425a529e889c1691d8a5b35bc1e2cc6d0a8eb4b3207648f"
+    },
+    {
+      "path": "apps/resident-web/src/lib/household-feedback.ts",
+      "before": "a3ec46b0026ea294e5836f6bd3c3840fd5c9d4aa01f0a119d66ca676b01bf49b",
+      "sha256": "c67719af013b82d4e425388492a69211caa401ab5fb0f747839cda3c086afda3"
+    },
+    {
+      "path": "apps/resident-web/src/lib/supabase/client.ts",
+      "before": "0754139edcadfb1d2500c8d2278cc27b3f91b6451e5f2210a1613f86ae26e37a",
+      "sha256": "94f4b7c88c6ea008eae35015a8130b934ef3d15a76aa0c24f51ac61a80664248"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/emergency.module.css",
+      "before": "3ef96b18c86fe3206f79aa7b43009aeedb98aa860df6290649cb88c2fee0488a",
+      "sha256": "2d764f09294ad83d3a00ff9c79c5258c6c4a3e6501fcecf0cc6b198fb1784866"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+      "before": "f362c12df6b7abd5d9b585cac02213b445711ae8998f893064c9c665b50264e7",
+      "sha256": "64d26beeedf6a645bbe38db85bfc1e9d69b3d7a23ad06ff49016807afe830b63"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+      "before": "2febdd3a58517e1a559d8ac41d7ffae94c455670f0d779c0f9a902a9e91af799",
+      "sha256": "8f34c0005a10a1b81e09d543f8fd30f493bde8502471e3a7d115ff5c800d5bb7"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "before": "e2e2ad6713450ad5fdb3a1c8e858dc84e94c5ba3c8faa6cd02db40d4cea1a163",
+      "sha256": "5b8e1fbfa70e293932dca5a3b65331f1e9f1b9a18fc2bc6c3f93099a4c45cfcb"
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "before": "f3eae5a00dedcacd4497bfcdf5577bfe4be328d2e35d0a2b24a9474868be1951",
+      "sha256": "e5396599346f8bfc640bde691c56997f3caf3c6a5d6ecce8ce10a7f9e84dbe41"
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+      "before": "23ab7321a60150141eae8d99bc448cec2f12c62a1af9533149baad74c2fb088a",
+      "sha256": "74ae01cf6282488b4d31b30dc9a076f5e0b4bb50218c8b379234468bb0192b19"
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "before": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2",
+      "sha256": "1a74226d0fb1ec3b60056989c95f068232fee5d206d2d4656a23eee91b2a176f"
+    },
+    {
+      "path": "apps/resident-web/src/lib/household.ts",
+      "before": null,
+      "sha256": "fcefb9013cd6e98822f6e14f849d51379f2a88348d3a48e3ae1e844b2decb817"
+    },
+    {
+      "path": "apps/resident-web/tests/household.test.ts",
+      "before": null,
+      "sha256": "7b9f208b755856c60b10f3508e0ec1158250178820a0fe862e484ce1d10594d4"
+    },
+    {
+      "path": "packages/shared/src/lib/attendance-request.ts",
+      "before": null,
+      "sha256": "cfa36f0391014575f175313fcc052f623f209c62b77e46364a8a318064b18929"
+    },
+    {
+      "path": "packages/shared/src/lib/attendance-request.test.ts",
+      "before": null,
+      "sha256": "d54265cc894ac710f248db80af780e1b95dcc2965eb36dd1e9fddafede2a491b"
+    }
+  ],
+  "chunks": [
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 1,
+      "end": 113,
+      "characters": 11912,
+      "next": 114
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 114,
+      "end": 308,
+      "characters": 11916,
+      "next": 309
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 309,
+      "end": 508,
+      "characters": 10163,
+      "next": 509
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 509,
+      "end": 708,
+      "characters": 10410,
+      "next": 709
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 709,
+      "end": 908,
+      "characters": 9409,
+      "next": 909
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 909,
+      "end": 1108,
+      "characters": 10705,
+      "next": 1109
+    },
+    {
+      "path": "tmp/family-web-phase3-20261022/owned.diff",
+      "start": 1109,
+      "end": 1214,
+      "characters": 5556,
+      "next": null
+    }
+  ]
+}

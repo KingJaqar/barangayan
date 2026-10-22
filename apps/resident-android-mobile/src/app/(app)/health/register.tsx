@@ -1,123 +1,47 @@
-import { ResidentActionGate } from '@/components/resident-action-gate';
-import { residentDriveRegistrationResultSchema } from '@barangayan/shared';
-/**
- * Applicant Registration — Module 10.
- *
- * Full-screen form that lets a signed-in resident register for a specific
- * medical drive.  Opened by navigating to  /health/register?driveId=<uuid>.
- *
- * Design tokens sampled from the reference screenshot:
- *   Primary green    #0F6E5B   (header, accents, submit button)
- *   Progress green   #22C55E   (stock bar fill)
- *   Light-green card #EAF4F0   (applicant-number preview card)
- *   Light-green bdr  #B2D8CC
- *   Page background  #F2F4F7   (off-white sheet)
- *   Card background  #FFFFFF
- *   Muted text       #60646C
- *
- * Layout hierarchy:
- *   ┌─────────────────────────────┐
- *   │  Green header + back arrow  │
- *   ├─────────────────────────────┤
- *   │  ScrollView                 │
- *   │   DriveInfoCard             │
- *   │   ApplicantNumberCard       │
- *   │   RegisteringForSection     │
- *   │   EligibilitySection        │
- *   │   PrivacyConsentCard        │
- *   ├─────────────────────────────┤
- *   │  SubmitButton (fixed)       │
- *   └─────────────────────────────┘
- */
+import {
+  driveRegistrationSchema,
+  residentDriveRegistrationResultSchema,
+  type ResidentDriveRegistrationResult,
+} from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   Easing,
-  Modal,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Switch,
-  TextInput,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { ProgressBar } from '@/components/progress-bar';
+import { Avatar } from '@/components/avatar';
+import {
+  HealthDriveSummary,
+  HealthFact,
+  HealthPanel,
+  HealthSheet,
+  HealthStatus,
+  healthDate,
+  healthTime,
+} from '@/components/health/health-presentation';
+import { PrimaryButton } from '@/components/primary-button';
+import { ResidentActionGate } from '@/components/resident-action-gate';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import type { MedicalDrive } from '@/hooks/use-medical-drives';
 import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
-import { type MedicalDrive } from '@/hooks/use-medical-drives';
 import { supabase } from '@/lib/supabase';
 
-// ─── Design tokens ───────────────────────────────────────────────────────────
-
-// Live-accent note: the module-level `s`/`ps`/`cbS` StyleSheets are built once at import
-// time and can't read the per-account accent color (Settings > App Theme). Every component
-// below declares `const PRIMARY_GREEN = theme.primary;` right after its useTheme() call,
-// and moves any style that needs the live color out of the static StyleSheet into an
-// inline override at the usage site.
-const PROGRESS_GREEN = '#22C55E';
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const pad3 = (n: number) => String(n).padStart(3, '0');
-
-/** "HH:MM:SS" → "8:00 AM" */
-function fmt12h(t: string): string {
-  const [hStr, mStr] = t.split(':');
-  const h = parseInt(hStr, 10);
-  const m = mStr ?? '00';
-  const period = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 || 12;
-  return `${h12}:${m} ${period}`;
-}
-
-/** "2026-08-08" → "Aug 8" */
-function fmtShortDate(iso: string): string {
-  const [y, mo, d] = iso.split('-').map(Number);
-  const dt = new Date(y, mo - 1, d, 12);
-  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-/** ISO birth_date → age in full years (null if no birth_date). */
-function computeAge(birthDate: string | null | undefined): number | null {
-  if (!birthDate) return null;
-  const [y, m, d] = birthDate.split('-').map(Number);
-  const born = new Date(y, m - 1, d);
-  const today = new Date();
-  let age = today.getFullYear() - born.getFullYear();
-  const monthDiff = today.getMonth() - born.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < born.getDate())) age--;
-  return age;
-}
-
-/** "Juan Dela Cruz" → "JD" */
-function getInitials(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-/** Preview applicant number (next-in-line, simplified display). */
-function previewApplicantNumber(drive: MedicalDrive): string {
-  const cfg = SHARED_DRIVE_TYPE_CONFIG[drive.type];
-  const prefix = cfg?.prefix ?? 'DRV';
-  const position = drive.stock_total - drive.stock_remaining + 1;
-  return `#${prefix}-${pad3(position)}`;
-}
-
-// ─── Comorbidities ───────────────────────────────────────────────────────────
-
-const COMORBIDITY_OPTIONS = [
+const COMORBIDITIES = [
   'Hypertension',
   'Diabetes',
   'Immunocompromised',
@@ -125,1369 +49,717 @@ const COMORBIDITY_OPTIONS = [
   'Allergy',
   'None',
 ] as const;
+const DOSES = ['1st Dose', '2nd Dose', 'Booster'] as const;
+type Dose = (typeof DOSES)[number];
+type Member = { id: string; name: string; relation: string; role?: string | null };
 
-type Comorbidity = (typeof COMORBIDITY_OPTIONS)[number];
-
-// ─── Dose History ─────────────────────────────────────────────────────────────
-
-const DOSE_OPTIONS = ['1st Dose', '2nd Dose', 'Booster'] as const;
-type DoseOption = (typeof DOSE_OPTIONS)[number];
-
-// ─── Subcomponents ───────────────────────────────────────────────────────────
-
-/** Themed card with shadow. */
-function Card({ children, style }: { children: React.ReactNode; style?: object }) {
-  const theme = useTheme();
-  return <View style={[cardS.card, { backgroundColor: theme.backgroundElement }, style]}>{children}</View>;
+function computeAge(value: string | null | undefined) {
+  if (!value) return null;
+  const [y, m, d] = value.split('-').map(Number);
+  const birth = new Date(y, m - 1, d),
+    today = new Date();
+  if (!Number.isFinite(birth.getTime())) return null;
+  let age = today.getFullYear() - y;
+  if (today.getMonth() < m - 1 || (today.getMonth() === m - 1 && today.getDate() < d)) age--;
+  return age;
 }
 
-const cardS = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    padding: Spacing.three,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-});
-
-// ─── CheckboxRow ─────────────────────────────────────────────────────────────
-
-function CheckboxRow({
-  label,
-  checked,
-  onToggle,
-}: {
-  label: string;
-  checked: boolean;
-  onToggle: () => void;
-}) {
-  const theme = useTheme();
-  // Shadows the module-level fallback — see the live-accent note at the top of this file.
-  const PRIMARY_GREEN = theme.primary;
-
+function DoseHistoryTabs({ active, onSelect }: { active: Dose; onSelect: (value: Dose) => void }) {
+  const { resident } = useTheme();
+  const reduced = useResidentReducedMotion(true);
+  const index = DOSES.indexOf(active);
+  const position = useRef(new Animated.Value(index)).current;
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    if (reduced) {
+      position.setValue(index);
+      return;
+    }
+    const animation = Animated.timing(position, {
+      toValue: index,
+      duration: 200,
+      easing: Easing.bezier(0.23, 1, 0.32, 1),
+      useNativeDriver: true,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [index, position, reduced]);
+  const cell = Math.max(0, (width - 8) / 3);
   return (
-    <Pressable onPress={onToggle} style={cbS.row} hitSlop={6}>
-      <View
-        style={[
-          cbS.box,
-          { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundElement },
-          checked && { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN },
-        ]}>
-        {checked && <Ionicons name="checkmark" size={13} color="#fff" />}
-      </View>
-      <ThemedText style={cbS.label}>{label}</ThemedText>
-    </Pressable>
-  );
-}
-
-const cbS = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    flexShrink: 1,
-  },
-  box: {
-    width: 22,
-    height: 22,
-    borderRadius: 5,
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-});
-
-// ─── DoseHistoryTabs ─────────────────────────────────────────────────────────
-
-function DoseHistoryTabs({
-  active,
-  onSelect,
-}: {
-  active: DoseOption;
-  onSelect: (d: DoseOption) => void;
-}) {
-  const theme = useTheme();
-  return (
-    <View style={[dhS.container, { backgroundColor: theme.backgroundSelected }]}>
-      {DOSE_OPTIONS.map((opt) => {
-        const isActive = active === opt;
-        return (
-          <Pressable
-            key={opt}
-            onPress={() => onSelect(opt)}
-            style={[dhS.tab, isActive && [dhS.tabActive, { backgroundColor: theme.backgroundElement }]]}>
-            <ThemedText
-              style={[
-                dhS.tabLabel,
-                isActive ? { fontWeight: '700', color: theme.text } : { color: theme.textSecondary },
-              ]}>
-              {opt}
-            </ThemedText>
-          </Pressable>
-        );
-      })}
+    <View
+      accessibilityRole="radiogroup"
+      accessibilityLabel="Dose History"
+      onLayout={(e) => {
+        const next = e.nativeEvent.layout.width;
+        setWidth((old) => (old === next ? old : next));
+      }}
+      style={[styles.doseTabs, { backgroundColor: resident.surface }]}
+    >
+      {width > 0 ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.doseIndicator,
+            {
+              backgroundColor: resident.card,
+              width: cell,
+              transform: [
+                {
+                  translateX: position.interpolate({
+                    inputRange: [0, 1, 2],
+                    outputRange: [0, cell, cell * 2],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+      ) : null}
+      {DOSES.map((dose) => (
+        <Pressable
+          key={dose}
+          accessibilityRole="radio"
+          accessibilityState={{ checked: active === dose }}
+          accessibilityLabel={dose}
+          onPress={() => onSelect(dose)}
+          style={styles.doseTab}
+        >
+          <ThemedText
+            style={[
+              styles.small,
+              { fontWeight: '700', color: active === dose ? resident.text : resident.muted },
+            ]}
+          >
+            {dose}
+          </ThemedText>
+        </Pressable>
+      ))}
     </View>
   );
 }
 
-const dhS = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    padding: 3,
-    gap: 2,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 9,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  tabActive: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  tabLabel: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-});
-
-// ─── Household member type (mirrors the shape stored in profiles.household_members) ──
-
-interface HouseholdMember {
-  id: string;
-  name: string;
-  relation: string;
-  role: string;
+function ApplicantPicker({
+  visible,
+  onClose,
+  members,
+  selected,
+  onSelect,
+  residentName,
+  avatar,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  members: Member[];
+  selected: string | null;
+  onSelect: (id: string | null) => void;
+  residentName: string;
+  avatar: string | null;
+}) {
+  const { resident } = useTheme();
+  return (
+    <HealthSheet title="Registering for" visible={visible} onClose={onClose}>
+      {[{ id: null, name: residentName, relation: 'Myself (Resident)', role: null }, ...members].map(
+        (member) => (
+          <Pressable
+            key={member.id ?? 'self'}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: selected === member.id }}
+            accessibilityLabel={member.name}
+            onPress={() => {
+              onSelect(member.id);
+              onClose();
+            }}
+            style={[
+              styles.pickerRow,
+              {
+                backgroundColor: selected === member.id ? resident.accentSoft : resident.card,
+                borderColor: resident.border,
+              },
+            ]}
+          >
+            <Avatar
+              fullName={member.name}
+              imageUrl={member.id === null ? avatar : null}
+              size={44}
+              color={resident.accentSoft}
+              foregroundColor={resident.accentText}
+            />
+            <View style={{ flex: 1 }}>
+              <ThemedText style={styles.subheading}>{member.name}</ThemedText>
+              <ThemedText style={[styles.small, { color: resident.muted }]}>
+                {member.relation}
+                {member.role ? ` · ${member.role}` : ''}
+              </ThemedText>
+            </View>
+            {selected === member.id ? (
+              <Ionicons name="checkmark-circle" size={22} color={resident.accentText} />
+            ) : null}
+          </Pressable>
+        ),
+      )}
+      {members.length === 0 ? (
+        <>
+          <ThemedText style={[styles.small, { color: resident.muted }]}>
+            No household members added yet. Go to Profile → Household Information to add them.
+          </ThemedText>
+          <PrimaryButton
+            presentation="resident"
+            variant="secondary"
+            label="Go to Profile"
+            onPress={() => {
+              onClose();
+              router.push('/(app)/settings/profile');
+            }}
+          />
+        </>
+      ) : null}
+    </HealthSheet>
+  );
 }
 
-// Either the resident themselves or one of their household members.
-type ApplicantSelection =
-  | { type: 'self' }
-  | { type: 'member'; member: HouseholdMember };
-
-// ─── Main screen ─────────────────────────────────────────────────────────────
-
 export default function ApplicantRegistrationScreen() {
-  return <ResidentActionGate><ApplicantRegistrationScreenContent /></ResidentActionGate>;
+  const { driveId } = useLocalSearchParams<{ driveId?: string }>();
+  const { session } = useAuth();
+  return (
+    <ResidentActionGate>
+      <ApplicantRegistrationScreenContent key={`${session?.user.id ?? 'guest'}:${driveId ?? 'missing'}`} />
+    </ResidentActionGate>
+  );
 }
 
 function ApplicantRegistrationScreenContent() {
-  const theme = useTheme();
-  // Shadows the module-level fallback — see the live-accent note at the top of this file.
-  const PRIMARY_GREEN = theme.primary;
+  const { resident } = useTheme();
   const insets = useSafeAreaInsets();
-  const { driveId } = useLocalSearchParams<{ driveId: string }>();
+  const { driveId } = useLocalSearchParams<{ driveId?: string }>();
   const { session } = useAuth();
-  const { profile } = useProfile();
-
-  // ── Remote data ────────────────────────────────────────────────────────────
+  const { profile, isLoading: profileLoading, refetch: refetchProfile } = useProfile();
+  const reduced = useResidentReducedMotion(true);
   const [drive, setDrive] = useState<MedicalDrive | null>(null);
-  const [loadingDrive, setLoadingDrive] = useState(true);
-
-  // ── Applicant selector ─────────────────────────────────────────────────────
-  const [selection, setSelection] = useState<ApplicantSelection>({ type: 'self' });
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pickerVisible, setPickerVisible] = useState(false);
-
-  // Household members parsed from the profile JSONB column.
-  const householdMembers = useMemo<HouseholdMember[]>(() => {
-    const raw = (profile as any)?.household_members;
-    return Array.isArray(raw) ? (raw as HouseholdMember[]) : [];
-  }, [profile]);
-
-  // Derived display values for the currently selected applicant.
-  const selectedName =
-    selection.type === 'self'
-      ? (profile?.full_name ?? 'My Profile')
-      : selection.member.name;
-
-  const selectedAvatarUrl: string | null =
-    selection.type === 'self' ? ((profile as any)?.avatar_url ?? null) : null;
-
-  const selectedInitials = getInitials(selectedName);
-
-  // ── Form state ─────────────────────────────────────────────────────────────
-  const [isPwd, setIsPwd] = useState(false);
-  const [selectedComorbidities, setSelectedComorbidities] = useState<Set<Comorbidity>>(
-    new Set(),
-  );
-  const [doseHistory, setDoseHistory] = useState<DoseOption>('1st Dose');
-  // Age override: always needed for household members (they have no birth_date);
-  // also used for the resident when their profile has no birth_date.
-  const [ageOverride, setAgeOverride] = useState('');
-  const [consented, setConsented] = useState(false);
-
-  // Reset age override whenever the selection changes so stale numbers don't carry over.
-  useEffect(() => { setAgeOverride(''); }, [selection]);
-
-  // ── Submission ─────────────────────────────────────────────────────────────
+  const raw = profile?.household_members;
+  const members: Member[] = Array.isArray(raw)
+    ? raw.filter(
+        (m): m is Member =>
+          typeof m === 'object' &&
+          m !== null &&
+          !Array.isArray(m) &&
+          typeof m.id === 'string' &&
+          typeof m.name === 'string' &&
+          typeof m.relation === 'string' &&
+          (m.role == null || typeof m.role === 'string'),
+      )
+    : [];
+  const selectedMember = members.find((m) => m.id === selectedId);
+  const selectedName = selectedMember?.name ?? profile?.full_name ?? 'My Profile';
+  const [age, setAge] = useState('');
+  const [pwd, setPwd] = useState(false);
+  const [comorbidities, setComorbidities] = useState<string[]>([]);
+  const [dose, setDose] = useState<Dose>('1st Dose');
+  const [priorDate, setPriorDate] = useState('');
+  const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [result, setResult] = useState<{
-    applicant_number: string;
-  } | null>(null);
-
-  // ── Success animation ──────────────────────────────────────────────────────
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [result, setResult] = useState<ResidentDriveRegistrationResult | null>(null);
+  const submitLock = useRef(false);
+  const generation = useRef(0);
+  const success = useRef(new Animated.Value(0)).current;
+  const successPlayed = useRef(false);
+  const userId = session?.user.id;
   useEffect(() => {
-    if (result) {
-      Animated.spring(fadeAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-        damping: 18,
-        stiffness: 160,
-      }).start();
+    const ticket = ++generation.current;
+    return () => {
+      generation.current = ticket + 1;
+    };
+  }, [driveId, userId]);
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+    if (!driveId) {
+      setLoadError('This medical drive link is missing its identifier.');
+      setLoading(false);
+      return;
     }
-  }, [result, fadeAnim]);
-
-  // ── Fetch drive ────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!driveId) return;
-    (async () => {
-      setLoadingDrive(true);
-      const { data, error } = await supabase
-        .from('medical_drives')
-        .select('*')
-        .eq('id', driveId)
-        .single();
-      if (error || !data) {
-        Alert.alert('Error', 'Could not load drive details.');
-        router.back();
-      } else {
+    void (async () => {
+      try {
+        const { data, error } = await supabase.from('medical_drives').select('*').eq('id', driveId).single();
+        if (cancelled) return;
+        if (error || !data) throw new Error('Could not load drive details. Please try again.');
         setDrive(data as MedicalDrive);
+      } catch {
+        if (!cancelled) setLoadError('Could not load drive details. Please try again.');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      setLoadingDrive(false);
     })();
-  }, [driveId]);
-
-  // ── Derived values ─────────────────────────────────────────────────────────
-  const driveTypeCfg =
-    drive ? (SHARED_DRIVE_TYPE_CONFIG[drive.type] ?? SHARED_DRIVE_TYPE_CONFIG.others) : null;
-  const fraction = drive && drive.stock_total > 0
-    ? drive.stock_remaining / drive.stock_total
-    : 0;
-
-  // Age logic:
-  //   • Resident selected + has birth_date  → computed automatically
-  //   • Resident selected + no birth_date   → ageOverride input shown
-  //   • Household member selected           → ageOverride input always shown
-  const profileAge = selection.type === 'self' ? computeAge(profile?.birth_date) : null;
-  const effectiveAge: number | null =
-    profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
-
-  // Map dose-history tab to prior_dose_date sentinel
-  function priorDoseDate(): string | null {
-    if (doseHistory === '1st Dose') return null;
-    // For 2nd Dose / Booster we pass a non-null sentinel;
-    // real implementations would show a date-picker.
-    return '2025-01-01'; // placeholder — signals a prior dose exists
-  }
-
-  // ── Comorbidity toggle ─────────────────────────────────────────────────────
-  function toggleComorbidity(c: Comorbidity) {
-    setSelectedComorbidities((prev) => {
-      const next = new Set(prev);
-      if (c === 'None') {
-        // "None" clears all others and toggles itself
-        if (next.has('None')) {
-          next.delete('None');
-        } else {
-          next.clear();
-          next.add('None');
-        }
-      } else {
-        // Selecting any real comorbidity deselects "None"
-        next.delete('None');
-        if (next.has(c)) {
-          next.delete(c);
-        } else {
-          next.add(c);
-        }
-      }
-      return next;
+    return () => {
+      cancelled = true;
+    };
+  }, [driveId, reload]);
+  useEffect(() => {
+    if (!result) return;
+    if (successPlayed.current || reduced) {
+      success.setValue(1);
+      successPlayed.current = true;
+      return;
+    }
+    successPlayed.current = true;
+    const animation = Animated.timing(success, {
+      toValue: 1,
+      duration: 240,
+      easing: Easing.bezier(0.23, 1, 0.32, 1),
+      useNativeDriver: true,
     });
+    animation.start();
+    return () => animation.stop();
+  }, [result, reduced, success]);
+  const profileAge = selectedId === null ? computeAge(profile?.birth_date) : null;
+  const vaccination = drive?.type === 'vaccination';
+  const needsPriorDate = vaccination && dose !== '1st Dose';
+  function toggleComorbidity(value: string) {
+    setComorbidities((previous) =>
+      value === 'None'
+        ? previous.includes(value)
+          ? []
+          : ['None']
+        : previous.includes(value)
+          ? previous.filter((v) => v !== value)
+          : [...previous.filter((v) => v !== 'None'), value],
+    );
   }
-
-  const comorbidityList = Array.from(selectedComorbidities).filter((c) => c !== 'None');
-
-  // ── Submit ─────────────────────────────────────────────────────────────────
-  async function handleSubmit() {
-    if (!session) {
-      Alert.alert('Sign In Required', 'Please sign in to register.');
+  async function submit() {
+    if (submitLock.current || result) return;
+    if (!session || !drive || !profile) {
+      setSubmitError('Your resident profile is unavailable. Please return to Health and try again.');
       return;
     }
-    if (!drive) return;
-    if (!consented) {
-      Alert.alert('Consent Required', 'Please check the consent box before registering.');
+    if (!consent) {
+      setSubmitError('Please check the consent box before registering.');
       return;
     }
-    if (effectiveAge === null || isNaN(effectiveAge) || effectiveAge < 0 || effectiveAge > 130) {
-      Alert.alert('Age Required', 'Please enter a valid age to continue.');
+    if (selectedId !== null && !selectedMember) {
+      setSubmitError('This household member is no longer available. Choose a registrant again.');
       return;
     }
-
-    setSubmitError(null);
+    const input = driveRegistrationSchema.safeParse({
+      driveId: drive.id,
+      age: profileAge ?? (/^\d{1,3}$/.test(age.trim()) ? Number(age) : NaN),
+      isPwd: pwd,
+      comorbidities: comorbidities.filter((c) => c !== 'None'),
+      priorDoseDate: needsPriorDate ? priorDate : undefined,
+    });
+    if (!input.success) {
+      setSubmitError(
+        needsPriorDate && !/^\d{4}-\d{2}-\d{2}$/.test(priorDate)
+          ? 'Enter the previous dose date as YYYY-MM-DD.'
+          : 'Enter a valid age (0–130) and a valid previous dose date, if needed.',
+      );
+      return;
+    }
+    const dateParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Manila',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date());
+    const today = ['year', 'month', 'day']
+      .map((type) => dateParts.find((part) => part.type === type)?.value)
+      .join('-');
+    if (input.data.priorDoseDate && input.data.priorDoseDate > today) {
+      setSubmitError('The previous dose date cannot be in the future.');
+      return;
+    }
+    submitLock.current = true;
     setSubmitting(true);
+    setSubmitError(null);
+    const ticket = generation.current;
     try {
       const { data, error } = await supabase.rpc('register_for_drive', {
-        p_drive_id: drive.id,
-        p_age: effectiveAge,
-        p_is_pwd: isPwd,
-        p_comorbidities: comorbidityList,
-        p_prior_dose_date: priorDoseDate() ?? undefined,
+        p_drive_id: input.data.driveId,
+        p_age: input.data.age,
+        p_is_pwd: input.data.isPwd,
+        p_comorbidities: input.data.comorbidities,
+        p_prior_dose_date: input.data.priorDoseDate,
       });
-
       if (error) throw new Error(error.message);
-
-      const res = residentDriveRegistrationResultSchema.parse(data);
-      setResult({
-        applicant_number: res.applicant_number,
-      });
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Registration failed. Please try again.';
-      setSubmitError(msg);
+      const confirmed = residentDriveRegistrationResultSchema.safeParse(data);
+      if (!confirmed.success) {
+        throw new Error(
+          'The registration response could not be confirmed. Check My Registrations before trying again.',
+        );
+      }
+      if (ticket === generation.current) setResult(confirmed.data);
+    } catch (error: unknown) {
+      if (ticket === generation.current)
+        setSubmitError(error instanceof Error ? error.message : 'Registration failed. Please try again.');
+      submitLock.current = false;
     } finally {
-      setSubmitting(false);
+      if (ticket === generation.current) setSubmitting(false);
     }
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  //  Render helpers
-  // ─────────────────────────────────────────────────────────────────────────
-
-  /** Formats the confirmed applicant number from the server into the short display form.
-   *  Server returns e.g. "VAC-20260808-0039" → we show "#VAC-039".
-   */
-  function fmtConfirmedNumber(raw: string): string {
-    const parts = raw.split('-');
-    if (parts.length < 3) return `#${raw}`;
-    const prefix = parts[0];
-    const seq = parts[parts.length - 1].replace(/^0+/, '') || '0';
-    return `#${prefix}-${seq.padStart(3, '0')}`;
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  //  Loading skeleton
-  // ─────────────────────────────────────────────────────────────────────────
-
-  if (loadingDrive) {
+  const back = () => router.back();
+  const header = <ServiceScreenHeader title="Applicant Registration" onBack={back} />;
+  if (loading || profileLoading)
     return (
-      <View style={[s.root, { backgroundColor: theme.background }]}>
-        <ScreenHeader onBack={() => router.back()} />
-        <View style={s.centerBox}>
-          <ActivityIndicator size="large" color={PRIMARY_GREEN} />
+      <View style={[styles.root, { backgroundColor: resident.card }]}>
+        {header}
+        <View style={styles.center}>
+          <ActivityIndicator color={resident.accentText} />
         </View>
       </View>
     );
-  }
-
-  if (!drive) return null;
-
-  // ─────────────────────────────────────────────────────────────────────────
-  //  Success state
-  // ─────────────────────────────────────────────────────────────────────────
-
-  if (result) {
+  if (loadError || !drive)
     return (
-      <View style={[s.root, { backgroundColor: theme.background }]}>
-        <ScreenHeader onBack={() => router.back()} />
-        <Animated.ScrollView
-          contentContainerStyle={[s.successBox, { paddingBottom: insets.bottom + 40 }]}
-          style={{ opacity: fadeAnim }}>
-          {/* ✓ circle */}
-          <View style={s.successIconRing}>
-            <Ionicons name="checkmark-circle" size={72} color={PRIMARY_GREEN} />
-          </View>
-
-          <ThemedText style={[s.successTitle, { color: PRIMARY_GREEN }]}>Registration Confirmed!</ThemedText>
-          <ThemedText themeColor="textSecondary" style={s.successSub}>
-            You're all set for the {drive.title}.
-          </ThemedText>
-
-          {/* Applicant number card */}
-          <View style={[s.successNumCard, { backgroundColor: `${PRIMARY_GREEN}14`, borderColor: `${PRIMARY_GREEN}40` }]}>
-            <ThemedText style={[s.successNumLabel, { color: PRIMARY_GREEN }]}>Your Applicant Number</ThemedText>
-            <ThemedText style={[s.successNum, { color: PRIMARY_GREEN }]}>
-              {fmtConfirmedNumber(result.applicant_number)}
-            </ThemedText>
-          </View>
-
-          <ThemedText themeColor="textSecondary" style={s.successNote}>
-            Please arrive on time at {drive.location} on {fmtShortDate(drive.drive_date)} between{' '}
-            {fmt12h(drive.time_start)} – {fmt12h(drive.time_end)}.
-          </ThemedText>
-
-          <Pressable
-            onPress={() => router.back()}
-            style={[s.doneBtn, { backgroundColor: PRIMARY_GREEN }]}>
-            <ThemedText style={s.doneBtnLabel}>Done</ThemedText>
-          </Pressable>
-        </Animated.ScrollView>
+      <View style={[styles.root, { backgroundColor: resident.card }]}>
+        {header}
+        <View style={styles.center}>
+          <ThemedText accessibilityRole="alert">{loadError ?? 'Drive details are unavailable.'}</ThemedText>
+          <PrimaryButton
+            presentation="resident"
+            label="Retry drive details"
+            onPress={() => setReload((n) => n + 1)}
+          />
+          <PrimaryButton presentation="resident" variant="secondary" label="Back to Health" onPress={back} />
+        </View>
       </View>
     );
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  //  Registration form
-  // ─────────────────────────────────────────────────────────────────────────
-
+  if (!profile)
+    return (
+      <View style={[styles.root, { backgroundColor: resident.card }]}>
+        {header}
+        <View style={styles.center}>
+          <ThemedText accessibilityRole="alert">
+            Your resident profile is unavailable. Reconnect and try again.
+          </ThemedText>
+          <PrimaryButton presentation="resident" label="Retry profile" onPress={refetchProfile} />
+          <PrimaryButton presentation="resident" variant="secondary" label="Back to Health" onPress={back} />
+        </View>
+      </View>
+    );
+  if (result)
+    return (
+      <View style={[styles.root, { backgroundColor: resident.card }]}>
+        {header}
+        <ScrollView contentContainerStyle={[styles.success, { paddingBottom: insets.bottom + 40 }]}>
+          <Animated.View
+            style={[
+              styles.successIcon,
+              {
+                backgroundColor: resident.accent,
+                opacity: success,
+                transform: reduced
+                  ? []
+                  : [{ scale: success.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
+              },
+            ]}
+          >
+            <Ionicons name="checkmark" size={36} color={resident.onAccent} />
+          </Animated.View>
+          <ThemedText
+            accessibilityRole="header"
+            style={[styles.successTitle, { color: resident.accentText }]}
+          >
+            Registration submitted!
+          </ThemedText>
+          <HealthStatus status={result.status} />
+          <ThemedText style={[styles.successNote, { color: resident.muted }]}>
+            {result.status === 'pending'
+              ? 'Your application has been received and is awaiting barangay review.'
+              : `Your registration for ${drive.title} is ${result.status}.`}
+          </ThemedText>
+          <View
+            style={[
+              styles.numberCard,
+              { backgroundColor: resident.accentSoft, borderColor: resident.border },
+            ]}
+          >
+            <ThemedText style={[styles.small, { color: resident.accentText }]}>
+              Your Applicant Number
+            </ThemedText>
+            <ThemedText selectable style={[styles.number, { color: resident.accentText }]}>
+              {result.applicant_number}
+            </ThemedText>
+          </View>
+          <ThemedText style={[styles.successNote, { color: resident.muted }]}>
+            Drive schedule: {healthDate(drive.drive_date)} · {healthTime(drive.time_start)}–
+            {healthTime(drive.time_end)} at {drive.location}. Check My Registrations for updates.
+          </ThemedText>
+          <View style={{ alignSelf: 'stretch' }}>
+            <PrimaryButton presentation="resident" label="Done" onPress={back} />
+          </View>
+        </ScrollView>
+      </View>
+    );
   return (
-    <View style={[s.root, { backgroundColor: theme.background }]}>
-      {/* ── Fixed green header ──────────────────────────────────────────────── */}
-      <ScreenHeader onBack={() => router.back()} />
-
-      {/* ── Scrollable body ─────────────────────────────────────────────────── */}
-      <ScrollView
-        contentContainerStyle={[s.scroll, { paddingBottom: insets.bottom + 100 }]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
-
-        {/* ── 1. Drive info card ────────────────────────────────────────────── */}
-        <Card style={s.sectionGap}>
-          {/* Title + type badge */}
-          <View style={s.titleRow}>
-            <ThemedText style={s.driveTitle} numberOfLines={2}>
-              {drive.title}
-            </ThemedText>
-            {driveTypeCfg && (
-              <View style={[s.badge, { backgroundColor: driveTypeCfg.color + '22' }]}>
-                <ThemedText style={[s.badgeText, { color: driveTypeCfg.color }]}>
-                  {driveTypeCfg.label}
-                </ThemedText>
-              </View>
-            )}
-          </View>
-
-          {/* Date · time · location */}
-          <ThemedText themeColor="textSecondary" style={s.metaText}>
-            {fmtShortDate(drive.drive_date)}
-            {' · '}
-            {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
-            {' · '}
-            {drive.location}
+    <KeyboardAvoidingView
+      style={[styles.root, { backgroundColor: resident.card }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      {header}
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
+        <HealthPanel>
+          <HealthDriveSummary drive={drive} />
+        </HealthPanel>
+        <View
+          style={[styles.numberCard, { backgroundColor: resident.accentSoft, borderColor: resident.border }]}
+        >
+          <ThemedText style={[styles.small, { color: resident.accentText, fontWeight: '600' }]}>
+            Your Applicant Number
           </ThemedText>
-
-          {/* Stock row + progress bar */}
-          <View style={s.stockRow}>
-            <ThemedText style={s.stockLabel}>{drive.stock_label}</ThemedText>
-            <ThemedText themeColor="textSecondary" style={s.stockValue}>
-              {drive.stock_remaining} / {drive.stock_total} {drive.stock_unit}
+          <ThemedText style={[styles.small, { color: resident.accentText }]}>
+            Assigned after submission
+          </ThemedText>
+        </View>
+        <ThemedText accessibilityRole="header" style={styles.sectionTitle}>
+          Registering for
+        </ThemedText>
+        <HealthPanel>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Change registrant"
+            onPress={() => setPickerVisible(true)}
+            style={styles.pickerRow}
+          >
+            <Avatar
+              fullName={selectedName}
+              imageUrl={selectedId === null ? profile?.avatar_url : null}
+              size={44}
+              color={resident.accentSoft}
+              foregroundColor={resident.accentText}
+            />
+            <View style={{ flex: 1 }}>
+              <ThemedText style={styles.subheading}>{selectedName}</ThemedText>
+              <ThemedText style={[styles.small, { color: resident.muted }]}>
+                {selectedMember?.relation ?? 'You'}
+              </ThemedText>
+            </View>
+            <ThemedText style={[styles.small, { color: resident.accentText, fontWeight: '700' }]}>
+              Change
             </ThemedText>
-          </View>
-          <ProgressBar fraction={fraction} color={PROGRESS_GREEN} />
-        </Card>
-
-        {/* ── 2. Applicant number preview ───────────────────────────────────── */}
-        <View style={[s.appNumCard, s.sectionGap, { backgroundColor: `${PRIMARY_GREEN}14`, borderColor: `${PRIMARY_GREEN}40` }]}>
-          <ThemedText style={[s.appNumLabel, { color: PRIMARY_GREEN }]}>Your Applicant Number</ThemedText>
-          <ThemedText style={[s.appNumValue, { color: PRIMARY_GREEN }]}>{previewApplicantNumber(drive)}</ThemedText>
-        </View>
-
-        {/* ── 3. Registering for ───────────────────────────────────────────── */}
-        <View style={s.sectionGap}>
-          <ThemedText themeColor="textSecondary" style={s.sectionCaption}>REGISTERING FOR</ThemedText>
-
-          {/* Profile selector — tap to open household picker */}
-          <Pressable onPress={() => setPickerVisible(true)}>
-            <Card>
-              <View style={s.profileSelectorRow}>
-                <View style={s.avatarCircle}>
-                  {selectedAvatarUrl ? (
-                    <Image
-                      source={{ uri: selectedAvatarUrl }}
-                      style={s.avatarImage}
-                      contentFit="cover"
-                      cachePolicy="memory-disk"
-                    />
-                  ) : (
-                    <ThemedText style={s.avatarInitials}>{selectedInitials}</ThemedText>
-                  )}
-                </View>
-                <ThemedText style={s.profileName}>{selectedName}</ThemedText>
-                {selection.type === 'member' && (
-                  <ThemedText style={[s.selectionTag, { color: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN + '1A' }]}>{selection.member.relation}</ThemedText>
-                )}
-                <Ionicons name="chevron-down" size={18} color={theme.textSecondary} />
-              </View>
-            </Card>
+            <Ionicons name="chevron-down" size={16} color={resident.accentText} />
           </Pressable>
-
-          {/* Profile details for the selected applicant */}
-          <Card style={{ marginTop: 8 }}>
-            {/* Name */}
-            <ProfileRow label="Name" value={selectedName} />
-            <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
-
-            {selection.type === 'member' && (
-              <>
-                <ProfileRow label="Relation" value={selection.member.relation} />
-                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
-                <ProfileRow label="Role" value={selection.member.role} />
-                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
-              </>
-            )}
-
-            {/* Age — computed for resident with birth_date; manual input for members or
-                 resident without birth_date */}
-            {profileAge !== null ? (
-              <ProfileRow label="Age" value={String(profileAge)} />
-            ) : (
-              <View style={s.profileRow}>
-                <ThemedText themeColor="textSecondary" style={s.profileRowLabel}>Age</ThemedText>
-                <TextInput
-                  style={[s.ageInput, { color: theme.text }]}
-                  placeholder="Enter age"
-                  placeholderTextColor={theme.textSecondary}
-                  keyboardType="number-pad"
-                  value={ageOverride}
-                  onChangeText={setAgeOverride}
-                  maxLength={3}
-                  returnKeyType="done"
-                />
-              </View>
-            )}
-
-            {/* Address — only shown for the resident (members share the household address) */}
-            {selection.type === 'self' && (
-              <>
-                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
-                <ProfileRow label="Address" value={profile?.home_address ?? '—'} />
-              </>
-            )}
-
-            {/* Edit in Profile link */}
-            <Pressable
-              onPress={() => router.push('/(app)/settings/profile')}
-              style={s.editLink}>
-              <ThemedText style={[s.editLinkText, { color: PRIMARY_GREEN }]}>Edit in Profile</ThemedText>
-            </Pressable>
-          </Card>
-        </View>
-
-        {/* ── Applicant picker sheet ─────────────────────────────────────────── */}
-        <ApplicantPickerSheet
-          visible={pickerVisible}
-          residentName={profile?.full_name ?? 'My Profile'}
-          residentAvatarUrl={(profile as any)?.avatar_url ?? null}
-          householdMembers={householdMembers}
-          selection={selection}
-          onSelect={(sel) => { setSelection(sel); setPickerVisible(false); }}
-          onClose={() => setPickerVisible(false)}
-        />
-
-        {/* ── 4. Eligibility Information ────────────────────────────────────── */}
-        <View style={s.sectionGap}>
-          <ThemedText style={s.eligibilityTitle}>Eligibility Information</ThemedText>
-
-          {/* PWD toggle */}
-          <Card>
-            <View style={s.pwdRow}>
-              <ThemedText style={s.pwdLabel}>Person with Disability (PWD)?</ThemedText>
-              <Switch
-                value={isPwd}
-                onValueChange={setIsPwd}
-                trackColor={{ false: theme.backgroundSelected, true: PRIMARY_GREEN + '60' }}
-                thumbColor={isPwd ? PRIMARY_GREEN : theme.textSecondary}
-                ios_backgroundColor={theme.backgroundSelected}
+          <HealthFact label="Name" value={selectedName} />
+          {selectedMember ? (
+            <>
+              <HealthFact label="Relation" value={selectedMember.relation} />
+              <HealthFact label="Role" value={selectedMember.role ?? '—'} />
+            </>
+          ) : null}
+          {profileAge !== null ? (
+            <HealthFact label="Age" value={String(profileAge)} />
+          ) : (
+            <View style={styles.field}>
+              <TextField
+                presentation="resident"
+                label="Age"
+                accessibilityLabel="Age"
+                value={age}
+                onChangeText={setAge}
+                keyboardType="number-pad"
+                maxLength={3}
+                placeholder="Enter age"
               />
             </View>
-          </Card>
-
-          {/* Comorbidities */}
-          <Card style={{ marginTop: 8, gap: Spacing.three }}>
-            <ThemedText style={s.comorbLabel}>
-              Comorbidities (select all that apply)
-            </ThemedText>
-            {/* 2-column grid — 3 rows of 2 */}
-            <View style={s.comorbGrid}>
-              {COMORBIDITY_OPTIONS.map((c) => (
-                <View key={c} style={s.comorbCell}>
-                  <CheckboxRow
-                    label={c}
-                    checked={selectedComorbidities.has(c)}
-                    onToggle={() => toggleComorbidity(c)}
-                  />
-                </View>
-              ))}
-            </View>
-
-            {/* Dose History */}
-            <ThemedText style={s.comorbLabel}>Dose History</ThemedText>
-            <DoseHistoryTabs active={doseHistory} onSelect={setDoseHistory} />
-          </Card>
-        </View>
-
-        {/* ── 5. Privacy consent ───────────────────────────────────────────── */}
-        <Card style={[s.sectionGap, s.privacyCard, { borderColor: theme.backgroundSelected }]}>
-          {/* Shield + notice text */}
-          <View style={s.privacyNoticeRow}>
-            <Ionicons name="shield-checkmark-outline" size={20} color={theme.textSecondary} style={{ marginTop: 1 }} />
-            <ThemedText themeColor="textSecondary" style={s.privacyNoticeText}>
-              This information is used only to determine allocation priority for this drive and is handled under the Barangay's Data Privacy Policy.
+          )}
+          {selectedId === null ? <HealthFact label="Address" value={profile?.home_address ?? '—'} /> : null}
+          <View style={styles.field}>
+            <ThemedText style={[styles.small, { color: resident.muted }]}>
+              Registrations are saved to your signed-in account. Household member identity is not recorded by
+              this service.
             </ThemedText>
           </View>
-
-          {/* Consent checkbox */}
-          <Pressable onPress={() => setConsented((v) => !v)} style={s.consentRow} hitSlop={6}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/(app)/settings/profile')}
+            style={styles.editLink}
+          >
+            <ThemedText style={[styles.small, { color: resident.accentText, fontWeight: '700' }]}>
+              Edit in Profile
+            </ThemedText>
+          </Pressable>
+        </HealthPanel>
+        <ThemedText accessibilityRole="header" style={styles.sectionTitle}>
+          Eligibility Information
+        </ThemedText>
+        <HealthPanel>
+          <View style={styles.pwdRow}>
+            <ThemedText style={[styles.subheading, { flex: 1 }]}>Person with Disability (PWD)?</ThemedText>
+            <Switch
+              accessibilityLabel="Person with Disability (PWD)?"
+              value={pwd}
+              onValueChange={setPwd}
+              trackColor={{ false: resident.border, true: resident.accentSoft }}
+              thumbColor={pwd ? resident.accentText : resident.muted}
+            />
+          </View>
+          <View style={[styles.eligibility, { borderColor: resident.border }]}>
+            <ThemedText style={styles.subheading}>Comorbidities (select all that apply)</ThemedText>
+            <View style={styles.chips}>
+              {COMORBIDITIES.map((value) => {
+                const checked = comorbidities.includes(value);
+                return (
+                  <Pressable
+                    key={value}
+                    accessibilityRole="checkbox"
+                    accessibilityLabel={value}
+                    accessibilityState={{ checked }}
+                    onPress={() => toggleComorbidity(value)}
+                    style={[
+                      styles.chip,
+                      {
+                        borderColor: checked ? resident.accentText : resident.border,
+                        backgroundColor: checked ? resident.accentSoft : resident.card,
+                      },
+                    ]}
+                  >
+                    {checked ? <Ionicons name="checkmark" size={14} color={resident.accentText} /> : null}
+                    <ThemedText
+                      style={[styles.small, { color: checked ? resident.accentText : resident.text }]}
+                    >
+                      {value}
+                    </ThemedText>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+          {vaccination ? (
+            <View style={[styles.eligibility, { borderColor: resident.border }]}>
+              <ThemedText style={styles.subheading}>Dose History</ThemedText>
+              <DoseHistoryTabs active={dose} onSelect={setDose} />
+              {needsPriorDate ? (
+                <TextField
+                  presentation="resident"
+                  label="Previous dose date"
+                  value={priorDate}
+                  onChangeText={setPriorDate}
+                  placeholder="YYYY-MM-DD"
+                  maxLength={10}
+                  autoCapitalize="none"
+                />
+              ) : null}
+            </View>
+          ) : null}
+        </HealthPanel>
+        <View style={[styles.privacy, { backgroundColor: resident.surface }]}>
+          <View style={styles.notice}>
+            <Ionicons name="shield-checkmark-outline" size={18} color={resident.accentText} />
+            <ThemedText style={[styles.small, { flex: 1, color: resident.muted }]}>
+              This information is used only to determine allocation priority for this drive and is handled
+              under the Barangay's Data Privacy Policy.
+            </ThemedText>
+          </View>
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityLabel="I understand and consent"
+            accessibilityState={{ checked: consent }}
+            onPress={() => setConsent((v) => !v)}
+            style={styles.consent}
+          >
             <View
               style={[
-                cbS.box,
-                consented && { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN },
-              ]}>
-              {consented && <Ionicons name="checkmark" size={13} color="#fff" />}
+                styles.checkbox,
+                {
+                  backgroundColor: consent ? resident.accent : resident.card,
+                  borderColor: consent ? resident.accentText : resident.controlBorder,
+                },
+              ]}
+            >
+              {consent ? <Ionicons name="checkmark" size={16} color={resident.onAccent} /> : null}
             </View>
-            <ThemedText style={s.consentLabel}>I understand and consent</ThemedText>
+            <ThemedText style={[styles.subheading, { flex: 1 }]}>I understand and consent</ThemedText>
           </Pressable>
-        </Card>
-
-        {/* Inline error */}
-        {submitError && (
-          <View style={[s.sectionGap, s.errorBox, { backgroundColor: `${theme.accentRed}1A`, borderColor: `${theme.accentRed}40` }]}>
-            <Ionicons name="alert-circle-outline" size={16} color={theme.accentRed} />
-            <ThemedText style={[s.errorText, { color: theme.accentRed }]}>{submitError}</ThemedText>
-          </View>
-        )}
+        </View>
+        {submitError ? (
+          <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>
+            {submitError}
+          </ThemedText>
+        ) : null}
       </ScrollView>
-
-      {/* ── Fixed submit button ──────────────────────────────────────────────── */}
       <View
         style={[
-          s.submitWrap,
-          { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected },
-          { paddingBottom: insets.bottom > 0 ? insets.bottom : Spacing.three },
-        ]}>
-        <Pressable
-          onPress={handleSubmit}
-          disabled={submitting || drive.stock_remaining === 0}
-          style={[
-            s.submitBtn,
-            {
-              backgroundColor:
-                submitting || drive.stock_remaining === 0
-                  ? PRIMARY_GREEN + '70'
-                  : PRIMARY_GREEN,
-            },
-          ]}>
-          {submitting ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <ThemedText style={s.submitLabel}>
-              {drive.stock_remaining === 0 ? 'No Slots Available' : 'Submit Registration'}
-            </ThemedText>
-          )}
-        </Pressable>
+          styles.footer,
+          {
+            backgroundColor: resident.card,
+            borderColor: resident.border,
+            paddingBottom: Math.max(16, insets.bottom),
+          },
+        ]}
+      >
+        <PrimaryButton
+          presentation="resident"
+          appearance="healthForm"
+          label={drive.stock_remaining <= 0 ? 'No Slots Available' : 'Submit Registration'}
+          loading={submitting}
+          disabled={!consent || drive.stock_remaining <= 0 || !profile || profileLoading}
+          onPress={() => {
+            void submit();
+          }}
+        />
       </View>
-    </View>
+      <ApplicantPicker
+        visible={pickerVisible}
+        onClose={() => setPickerVisible(false)}
+        members={members}
+        selected={selectedId}
+        onSelect={(id) => {
+          setSelectedId(id);
+          setAge('');
+        }}
+        residentName={profile?.full_name ?? 'My Profile'}
+        avatar={profile?.avatar_url ?? null}
+      />
+    </KeyboardAvoidingView>
   );
 }
 
-// ─── ApplicantPickerSheet ─────────────────────────────────────────────────────
-// Bottom-sheet modal that lists the resident themselves + their household members
-// so the user can choose who they are registering for.
-//
-// Animation design:
-//   Open  — spring (damping 22, stiffness 220) for the sheet + 180 ms fade-in for
-//            the backdrop.  Gives a natural, elastic snap-into-place feel.
-//   Close — 260 ms ease-in-cubic slide-down + 200 ms backdrop fade, then the Modal
-//            is unmounted so there are no phantom touch targets left behind.
-
-function ApplicantPickerSheet({
-  visible,
-  residentName,
-  residentAvatarUrl,
-  householdMembers,
-  selection,
-  onSelect,
-  onClose,
-}: {
-  visible: boolean;
-  residentName: string;
-  residentAvatarUrl: string | null;
-  householdMembers: HouseholdMember[];
-  selection: ApplicantSelection;
-  onSelect: (sel: ApplicantSelection) => void;
-  onClose: () => void;
-}) {
-  const theme = useTheme();
-  // Shadows the module-level fallback — see the live-accent note at the top of this file.
-  const PRIMARY_GREEN = theme.primary;
-  const isResidentSelected = selection.type === 'self';
-
-  // `modalVisible` lags behind the `visible` prop so the exit animation can
-  // finish before the Modal actually unmounts.
-  const [modalVisible, setModalVisible] = useState(false);
-
-  // Sheet slides from off-screen (large positive Y) up to 0.
-  // 700 is safely below any device viewport.
-  const translateY = useRef(new Animated.Value(700)).current;
-  const backdropOpacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (visible) {
-      // Reset position before mounting so we always slide in from below.
-      translateY.setValue(700);
-      backdropOpacity.setValue(0);
-      setModalVisible(true);
-
-      Animated.parallel([
-        // Spring gives the sheet a natural, slightly elastic feel on the way up.
-        Animated.spring(translateY, {
-          toValue: 0,
-          useNativeDriver: true,
-          damping: 22,
-          stiffness: 220,
-          mass: 0.9,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: 180,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      // Animate out, then unmount the Modal.
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: 700,
-          duration: 260,
-          easing: Easing.bezier(0.4, 0, 1, 1), // ease-in cubic — feels intentional, not sluggish
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 0,
-          duration: 200,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]).start(({ finished }) => {
-        if (finished) setModalVisible(false);
-      });
-    }
-  }, [visible, translateY, backdropOpacity]);
-
-  // Trigger the exit animation; the useEffect above handles the actual close.
-  function handleClose() {
-    onClose();
-  }
-
-  return (
-    <Modal
-      visible={modalVisible}
-      transparent
-      animationType="none"
-      onRequestClose={handleClose}
-      statusBarTranslucent>
-
-      {/* ── Animated backdrop ─────────────────────────────────────────────── */}
-      <Animated.View
-        style={[StyleSheet.absoluteFill, ps.backdrop, { opacity: backdropOpacity }]}
-        pointerEvents="box-none">
-        <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
-      </Animated.View>
-
-      {/* ── Animated sheet ────────────────────────────────────────────────── */}
-      <Animated.View
-        style={[
-          ps.sheet,
-          { backgroundColor: theme.backgroundElement },
-          { transform: [{ translateY }] },
-        ]}>
-        {/* Handle */}
-        <View style={[ps.handle, { backgroundColor: theme.backgroundSelected }]} />
-        <ThemedText style={ps.title}>Registering for</ThemedText>
-
-        {/* ── Resident (self) row ────────────────────────────────────────── */}
-        <Pressable
-          style={[ps.row, isResidentSelected && { backgroundColor: PRIMARY_GREEN + '14' }]}
-          onPress={() => onSelect({ type: 'self' })}>
-          <View style={[ps.avatarCircle, { backgroundColor: PRIMARY_GREEN }]}>
-            {residentAvatarUrl ? (
-              <Image
-                source={{ uri: residentAvatarUrl }}
-                style={ps.avatarImage}
-                contentFit="cover"
-                cachePolicy="memory-disk"
-              />
-            ) : (
-              <ThemedText style={ps.avatarInitials}>
-                {getInitials(residentName)}
-              </ThemedText>
-            )}
-          </View>
-          <View style={ps.rowInfo}>
-            <ThemedText style={ps.rowName}>{residentName}</ThemedText>
-            <ThemedText themeColor="textSecondary" style={ps.rowSub}>Myself (Resident)</ThemedText>
-          </View>
-          {isResidentSelected && (
-            <Ionicons name="checkmark-circle" size={22} color={PRIMARY_GREEN} />
-          )}
-        </Pressable>
-
-        {/* ── Household members ──────────────────────────────────────────── */}
-        {householdMembers.length === 0 ? (
-          <View style={ps.emptyBox}>
-            <Ionicons name="people-outline" size={28} color={theme.textSecondary} />
-            <ThemedText themeColor="textSecondary" style={ps.emptyText}>
-              No household members added yet.{'\n'}Go to Profile → Household Information to add them.
-            </ThemedText>
-            <Pressable
-              style={[ps.goToProfileBtn, { backgroundColor: PRIMARY_GREEN }]}
-              onPress={() => {
-                handleClose();
-                router.push('/(app)/settings/profile');
-              }}>
-              <ThemedText style={ps.goToProfileText}>Go to Profile</ThemedText>
-            </Pressable>
-          </View>
-        ) : (
-          <ScrollView
-            style={ps.memberList}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled">
-            {householdMembers.map((m) => {
-              const isSel = selection.type === 'member' && selection.member.id === m.id;
-              return (
-                <Pressable
-                  key={m.id}
-                  style={[ps.row, isSel && { backgroundColor: PRIMARY_GREEN + '14' }]}
-                  onPress={() => onSelect({ type: 'member', member: m })}>
-                  <View style={[ps.avatarCircle, ps.memberAvatarBg]}>
-                    <ThemedText style={ps.avatarInitials}>{getInitials(m.name)}</ThemedText>
-                  </View>
-                  <View style={ps.rowInfo}>
-                    <ThemedText style={ps.rowName}>{m.name}</ThemedText>
-                    <ThemedText themeColor="textSecondary" style={ps.rowSub}>
-                      {m.relation} · {m.role}
-                    </ThemedText>
-                  </View>
-                  {isSel && (
-                    <Ionicons name="checkmark-circle" size={22} color={PRIMARY_GREEN} />
-                  )}
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-        )}
-      </Animated.View>
-    </Modal>
-  );
-}
-
-const ps = StyleSheet.create({
-  // Layout-only; the rgba background color is set inline so it can be driven by
-  // the Animated opacity value without conflicting with useNativeDriver.
-  backdrop: {
-    backgroundColor: 'rgba(0,0,0,0.45)',
-  },
-  sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: Spacing.three,
-    paddingBottom: 40,
-    paddingTop: Spacing.two,
-    maxHeight: '75%',
-  },
-  handle: {
-    alignSelf: 'center',
-    width: 38,
-    height: 4,
-    borderRadius: 2,
-    marginBottom: Spacing.two,
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: '700',
-    marginBottom: Spacing.two + 4,
-  },
-  memberList: {
-    flexGrow: 0,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two + 4,
-    paddingVertical: Spacing.two + 2,
-    paddingHorizontal: Spacing.two,
-    borderRadius: 12,
-    marginBottom: 4,
-  },
-  // rowSelected/avatarCircle background applied inline at each usage site with the live
-  // accent — see the live-accent note at the top of this file.
-  avatarCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  memberAvatarBg: {
-    backgroundColor: '#D1D5DB',
-  },
-  avatarImage: {
-    width: 44,
-    height: 44,
-  },
-  avatarInitials: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-  },
-  rowInfo: {
-    flex: 1,
-    gap: 2,
-  },
-  rowName: {
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  rowSub: {
-    fontSize: 13,
-  },
-  emptyBox: {
-    alignItems: 'center',
-    paddingVertical: Spacing.four,
-    gap: Spacing.two,
-  },
-  emptyText: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  goToProfileBtn: {
-    marginTop: Spacing.one,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-    // backgroundColor applied inline at the usage site with the live accent.
-    borderRadius: 20,
-  },
-  goToProfileText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#fff',
-  },
-});
-
-// ─── ScreenHeader ─────────────────────────────────────────────────────────────
-
-function ScreenHeader({ onBack }: { onBack: () => void }) {
-  const theme = useTheme();
-  // Shadows the module-level fallback — see the live-accent note at the top of this file.
-  const PRIMARY_GREEN = theme.primary;
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View style={[s.header, { backgroundColor: PRIMARY_GREEN, paddingTop: insets.top + Spacing.two }]}>
-      <Pressable
-        onPress={onBack}
-        style={s.backBtn}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        hitSlop={Spacing.two}>
-        <Ionicons name="chevron-back" size={26} color="#fff" />
-      </Pressable>
-      <View style={s.headerContent}>
-        <ThemedText style={[s.headerTitle, { color: theme.onPrimary }]}>
-          Applicant Registration
-        </ThemedText>
-      </View>
-    </View>
-  );
-}
-
-// ─── ProfileRow ──────────────────────────────────────────────────────────────
-
-function ProfileRow({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={s.profileRow}>
-      <ThemedText themeColor="textSecondary" style={s.profileRowLabel}>{label}</ThemedText>
-      <ThemedText style={s.profileRowValue} numberOfLines={2}>
-        {value}
-      </ThemedText>
-    </View>
-  );
-}
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
-
-const s = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-
-  // ── Header ─────────────────────────────────────────────────────────────────
-  // backgroundColor applied inline in ScreenHeader with the live accent — mirrors
-  // the Profile screen header (same green bar overlapping the status bar).
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
-  },
-
-  // ── Body scroll ────────────────────────────────────────────────────────────
-  scroll: {
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-  },
-  sectionGap: {
-    marginBottom: Spacing.two + 4,
-  },
-  centerBox: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // ── Drive info card ────────────────────────────────────────────────────────
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: Spacing.two,
-    marginBottom: 6,
-  },
-  driveTitle: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '700',
-    lineHeight: 22,
-  },
-  badge: {
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    flexShrink: 0,
-  },
-  badgeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    lineHeight: 16,
-  },
-  metaText: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 10,
-  },
-  stockRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  stockLabel: {
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 20,
-  },
-  stockValue: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-
-  // ── Applicant number card ──────────────────────────────────────────────────
-  appNumCard: {
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  center: { flex: 1, justifyContent: 'center', padding: 20, gap: 16 },
+  content: { padding: 20, gap: 16, paddingBottom: 24 },
+  sectionTitle: { fontSize: 17, lineHeight: 24, fontWeight: '700' },
+  subheading: { fontSize: 14.5, lineHeight: 22, fontWeight: '700' },
+  small: { fontSize: 13.5, lineHeight: 20 },
+  numberCard: { borderWidth: 1, borderRadius: 16, padding: 16, gap: 4, alignSelf: 'stretch' },
+  number: { fontSize: 28, lineHeight: 36, fontWeight: '800' },
+  pickerRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, borderBottomWidth: 1 },
+  field: { padding: 16 },
+  editLink: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center', paddingHorizontal: 16 },
+  pwdRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 },
+  eligibility: { padding: 16, gap: 12, borderTopWidth: 1 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  chip: {
+    minHeight: 44,
     borderWidth: 1,
-    borderRadius: 14,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two + 4,
-  },
-  // appNumLabel/appNumValue color applied inline with the live accent — see the shadow
-  // note at the top of this file.
-  appNumLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.2,
-    marginBottom: 4,
-  },
-  appNumValue: {
-    fontSize: 30,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    lineHeight: 38,
-  },
-
-  // ── Registering for ────────────────────────────────────────────────────────
-  sectionCaption: {
-    fontSize: 11,
-    fontWeight: '600',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-    marginBottom: 8,
-  },
-  profileSelectorRow: {
+    borderRadius: 100,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 6,
+    maxWidth: '100%',
   },
-  avatarCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#D1D5DB',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-  },
-  avatarInitials: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#374151',
-    lineHeight: 18,
-  },
-  profileName: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '700',
-    lineHeight: 22,
-  },
-  // color/backgroundColor applied inline with the live accent.
-  selectionTag: {
-    fontSize: 12,
-    fontWeight: '600',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginRight: 4,
-  },
-
-  // Profile detail rows
-  profileRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-  },
-  profileRowLabel: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  profileRowValue: {
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 20,
-    textAlign: 'right',
-    flex: 1,
-    marginLeft: Spacing.two,
-  },
-  ageInput: {
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 20,
-    textAlign: 'right',
-    minWidth: 60,
-    padding: 0,
-  },
-  divider: {
-    height: 1,
-  },
-  editLink: {
-    alignSelf: 'flex-end',
-    paddingTop: 10,
-  },
-  editLinkText: {
-    fontSize: 14,
-    // color applied inline with the live accent.
-    fontWeight: '600',
-    lineHeight: 20,
-  },
-
-  // ── Eligibility ────────────────────────────────────────────────────────────
-  eligibilityTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 26,
-    marginBottom: 10,
-  },
-  pwdRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  pwdLabel: {
-    fontSize: 15,
-    lineHeight: 22,
-    flex: 1,
-    marginRight: 8,
-  },
-  comorbLabel: {
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 20,
-  },
-  comorbGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    rowGap: Spacing.two + 4,
-  },
-  comorbCell: {
-    width: '50%',
-  },
-
-  // ── Privacy card ───────────────────────────────────────────────────────────
-  privacyCard: {
-    borderWidth: 1,
-    gap: Spacing.two,
-  },
-  privacyNoticeRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.two,
-  },
-  privacyNoticeText: {
-    fontSize: 13,
-    lineHeight: 19,
-    flex: 1,
-  },
-  consentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  consentLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 20,
-  },
-
-  // ── Error ──────────────────────────────────────────────────────────────────
-  errorBox: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-    borderRadius: 10,
-    padding: Spacing.two + 4,
-    borderWidth: 1,
-  },
-  errorText: {
-    fontSize: 13,
-    flex: 1,
-    lineHeight: 18,
-  },
-
-  // ── Submit ─────────────────────────────────────────────────────────────────
-  submitWrap: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.two,
-    borderTopWidth: 1,
-  },
-  submitBtn: {
-    borderRadius: 30,
-    height: 56,
+  privacy: { borderRadius: 16, padding: 16, gap: 12 },
+  notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  consent: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  submitLabel: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-  },
-
-  // ── Success state ──────────────────────────────────────────────────────────
-  successBox: {
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    gap: Spacing.two + 4,
-  },
-  successIconRing: {
-    marginBottom: Spacing.two,
-  },
-  successTitle: {
-    fontSize: 22,
-    fontWeight: '800',
-    // color applied inline with the live accent.
-    textAlign: 'center',
-    lineHeight: 28,
-  },
-  successSub: {
-    fontSize: 15,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  successNumCard: {
-    borderWidth: 1,
-    borderRadius: 14,
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: Spacing.two,
-  },
-  successNumLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    // color applied inline with the live accent.
-    letterSpacing: 0.2,
-    marginBottom: 4,
-  },
-  successNum: {
-    fontSize: 28,
-    fontWeight: '800',
-    // color applied inline with the live accent.
-    letterSpacing: 0.5,
-  },
-  successNote: {
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  doneBtn: {
-    // backgroundColor applied inline with the live accent.
-    borderRadius: 30,
-    height: 52,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: Spacing.three,
-  },
-  doneBtnLabel: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
+  footer: { paddingHorizontal: 20, paddingTop: 12, borderTopWidth: 1 },
+  doseTabs: { position: 'relative', flexDirection: 'row', padding: 4, borderRadius: 12 },
+  doseIndicator: { position: 'absolute', top: 4, bottom: 4, left: 4, borderRadius: 8 },
+  doseTab: { flex: 1, minHeight: 44, padding: 8, alignItems: 'center', justifyContent: 'center' },
+  success: { flexGrow: 1, alignItems: 'center', paddingHorizontal: 20, paddingTop: 40, gap: 16 },
+  successIcon: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center' },
+  successTitle: { fontSize: 24, lineHeight: 30, fontWeight: '800', textAlign: 'center' },
+  successNote: { fontSize: 14.5, lineHeight: 22, textAlign: 'center' },
 });

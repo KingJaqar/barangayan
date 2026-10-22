@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Action, Body, Card, confirmDestructive, Notice, Screen, SymbolIcon } from '../../components/ui';
-import { sameColor } from '../../lib/color-math';
+import { readableForeground, sameColor } from '../../lib/color-math';
 import { DEFAULT_ACCENT } from '../../lib/palette';
 import { layout, radius, space, typeScale, useColors, useType } from '../../lib/theme';
 import { CustomColorSheet } from './color-picker';
@@ -13,7 +13,7 @@ function Swatch({ color, name, selected, onPress }: { color: string; name: strin
   return <Pressable accessibilityRole="radio" accessibilityLabel={name} accessibilityValue={{ text: color }} accessibilityState={{ checked: selected }} onPress={onPress}
     style={({ pressed }) => ({ width: layout.controlMin, height: layout.controlMin, borderRadius: layout.controlMin / 2, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: selected ? colors.textPrimary : 'transparent', opacity: pressed ? 0.7 : 1 })}>
     <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: color, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.border }}>
-      {selected && <SymbolIcon name="checkmark" color="#FFFFFF" size={16} />}
+      {selected && <SymbolIcon name="checkmark" color={readableForeground(color)} size={16} />}
     </View>
   </Pressable>;
 }
@@ -75,7 +75,7 @@ export function AppearanceScreen() {
         return <View key={color} style={{ gap: space[2] }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[3], minHeight: layout.listRowMin }}>
             <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: color, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' }}>
-              {selected && <SymbolIcon name="checkmark" color="#FFFFFF" size={16} />}
+              {selected && <SymbolIcon name="checkmark" color={readableForeground(color)} size={16} />}
             </View>
             <Text style={[type.body, { flex: 1, color: colors.textPrimary }]}>{color}{selected ? ' (in use)' : ''}</Text>
           </View>

@@ -1,0 +1,184 @@
+BEGIN
+SET
+CREATE EXTENSION
+ok 1 - Anonymous users cannot execute lifecycle mutations
+ok 2 - Lifecycle mutations run as the caller under RLS
+ok 3 - Internal active-admin lookup is not anonymous-callable
+ok 4 - admin_health_records: record view enforces caller permissions
+ok 5 - admin_households_records: record view enforces caller permissions
+ok 6 - admin_incidents_records: record view enforces caller permissions
+ok 7 - admin_requests_records: record view enforces caller permissions
+ok 8 - admin_transactions_records: record view enforces caller permissions
+ok 9 - admin_staff_records: record view enforces caller permissions
+ok 10 - admin_residents_records: record view enforces caller permissions
+ok 11 - admin_applicants_records: record view enforces caller permissions
+INSERT 0 2
+INSERT 0 4
+INSERT 0 4
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+UPDATE 1
+CREATE TABLE
+INSERT 0 7
+INSERT 0 1
+GRANT
+SET
+SET
+CREATE FUNCTION
+CREATE FUNCTION
+UPDATE 8
+ok 12 - requests: active details are readable
+ok 13 - transactions: active details are readable
+ok 14 - residents: active details are readable
+ok 15 - incidents: active details are readable
+ok 16 - health: active details are readable
+ok 17 - applicants: active details are readable
+ok 18 - households: active details are readable
+ok 19 - staff: active details are readable
+ok 20 - requests: edits persist
+ok 21 - transactions: edits persist
+ok 22 - residents: edits persist
+ok 23 - incidents: edits persist
+ok 24 - health: edits persist
+ok 25 - applicants: edits persist
+ok 26 - households: edits persist
+ok 27 - staff: edits persist
+CREATE FUNCTION
+ok 28 - requests: edited values are read back from database
+ok 29 - transactions: edited values are read back from database
+ok 30 - residents: edited values are read back from database
+ok 31 - incidents: edited values are read back from database
+ok 32 - health: edited values are read back from database
+ok 33 - applicants: edited values are read back from database
+ok 34 - households: edited values are read back from database
+ok 35 - staff: edited values are read back from database
+ok 36 - requests: tenant reassignment rejected
+ok 37 - transactions: tenant reassignment rejected
+ok 38 - residents: tenant reassignment rejected
+ok 39 - incidents: tenant reassignment rejected
+ok 40 - health: tenant reassignment rejected
+ok 41 - applicants: tenant reassignment rejected
+ok 42 - households: tenant reassignment rejected
+ok 43 - staff: tenant reassignment rejected
+ok 44 - requests: stale actions rejected
+ok 45 - transactions: stale actions rejected
+ok 46 - residents: stale actions rejected
+ok 47 - incidents: stale actions rejected
+ok 48 - health: stale actions rejected
+ok 49 - applicants: stale actions rejected
+ok 50 - households: stale actions rejected
+ok 51 - staff: stale actions rejected
+ok 52 - requests: related records prevent permanent deletion
+ok 53 - residents: related records prevent permanent deletion
+ok 54 - health: related records prevent permanent deletion
+ok 55 - applicants: archive succeeds
+ok 56 - households: archive succeeds
+ok 57 - residents: archive succeeds
+ok 58 - health: archive succeeds
+ok 59 - requests: archive succeeds
+ok 60 - staff: archive succeeds
+ok 61 - transactions: archive succeeds
+ok 62 - incidents: archive succeeds
+ok 63 - requests: archive leaves active list
+ok 64 - transactions: archive leaves active list
+ok 65 - residents: archive leaves active list
+ok 66 - incidents: archive leaves active list
+ok 67 - health: archive leaves active list
+ok 68 - applicants: archive leaves active list
+ok 69 - households: archive leaves active list
+ok 70 - staff: archive leaves active list
+ok 71 - requests: archived details remain readable
+ok 72 - transactions: archived details remain readable
+ok 73 - residents: archived details remain readable
+ok 74 - incidents: archived details remain readable
+ok 75 - health: archived details remain readable
+ok 76 - applicants: archived details remain readable
+ok 77 - households: archived details remain readable
+ok 78 - staff: archived details remain readable
+ok 79 - Household archive preserves check-in state
+ok 80 - incidents: archived details editable
+ok 81 - applicants: archived details editable
+ok 82 - households: archived details editable
+ok 83 - staff: archived details editable
+ok 84 - residents: restore succeeds
+ok 85 - health: restore succeeds
+ok 86 - households: restore succeeds
+ok 87 - applicants: restore succeeds
+ok 88 - staff: restore succeeds
+ok 89 - transactions: restore succeeds
+ok 90 - incidents: restore succeeds
+ok 91 - requests: restore succeeds
+ok 92 - requests: restored record returns to active list
+ok 93 - transactions: restored record returns to active list
+ok 94 - residents: restored record returns to active list
+ok 95 - incidents: restored record returns to active list
+ok 96 - health: restored record returns to active list
+ok 97 - applicants: restored record returns to active list
+ok 98 - households: restored record returns to active list
+ok 99 - staff: restored record returns to active list
+ok 100 - Household restore preserves check-in state
+ok 101 - Staff profile and roster update atomically
+ok 102 - Staff profile changes persisted
+ok 103 - Cannot archive own staff record
+SET
+ok 104 - requests: other tenant cannot browse details
+ok 105 - transactions: other tenant cannot browse details
+ok 106 - residents: other tenant cannot browse details
+ok 107 - incidents: other tenant cannot browse details
+ok 108 - health: other tenant cannot browse details
+ok 109 - applicants: other tenant cannot browse details
+ok 110 - households: other tenant cannot browse details
+ok 111 - staff: other tenant cannot browse details
+ok 112 - requests: other tenant deletion denied
+ok 113 - transactions: other tenant deletion denied
+ok 114 - residents: other tenant deletion denied
+ok 115 - incidents: other tenant deletion denied
+ok 116 - health: other tenant deletion denied
+ok 117 - applicants: other tenant deletion denied
+ok 118 - households: other tenant deletion denied
+ok 119 - staff: other tenant deletion denied
+SET
+ok 120 - requests: resident lifecycle mutation denied
+ok 121 - transactions: resident lifecycle mutation denied
+ok 122 - residents: resident lifecycle mutation denied
+ok 123 - incidents: resident lifecycle mutation denied
+ok 124 - health: resident lifecycle mutation denied
+ok 125 - applicants: resident lifecycle mutation denied
+ok 126 - households: resident lifecycle mutation denied
+ok 127 - staff: resident lifecycle mutation denied
+ok 128 - Resident cannot archive via existing cancellation policy
+ok 129 - Resident cannot alter household archive state
+SET
+ok 130 - requests: archive before permanent deletion
+ok 131 - transactions: archive before permanent deletion
+ok 132 - residents: archive before permanent deletion
+ok 133 - incidents: archive before permanent deletion
+ok 134 - health: archive before permanent deletion
+ok 135 - applicants: archive before permanent deletion
+ok 136 - households: archive before permanent deletion
+ok 137 - staff: archive before permanent deletion
+ok 138 - transactions: permanent deletion succeeds
+ok 139 - applicants: permanent deletion succeeds
+ok 140 - households: permanent deletion succeeds
+ok 141 - staff: permanent deletion succeeds
+ok 142 - incidents: permanent deletion succeeds
+ok 143 - health: permanent deletion succeeds
+ok 144 - requests: permanent deletion succeeds
+ok 145 - residents: permanent deletion succeeds
+ok 146 - requests: deleted record is absent from database view
+ok 147 - transactions: deleted record is absent from database view
+ok 148 - residents: deleted record is absent from database view
+ok 149 - incidents: deleted record is absent from database view
+ok 150 - health: deleted record is absent from database view
+ok 151 - applicants: deleted record is absent from database view
+ok 152 - households: deleted record is absent from database view
+ok 153 - staff: deleted record is absent from database view
+1..153
+ROLLBACK
+
+NOTICE:  extension "pgtap" already exists, skipping

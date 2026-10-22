@@ -14,17 +14,23 @@
  *     is rendered instead.
  */
 
-import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapLngLat, MapMarker } from '@barangayan/shared';
+import type { LatLng, MapBridgeInboundMessage, MapLngLat, MapMarker } from '@barangayan/shared';
 import { isPointInPolygon } from '@barangayan/shared';
 import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+import type NativeWebView from 'react-native-webview';
 
 import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from '@/components/leaflet-assets';
+import { isMapPosition, readMapMessage, type LocalMapInboundMessage, type MapPresentation } from '@/lib/map-presentation';
 
 export interface MapViewHandle {
   fitAll: () => void;
+  fitBoundary: () => void;
+  flyTo: (position: FocusPosition) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
 }
 
 /**
@@ -45,7 +51,7 @@ export const AMPID_I_SAN_MATEO_CENTER: LatLng = DEFAULT_CENTER;
 
 // react-native-webview is not available on Expo Web — dynamic import guards the
 // native-only require so the web bundle never fails to parse this module.
-let WebView: any = null;
+let WebView: typeof NativeWebView | null = null;
 if (Platform.OS !== 'web') {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   WebView = require('react-native-webview').WebView;
@@ -111,6 +117,11 @@ const LEAFLET_HTML = `
     // Once a boundary is set, marker updates stop re-fitting the map — the boundary
     // is the intended focus and shouldn't jump around as markers stream in.
     var hasBoundary = false;
+    var presentation = null;
+    var markerEntries = [];
+    var currentUserLocation = null;
+    var presentationFitted = false;
+    var zoomTarget = null;
 
     // ── Helpers ──────────────────────────────────────────────────────────────
     function postToRN(msg) {
@@ -120,7 +131,55 @@ const LEAFLET_HTML = `
     }
 
     function colorForKind(kind) {
-      return kindColors[kind] || (kind === 'evacuation' ? '#10B981' : '#0F6E5B');
+      var color = kindColors[kind];
+      return typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color)
+        ? color : (kind === 'evacuation' ? '#10B981' : '#0F6E5B');
+    }
+
+    function presentationIcon(kind, selected) {
+      if (!presentation) return kind === 'user-location' ? makePersonIcon() : makeIcon(colorForKind(kind));
+      var width = selected ? 40 : 30;
+      var height = Math.round(width * 1.3);
+      return L.divIcon({ className: 'map-pin', iconSize: [width, height], iconAnchor: [width / 2, height],
+        html: '<svg width="' + width + '" height="' + height + '" viewBox="0 0 30 39" xmlns="http://www.w3.org/2000/svg"><path d="M15 1C7.3 1 1 7.2 1 14.8 1 25.4 15 38 15 38s14-12.6 14-23.2C29 7.2 22.7 1 15 1z" fill="' + colorForKind(kind) + '" stroke="#FFFFFF" stroke-width="2"/><circle cx="15" cy="14.5" r="5.5" fill="#FFFFFF"/></svg>' });
+    }
+
+    function updateMarkerPresentation() {
+      markerEntries.forEach(function (entry) {
+        var selected = !!presentation && presentation.selectedMarkerId === entry.id;
+        entry.marker.setIcon(presentationIcon(entry.kind, selected));
+        entry.marker.setZIndexOffset(selected ? 1000 : 0);
+      });
+    }
+
+    function drawUserLocation() {
+      userLayer.clearLayers();
+      var loc = currentUserLocation;
+      if (!map || !loc || !loc.position) return;
+      var point = [loc.position.lat, loc.position.lng];
+      if (typeof loc.accuracyMeters === 'number' && loc.accuracyMeters > 0) {
+        userLayer.addLayer(L.circle(point, { radius: loc.accuracyMeters,
+          color: loc.pending ? '#B45309' : '#2563EB', weight: 1, fillOpacity: 0.12,
+          dashArray: loc.pending ? '4 4' : null, interactive: false }));
+      }
+      if (presentation) {
+        userLayer.addLayer(L.circleMarker(point, { radius: 18, stroke: false, fillColor: '#2F66CC', fillOpacity: 0.18, interactive: false }));
+        userLayer.addLayer(L.circleMarker(point, { radius: 8, color: '#FFFFFF', weight: 3, fillColor: '#2F66CC', fillOpacity: 1, interactive: false }));
+      } else {
+        userLayer.addLayer(L.marker(point, { icon: makePersonIcon(), opacity: loc.pending ? 0.6 : 1, interactive: false }));
+      }
+    }
+
+    function fitPresentationBounds(bounds, fly) {
+      var top = presentation ? Math.max(0, presentation.padding.top) : 0;
+      var bottom = presentation ? Math.max(0, presentation.padding.bottom) : 0;
+      var room = Math.max(0, map.getSize().y - 120);
+      if (top + bottom > room) { var scale = room / (top + bottom); top *= scale; bottom *= scale; }
+      var options = { paddingTopLeft: [30, top], paddingBottomRight: [30, bottom],
+        animate: !presentation || !presentation.reducedMotion, duration: 0.5 };
+      map.stop();
+      if (fly && options.animate) map.flyToBounds(bounds, options);
+      else map.fitBounds(bounds, options);
     }
 
     function makeIcon(color) {
@@ -183,6 +242,7 @@ const LEAFLET_HTML = `
      *  different from category markers and the red "You" pin so it reads as "draggable,
      *  editable" rather than "a report on the map". */
     function makePickerIcon() {
+      if (presentation) return presentationIcon('picker', true);
       var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 44" width="30" height="44">'
         + '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 29 15 29S30 26.25 30 15C30 6.7 23.3 0 15 0z" fill="#1D4ED8"/>'
         + '<circle cx="15" cy="15" r="6.5" fill="white"/>'
@@ -226,9 +286,11 @@ const LEAFLET_HTML = `
       postToRN({ type: 'MAP_READY' });
 
       map.on('moveend', function () {
+        if (zoomTarget !== null && Math.abs(map.getZoom() - zoomTarget) < 0.01) zoomTarget = null;
         var c = map.getCenter();
         postToRN({ type: 'MAP_MOVED', payload: { center: { lat: c.lat, lng: c.lng }, zoom: map.getZoom() } });
       });
+      map.on('dragstart', function () { zoomTarget = null; });
 
       // Picker mode: a plain tap places/moves the pin (SET_PICKER payload.enabled).
       map.on('click', function (e) {
@@ -236,8 +298,8 @@ const LEAFLET_HTML = `
           postToRN({ type: 'MAP_TAPPED', payload: { lat: e.latlng.lat, lng: e.latlng.lng } });
           return;
         }
-        if (!pickerEnabled) return;
-        placePickerMarker(e.latlng, true);
+        if (pickerEnabled) { placePickerMarker(e.latlng, true); return; }
+        if (presentation) postToRN({ type: 'BACKGROUND_TAPPED' });
       });
     });
 
@@ -259,6 +321,49 @@ const LEAFLET_HTML = `
       if (!msg || !msg.type) return;
 
       switch (msg.type) {
+        case 'SET_PRESENTATION': {
+          presentation = msg.payload;
+          if (!map) break;
+          if (presentation) map.zoomControl.remove();
+          else map.zoomControl.addTo(map);
+          var attribution = map.attributionControl.getContainer();
+          attribution.style.marginBottom = presentation ? Math.max(0, presentation.attributionBottom) + 'px' : '';
+          attribution.style.backgroundColor = presentation ? presentation.surface : '';
+          attribution.style.color = presentation ? presentation.text : '';
+          attribution.style.fontFamily = presentation ? presentation.fontFamily : '';
+          attribution.style.border = presentation ? '1px solid ' + presentation.border : '';
+          updateMarkerPresentation();
+          if (pickerMarker) pickerMarker.setIcon(makePickerIcon());
+          drawUserLocation();
+          // Layout/theme/selection changes never fit the map or dispatch domain events.
+          break;
+        }
+        case 'ZOOM': {
+          if (map && msg.payload) {
+            var nextZoom = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), (zoomTarget === null ? map.getZoom() : zoomTarget) + msg.payload.delta));
+            map.stop(); zoomTarget = nextZoom;
+            if (presentation && presentation.reducedMotion) map.setZoom(nextZoom, { animate: false });
+            else map.flyTo(map.getCenter(), nextZoom, { duration: 0.5 });
+          }
+          break;
+        }
+        case 'FLY_TO': {
+          if (!map || !msg.payload) break;
+          zoomTarget = null;
+          map.stop();
+          var target = [msg.payload.lat, msg.payload.lng];
+          if (presentation && presentation.reducedMotion) map.setView(target, msg.payload.zoom, { animate: false });
+          else map.flyTo(target, msg.payload.zoom, { duration: 0.5 });
+          break;
+        }
+        case 'FIT_BOUNDARY': {
+          if (!map) break;
+          zoomTarget = null;
+          var layers = boundaryLayer.getLayers();
+          if (layers.length) fitPresentationBounds(L.featureGroup(layers).getBounds(), true);
+          else map.setView([${DEFAULT_CENTER.lat}, ${DEFAULT_CENTER.lng}], ${DEFAULT_ZOOM}, { animate: !presentation || !presentation.reducedMotion });
+          break;
+        }
         case 'SET_CENTER': {
           if (map && msg.payload) {
             map.setView([msg.payload.lat, msg.payload.lng], map.getZoom());
@@ -267,7 +372,7 @@ const LEAFLET_HTML = `
         }
         case 'SET_VIEW': {
           if (map && msg.payload) {
-            map.setView([msg.payload.lat, msg.payload.lng], msg.payload.zoom, { animate: true });
+            map.setView([msg.payload.lat, msg.payload.lng], msg.payload.zoom, { animate: !presentation || !presentation.reducedMotion });
           }
           break;
         }
@@ -280,14 +385,18 @@ const LEAFLET_HTML = `
           }
 
           markerLayer.clearLayers();
+          markerEntries = [];
+          if (pickerMarker && presentation) pickerMarker.setIcon(makePickerIcon());
           msg.payload.markers.forEach(function (m) {
-            if (!m || typeof m.position !== 'object') return;
-            var icon = m.kind === 'user-location' ? makePersonIcon() : makeIcon(colorForKind(m.kind));
+            if (!m || !m.position || !Number.isFinite(m.position.lat) || Math.abs(m.position.lat) > 90
+              || !Number.isFinite(m.position.lng) || Math.abs(m.position.lng) > 180) return;
+            var selected = !!presentation && presentation.selectedMarkerId === m.id;
+            var icon = presentationIcon(m.kind, selected);
             var marker = L.marker(
               [m.position.lat, m.position.lng],
-              { icon: icon }
+              { icon: icon, bubblingMouseEvents: false, title: m.label || '', zIndexOffset: selected ? 1000 : 0 }
             );
-            if (m.label) {
+            if (m.label && !presentation) {
               // Leaflet treats string popup content as HTML. Incident titles are
               // resident-controlled, so pass a text node container instead.
               var popupContent = document.createElement('div');
@@ -298,13 +407,15 @@ const LEAFLET_HTML = `
               postToRN({ type: 'MARKER_TAPPED', payload: { markerId: m.id } });
             });
             markerLayer.addLayer(marker);
+            markerEntries.push({ marker: marker, id: m.id, kind: m.kind });
           });
 
           // Fit the map to the new markers — unless a boundary is set, in which case
           // the boundary stays the fixed focus and markers must not shift the view.
-          if (!hasBoundary && msg.payload.markers.length > 0) {
+          if (!hasBoundary && markerEntries.length > 0 && (!presentation || !presentationFitted)) {
             var group = L.featureGroup(markerLayer.getLayers());
-            map.fitBounds(group.getBounds().pad(0.2));
+            if (presentation) { fitPresentationBounds(group.getBounds().pad(0.2), false); presentationFitted = true; }
+            else map.fitBounds(group.getBounds().pad(0.2));
           }
           break;
         }
@@ -326,7 +437,8 @@ const LEAFLET_HTML = `
             });
             boundaryLayer.addLayer(boundaryFeature);
             hasBoundary = true;
-            map.fitBounds(boundaryFeature.getBounds().pad(0.1));
+            if (presentation) fitPresentationBounds(boundaryFeature.getBounds().pad(0.1), false);
+            else map.fitBounds(boundaryFeature.getBounds().pad(0.1));
           } else {
             hasBoundary = false;
           }
@@ -381,21 +493,8 @@ const LEAFLET_HTML = `
         }
         case 'SET_USER_LOCATION': {
           if (!map) break;
-          userLayer.clearLayers();
-          var loc = msg.payload;
-          if (!loc || !loc.position) break;
-          var userLatLng = [loc.position.lat, loc.position.lng];
-          if (typeof loc.accuracyMeters === 'number' && loc.accuracyMeters > 0) {
-            userLayer.addLayer(L.circle(userLatLng, {
-              radius: loc.accuracyMeters,
-              color: loc.pending ? '#B45309' : '#2563EB',
-              weight: 1,
-              fillOpacity: 0.12,
-              dashArray: loc.pending ? '4 4' : null,
-              interactive: false,
-            }));
-          }
-          userLayer.addLayer(L.marker(userLatLng, { icon: makePersonIcon(), opacity: loc.pending ? 0.6 : 1, interactive: false }));
+          currentUserLocation = msg.payload;
+          drawUserLocation();
           break;
         }
         case 'SET_TILES': {
@@ -483,6 +582,10 @@ export interface MapUserLocation {
 }
 
 export interface MapViewProps {
+  /** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+  presentation?: MapPresentation;
+  /** Presentation dismissal only; never called for picker, marker or routing taps. */
+  onBackgroundTap?: () => void;
   markers: MapMarker[];
   center?: LatLng;
   /** Center + zoom to fly the map to a specific position. */
@@ -544,8 +647,8 @@ function userLocationMessage(location: MapUserLocation | null | undefined): MapB
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, showTiles = true, packMap = null, roadMarks = null, route = null, routePadding, onMapTap = null, style }, ref) => {
-  const webViewRef = useRef<any>(null);
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, showTiles = true, packMap = null, roadMarks = null, route = null, routePadding, onMapTap = null, presentation, onBackgroundTap, style }, ref) => {
+  const webViewRef = useRef<NativeWebView>(null);
   const isReadyRef = useRef(false);
   // Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
   const routePaddingRef = useRef(routePadding);
@@ -555,7 +658,7 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
   // (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
   const lastAcceptedPickerPosRef = useRef<LatLng | null>(picker?.position ?? null);
 
-  function sendMessage(msg: MapBridgeInboundMessage) {
+  function sendMessage(msg: LocalMapInboundMessage) {
     if (!webViewRef.current || !isReadyRef.current) return;
     const js = `
       (function() {
@@ -572,7 +675,17 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       if (!isReadyRef.current) return;
       sendMessage({ type: 'FIT_ALL' });
     },
+    fitBoundary: () => sendMessage({ type: 'FIT_BOUNDARY' }),
+    flyTo: position => {
+      if (isMapPosition(position) && Number.isFinite(position.zoom) && position.zoom >= 0 && position.zoom <= 19) {
+        sendMessage({ type: 'FLY_TO', payload: position });
+      }
+    },
+    zoomIn: () => sendMessage({ type: 'ZOOM', payload: { delta: 1 } }),
+    zoomOut: () => sendMessage({ type: 'ZOOM', payload: { delta: -1 } }),
   }));
+
+  useEffect(() => { sendMessage({ type: 'SET_PRESENTATION', payload: presentation ?? null }); }, [presentation]);
 
   const tapMode = onMapTap !== null;
   useEffect(() => {
@@ -652,33 +765,30 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
 
   // Incoming messages from the WebView.
   function handleMessage(event: { nativeEvent: { data: string } }) {
-    let msg: MapBridgeOutboundMessage;
-    try {
-      msg = JSON.parse(event.nativeEvent.data) as MapBridgeOutboundMessage;
-    } catch {
-      return;
-    }
+    const msg = readMapMessage(event.nativeEvent.data);
+    if (!msg) return;
 
     switch (msg.type) {
       case 'MAP_ERROR': { onMapError?.(); break; }
       case 'MAP_READY': {
+        if (isReadyRef.current) break;
         isReadyRef.current = true;
-        onMapReady?.();
+        if (presentation) sendMessage({ type: 'SET_PRESENTATION', payload: presentation });
         sendMessage({ type: 'SET_TILES', payload: { enabled: showTiles } });
         if (packMap) sendMessage({ type: 'SET_PACK_BASEMAP', payload: { map: packMap } });
         if (roadMarks) sendMessage({ type: 'SET_ROAD_MARKS', payload: roadMarks });
         if (tapMode) sendMessage({ type: 'SET_TAP_MODE', payload: { enabled: true } });
         sendMessage({
           type: 'SET_MARKERS',
-          payload: { markers },
-          ...(kindColors ? { kindColors } : {}),
-        } as MapBridgeInboundMessage & { kindColors?: Record<string, string> });
+          payload: { markers, ...(kindColors ? { kindColors } : {}) },
+        });
         if (boundary) {
           sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary } });
         }
         if (center) {
           sendMessage({ type: 'SET_CENTER', payload: center });
         }
+        if (focusPosition) sendMessage({ type: 'SET_VIEW', payload: focusPosition });
         if (picker) {
           sendMessage({ type: 'SET_PICKER', payload: { enabled: picker.enabled, position: picker.position } });
         }
@@ -687,20 +797,26 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
           sendMessage(userLocationMessage(userLocation));
         }
         if (route && route.length >= 2) sendMessage({ type: 'DRAW_ROUTE', payload: { points: route, padding: routePaddingRef.current } });
+        onMapReady?.();
         break;
       }
       case 'MAP_TAPPED': {
-        onMapTap?.(msg.payload);
+        if (onMapTap) onMapTap(msg.payload);
+        break;
+      }
+      case 'BACKGROUND_TAPPED': {
+        if (presentation && !tapMode && !picker?.enabled) onBackgroundTap?.();
         break;
       }
       case 'MARKER_TAPPED': {
-        onMarkerTap?.(msg.payload.markerId);
+        if (markers.some(marker => marker.id === msg.payload.markerId)) onMarkerTap?.(msg.payload.markerId);
         break;
       }
       case 'MAP_MOVED': {
         break;
       }
       case 'PICKER_MOVED': {
+        if (!picker?.enabled || tapMode) break;
         const pos = msg.payload;
         if (constrainPicker && boundary && !isPointInPolygon(pos, boundary)) {
           // Reject: snap the pin back to the last position that was inside the boundary.
@@ -718,8 +834,8 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
   // ── Web fallback ─────────────────────────────────────────────────────────
   if (Platform.OS === 'web' || WebView === null) {
     return (
-      <View style={[styles.webFallback, style]}>
-        <Text style={styles.webFallbackText}>Map unavailable on web</Text>
+      <View style={[styles.webFallback, presentation && { backgroundColor: presentation.surface }, style]}>
+        <Text style={[styles.webFallbackText, presentation && { color: presentation.text, fontFamily: presentation.fontFamily }]}>Map unavailable on web</Text>
       </View>
     );
   }
@@ -731,6 +847,8 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       style={[styles.webView, style]}
       source={{ html: LEAFLET_HTML }}
       onMessage={handleMessage}
+      onError={onMapError}
+      onRenderProcessGone={() => { isReadyRef.current = false; onMapError?.(); }}
       injectedJavaScript={
         zoomControlTop !== undefined
           ? `(function(){var s=document.createElement('style');s.textContent='.leaflet-top.leaflet-left{margin-top:${Math.round(zoomControlTop)}px !important;}';document.head.appendChild(s);})();true;`
@@ -747,7 +865,6 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       nestedScrollEnabled
       javaScriptEnabled
       domStorageEnabled
-      androidHardwareAccelerationDisabled={false}
     />
   );
 });

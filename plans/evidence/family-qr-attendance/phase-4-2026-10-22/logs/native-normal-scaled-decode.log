@@ -1,0 +1,1 @@
+[{"name":"native-normal-settled","bounds":[357,852,723,1218],"payload":{"type":"household","version":"1.0","profileId":"dfb21000-0000-4000-8000-000000000002"},"method":"Actual native pixels cropped to UIAutomator QR bounds and doubled with nearest-neighbor scaling, decoded by html5-qrcode 2.3.8; no physical camera"}]

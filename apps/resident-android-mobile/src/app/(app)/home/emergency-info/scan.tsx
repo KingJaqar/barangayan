@@ -16,5 +16,5 @@ export default function ScanTabScreen() {
     );
   }
 
-  return <AuthenticatedScanView userId={session.user.id} />;
+  return <AuthenticatedScanView />;
 }

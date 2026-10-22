@@ -1,146 +1,103 @@
-import { useEffect, useState } from 'react';
-
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useIsFocused } from 'expo-router';
+import { AppState } from 'react-native';
+import type { Json } from '@barangayan/shared';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
+import { HouseholdError, householdRequest, readHouseholdMembers, saveHouseholdMembers, type ProfileHouseholdMember } from '@/lib/household';
 
-/**
- * RFC-4122 v4 UUID — see the matching comment in settings/profile.tsx.
- * profiles.household_members (jsonb) is mirrored by a DB trigger into the
- * canonical household_members table, whose `id` column is a real `uuid`;
- * a non-UUID client id makes that trigger's `::uuid` cast fail with
- * "invalid input syntax for type uuid".
- */
 function genId(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
 
-export type ProfileHouseholdMember = {
-  id: string;
-  name: string;
-  relation: string;
-  role?: string;
-};
-
-type UseProfileHouseholdMembersResult = {
-  members: ProfileHouseholdMember[];
-  isLoading: boolean;
-  error: string | null;
-  refetch: () => Promise<void>;
-  addMember: (member: { name: string; relation: string; role?: string }) => Promise<ProfileHouseholdMember | null>;
-  updateMember: (id: string, updates: Partial<ProfileHouseholdMember>) => Promise<ProfileHouseholdMember | null>;
-  removeMember: (id: string) => Promise<boolean>;
-};
-
-export function useProfileHouseholdMembers(): UseProfileHouseholdMembersResult {
+export function useProfileHouseholdMembers() {
   const { session } = useAuth();
-  const { profile } = useProfile();
-  const [members, setMembers] = useState<ProfileHouseholdMember[]>([]);
+  const { profile, refetch: refreshProfile } = useProfile();
+  const owner = session?.user.id ?? null;
+  const focused = useIsFocused();
+  const [state, setState] = useState<{ owner: string; members: ProfileHouseholdMember[]; snapshot: Json } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [needsReload, setNeedsReload] = useState(false);
+  const generation = useRef(0);
+  const read = useRef<AbortController | null>(null);
+  const write = useRef<AbortController | null>(null);
+  const activeOwner = useRef(owner);
+  activeOwner.current = owner;
+  const householdIdentity = JSON.stringify(profile?.id === owner ? profile.household_members : null);
 
-  const profileId = profile?.id ?? session?.user?.id ?? null;
+  const load = useCallback(async () => {
+    if (write.current) return;
+    read.current?.abort();
+    const ticket = ++generation.current;
+    if (!owner) { setState(null); setIsLoading(false); setError(null); return; }
+    const controller = new AbortController();
+    read.current = controller;
+    setIsLoading(true); setError(null);
+    try {
+      const { data, error: failure } = await householdRequest(signal => supabase.from('profiles').select('household_members').eq('id', owner).abortSignal(signal).single(), controller.signal);
+      if (ticket !== generation.current || activeOwner.current !== owner) return;
+      if (failure || !data) throw new HouseholdError('Unable to load family members. Reconnect and try again.');
+      const members = readHouseholdMembers(data.household_members);
+      setState({ owner, members, snapshot: data.household_members ?? [] });
+      setSaveError(null); setNeedsReload(false);
+    } catch (failure) {
+      if (ticket === generation.current && activeOwner.current === owner) setError(failure instanceof HouseholdError ? failure.message : 'Unable to load family members. Reconnect and try again.');
+    } finally {
+      if (ticket === generation.current) { read.current = null; setIsLoading(false); }
+    }
+  }, [owner]);
 
+  const cancelRead = useCallback(() => { generation.current++; read.current?.abort(); read.current = null; }, []);
   useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      if (!profileId) {
-        setMembers([]);
-        setIsLoading(false);
-        return;
+    if (focused) void load();
+    return cancelRead;
+  }, [load, focused, householdIdentity, cancelRead]);
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', next => { if (next === 'active' && focused) void load(); });
+    return () => listener.remove();
+  }, [load, focused]);
+  useEffect(() => () => { write.current?.abort(); write.current = null; }, [owner]);
+
+  const visible = state?.owner === owner ? state : null;
+  async function persistMembers(next: ProfileHouseholdMember[]) {
+    if (!owner || activeOwner.current !== owner || !visible || isLoading || error || needsReload || write.current) return false;
+    const controller = new AbortController();
+    write.current = controller;
+    setSaveError(null);
+    try {
+      const result = await saveHouseholdMembers(next, visible.snapshot, controller.signal);
+      if (activeOwner.current !== owner || controller.signal.aborted) return false;
+      setState({ owner, ...result });
+      refreshProfile();
+      return true;
+    } catch (failure) {
+      if (activeOwner.current === owner && !controller.signal.aborted) {
+        setSaveError(failure instanceof HouseholdError ? failure.message : 'Could not save your family changes. Reload before trying again.');
+        setNeedsReload(true);
       }
-      setIsLoading(true);
-      setError(null);
-
-      const { data, error: qErr } = await supabase
-        .from('profiles')
-        .select('household_members')
-        .eq('id', profileId)
-        .single();
-
-      if (qErr) {
-        setError(qErr.message);
-        setMembers([]);
-      } else if (!cancelled) {
-        const raw = (data as any)?.household_members;
-        const normalized: ProfileHouseholdMember[] = Array.isArray(raw)
-          ? raw.map((m: any) => ({
-              id: String(m.id ?? m.name ?? Math.random()),
-              name: String(m.name ?? 'Unknown'),
-              relation: String(m.relation ?? ''),
-              role: m.role ? String(m.role) : undefined,
-            }))
-          : [];
-        setMembers(normalized);
-      }
-      if (!cancelled) setIsLoading(false);
-    }
-    load();
-    return () => { cancelled = true; };
-  }, [profileId]);
-
-  const persistMembers = async (next: ProfileHouseholdMember[]): Promise<boolean> => {
-    if (!profileId) return false;
-    const payload = next.map((m) => ({
-      id: m.id,
-      name: m.name,
-      relation: m.relation,
-      ...(m.role ? { role: m.role } : {}),
-    }));
-    const { error: upErr } = await supabase
-      .from('profiles')
-      .update({ household_members: payload } as any)
-      .eq('id', profileId);
-
-    if (upErr) {
-      setError(upErr.message);
       return false;
-    }
-    setMembers(next);
-    return true;
-  };
-
-  const addMember = async (input: { name: string; relation: string; role?: string }): Promise<ProfileHouseholdMember | null> => {
-    if (!profileId) return null;
-    const newMember: ProfileHouseholdMember = {
-      id: genId(),
-      name: input.name.trim(),
-      relation: input.relation.trim(),
-      ...(input.role?.trim() ? { role: input.role.trim() } : {}),
-    };
-    const next = [...members, newMember];
-    const ok = await persistMembers(next);
-    return ok ? newMember : null;
-  };
-
-  const updateMember = async (id: string, updates: Partial<ProfileHouseholdMember>): Promise<ProfileHouseholdMember | null> => {
-    if (!profileId) return null;
-    const next = members.map((m) => (m.id === id ? { ...m, ...updates } : m));
-    const updated = next.find((m) => m.id === id);
-    const ok = await persistMembers(next);
-    return ok ? updated ?? null : null;
-  };
-
-  const removeMember = async (id: string): Promise<boolean> => {
-    if (!profileId) return false;
-    const next = members.filter((m) => m.id !== id);
-    return persistMembers(next);
-  };
-
-  return {
-    members,
-    isLoading,
-    error,
-    refetch: async () => {
-      // Refetch is handled by the effect re-running when profileId changes.
-      return Promise.resolve();
-    },
-    addMember,
-    updateMember,
-    removeMember,
-  };
+    } finally { if (write.current === controller) write.current = null; }
+  }
+  const members = visible?.members ?? [];
+  async function addMember(input: { name: string; relation: string; role?: string }) {
+    const member = { ...input, id: genId() };
+    return await persistMembers([...members, member]) ? member : null;
+  }
+  async function updateMember(id: string, updates: Partial<ProfileHouseholdMember>) {
+    if (!members.some(member => member.id === id)) return null;
+    const next = members.map(member => member.id === id ? { ...member, ...updates, id } : member);
+    return await persistMembers(next) ? next.find(member => member.id === id) ?? null : null;
+  }
+  async function removeMember(id: string) {
+    if (!members.some(member => member.id === id)) return false;
+    return persistMembers(members.filter(member => member.id !== id));
+  }
+  return { members, isLoading: !!owner && (isLoading || !visible && !error), error: owner ? error : null,
+    saveError: owner ? saveError : null, needsReload, refetch: load, addMember, updateMember, removeMember };
 }

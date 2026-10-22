@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-22",
+  "project": "pwjbucnyqexiepoinoke",
+  "endpoint": "generate-household-qr",
+  "status": "retain; active deployed caller confirmed",
+  "window": "Default last 24 hours at query time",
+  "requests": 1,
+  "http_status": "546",
+  "caller": "Dalvik/2.1.0 Android 12 SM-S918U",
+  "owner": "Android/iOS client release owners and web Phase 4 release operator",
+  "retirement": "Identify supported deployed client versions; publish compatible replacements; collect version-attributed endpoint traffic for an operator-approved transition window; separately authorize removal. One day of zero traffic alone is insufficient.",
+  "export": {
+    "version": 9,
+    "usesAttendance": false,
+    "files": [
+      "export-my-data/index.ts"
+    ]
+  },
+  "deletion": {
+    "version": 9,
+    "usesV2": false,
+    "usesDeletionRPC": true
+  }
+}

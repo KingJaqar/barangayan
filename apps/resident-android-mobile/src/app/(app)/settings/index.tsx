@@ -3,8 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { idVerificationState } from '@barangayan/shared';
 import Constants from 'expo-constants';
 import { Href, Link, useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState, type ReactNode } from 'react';
-import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Alert, Animated as NativeAnimated, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 
@@ -21,6 +22,7 @@ import { SegmentedControl } from '@/components/segmented-control';
 import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
 import { ACCENT_COLORS, Spacing } from '@/constants/theme';
+import { getResidentTheme } from '@/constants/resident-theme';
 import { getMobileFontFamily, MOBILE_FONT_OPTIONS } from '@/constants/fonts';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 
@@ -29,7 +31,9 @@ import { useFontPreference } from '@/hooks/use-font-preference';
 import { useNotificationPreferences } from '@/hooks/use-notification-preferences';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
-import { MAX_CUSTOM_COLORS, useThemePreference, type ThemePreference } from '@/hooks/use-theme-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
+import { MAX_CUSTOM_COLORS, useThemePreference } from '@/hooks/use-theme-preference';
 import { clearGoogleReauthentication, googleReauthentication, startGoogleAuth } from '@/lib/google-auth';
 import { accountSettingsRows, deletionConfirmation } from '@/lib/sensitive-auth';
 import { supabase } from '@/lib/supabase';
@@ -61,6 +65,7 @@ export default function SettingsScreen() {
   const rows = accountSettingsRows(setup);
   const router = useRouter();
   const theme = useTheme();
+  const reduced = useResidentReducedMotion(true);
   const bottomTabInset = useFloatingTabInset();
   const { scheme, accentColor, setThemePreference, setAccentColor, customColors, addCustomColor, removeCustomColor } =
     useThemePreference();
@@ -289,40 +294,36 @@ export default function SettingsScreen() {
       <View style={[styles.root, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + Spacing.three }]}>
         {session ? (
+          <>
+          <Card variant="resident" style={styles.profileCard}>
+            <Link href="/settings/profile" asChild>
+              <Pressable style={styles.profileRow} accessibilityRole="button" accessibilityLabel={`${profile?.full_name ?? 'Profile'}, Edit Profile, ${rows.profile.subtitle}`}>
+                <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={80} foregroundColor={theme.resident.onAccent} />
+                <View style={styles.rowText}>
+                  <ThemedText style={styles.profileName}>{profile?.full_name ?? 'Resident'}</ThemedText>
+                  <ThemedText style={styles.profileEmail} themeColor="textSecondary">{profile?.email ?? session.user.email}</ThemedText>
+                  <ThemedText style={[styles.editProfile, { color: theme.resident.accentText }]}>Edit Profile</ThemedText>
+                  {rows.profile.warning ? <StatusLine text={rows.profile.subtitle} warning /> : null}
+                </View>
+              </Pressable>
+            </Link>
+          </Card>
           <Section title="Account">
-            <Card>
-              <Link href="/settings/profile" asChild>
-                <Pressable
-                  style={styles.row}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${profile?.full_name ?? 'Profile'}, ${rows.profile.subtitle}`}>
-                  <Avatar
-                    fullName={profile?.full_name ?? 'Resident'}
-                    imageUrl={(profile as any)?.avatar_url ?? null}
-                    size={40}
-                  />
-                  <View style={styles.rowText}>
-                    <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
-                    <StatusLine text={rows.profile.subtitle} warning={rows.profile.warning} />
-                  </View>
-                  <Chevron />
-                </Pressable>
-              </Link>
-              <Divider />
+            <Card variant="resident">
               <Link href="/settings/valid-id" asChild>
-                <Pressable style={styles.row} accessibilityRole="button" accessibilityLabel={`Valid ID, ${idStatus}`}>
+                <Pressable accessibilityRole="button" style={styles.row} accessibilityLabel={`Valid ID, ${idStatus}`}>
                   <SettingsIcon name="card" />
                   <View style={styles.rowText}>
-                    <ThemedText>Valid ID</ThemedText>
+                    <ThemedText style={styles.rowTitle}>Valid ID</ThemedText>
                     <View style={styles.verifiedStatus}>
-                      <Ionicons name={idVerified ? 'checkmark-circle' : 'warning'} size={16} color={idVerified ? theme.accentGreen : theme.accentRed} accessible={false} />
-                      <ThemedText type="small" style={{ color: idVerified ? theme.accentGreen : theme.accentRed }}>{idStatus}</ThemedText>
+                      <Ionicons name={idVerified ? 'checkmark-circle' : 'warning'} size={16} color={idVerified ? theme.resident.success : theme.resident.danger} accessible={false} />
+                      <ThemedText type="small" style={{ color: idVerified ? theme.resident.success : theme.resident.danger }}>{idStatus}</ThemedText>
                     </View>
                   </View>
                   <Chevron />
                 </Pressable>
               </Link>
-              <Divider />
+              <Divider variant="resident" />
               <Link href="/settings/change-password" asChild>
                 <Pressable
                   style={styles.row}
@@ -330,7 +331,7 @@ export default function SettingsScreen() {
                   accessibilityLabel={[rows.password.title, rows.password.subtitle].filter(Boolean).join(', ')}>
                   <SettingsIcon name="lock-closed" />
                   <View style={styles.rowText}>
-                    <ThemedText>{rows.password.title}</ThemedText>
+                    <ThemedText style={styles.rowTitle}>{rows.password.title}</ThemedText>
                     {rows.password.subtitle ? <StatusLine text={rows.password.subtitle} warning={rows.password.warning} /> : null}
                   </View>
                   <Chevron />
@@ -338,7 +339,7 @@ export default function SettingsScreen() {
               </Link>
               {setupRefreshError ? (
                 <>
-                  <Divider />
+                  <Divider variant="resident" />
                   <Pressable
                     style={styles.row}
                     accessibilityRole="button"
@@ -354,16 +355,16 @@ export default function SettingsScreen() {
                   </Pressable>
                 </>
               ) : null}
-              <Divider />
+              <Divider variant="resident" />
               <Link href="/settings/email-verification" asChild>
-              <Pressable style={styles.row} accessibilityRole="button">
+              <Pressable accessibilityRole="button" style={styles.row}>
                 <SettingsIcon name="mail" />
                 <View style={styles.rowText}>
-                  <ThemedText>Email Verification</ThemedText>
+                  <ThemedText style={styles.rowTitle}>Email Verification</ThemedText>
                   {profile?.email_verification_status === 'verified' ? (
                     <View style={styles.verifiedStatus} accessibilityLabel="Your email is verified">
-                      <Ionicons name="checkmark-circle" size={16} color={theme.accentGreen} />
-                      <ThemedText type="smallBold" style={{ color: theme.accentGreen }}>Verified</ThemedText>
+                      <Ionicons name="checkmark-circle" size={16} color={theme.resident.success} />
+                      <ThemedText type="smallBold" style={{ color: theme.resident.success }}>Verified</ThemedText>
                     </View>
                   ) : (
                     <ThemedText type="small" themeColor="textSecondary">Verify Your Email</ThemedText>
@@ -372,14 +373,14 @@ export default function SettingsScreen() {
                 <Chevron />
               </Pressable>
               </Link>
-              <Divider />
+              <Divider variant="resident" />
               <Link href="/settings/location-verification" asChild>
-                <Pressable style={styles.row}>
+                <Pressable accessibilityRole="button" style={styles.row}>
                   <SettingsIcon name="location" />
                   <View style={styles.rowText}>
-                    <ThemedText>Location Verification</ThemedText>
+                    <ThemedText style={styles.rowTitle}>Location Verification</ThemedText>
                     <ThemedText type="small" themeColor="textSecondary">
-                      {(profile as any)?.verified_location
+                      {profile?.verified_location
                         ? 'Your location is verified ✓'
                         : 'Pin your exact location'}
                     </ThemedText>
@@ -389,34 +390,35 @@ export default function SettingsScreen() {
               </Link>
             </Card>
           </Section>
+          </>
         ) : null}
 
         <Section title="Preferences">
-          <Card>
+          <Card variant="resident">
             {session ? (
               <>
                 <View style={styles.row}>
                   <SettingsIcon name="notifications" />
                   <View style={styles.rowText}>
-                    <ThemedText>Push Notifications</ThemedText>
+                    <ThemedText style={styles.rowTitle}>Push Notifications</ThemedText>
                     <ThemedText type="small" themeColor="textSecondary">
                       Alerts and updates
                     </ThemedText>
                   </View>
-                  <PreferenceToggle value={pushEnabled} onValueChange={setPushEnabled} />
+                  <PreferenceToggle label="Push Notifications" value={pushEnabled} onValueChange={setPushEnabled} />
                 </View>
-                <Divider />
+                <Divider variant="resident" />
                 <View style={styles.row}>
                   <SettingsIcon name="chatbubble-ellipses" />
                   <View style={styles.rowText}>
-                    <ThemedText>SMS Notifications</ThemedText>
+                    <ThemedText style={styles.rowTitle}>SMS Notifications</ThemedText>
                     <ThemedText type="small" themeColor="textSecondary">
-                      Urgent community alerts
+                      Local preference only · SMS delivery is unavailable
                     </ThemedText>
                   </View>
-                  <PreferenceToggle value={smsEnabled} onValueChange={setSmsEnabled} />
+                  <PreferenceToggle label="SMS Notifications — local preference only" value={smsEnabled} onValueChange={setSmsEnabled} />
                 </View>
-                <Divider />
+                <Divider variant="resident" />
               </>
             ) : null}
 
@@ -427,57 +429,52 @@ export default function SettingsScreen() {
               </View>
 
               <SegmentedControl
+                presentation="resident"
                 variant="outline"
                 segments={[
                   { key: 'light', label: 'Light' },
                   { key: 'dark', label: 'Dark' },
                 ]}
                 activeKey={scheme}
-                onChange={(key) => setThemePreference(key as ThemePreference)}
+                onChange={setThemePreference}
               />
 
-              <ScrollableChevronRow contentContainerStyle={styles.swatchRow}>
+              <ScrollableChevronRow label="accent colors" contentContainerStyle={styles.swatchRow}>
                 {ACCENT_COLORS.map((color) => (
-                  <Pressable key={color} onPress={() => setAccentColor(color)}>
-                    <View style={[styles.swatch, { backgroundColor: color }]}>
-                      {accentColor === color ? <Ionicons name="checkmark" size={18} color={theme.onPrimary} /> : null}
-                    </View>
-                  </Pressable>
+                  <AccentSwatch key={color} color={color} reduced={reduced} selected={accentColor.toLowerCase() === color.toLowerCase()} onSelect={() => setAccentColor(color)} />
                 ))}
 
                 {customColors.length > 0 ? <View style={[styles.swatchDivider, { backgroundColor: theme.backgroundSelected }]} /> : null}
 
                 {customColors.map((color) => (
-                  <Pressable
+                  <AccentSwatch
                     key={color}
-                    onPress={() => setAccentColor(color)}
-                    onLongPress={() =>
+                    color={color}
+                    reduced={reduced}
+                    selected={accentColor.toLowerCase() === color.toLowerCase()}
+                    onSelect={() => setAccentColor(color)}
+                    onRemove={() =>
                       Alert.alert('Remove Custom Color', `Remove ${color} from your saved colors?`, [
                         { text: 'Cancel', style: 'cancel' },
                         { text: 'Remove', style: 'destructive', onPress: () => removeCustomColor(color) },
                       ])
-                    }>
-                    <View style={[styles.swatch, { backgroundColor: color }]}>
-                      {accentColor === color ? <Ionicons name="checkmark" size={18} color={theme.onPrimary} /> : null}
-                    </View>
-                  </Pressable>
+                    }
+                  />
                 ))}
 
-                <Pressable onPress={() => setIsCustomColorModalVisible(true)}>
+                <Pressable accessibilityRole="button" accessibilityLabel="Add a custom color" onPress={() => setIsCustomColorModalVisible(true)}>
                   <View style={[styles.swatch, styles.addSwatch, { borderColor: theme.backgroundSelected }]}>
                     <Ionicons name="add" size={20} color={theme.textSecondary} />
                   </View>
                 </Pressable>
               </ScrollableChevronRow>
 
-              {customColors.length > 0 ? (
-                <ThemedText type="small" themeColor="textSecondary" style={styles.customColorHint}>
-                  {customColors.length}/{MAX_CUSTOM_COLORS} custom colors saved · hold a swatch to remove it
-                </ThemedText>
-              ) : null}
+              <ThemedText type="small" themeColor="textSecondary" style={styles.customColorHint}>
+                {customColors.length}/{MAX_CUSTOM_COLORS} custom colors saved · hold a swatch to remove it
+              </ThemedText>
             </View>
 
-            <Divider />
+            <Divider variant="resident" />
 
             <View style={styles.themeSection}>
               <View style={styles.themeRow}>
@@ -485,23 +482,23 @@ export default function SettingsScreen() {
                 <ThemedText style={styles.rowLabel}>Font Style</ThemedText>
               </View>
 
-              <ScrollableChevronRow contentContainerStyle={styles.fontRow}>
+              <ScrollableChevronRow label="fonts" contentContainerStyle={styles.fontRow}>
                 {MOBILE_FONT_OPTIONS.map((font) => {
                   const isActive = fontId === font.id;
                   return (
-                    <Pressable key={font.id} onPress={() => setFontId(font.id)}>
+                    <Pressable key={font.id} accessibilityRole="button" accessibilityLabel={font.label} accessibilityState={{ selected: isActive }} onPress={() => setFontId(font.id)}>
                       <View
                         style={[
                           styles.fontChip,
                           {
-                            backgroundColor: isActive ? theme.primary : theme.backgroundElement,
-                            borderColor: isActive ? theme.primary : theme.backgroundSelected,
+                            backgroundColor: isActive ? theme.resident.accent : theme.resident.card,
+                            borderColor: isActive ? theme.resident.accentText : theme.resident.border,
                           },
                         ]}>
                         <ThemedText
                           style={[
                             styles.fontChipLabel,
-                            { color: isActive ? theme.onPrimary : theme.text, fontFamily: getMobileFontFamily(font.id) },
+                            { color: isActive ? theme.resident.onAccent : theme.resident.text, fontFamily: getMobileFontFamily(font.id) },
                           ]}>
                           {font.label}
                         </ThemedText>
@@ -516,21 +513,21 @@ export default function SettingsScreen() {
 
         {session ? (
           <Section title="Privacy & Data">
-            <Card>
-              <Pressable style={styles.row} onPress={handleDownloadData} disabled={isExportingData}>
+            <Card variant="resident">
+              <Pressable accessibilityRole="button" style={styles.row} onPress={handleDownloadData} disabled={isExportingData}>
                 <SettingsIcon name="download" />
                 <ThemedText style={styles.rowLabel}>
                   {isExportingData ? 'Preparing export…' : 'Download My Data'}
                 </ThemedText>
                 <Chevron />
               </Pressable>
-              <Divider />
-              <Pressable style={styles.row} onPress={handleDeleteAccount} disabled={isDeletingAccount || isConfirmingGoogle}>
-                <SettingsIcon name="trash" color={theme.accentRed} />
-                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>
+              <Divider variant="resident" />
+              <Pressable accessibilityRole="button" style={styles.row} onPress={handleDeleteAccount} disabled={isDeletingAccount || isConfirmingGoogle}>
+                <SettingsIcon name="trash" color={theme.resident.danger} />
+                <ThemedText style={[styles.rowLabel, { color: theme.resident.danger }]}>
                   {isConfirmingGoogle ? 'Confirming with Google…' : 'Delete My Account'}
                 </ThemedText>
-                <Chevron color={theme.accentRed} />
+                <Chevron color={theme.resident.danger} />
               </Pressable>
               {deleteNotice ? (
                 <ThemedText type="small" themeColor="accentRed" accessibilityLiveRegion="polite" style={styles.deleteNotice}>
@@ -542,36 +539,36 @@ export default function SettingsScreen() {
         ) : null}
 
         <Section title="About">
-          <Card>
+          <Card variant="resident">
             <AboutRow icon="help-circle" label="Help Center" href="/settings/help" />
-            <Divider />
+            <Divider variant="resident" />
             <AboutRow icon="document-text" label="Terms & Privacy Policy" href="/settings/terms-privacy" />
-            <Divider />
+            <Divider variant="resident" />
             <View style={styles.row}>
               <SettingsIcon name="information-circle" />
               <ThemedText style={styles.rowLabel}>App Version</ThemedText>
               <ThemedText type="small" themeColor="textSecondary">
-                v{Constants.expoConfig?.version ?? '1.0.0'}
+                {Constants.expoConfig?.version ? `v${Constants.expoConfig.version}` : 'Unavailable'}
               </ThemedText>
             </View>
-            <Divider />
+            <Divider variant="resident" />
             <AboutRow icon="people" label="About Us" href="/settings/about" />
           </Card>
         </Section>
 
         <Section title="Session">
-          <Card>
+          <Card variant="resident">
             {session ? (
-              <Pressable style={styles.row} onPress={handleLogout}>
-                <SettingsIcon name="log-out" color={theme.accentRed} />
-                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Logout</ThemedText>
-                <Chevron color={theme.accentRed} />
+              <Pressable accessibilityRole="button" style={styles.row} onPress={handleLogout}>
+                <SettingsIcon name="log-out" color={theme.resident.danger} />
+                <ThemedText style={[styles.rowLabel, { color: theme.resident.danger }]}>Logout</ThemedText>
+                <Chevron color={theme.resident.danger} />
               </Pressable>
             ) : (
-              <Pressable style={styles.row} onPress={() => router.push('/(auth)/login')}>
-                <SettingsIcon name="log-in" color={theme.accentRed} />
-                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Login</ThemedText>
-                <Chevron color={theme.accentRed} />
+              <Pressable accessibilityRole="button" style={styles.row} onPress={() => router.push('/(auth)/login')}>
+                <SettingsIcon name="log-in" color={theme.resident.danger} />
+                <ThemedText style={[styles.rowLabel, { color: theme.resident.danger }]}>Login</ThemedText>
+                <Chevron color={theme.resident.danger} />
               </Pressable>
             )}
           </Card>
@@ -588,28 +585,18 @@ export default function SettingsScreen() {
         label={isDeletingAccount ? 'Deleting account...' : 'Logging out...'}
       />
 
-      <Modal visible={isGoogleDeleteReady && isFocused && !!session} transparent animationType="fade" onRequestClose={cancelGoogleDeletion}>
-        <View style={[styles.confirmOverlay, { backgroundColor: theme.text + '66' }]}>
-          <View style={[styles.confirmSheet, { backgroundColor: theme.background }]} accessibilityViewIsModal>
-            <ThemedText type="smallBold" accessibilityRole="header" style={styles.confirmTitle}>
-              Permanently Delete Account?
-            </ThemedText>
-            <ThemedText type="small" themeColor="textSecondary" style={styles.confirmText}>
-              Google confirmed it is you. Deleting cannot be undone.
-            </ThemedText>
-            <PrimaryButton label="Delete Account" variant="destructive" loading={isDeletingAccount} onPress={() => { void deleteAfterGoogle(); }} />
-            <PrimaryButton label="Cancel" variant="secondary" disabled={isDeletingAccount} onPress={cancelGoogleDeletion} />
-          </View>
-        </View>
-      </Modal>
+      <GoogleDeletionDialog visible={isGoogleDeleteReady && isFocused && !!session} busy={isDeletingAccount}
+        onCancel={cancelGoogleDeletion} onConfirm={() => { void deleteAfterGoogle(); }} />
 
       <DeleteAccountModal
+        presentation="resident"
         visible={isDeleteModalVisible}
         onClose={() => setIsDeleteModalVisible(false)}
         onConfirm={confirmDeleteAccount}
       />
 
       <CustomAccentColorModal
+        initialColor={accentColor}
         visible={isCustomColorModalVisible}
         onClose={() => setIsCustomColorModalVisible(false)}
         atLimit={customColors.length >= MAX_CUSTOM_COLORS}
@@ -626,12 +613,55 @@ export default function SettingsScreen() {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View style={styles.section}>
-      <ThemedText type="smallBold" themeColor="primary" style={styles.sectionTitle}>
-        {title.toUpperCase()}
+      <ThemedText accessibilityRole="header" type="smallBold" themeColor="textSecondary" style={styles.sectionTitle}>
+        {title}
       </ThemedText>
       {children}
     </View>
   );
+}
+
+function GoogleDeletionDialog({ visible, busy, onCancel, onConfirm }: {
+  visible: boolean; busy: boolean; onCancel: () => void; onConfirm: () => void;
+}) {
+  const { resident } = useTheme();
+  const { mounted, panel, scrim, reduced } = useReportModalMotion(visible, 200, 200);
+  return <Modal visible={mounted} transparent animationType="none" onRequestClose={onCancel}>
+    <View style={styles.confirmOverlay}>
+      <NativeAnimated.View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]} />
+      <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} disabled={busy} accessibilityRole="button" accessibilityLabel="Cancel account deletion" />
+      <NativeAnimated.View accessibilityViewIsModal pointerEvents={visible ? 'auto' : 'none'} style={[styles.confirmSheet, { backgroundColor: resident.card, opacity: panel,
+        transform: [{ scale: reduced ? 1 : panel.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
+      }]}>
+        <ThemedText accessibilityRole="header" style={styles.confirmTitle}>Permanently Delete Account?</ThemedText>
+        <ThemedText type="small" themeColor="textSecondary" style={styles.confirmText}>Google confirmed it is you. Deleting cannot be undone.</ThemedText>
+        <PrimaryButton presentation="resident" label="Delete Account" variant="destructiveFilled" loading={busy} onPress={onConfirm} />
+        <PrimaryButton presentation="resident" label="Cancel" variant="secondary" disabled={busy} onPress={onCancel} />
+      </NativeAnimated.View>
+    </View>
+  </Modal>;
+}
+
+function AccentSwatch({ color, selected, onSelect, onRemove, reduced }: {
+  color: string; selected: boolean; onSelect: () => void; onRemove?: () => void; reduced: boolean;
+}) {
+  const { resident } = useTheme();
+  const swatch = getResidentTheme('light', color);
+  const scale = useSharedValue(1);
+  const motion = useAnimatedStyle(() => ({ transform: [{ scale: reduced ? 1 : scale.value }] }));
+  useEffect(() => { if (reduced) scale.value = 1; return () => cancelAnimation(scale); }, [reduced, scale]);
+  return <Animated.View style={motion}>
+    <Pressable onPress={onSelect} onLongPress={onRemove} delayLongPress={550}
+      onPressIn={() => { scale.value = reduced ? 1 : withTiming(0.95, { duration: 150, easing: Easing.bezier(0, 0, 0.58, 1) }); }}
+      onPressOut={() => { scale.value = reduced ? 1 : withTiming(1, { duration: 150, easing: Easing.bezier(0, 0, 0.58, 1) }); }}
+      accessibilityRole="button" accessibilityLabel={`${onRemove ? 'Custom color' : 'Accent color'} ${color}`}
+      accessibilityHint={onRemove ? 'Hold to remove this saved color' : undefined} accessibilityState={{ selected }}
+      style={[styles.swatchRing, { borderColor: selected ? resident.text : 'transparent' }]}>
+      <View style={[styles.swatch, { backgroundColor: color, borderWidth: 1, borderColor: resident.controlBorder }]}>
+        {selected ? <Ionicons name="checkmark" size={20} color={swatch.onAccent} /> : null}
+      </View>
+    </Pressable>
+  </Animated.View>;
 }
 
 /** Secondary row text; a warning adds an icon and color, never color alone. */
@@ -646,7 +676,7 @@ function StatusLine({ text, warning }: { text: string; warning: boolean }) {
   }
   return (
     <View style={styles.warningLine}>
-      <Ionicons name="alert-circle" size={14} color={theme.accentRed} accessible={false} />
+      <Ionicons name="alert-circle" size={14} color={theme.resident.danger} accessible={false} />
       <ThemedText type="small" themeColor="accentRed">
         {text}
       </ThemedText>
@@ -655,11 +685,8 @@ function StatusLine({ text, warning }: { text: string; warning: boolean }) {
 }
 
 function Chevron({ color }: { color?: string }) {
-  return (
-    <ThemedText themeColor={color ? undefined : 'textSecondary'} style={color ? { color } : undefined}>
-      {'›'}
-    </ThemedText>
-  );
+  const { resident } = useTheme();
+  return <Ionicons name="chevron-forward" size={20} color={color ?? resident.muted} accessible={false} />;
 }
 
 function AboutRow({
@@ -673,7 +700,7 @@ function AboutRow({
 }) {
   return (
     <Link href={href} asChild>
-      <Pressable style={styles.row}>
+      <Pressable accessibilityRole="button" style={styles.row}>
         <SettingsIcon name={icon} />
         <ThemedText style={styles.rowLabel}>{label}</ThemedText>
         <Chevron />
@@ -691,26 +718,28 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    padding: Spacing.three,
+    padding: 20,
   },
   section: {
-    marginBottom: Spacing.three,
+    marginBottom: 24,
   },
   sectionTitle: {
     marginBottom: Spacing.two,
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 14,
+    lineHeight: 20,
+    paddingHorizontal: 4,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
-    minHeight: 52,
-    paddingHorizontal: Spacing.two + Spacing.one,
-    paddingVertical: Spacing.two,
+    gap: 14,
+    minHeight: 68,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   rowText: {
     flex: 1,
+    minWidth: 0,
     gap: Spacing.half,
   },
   verifiedStatus: {
@@ -720,7 +749,11 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     flex: 1,
+    fontSize: 15.5,
+    lineHeight: 20,
+    fontWeight: '600',
   },
+  rowTitle: { fontSize: 15.5, lineHeight: 20, fontWeight: '600' },
   warningLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -737,19 +770,20 @@ const styles = StyleSheet.create({
   },
   confirmSheet: {
     borderRadius: 24,
-    padding: Spacing.four,
-    gap: Spacing.three,
+    padding: 24,
+    gap: 12,
   },
   confirmTitle: {
-    fontSize: 18,
-    textAlign: 'center',
+    fontSize: 19,
+    lineHeight: 25,
+    fontWeight: '800',
   },
   confirmText: {
-    textAlign: 'center',
+    lineHeight: 20,
   },
   themeSection: {
-    padding: Spacing.two + Spacing.one,
-    gap: Spacing.two + Spacing.one,
+    padding: 16,
+    gap: 12,
   },
   themeRow: {
     flexDirection: 'row',
@@ -758,13 +792,15 @@ const styles = StyleSheet.create({
   },
   swatchRow: {
     flexDirection: 'row',
-    gap: Spacing.two + Spacing.one,
-    paddingHorizontal: Spacing.two,
+    gap: 4,
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    paddingVertical: 4,
   },
   swatch: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -789,10 +825,17 @@ const styles = StyleSheet.create({
   fontChip: {
     borderRadius: 20,
     borderWidth: 1,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
   },
   fontChipLabel: {
     fontSize: 14,
   },
+  profileCard: { marginBottom: 24 },
+  profileRow: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 16 },
+  profileName: { fontSize: 19, lineHeight: 24, fontWeight: '800' },
+  profileEmail: { fontSize: 13.5, lineHeight: 19 },
+  editProfile: { fontSize: 13.5, lineHeight: 20, fontWeight: '700', marginTop: 8 },
+  swatchRing: { padding: 2, borderWidth: 2, borderRadius: 26 },
 });

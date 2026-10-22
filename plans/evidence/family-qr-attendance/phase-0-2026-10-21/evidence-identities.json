@@ -1,0 +1,70 @@
+[
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/baseline-inventory.json",
+    "sha256": "07761DE0B6AF6DB0B3957E2B3EBC6983D12B2B6ED9EAC3FD1C2C01EEF7BC2E2E"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/baseline.md",
+    "sha256": "6E32DF888107F56581A2E3D5B3D6A0C7C20BA0CB2CF9BC2B097DDCA97AE1D636"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+    "sha256": "0B50BF2FF9CEA1D563972876D53F13F5E4C64D2A1F1066A0745C12D04B3763B1"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/environment.json",
+    "sha256": "47A79AD3A30B9642F82651DA88B6DE612090E550D08436E8D94A01F7325F8A78"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-contracts.json",
+    "sha256": "E6691473C680094C1B1A4CABE4CBF3F915CC5FA29F47A4BCBF131FD7DE1865C2"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-final-discovery.json",
+    "sha256": "817CBADDD1702C8D093096F0B2051F035E77A20A8DBAA84273AFB86A356E26F4"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-migrations.json",
+    "sha256": "B5B54E221297501465737E1C3AB95C8EB16E745C5D3624F05C485847DB0544DC"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-qr-log-summary.json",
+    "sha256": "378AD8EB6E085BC0717C96C15C0CD801956CF20EB830782AAFA9CF25842A9839"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-qr-runtime-summary.json",
+    "sha256": "9E537B7DE8FC2810033EE66A02D4E7C79B96A365D9595900582E2AA5C1C23A03"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-schema.json",
+    "sha256": "5DB7FAECAFA621111DB1B4E8BAE1101EE52E2B9C5B6C1DB57B8C42FCED73A3E9"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/hosted-writers.json",
+    "sha256": "4EC1660C1579229F01703584CBC9C0E1B2EE8E764142E9F3C28E685F11BDD11C"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/locked-versions.json",
+    "sha256": "F77DBE1EE9E400DF3A03D7C88F5DFA1864B578124FAAF0D09402E91BD6805CCA"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/packet-manifest.json",
+    "sha256": "15F1EB55072F82D5A14684F1C56A2CBC3186B63ED922C1C9424694851D5B2B7F"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/read-ledger.json",
+    "sha256": "365FD44546A7805BB17EC8E97A05B6BA7FA399C67DB59C42362BD748BB34CA88"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/source-reads.json",
+    "sha256": "2BE55F62775AE4317114A40F22F3357D7A431CFA2BEFF2D984B0D28518DED7ED"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/supplement-manifest.json",
+    "sha256": "CBA933BE91E3BD386FB07D5B0BD5C9D9E6B8EC86FE9D4333338FC15628607EAC"
+  },
+  {
+    "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/supplement-read-ledger.json",
+    "sha256": "78A4940C37F268EB06B1AD7815976A84C44D919457B8D5E48A5D4DF071A54650"
+  }
+]

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { Action, Body, Card, SymbolIcon, Notice } from '../../components/ui';
 import { layout, radius, space, useColors, useType } from '../../lib/theme';
-import { sameColor } from '../../lib/color-math';
+import { readableForeground, sameColor } from '../../lib/color-math';
 import { useAppearance } from '../appearance/provider';
 import { FONT_CHOICES, PRESET_COLORS, THEME_CHOICES } from '../appearance/preferences';
 import { OnboardingFrame, useLeaveIntroduction } from './frame';
@@ -77,7 +77,7 @@ export function PersonalizationScreen() {
             onPress={() => { setAccent(preset.color); setMessage('Accent color updated'); }}
             style={({ pressed }) => ({ width: layout.controlMin, height: layout.controlMin, borderRadius: layout.controlMin / 2, borderWidth: 2, borderColor: selected ? colors.textPrimary : 'transparent', alignItems: 'center', justifyContent: 'center', opacity: pressed ? 0.7 : 1 })}>
             <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: preset.color, alignItems: 'center', justifyContent: 'center' }}>
-              {selected && <SymbolIcon name="checkmark" color="#FFFFFF" size={16} />}
+              {selected && <SymbolIcon name="checkmark" color={readableForeground(preset.color)} size={16} />}
             </View>
           </Pressable>;
         })}

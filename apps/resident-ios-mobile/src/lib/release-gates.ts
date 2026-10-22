@@ -8,6 +8,8 @@
  * barangay's own `evacuation-route` function, as the resident web app already does. Tiles and geocoding stay behind `mapProviders`.
  * `evacuationCheckin` and `householdQr` are open by owner decision OD-12 (2026-10-16), also for the non-device, non-live scope: online
  * resident-only check-in against the server's receipt, and the household code generated on the device from the account id.
+ * `medicalRegistration` is open by owner decision OD-13 (2026-10-16), also for the non-device, non-live scope: self-only registration through
+ * `register_for_drive`. G16's two-tenant negative tests, G01 and G17 are not thereby satisfied.
  */
 export const releaseGates = Object.freeze({
   householdEditing: false,

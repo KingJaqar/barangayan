@@ -1,0 +1,30 @@
+{
+  "generator": "Repomix 1.18.1",
+  "security": "enabled in invocation; generation return log unavailable because post-generation log writer failed cp1252; not rerun to recover output",
+  "packet_sha256": "a16d28304a64bebf80d63da4159640d6eaec147ff0853d99c688e350942e654b",
+  "sources": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "sha256": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820",
+      "lines": 68,
+      "characters": 3538,
+      "source_equivalent": true
+    },
+    {
+      "path": "packages/shared/src/lib/auth-fetch.ts",
+      "sha256": "8915f808f0fea76ea4a9d4f462e3fe117e44dda455bf4f960abc063246d7db72",
+      "lines": 13,
+      "characters": 812,
+      "source_equivalent": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "sha256": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95",
+      "lines": 13,
+      "characters": 597,
+      "source_equivalent": true
+    }
+  ],
+  "omissions": [],
+  "reader": "All three complete entries previously read against originals; emitted XML entries now complete below."
+}

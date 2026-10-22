@@ -1,0 +1,22 @@
+[
+  {
+    "path": "supabase/migrations/20261021111056_household_attendance.sql",
+    "sha256": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E"
+  },
+  {
+    "path": "packages/shared/src/types/household-attendance.database.ts",
+    "sha256": "EFBFFAA3008213BBE0A37965ABCAD40BC7F7F5E4A3F1CB999373A075D8A65B60"
+  },
+  {
+    "path": "supabase/tests/household_attendance.test.sql",
+    "sha256": "67AABD3F1E154D5409040E9D08081939703EA7298E707E5DC015F0435F426215"
+  },
+  {
+    "path": "supabase/functions/export-my-data/export-v2.ts",
+    "sha256": "25BB5C80B0EDE7DACA443BD98D96F78ADA3464FC325DBF66F46463B27915DB27"
+  },
+  {
+    "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+    "sha256": "069079FE00384649CB9B7EAC4693726AA4ABA57873CDA8A723E0D084EB312C7A"
+  }
+]

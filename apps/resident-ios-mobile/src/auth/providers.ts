@@ -8,6 +8,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { AppState } from 'react-native';
 import { appleNamesFrom, createAppleNonce } from './apple-nonce';
 import { buildCallbackUrl, callbackFailureMessage, parseCallback } from './callback-url';
+import { clearAppleAuthorizationCode, holdAppleAuthorizationCode } from './apple-authorization';
 import { reauthenticationState, type ReauthenticationState } from './fresh-authentication';
 import {
   ATTEMPT_KEY, parseAttempt, ProviderAuthFlow,
@@ -167,7 +168,9 @@ export function createProviderAuth(client: Client) {
         await clearProviderAttempt();
         throw new Error('Apple did not return a sign-in token. Please try again.');
       }
-      return await apple.finish({ identityToken: credential.identityToken, nonce: nonce.raw, fullName: credential.fullName });
+      const completed = await apple.finish({ identityToken: credential.identityToken, nonce: nonce.raw, fullName: credential.fullName });
+      if (intent === 'reauthenticate' && purpose === 'delete_account' && completed.userId && credential.authorizationCode) holdAppleAuthorizationCode(completed.userId, credential.authorizationCode);
+      return completed;
     } finally { starting = false; }
   }
 
@@ -179,6 +182,7 @@ export function createProviderAuth(client: Client) {
   /** Single use: a confirmed or abandoned sensitive action cannot be repeated from it. */
   async function clearReauthentication() {
     const attempt = await pendingProviderAttempt();
+    clearAppleAuthorizationCode();
     if (attempt?.intent === 'reauthenticate') await clearProviderAttempt();
   }
 

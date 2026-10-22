@@ -1,247 +1,129 @@
-import { useState } from 'react';
-import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { CameraView, BarcodeScanningResult } from 'expo-camera';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, AppState, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { CameraView, type BarcodeScanningResult } from 'expo-camera';
+import { useIsFocused } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-
 import { Ionicons } from '@expo/vector-icons';
-import { Spacing } from '@/constants/theme';
-import { useQrCheckins } from '@/hooks/use-qr-checkins';
+import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
+
+import { ThemedText } from '@/components/themed-text';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
-import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
-import type { EvacuationCenterQrPayload } from '@barangayan/shared';
+import { useTheme } from '@/hooks/use-theme';
 
-interface QrScannerOverlayProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-export function QrScannerOverlay({ visible, onClose }: QrScannerOverlayProps) {
-  const [scanning, setScanning] = useState(false);
-  const [frameSize, setFrameSize] = useState(0);
-  const { checkIn, updateHouseholdStatus } = useQrCheckins();
+export function QrScannerOverlay({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  const { resident } = useTheme();
+  const focused = useIsFocused();
   const { session } = useAuth();
   const { profile } = useProfile();
+  const owner = session?.user.id ?? null;
+  const barangayId = profile?.barangay_id ?? null;
+  const [active, setActive] = useState(AppState.currentState !== 'background' && AppState.currentState !== 'inactive');
+  const [message, setMessage] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [finderSize, setFinderSize] = useState({ width: 0, height: 0 });
+  const frameSize = Math.max(0, Math.min(256, finderSize.width - 48, finderSize.height - 24));
+  const lock = useRef(false);
+  const eligible = useRef(false);
+  const activeOwner = useRef(owner);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  const shown = visible && focused && active && !!owner && !!barangayId;
+  const { mounted, panel } = useReportModalMotion(shown, 200);
 
-  if (!visible) return null;
-
-  async function handleBarcodeScanned(event: BarcodeScanningResult) {
-    if (scanning) return;
-    setScanning(true);
-
-    try {
-      const raw = event.data.trim();
-      if (!raw) {
-        Alert.alert('Invalid QR', 'This QR code does not contain a valid evacuation center ID.');
-        setScanning(false);
-        return;
-      }
-
-      let payload: Record<string, unknown>;
-      try {
-        payload = JSON.parse(raw);
-      } catch {
-        Alert.alert('Invalid QR', 'This QR code does not contain a valid payload.');
-        setScanning(false);
-        return;
-      }
-
-      const parsed = evacuationCenterQrPayloadSchema.safeParse(payload);
-      if (!parsed.success) {
-        Alert.alert('Invalid QR', 'This QR code is not a valid evacuation center check-in code.');
-        setScanning(false);
-        return;
-      }
-
-      const qrData = parsed.data as EvacuationCenterQrPayload;
-
-      if (qrData.barangay_id !== profile?.barangay_id) {
-        Alert.alert('Wrong Barangay', 'This QR code belongs to a different barangay.');
-        setScanning(false);
-        return;
-      }
-
-      const result = await checkIn(qrData.center_id);
-      if (result) {
-        const householdUpdated = await updateHouseholdStatus();
-        if (!householdUpdated && session?.user?.id) {
-          Alert.alert('Warning', 'Check-in recorded, but could not update household status.');
-        }
-
-        Alert.alert('Check-in Recorded', 'Your presence has been registered at the evacuation center.', [
-          { text: 'OK', onPress: () => { onClose(); setScanning(false); } },
-        ]);
-      } else {
-        Alert.alert('Error', 'Could not record your check-in. Please try again.');
-        setScanning(false);
-      }
-    } catch {
-      Alert.alert('Error', 'Something went wrong while processing the QR code.');
-      setScanning(false);
+  useEffect(() => {
+    eligible.current = shown;
+    activeOwner.current = owner;
+    if (shown) {
+      lock.current = false;
+      setMessage(null);
+      setCameraError(false);
+      setReady(false);
     }
+    return () => { eligible.current = false; };
+  }, [shown, owner, barangayId]);
+
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', state => {
+      setActive(state === 'active');
+      if (state !== 'active') {
+        eligible.current = false;
+        if (visible) closeRef.current();
+      }
+    });
+    if (visible && !focused) closeRef.current();
+    return () => listener.remove();
+  }, [visible, focused]);
+
+  function close() {
+    eligible.current = false;
+    onClose();
   }
 
-  return (
-    // A native modal escapes the guide's ScrollView and covers the floating tabs.
-    <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
-      <SafeAreaProvider style={styles.container}>
-        <CameraView
-          style={styles.camera}
-          facing="back"
-          onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ['qr'],
-          }}
-        />
+  function handleBarcodeScanned(event: BarcodeScanningResult) {
+    if (!eligible.current || activeOwner.current !== owner || lock.current) return;
+    lock.current = true;
+    let payload: unknown;
+    try { payload = event.data.length <= 2048 ? JSON.parse(event.data.trim()) : null; } catch { payload = null; }
+    const parsed = evacuationCenterQrPayloadSchema.safeParse(payload);
+    if (!parsed.success) { setMessage('This is not a valid evacuation center check-in QR code.'); return; }
+    if (parsed.data.barangay_id !== barangayId) { setMessage('This QR code belongs to a different barangay.'); return; }
+    setMessage('Ask barangay staff to scan your Family QR and confirm who is present. This scan did not record attendance.');
+  }
 
-        <SafeAreaView style={styles.controls}>
-          <View style={styles.topBar}>
-            <Pressable onPress={onClose} style={styles.closeButton} hitSlop={Spacing.two}
-              accessibilityRole="button" accessibilityLabel="Close QR scanner">
-              <Ionicons name="close" size={28} color="#FFFFFF" />
-            </Pressable>
-            <Text style={styles.scanTitle}>Scan QR Code</Text>
-            <View style={{ width: 44 }} />
+  return <Modal visible={mounted} animationType="none" presentationStyle="fullScreen" onRequestClose={close}>
+    <SafeAreaProvider style={{ flex: 1, backgroundColor: resident.mediaBackdrop }}>
+      <Animated.View style={[styles.root, { opacity: panel }]}>
+        <SafeAreaView style={styles.root}>
+          <View style={styles.header}>
+            <Pressable onPress={close} style={styles.close} accessibilityRole="button" accessibilityLabel="Close QR scanner"><Ionicons name="close" size={24} color={resident.mediaForeground} /></Pressable>
+            <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.mediaForeground }]}>Scan QR Code</ThemedText>
+            <View style={styles.close} />
           </View>
-
-          <View style={styles.viewfinder} onLayout={({ nativeEvent: { layout } }) => {
-            setFrameSize(Math.min(layout.width * 0.7, layout.height * 0.8, 320));
+          <View style={styles.finder} onLayout={({ nativeEvent: { layout } }) => {
+            setFinderSize(previous => previous.width === layout.width && previous.height === layout.height ? previous : { width: layout.width, height: layout.height });
           }}>
-            <View style={[styles.scanFrame, { width: frameSize, height: frameSize }]}>
-              <View style={styles.cornerTL} />
-              <View style={styles.cornerTR} />
-              <View style={styles.cornerBL} />
-              <View style={styles.cornerBR} />
+            {shown && !message && !cameraError ? <CameraView style={StyleSheet.absoluteFill} facing="back"
+              onCameraReady={() => { if (eligible.current) setReady(true); }} onMountError={() => { if (eligible.current) setCameraError(true); }}
+              onBarcodeScanned={handleBarcodeScanned} barcodeScannerSettings={{ barcodeTypes: ['qr'] }} /> : null}
+            <View pointerEvents="none" style={[styles.mask, { backgroundColor: resident.mediaScrim, top: 0, left: 0, right: 0, height: (finderSize.height - frameSize) / 2 }]} />
+            <View pointerEvents="none" style={[styles.mask, { backgroundColor: resident.mediaScrim, bottom: 0, left: 0, right: 0, height: (finderSize.height - frameSize) / 2 }]} />
+            <View pointerEvents="none" style={[styles.mask, { backgroundColor: resident.mediaScrim, top: (finderSize.height - frameSize) / 2, left: 0, height: frameSize, width: (finderSize.width - frameSize) / 2 }]} />
+            <View pointerEvents="none" style={[styles.mask, { backgroundColor: resident.mediaScrim, top: (finderSize.height - frameSize) / 2, right: 0, height: frameSize, width: (finderSize.width - frameSize) / 2 }]} />
+            <View style={[styles.frame, { width: frameSize, height: frameSize }]}>
+              {(['tl', 'tr', 'bl', 'br'] as const).map(corner => <View key={corner} style={[styles.corner, styles[corner], { borderColor: resident.accent }]} />)}
+              {cameraError ? <View style={styles.cameraState}><Ionicons name="videocam-off-outline" size={32} color={resident.mediaForeground} />
+                <ThemedText accessibilityRole="alert" style={[styles.feedback, { color: resident.mediaForeground }]}>Camera unavailable. Check camera access in Settings, or try again.</ThemedText>
+                <Pressable onPress={() => { setReady(false); setCameraError(false); }} accessibilityRole="button" style={styles.retry}><ThemedText style={{ color: resident.mediaForeground }}>Retry camera</ThemedText></Pressable>
+              </View> : shown && !ready && !message ? <ActivityIndicator color={resident.mediaForeground} accessibilityLabel="Starting camera" /> : null}
             </View>
           </View>
-
-          <View style={styles.bottomBar}>
-            <Text style={styles.instruction}>Position the barangay QR code within the frame</Text>
-            {scanning && (
-              <View style={styles.processingRow}>
-                <ActivityIndicator size="small" color="#FFFFFF" />
-                <Text style={styles.processingText}>Processing...</Text>
-              </View>
-            )}
+          <View style={styles.footer}>
+            <ThemedText accessibilityLiveRegion="polite" style={[styles.feedback, { color: resident.mediaForeground }]}>{message ?? 'Position the barangay QR code within the frame'}</ThemedText>
+            {message ? <Pressable accessibilityRole="button" onPress={close} style={styles.retry}><ThemedText style={{ color: resident.mediaForeground }}>Close scanner</ThemedText></Pressable> : null}
           </View>
         </SafeAreaView>
-      </SafeAreaProvider>
-    </Modal>
-  );
+      </Animated.View>
+    </SafeAreaProvider>
+  </Modal>;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  controls: {
-    flex: 1,
-  },
-  camera: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.two,
-  },
-  closeButton: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scanTitle: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  viewfinder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scanFrame: {
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.3)',
-  },
-  cornerTL: {
-    position: 'absolute',
-    top: -2,
-    left: -2,
-    width: 40,
-    height: 40,
-    borderTopWidth: 4,
-    borderLeftWidth: 4,
-    borderTopColor: '#0F6E5B',
-    borderLeftColor: '#0F6E5B',
-    borderTopLeftRadius: 24,
-  },
-  cornerTR: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    width: 40,
-    height: 40,
-    borderTopWidth: 4,
-    borderRightWidth: 4,
-    borderTopColor: '#0F6E5B',
-    borderRightColor: '#0F6E5B',
-    borderTopRightRadius: 24,
-  },
-  cornerBL: {
-    position: 'absolute',
-    bottom: -2,
-    left: -2,
-    width: 40,
-    height: 40,
-    borderBottomWidth: 4,
-    borderLeftWidth: 4,
-    borderBottomColor: '#0F6E5B',
-    borderLeftColor: '#0F6E5B',
-    borderBottomLeftRadius: 24,
-  },
-  cornerBR: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    width: 40,
-    height: 40,
-    borderBottomWidth: 4,
-    borderRightWidth: 4,
-    borderBottomColor: '#0F6E5B',
-    borderRightColor: '#0F6E5B',
-    borderBottomRightRadius: 24,
-  },
-  bottomBar: {
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.two,
-    paddingBottom: Spacing.three,
-  },
-  instruction: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    textAlign: 'center',
-    opacity: 0.9,
-  },
-  processingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    marginTop: Spacing.two,
-  },
-  processingText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
+  root: { flex: 1 }, header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, minHeight: 56 },
+  close: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  title: { flex: 1, fontSize: 17, fontWeight: '700', textAlign: 'center' },
+  finder: { flex: 1, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  frame: { borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+  corner: { position: 'absolute', width: 48, height: 48 },
+  mask: { position: 'absolute' },
+  tl: { top: 0, left: 0, borderTopWidth: 4, borderLeftWidth: 4, borderTopLeftRadius: 24 },
+  tr: { top: 0, right: 0, borderTopWidth: 4, borderRightWidth: 4, borderTopRightRadius: 24 },
+  bl: { bottom: 0, left: 0, borderBottomWidth: 4, borderLeftWidth: 4, borderBottomLeftRadius: 24 },
+  br: { bottom: 0, right: 0, borderBottomWidth: 4, borderRightWidth: 4, borderBottomRightRadius: 24 },
+  footer: { paddingHorizontal: 32, paddingTop: 24, paddingBottom: 40, gap: 12, alignItems: 'center' },
+  feedback: { fontSize: 15, lineHeight: 24, textAlign: 'center' },
+  cameraState: { padding: 24, gap: 8, alignItems: 'center' },
+  retry: { minHeight: 44, paddingHorizontal: 16, justifyContent: 'center' },
 });

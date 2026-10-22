@@ -1,0 +1,12 @@
+{
+  "node": "v24.13.1",
+  "lock_sha256": "0b8e5d22a6e9ec2a39608b1cf3e5d04c80c2685714b21a320c2b05d7b498efcb",
+  "packages": {
+    "node_modules/zod/package.json": "3.25.76",
+    "node_modules/vitest/package.json": "3.2.7",
+    "node_modules/next/package.json": "16.3.0",
+    "apps/resident-web/node_modules/typescript/package.json": "5.9.3",
+    "apps/admin-web/node_modules/typescript/package.json": "5.9.3",
+    "node_modules/@supabase/supabase-js/package.json": "2.112.1"
+  }
+}

@@ -5,7 +5,7 @@ export default function QrGuideScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/home/emergency-info');
+    router.replace('/home/emergency-info?tab=scan');
   }, [router]);
 
   return null;

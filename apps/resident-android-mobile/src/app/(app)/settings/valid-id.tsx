@@ -6,18 +6,21 @@ import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthHeader } from '@/components/auth-header';
 import { BirthdayWheelModal } from '@/components/birthday-wheel-modal';
 import { GuestPrompt } from '@/components/guest-prompt';
-import { RecoveryButton, RecoveryError, recoveryStyles, StepFlowScreen } from '@/components/password-recovery-screen';
+import { RecoveryError, recoveryStyles, StepFlowScreen } from '@/components/password-recovery-screen';
+import { PrimaryButton } from '@/components/primary-button';
+import { SettingsSheet } from '@/components/settings-sheet';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { ACCEPTED_IMAGE_MIME_TYPES, imageExtension, pickImageAsset, readImageBytes, type PickedImage } from '@/lib/image-upload';
 import { extractIdDetails } from '@/lib/valid-id';
 import { idPhotoBytes } from '@/lib/id-photo-bytes';
@@ -46,7 +49,7 @@ export default function ValidIdScreen() {
 function ValidIdScreenContent() {
   const router = useRouter();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
+  const reduced = useResidentReducedMotion(true);
   const { session } = useAuth();
   const { profile, isLoading, error: profileError, refetch } = useProfile();
   const [step, setStep] = useState(1);
@@ -205,23 +208,22 @@ function ValidIdScreenContent() {
 
   if (!session) return <GuestPrompt label="Log in to submit your valid ID." />;
   if (showConfirmation || (!replacing && (isLoading || profileError))) {
-    const statusColor = verified ? theme.accentGreen : theme.accentOrange;
-    return <View style={[styles.root, { backgroundColor: theme.background }]}>
-      <AuthHeader title="Valid ID" onBack={goBack} />
+    const statusColor = verified ? theme.resident.success : theme.resident.warning;
+    return <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <AuthHeader presentation="resident" title="Valid ID" onBack={goBack} />
       <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
         <ScrollView contentContainerStyle={styles.statusContent}>
           <View style={styles.statusBody}>
-            <ThemedText accessibilityRole="header" style={styles.statusTitle}>{showConfirmation && !verified ? 'ID submitted' : 'Valid ID'}</ThemedText>
-            {showConfirmation ? <View style={[styles.confirmation, { borderColor: `${statusColor}66`, backgroundColor: `${statusColor}1A` }]} accessibilityLiveRegion="polite">
-              {!verified ? <Ionicons name="time-outline" size={20} color={statusColor} /> : null}
+            {showConfirmation ? <View style={[styles.confirmation, { borderColor: theme.resident.border, backgroundColor: verified ? theme.resident.successSoft : theme.resident.warningSoft }]} accessibilityLiveRegion="polite">
+              <Ionicons name={verified ? "checkmark-circle-outline" : "time-outline"} size={20} color={statusColor} />
               <View style={styles.statusText}>
                 <ThemedText style={styles.confirmationTitle}>{verified ? 'Your valid ID has been verified' : 'Valid ID is pending verification'}</ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">{verified ? 'You can use this ID for service requests.' : 'Your ID has been submitted for staff review. You can use it for service requests once it has been verified.'}</ThemedText>
               </View>
             </View> : null}
-            {isLoading ? <View style={styles.status} accessibilityLiveRegion="polite"><ActivityIndicator color={theme.primary} /><ThemedText themeColor="textSecondary">Checking verification status…</ThemedText></View> : profileError ? <>
-              <RecoveryError message={submitted ? 'Your ID was submitted. Verification status is temporarily unavailable.' : profileError} />
-              <RecoveryButton label="Try again" onPress={refetch} />
+            {isLoading ? <View style={styles.status} accessibilityLiveRegion="polite"><ActivityIndicator color={theme.resident.accentText} /><ThemedText themeColor="textSecondary">Checking verification status…</ThemedText></View> : profileError ? <>
+              <RecoveryError presentation="resident" message={submitted ? 'Your ID was submitted. Verification status is temporarily unavailable.' : profileError} />
+              <PrimaryButton presentation="resident" label="Try again" onPress={refetch} />
             </> : showConfirmation ? <>
               <ThemedText type="small" themeColor="textSecondary">{verified ? 'If you need to replace this ID, your new submission will require staff verification before it can be used for service requests.' : 'If you need to correct this submission, you can submit a replacement ID for staff review.'}</ThemedText>
               <PhotoAction label="Submit a replacement ID" icon="card-outline" onPress={() => {
@@ -230,34 +232,34 @@ function ValidIdScreenContent() {
                 publication.current = null; setSubmitted(false); setReplacing(true);
               }} />
             </> : null}
-            <RecoveryButton label="Back to Settings" onPress={() => router.dismissTo('/settings')} />
+            <PrimaryButton presentation="resident" label="Back to Settings" onPress={() => router.dismissTo('/settings')} />
           </View>
         </ScrollView>
       </SafeAreaView>
     </View>;
   }
-  const intro = STEPS[step - 1]!;
+  const intro = STEPS[step - 1] ?? STEPS[0];
   return (
-    <View style={[styles.root, { backgroundColor: theme.background }]}>
-      <AuthHeader title="Valid ID" onBack={goBack} />
-      <StepFlowScreen step={step} totalSteps={4} flowLabel="Valid ID submission" title={intro.title} description={intro.description}>
-        <View style={recoveryStyles.form}>
+    <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <AuthHeader presentation="resident" title="Valid ID" onBack={goBack} />
+      <StepFlowScreen presentation="resident" compact step={step} totalSteps={4} flowLabel="Valid ID submission" title={intro.title} description={intro.description}>
+        <View style={styles.form}>
             {step === 1 ? <>
               {profile?.id_verification_status ? <View style={styles.status}>
-                <Ionicons name={verified ? 'checkmark-circle' : 'warning'} size={20} color={verified ? theme.accentGreen : theme.accentRed} />
+                <Ionicons name={verified ? 'checkmark-circle' : 'warning'} size={20} color={verified ? theme.resident.success : theme.resident.danger} />
                 <ThemedText type="small" style={styles.statusText}>{verified ? 'Your current ID is verified. A new submission will need verification again.' : profile.id_verification_status === 'pending' ? 'Your current ID is pending verification. You may submit a replacement.' : 'Your ID has not been verified. Submit a clear photo for review.'}</ThemedText>
               </View> : null}
               <View style={styles.options}>
                 <ThemedText type="small">ID type</ThemedText>
-                <Pressable accessibilityRole="button" accessibilityLabel="Select ID type" onPress={() => setTypePickerOpen(true)} style={[styles.option, { borderColor: theme.backgroundSelected, backgroundColor: theme.background }]}>
+                <Pressable accessibilityRole="button" accessibilityLabel="Select ID type" onPress={() => setTypePickerOpen(true)} style={[styles.option, { borderColor: theme.resident.border, backgroundColor: theme.resident.card }]}>
                   <ThemedText style={styles.statusText} themeColor={idType ? 'text' : 'textSecondary'}>{idType || 'Select ID type'}</ThemedText>
                   <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
                 </Pressable>
               </View>
-              {idType === 'Other' ? <TextField label="Specify ID type" required accessibilityLabel="Specify ID type" value={otherIdType} maxLength={193} onChangeText={setOtherIdType} style={recoveryStyles.field} /> : null}
+              {idType === 'Other' ? <TextField presentation="resident" label="Specify ID type" required accessibilityLabel="Specify ID type" value={otherIdType} maxLength={193} onChangeText={setOtherIdType} style={recoveryStyles.field} /> : null}
             </> : null}
             {step === 2 ? <>
-              <View style={[styles.photoFrame, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundElement }]}>
+              <View style={[styles.photoFrame, { borderColor: theme.resident.border, backgroundColor: theme.resident.surface }]}>
                 {photo ? <Image source={{ uri: photo.uri }} style={styles.photo} contentFit="contain" accessibilityLabel="Selected front ID photo" /> : <><Ionicons name="card-outline" size={48} color={theme.textSecondary} /><ThemedText themeColor="textSecondary">Front of ID only</ThemedText></>}
               </View>
               <PhotoAction label={photo ? 'Upload a different photo' : 'Upload a photo'} icon="cloud-upload-outline" disabled={busy} onPress={() => { void choosePhoto(); }} />
@@ -265,7 +267,7 @@ function ValidIdScreenContent() {
               {permission && !permission.granted && !permission.canAskAgain ? <PhotoAction label="Open camera permissions" icon="settings-outline" disabled={busy} onPress={() => { void Linking.openSettings(); }} /> : null}
               <ThemedText type="small" themeColor="textSecondary">Keep all corners visible and avoid blur or glare. JPG, PNG, or WebP, up to 5 MB.</ThemedText>
               {busy ? <ThemedText type="small" accessibilityLiveRegion="polite">Uploading and reading your ID photo…</ThemedText> : null}
-              <RecoveryError message={readingError} />
+              <RecoveryError presentation="resident" message={readingError} />
               {photo && !detailsReady && !busy ? <>
                 <PhotoAction label="Try reading the photo again" icon="refresh-outline" onPress={() => { void retryReading(); }} />
                 <PhotoAction label="Enter details manually" icon="create-outline" onPress={() => { setDetailsReady(true); setStep(3); }} />
@@ -275,49 +277,41 @@ function ValidIdScreenContent() {
               <ThemedText type="small" themeColor="textSecondary">Use the details printed on your ID. Leave optional fields blank if they are not shown on the front.</ThemedText>
               {FIELDS.map(field => field.key === 'birthDate' ? <View key={field.key} style={styles.options}>
                 <ThemedText type="small">{field.label}</ThemedText>
-                <Pressable accessibilityRole="button" accessibilityLabel={field.label} accessibilityHint="Opens month, day and year wheels" accessibilityValue={{ text: details.birthDate ? birthdayLabel(details.birthDate) : 'Not selected' }} onPress={() => { Keyboard.dismiss(); setBirthdayOpen(true); }} style={[styles.option, { borderColor: fieldErrors.birthDate ? theme.accentRed : theme.backgroundSelected }]}>
+                <Pressable accessibilityRole="button" accessibilityLabel={field.label} accessibilityHint="Opens month, day and year wheels" accessibilityValue={{ text: details.birthDate ? birthdayLabel(details.birthDate) : 'Not selected' }} onPress={() => { Keyboard.dismiss(); setBirthdayOpen(true); }} style={[styles.option, { borderColor: fieldErrors.birthDate ? theme.resident.danger : theme.resident.border }]}>
                   <ThemedText style={styles.statusText} themeColor={details.birthDate ? 'text' : 'textSecondary'}>{birthdayLabel(details.birthDate)}</ThemedText>
-                  <Ionicons name="calendar-outline" size={20} color={theme.primary} />
+                  <Ionicons name="calendar-outline" size={20} color={theme.resident.accentText} />
                 </Pressable>
-                {fieldErrors.birthDate ? <RecoveryError message={fieldErrors.birthDate} /> : null}
-              </View> : <TextField key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.background }]} />)}
+                {fieldErrors.birthDate ? <RecoveryError presentation="resident" message={fieldErrors.birthDate} /> : null}
+              </View> : <TextField presentation="resident" key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.resident.card }]} />)}
             </> : null}
             {step === 4 && photo ? <>
-              <Image source={{ uri: photo.uri }} style={[styles.summaryPhoto, { backgroundColor: theme.backgroundElement }]} contentFit="contain" accessibilityLabel="Front ID photo to submit" />
-              <View style={[styles.summary, { borderColor: theme.backgroundSelected }]}>
+              <Image source={{ uri: photo.uri }} style={[styles.summaryPhoto, { backgroundColor: theme.resident.surface }]} contentFit="contain" accessibilityLabel="Front ID photo to submit" />
+              <View style={[styles.summary, { borderColor: theme.resident.border }]}>
                 <SummaryField label="ID type" value={selectedType} />
                 {FIELDS.map(field => <SummaryField key={field.key} label={field.label} value={details[field.key] || 'Not shown on ID'} />)}
               </View>
               <ThemedText type="small" themeColor="textSecondary">Submitting sends this photo and your confirmed details to the barangay for review.</ThemedText>
             </> : null}
-            <RecoveryError message={error} />
-            <RecoveryButton label={step === 4 ? 'Submit' : 'Continue'} loading={busy} disabled={step === 1 ? !idType || (idType === 'Other' && !otherIdType.trim()) : step === 2 ? !photo || !detailsReady : false} onPress={step === 4 ? () => { void submit(); } : continueFlow} />
+            <RecoveryError presentation="resident" message={error} />
+            <PrimaryButton presentation="resident" label={step === 4 ? 'Submit' : 'Continue'} loading={busy} disabled={step === 1 ? !idType || (idType === 'Other' && !otherIdType.trim()) : step === 2 ? !photo || !detailsReady : false} onPress={step === 4 ? () => { void submit(); } : continueFlow} />
             <Pressable accessibilityRole="button" accessibilityLabel={step === 1 ? 'Back to Settings' : 'Previous step'} disabled={busy} onPress={goBack} style={recoveryStyles.textLink}><ThemedText style={recoveryStyles.textLinkLabel}>{step === 1 ? 'Back to Settings' : 'Previous step'}</ThemedText></Pressable>
         </View>
       </StepFlowScreen>
-      <BirthdayWheelModal visible={birthdayOpen} value={details.birthDate} onClose={() => setBirthdayOpen(false)} onConfirm={value => {
+      <BirthdayWheelModal presentation="resident" visible={birthdayOpen} value={details.birthDate} onClose={() => setBirthdayOpen(false)} onConfirm={value => {
         setDetails(previous => ({ ...previous, birthDate: value }));
         setFieldErrors(previous => ({ ...previous, birthDate: '' }));
         setBirthdayOpen(false);
       }} />
-      <Modal visible={typePickerOpen} transparent animationType="slide" onRequestClose={() => setTypePickerOpen(false)}>
-        <View style={styles.pickerOverlay}>
-          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Close ID type picker" onPress={() => setTypePickerOpen(false)} />
-          <View style={[styles.pickerSheet, { backgroundColor: theme.background, paddingBottom: insets.bottom + Spacing.three }]} accessibilityViewIsModal>
-            <ThemedText accessibilityRole="header" style={styles.pickerTitle}>Select ID type</ThemedText>
-            <ScrollView contentContainerStyle={styles.options}>
-              {ID_TYPES.map(type => <Pressable key={type} accessibilityRole="radio" accessibilityLabel={type} accessibilityState={{ checked: idType === type }} onPress={() => { setIdType(type); setTypePickerOpen(false); setError(null); }} style={[styles.option, { borderColor: idType === type ? theme.primary : theme.backgroundSelected, backgroundColor: theme.backgroundElement }]}>
-                <ThemedText style={styles.statusText}>{type}</ThemedText><Ionicons name={idType === type ? 'radio-button-on' : 'radio-button-off'} size={22} color={idType === type ? theme.primary : theme.textSecondary} />
-              </Pressable>)}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-      <Modal visible={cameraOpen} animationType="slide" onRequestClose={goBack}>
-        <View style={[styles.root, { backgroundColor: theme.background }]}>
-          <AuthHeader title="Front ID photo" onBack={goBack} />
+      <SettingsSheet visible={typePickerOpen} title="Select ID type" onClose={() => setTypePickerOpen(false)}>
+        {ID_TYPES.map(type => <Pressable key={type} accessibilityRole="radio" accessibilityLabel={type} accessibilityState={{ checked: idType === type }} onPress={() => { setIdType(type); setTypePickerOpen(false); setError(null); }} style={[styles.option, { borderColor: idType === type ? theme.resident.accentText : theme.resident.border, backgroundColor: idType === type ? theme.resident.accentSoft : theme.resident.surface }]}>
+          <ThemedText style={styles.statusText}>{type}</ThemedText><Ionicons name={idType === type ? 'radio-button-on' : 'radio-button-off'} size={22} color={idType === type ? theme.resident.accentText : theme.resident.muted} />
+        </Pressable>)}
+      </SettingsSheet>
+      <Modal visible={cameraOpen} animationType={reduced ? "none" : "slide"} onRequestClose={goBack}>
+        <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+          <AuthHeader presentation="resident" title="Front ID photo" onBack={goBack} />
           {cameraOpen ? <CameraView ref={camera} style={styles.camera} facing="back" onCameraReady={() => setCameraReady(true)} onMountError={() => { setCameraOpen(false); setError('Camera unavailable. Please upload an existing photo.'); }} /> : null}
-          <View style={styles.cameraControls}><ThemedText>Fit the front of your ID inside the photo.</ThemedText><RecoveryButton label="Take photo" loading={capturing} disabled={!cameraReady} onPress={() => { void takePhoto(); }} /><PhotoAction label="Cancel" icon="close-outline" disabled={capturing} onPress={() => setCameraOpen(false)} /></View>
+          <View style={styles.cameraControls}><ThemedText>Fit the front of your ID inside the photo.</ThemedText><PrimaryButton presentation="resident" label="Take photo" loading={capturing} disabled={!cameraReady} onPress={() => { void takePhoto(); }} /><PhotoAction label="Cancel" icon="close-outline" disabled={capturing} onPress={() => setCameraOpen(false)} /></View>
         </View>
       </Modal>
     </View>
@@ -329,27 +323,23 @@ function SummaryField({ label, value }: { label: string; value: string }) {
 }
 function PhotoAction({ label, icon, onPress, disabled = false }: { label: string; icon: keyof typeof Ionicons.glyphMap; onPress: () => void; disabled?: boolean }) {
   const theme = useTheme();
-  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} onPress={onPress} disabled={disabled} style={({ pressed }) => [styles.photoAction, { borderColor: theme.backgroundSelected, opacity: disabled || pressed ? 0.5 : 1 }]}><Ionicons name={icon} size={22} color={theme.primary} /><ThemedText themeColor="primary" style={styles.statusText}>{label}</ThemedText></Pressable>;
+  return <PrimaryButton presentation="resident" variant="secondary" label={label} onPress={onPress} disabled={disabled} leadingIcon={<Ionicons name={icon} size={20} color={disabled ? theme.resident.muted : theme.resident.text} />} />;
 }
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  statusContent: { flexGrow: 1, padding: Spacing.four, paddingTop: Spacing.five },
-  statusBody: { width: '100%', maxWidth: 480, alignSelf: 'center', gap: Spacing.four },
-  statusTitle: { fontSize: 26, lineHeight: 34, fontWeight: '700' },
-  confirmation: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two, padding: Spacing.three, borderWidth: 1, borderRadius: 12 },
-  confirmationTitle: { fontWeight: '600', marginBottom: Spacing.one },
+  statusContent: { flexGrow: 1, padding: 16 },
+  form: { gap: 12 },
+  statusBody: { width: '100%', maxWidth: 480, alignSelf: 'center', gap: 16 },
+  confirmation: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderWidth: 1, borderRadius: 16 },
+  confirmationTitle: { fontSize: 16, lineHeight: 20, fontWeight: '700', marginBottom: 4 },
   status: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two },
   statusText: { flex: 1 },
   options: { gap: Spacing.two },
-  pickerOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
-  pickerSheet: { maxHeight: '70%', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: Spacing.four, gap: Spacing.three },
-  pickerTitle: { fontSize: 20, fontWeight: '600' },
-  option: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, padding: Spacing.three, minHeight: 56, borderRadius: 12, borderWidth: 1 },
+  option: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, padding: Spacing.three, minHeight: 48, borderRadius: 12, borderWidth: 1 },
   photoFrame: { width: '100%', aspectRatio: 1.6, borderWidth: 1, borderRadius: 12, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', gap: Spacing.two },
   photo: { width: '100%', height: '100%' },
-  photoAction: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, minHeight: 56, padding: Spacing.three, borderWidth: 1, borderRadius: 12 },
   summaryPhoto: { width: '100%', aspectRatio: 1.6, borderRadius: 12 },
-  summary: { borderRadius: 12, borderWidth: 1, padding: Spacing.three, gap: Spacing.three },
+  summary: { borderRadius: 12, borderWidth: 1, padding: Spacing.three, gap: Spacing.two },
   summaryField: { gap: Spacing.one },
   camera: { flex: 1 },
   cameraControls: { padding: Spacing.four, paddingBottom: Spacing.six, gap: Spacing.three },

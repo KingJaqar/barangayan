@@ -1,0 +1,85 @@
+PASS Actual local staff selects two participants; native status and Manila arrival visible
+PASS Native error and explicit refresh recover without false attendance success
+PASS Native theme/font/extreme accent changes do not issue data writes or refresh loops
+PASS Native focus leave/return has bounded reads and stable idle
+Warning: Activity not started, its current task has been brought to the front
+PASS Native background/resume refresh uses actual AppState
+PASS Actual exact-stay staff departure appears natively with preserved Manila history
+Traceback (most recent call last):
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 36, in check
+    try:fn();results.append(dict(name=name,result='pass'));print('PASS '+name,flush=True)
+        ~~^^
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 76, in account
+    text=capture('native-other-account');assert '1 person' in text and 'Synthetic Family' not in text and 'Selected Child' not in text,text
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Local native test � synthetic session � real local API
+
+TEST THEME
+
+TEST FONT
+
+TEST ACCENT
+
+TEST ACCOUNT
+
+TEST LOGOUT
+
+TEST LEAVE
+
+
+Household: Your Household
+Staff confirm who is present. Showing a code alone does not record attendance.
+
+
+\uf4fd
+My QR Code
+
+Show My Code
+\uf2e1
+
+
+
+
+
+
+
+
+
+Show this Family QR to barangay staff and confirm who is present.
+Family Members
+Family list unavailable
+
+
+Refresh family
+
+
+
+Loading family members�
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 93, in <module>
+    check('Delayed read/account switch/logout clear private Family/QR state',account)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 37, in check
+    except Exception as ex:results.append(dict(name=name,result='fail',reason=str(ex)));print('FAIL '+name+': '+str(ex),flush=True);raise
+                                                                                        ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\uf4fd' in position 357: character maps to <undefined>

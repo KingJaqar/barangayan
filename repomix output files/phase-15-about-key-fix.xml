@@ -1,0 +1,63 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/settings/about.tsx, apps/resident-android-mobile/tests/help-legal-about-ui.mjs
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, .git/**, **/.expo/**, **/ios/**, **/android/**, **/dist/**, **/.next*/**, **/build/**, **/coverage/**, **/.cache/**, **/.turbo/**, tmp/**, repomix output files/**, **/*.tsbuildinfo, **/*.log, **/*.map, **/*.xml, .aws/**, .codex/**, .claude/**, **/.env*, **/*.pem, **/*.key, **/*.p8, **/*.p12, **/*.jks, **/*.keystore, **/credentials*.json, **/*service-account*.json, **/*.jpg, **/*.jpeg, **/*.webp, **/*.gif, **/*.mp4, **/*.pdf
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          settings/
+            about.tsx
+    tests/
+      help-legal-about-ui.mjs</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/tests/help-legal-about-ui.mjs">// Real routes, content hooks, Markdown renderer, primitives and motion controller.
+// Only remote/device boundaries are synthetic; this does not qualify Android rendering.
+⋮----
+window.notify=table=&gt;
+⋮----
+// Exact pre-existing RN Web diagnostic retained in the development baseline, not suppressed.
+⋮----
+const settle=()
+const go=async s=&gt;
+const tab=name=&gt;page.getByRole(&apos;tab&apos;,
+const button=name=&gt;page.getByRole(&apos;button&apos;,</file><file path="apps/resident-android-mobile/src/app/(app)/settings/about.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import Constants from &apos;expo-constants&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ContentState, ManagedMarkdown } from &apos;@/components/settings/managed-content&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAboutUs } from &apos;@/hooks/use-about-us&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+type Purpose = &apos;mission&apos; | &apos;vision&apos;;
+⋮----
+function PurposePanel(
+⋮----
+const settle = () =&gt;
+⋮----
+onPress=</file></files></repomix>

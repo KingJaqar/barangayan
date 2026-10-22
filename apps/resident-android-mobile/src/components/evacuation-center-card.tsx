@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps } from 'react';
-import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { centerOccupancy } from '@/lib/center-presentation';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -20,14 +21,12 @@ const FACILITY_ICON_MAP: Record<string, { icon: ComponentProps<typeof Ionicons>[
 export type EvacuationCenterCardProps = {
   name: string;
   address: string;
-  distanceKm: number;
-  estimatedMinutes: number;
+  distanceKm?: number;
+  estimatedMinutes?: number;
   currentOccupancy: number;
   capacity: number | null;
   facilities: string[];
   verified?: boolean;
-  minHeight?: number;
-  onContentLayout?: (event: LayoutChangeEvent) => void;
 };
 
 export function EvacuationCenterCard({
@@ -39,34 +38,18 @@ export function EvacuationCenterCard({
   capacity,
   facilities,
   verified = false,
-  minHeight,
-  onContentLayout,
 }: EvacuationCenterCardProps) {
   const theme = useTheme();
 
-  const occupancyFraction = capacity && capacity > 0 ? currentOccupancy / capacity : 0;
-  const occupancyPercent = Math.round(occupancyFraction * 100);
-
-  const isFull = occupancyPercent >= 100;
-  const isHigh = occupancyPercent >= 80;
-
-  const barColor = isFull ? '#DC2626' : isHigh ? '#D97706' : '#0F6E5B';
-  const textColor = isFull ? '#DC2626' : isHigh ? '#D97706' : '#0F6E5B';
-
-  const displayOccupancy = isFull ? 'FULL' : `${occupancyPercent}%`;
-  const capacityText =
-    capacity !== null && capacity !== undefined
-      ? `(${currentOccupancy.toLocaleString()}/${capacity.toLocaleString()})`
-      : '';
-
-  const distanceDisplay =
-    distanceKm > 0 ? `${distanceKm.toFixed(1)} km` : '--';
-  const estimatedDisplay =
-    estimatedMinutes > 0 ? `Est. ${estimatedMinutes} min` : '';
+  const occupancy = centerOccupancy(currentOccupancy, capacity);
+  const barColor = theme.resident[occupancy.tone];
+  const textColor = barColor;
+  const distanceDisplay = distanceKm !== undefined && Number.isFinite(distanceKm) && distanceKm >= 0 ? `${distanceKm.toFixed(1)} km` : null;
+  const estimatedDisplay = estimatedMinutes !== undefined && estimatedMinutes > 0 ? `Est. ${estimatedMinutes} min` : '';
 
   return (
-    <View testID="center-card" style={[styles.card, { minHeight, backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-      <View onLayout={onContentLayout} style={styles.content}>
+    <View testID="center-card" style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+      <View style={styles.content}>
         <View style={styles.headerRow}>
           <View style={styles.titleColumn}>
             <View style={styles.titleRow}>
@@ -74,8 +57,8 @@ export function EvacuationCenterCard({
                 {name}
               </ThemedText>
               {verified && (
-                <View style={[styles.verifiedBadge, { backgroundColor: '#0F6E5B' }]}>
-                  <ThemedText style={[styles.verifiedIcon, { color: '#FFFFFF' }]}>✓</ThemedText>
+                <View style={[styles.verifiedBadge, { backgroundColor: theme.resident.accent }]}>
+                  <ThemedText style={[styles.verifiedIcon, { color: theme.resident.onAccent }]}>✓</ThemedText>
                 </View>
               )}
             </View>
@@ -84,9 +67,9 @@ export function EvacuationCenterCard({
             </ThemedText>
           </View>
         </View>
-        {(distanceDisplay !== '--' || estimatedDisplay) ? (
+        {(distanceDisplay !== null || estimatedDisplay) ? (
           <View style={styles.distanceColumn}>
-            {distanceDisplay !== '--' && (
+            {distanceDisplay !== null && (
               <View style={styles.distanceRow}>
                 <Ionicons name="walk-outline" size={14} color={theme.textSecondary} />
                 <ThemedText style={[styles.distanceText, { color: theme.text }]}>{distanceDisplay}</ThemedText>
@@ -105,24 +88,23 @@ export function EvacuationCenterCard({
             Occupancy
           </ThemedText>
           <ThemedText type="smallBold" style={[styles.occupancyValue, { color: textColor }]}>
-            {displayOccupancy} {capacityText}
+            {occupancy.label}
           </ThemedText>
         </View>
 
-        <View style={[styles.track, { backgroundColor: theme.backgroundSelected }]}>
-          <View style={[styles.fill, { backgroundColor: barColor, width: `${Math.min(occupancyFraction * 100, 100)}%` }]} />
+        <View style={[styles.track, { backgroundColor: theme.resident.surface }]}>
+          <View style={[styles.fill, { backgroundColor: barColor, width: `${occupancy.fill}%` }]} />
         </View>
 
         {facilities.length > 0 && (
           <View style={styles.tagsRow}>
             {facilities.map((facilityKey) => {
               const facility = FACILITY_ICON_MAP[facilityKey];
-              if (!facility) return null;
               return (
-                <View key={facilityKey} style={[styles.tag, { backgroundColor: theme.backgroundSelected }]}>
-                  <Ionicons name={facility.icon} size={13} color={theme.textSecondary} />
+                <View key={facilityKey} style={[styles.tag, { backgroundColor: theme.resident.surface }]}>
+                  <Ionicons name={facility?.icon ?? 'ellipse-outline'} size={13} color={theme.textSecondary} />
                   <ThemedText type="small" themeColor="textSecondary" style={styles.tagLabel}>
-                    {facility.label}
+                    {facility?.label ?? facilityKey.replaceAll('_', ' ')}
                   </ThemedText>
                 </View>
               );
@@ -137,14 +119,11 @@ export function EvacuationCenterCard({
 const styles = StyleSheet.create({
   card: {
     alignSelf: 'stretch',
-    borderRadius: 14,
-    borderWidth: 1,
+    borderBottomWidth: 1,
   },
-  // Measure natural content, independently of the shared outer minimum height.
-  // Long names, wrapped facilities, and larger fonts remain fully visible.
   content: {
     padding: 12,
-    gap: Spacing.two,
+    gap: 6,
   },
   headerRow: {
     flexDirection: 'row',
@@ -162,9 +141,9 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   name: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
-    lineHeight: 19,
+    lineHeight: 20,
     flex: 1,
   },
   verifiedBadge: {
@@ -180,7 +159,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   address: {
-    fontSize: 12,
+    fontSize: 12.5,
     lineHeight: 16,
   },
   distanceColumn: {
@@ -195,12 +174,12 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   distanceText: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '600',
     lineHeight: 16,
   },
   estimatedText: {
-    fontSize: 12,
+    fontSize: 12.5,
     lineHeight: 16,
   },
   occupancySection: {
@@ -211,11 +190,11 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
   occupancyLabel: {
-    fontSize: 12,
+    fontSize: 12.5,
     lineHeight: 16,
   },
   occupancyValue: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '700',
     lineHeight: 16,
   },
@@ -237,9 +216,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    borderRadius: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
     maxWidth: '100%',
   },
   tagLabel: {

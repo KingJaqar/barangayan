@@ -1,0 +1,277 @@
+{
+  "date": "2026-10-21",
+  "packages": [
+    {
+      "package": "@expo/metro-runtime",
+      "version": "57.0.8",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "@expo/ui",
+      "version": "57.0.9",
+      "native_ios_files": 138,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "@react-native-async-storage/async-storage",
+      "version": "2.2.0",
+      "native_ios_files": 3,
+      "privacy_manifests": 1,
+      "required_reason_categories_seen": [
+        "file timestamp"
+      ],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "@supabase/supabase-js",
+      "version": "2.112.1",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "expo",
+      "version": "57.0.10",
+      "native_ios_files": 31,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-application",
+      "version": "57.0.2",
+      "native_ios_files": 4,
+      "privacy_manifests": 1,
+      "required_reason_categories_seen": [],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "expo-apple-authentication",
+      "version": "57.0.2",
+      "native_ios_files": 9,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-camera",
+      "version": "57.0.3",
+      "native_ios_files": 24,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-crypto",
+      "version": "57.0.3",
+      "native_ios_files": 8,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-dev-client",
+      "version": "57.0.20",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "expo-file-system",
+      "version": "57.0.2",
+      "native_ios_files": 45,
+      "privacy_manifests": 1,
+      "required_reason_categories_seen": [
+        "disk space",
+        "file timestamp"
+      ],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "expo-image-manipulator",
+      "version": "57.0.21",
+      "native_ios_files": 12,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-image-picker",
+      "version": "57.0.20",
+      "native_ios_files": 14,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-linking",
+      "version": "57.0.5",
+      "native_ios_files": 3,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-location",
+      "version": "57.0.8",
+      "native_ios_files": 29,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-media-library",
+      "version": "57.0.3",
+      "native_ios_files": 35,
+      "privacy_manifests": 1,
+      "required_reason_categories_seen": [],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "expo-notifications",
+      "version": "57.0.11",
+      "native_ios_files": 20,
+      "privacy_manifests": 1,
+      "required_reason_categories_seen": [
+        "user defaults"
+      ],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "expo-print",
+      "version": "57.0.1",
+      "native_ios_files": 9,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-router",
+      "version": "57.0.10",
+      "native_ios_files": 15,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-secure-store",
+      "version": "57.0.4",
+      "native_ios_files": 4,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-sharing",
+      "version": "57.0.13",
+      "native_ios_files": 7,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [
+        "user defaults"
+      ],
+      "status": "REVIEW: required-reason API symbols with no shipped manifest"
+    },
+    {
+      "package": "expo-splash-screen",
+      "version": "57.0.5",
+      "native_ios_files": 4,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "expo-web-browser",
+      "version": "57.0.2",
+      "native_ios_files": 5,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "qrcode",
+      "version": "1.5.4",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "react",
+      "version": "19.2.3",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "react-dom",
+      "version": "19.2.3",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "react-native",
+      "version": "0.86.2",
+      "native_ios_files": 1692,
+      "privacy_manifests": 6,
+      "required_reason_categories_seen": [
+        "file timestamp",
+        "system boot time",
+        "user defaults"
+      ],
+      "status": "manifest shipped"
+    },
+    {
+      "package": "react-native-safe-area-context",
+      "version": "5.7.0",
+      "native_ios_files": 28,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "react-native-screens",
+      "version": "4.26.2",
+      "native_ios_files": 244,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "react-native-web",
+      "version": "0.21.2",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    },
+    {
+      "package": "react-native-webview",
+      "version": "13.16.1",
+      "native_ios_files": 14,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "native, no required-reason symbols found"
+    },
+    {
+      "package": "zod",
+      "version": "3.25.76",
+      "native_ios_files": 0,
+      "privacy_manifests": 0,
+      "required_reason_categories_seen": [],
+      "status": "javascript-only"
+    }
+  ],
+  "review": [
+    "expo-sharing"
+  ]
+}

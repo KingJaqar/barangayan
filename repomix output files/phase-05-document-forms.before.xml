@@ -1,0 +1,1168 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/AGENTS.md, apps/CLAUDE.md, packages/AGENTS.md, packages/CLAUDE.md, apps/resident-android-mobile/**/AGENTS.md, apps/resident-android-mobile/**/CLAUDE.md, packages/shared/**/AGENTS.md, packages/shared/**/CLAUDE.md, .gitignore, apps/resident-android-mobile/.gitignore, packages/shared/.gitignore, package.json, tsconfig.json, eslint.config.js, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/metro.config.js, apps/resident-android-mobile/tsconfig.json, apps/resident-android-mobile/eslint.config.js, apps/resident-android-mobile/vitest.config.ts, packages/shared/package.json, packages/shared/tsconfig.json, packages/shared/vitest.config.ts, packages/shared/src/index.ts, apps/resident-android-mobile/src/app/**/services/request/*.tsx, apps/resident-android-mobile/src/components/services/charter-request-form.tsx, apps/resident-android-mobile/src/components/services/purpose-sheet.tsx, apps/resident-android-mobile/src/components/services/service-screen-header.tsx, apps/resident-android-mobile/src/components/services/service-error-toast.tsx, apps/resident-android-mobile/src/components/resident-action-gate.tsx, apps/resident-android-mobile/src/components/text-field.tsx, apps/resident-android-mobile/src/components/primary-button.tsx, apps/resident-android-mobile/src/hooks/use-profile.ts, apps/resident-android-mobile/src/lib/image-upload.ts, apps/resident-android-mobile/src/lib/supporting-upload.ts, apps/resident-android-mobile/src/lib/valid-id*.ts, packages/shared/src/lib/service-*.ts, packages/shared/src/lib/resident-submission*.ts, packages/shared/src/constants/document-catalog-shape.ts, packages/shared/src/schemas/request-form*.ts, packages/shared/src/schemas/document-type*.ts, packages/shared/src/schemas/service-foundations*.ts, apps/resident-android-mobile/src/app/(app)/services/[[]documentId].tsx, apps/resident-android-mobile/src/app/(app)/services/_layout.tsx, apps/resident-android-mobile/src/components/services/document-*.tsx, apps/resident-android-mobile/src/components/services/services-list-presentation.tsx, apps/resident-android-mobile/src/components/card.tsx, apps/resident-android-mobile/src/components/themed-text.tsx, apps/resident-android-mobile/src/components/ui/collapsible.tsx, apps/resident-android-mobile/src/hooks/use-theme.ts, apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts, apps/resident-android-mobile/src/hooks/use-font-preference.tsx, apps/resident-android-mobile/src/constants/resident-theme.ts, apps/resident-android-mobile/src/constants/theme.ts, apps/resident-android-mobile/tests/document-forms-ui.mjs
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, .git/**, **/.expo/**, **/ios/**, **/android/**, **/dist/**, **/.next*/**, **/build/**, **/coverage/**, **/.cache/**, **/.turbo/**, tmp/**, repomix output files/**, **/*.tsbuildinfo, **/*.log, **/*.map, **/*.xml, .aws/**, .codex/**, .claude/**, **/.env*, **/*.pem, **/*.key, **/*.p8, **/*.p12, **/*.jks, **/*.keystore, **/credentials*.json, **/*service-account*.json, **/*.jpg, **/*.jpeg, **/*.webp, **/*.gif, **/*.mp4, **/*.pdf
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          services/
+            request/
+              [documentId].tsx
+            _layout.tsx
+      components/
+        services/
+          charter-request-form.tsx
+          purpose-sheet.tsx
+          service-error-toast.tsx
+          service-screen-header.tsx
+          services-list-presentation.tsx
+        ui/
+          collapsible.tsx
+        card.tsx
+        primary-button.tsx
+        resident-action-gate.tsx
+        text-field.tsx
+        themed-text.tsx
+      constants/
+        resident-theme.ts
+        theme.ts
+      hooks/
+        use-font-preference.tsx
+        use-profile.ts
+        use-resident-reduced-motion.ts
+        use-theme.ts
+      lib/
+        image-upload.ts
+        supporting-upload.ts
+        valid-id.test.ts
+        valid-id.ts
+    .gitignore
+    app.config.js
+    app.json
+    eslint.config.js
+    metro.config.js
+    package.json
+    tsconfig.json
+    vitest.config.ts
+packages/
+  shared/
+    src/
+      constants/
+        document-catalog-shape.ts
+      lib/
+        resident-submission.test.ts
+        resident-submission.ts
+        service-catalog.test.ts
+        service-catalog.ts
+        service-foundations.ts
+        service-request-validation.test.ts
+        service-request-validation.ts
+        service-tracking.test.ts
+        service-tracking.ts
+      schemas/
+        document-type.test.ts
+        document-type.ts
+        request-form.test.ts
+        request-form.ts
+        service-foundations.test.ts
+        service-foundations.ts
+      index.ts
+    package.json
+    tsconfig.json
+    vitest.config.ts
+.gitignore
+AGENTS.md
+CLAUDE.md
+eslint.config.js
+package.json
+tsconfig.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/services/services-list-presentation.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Link, type Href } from &apos;expo-router&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Shared by the catalog and Requests; row feedback never scales list geometry. */
+export function ServiceListLink({ href, label, divider, children, style }: {
+  href: Href;
+  label: string;
+  divider: boolean;
+  children: ReactNode;
+  style?: StyleProp&lt;ViewStyle&gt;;
+})
+⋮----
+onPressIn=
+onPressOut=
+⋮----
+/** Retained while exiting, with hidden controls immediately removed from input/focus. */
+export function ServicesNewRequestButton(</file><file path="apps/resident-android-mobile/src/components/services/service-error-toast.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export function ServiceErrorToast({ notice, onDismiss }: {
+  notice: { message: string } | null;
+onDismiss: ()</file><file path="apps/resident-android-mobile/src/constants/resident-theme.ts">type RGB = readonly [number, number, number];
+⋮----
+function rgb(hex: string): RGB
+⋮----
+function mix(color: string, surface: string, amount: number): string
+⋮----
+function luminance(hex: string): number
+⋮----
+function contrast(a: string, b: string): number
+⋮----
+function foreground(background: string): string
+⋮----
+function readable(color: string, surface: string, text: string): string
+⋮----
+/** Opt-in resident roles. Saved preferences and the legacy palette stay unchanged. */
+export function getResidentTheme(mode: &apos;light&apos; | &apos;dark&apos;, selectedAccent: string)
+⋮----
+const tone = (color: string) =&gt;</file><file path="apps/resident-android-mobile/src/hooks/use-font-preference.tsx">import { isValidFontId } from &apos;@barangayan/shared&apos;;
+import { createContext, useContext, useEffect, useState, type ReactNode } from &apos;react&apos;;
+⋮----
+import { DEFAULT_FONT_ID } from &apos;@/constants/fonts&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+interface FontPreferenceContextValue {
+  fontId: string;
+  setFontId: (id: string) =&gt; void;
+}
+⋮----
+/**
+ * Real, persisted font-style preference — same shape as ThemePreferenceProvider
+ * (use-theme-preference.tsx), writing/reading `profiles.font_preference` (0075 migration,
+ * shared with the web admin&apos;s Theme page). Guests get local-only state for the session.
+ */
+export function FontPreferenceProvider(
+⋮----
+// Same &quot;only overwrite on the initial load per session&quot; reasoning as
+// ThemePreferenceProvider — avoids a background refetch clobbering a change made seconds
+// ago.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function setFontId(id: string)</file><file path="apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts">import { useEffect, useState } from &apos;react&apos;;
+import { AccessibilityInfo } from &apos;react-native&apos;;
+⋮----
+/** Legacy consumers do not subscribe. Until queried, prefer the static accessible state. */
+export function useResidentReducedMotion(enabled: boolean)
+⋮----
+// Failure to read an optional motion preference must never enable geometric motion.</file><file path="apps/resident-android-mobile/src/lib/image-upload.ts">/**
+ * Picking an image and reading its bytes for a Supabase Storage upload.
+ *
+ * ── The bug this fixes ──────────────────────────────────────────────────────────
+ * Submitting an incident report with a photo failed with:
+ *
+ *   Photo upload failed: Call to function &apos;FileSystemFile.bytes&apos; has been rejected.
+ *   → Caused by: Missing &apos;READ&apos; permission for accessing the file.
+ *
+ * Cause: the screens picked with `DocumentPicker.getDocumentAsync({ copyToCacheDirectory:
+ * true })` and then read the result with `new File(asset.uri).arrayBuffer()`. On Android
+ * the picker copies the document into the *host app&apos;s* `context.cacheDir`
+ * (`cache/DocumentPicker/…`) and hands back a `file://` URI. `expo-file-system` (SDK 54+)
+ * validates every read against its own permission service, which only grants READ for
+ * paths it considers app-owned — and under Expo Go / scoped storage that copy is not one
+ * of them. So the picker succeeds, the thumbnail renders (expo-image reads it through a
+ * different path), and only the upload fails.
+ *
+ * Fix: pick through `File.pickFileAsync()` instead. The file system module runs the
+ * system picker itself, calls `takePersistableUriPermission()` on the result, and returns
+ * a `File` bound to the `content://` URI — which its permission check accepts
+ * unconditionally (content URIs carry their own grant). On iOS it hands back a temporary
+ * copy inside the app container. `DocumentPicker` stays as a fallback for providers that
+ * refuse a persistable grant; there we deliberately skip the cache copy on Android so we
+ * keep the readable `content://` URI.
+ *
+ * Docs: https://docs.expo.dev/versions/v57.0.0/sdk/filesystem/
+ */
+⋮----
+import { File } from &apos;expo-file-system&apos;;
+import { Platform } from &apos;react-native&apos;;
+⋮----
+/** Mime types the `incident-photos` and `id-documents` buckets accept (migrations 0020 / 0025). */
+⋮----
+export interface PickedImage {
+  uri: string;
+  mimeType: string;
+  /** Bytes, or `null` when the provider does not report a size. */
+  size: number | null;
+  /**
+   * Best-effort file name for display. Content providers often expose only an opaque
+   * document id, so use `displayName` in the UI rather than this.
+   */
+  name: string;
+}
+⋮----
+/** Bytes, or `null` when the provider does not report a size. */
+⋮----
+/**
+   * Best-effort file name for display. Content providers often expose only an opaque
+   * document id, so use `displayName` in the UI rather than this.
+   */
+⋮----
+/**
+ * A label safe to show the resident. `File.pickFileAsync` derives `name` from the
+ * `content://` URI&apos;s last segment, which is usually a bare document id (&quot;1000000042&quot;),
+ * so anything without a file extension is replaced with a generic description.
+ */
+export function displayName(image: PickedImage): string
+⋮----
+/** Storage-path extension for a mime type. Defaults to `jpg` for `image/jpeg` and anything odd. */
+export function imageExtension(mimeType: string): string
+⋮----
+/**
+ * Opens the system image picker.
+ *
+ * @returns the picked image, or `null` when the user cancelled.
+ */
+export async function pickImageAsset(): Promise&lt;PickedImage | null&gt;
+⋮----
+// Falls through to DocumentPicker — e.g. a content provider that refuses a
+// persistable URI grant, or web, where pickFileAsync is not implemented.
+⋮----
+// Android: the cache copy is exactly what expo-file-system refuses to read (see the
+// file header), so keep the original content:// URI. iOS/web: the copy lands inside
+// the app container and reads fine.
+⋮----
+/**
+ * Reads a picked image into the byte array `supabase.storage.upload()` expects.
+ *
+ * @throws a resident-readable Error when the file can no longer be read (the URI grant
+ *         was revoked, or the file was deleted between picking and submitting).
+ */
+export async function readImageBytes(image: PickedImage): Promise&lt;Uint8Array&gt;
+⋮----
+// DocumentPicker returns a blob:/data: URL on web; expo-file-system cannot open it.
+⋮----
+/** `true` when the image is within the per-file byte limit of its destination bucket. */
+export function isWithinSizeLimit(image: PickedImage, maxBytes: number): boolean</file><file path="apps/resident-android-mobile/src/lib/supporting-upload.ts">import { SUPPORTING_FILE_MAX_BYTES, SUPPORTING_FILE_MIME_TYPES } from &apos;@barangayan/shared&apos;;
+⋮----
+import { File } from &apos;expo-file-system&apos;;
+import { Platform } from &apos;react-native&apos;;
+⋮----
+export type SupportingFile = { name: string; mimeType: string; bytes: Uint8Array };
+export async function pickSupportingFile(): Promise&lt;SupportingFile | null&gt;
+⋮----
+/* Providers without a persistable grant use the original content URI. */</file><file path="apps/resident-android-mobile/src/lib/valid-id.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { normalizeBirthDate, parseIdText } from &apos;../../../../supabase/functions/extract-resident-id/id-text&apos;;
+import { idPhotoBytes } from &apos;./id-photo-bytes&apos;;</file><file path="apps/resident-android-mobile/src/lib/valid-id.ts">import { type IdConfirmedDetails } from &apos;@barangayan/shared&apos;;
+import { FunctionsHttpError } from &apos;@supabase/supabase-js&apos;;
+import { supabase } from &apos;./supabase&apos;;
+⋮----
+export async function extractIdDetails(frontPath: string, idType: string): Promise&lt;IdConfirmedDetails&gt;</file><file path="apps/resident-android-mobile/.gitignore"># @generated expo-cli sync-2b81b286409207a5da26e14c78851eb30d8ccbdb
+# The following patterns were generated by expo-cli
+
+expo-env.d.ts
+# @end expo-cli</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="apps/resident-android-mobile/tsconfig.json">{
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [
+        &quot;./src/*&quot;
+      ],
+      &quot;@/assets/*&quot;: [
+        &quot;./assets/*&quot;
+      ]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;.expo/types/**/*.ts&quot;,
+    &quot;expo-env.d.ts&quot;
+  ]
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="packages/shared/src/constants/document-catalog-shape.ts">/**
+ * Seed/demo defaults for `supabase/seed.sql` only — a realistic starting catalog for the
+ * pilot barangay&apos;s admin to review and edit, not a hardcoded runtime list. Each
+ * barangay&apos;s actual catalog always comes from its own `document_types` rows
+ * (AGENTS.md §0 — protects the configurable/multi-tenant design).
+ */</file><file path="packages/shared/src/lib/service-request-validation.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { submissionSchemaForCatalog, type ServiceCatalogContract } from &apos;../schemas/service-foundations&apos;;
+import { residentServiceError } from &apos;./resident-submission&apos;;
+import { serviceRequestFieldErrors } from &apos;./service-request-validation&apos;;</file><file path="packages/shared/src/lib/service-request-validation.ts">export type ServiceRequestField =
+  | &apos;purposeCode&apos; | &apos;purposeExplanation&apos; | &apos;businessName&apos; | &apos;establishmentAddress&apos;
+  | &apos;recordReference&apos; | &apos;copies&apos; | &apos;totalPages&apos; | &apos;personalAppearanceAcknowledged&apos;
+  | &apos;dti&apos; | &apos;hoa&apos; | &apos;lessor&apos;;
+⋮----
+/** Converts validation paths into field guidance without exposing validator messages. */
+export function serviceRequestFieldErrors(failure: unknown): Partial&lt;Record&lt;ServiceRequestField, string&gt;&gt;</file><file path="packages/shared/src/lib/service-tracking.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { computeDocumentTypeTrends, getCompletionHours, getSlaFlag } from &apos;./service-tracking&apos;;
+⋮----
+const createdAt = new Date(&apos;2026-01-09T12:00:00Z&apos;).toISOString(); // 12h elapsed, target 24h
+⋮----
+const createdAt = new Date(&apos;2026-01-09T05:00:00Z&apos;).toISOString(); // 19h elapsed, target 24h (79.2%) -&gt; on_track
+⋮----
+const createdAt2 = new Date(&apos;2026-01-09T04:00:00Z&apos;).toISOString(); // 20h elapsed (83%) -&gt; near_target
+⋮----
+const createdAt = new Date(&apos;2026-01-08T00:00:00Z&apos;).toISOString(); // 48h elapsed, target 24h
+⋮----
+status_history: [{ status: &apos;completed&apos;, at: &apos;2026-01-02T00:00:00Z&apos; }], // 24h
+⋮----
+status_history: [{ status: &apos;completed&apos;, at: &apos;2026-01-01T12:00:00Z&apos; }], // 12h</file><file path="packages/shared/src/schemas/document-type.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { documentTypeSchema } from &apos;./document-type&apos;;</file><file path="packages/shared/src/schemas/request-form.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { requestFormSchema } from &apos;./request-form&apos;;</file><file path="packages/shared/src/schemas/request-form.ts">import { z } from &apos;zod&apos;;
+⋮----
+/**
+ * Submission shape for the Document/Service Request Form (Module 1) and, when
+ * `appointmentSlot` is set, the shared appointment-scheduling flow (pickup or health
+ * center) it&apos;s paired with. `documentTypeId` always points at a barangay-scoped
+ * `document_types` row — never a hardcoded document name.
+ */
+⋮----
+timeSlot: z.string(), // e.g. &quot;09:00-09:30&quot;, validated server-side against daily slot limits
+⋮----
+export type RequestFormInput = z.infer&lt;typeof requestFormSchema&gt;;</file><file path="packages/shared/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/components/services/purpose-sheet.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Modal,
+  PanResponder,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+⋮----
+type Option = { code: string; label: string };
+⋮----
+/** Bottom-sheet picker: slides up on open, slides down on close (button, backdrop tap,
+ * swipe-down on the handle, Android back). `visible` is the parent&apos;s source of truth; the
+ * sheet stays mounted until the slide-out animation finishes. */
+⋮----
+const progress = useRef(new Animated.Value(0)).current; // 0 = hidden, 1 = shown
+⋮----
+onSelect(item.code);
+onClose();</file><file path="apps/resident-android-mobile/src/components/card.tsx">import type { ReactNode } from &apos;react&apos;;
+import { StyleSheet, type ViewProps } from &apos;react-native&apos;;
+⋮----
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Rounded, clipped backgroundElement container for grouped rows — pair with &lt;Divider /&gt; between rows. */
+export function Card(</file><file path="apps/resident-android-mobile/src/components/resident-action-gate.tsx">import type { ReactNode } from &apos;react&apos;;
+import { View } from &apos;react-native&apos;;
+import { useLocalSearchParams, usePathname, useRouter } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { GuestAuthCalloutScreen } from &apos;./guest-auth-callout-screen&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+⋮----
+/** Block mounting submission forms until the resident is signed in and their profile is checked. */</file><file path="apps/resident-android-mobile/src/components/themed-text.tsx">import { Platform, StyleSheet, Text, type TextProps } from &apos;react-native&apos;;
+⋮----
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { Fonts, ThemeColor } from &apos;@/constants/theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ThemedTextProps = TextProps &amp; {
+  type?: &apos;default&apos; | &apos;title&apos; | &apos;small&apos; | &apos;smallBold&apos; | &apos;subtitle&apos; | &apos;link&apos; | &apos;linkPrimary&apos; | &apos;code&apos; | &apos;heading&apos; | &apos;body&apos; | &apos;residentHeader&apos;;
+  themeColor?: ThemeColor;
+};
+⋮----
+export function ThemedText(
+⋮----
+// &apos;code&apos; keeps the fixed monospace face regardless of the App Theme font pick — it&apos;s
+// meant to look like code, not prose.</file><file path="apps/resident-android-mobile/src/constants/theme.ts">/**
+ * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
+ * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ */
+⋮----
+import { ACCENT_COLORS as SHARED_ACCENT_COLORS } from &apos;@barangayan/shared&apos;;
+import { Platform } from &apos;react-native&apos;;
+⋮----
+// primary/onPrimary/accentRed sampled directly from the design file (see the plan&apos;s
+// Design Reference Review) — #0F6E5B is the button/active-state green, #93000A is the
+// locked red accent for the Maps (Emergency &amp; DRRM) section&apos;s active tab/toggle state.
+//
+// accentOrange/accentGreen back the Reports bottom-tab&apos;s &quot;active reports&quot; / &quot;resolved
+// reports&quot; live-count badges (white text on a dark fill, per the design brief) — picked
+// dark enough for white text to clear WCAG AA at the badges&apos; small size, and deliberately
+// NOT theme.primary/ACCENT_COLORS, for the same reason status-badge.tsx&apos;s STATUS_GREEN
+// isn&apos;t theme.primary either: status semantics must stay fixed regardless of the user&apos;s
+// chosen App Theme accent color. accentOrange is also kept visually distinct from
+// accentRed (the announcements badge) — the two used to be easy to mistake for each
+// other at the badges&apos; small size.
+⋮----
+export type ThemeColor = keyof typeof Colors.light &amp; keyof typeof Colors.dark;
+⋮----
+// Re-exported from packages/shared (now also read by the web admin&apos;s Theme page) —
+// kept as a named export here so existing mobile imports (Onboarding Personalization,
+// Settings) don&apos;t need to change. See theme-colors.ts&apos;s own comment for why this lives
+// in shared. The first entry matches use-theme-preference.tsx&apos;s DEFAULT_ACCENT_COLOR.
+⋮----
+/** iOS `UIFontDescriptorSystemDesignDefault` */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignSerif` */
+⋮----
+/** Custom Gideon Roman serif */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignRounded` */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignMonospaced` */</file><file path="apps/resident-android-mobile/src/hooks/use-theme.ts">/**
+ * Learn more about light and dark modes:
+ * https://docs.expo.dev/guides/color-schemes/
+ */
+⋮----
+import { Colors } from &apos;@/constants/theme&apos;;
+import { useMemo } from &apos;react&apos;;
+import { getResidentTheme } from &apos;@/constants/resident-theme&apos;;
+import { useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+⋮----
+export function useTheme()
+⋮----
+// Real per-account accent color (Settings &gt; App Theme) overrides the constant —
+// onPrimary stays white regardless, it reads fine against all 4 accent swatches.</file><file path="apps/resident-android-mobile/eslint.config.js">// https://docs.expo.dev/guides/using-eslint/
+⋮----
+// All instances in this codebase are legitimate: loading-state resets, hydration
+// flags, derived-state initialisation from async data, and refetch-on-mount.
+// The rule fires for any synchronous setState call inside an effect body, which
+// is an overly broad heuristic for React Native projects where these patterns are
+// idiomatic and do not cause observable cascading-render problems.
+⋮----
+// React Native renders &amp;apos; literally — it is not HTML. Contractions in
+// user-facing text are not XSS vectors on native; the rule exists for the web DOM.
+⋮----
+// Animated.Value must be passed into Animated.View&apos;s style prop, which is
+// evaluated during render. The canonical React Native Animated pattern requires
+// this; there is no alternative that avoids touching .current in JSX.
+⋮----
+// Mutating `.value` on a Reanimated useSharedValue() is the canonical Reanimated
+// API, not an unsafe render-time mutation. The rule can recognize SharedValues via
+// its enableCustomTypeDefinitionForReanimated option, but that only self-enables
+// when it detects the Reanimated Babel plugin in the active compile pipeline —
+// which never happens under plain ESLint (no Babel transform pass runs here), so
+// it fires unconditionally on every `.value` assignment.</file><file path="packages/shared/src/lib/resident-submission.test.ts">import { describe, expect, it, vi } from &apos;vitest&apos;;
+import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { Database, Tables } from &apos;../types/database&apos;;
+import { ResidentSubmissionAttempt, uploadSupportingEvidence } from &apos;./resident-submission&apos;;
+import { idVerificationState } from &apos;./service-catalog&apos;;
+⋮----
+function fixture()
+⋮----
+function storage(bytes: Uint8Array)</file><file path="packages/shared/src/lib/service-catalog.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { BUSINESS_FEE_DESCRIPTION, catalogContract, charterSections, requestFee, requestFeeLabel, serviceDocumentTypeValues, servicePriceLabel } from &apos;./service-catalog&apos;;
+import type { Tables } from &apos;../types/database&apos;;
+import { serviceDocumentTypeSchema, submissionSchemaForCatalog, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;</file><file path="packages/shared/src/lib/service-catalog.ts">import { serviceCatalogContractSchema, serviceDocumentTypeSchema, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;
+import type { Json, Tables } from &apos;../types/database&apos;;
+import { formatProcessingTime } from &apos;./format&apos;;
+⋮----
+/** One validated mapping for create/edit. Legacy request contracts stay untouched. */
+export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput)
+⋮----
+export function catalogContract(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function servicePriceLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request:
+⋮----
+/** Charter guidance only; elapsed tracking remains a separate timing contract. */
+export function serviceProcessingLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function idVerificationState(
+  profile: Pick&lt;
+    Tables&lt;&apos;profiles&apos;&gt;,
+    &apos;id_verification_status&apos; | &apos;approved_id_submission_id&apos; | &apos;current_id_submission_id&apos; | &apos;id_repair_required&apos;
+  &gt; | null,
+)
+⋮----
+export function submittedDetailLines(value: Json | null): [string, string][]
+⋮----
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
+export function requestFee(
+  request: Pick&lt;
+    Tables&lt;&apos;service_requests&apos;&gt;,
+    &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos;
+  &gt; &amp; { legacy_fee_centavos?: number | null },
+  legacyCatalogFee: number,
+  recordedPaymentFee?: number | null,
+)</file><file path="packages/shared/src/lib/service-foundations.ts">import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { Database } from &apos;../types/database&apos;;
+import { idPublicationSchema, idReviewSchema, profileCompletionSchema, serviceSubmissionSchema, slaTransitionSchema } from &apos;../schemas/service-foundations&apos;;
+import type { IdPublicationInput, IdReviewInput, ProfileCompletionInput, ServiceSubmissionInput, SlaTransitionInput } from &apos;../schemas/service-foundations&apos;;
+⋮----
+/** Uses the caller&apos;s existing session client. Identity, tenant, decisions and clocks are server derived. */
+export function serviceFoundationOperations(client: SupabaseClient&lt;Database&gt;)</file><file path="packages/shared/src/lib/service-tracking.ts">/**
+ * Ticket 12 — Automated Service Tracking auto-flagging + rolling-average trend
+ * analysis. document_types.processing_target_hours was always stored, but
+ * nothing ever compared it to elapsed time or aggregated it into a trend —
+ * this fills that gap without any new DB columns, using status_history
+ * (already logged by the track_service_request_status trigger, 0002/0026) as
+ * the source of completion timestamps.
+ */
+⋮----
+export type SlaFlag = &apos;on_track&apos; | &apos;near_target&apos; | &apos;overdue&apos;;
+⋮----
+/** A request is &quot;near target&quot; once it&apos;s spent 80%+ of its target processing time. */
+⋮----
+/**
+ * Flags an in-flight request against its document type&apos;s target processing
+ * time. Only meaningful for requests still open (submitted/in_progress/
+ * ready_for_pickup) — callers should not call this for completed/cancelled
+ * requests, since &quot;elapsed since submission&quot; no longer means anything once
+ * the clock has stopped.
+ */
+export function getSlaFlag(createdAtIso: string, targetHours: number, now: Date = new Date()): SlaFlag
+⋮----
+type StatusHistoryEntry = { status: string; at: string };
+⋮----
+/**
+ * Reads the timestamp of the &apos;completed&apos; entry out of a request&apos;s
+ * status_history and returns the hours between submission and completion, or
+ * null if the request was never completed (cancelled, still open, or —
+ * defensively — history predates this column being populated).
+ */
+export function getCompletionHours(createdAtIso: string, statusHistory: unknown): number | null
+⋮----
+export interface DocumentTypeTrend {
+  documentTypeId: string;
+  documentTypeName: string;
+  targetHours: number;
+  /** Rolling average completion time (hours) over the sampled window. Null if no completions yet. */
+  averageHours: number | null;
+  completedCount: number;
+}
+⋮----
+/** Rolling average completion time (hours) over the sampled window. Null if no completions yet. */
+⋮----
+/**
+ * Groups a set of completed requests by document type and computes each
+ * type&apos;s rolling-average completion time. Callers pass in requests already
+ * filtered to a window (e.g. completed in the last 30 days) and status = &apos;completed&apos;.
+ */
+export function computeDocumentTypeTrends(
+  requests: Array&lt;{
+    document_type_id: string;
+    created_at: string;
+    status_history: unknown;
+  }&gt;,
+  documentTypes: Array&lt;{ id: string; name: string; processing_target_hours: number }&gt;,
+): DocumentTypeTrend[]</file><file path="packages/shared/src/schemas/document-type.ts">import { z } from &apos;zod&apos;;
+⋮----
+/**
+ * Admin-side create/edit form for a document_types row (apps/admin-web&apos;s Documents page).
+ * feeCentavos stays an integer here — the form UI converts a peso input to centavos
+ * before validating, same direction as formatCentavosAsPHP&apos;s inverse.
+ */
+⋮----
+export type DocumentTypeInput = z.infer&lt;typeof documentTypeSchema&gt;;</file><file path="packages/shared/src/schemas/service-foundations.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { charterSchema, coordinatesSchema, idPublicationSchema, idReviewSchema, profileCompletionSchema, serviceCatalogContractSchema, serviceSubmissionSchema, slaTransitionSchema, supportingAttachmentSchema, submissionSchemaForCatalog } from &apos;./service-foundations&apos;;
+import type { ServiceCatalogContract, ServiceSubmissionInput } from &apos;./service-foundations&apos;;</file><file path="packages/shared/tsconfig.json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2020&quot;,
+    &quot;lib&quot;: [&quot;ES2020&quot;],
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;strict&quot;: true,
+    &quot;declaration&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;rewriteRelativeImportExtensions&quot;: true
+  },
+  &quot;include&quot;: [&quot;src/**/*.ts&quot;, &quot;scripts/**/*.mts&quot;]
+}</file><file path="eslint.config.js">// https://docs.expo.dev/guides/using-eslint/</file><file path="tsconfig.json">{
+  &quot;compilerOptions&quot;: {},
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;
+}</file><file path="apps/resident-android-mobile/src/app/(app)/services/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+⋮----
+// Native Stack nested inside the &quot;Services&quot; NativeTabs tab, so screens here (Document
+// Detail, Request Form, Payment, Request Tracking detail) can push over the
+// Documents/Requests/Logs segmented-control index screen — see Expo Router&apos;s guidance on
+// nesting a Stack inside NativeTabs for header + push support.
+⋮----
+{/* index.tsx builds its own segmented-control header — the native Stack header
+          would otherwise show a stray &quot;index&quot; title above it (same fix as Settings). */}
+⋮----
+{/* Sequential flow steps get a lateral push — each is a &quot;next step&quot; the resident
+          can also back-swipe out of. The two arrival/confirmation screens (pay-at-pickup
+          confirmation, payment success receipt) get a softer fade-from-bottom reveal
+          instead, matching their &quot;you&apos;ve arrived&quot; feel. */}</file><file path="apps/resident-android-mobile/src/components/ui/collapsible.tsx">import { PropsWithChildren, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from &apos;react-native-reanimated&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/**
+   * When true, skips Collapsible&apos;s own card surface (white header background +
+   * nested backgroundElement content box) and renders just the header/divider
+   * and flat children instead. Use this when a parent already provides the
+   * card chrome (background, border, radius) — otherwise the two nest into a
+   * &quot;box inside a box inside a box&quot; look.
+   */
+⋮----
+function toggle()
+⋮----
+&lt;Animated.View entering=</file><file path="apps/resident-android-mobile/src/components/primary-button.tsx">import { useEffect, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+interface ButtonContentProps extends Omit&lt;PressableProps, &apos;style&apos;&gt; {
+  label: string;
+  leadingIcon?: ReactNode;
+  loading?: boolean;
+}
+⋮----
+type ButtonVariant = &apos;primary&apos; | &apos;secondary&apos; | &apos;destructive&apos;;
+export type PrimaryButtonProps = ButtonContentProps &amp; (
+  | { presentation?: &apos;default&apos;; variant?: ButtonVariant }
+  | { presentation: &apos;resident&apos;; variant?: ButtonVariant | &apos;destructiveFilled&apos; }
+);
+⋮----
+/** The green pill button used throughout the design file (Login, Register, Verify, etc.).
+ * &apos;destructive&apos; is the red-outlined variant for cancel/undo-style actions (e.g. cancelling
+ * a pending payment) — same shape as &apos;secondary&apos; but in theme.accentRed.
+ * Resident confirmation dialogs use &apos;destructiveFilled&apos; for the reference&apos;s filled action. */
+export function PrimaryButton(</file><file path="apps/resident-android-mobile/src/components/text-field.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, TextInput, type TextInputProps, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface TextFieldProps extends TextInputProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  label?: string;
+  error?: string;
+  /** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+  success?: string;
+  /** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+  required?: boolean;
+  /** Enables an in-field control for revealing or masking password text. */
+  passwordVisibility?: {
+    visible: boolean;
+    onToggle: () =&gt; void;
+  };
+}
+⋮----
+/** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+⋮----
+/** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+⋮----
+/** Enables an in-field control for revealing or masking password text. */
+⋮----
+export function TextField({
+  label,
+  error,
+  success,
+  required,
+  style,
+  passwordVisibility,
+  secureTextEntry,
+  presentation = &apos;default&apos;,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps)
+⋮----
+function handlePasswordVisibilityToggle()
+⋮----
+// Tapping the affordance should not interrupt typing or dismiss the keyboard.
+⋮----
+onBlur=
+⋮----</file><file path="apps/resident-android-mobile/src/hooks/use-profile.ts">import { AccountRequestScope, type Tables } from &apos;@barangayan/shared&apos;;
+import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+import { createContext, createElement, useCallback, useContext, useEffect, useRef, useState } from &apos;react&apos;;
+import { AppState } from &apos;react-native&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { safeReadRetryDelay } from &apos;@/lib/setup-refresh&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export type Profile = Tables&lt;&apos;profiles&apos;&gt; &amp; {
+  barangays: (Pick&lt;Tables&lt;&apos;barangays&apos;&gt;, &apos;name&apos; | &apos;boundary&apos;&gt; &amp; {
+    barangay_localities: Pick&lt;Tables&lt;&apos;barangay_localities&apos;&gt;, &apos;display_name&apos; | &apos;city&apos; | &apos;province&apos;&gt; | null;
+  }) | null;
+};
+const cacheKey = (id: string) =&gt; `resident_profile_v2:$
+export async function clearProfileCache(userId?: string)
+interface ProfileContextValue { profile: Profile | null; isLoading: boolean; error: string | null; refetch: () =&gt; void; }
+⋮----
+export function ProfileProvider(
+⋮----
+const load = (attempt: number) =&gt; supabase.from(&apos;profiles&apos;).select(&apos;*, barangays(name, boundary, barangay_localities(display_name, city, province))&apos;)
+.eq(&apos;id&apos;, userId).maybeSingle().then(async (
+⋮----
+// A newer refetch, sign-out or account switch invalidates this ticket.
+⋮----
+// Offline demographic data is useful; cached approval is never trusted.
+⋮----
+} catch { /* Offline cache is optional. */ }
+⋮----
+export function useProfile()</file><file path="apps/resident-android-mobile/metro.config.js">// Metro config for the npm-workspaces monorepo.
+// Metro&apos;s default config only watches apps/resident-android-mobile, so it can&apos;t resolve
+// @barangayan/shared out of the box — this is the fix (see the plan&apos;s
+// &quot;Pre-Development Technical Risk Mitigations&quot;).
+⋮----
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+⋮----
+// Other tools create and delete short-lived refs under .git; if one vanishes while
+// the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+⋮----
+// `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
+// only sees the hoisted `entities@4` at the workspace root — which dropped the old
+// `lib/maps/*.json` layout that `markdown-it@10` (pulled in by
+// react-native-markdown-display) still `require`s. Redirect that legacy subpath to
+// markdown-it&apos;s own nested `entities@2` copy, leaving entities@4 consumers untouched.
+⋮----
+config.resolver.resolveRequest = (context, moduleName, platform) =&gt;</file><file path="packages/shared/src/lib/resident-submission.ts">import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { Database } from &apos;../types/database&apos;;
+import {
+  serviceSubmissionSchema,
+  supportingAttachmentSchema,
+  type ServiceSubmissionInput,
+} from &apos;../schemas/service-foundations&apos;;
+import { serviceFoundationOperations } from &apos;./service-foundations&apos;;
+import { serviceRequestFieldErrors } from &apos;./service-request-validation&apos;;
+⋮----
+export function residentServiceError(failure: unknown, phase: &apos;validate&apos; | &apos;pick&apos; | &apos;upload&apos; | &apos;submit&apos; = &apos;submit&apos;)
+⋮----
+// These messages originate in our local recovery and file-picker helpers.
+⋮----
+/** Unique operation identifier, never an authentication credential. */
+export function createRequestKey()
+⋮----
+export function supportingAttachmentMetadata(
+  residentId: string,
+  input: { uploadId: string; requirementCode: &apos;dti&apos; | &apos;hoa&apos; | &apos;lessor&apos; | &apos;other&apos;; mimeType: string; sizeBytes: number },
+)
+⋮----
+export async function uploadSupportingEvidence(
+  client: SupabaseClient&lt;Database&gt;,
+  input: {
+    uploadId: string;
+    requirementCode: &apos;dti&apos; | &apos;hoa&apos; | &apos;lessor&apos; | &apos;other&apos;;
+    mimeType: string;
+    bytes: Uint8Array;
+  },
+)
+⋮----
+/** Holds the exact submitted input across lost replies. Changed retries never create
+ * another request. A definite validation/authorization failure permits correction. */
+export class ResidentSubmissionAttempt
+⋮----
+/** A client that persisted an unconfirmed attempt passes its key back to retry the same operation. */
+constructor(readonly key: string = createRequestKey())
+async submit(client: SupabaseClient&lt;Database&gt;, value: Omit&lt;ServiceSubmissionInput, &apos;idempotencyKey&apos;&gt;)</file><file path="packages/shared/src/schemas/service-foundations.ts">import { z } from &apos;zod&apos;;
+import { EMPLOYMENT_STATUSES, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES } from &apos;./auth&apos;;
+⋮----
+const text = (max: number)
+const optionalText = (max: number)
+⋮----
+// Eleven categories; grouped procedures remain prose, avoiding invented step/person mappings.
+⋮----
+export type ServiceDocumentTypeInput = z.infer&lt;typeof serviceDocumentTypeSchema&gt;;
+⋮----
+export function submissionSchemaForCatalog(catalog: z.infer&lt;typeof serviceCatalogContractSchema&gt;)
+⋮----
+const issue = (path: (string | number)[], message: string) =&gt; ctx.addIssue(
+⋮----
+const has = (code: string)
+⋮----
+export type IdConfirmedDetails = z.infer&lt;typeof idConfirmedDetailsSchema&gt;;
+⋮----
+export type ServiceCatalogContract = z.infer&lt;typeof serviceCatalogContractSchema&gt;;
+export type ServiceSubmissionInput = z.infer&lt;typeof serviceSubmissionSchema&gt;;
+export type ProfileCompletionInput = z.infer&lt;typeof profileCompletionSchema&gt;;
+export type IdPublicationInput = z.infer&lt;typeof idPublicationSchema&gt;;
+export type IdReviewInput = z.infer&lt;typeof idReviewSchema&gt;;
+export type SlaTransitionInput = z.infer&lt;typeof slaTransitionSchema&gt;;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path=".gitignore"># Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# Supabase env files for apps/mobile (real values) — examples stay committed
+.env
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+.next-*/</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/src/components/services/service-screen-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Fonts, Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 5,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file><file path="apps/resident-android-mobile/src/components/services/charter-request-form.tsx">import {
+  residentServiceError,
+  catalogContract,
+  createRequestKey,
+  idVerificationMessages,
+  idVerificationState,
+  ResidentSubmissionAttempt,
+  servicePriceLabel,
+  serviceRequestFieldErrors,
+  submissionSchemaForCatalog,
+  supportingAttachmentMetadata,
+  uploadSupportingEvidence,
+  type ServiceSubmissionInput,
+  type Tables,
+  type ServiceRequestField,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  View,
+  type LayoutChangeEvent,
+} from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { PurposeSheet } from &apos;@/components/services/purpose-sheet&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { pickSupportingFile, type SupportingFile } from &apos;@/lib/supporting-upload&apos;;
+⋮----
+type Requirement = ServiceSubmissionInput[&apos;attachments&apos;][number][&apos;requirementCode&apos;];
+⋮----
+const locate = (field: ServiceRequestField, event: LayoutChangeEvent) =&gt;
+⋮----
+async function pick(code: Requirement)
+async function submit()
+⋮----
+&lt;View onLayout=
+⋮----
+setFiles((previous) =&gt;
+⋮----
+
+⋮----
+&lt;Field label=&quot;Explain your purpose&quot; value=
+⋮----
+&lt;Field label=&quot;Business name&quot; value=
+&lt;Field label=&quot;Establishment address&quot; value=
+⋮----
+setRenter(value);
+if (!value)
+⋮----
+&lt;Field label=&quot;Record/document reference&quot; value=
+&lt;Field label=&quot;Number of copies&quot; value=
+&lt;Field label=&quot;Total pages across all copies&quot; value=</file><file path="apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx">import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+import { catalogContract, residentServiceError, ResidentSubmissionAttempt } from &apos;@barangayan/shared&apos;;
+import { CharterRequestForm } from &apos;@/components/services/charter-request-form&apos;;
+import { formatCentavosAsPHP, requestFormSchema, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { PlaceholderPanel } from &apos;@/components/placeholder-panel&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { AnimatedAppear } from &apos;@/components/services/animated-appear&apos;;
+import { SkeletonBlock } from &apos;@/components/services/skeleton&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import {
+  displayName,
+  imageExtension,
+  isWithinSizeLimit,
+  pickImageAsset,
+  readImageBytes,
+  type PickedImage,
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type DocumentType = Tables&lt;&apos;document_types&apos;&gt;;
+⋮----
+/** Shimmer stand-in for the loading state, shaped like the form below it. Rendered only
+ * while `doc === undefined` — same early-return slot `PlaceholderPanel` used to occupy. */
+⋮----
+// S0-8: uploads the picked ID image to Storage *before* the service_requests insert
+// and returns its path. Must happen first — residents have no UPDATE/DELETE policy on
+// service_requests (see 0002&apos;s &quot;no client update/delete policy&quot; comment), so there&apos;s
+// no way to patch the path in after the fact or roll back a row left without one.
+⋮----
+/* Design-system recipes (shared literally across the Services screens) */
+⋮----
+/* Loading skeleton */</file><file path="packages/shared/src/index.ts"></file></files></repomix>

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
 import { PrimaryButton } from '@/components/primary-button';
-import { SkeletonBlock } from '@/components/services/skeleton';
+import { ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -22,8 +22,8 @@ export function ServicesEmptyState({
   const theme = useTheme();
   return (
     <View style={styles.state}>
-      <View style={[styles.stateIcon, { backgroundColor: theme.backgroundElement }]}>
-        <Ionicons name={icon} size={28} color={theme.textSecondary} />
+      <View style={[styles.stateIcon, { backgroundColor: theme.resident.surface }]}>
+        <Ionicons name={icon} size={28} color={theme.resident.muted} accessible={false} />
       </View>
       <ThemedText type="heading" style={styles.stateTitle}>
         {title}
@@ -49,39 +49,41 @@ export function ServicesErrorState({
   const theme = useTheme();
   return (
     <View style={styles.state}>
-      <View style={[styles.stateIcon, { backgroundColor: `${theme.accentRed}1A` }]}>
-        <Ionicons name="cloud-offline-outline" size={28} color={theme.accentRed} />
+      <View style={[styles.stateIcon, { backgroundColor: theme.resident.dangerSoft }]}>
+        <Ionicons name="cloud-offline-outline" size={28} color={theme.resident.danger} accessible={false} />
       </View>
       <ThemedText accessibilityRole="alert" themeColor="textSecondary" style={styles.stateMessage}>
         {message}
       </ThemedText>
       <View style={styles.retry}>
-        <PrimaryButton label={retryLabel} onPress={onRetry} />
+        <PrimaryButton label={retryLabel} presentation="resident" onPress={onRetry} />
       </View>
     </View>
   );
 }
 
-/** Airbnb-style shimmering rows that mirror the final row layout while data loads. */
+/** Static grouped placeholders keep loading legible without a decorative loop. */
 export function ServicesListSkeleton({ rows = 4 }: { rows?: number }) {
   const theme = useTheme();
   return (
-    <View style={styles.skeletonList} accessibilityLabel="Loading">
-      {Array.from({ length: rows }, (_, index) => (
-        <View
-          key={index}
-          style={[
-            styles.skeletonRow,
-            { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
-          ]}>
-          <SkeletonBlock width={56} height={56} borderRadius={16} />
-          <View style={styles.skeletonText}>
-            <SkeletonBlock width="65%" height={16} />
-            <SkeletonBlock width="85%" height={12} />
-            <SkeletonBlock width="40%" height={12} />
+    <View style={styles.skeletonList} accessibilityLabel="Loading" accessibilityState={{ busy: true }}>
+      <ServicesPanel>
+        {Array.from({ length: rows }, (_, index) => (
+          <View
+            key={index}
+            style={[
+              serviceListStyles.row,
+              index > 0 && { borderTopWidth: 1, borderTopColor: theme.resident.border },
+            ]}>
+            <View style={[serviceListStyles.icon, { backgroundColor: theme.resident.surface }]} />
+            <View style={styles.skeletonText}>
+              <View style={[styles.placeholder, { width: '65%', height: 16, backgroundColor: theme.resident.surface }]} />
+              <View style={[styles.placeholder, { width: '85%', backgroundColor: theme.resident.surface }]} />
+              <View style={[styles.placeholder, { width: '40%', backgroundColor: theme.resident.surface }]} />
+            </View>
           </View>
-        </View>
-      ))}
+        ))}
+      </ServicesPanel>
     </View>
   );
 }
@@ -112,17 +114,9 @@ const styles = StyleSheet.create({
     marginTop: Spacing.two,
   },
   skeletonList: {
-    gap: Spacing.three,
     paddingHorizontal: 20,
   },
-  skeletonRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-    padding: Spacing.three,
-    borderRadius: 20,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
+  placeholder: { height: 12, borderRadius: 4 },
   skeletonText: {
     flex: 1,
     gap: Spacing.two,

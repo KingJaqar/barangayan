@@ -1,0 +1,481 @@
+[
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\packet-manifest.json",
+    "sha256": "52acf75b79abc8295f7253da35c56e05032d53a6554c980e231d26aaf8d50911",
+    "sources": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance.test.ts",
+        "sha256": "29409667386f00f775ec3e6fd82f0e7a0f5718a1e45e6d124d545ebcf9e4c717",
+        "equivalent": true,
+        "lines": 49
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "sha256": "60208bbecd0eae2b172adac6a178686be860218e41472fb0acf99b44b4567248",
+        "equivalent": true,
+        "lines": 112
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "sha256": "5bc2ab572bf5fbd38c51a240041ecfd39bbfe24d57290f0043ac3f64c4d236cd",
+        "equivalent": true,
+        "lines": 723
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "sha256": "d347fb05eff5b02ef7d312829324bd900a542abb142d19f7ff9dc5e6723b1a6e",
+        "equivalent": true,
+        "lines": 163
+      },
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "sha256": "413bb012b44e6b16912d97d1873a8c869f208263b9546e74f65d8d0aa5920b7d",
+        "equivalent": true,
+        "lines": 153
+      },
+      {
+        "path": "CLAUDE.md",
+        "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "equivalent": true,
+        "lines": 1
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equivalent": true,
+        "lines": 0
+      }
+    ],
+    "chunks": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance.test.ts",
+        "start": 1,
+        "end": 49,
+        "characters": 3305,
+        "next": null
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "start": 1,
+        "end": 112,
+        "characters": 5538,
+        "next": null
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 1,
+        "end": 185,
+        "characters": 11976,
+        "next": 186
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 186,
+        "end": 347,
+        "characters": 11957,
+        "next": 348
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 348,
+        "end": 529,
+        "characters": 11999,
+        "next": 530
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 530,
+        "end": 674,
+        "characters": 11863,
+        "next": 675
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 675,
+        "end": 723,
+        "characters": 2537,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "start": 1,
+        "end": 163,
+        "characters": 11708,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "start": 1,
+        "end": 105,
+        "characters": 11983,
+        "next": 106
+      },
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "start": 106,
+        "end": 153,
+        "characters": 4461,
+        "next": null
+      },
+      {
+        "path": "CLAUDE.md",
+        "start": 1,
+        "end": 1,
+        "characters": 11,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\supplement-manifest.json",
+    "sha256": "98224adc3876ea2ef19d69881a668d506f18df6cc0fcb19d3ef22a0fce86bd94",
+    "sources": [
+      {
+        "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+        "sha256": "a19eed9cdc838e4cb111656d82e14edfebae9508253850b729cee8866ec446c7",
+        "equivalent": true,
+        "lines": 173
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.test.ts",
+        "sha256": "d0b41eb8cdf76e56928c8548a0a9dcc2509188966a87f21e74d170a3c6f28b6d",
+        "equivalent": true,
+        "lines": 61
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "sha256": "0fee2583126cf09230643c2e398494b2c9288ed5ebae044f0a3f75040d4abf56",
+        "equivalent": true,
+        "lines": 123
+      },
+      {
+        "path": "packages/shared/src/types/household-attendance.database.ts",
+        "sha256": "91fa7a37b53fa4d79758a251db451146bcadec24a6eaf0009241ec93949580e7",
+        "equivalent": true,
+        "lines": 125
+      },
+      {
+        "path": "supabase/functions/export-my-data/export-v2.ts",
+        "sha256": "c082994e7376c7092793bff837e425f1709c99fa9727aa618b480c663dc330ed",
+        "equivalent": true,
+        "lines": 193
+      },
+      {
+        "path": "supabase/functions/export-my-data/index.ts",
+        "sha256": "ea8a7a7b83ada037b43a3f472acf4cfade45fad6848f47718437fd2a10b72d63",
+        "equivalent": true,
+        "lines": 150
+      }
+    ],
+    "chunks": [
+      {
+        "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+        "start": 1,
+        "end": 173,
+        "characters": 11945,
+        "next": null
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.test.ts",
+        "start": 1,
+        "end": 61,
+        "characters": 4447,
+        "next": null
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "start": 1,
+        "end": 123,
+        "characters": 6953,
+        "next": null
+      },
+      {
+        "path": "packages/shared/src/types/household-attendance.database.ts",
+        "start": 1,
+        "end": 125,
+        "characters": 3469,
+        "next": null
+      },
+      {
+        "path": "supabase/functions/export-my-data/export-v2.ts",
+        "start": 1,
+        "end": 171,
+        "characters": 11969,
+        "next": 172
+      },
+      {
+        "path": "supabase/functions/export-my-data/export-v2.ts",
+        "start": 172,
+        "end": 193,
+        "characters": 1489,
+        "next": null
+      },
+      {
+        "path": "supabase/functions/export-my-data/index.ts",
+        "start": 1,
+        "end": 150,
+        "characters": 7572,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\legacy-manifest.json",
+    "sha256": "6cde89d32b2d61708760c17c2bd7d9b5e452d676ae858bed560deeac87b0e480",
+    "sources": [
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "sha256": "74f7c959531a51ec032c970e7721b6805be6039575dd4355ec381e893535de44",
+        "equivalent": true,
+        "lines": 333
+      }
+    ],
+    "chunks": [
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "start": 1,
+        "end": 128,
+        "characters": 11894,
+        "next": 129
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "start": 129,
+        "end": 271,
+        "characters": 11993,
+        "next": 272
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "start": 272,
+        "end": 333,
+        "characters": 5281,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\final-manifest.json",
+    "sha256": "720236b0f8f47c3812a7206be2455cd4edbd37a081bac7c3b06eb42a9d5c8b2a",
+    "sources": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+        "sha256": "b812281dc3e6179e8cccb5af5e16a32c3f22681ce6f6967f863e2093114f5ae4",
+        "equivalent": true,
+        "lines": 52
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "sha256": "dd48d2717bc97560bd3f8289428411a6eff6e1e1ccdfccd6aac96d9143972e25",
+        "equivalent": true,
+        "lines": 760
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "sha256": "3c918bbe821993410fe3fb2d01b81eaf30d21f08fbe46953a9a40a605bbd01ec",
+        "equivalent": true,
+        "lines": 106
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "sha256": "58ee2b94942810368c52dea9d7eac4424c1c62e7dc028f08ce8a6556580d8fff",
+        "equivalent": true,
+        "lines": 176
+      }
+    ],
+    "chunks": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+        "start": 1,
+        "end": 52,
+        "characters": 3157,
+        "next": null
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 1,
+        "end": 185,
+        "characters": 11976,
+        "next": 186
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 186,
+        "end": 348,
+        "characters": 11991,
+        "next": 349
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 349,
+        "end": 526,
+        "characters": 11929,
+        "next": 527
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 527,
+        "end": 680,
+        "characters": 11840,
+        "next": 681
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "start": 681,
+        "end": 760,
+        "characters": 4798,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "start": 1,
+        "end": 106,
+        "characters": 10092,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "start": 1,
+        "end": 164,
+        "characters": 11982,
+        "next": 165
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "start": 165,
+        "end": 176,
+        "characters": 991,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\role-manifest.json",
+    "sha256": "54f4e34c6a5d633f095b6515070029f014f08cd6d04a6e2b115f624bd3e36490",
+    "sources": [
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "sha256": "ebbcf95f4f276891e11731da2f3b395e43a05fe27ed401135257f63077b39bec",
+        "equivalent": true,
+        "lines": 222
+      }
+    ],
+    "chunks": [
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "start": 1,
+        "end": 107,
+        "characters": 11966,
+        "next": 108
+      },
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "start": 108,
+        "end": 222,
+        "characters": 11657,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\closure-manifest.json",
+    "sha256": "ba7c0aaf4410a9c27f119fec37c9bca233656e0a28366dc12741165a5c3063b9",
+    "sources": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+        "sha256": "ba5ff727729ccc02b764c29781b4f09be90b729ec436d155554a2cc5da10acce",
+        "equivalent": true,
+        "lines": 59
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "sha256": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace",
+        "equivalent": true,
+        "lines": 126
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "sha256": "813acca07e59c02bcd4eef15622ba363af0bd22582919ff3b0becf2c021f1698",
+        "equivalent": true,
+        "lines": 122
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "sha256": "0e28782d0c5b35eedc521ab5ba11038f910c40a5fdc2529eeff1f6e2b8b770dd",
+        "equivalent": true,
+        "lines": 178
+      }
+    ],
+    "chunks": [
+      {
+        "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+        "start": 1,
+        "end": 59,
+        "characters": 3648,
+        "next": null
+      },
+      {
+        "path": "packages/shared/src/schemas/household-attendance.ts",
+        "start": 1,
+        "end": 126,
+        "characters": 7158,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "start": 1,
+        "end": 122,
+        "characters": 11285,
+        "next": null
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "start": 1,
+        "end": 164,
+        "characters": 11880,
+        "next": 165
+      },
+      {
+        "path": "supabase/tests/household_attendance_concurrency.mjs",
+        "start": 165,
+        "end": 178,
+        "characters": 1278,
+        "next": null
+      }
+    ]
+  },
+  {
+    "manifest": "tmp\\family-web-phase1-20261021\\delta-manifest.json",
+    "sha256": "e4faa358cc483ad14bcee8ea5cb3edc9bf17add56c93e47e1f679804f6e21894",
+    "sources": [
+      {
+        "path": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/shared-final-delta-sources.json",
+        "sha256": "68ea127dd9b42e6a1f287a8a6d8cd13bd2d50cebbafbbdfc75d8a55c7097f9cf",
+        "equivalent": true,
+        "lines": 22
+      },
+      {
+        "path": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/shared-final-delta.diff",
+        "sha256": "c82eae5c5afedd8f05eb9f79890871f16a1c1fbcf063a87376cfa525d2a1c5cf",
+        "equivalent": true,
+        "lines": 96
+      }
+    ],
+    "chunks": [
+      {
+        "path": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/shared-final-delta-sources.json",
+        "start": 1,
+        "end": 22,
+        "characters": 794,
+        "next": null
+      },
+      {
+        "path": "plans/evidence/family-web-qr-attendance/phase-1-2026-10-21/shared-final-delta.diff",
+        "start": 1,
+        "end": 96,
+        "characters": 6549,
+        "next": null
+      }
+    ]
+  }
+]

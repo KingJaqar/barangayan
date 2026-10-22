@@ -7,7 +7,7 @@ const config: ExpoConfig = {
   name: 'Barangayan',
   slug: 'barangayan-resident-ios',
   version: '1.0.0',
-  platforms: ['ios'],
+  platforms: ['ios', 'web'],
   orientation: 'portrait',
   userInterfaceStyle: 'automatic',
   ...(process.env.IOS_URL_SCHEME ? { scheme: process.env.IOS_URL_SCHEME } : {}),
@@ -46,8 +46,14 @@ const config: ExpoConfig = {
     }],
     // QR check-in scanning. The camera has one Info.plist purpose string shared with the photo picker above, so both plugins name both uses.
     ['expo-camera', { cameraPermission: CAMERA_PURPOSE, microphonePermission: false, recordAudioAndroid: false }],
+    // Remote alerts through Expo Push / APNs (A44, G13). Alerts only: no `remote-notification` background mode (no silent
+    // push), no critical alerts and no custom sounds; the permission prompt has no Info.plist purpose string. The APNs
+    // entitlement is added by the plugin; Apple capabilities and credentials are not part of this plan (OD-06).
+    ['expo-notifications', { enableBackgroundRemoteNotifications: false }],
     ['expo-splash-screen', { backgroundColor: '#0F6E5B', image: './assets/barangayan-logo-1024.png', imageWidth: 96 }],
   ],
+  // Web is a localhost test target only (OD-14): same JavaScript, single-page output, never a shipped product.
+  web: { bundler: 'metro', output: 'single' },
   experiments: { typedRoutes: true },
   extra: process.env.EAS_PROJECT_ID ? { eas: { projectId: process.env.EAS_PROJECT_ID } } : {},
 };

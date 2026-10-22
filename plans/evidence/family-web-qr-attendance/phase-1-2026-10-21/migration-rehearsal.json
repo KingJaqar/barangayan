@@ -1,0 +1,115 @@
+{
+  "database": "family_attendance_web_phase1_20261021_receipt_final",
+  "steps": [
+    {
+      "step": "create",
+      "exit": 0,
+      "sha256": "c2ede168fca08bf9b09b5071bcb3c0e451fdda50a818c09e878a3b27cb2a43db"
+    },
+    {
+      "step": "schema",
+      "exit": 0,
+      "sha256": "7f83aab33834ff56b030e7ce0ec6d923166cb7b1c3b10ea180eed62c0a81fa65"
+    },
+    {
+      "step": "0118_resident_front_id_submission",
+      "exit": 0,
+      "sha256": "f063101a9257d45b0111b043e200d325ccf94f4ff49ba169c2045ca88a93c337"
+    },
+    {
+      "step": "0119_admin_profile_and_verified_association",
+      "exit": 0,
+      "sha256": "b3444289658f366826d4bc529f8e26daa9222135c79d2b20024786488760765f"
+    },
+    {
+      "step": "0120_flood_shadow_runs",
+      "exit": 0,
+      "sha256": "7689e8503718be870828b7be6bb9deca46bed5ef3215a7368b9a96f7bbd2c65e"
+    },
+    {
+      "step": "0121_resident_ios_write_boundaries",
+      "exit": 0,
+      "sha256": "0bb25cbad213ec580a28c1c197b37d30abd9ce04a975ff609b34c76cdf9fa7bb"
+    },
+    {
+      "step": "0122_resident_apple_account_setup",
+      "exit": 0,
+      "sha256": "cd44658d997cf7196573240df09737f10fc1f4148ddb4c455686921bc96c5765"
+    },
+    {
+      "step": "0123_resident_household_conditional_save",
+      "exit": 0,
+      "sha256": "f41a74428b519bbc694c9c6ee58dc3deb114325f5b65b28138204eb6b3c40242"
+    },
+    {
+      "step": "0124_unreferenced_upload_objects",
+      "exit": 0,
+      "sha256": "09f2f8cfd77f9fe531a9180a17a53ceda8c2297344db94565ea79270da82eacb"
+    },
+    {
+      "step": "0125_automatic_document_request_payments",
+      "exit": 0,
+      "sha256": "8ee3a83422ae44148e2fc1a88516ba5ab0b2120db24e25ee81c426956b1a20d2"
+    },
+    {
+      "step": "0126_restore_automatic_request_submission",
+      "exit": 0,
+      "sha256": "2008cab74d67c16dd5d2ea46d632c6f0e578205744f4070472761592ec610e7c"
+    },
+    {
+      "step": "0127_admin_resident_document_requests",
+      "exit": 0,
+      "sha256": "b1efd479a4bd34f249837b5543bf826a378fe40a77605fed221e87c5ffba2636"
+    },
+    {
+      "step": "0128_admin_personal_profile_editing",
+      "exit": 0,
+      "sha256": "2598cc612300dd299fc9e051ddc8422a0478cbb4389dcfc79ace2c76d2332015"
+    },
+    {
+      "step": "0129_admin_record_sheet_edit_parity",
+      "exit": 0,
+      "sha256": "4428439ed520aadab02fc7467eba7aa5fee13bb2e78d095e8ba9b451ce2589ac"
+    },
+    {
+      "step": "0130_resident_directory_admin_visibility",
+      "exit": 0,
+      "sha256": "c73d4e2d9e75e869d706ca6985961997e8a0141cb940a3164de731f6d29ed02e"
+    },
+    {
+      "step": "0131_request_editor_admin_resident_options",
+      "exit": 0,
+      "sha256": "1d4545d5f5a83adf2b6c4fce9588e2d028b6c14e2cd381668d36d505a57ca2b6"
+    },
+    {
+      "step": "0132_request_payment_column_editors",
+      "exit": 0,
+      "sha256": "96064dc3558b49ea745f962d0fb3fdc27aaf3136f7e97d474cc0347945165a98"
+    },
+    {
+      "step": "0133_full_versioned_request_record_editor",
+      "exit": 0,
+      "sha256": "059472c21de4a378f86d2e53ad80430576ccd87cf74b3b32ca2b3056d51dee55"
+    },
+    {
+      "step": "0134_medical_applicant_email",
+      "exit": 0,
+      "sha256": "bf72658a22174e5d090e4231e78a5afd08ac9cc85ad13143f48f528bd0794e27"
+    },
+    {
+      "step": "0135_resident_notifications",
+      "exit": 0,
+      "sha256": "c4cd5186f959cefe88e49b29dd22f55969cef7ab84bcc65621aaabf1912c5980"
+    },
+    {
+      "step": "0136_account_deletion_state",
+      "exit": 0,
+      "sha256": "88a5012543e07c04e37a27faee5959ecfc0f23dd8024f7c682c5883dc9ed172b"
+    },
+    {
+      "step": "attendance",
+      "exit": 0,
+      "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+    }
+  ]
+}

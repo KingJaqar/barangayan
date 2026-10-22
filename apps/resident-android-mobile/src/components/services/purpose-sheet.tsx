@@ -147,7 +147,7 @@ export function PurposeSheet({
           <View {...pan.panHandlers} style={styles.dragZone}>
             <View style={[styles.grabber, { backgroundColor: theme.backgroundSelected }]} />
             <View style={styles.headerRow}>
-              <ThemedText type="heading" style={styles.title}>
+              <ThemedText type="heading" style={[styles.title, resident && styles.residentTitle]}>
                 {title}
               </ThemedText>
               <Pressable
@@ -155,7 +155,7 @@ export function PurposeSheet({
                 hitSlop={8}
                 accessibilityRole="button"
                 accessibilityLabel="Cancel purpose selection"
-                style={[styles.closeBtn, { backgroundColor: theme.backgroundElement }]}>
+                style={[styles.closeBtn, resident && styles.residentClose, { backgroundColor: resident ? theme.resident.surface : theme.backgroundElement }]}>
                 <Ionicons name="close" size={18} color={theme.text} />
               </Pressable>
             </View>
@@ -164,7 +164,7 @@ export function PurposeSheet({
           <ScrollView
             bounces={false}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.list}>
+            contentContainerStyle={[styles.list, resident && styles.residentList]}>
             {options.map((item, index) => {
               const active = item.code === selected;
               return (
@@ -180,16 +180,21 @@ export function PurposeSheet({
                   android_ripple={{ color: theme.backgroundSelected }}
                   style={({ pressed }) => [
                     styles.row,
+                    resident && styles.residentRow,
                     index > 0 && {
                       borderTopWidth: StyleSheet.hairlineWidth,
                       borderTopColor: resident ? theme.resident.border : theme.backgroundSelected,
                     },
                     pressed && { backgroundColor: resident ? theme.resident.pressed : theme.backgroundElement },
                   ]}>
-                  <ThemedText style={[styles.rowLabel, active && { fontWeight: '700' }]}>
+                  <ThemedText style={[styles.rowLabel, resident && styles.residentRowLabel, active && { fontWeight: '700' }]}>
                     {item.label}
                   </ThemedText>
-                  {active ? (
+                  {resident ? (
+                    <View accessible={false} style={[styles.residentRadio, { borderColor: active ? theme.resident.accentText : theme.backgroundSelected }]}>
+                      {active ? <View style={[styles.residentRadioDot, { backgroundColor: theme.resident.accentText }]} /> : null}
+                    </View>
+                  ) : active ? (
                     <Ionicons name="checkmark-circle" size={22} color={resident ? theme.resident.accentText : theme.primary} />
                   ) : (
                     <View style={[styles.radio, { borderColor: theme.backgroundSelected }]} />
@@ -205,6 +210,13 @@ export function PurposeSheet({
 }
 
 const styles = StyleSheet.create({
+  residentTitle: { fontSize: 19, lineHeight: 26, fontWeight: '800' },
+  residentClose: { width: 36, height: 36, borderRadius: 18 },
+  residentList: { paddingBottom: 8 },
+  residentRow: { minHeight: 56, paddingHorizontal: 0, paddingVertical: 16 },
+  residentRowLabel: { fontSize: 15, lineHeight: 20, fontWeight: '500' },
+  residentRadio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  residentRadioDot: { width: 12, height: 12, borderRadius: 6 },
   root: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.5)' },
   sheet: {

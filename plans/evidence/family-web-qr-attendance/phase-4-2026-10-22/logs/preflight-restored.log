@@ -1,0 +1,4 @@
+BEGIN
+DO
+{"stays": 2, "members": 1, "database": "family_attendance_web4_backup_20261022", "profiles": 2, "receipts": 3, "postgresql": "17.6", "active_stays": 1, "legacy_checkins": 1}
+COMMIT

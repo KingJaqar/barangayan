@@ -1,0 +1,12 @@
+{
+  "result": "pass",
+  "candidate_source_hashes": 65,
+  "local_links": 28,
+  "python_syntax": "pass",
+  "javascript_syntax": "pass",
+  "owned_whitespace": "pass",
+  "acceptance_ids": 17,
+  "plan_diff": "UTF-8, selected Phase 4 only",
+  "packet_closure": "Six entries, seven complete chunks, hashes unchanged; see closure-audit.json",
+  "pending": "Actual staging Auth/navigation/camera, compatible account-function deployment/export/deletion, target recovery and legacy-client transition"
+}

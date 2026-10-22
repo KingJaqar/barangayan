@@ -1,0 +1,14 @@
+
+> @barangayan/web@0.1.0 test:tables
+> vitest run --config vitest.config.ts tests/table-browse/household-attendance-web.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/household-attendance-web.test.ts (6 tests) 30ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  10:18:02
+   Duration  3.77s (transform 1.08s, setup 0ms, collect 2.01s, tests 30ms, environment 0ms, prepare 446ms)
+

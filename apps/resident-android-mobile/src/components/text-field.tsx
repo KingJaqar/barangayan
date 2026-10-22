@@ -11,6 +11,7 @@ import { useTheme } from '@/hooks/use-theme';
 
 export interface TextFieldProps extends TextInputProps {
   presentation?: 'default' | 'resident';
+  appearance?: 'default' | 'requestForm';
   label?: string;
   error?: string;
   /** Shown (green check + message) below the field once its value passes
@@ -36,6 +37,7 @@ export function TextField({
   passwordVisibility,
   secureTextEntry,
   presentation = 'default',
+  appearance = 'default',
   onFocus,
   onBlur,
   ...inputProps
@@ -71,7 +73,7 @@ export function TextField({
         backgroundColor: theme.resident.surface,
         borderRadius: ResidentLayout.controlRadius,
         minHeight: ResidentLayout.controlHeight,
-        borderColor: error ? theme.resident.danger : focused ? theme.resident.accentText : theme.resident.controlBorder,
+        borderColor: error ? theme.resident.danger : focused ? theme.resident.accentText : appearance === 'requestForm' ? theme.resident.border : theme.resident.controlBorder,
       },
       style,
     ]}

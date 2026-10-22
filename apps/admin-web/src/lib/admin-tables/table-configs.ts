@@ -948,6 +948,7 @@ export const TABLE_SUMMARY_KEYS = {
   ],
   "households": [
     "total",
+    "holders",
     "checked_in",
     "not_checked_in",
     "spouse",

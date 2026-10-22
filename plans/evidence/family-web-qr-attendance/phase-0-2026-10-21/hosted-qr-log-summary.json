@@ -1,0 +1,17 @@
+{
+  "project_id": "pwjbucnyqexiepoinoke",
+  "window": "Tool default last 24 hours; observed October 21, 2026 Asia/Manila",
+  "function_id": "8d326c35-05bf-4101-8b13-e507097083c2",
+  "source": "function_edge_logs",
+  "scope": "Aggregates only; no resident, request URL, token, IP or session fields",
+  "result": [
+    {
+      "count": 1,
+      "error_code": "",
+      "max_execution_ms": 150113,
+      "min_execution_ms": 150113,
+      "status": "546"
+    }
+  ],
+  "interpretation": "One hosted endpoint HTTP 546, 150113 ms. Error-code header returned empty under queried key; do not infer a code/cause or attribute to web. No browser QR failure observed."
+}

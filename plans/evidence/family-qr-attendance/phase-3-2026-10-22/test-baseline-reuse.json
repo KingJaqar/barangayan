@@ -1,0 +1,14 @@
+[
+  {
+    "path": "apps\\resident-android-mobile\\tests\\drrm-scan-family-ui.mjs",
+    "reused_snapshot": "tmp\\resident-android-magicpatterns-phase-16-20261021\\before\\apps\\resident-android-mobile\\tests\\drrm-scan-family-ui.mjs",
+    "sha256": "d6f296b3514b5f406d0e7dae3ad63a9b5331c4c90662d3bd9062e0256ffaceb5",
+    "proof": "Recorded exact phase transformations reproduce candidate; historical snapshot is recoverable initial test source."
+  },
+  {
+    "path": "apps\\resident-android-mobile\\tests\\settings-profile-ui.mjs",
+    "reused_snapshot": "tmp\\resident-android-magicpatterns-phase-16-20261021\\before\\apps\\resident-android-mobile\\tests\\settings-profile-ui.mjs",
+    "sha256": "3286e91a97a437302db3321a35474b13e8b6f23369b29cd1374267f7bf374016",
+    "proof": "Recorded exact phase transformations reproduce candidate; historical snapshot is recoverable initial test source."
+  }
+]

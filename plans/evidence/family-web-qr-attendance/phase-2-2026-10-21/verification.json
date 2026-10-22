@@ -1,0 +1,173 @@
+{
+  "date": "2026-10-21",
+  "timezone": "Asia/Manila",
+  "phase": 2,
+  "status": "Partially complete",
+  "implementation": "Complete locally; no known local scope regression",
+  "candidate_sources": "sources.json",
+  "source_count": 20,
+  "cwd": "C:/Users/User/barangayan",
+  "environment": {
+    "database": "family_attendance_web_phase1_20261021_clean",
+    "postgres": "17.6",
+    "pgtap": "1.3.3",
+    "container": "supabase_db_barangayan",
+    "postgrest": "14.5",
+    "browser": "155.0.8059.85",
+    "auth": "Synthetic /user endpoint; real signed authenticated-role PostgREST/PostgreSQL operations",
+    "no_real_resident_data": true
+  },
+  "checks": [
+    {
+      "name": "Admin typecheck",
+      "command": "npm run typecheck --workspace=@barangayan/web",
+      "exit": 0,
+      "result": "pass",
+      "log": "logs/typecheck.candidate.log",
+      "latest_candidate": "Final production build also passed TypeScript after last prop/message change"
+    },
+    {
+      "name": "Admin lint",
+      "command": "npm run lint --workspace=@barangayan/web",
+      "exit": 0,
+      "result": "pass with exactly 2 pre-existing warnings",
+      "owned_warnings": 0,
+      "log": "logs/lint.verified.log"
+    },
+    {
+      "name": "Production build",
+      "command": "$env:BARANGAYAN_PREVIEW_DIST_DIR='.next-family-phase2-verified'; npm run build --workspace=@barangayan/web -- --webpack",
+      "exit": 0,
+      "result": "pass",
+      "log": "logs/build.verified.log"
+    },
+    {
+      "name": "Admin table/auth/search/profile suite",
+      "command": "npm run test:tables --workspace=@barangayan/web",
+      "exit": 1,
+      "result": "pre-existing-failure",
+      "passed": 159,
+      "failed": 1,
+      "failure": "record-lifecycle: versioned request-editor expected field list; same failure in baseline; no Phase 2 change to that expectation",
+      "log": "logs/tests.closure.log"
+    },
+    {
+      "name": "Shared consumed contracts/Auth",
+      "command": "npm run test --workspace=@barangayan/shared -- src/lib/auth-fetch.test.ts src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts",
+      "exit": 0,
+      "result": "pass",
+      "passed": 45,
+      "log": "logs/shared.closure.log"
+    },
+    {
+      "name": "SQL projections",
+      "command": "docker exec -i supabase_db_barangayan psql -U supabase_admin -d family_attendance_web_phase1_20261021_clean -X -At -v ON_ERROR_STOP=1 < supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "passed": 27,
+      "log": "logs/final-admin_household_attendance_projection_web.test.sql.log"
+    },
+    {
+      "name": "SQL attendance regression",
+      "command": "same disposable psql command with supabase/tests/household_attendance.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "passed": 83,
+      "log": "logs/final-household_attendance.test.sql.log"
+    },
+    {
+      "name": "SQL lifecycle regression",
+      "command": "same disposable psql command with supabase/tests/admin_record_lifecycle.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "passed": 153,
+      "log": "logs/final-admin_record_lifecycle.test.sql.log"
+    },
+    {
+      "name": "Complete migration rehearsal",
+      "command": "python tmp/family-web-phase2-20261021/rehearse-projection.py",
+      "exit": 0,
+      "result": "pass",
+      "log": "projection-rehearsal.json"
+    },
+    {
+      "name": "Brave UI -> real local API -> PostgreSQL",
+      "command": "python tmp/family-web-phase2-20261021/browser-db.py run",
+      "exit": 0,
+      "result": "pass",
+      "groups": 14,
+      "console_errors": 0,
+      "log": "logs/browser.acceptance.log",
+      "details": "browser-results.json"
+    },
+    {
+      "name": "Repomix/Reader/source identities",
+      "result": "pass",
+      "packets": [
+        "tmp/family-web-phase2-20261021/context.xml",
+        "tmp/family-web-phase2-20261021/final.xml",
+        "tmp/family-web-phase2-20261021/session-feedback.xml"
+      ],
+      "completed_chunks": [
+        19,
+        9,
+        3
+      ],
+      "max_chunk_lines": 200,
+      "max_chunk_characters": 12000,
+      "security": "passed",
+      "omissions": []
+    },
+    {
+      "name": "Owned diff/source review",
+      "result": "pass",
+      "details": "context-index.md",
+      "unused_duplicate_production_files": 0
+    }
+  ],
+  "baseline": {
+    "typecheck": "pass",
+    "lint": "2 warnings, zero errors",
+    "tests": "152 pass, one unrelated failure",
+    "build": "restricted Google font download failure",
+    "sql": "83 attendance assertions pass"
+  },
+  "dependencies": {
+    "added_to_admin": "html5-qrcode 2.3.8",
+    "new_repository_packages": 0,
+    "reason": "Required browser camera decoder; reuse exact existing resident-web locked package",
+    "retired": "unused overlapping jsqr declaration and lock entry"
+  },
+  "pending_manual": [
+    "Dedicated staging target and explicit deployment/remote-migration authorization",
+    "Real deployed login/role revocation/account-switch and browser Back/Forward lifecycle",
+    "Physical staff mobile camera scanning actual resident Family QR; compatible resident display is Phase 3",
+    "Full release/recovery gates are Phase 4"
+  ],
+  "no_actions": [
+    "commit",
+    "push",
+    "deployment",
+    "remote migration",
+    "real resident data deletion",
+    "external service configuration change",
+    "third-party message"
+  ],
+  "authorized_coordination": "Only messages to the other Codex Phase 2 chat, after explicit human authorization; Web chat owns shared code and migration, Android chat only its plan/evidence/read-only review",
+  "repeat_reasons": [
+    "Concurrent helper/camera collision resolved by authorized ownership agreement",
+    "Obsolete household editable-field test adapted; unrelated failure preserved",
+    "Actual late-permission camera leak fixed and verified",
+    "Final source changes invalidated prior type/lint/build candidates",
+    "Accessible-role locators and Windows encoding corrected from observed DOM/source",
+    "Static offscreen canvas produced white video; observed valid source and white frame, detached ImageData feed decodes",
+    "Brave transparently retried socket-close simulation; explicit unavailable committed response tested instead",
+    "Existing theme transition settled before final visual evidence"
+  ],
+  "cleanup": {
+    "temporary_postgrest": "family-web-phase2-rest stopped successfully",
+    "default_services": "unchanged",
+    "synthetic_fixture_data": "retained only in disposable local database; no real data used",
+    "file_preservation_audit": "closure-audit.json"
+  }
+}

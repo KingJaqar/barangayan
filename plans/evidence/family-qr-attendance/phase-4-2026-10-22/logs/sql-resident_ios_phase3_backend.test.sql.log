@@ -1,0 +1,142 @@
+BEGIN
+1..86
+INSERT 0 2
+INSERT 0 5
+INSERT 0 5
+UPDATE 4
+INSERT 0 3
+INSERT 0 1
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+CREATE FUNCTION
+GRANT
+SET
+SET
+SET
+ok 1 - Resident can create an own-tenant incident with a client-chosen id
+ok 2 - Replaying the same incident id is rejected, so retry reconciliation finds the first row
+ok 3 - A resident cannot create an incident with a preset confirmation count
+ok 4 - A resident cannot create an incident in a non-open status
+ok 5 - An incident cannot reference another barangay category
+ok 6 - An incident cannot reference another barangay waste zone
+ok 7 - An incident cannot attach another resident photo path
+ok 8 - An incident accepts at most five photos
+ok 9 - A resident cannot create an incident in another barangay
+ok 10 - A resident cannot create an incident for another reporter
+ok 11 - A reporter cannot set the confirmation count
+ok 12 - A reporter cannot resolve their own incident
+ok 13 - A reporter cannot move an incident to another barangay
+ok 14 - A reporter cannot re-point an incident to a foreign category
+ok 15 - A reporter cannot edit a submitted incident
+ok 16 - A reporter can mark their resolved incident read
+ok 17 - A reporter cannot reopen a resolved incident
+ok 18 - A reporter can withdraw an own open incident through the contract RPC
+RESET
+ok 19 - Rejected writes left the confirmation count unchanged
+ok 20 - The RPC withdrawal committed
+ok 21 - No rejected create left a row behind
+UPDATE 1
+SET
+SET
+SET
+ok 22 - A resident of another barangay cannot corroborate
+ok 23 - A resident of another barangay cannot withdraw
+SET
+SET
+ok 24 - A same-barangay resident can corroborate once
+ok 25 - A second corroboration is a no-op
+ok 26 - A non-reporter cannot withdraw
+ok 27 - Confirmations cannot be inserted directly
+RESET
+ok 28 - Exactly one confirmation was counted
+SET
+SET
+SET
+ok 29 - A reporter cannot corroborate their own report
+ok 30 - A resident cannot record a read for another barangay announcement
+ok 31 - A resident can record a read for an own-barangay announcement
+ok 32 - A resident cannot record a read for another resident
+ok 33 - A request cannot reference another barangay document type
+ok 34 - A request cannot reference an inactive document type
+ok 35 - A resident cannot create a request that is already completed or paid
+ok 36 - A resident status/payment update on their own request is filtered by row security
+ok 37 - A resident cannot insert a payment row, including a forged paid one
+ok 38 - A resident cannot collect a pickup payment
+ok 39 - A resident cannot assess a fee
+ok 40 - A resident cannot review a request
+ok 41 - A resident cannot drive the SLA clock
+ok 42 - A resident cannot review an ID submission
+ok 43 - A resident cannot mark a request ready
+ok 44 - A resident cannot complete a request
+ok 45 - A resident cannot change incident status through the staff RPC
+ok 46 - A resident cannot use the staff drive-registration RPC
+ok 47 - A resident cannot escalate their role
+ok 48 - A resident cannot change their barangay
+ok 49 - A resident cannot self-verify their ID
+ok 50 - Registrations cannot be inserted directly by a resident
+ok 51 - A future prior-dose date is rejected
+ok 52 - None cannot be combined with a condition
+ok 53 - An age above 130 is rejected
+ok 54 - A drive whose date has passed is closed
+ok 55 - An exhausted drive rejects registration
+ok 56 - A valid self registration returns the committed applicant number
+ok 57 - A duplicate registration is rejected
+RESET
+ok 58 - Exactly one slot was consumed by the rejected and accepted attempts
+SET
+SET
+SET
+ok 59 - A resident can register a push token
+ok 60 - A malformed push token is rejected
+ok 61 - An unsupported device type is rejected
+SET
+SET
+ok 62 - A second account on the same device can register the same token
+RESET
+ok 63 - The filtered resident update changed nothing
+ok 64 - A token has exactly one current owner
+ok 65 - The most recent registrant owns the token
+SET
+SET
+SET
+ok 66 - Legacy resident check-in requires staff confirmation
+ok 67 - A repeated legacy check-in cannot bypass staff confirmation
+ok 68 - Legacy check-in rejects another barangay center
+ok 69 - Legacy check-in rejects an inactive center
+ok 70 - Legacy check-in rejects an unknown center
+RESET
+ok 71 - Legacy check-in attempts leave no new rows after cutover
+SET
+SET
+SET
+ok 72 - An administrator cannot use the resident check-in
+RESET
+UPDATE 1
+SET
+SET
+SET
+ok 73 - A deleted account cannot corroborate
+ok 74 - A deleted account cannot register a push token
+ok 75 - A deleted account cannot check in
+RESET
+SET
+SET
+SET
+ok 76 - Anonymous cannot corroborate
+ok 77 - Anonymous cannot register a push token
+ok 78 - Anonymous cannot recompute waste-zone scores
+ok 79 - No resident insert policy exists on payments
+ok 80 - Anonymous cannot execute the check-in RPC
+ok 81 - Anonymous cannot execute account deletion
+ok 82 - Anonymous cannot execute incident withdrawal
+ok 83 - Anonymous cannot execute incident soft delete
+ok 84 - Anonymous cannot execute About Us publishing
+ok 85 - Security-definer trigger functions are not executable through the API roles
+ok 86 - The only anonymous-executable security-definer routines are the policy helpers, the public routing snapshot and the token release (migration 0135: a signed-out device removes its own push token by possessing it)
+RESET
+ROLLBACK
+

@@ -1,3 +1,6 @@
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { ReportSourceState, useReportTone } from '@/components/reports/report-presentation';
 import { ResidentActionGate } from '@/components/resident-action-gate';
 /**
  * Submit Incident Report screen — reached by tapping the FAB on My Incident Reports.
@@ -7,9 +10,7 @@ import { ResidentActionGate } from '@/components/resident-action-gate';
  *   2. Photos are uploaded to the `incident-photos` Storage bucket BEFORE the DB row is
  *      created, because residents have no UPDATE policy on incidents (same constraint as
  *      id-documents on service_requests). Uploaded paths are public URLs.
- *   3. Location defaults to the barangay polygon centroid (Phase 2 will add an
- *      interactive map picker; for MVP this lets the form be fully functional without a
- *      full embedded map).
+ *   3. Location uses the existing GPS/centroid fallback and boundary-constrained picker.
  *   4. On success the user is replaced back to the Reports index so the new card
  *      appears immediately (Realtime subscription on useMyIncidents fires).
  */
@@ -22,7 +23,7 @@ import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -30,14 +31,13 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { FadeInView } from '@/components/reports/fade-in-view';
 import { FeedbackModal } from '@/components/reports/feedback-modal';
 import { LocationPickerModal } from '@/components/reports/location-picker-modal';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors, Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useIncidentCategories } from '@/hooks/use-incident-categories';
 import { useProfile } from '@/hooks/use-profile';
@@ -74,20 +74,23 @@ function polygonCentroid(boundary: unknown): { lat: number; lng: number } | null
 function PhotoThumb({
   uri,
   onRemove,
+  width,
 }: {
+  width: number;
   uri: string;
   onRemove: () => void;
 }) {
+  const { resident } = useTheme();
   return (
-    <View style={photoStyles.wrap}>
+    <View style={[photoStyles.wrap, { width, height: width }]}>
       <Image source={{ uri }} style={photoStyles.img} contentFit="cover" />
       <Pressable
-        style={({ pressed }) => [photoStyles.remove, pressed && photoStyles.removePressed]}
+        style={({ pressed }) => [photoStyles.remove, { backgroundColor: resident.mediaScrim }, pressed && photoStyles.removePressed]}
         onPress={onRemove}
         accessibilityRole="button"
         accessibilityLabel="Remove photo"
         hitSlop={Spacing.one}>
-        <Ionicons name="close-circle" size={20} color="#fff" />
+        <Ionicons name="close-circle" size={20} color={resident.mediaForeground} />
       </Pressable>
     </View>
   );
@@ -98,23 +101,22 @@ const photoStyles = StyleSheet.create({
     position: 'relative',
     width: 80,
     height: 80,
-    shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
-  img:  { width: 80, height: 80, borderRadius: 12 },
+  img: { width: '100%', height: '100%', borderRadius: 12 },
   remove: {
     position: 'absolute',
-    top: -6,
-    right: -6,
-    backgroundColor: 'rgba(15,23,42,0.65)',
+    top: 0,
+    right: 0,
+    width: 44, height: 44, alignItems: 'center', justifyContent: 'center',
     borderRadius: 10,
   },
   removePressed: {
     opacity: 0.7,
-    transform: [{ scale: 0.92 }],
+
   },
 });
 
@@ -124,67 +126,49 @@ function CategoryPicker({
   categories,
   selectedId,
   onSelect,
+  disabled,
 }: {
+  disabled: boolean;
   categories: { id: string; name: string; color: string; icon: string | null }[];
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={catStyles.row}>
-      {categories.map((cat) => {
-        const active = cat.id === selectedId;
-        return (
-          <Pressable
-            key={cat.id}
-            onPress={() => onSelect(cat.id)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: active }}
-            style={({ pressed }) => [
-              catStyles.chip,
-              active
-                ? { backgroundColor: cat.color }
-                : { borderWidth: 1.5, borderColor: cat.color },
-              pressed && catStyles.chipPressed,
-            ]}>
-            {cat.icon ? (
-              <Ionicons
-                name={cat.icon as keyof typeof Ionicons.glyphMap}
-                size={14}
-                color={active ? '#fff' : cat.color}
-              />
-            ) : null}
-            <ThemedText
-              type="small"
-              style={{ color: active ? '#fff' : cat.color, fontWeight: '700' }}>
-              {cat.name}
-            </ThemedText>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
-  );
+  return <ScrollableChevronRow label="report categories" contentContainerStyle={catStyles.row}>
+    {categories.map(cat => <CategoryOption key={cat.id} category={cat} active={selectedId === cat.id} disabled={disabled} onSelect={() => onSelect(cat.id)} />)}
+  </ScrollableChevronRow>;
 }
-
+function CategoryOption({ category, active, onSelect, disabled }: {
+  category: { name: string; color: string; icon: string | null }; active: boolean; onSelect: () => void; disabled: boolean;
+}) {
+  const { resident } = useTheme();
+  const tone = useReportTone(category.color);
+  return <Pressable accessibilityRole="button" accessibilityState={{ selected: active, disabled }} disabled={disabled} onPress={onSelect}
+    style={({ pressed }) => [catStyles.chip, { borderColor: active ? tone.ink : tone.ink + '55', backgroundColor: pressed ? resident.pressed : active ? tone.soft : resident.card }]}>
+    <Ionicons name={active ? 'checkmark' : (category.icon ?? 'alert-circle-outline') as keyof typeof Ionicons.glyphMap} size={16} color={tone.ink} accessible={false} />
+    <ThemedText style={{ color: resident.text, fontSize: 13.5, lineHeight: 20, fontWeight: '700' }}>{category.name}</ThemedText>
+  </Pressable>;
+}
 const catStyles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingBottom: Spacing.one },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  chipPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.97 }],
-  },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8 },
+  chip: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 100, borderWidth: 2, paddingHorizontal: 14, paddingVertical: 8 },
+  chipPressed: { opacity: 0.85 },
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
+
+function IncidentFormField({ label, value, onChangeText, limit, placeholder, required = false, multiline = false, disabled, helper }: {
+  label: string; value: string; onChangeText: (value: string) => void; limit: number; placeholder: string;
+  required?: boolean; multiline?: boolean; disabled: boolean; helper?: string;
+}) {
+  const { resident } = useTheme();
+  return <View style={[styles.field, { borderTopColor: resident.border }]}>
+    <View style={styles.row}><ThemedText style={[styles.sectionLabel, { color: resident.muted }]}>{label}{required ? <ThemedText style={{ color: resident.danger }}> *</ThemedText> : null}</ThemedText><ThemedText style={{ color: resident.muted, fontSize: 12 }}>{value.length}/{limit}</ThemedText></View>
+    <TextField presentation="resident" appearance="requestForm" accessibilityLabel={required ? label + ', required' : label === 'Specific area details' ? 'Specific area details' : label}
+      value={value} onChangeText={onChangeText} maxLength={limit} placeholder={placeholder} editable={!disabled} multiline={multiline}
+      style={{ backgroundColor: resident.card, borderWidth: 0, borderRadius: 0, padding: 0, paddingHorizontal: 0, paddingVertical: 0, minHeight: multiline ? 64 : 28, fontSize: 15, lineHeight: 21, textAlignVertical: 'top' }} />
+    {helper ? <ThemedText style={{ color: resident.muted, fontSize: 12.5, lineHeight: 17 }}>{helper}</ThemedText> : null}
+  </View>;
+}
 
 export default function NewIncidentScreen() {
   return <ResidentActionGate><NewIncidentScreenContent /></ResidentActionGate>;
@@ -198,8 +182,8 @@ function NewIncidentScreenContent() {
   const insets = useSafeAreaInsets();
 
   const barangayId = profile?.barangay_id ?? null;
-  const { categories, isLoading: catsLoading } = useIncidentCategories(barangayId);
-  const { zones } = useWasteZones(barangayId);
+  const { categories, isLoading: catsLoading, error: catsError, retry: retryCategories } = useIncidentCategories(barangayId);
+  const { zones, isLoading: zonesLoading, error: zonesError, retry: retryZones } = useWasteZones(barangayId);
   // The resident's barangay boundary — passed to the location picker so residents can
   // only pin a spot inside it (mirrors the Maps tab / registration geofencing pattern).
   const boundary = (profile?.barangays?.boundary as Polygon | MultiPolygon | null) ?? null;
@@ -220,6 +204,9 @@ function NewIncidentScreenContent() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [photoWidth, setPhotoWidth] = useState(72);
+  const submitLock = useRef(false);
+  const pickerLock = useRef(false);
 
   // ── Location: try GPS first, fall back to barangay centroid ──────────────
   const locationResolved = useRef(false);
@@ -288,11 +275,14 @@ function NewIncidentScreenContent() {
 
   // ── Photo picker ──────────────────────────────────────────────────────────
   async function handlePickPhoto() {
+    if (pickerLock.current || submitting) return;
     if (photos.length >= 5) {
-      Alert.alert('Limit reached', 'You can attach up to 5 photos per report.');
+      setError('You can attach up to 5 photos per report.');
       return;
     }
 
+    pickerLock.current = true;
+    try {
     const picked = await pickImageAsset();
     if (!picked) return;
 
@@ -306,7 +296,9 @@ function NewIncidentScreenContent() {
     }
 
     setError(null);
-    setPhotos((prev) => [...prev, picked]);
+    setPhotos((prev) => prev.length < 5 ? [...prev, picked] : prev);
+    } catch { setError('The photo could not be opened. Please choose it again.'); }
+    finally { pickerLock.current = false; }
   }
 
   // ── Upload a single photo, return its storage path + public URL ────────────
@@ -328,7 +320,7 @@ function NewIncidentScreenContent() {
 
   // ── Submit ────────────────────────────────────────────────────────────────
   async function handleSubmit() {
-    if (!session || !barangayId) return;
+    if (!session || !barangayId || submitLock.current || submitted) return;
     setError(null);
 
     // Validate form
@@ -355,7 +347,9 @@ function NewIncidentScreenContent() {
       return;
     }
 
+    submitLock.current = true;
     setSubmitting(true);
+    try {
 
     // Upload photos first (no resident UPDATE policy on incidents).
     let uploaded: { path: string; url: string }[] = [];
@@ -400,6 +394,8 @@ function NewIncidentScreenContent() {
     // Success — surface the centered confirmation; navigation happens once it's
     // dismissed (see handleSuccessDismiss). Realtime will update the list.
     setSubmitted(true);
+    } catch { setError('Your report could not be submitted. Please try again.'); }
+    finally { submitLock.current = false; setSubmitting(false); }
   }
 
   /** Fires once the success pop-up is dismissed (auto or manual) — returns the resident
@@ -410,73 +406,44 @@ function NewIncidentScreenContent() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
-
-      {/* ── Header ────────────────────────────────────────────────────────── */}
-      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <Pressable
-          onPress={() => router.back()}
-          style={styles.backBtn}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          hitSlop={Spacing.two}>
-          <Ionicons name="chevron-back" size={26} color="#fff" />
-        </Pressable>
-        <View style={styles.headerContent}>
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Report an Incident
-          </ThemedText>
-        </View>
-      </View>
-
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.card }]}>
+      <KeyboardAvoidingView behavior="padding" style={styles.root}>
+      <ServiceScreenHeader title="Report an Incident" />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-
-        {/* ── Category ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-            Category *
-          </ThemedText>
-          {catsLoading ? (
-            <ActivityIndicator color={theme.primary} />
-          ) : (
-            <CategoryPicker
-              categories={categories}
-              selectedId={categoryId}
-              onSelect={setCategoryId}
-            />
-          )}
-        </ThemedView>
+        <View style={styles.section}>
+          <ThemedText style={[styles.sectionLabel, { color: theme.resident.muted }]}>Category <ThemedText style={{ color: theme.resident.danger }}>*</ThemedText></ThemedText>
+          {catsError ? <ReportSourceState message={catsError} retry={retryCategories} /> : !catsLoading && categories.length === 0 ? <ReportSourceState message="No incident categories are available. Contact your barangay." /> : catsLoading ? <ActivityIndicator color={theme.resident.accentText} /> :
+            <CategoryPicker disabled={submitting || submitted} categories={categories} selectedId={categoryId} onSelect={setCategoryId} />}
         </View>
-
         {/* ── Zone (trash/dumping reports only) ── */}
-        {categories.find((c) => c.id === categoryId)?.is_trash_related && zones.length > 0 && (
-          <FadeInView>
-          <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
+        {categories.find((c) => c.id === categoryId)?.is_trash_related && (
+          <View>
+          <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.resident.border }]}>
+            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.resident.text }]}>
               Collection Zone
             </ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
               Which zone is this in? Helps the barangay track dumping hotspots.
             </ThemedText>
+            {zonesError ? <ReportSourceState message={zonesError} retry={retryZones} /> : zonesLoading ? <ThemedText>Loading zones…</ThemedText> : zones.length === 0 ? <ThemedText>No collection zones are available.</ThemedText> : null}
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={catStyles.row}>
               {zones.map((zone) => {
                 const active = zoneId === zone.id;
                 return (
                   <Pressable
                     key={zone.id}
+                    disabled={submitting || submitted}
                     onPress={() => setZoneId(active ? null : zone.id)}
                     accessibilityRole="button"
                     accessibilityState={{ selected: active }}
                     style={({ pressed }) => [
                       catStyles.chip,
                       active
-                        ? { backgroundColor: theme.primary }
-                        : { borderWidth: 1.5, borderColor: theme.primary },
+                        ? { backgroundColor: theme.resident.accent }
+                        : { borderWidth: 1.5, borderColor: theme.resident.accentText },
                       pressed && catStyles.chipPressed,
                     ]}>
-                    <ThemedText type="small" style={{ color: active ? theme.onPrimary : theme.primary, fontWeight: '700' }}>
+                    <ThemedText type="small" style={{ color: active ? theme.resident.onAccent : theme.resident.accentText, fontWeight: '700' }}>
                       {zone.name}
                     </ThemedText>
                   </Pressable>
@@ -484,152 +451,42 @@ function NewIncidentScreenContent() {
               })}
             </ScrollView>
           </ThemedView>
-          </FadeInView>
+          </View>
         )}
 
-        {/* ── Title ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-            Title *
-          </ThemedText>
-          <TextField
-            placeholder="e.g. Broken streetlight on Purok 3"
-            value={title}
-            onChangeText={setTitle}
-            maxLength={100}
-          />
-          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
-            {title.length}/100
-          </ThemedText>
-        </ThemedView>
-        </View>
 
-        {/* ── Description ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-            Description
-          </ThemedText>
-          <TextField
-            placeholder="Describe the incident in detail…"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            maxLength={1000}
-          />
-          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
-            {description.length}/1000
-          </ThemedText>
-        </ThemedView>
-        </View>
-
-        {/* ── Photos ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-          <View style={styles.row}>
-            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-              Photos
-            </ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
-              {photos.length}/5
-            </ThemedText>
-          </View>
-          <ThemedText type="small" themeColor="textSecondary">
-            Attach up to 5 photos as evidence (JPG, PNG, WebP — max 10 MB each).
-          </ThemedText>
-
-          <View style={styles.photoRow}>
-            {photos.map((p, i) => (
-              <PhotoThumb
-                key={`${p.name}-${i}`}
-                uri={p.uri}
-                onRemove={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}
-              />
-            ))}
-            {photos.length < 5 && (
-              <Pressable
-                onPress={handlePickPhoto}
-                accessibilityRole="button"
-                accessibilityLabel="Add photo"
-                style={({ pressed }) => [
-                  styles.addPhoto,
-                  { borderColor: theme.backgroundSelected },
-                  pressed && styles.addPhotoPressed,
-                ]}>
-                <Ionicons name="camera-outline" size={22} color={theme.textSecondary} />
-                <ThemedText type="small" themeColor="textSecondary">
-                  Add photo
-                </ThemedText>
-              </Pressable>
-            )}
-          </View>
-        </ThemedView>
-        </View>
-
-        {/* ── Location ── */}
-        <View>
-        <Pressable
-          onPress={() => setPickerVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Pin exact location on map">
-          {({ pressed }) => (
-          <ThemedView
-            type="backgroundElement"
-            style={[styles.section, { borderColor: theme.backgroundSelected }, pressed && styles.sectionPressed]}>
-            <View style={styles.row}>
-              <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-                Location
-              </ThemedText>
-              <View style={styles.locationEditHint}>
-                {addressLoading && <ActivityIndicator size="small" color={theme.primary} />}
-                <Ionicons name="create-outline" size={16} color={theme.primary} />
-              </View>
+        <View style={[styles.panel, { borderColor: theme.resident.border, backgroundColor: theme.resident.card }]}>
+          <IncidentFormField label="Title" required limit={100} value={title} onChangeText={setTitle} disabled={submitting || submitted} placeholder="e.g. Broken streetlight on Purok 3" />
+          <IncidentFormField label="Description" limit={1000} value={description} onChangeText={setDescription} disabled={submitting || submitted} multiline placeholder="Describe the incident in detail…" />
+          <View style={[styles.field, { borderTopColor: theme.resident.border }]}>
+            <View style={styles.row}><ThemedText style={[styles.sectionLabel, { color: theme.resident.muted }]}>Photos</ThemedText><ThemedText style={{ color: theme.resident.muted, fontSize: 12 }}>{photos.length}/5</ThemedText></View>
+            <ThemedText style={{ color: theme.resident.muted, fontSize: 12.5, lineHeight: 17 }}>Attach up to 5 photos as evidence (JPG, PNG, WebP — max 10 MB each).</ThemedText>
+            <View style={styles.photoRow} onLayout={event => { const next = Math.min(72, Math.max(0, (event.nativeEvent.layout.width - 16) / 3)); setPhotoWidth(current => current === next ? current : next); }}>
+              {photos.map((photo, index) => <PhotoThumb key={photo.name + index} width={photoWidth} uri={photo.uri} onRemove={() => setPhotos(current => current.filter((_, i) => i !== index))} />)}
+              {photos.length < 5 ? <Pressable onPress={handlePickPhoto} disabled={submitting || submitted} accessibilityRole="button" accessibilityLabel="Add photo"
+                style={({ pressed }) => [styles.addPhoto, { width: photoWidth, height: photoWidth, borderColor: theme.resident.border }, pressed && styles.addPhotoPressed]}>
+                <Ionicons name="camera-outline" size={21} color={theme.resident.muted} /><ThemedText style={{ fontSize: 12, color: theme.resident.muted }}>Add photo</ThemedText>
+              </Pressable> : null}
             </View>
-            <View style={styles.locationRow}>
-              <View style={[styles.locationIconWrap, { backgroundColor: location ? `${theme.primary}1A` : theme.backgroundSelected }]}>
-                <Ionicons
-                  name={location ? 'location-outline' : 'location-sharp'}
-                  size={15}
-                  color={location ? theme.primary : theme.textSecondary}
-                />
-              </View>
-              <ThemedText type="small" themeColor={location ? undefined : 'textSecondary'} style={styles.locationText}>
-                {address || locationLabel}
-              </ThemedText>
-            </View>
-            {location ? (
-              <ThemedText type="small" themeColor="textSecondary" style={styles.coords}>
-                {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
-              </ThemedText>
-            ) : null}
-            <ThemedText type="small" themeColor="textSecondary" style={styles.coords}>
-              Tap to pin the exact location on the map
-            </ThemedText>
-          </ThemedView>
-          )}
-        </Pressable>
+          </View>
         </View>
-
-        {/* ── Specific Area Details ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
-          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-            Specific Area Details
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
-            Add precise details to help find the spot (e.g. near the blue gate, 2nd house from the corner).
-          </ThemedText>
-          <TextField
-            placeholder="e.g. Near the sari-sari store, blue gate"
-            value={specificAreaDetails}
-            onChangeText={setSpecificAreaDetails}
-            maxLength={300}
-          />
-          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
-            {specificAreaDetails.length}/300
-          </ThemedText>
-        </ThemedView>
+        <View style={[styles.panel, { borderColor: theme.resident.border, backgroundColor: theme.resident.card }]}>
+          <Pressable disabled={submitting || submitted} onPress={() => setPickerVisible(true)} accessibilityRole="button" accessibilityLabel="Pin exact location on map"
+            style={({ pressed }) => [styles.locationRow, pressed && styles.sectionPressed]}>
+            <View style={[styles.locationIconWrap, { backgroundColor: theme.resident.accentSoft }]}><Ionicons name="location-outline" size={21} color={theme.resident.accentText} /></View>
+            <View style={{ flex: 1, gap: 4 }}>
+              <View style={[styles.row, { flexWrap: 'wrap', gap: 4 }]}>
+                <ThemedText style={[styles.sectionLabel, { color: theme.resident.muted }]}>Location</ThemedText>
+                {location ? <ThemedText style={{ color: theme.resident.muted, fontSize: 12 }}>{location.lat.toFixed(5)}, {location.lng.toFixed(5)}</ThemedText> : null}
+              </View>
+              <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: '600', color: theme.resident.text }}>{address || locationLabel}</ThemedText>
+              {addressLoading ? <ActivityIndicator size="small" color={theme.resident.accentText} /> : null}
+              <ThemedText style={{ fontSize: 13, lineHeight: 18, fontWeight: '700', color: theme.resident.accentText }}>Tap to pin the exact location on the map</ThemedText>
+            </View>
+            <Ionicons name="chevron-forward" size={21} color={theme.resident.muted} />
+          </Pressable>
+          <IncidentFormField label="Specific area details" limit={300} value={specificAreaDetails} onChangeText={setSpecificAreaDetails} disabled={submitting || submitted} multiline
+            placeholder="e.g. Near the sari-sari store, blue gate" helper="Add precise details to help find the spot (e.g. near the blue gate, 2nd house from the corner)." />
         </View>
       </ScrollView>
 
@@ -649,8 +506,12 @@ function NewIncidentScreenContent() {
       />
 
       {/* ── Footer CTA ── */}
-      <ThemedView style={[styles.footer, { borderTopColor: theme.backgroundSelected }]}>
+      <ThemedView style={[styles.footer, { borderTopColor: theme.resident.border, backgroundColor: theme.resident.card, paddingBottom: Math.max(insets.bottom, 16) }]}>
+        {error ? <ThemedText accessibilityRole="alert" style={{ color: theme.resident.danger, marginBottom: 8 }}>{error}</ThemedText> : null}
         <PrimaryButton
+          presentation="resident"
+          disabled={!categoryId || title.length < 3 || !location || submitted || catsLoading || !!catsError}
+          appearance="requestForm"
           label={submitting ? 'Submitting…' : 'Submit Report'}
           loading={submitting}
           onPress={handleSubmit}
@@ -674,118 +535,21 @@ function NewIncidentScreenContent() {
         onDismiss={() => setError(null)}
         autoDismissMs={2800}
       />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  root: { flex: 1 },
-
-  /* Header */
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
-
-  content: {
-    padding: Spacing.four,
-    gap: Spacing.three,
-    paddingBottom: Spacing.six,
-  },
-  section: {
-    padding: Spacing.three,
-    borderRadius: 18,
-    borderWidth: StyleSheet.hairlineWidth,
-    gap: Spacing.two,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 1,
-  },
-  sectionLabel: {
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-  },
-  counter: {
-    alignSelf: 'flex-end',
-    fontSize: 11.5,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  photoRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: Spacing.two,
-    marginTop: Spacing.one,
-  },
-  addPhoto: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing.one,
-  },
-  addPhotoPressed: {
-    opacity: 0.7,
-    transform: [{ scale: 0.97 }],
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  locationIconWrap: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  locationText: {
-    flex: 1,
-  },
-  sectionPressed: {
-    opacity: 0.85,
-  },
-  locationEditHint: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-  },
-  coords: {
-    marginLeft: 36,
-    fontSize: 12,
-  },
-  footer: {
-    padding: Spacing.four,
-    paddingBottom: Spacing.five,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: Colors.light.backgroundElement,
-  },
+  safeArea: { flex: 1 }, root: { flex: 1 }, content: { padding: 16, gap: 16, paddingBottom: 32 },
+  section: { gap: 8, backgroundColor: 'transparent' }, sectionLabel: { fontSize: 12.5, lineHeight: 18, fontWeight: '700' },
+  panel: { borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
+  field: { padding: 16, gap: 6, borderTopWidth: StyleSheet.hairlineWidth },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  photoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+  addPhoto: { borderRadius: 12, borderStyle: 'dashed', borderWidth: 2, alignItems: 'center', justifyContent: 'center', gap: 4 },
+  addPhotoPressed: { opacity: 0.7 }, sectionPressed: { opacity: 0.85 },
+  locationRow: { padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  locationIconWrap: { width: 36, height: 36, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  footer: { padding: 16, borderTopWidth: StyleSheet.hairlineWidth },
 });

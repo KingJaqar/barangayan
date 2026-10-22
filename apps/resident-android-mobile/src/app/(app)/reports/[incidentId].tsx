@@ -11,11 +11,20 @@
  * reporter-only, 24-h window) are enforced server-side.
  */
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { ReportMapControls } from '@/components/reports/report-map-controls';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { isMapPosition } from '@/lib/map-presentation';
+import { ReportPhoto } from '@/components/reports/report-photo';
+import { ReportSourceState, ReportStatusBadge, useReportTone } from '@/components/reports/report-presentation';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Animated,
+  Easing,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,16 +32,13 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { MapView, type FocusPosition } from '@/components/map-view';
-import { FadeInView } from '@/components/reports/fade-in-view';
+import { MapView, type FocusPosition, type MapViewHandle } from '@/components/map-view';
 import { FeedbackModal, type FeedbackKind } from '@/components/reports/feedback-modal';
 import { PhotoViewerModal } from '@/components/reports/photo-viewer-modal';
-import { Shimmer } from '@/components/reports/shimmer';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { incidentStatusMeta } from '@/constants/incident-status';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import type { MyIncidentRow } from '@/hooks/use-my-incidents';
 import { useProfile } from '@/hooks/use-profile';
@@ -42,29 +48,14 @@ import { supabase } from '@/lib/supabase';
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
-function StatusBadge({ status }: { status: string }) {
-  const cfg = incidentStatusMeta(status);
-  return (
-    <View style={[statusStyles.pill, { backgroundColor: cfg.bg }]}>
-      <Ionicons name={cfg.icon as keyof typeof Ionicons.glyphMap} size={13} color={cfg.fg} />
-      <ThemedText style={[statusStyles.label, { color: cfg.fg }]}>{cfg.label}</ThemedText>
-    </View>
-  );
-}
-
-const statusStyles = StyleSheet.create({
-  pill:  { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 20, paddingHorizontal: 11, paddingVertical: 5, alignSelf: 'flex-start' },
-  label: { fontSize: 12.5, fontWeight: '700', lineHeight: 17, letterSpacing: 0.1 },
-});
-
 // ─── Info row ────────────────────────────────────────────────────────────────
 
 function InfoRow({ icon, children }: { icon: keyof typeof Ionicons.glyphMap; children: React.ReactNode }) {
   const theme = useTheme();
   return (
     <View style={infoStyles.row}>
-      <View style={[infoStyles.iconWrap, { backgroundColor: theme.backgroundSelected }]}>
-        <Ionicons name={icon} size={13} color={theme.textSecondary} />
+      <View style={infoStyles.iconWrap}>
+        <Ionicons name={icon} size={16} color={theme.resident.muted} />
       </View>
       {children}
     </View>
@@ -74,8 +65,8 @@ function InfoRow({ icon, children }: { icon: keyof typeof Ionicons.glyphMap; chi
 const infoStyles = StyleSheet.create({
   row:  { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   iconWrap: {
-    width: 26,
-    height: 26,
+    width: 16,
+    height: 20,
     borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
@@ -87,87 +78,57 @@ const infoStyles = StyleSheet.create({
 /** Tapping a photo opens it full-screen via `PhotoViewerModal` — presentation only,
  * no new data fetching, just a nicer way to look at the same `photo_urls` array. */
 function PhotoCarousel({ urls, onPressPhoto }: { urls: string[]; onPressPhoto: (uri: string) => void }) {
+  const { resident } = useTheme();
+  const reduced = useResidentReducedMotion(true);
+  const track = useRef<ScrollView>(null);
+  const [width, setWidth] = useState(0);
   const [active, setActive] = useState(0);
-  const theme = useTheme();
-  if (urls.length === 0) return null;
-  const hasMultiple = urls.length > 1;
-  const goPrev = () => setActive((i) => (i - 1 + urls.length) % urls.length);
-  const goNext = () => setActive((i) => (i + 1) % urls.length);
-  return (
-    <View style={carouselStyles.wrap}>
-      <Pressable
-        onPress={() => onPressPhoto(urls[active])}
-        accessibilityRole="button"
-        accessibilityLabel="View photo full-screen"
-        style={[carouselStyles.imgWrap, { backgroundColor: theme.backgroundSelected }]}>
-        {/* `contain`, not `cover` — cover crops a tall/wide upload to fill the fixed
-            220px box, which can slice off the top and bottom of the subject. Contain
-            always shows the whole photo, letterboxed on the shorter axis. */}
-        <Image source={{ uri: urls[active] }} style={carouselStyles.img} contentFit="contain" />
-        <View style={carouselStyles.expandHint}>
-          <Ionicons name="expand-outline" size={15} color="#fff" />
-        </View>
+  const index = Math.min(active, Math.max(0, urls.length - 1));
+  if (!urls.length) return <ReportSourceState message="No photos were attached to this report." />;
+  function go(next: number) {
+    const target = (next + urls.length) % urls.length;
+    setActive(target); track.current?.scrollTo({ x: target * width, animated: !reduced });
+  }
+  return <View>
+    <View onLayout={event => { const next = event.nativeEvent.layout.width; setWidth(current => current === next ? current : next); }}
+      style={{ aspectRatio: 8 / 5, borderRadius: 16, overflow: 'hidden', backgroundColor: resident.surface }}>
+      <ScrollView ref={track} horizontal pagingEnabled showsHorizontalScrollIndicator={false} scrollEventThrottle={16}
+        onScroll={event => { if (width > 0) { const next = Math.max(0, Math.min(urls.length - 1, Math.round(event.nativeEvent.contentOffset.x / width))); setActive(current => current === next ? current : next); } }}>
+        {urls.map((uri, photoIndex) => <Pressable key={uri + photoIndex} accessibilityRole="button"
+          accessibilityLabel={'View photo ' + (photoIndex + 1) + ' of ' + urls.length + ' full-screen'} onPress={() => onPressPhoto(uri)} style={{ width, height: '100%' }}>
+          <ReportPhoto uri={uri} />
+        </Pressable>)}
+      </ScrollView>
+      {urls.length > 1 ? <View style={[carouselStyles.counter, { pointerEvents: 'none', backgroundColor: resident.mediaScrim }]}><ThemedText style={{ color: resident.mediaForeground, fontSize: 12, fontWeight: '700' }}>{index + 1} / {urls.length}</ThemedText></View> : null}
+      <Pressable accessibilityRole="button" accessibilityLabel="View photo full-screen" onPress={() => { const uri = urls[index]; if (uri) onPressPhoto(uri); }} style={[carouselStyles.expand, { backgroundColor: resident.mediaScrim }]}>
+        <Ionicons name="expand-outline" size={18} color={resident.mediaForeground} />
       </Pressable>
-      {hasMultiple && (
-        <View style={carouselStyles.nav}>
-          <Pressable
-            onPress={goPrev}
-            hitSlop={Spacing.two}
-            accessibilityRole="button"
-            accessibilityLabel="Previous photo"
-            style={carouselStyles.chevronBtn}>
-            <Ionicons name="chevron-back" size={20} color={theme.textSecondary} />
-          </Pressable>
-
-          <View style={carouselStyles.dots}>
-            {urls.map((_, i) => (
-              <Pressable key={i} onPress={() => setActive(i)} hitSlop={Spacing.one}>
-                <View
-                  style={[
-                    carouselStyles.dot,
-                    { backgroundColor: theme.backgroundSelected },
-                    i === active && { backgroundColor: theme.primary, width: 18 },
-                  ]}
-                />
-              </Pressable>
-            ))}
-          </View>
-
-          <Pressable
-            onPress={goNext}
-            hitSlop={Spacing.two}
-            accessibilityRole="button"
-            accessibilityLabel="Next photo"
-            style={carouselStyles.chevronBtn}>
-            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
-          </Pressable>
-        </View>
-      )}
+    {urls.length > 1 ? <View pointerEvents="box-none" style={carouselStyles.nav}>
+      <Pressable accessibilityRole="button" hitSlop={6} accessibilityLabel="Previous photo" onPress={() => go(index - 1)} style={[carouselStyles.arrow, { backgroundColor: resident.card }]}><Ionicons name="chevron-back" size={20} color={resident.text} /></Pressable>
+      <Pressable accessibilityRole="button" hitSlop={6} accessibilityLabel="Next photo" onPress={() => go(index + 1)} style={[carouselStyles.arrow, { backgroundColor: resident.card }]}><Ionicons name="chevron-forward" size={20} color={resident.text} /></Pressable>
+    </View> : null}
+    {urls.length > 1 ? <View style={carouselStyles.dots}>{urls.map((uri, dot) => <CarouselDot key={uri + dot} active={dot === index} index={dot} onPress={() => go(dot)} />)}</View> : null}
     </View>
-  );
+  </View>;
 }
-
+function CarouselDot({ active, index, onPress }: { active: boolean; index: number; onPress: () => void }) {
+  const { resident } = useTheme(); const reduced = useResidentReducedMotion(true);
+  const progress = useRef(new Animated.Value(Number(active))).current;
+  useEffect(() => {
+    const animation = Animated.timing(progress, { toValue: Number(active), duration: reduced ? 0 : 200, easing: Easing.out(Easing.ease), useNativeDriver: false });
+    animation.start(); return () => animation.stop();
+  }, [active, reduced, progress]);
+  return <Pressable accessibilityRole="button" accessibilityLabel={'Photo ' + (index + 1)} accessibilityState={{ selected: active }} onPress={onPress} style={carouselStyles.dotHit} hitSlop={8}>
+    <Animated.View style={{ width: progress.interpolate({ inputRange: [0, 1], outputRange: [6, 20] }), height: 6, borderRadius: 3, backgroundColor: resident.mediaForeground, opacity: active ? 1 : 0.5 }} />
+  </Pressable>;
+}
 const carouselStyles = StyleSheet.create({
-  wrap: { gap: Spacing.two },
-  // 220 * 1.4 — the resident asked for a 40% larger photo so more detail is visible
-  // without having to tap into the full-screen viewer.
-  imgWrap: { width: '100%', height: 308, borderRadius: 16, overflow: 'hidden' },
-  img:  { width: '100%', height: '100%' },
-  expandHint: {
-    position: 'absolute',
-    right: Spacing.two,
-    bottom: Spacing.two,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: 'rgba(15,23,42,0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nav: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  chevronBtn: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center' },
-  dots: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 },
-  dot:  { width: 7, height: 7, borderRadius: 4 },
+  nav: { position: 'absolute', left: 4, right: 4, top: '45%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  arrow: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  dots: { position: 'absolute', left: 56, right: 56, bottom: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  dotHit: { width: 28, height: 44, justifyContent: 'center', alignItems: 'center' },
+  counter: { position: 'absolute', top: 12, left: 12, borderRadius: 100, paddingHorizontal: 10, paddingVertical: 4 },
+  expand: { position: 'absolute', bottom: 12, right: 12, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
 });
 
 // ─── Date formatter ───────────────────────────────────────────────────────────
@@ -177,7 +138,7 @@ const carouselStyles = StyleSheet.create({
 function fmt(iso: string) {
   const d = new Date(iso);
   const date = d.toLocaleDateString('en-PH', {
-    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+    month: 'short', day: 'numeric', year: 'numeric',
   });
   const time = d.toLocaleTimeString('en-PH', { hour: 'numeric', minute: '2-digit' });
   return `${date} · ${time}`;
@@ -211,84 +172,38 @@ const INCIDENT_STEP_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
  * Those steps show "Completed" without a time rather than a guessed one.
  */
 function StatusTimeline({ incident }: { incident: IncidentDetail }) {
-  const theme = useTheme();
-  const isStopped = incident.status === 'withdrawn' || incident.status === 'unresolved';
-  const currentStepIndex = isStopped ? -1 : INCIDENT_STEP_ORDER.indexOf(incident.status as typeof INCIDENT_STEP_ORDER[number]);
-
-  return (
-    <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-      <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
-        Status History
-      </ThemedText>
-
+  const { resident } = useTheme();
+  const stopped = incident.status === 'withdrawn' || incident.status === 'unresolved';
+  const current = stopped ? -1 : INCIDENT_STEP_ORDER.indexOf(incident.status as typeof INCIDENT_STEP_ORDER[number]);
+  return <View style={[styles.card, { borderColor: resident.border, backgroundColor: resident.card }]}>
+    <View style={[styles.row, { flexWrap: 'wrap', gap: 4 }]}><ThemedText style={[styles.sectionLabel, { color: resident.muted }]}>Status history</ThemedText><ThemedText style={{ fontSize: 12, color: resident.muted }}>Updated {new Date(incident.updated_at).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</ThemedText></View>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
       {INCIDENT_STEP_ORDER.map((step, index) => {
-        const isDone = index <= currentStepIndex && !isStopped;
-        const isCurrent = step === incident.status;
-        const isLast = index === INCIDENT_STEP_ORDER.length - 1;
-        // Known time only for the "Reported" step (created_at) and whichever step is
-        // current right now (updated_at) — see the function comment above.
-        const timeLabel = step === 'open' ? fmt(incident.created_at) : isCurrent ? fmt(incident.updated_at) : null;
-
-        return (
-          <View key={step} style={timelineStyles.step}>
-            <View style={timelineStyles.stepIndicator}>
-              <View
-                style={[
-                  timelineStyles.stepDot,
-                  { backgroundColor: isDone ? theme.primary : theme.backgroundSelected },
-                  !isDone && { borderWidth: 1, borderColor: theme.textSecondary },
-                ]}>
-                {isDone ? (
-                  <Ionicons name={INCIDENT_STEP_ICON[step]} size={14} color={theme.onPrimary} />
-                ) : null}
+        const done = step === 'open' || (!stopped && index <= current);
+        const selected = step === incident.status;
+        const time = step === 'open' ? fmt(incident.created_at) : selected ? fmt(incident.updated_at) : done ? 'Completed' : 'Pending';
+        return <View key={step} style={timelineStyles.step}>
+          <View style={timelineStyles.track}>
+            {index < 2 ? <View style={[timelineStyles.line, { backgroundColor: index < current && !stopped ? resident.accentText : resident.border }]} /> : null}
+            <View style={[timelineStyles.ring, { backgroundColor: selected ? resident.accentSoft : resident.card }]}>
+              <View style={[timelineStyles.dot, { backgroundColor: done ? resident.accent : resident.surface, borderColor: done ? resident.accentText : resident.border }]}>
+                <Ionicons name={INCIDENT_STEP_ICON[step]} size={16} color={done ? resident.onAccent : resident.muted} />
               </View>
-              {!isLast ? (
-                <View
-                  style={[
-                    timelineStyles.stepLine,
-                    { backgroundColor: index < currentStepIndex && !isStopped ? theme.primary : theme.backgroundSelected },
-                  ]}
-                />
-              ) : null}
-            </View>
-            <View style={timelineStyles.stepBody}>
-              <ThemedText
-                type={isCurrent ? 'smallBold' : 'small'}
-                themeColor={isDone ? undefined : 'textSecondary'}
-                style={isCurrent ? { color: theme.primary } : undefined}>
-                {INCIDENT_STEP_LABEL[step]}
-              </ThemedText>
-              <ThemedText type="small" themeColor="textSecondary">
-                {timeLabel ?? (isDone ? 'Completed' : 'Pending')}
-              </ThemedText>
             </View>
           </View>
-        );
+          <ThemedText style={{ textAlign: 'center', fontSize: 12, lineHeight: 17, fontWeight: '600', color: selected ? resident.accentText : resident.text }}>{INCIDENT_STEP_LABEL[step]}</ThemedText>
+          <ThemedText style={{ textAlign: 'center', fontSize: 11.5, lineHeight: 16, color: resident.muted }}>{time}</ThemedText>
+        </View>;
       })}
-
-      {isStopped && (
-        <FadeInView>
-          <ThemedText
-            type="small"
-            style={timelineStyles.stoppedNote}
-            themeColor={incident.status === 'unresolved' ? 'accentRed' : 'textSecondary'}>
-            {incident.status === 'withdrawn'
-              ? `Withdrawn by the reporter · ${fmt(incident.updated_at)}`
-              : `Closed as unresolved by the barangay · ${fmt(incident.updated_at)}`}
-          </ThemedText>
-        </FadeInView>
-      )}
-    </ThemedView>
-  );
+    </ScrollView>
+    {stopped ? <ThemedText style={{ color: incident.status === 'unresolved' ? resident.danger : resident.muted, fontSize: 13 }}>{incident.status === 'withdrawn' ? 'Withdrawn by the reporter' : 'Closed as unresolved by the barangay'} · {fmt(incident.updated_at)}</ThemedText> : null}
+  </View>;
 }
-
 const timelineStyles = StyleSheet.create({
-  step: { flexDirection: 'row', gap: Spacing.two },
-  stepIndicator: { alignItems: 'center' },
-  stepDot: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
-  stepLine: { width: 2, flex: 1, minHeight: Spacing.four },
-  stepBody: { flex: 1, gap: Spacing.half, paddingBottom: Spacing.two },
-  stoppedNote: { marginTop: Spacing.one },
+  step: { flex: 1, minWidth: 84, gap: 4, alignItems: 'stretch' }, track: { height: 40, alignItems: 'center', justifyContent: 'center' },
+  line: { position: 'absolute', left: '50%', width: '100%', height: 2, top: 19 },
+  ring: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+  dot: { width: 28, height: 28, borderRadius: 14, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
 });
 
 // ─── Location card ───────────────────────────────────────────────────────────
@@ -311,7 +226,14 @@ const RECENTER_ZOOM = 18;
 function LocationCard({ incident }: { incident: IncidentDetail }) {
   const theme = useTheme();
   const { profile } = useProfile();
-  const [focusPosition, setFocusPosition] = useState<FocusPosition | undefined>(undefined);
+  const map = useRef<MapViewHandle>(null);
+  const reducedMotion = useResidentReducedMotion(true);
+  const { fontId } = useFontPreference();
+  const initialLocation: unknown = incident.location;
+  const [focusPosition] = useState<FocusPosition | undefined>(() => isMapPosition(initialLocation) ? { lat: initialLocation.lat, lng: initialLocation.lng, zoom: RECENTER_ZOOM } : undefined);
+  const presentation = useMemo(() => ({ selectedMarkerId: incident.id, padding: { top: 0, bottom: 20 }, attributionBottom: 0, reducedMotion,
+    surface: theme.resident.card, text: theme.resident.text, border: theme.resident.border, fontFamily: getMobileFontFamily(fontId) ?? 'sans-serif',
+  }), [incident.id, reducedMotion, theme.resident.card, theme.resident.text, theme.resident.border, fontId]);
 
   const loc = incident.location as { lat?: unknown; lng?: unknown } | null;
   const hasLocation = loc !== null && typeof loc === 'object' && typeof loc.lat === 'number' && typeof loc.lng === 'number';
@@ -320,109 +242,28 @@ function LocationCard({ incident }: { incident: IncidentDetail }) {
 
   if (!hasLocation && !hasAddress && !hasDetails) return null;
 
-  const category = incident.incident_categories;
   const markerKind = incident.category_id ?? 'incident';
   const boundary = (profile?.barangays?.boundary as Polygon | MultiPolygon | null) ?? null;
 
-  // A fresh object every press (even with unchanged lat/lng/zoom) so MapView's
-  // `focusPosition` effect — which only fires on reference change — always re-triggers,
-  // flying back to the pin however far the resident panned or zoomed away from it.
+  // The command recenters even after the resident pans away from the initial focus.
   function handleRecenter() {
     if (!hasLocation) return;
-    setFocusPosition({ lat: loc!.lat as number, lng: loc!.lng as number, zoom: RECENTER_ZOOM });
+    if (loc && typeof loc.lat === 'number' && typeof loc.lng === 'number') map.current?.flyTo({ lat: loc.lat, lng: loc.lng, zoom: RECENTER_ZOOM });
   }
 
-  return (
-    <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-      <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
-        Location
-      </ThemedText>
-
-      {hasLocation && (
-        <View style={[locationStyles.mapWrap, { backgroundColor: theme.backgroundSelected }]}>
-          <MapView
-            markers={[
-              {
-                id: incident.id,
-                position: { lat: loc!.lat as number, lng: loc!.lng as number },
-                kind: markerKind,
-                label: incident.title,
-              },
-            ]}
-            kindColors={category ? { [markerKind]: category.color } : undefined}
-            boundary={boundary}
-            focusPosition={focusPosition}
-            style={StyleSheet.absoluteFill}
-          />
-          <Pressable
-            onPress={handleRecenter}
-            accessibilityRole="button"
-            accessibilityLabel="Recenter map on pinned location"
-            hitSlop={Spacing.one}
-            style={({ pressed }) => [locationStyles.recenterBtn, pressed && locationStyles.recenterBtnPressed]}>
-            <Ionicons name="locate-outline" size={19} color={theme.primary} />
-          </Pressable>
-        </View>
-      )}
-
-      {hasAddress && (
-        <InfoRow icon="location-outline">
-          <ThemedText type="small" themeColor="textSecondary" style={locationStyles.flexText}>
-            {incident.address}
-          </ThemedText>
-        </InfoRow>
-      )}
-
-      {hasLocation && (
-        <ThemedText type="small" themeColor="textSecondary" style={locationStyles.coords}>
-          {(loc!.lat as number).toFixed(5)}, {(loc!.lng as number).toFixed(5)}
-        </ThemedText>
-      )}
-
-      {hasDetails && (
-        <InfoRow icon="information-circle-outline">
-          <ThemedText type="small" themeColor="textSecondary" style={[locationStyles.flexText, locationStyles.detailsText]}>
-            “{incident.specific_area_details}”
-          </ThemedText>
-        </InfoRow>
-      )}
-    </ThemedView>
-  );
+  return <View style={[styles.card, { padding: 0, gap: 0, overflow: 'hidden', backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+    {hasLocation ? <View style={{ height: 176 }}>
+      <MapView ref={map} markers={[{ id: incident.id, position: { lat: loc.lat as number, lng: loc.lng as number }, kind: markerKind, label: incident.title }]}
+        kindColors={{ [markerKind]: theme.resident.accent }} boundary={boundary} focusPosition={focusPosition} presentation={presentation} style={StyleSheet.absoluteFill} />
+      <ReportMapControls onZoomIn={() => map.current?.zoomIn()} onZoomOut={() => map.current?.zoomOut()} onRecenter={handleRecenter} />
+    </View> : null}
+    <View style={{ padding: 16, gap: 6 }}>
+      {hasAddress ? <InfoRow icon="location-outline"><ThemedText style={{ flex: 1, color: theme.resident.text, fontSize: 14, lineHeight: 20, fontWeight: '500' }}>{incident.address}</ThemedText></InfoRow> : null}
+      {hasLocation ? <ThemedText style={{ marginLeft: 24, fontSize: 12, color: theme.resident.muted }}>{(loc.lat as number).toFixed(5)}, {(loc.lng as number).toFixed(5)}</ThemedText> : null}
+      {hasDetails ? <InfoRow icon="information-circle-outline"><ThemedText style={{ flex: 1, color: theme.resident.muted, fontSize: 13 }}>{incident.specific_area_details}</ThemedText></InfoRow> : null}
+    </View>
+  </View>;
 }
-
-const locationStyles = StyleSheet.create({
-  mapWrap: {
-    width: '100%',
-    // 180 * 1.5 — 50% larger so the pinned location and surrounding streets read more
-    // clearly. Pairs with map-view.tsx's `nestedScrollEnabled` fix so panning around
-    // this bigger map, nested inside the screen's outer ScrollView, stays smooth.
-    height: 270,
-    borderRadius: 14,
-    overflow: 'hidden',
-  },
-  recenterBtn: {
-    position: 'absolute',
-    right: Spacing.two,
-    bottom: Spacing.two,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  recenterBtnPressed: {
-    opacity: 0.75,
-  },
-  flexText: { flex: 1 },
-  detailsText: { fontStyle: 'italic' },
-  coords: { marginLeft: 34 },
-});
 
 // ─── Main screen ─────────────────────────────────────────────────────────────
 
@@ -436,9 +277,12 @@ export default function IncidentDetailScreen() {
   const insets = useSafeAreaInsets();
 
   const [incident, setIncident] = useState<IncidentDetail | null | undefined>(undefined);
+  const categoryTone = useReportTone(incident?.incident_categories?.color ?? theme.primary);
   const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [withdrawing, setWithdrawing] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const actionLock = useRef(false);
   const [previewUri, setPreviewUri] = useState<string | null>(null);
 
   // Centered pop-up feedback (replaces the old `notify()` Alert calls) for the two
@@ -461,20 +305,22 @@ export default function IncidentDetailScreen() {
   const loadIncident = useCallback(async () => {
     if (!incidentId) return null;
 
-    const { data } = await supabase
+    setLoadError(false);
+    const { data, error } = await supabase
       .from('incidents')
       .select('*, incident_categories(name, icon, color)')
       .eq('id', incidentId)
       .is('deleted_at', null)
       .maybeSingle();
 
+    if (error) { setLoadError(true); return null; }
     const row = (data as IncidentDetail | null) ?? null;
     setIncident(row);
     return row;
   }, [incidentId]);
 
   useEffect(() => {
-    void loadIncident();
+    void loadIncident().catch(() => setLoadError(true));
   }, [loadIncident]);
 
   // ── Live status updates ──────────────────────────────────────────────────
@@ -497,7 +343,7 @@ export default function IncidentDetailScreen() {
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'incidents', filter: `id=eq.${incidentId}` },
-        () => void loadIncident(),
+        () => { void loadIncident().catch(() => setLoadError(true)); },
       )
       .subscribe();
 
@@ -520,10 +366,15 @@ export default function IncidentDetailScreen() {
 
   // ── Confirm ─────────────────────────────────────────────────────────────
   async function handleConfirm() {
-    if (!incidentId) return;
+    if (!incidentId || actionLock.current) return;
+    actionLock.current = true;
     setConfirming(true);
-    const { data, error } = await supabase.rpc('confirm_incident', { p_incident_id: incidentId });
+    let result: { data: boolean | null; error: { message: string } | null };
+    try { result = await supabase.rpc('confirm_incident', { p_incident_id: incidentId }); }
+    catch { setConfirming(false); actionLock.current = false; setFeedback({ kind: 'error', title: 'Could not confirm', message: 'Please try again.' }); return; }
+    const { data, error } = result;
     setConfirming(false);
+    actionLock.current = false;
 
     if (error) {
       setFeedback({ kind: 'error', title: 'Could not confirm', message: error.message });
@@ -538,7 +389,7 @@ export default function IncidentDetailScreen() {
 
     setAlreadyConfirmed(true);
     // Refresh count from DB
-    await loadIncident();
+    await loadIncident().catch(() => setLoadError(true));
   }
 
   // ── Withdraw own open report (within 24 h) ───────────────────────────────
@@ -553,8 +404,8 @@ export default function IncidentDetailScreen() {
   // It moves the row to status = 'withdrawn' rather than removing it, so we re-read
   // afterwards: the row is still there, just with a new status.
   async function handleWithdraw() {
-    if (!incidentId) return;
-
+    if (!incidentId || actionLock.current) return;
+    actionLock.current = true;
     const confirmed = await confirmAction({
       title: 'Withdraw Report',
       message:
@@ -562,19 +413,24 @@ export default function IncidentDetailScreen() {
       confirmLabel: 'Withdraw',
       destructive: true,
     });
-    if (!confirmed) return;
+    if (!confirmed) { actionLock.current = false; return; }
 
     setWithdrawing(true);
-    const { error } = await supabase.rpc('withdraw_incident', { p_incident_id: incidentId });
+    let result: { error: { message: string } | null };
+    try { result = await supabase.rpc('withdraw_incident', { p_incident_id: incidentId }); }
+    catch { setWithdrawing(false); actionLock.current = false; setFeedback({ kind: 'error', title: 'Could not withdraw', message: 'Please try again.' }); return; }
+    const { error } = result;
 
     if (error) {
       setWithdrawing(false);
+      actionLock.current = false;
       setFeedback({ kind: 'error', title: 'Could not withdraw', message: error.message });
       return;
     }
 
-    await loadIncident();
+    await loadIncident().catch(() => setLoadError(true));
     setWithdrawing(false);
+    actionLock.current = false;
 
     // `back()`, not `replace()` — this screen was pushed on top of the Reports index,
     // so replacing would stack a second copy of the index instead of returning to it.
@@ -589,28 +445,22 @@ export default function IncidentDetailScreen() {
   }
 
   // ── Loading / not found ──────────────────────────────────────────────────
-  if (incident === undefined) {
-    return (
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
-        <View style={styles.loadingContent}>
-          <Shimmer style={styles.loadingPhoto} />
-          <Shimmer style={[styles.loadingLine, { width: '70%', height: 22 }]} />
-          <Shimmer style={[styles.loadingLine, { width: '40%' }]} />
-          <Shimmer style={[styles.loadingLine, { width: '92%' }]} />
-          <Shimmer style={[styles.loadingLine, { width: '80%' }]} />
-        </View>
-      </SafeAreaView>
-    );
-  }
+  if (loadError) return <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
+    <ServiceScreenHeader title="Incident Report" /><ReportSourceState message="This report could not be loaded." retry={() => { void loadIncident().catch(() => setLoadError(true)); }} />
+  </SafeAreaView>;
+  if (incident === undefined) return <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
+    <ServiceScreenHeader title="Incident Report" /><ReportSourceState message="Loading report…" />
+  </SafeAreaView>;
   if (incident === null) {
     return (
       <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
+        <ServiceScreenHeader title="Incident Report" />
         <View style={styles.notFound}>
           <View style={[styles.notFoundIconWrap, { backgroundColor: theme.backgroundElement }]}>
-            <Ionicons name="alert-circle-outline" size={40} color={theme.textSecondary} />
+            <Ionicons name="alert-circle-outline" size={40} color={theme.resident.muted} />
           </View>
           <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
-            Report not found or was withdrawn.
+            This report is no longer available.
           </ThemedText>
         </View>
       </SafeAreaView>
@@ -636,170 +486,107 @@ export default function IncidentDetailScreen() {
     (incident.status === 'open' || incident.status === 'in_progress');
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
-
-      {/* ── Header ────────────────────────────────────────────────────────── */}
-      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <Pressable
-          onPress={() => router.back()}
-          style={styles.backBtn}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          hitSlop={Spacing.two}>
-          <Ionicons name="chevron-back" size={26} color="#fff" />
-        </Pressable>
-        <View style={styles.headerContent}>
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Incident Report
-          </ThemedText>
-        </View>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.card }]}>
+      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <ServiceScreenHeader title="Incident Report" />
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]} >
 
         {/* ── Photos ── */}
         <PhotoCarousel urls={incident.photo_urls ?? []} onPressPhoto={setPreviewUri} />
 
-        {/* ── Header card ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-          <View style={styles.titleRow}>
-            <ThemedText style={styles.title}>{incident.title}</ThemedText>
-            <StatusBadge status={incident.status} />
+        <View style={{ gap: 8, paddingHorizontal: 4 }}>
+          <View style={[styles.row, { justifyContent: 'flex-start', flexWrap: 'wrap', gap: 8 }]}>
+            <ReportStatusBadge status={incident.status} />
+            {category ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {category.icon ? <Ionicons name={category.icon as keyof typeof Ionicons.glyphMap} size={16} color={categoryTone.ink} /> : null}
+              <ThemedText style={{ color: theme.resident.text, fontSize: 13, fontWeight: '600' }}>{category.name}</ThemedText>
+            </View> : null}
           </View>
-
-          {category && (
-            <View style={[styles.catPill, { backgroundColor: `${category.color}20` }]}>
-              {category.icon ? (
-                <Ionicons
-                  name={category.icon as keyof typeof Ionicons.glyphMap}
-                  size={13}
-                  color={category.color}
-                />
-              ) : null}
-              <ThemedText type="small" style={{ color: category.color, fontWeight: '700' }}>
-                {category.name}
-              </ThemedText>
-            </View>
-          )}
-
-          {incident.description ? (
-            <ThemedText themeColor="textSecondary" style={styles.desc}>
-              {incident.description}
-            </ThemedText>
-          ) : null}
-        </ThemedView>
+          <ThemedText style={styles.title}>{incident.title}</ThemedText>
+          {incident.description ? <ThemedText style={[styles.desc, { color: theme.resident.muted }]}>{incident.description}</ThemedText> : null}
         </View>
+        <StatusTimeline incident={incident} />
 
         {/* ── Location (map, address, specific area details) ── */}
         <View>
           <LocationCard incident={incident} />
         </View>
 
-        {/* ── Meta ── */}
-        <View>
-        <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected, gap: Spacing.three }]}>
-          <InfoRow icon="calendar-outline">
-            <ThemedText type="small" themeColor="textSecondary">
-              Reported on {fmt(incident.created_at)}
-            </ThemedText>
-          </InfoRow>
-
-          {incident.updated_at !== incident.created_at && (
-            <InfoRow icon="refresh-outline">
-              <ThemedText type="small" themeColor="textSecondary">
-                Last updated {fmt(incident.updated_at)}
-              </ThemedText>
-            </InfoRow>
-          )}
-
-          <InfoRow icon="people-outline">
-            <ThemedText type="small" themeColor="textSecondary">
-              {incident.confirmation_count === 0
-                ? 'No confirmations yet'
-                : `${incident.confirmation_count} resident${incident.confirmation_count !== 1 ? 's' : ''} confirmed this report`}
-            </ThemedText>
-          </InfoRow>
-        </ThemedView>
-        </View>
-
-        {/* ── Status timeline ── */}
-        <View>
-          <StatusTimeline incident={incident} />
+        <View style={[styles.card, { padding: 0, gap: 0, overflow: 'hidden', backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{ flex: 1, minWidth: 128, padding: 14, gap: 4 }}><InfoRow icon="calendar-outline"><ThemedText style={{ fontSize: 12, color: theme.resident.muted }}>Reported on</ThemedText></InfoRow><ThemedText style={{ fontSize: 13, color: theme.resident.text }}>{fmt(incident.created_at)}</ThemedText></View>
+            {incident.updated_at !== incident.created_at ? <View style={{ flex: 1, minWidth: 128, padding: 14, gap: 4, borderLeftWidth: StyleSheet.hairlineWidth, borderLeftColor: theme.resident.border }}><InfoRow icon="refresh-outline"><ThemedText style={{ fontSize: 12, color: theme.resident.muted }}>Last updated</ThemedText></InfoRow><ThemedText style={{ fontSize: 13, color: theme.resident.text }}>{fmt(incident.updated_at)}</ThemedText></View> : null}
+          </View>
+          <View style={{ padding: 14, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.resident.border }}><InfoRow icon="people-outline"><ThemedText style={{ flex: 1, fontSize: 13, color: theme.resident.muted }}>{incident.confirmation_count === 0 ? 'No confirmations yet' : incident.confirmation_count + ' resident' + (incident.confirmation_count !== 1 ? 's' : '') + ' confirmed this report'}</ThemedText></InfoRow></View>
         </View>
 
         {/* ── Actions ── */}
-        {/* Each block below fades/rises in on mount via FadeInView (never Reanimated's
-            `entering`/`exiting`/`layout` props — see fade-in-view.tsx) so a state change
-            (e.g. tapping Confirm swaps this block for the "confirmed" banner below) reads
-            as a soft transition instead of a hard pop. */}
         {canConfirm && (
-          <FadeInView>
-            <PrimaryButton
+          <View>
+            <PrimaryButton presentation="resident"
               label={confirming ? 'Confirming…' : `Confirm this report · ${incident.confirmation_count} confirmed`}
               loading={confirming}
               onPress={handleConfirm}
             />
-          </FadeInView>
+          </View>
         )}
 
         {alreadyConfirmed && !isOwn && (
-          <FadeInView>
-          <ThemedView type="backgroundElement" style={[styles.card, styles.confirmedBanner, { borderColor: `${theme.accentGreen}33` }]}>
-            <Ionicons name="checkmark-circle" size={18} color={theme.accentGreen} />
-            <ThemedText type="small" style={{ color: theme.accentGreen, fontWeight: '700' }}>
+          <View>
+          <ThemedView type="backgroundElement" style={[styles.card, styles.confirmedBanner, { borderColor: `${theme.resident.success}33` }]}>
+            <Ionicons name="checkmark-circle" size={18} color={theme.resident.success} />
+            <ThemedText type="small" style={{ color: theme.resident.success, fontWeight: '700' }}>
               You have confirmed this report
             </ThemedText>
           </ThemedView>
-          </FadeInView>
+          </View>
         )}
 
         {canWithdraw && (
-          <FadeInView>
+          <View>
             <Pressable
               onPress={handleWithdraw}
               disabled={withdrawing}
               accessibilityRole="button"
               style={({ pressed }) => [
                 styles.withdrawBtn,
-                { borderColor: theme.accentRed },
+                { borderColor: theme.resident.danger },
                 withdrawing && styles.withdrawBtnBusy,
                 pressed && !withdrawing && styles.withdrawBtnPressed,
               ]}>
-              <Ionicons name="trash-outline" size={16} color={theme.accentRed} />
-              <ThemedText style={{ color: theme.accentRed, fontWeight: '700', fontSize: 14 }}>
+              <Ionicons name="trash-outline" size={16} color={theme.resident.danger} />
+              <ThemedText style={{ color: theme.resident.danger, fontWeight: '700', fontSize: 14 }}>
                 {withdrawing ? 'Withdrawing…' : 'Withdraw report'}
               </ThemedText>
             </Pressable>
-          </FadeInView>
+          </View>
         )}
 
         {/* The 24-hour window is enforced server-side; say so rather than just hiding the button. */}
         {windowClosed && (
-          <FadeInView>
+          <View>
             <ThemedText type="small" themeColor="textSecondary" style={styles.note}>
               The 24-hour window for withdrawing this report has closed. Contact the barangay
               office if it needs to be cancelled.
             </ThemedText>
-          </FadeInView>
+          </View>
         )}
 
         {isWithdrawn && isOwn && (
-          <FadeInView>
-          <ThemedView type="backgroundElement" style={[styles.card, styles.confirmedBanner, { borderColor: theme.backgroundSelected }]}>
-            <Ionicons name="close-circle" size={18} color={theme.textSecondary} />
+          <View>
+          <ThemedView type="backgroundElement" style={[styles.card, styles.confirmedBanner, { borderColor: theme.resident.border, backgroundColor: theme.resident.card }]}>
+            <Ionicons name="close-circle" size={18} color={theme.resident.muted} />
             <ThemedText type="small" themeColor="textSecondary" style={{ flex: 1 }}>
               You withdrew this report. It stays on record but the barangay will not act on it.
             </ThemedText>
           </ThemedView>
-          </FadeInView>
+          </View>
         )}
       </ScrollView>
       </View>
 
       {/* ── Full-screen photo preview ── */}
-      <PhotoViewerModal visible={!!previewUri} uri={previewUri} onClose={() => setPreviewUri(null)} />
+      <PhotoViewerModal visible={!!previewUri} uri={previewUri} photos={incident.photo_urls ?? []} onClose={() => setPreviewUri(null)} />
 
       {/* ── Centered feedback pop-up (confirm / withdraw results) ── */}
       <FeedbackModal
@@ -821,72 +608,35 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   root: { flex: 1 },
 
-  /* Header */
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
-
   content: {
-    padding: Spacing.three,
-    gap: Spacing.three,
-    paddingBottom: Spacing.six,
+    padding: 16,
+    gap: 14,
   },
   card: {
-    borderRadius: 18,
+    borderRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.three,
-    gap: Spacing.two,
-    shadowColor: '#000',
+    padding: 16,
+    gap: 12,
     shadowOpacity: 0.04,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 3 },
     elevation: 1,
   },
-  titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: Spacing.two,
-  },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   title: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 25,
+    fontSize: 21,
+    fontWeight: '800',
+    lineHeight: 26,
     letterSpacing: -0.3,
   },
-  catPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-  },
   desc: {
-    fontSize: 14,
-    lineHeight: 21,
+    fontSize: 15,
+    lineHeight: 22,
   },
   sectionLabel: {
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-    fontSize: 12,
+    fontWeight: '700',
+    fontSize: 15,
+    lineHeight: 20,
   },
   confirmedBanner: {
     flexDirection: 'row',
@@ -900,7 +650,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.two,
     borderWidth: 1.5,
-    borderRadius: 24,
+    borderRadius: 12,
     paddingVertical: Spacing.two + Spacing.one,
   },
   withdrawBtnPressed: {
@@ -914,21 +664,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: Spacing.two,
     lineHeight: 20,
-  },
-
-  /* Loading skeleton */
-  loadingContent: {
-    padding: Spacing.three,
-    gap: Spacing.three,
-  },
-  loadingPhoto: {
-    width: '100%',
-    height: 308,
-    borderRadius: 16,
-  },
-  loadingLine: {
-    height: 14,
-    borderRadius: 7,
   },
 
   /* Not found */

@@ -1,0 +1,44 @@
+BEGIN
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+ok 1 - Export view uses invoker permissions and a barrier
+ok 2 - Auth users are not referenced by an exposed view
+ok 3 - Clients still cannot select private receipt rows
+ok 4 - No service-role export shortcut
+SET
+ok 5 - Anonymous view access denied
+ok 6 - Anonymous private-helper access denied
+RESET
+SET
+dfb41000-0000-4000-8000-000000000001
+ok 7 - Resident exports exactly their own receipt
+ok 8 - Foreign household receipt hidden
+ok 9 - Calling the helper directly retains ownership filtering
+ok 10 - Private staff and payload fields are never exported
+dfb41000-0000-4000-8000-000000000003
+ok 11 - Staff cannot export resident receipt metadata
+RESET
+UPDATE 1
+SET
+dfb41000-0000-4000-8000-000000000001
+ok 12 - Banned resident cannot export receipts
+RESET
+UPDATE 1
+SET
+ok 13 - Anonymous Auth account cannot export receipts
+RESET
+UPDATE 1
+SET
+ok 14 - Deleted Auth account cannot export receipts
+RESET
+UPDATE 1
+UPDATE 1
+SET
+ok 15 - Archived profile cannot export receipts
+
+ok 16 - Missing subject cannot export receipts
+RESET
+1..16
+ROLLBACK

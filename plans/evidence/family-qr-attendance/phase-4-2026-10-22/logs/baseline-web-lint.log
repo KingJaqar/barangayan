@@ -1,0 +1,4 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint src/lib/qr-checkin.ts src/components/emergency/qr-scanner-dialog.tsx src/components/emergency/qr-upload-fallback.tsx src/components/emergency/scan-content.tsx
+

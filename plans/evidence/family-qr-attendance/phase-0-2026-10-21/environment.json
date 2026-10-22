@@ -1,0 +1,52 @@
+[
+  {
+    "command": [
+      "adb",
+      "-s",
+      "127.0.0.1:16384",
+      "shell",
+      "getprop",
+      "ro.product.model"
+    ],
+    "exit": 0,
+    "stdout": "SM-S918U\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "adb",
+      "-s",
+      "127.0.0.1:16384",
+      "shell",
+      "getprop",
+      "ro.build.version.release"
+    ],
+    "exit": 0,
+    "stdout": "12\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "adb",
+      "-s",
+      "127.0.0.1:16384",
+      "shell",
+      "pm",
+      "list",
+      "packages",
+      "barangayan"
+    ],
+    "exit": 0,
+    "stdout": "package:com.barangayan.resident.dev\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "docker",
+      "version",
+      "--format",
+      "{{.Client.Version}}|{{if .Server}}{{.Server.Version}}{{end}}"
+    ],
+    "result": "timeout after 20 seconds"
+  }
+]

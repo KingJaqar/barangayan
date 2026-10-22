@@ -1,0 +1,237 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{56cd291f-d382-42a9-add9-363ac56b39a0}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Collecting files...
+
+[K[1A
+[K[?25l⠸ Collect file... (68/69) apps/resident-android-mobile/metro.config.js
+
+[K[1A
+[K[?25l⠼ Processing files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Processing files...
+
+[K[1A
+[K[?25l⠙ Processing files...
+
+[K[1A
+[K[?25l⠹ Processing files...
+
+[K[1A
+[K[?25l⠸ Processing files...
+
+[K[1A
+[K[?25l⠼ Processing files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Processing files...
+
+[K[1A
+[K[?25l⠙ Processing files...
+
+[K[1A
+[K[?25l⠹ Processing files...
+
+[K[1A
+[K[?25l⠸ Processing files...
+
+[K[1A
+[K[?25l⠼ Processing files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Running security check... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠙ Running security check... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠹ Running security check... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠸ Running security check... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠼ Processing file... (1/69) apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx
+
+[K[1A
+[K[?25l⠴ Processing file... (1/69) apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx
+
+[K[1A
+[K[?25l⠦ Processing file... (3/69) apps/resident-android-mobile/src/app/(app)/reports/index.tsx
+
+[K[1A
+[K[?25l⠧ Processing file... (8/69) apps/resident-android-mobile/src/components/reports/announcement-modal.tsx
+
+[K[1A
+[K[?25l⠇ Processing file... (16/69) apps/resident-android-mobile/src/components/reports/report-photo.tsx
+
+[K[1A
+[K[?25l⠏ Processing file... (23/69) apps/resident-android-mobile/src/components/primary-button.tsx
+
+[K[1A
+[K[?25l⠋ Processing file... (37/69) apps/resident-android-mobile/src/hooks/use-unread-counts.tsx
+
+[K[1A
+[K[?25l⠙ Processing file... (41/69) apps/resident-android-mobile/src/lib/realtime-channel.ts
+
+[K[1A
+[K[?25l⠹ Processing file... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠸ Processing file... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠼ Processing file... (69/69) tsconfig.json
+
+[K[1A
+[K[?25l⠴ Writing output file...
+
+[K[1A
+[K[?25l⠦ Calculating metrics... (69/69) packages/shared/src/index.ts
+
+[K[1A
+[K[?25l⠧ Calculating metrics... (69/69) packages/shared/src/index.ts
+
+[K[1A
+[K[?25l✔ Packing completed successfully!
+[?25h
+📈 Top 5 Files by Token Count:
+──────────────────────────────
+1.  apps/resident-android-mobile/src/components/map-view.tsx (2,454 tokens, 10,347 chars, 9.8%)
+2.  apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx (2,071 tokens, 8,859 chars, 8.3%)
+3.  apps/resident-android-mobile/src/app/(app)/reports/new.tsx (1,290 tokens, 5,504 chars, 5.1%)
+4.  apps/resident-android-mobile/src/hooks/use-unread-counts.tsx (1,071 tokens, 4,619 chars, 4.3%)
+5.  apps/resident-android-mobile/src/lib/image-upload.ts (993 tokens, 4,163 chars, 4%)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+
+📊 Pack Summary:
+────────────────
+  Total Files: 69 files
+ Total Tokens: 25,062 tokens
+  Total Chars: 99,622 chars
+       Output: repomix output files\phase-07-reports-announcements.handoff.xml
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com

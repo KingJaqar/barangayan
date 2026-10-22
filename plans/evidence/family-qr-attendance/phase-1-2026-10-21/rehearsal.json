@@ -1,0 +1,108 @@
+{
+  "database": "family_attendance_rehearsal_20261021_v5",
+  "baseline": "schema-only local 0117; no resident data copied",
+  "excluded": "pg_cron extension/schema: scheduling is tied to the server database",
+  "schema_sha256": "9B71938F8E6C4383BEF5C0280D5DC4C9B435A03ED441217216918BBD2B045287",
+  "migrations": [
+    {
+      "file": "supabase\\migrations\\0118_resident_front_id_submission.sql",
+      "sha256": "F063101A9257D45B0111B043E200D325CCF94F4FF49BA169C2045CA88A93C337",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0119_admin_profile_and_verified_association.sql",
+      "sha256": "B3444289658F366826D4BC529F8E26DAA9222135C79D2B20024786488760765F",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0120_flood_shadow_runs.sql",
+      "sha256": "7689E8503718BE870828B7BE6BB9DECA46BED5EF3215A7368B9A96F7BBD2C65E",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0121_resident_ios_write_boundaries.sql",
+      "sha256": "8B1FBABD7332AD3638C455B204493BEB3253C744C769D6C50A24032CB1CAF26E",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0122_resident_apple_account_setup.sql",
+      "sha256": "B67FD9CE4F4C1956E86D8F2F76904D33517876AE9EEF253980CE708029DE4989",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0123_resident_household_conditional_save.sql",
+      "sha256": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0124_unreferenced_upload_objects.sql",
+      "sha256": "09F2F8CFD77F9FE531A9180A17A53CEDA8C2297344DB94565EA79270DA82EACB",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0125_automatic_document_request_payments.sql",
+      "sha256": "8EE3A83422AE44148E2FC1A88516BA5AB0B2120DB24E25EE81C426956B1A20D2",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0126_restore_automatic_request_submission.sql",
+      "sha256": "2008CAB74D67C16DD5D2EA46D632C6F0E578205744F4070472761592EC610E7C",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0127_admin_resident_document_requests.sql",
+      "sha256": "B1EFD479A4BD34F249837B5543BF826A378FE40A77605FED221E87C5FFBA2636",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0128_admin_personal_profile_editing.sql",
+      "sha256": "DC562D15255225A6D0366C625C16C3E5131156F3B4C1DF6FAC4C09B325C15405",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0129_admin_record_sheet_edit_parity.sql",
+      "sha256": "FF0D2BF1CBC2B70987D08029924146AB026A15441990114BFF6CFC0861EC8489",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0130_resident_directory_admin_visibility.sql",
+      "sha256": "C73D4E2D9E75E869D706CA6985961997E8A0141CB940A3164DE731F6D29ED02E",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0131_request_editor_admin_resident_options.sql",
+      "sha256": "1D4545D5F5A83ADF2B6C4FCE9588E2D028B6C14E2CD381668D36D505A57CA2B6",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0132_request_payment_column_editors.sql",
+      "sha256": "96064DC3558B49EA745F962D0FB3FDC27AAF3136F7E97D474CC0347945165A98",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0133_full_versioned_request_record_editor.sql",
+      "sha256": "059472C21DE4A378F86D2E53AD80430576CCD87CF74B3B32CA2B3056D51DEE55",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0134_medical_applicant_email.sql",
+      "sha256": "BF72658A22174E5D090E4231E78A5AFD08AC9CC85AD13143F48F528BD0794E27",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0135_resident_notifications.sql",
+      "sha256": "C4CD5186F959CEFE88E49B29DD22F55969CEF7AB84BCC65621AAABF1912C5980",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\0136_account_deletion_state.sql",
+      "sha256": "88A5012543E07C04E37A27FAEE5959ECFC0F23DD8024F7C682C5883DC9ED172B",
+      "exit": 0
+    },
+    {
+      "file": "supabase\\migrations\\20261021111056_household_attendance.sql",
+      "sha256": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E",
+      "exit": 0
+    }
+  ]
+}

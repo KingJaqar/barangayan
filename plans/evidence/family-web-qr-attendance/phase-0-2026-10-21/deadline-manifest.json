@@ -1,0 +1,38 @@
+{
+  "path": "tmp/family-web-phase0-20261021/deadline-supplement.xml",
+  "sha256": "4490D8EB791D5593F2916AB7F4253B5AE7957BDAB0B4D943FAA67E6B2B559169",
+  "entries": [
+    {
+      "path": "packages/shared/src/lib/auth-fetch.test.ts",
+      "sha256": "47728E89E011EF94FF5F2D197516527933EBD8893FE5D0CF81A5F88F309AF12D",
+      "normalized_match": true
+    },
+    {
+      "path": "packages/shared/src/lib/auth-fetch.ts",
+      "sha256": "8915F808F0FEA76EA4A9D4F462E3FE117E44DDA455BF4F960ABC063246D7DB72",
+      "normalized_match": true
+    }
+  ],
+  "version": "1.18.1",
+  "exit": 0,
+  "security": "passed",
+  "selectors": [
+    "packages/shared/src/lib/auth-fetch.ts",
+    "packages/shared/src/lib/auth-fetch.test.ts"
+  ],
+  "omissions": [],
+  "reads": [
+    {
+      "path": "packages/shared/src/lib/auth-fetch.test.ts",
+      "start": 1,
+      "end": 39,
+      "complete": true
+    },
+    {
+      "path": "packages/shared/src/lib/auth-fetch.ts",
+      "start": 1,
+      "end": 13,
+      "complete": true
+    }
+  ]
+}

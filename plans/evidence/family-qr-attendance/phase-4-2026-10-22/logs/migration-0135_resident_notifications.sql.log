@@ -1,0 +1,74 @@
+CREATE TABLE
+ALTER TABLE
+DROP POLICY
+CREATE POLICY
+REVOKE
+GRANT
+GRANT
+CREATE TABLE
+CREATE INDEX
+CREATE FUNCTION
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+REVOKE
+GRANT
+GRANT
+GRANT
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+REVOKE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+DO
+
+NOTICE:  policy "residents read their notification preferences" for relation "public.notification_preferences" does not exist, skipping
+NOTICE:  policy "residents read their inbox" for relation "public.notification_inbox" does not exist, skipping
+NOTICE:  policy "residents mark their inbox read" for relation "public.notification_inbox" does not exist, skipping
+NOTICE:  trigger "z_notify_request_change" for relation "public.service_requests" does not exist, skipping
+NOTICE:  trigger "z_notify_incident_change" for relation "public.incidents" does not exist, skipping
+NOTICE:  trigger "z_notify_announcement" for relation "public.announcements" does not exist, skipping
+NOTICE:  trigger "z_notify_medical_drive" for relation "public.medical_drives" does not exist, skipping
+NOTICE:  trigger "z_notify_drive_registration" for relation "public.drive_registrations" does not exist, skipping

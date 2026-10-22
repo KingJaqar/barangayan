@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -12,6 +13,7 @@ import Animated, {
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
 
 /**
@@ -21,12 +23,14 @@ import { useTheme } from '@/hooks/use-theme';
  * of a frozen screen. Same visual slot/size as the QR image it's standing in for (see
  * qrCard's minHeight in the payment screen), so nothing reflows once the real QR lands.
  */
-export function QrGeneratingIndicator() {
+export function QrGeneratingIndicator({ active }: { active: boolean }) {
+  const reducedMotion = useResidentReducedMotion(true);
   const theme = useTheme();
   const rotation = useSharedValue(0);
   const pulse = useSharedValue(1);
 
   useEffect(() => {
+    if (!active || reducedMotion) { rotation.value = 0; pulse.value = 1; return; }
     rotation.value = withRepeat(withTiming(360, { duration: 1400, easing: Easing.linear }), -1);
     pulse.value = withRepeat(
       withSequence(
@@ -35,7 +39,8 @@ export function QrGeneratingIndicator() {
       ),
       -1,
     );
-  }, [rotation, pulse]);
+    return () => { cancelAnimation(rotation); cancelAnimation(pulse); };
+  }, [rotation, pulse, active, reducedMotion]);
 
   const ringStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotation.value}deg` }],
@@ -48,13 +53,13 @@ export function QrGeneratingIndicator() {
     <View style={styles.container}>
       <View style={styles.ringFrame}>
         <Animated.View
-          style={[styles.ring, { borderColor: `${theme.primary}26`, borderTopColor: theme.primary }, ringStyle]}
+          style={[styles.ring, { borderColor: theme.resident.accentSoft, borderTopColor: theme.primary }, ringStyle]}
         />
         <Animated.View style={iconStyle}>
-          <Ionicons name="qr-code-outline" size={40} color={theme.primary} />
+          <Ionicons name="qr-code-outline" size={40} color={theme.resident.accentText} />
         </Animated.View>
       </View>
-      <ThemedText type="smallBold" style={{ color: theme.primary }}>
+      <ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>
         Generating your QR code…
       </ThemedText>
       <ThemedText type="small" themeColor="textSecondary" style={styles.caption}>

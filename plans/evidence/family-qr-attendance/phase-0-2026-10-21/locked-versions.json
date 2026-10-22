@@ -1,0 +1,44 @@
+{
+  "apps/admin-web/node_modules/typescript": {
+    "version": "5.9.3"
+  },
+  "apps/resident-web/node_modules/typescript": {
+    "version": "5.9.3"
+  },
+  "node_modules/@supabase/supabase-js": {
+    "version": "2.112.1"
+  },
+  "node_modules/expo": {
+    "version": "57.0.10"
+  },
+  "node_modules/expo-camera": {
+    "version": "57.0.3"
+  },
+  "node_modules/expo-image": {
+    "version": "57.0.2"
+  },
+  "node_modules/expo-router": {
+    "version": "57.0.10"
+  },
+  "node_modules/next": {
+    "version": "16.3.0"
+  },
+  "node_modules/qrcode.react": {
+    "version": "4.2.0"
+  },
+  "node_modules/react-native": {
+    "version": "0.86.2"
+  },
+  "node_modules/react-native-qrcode-svg": {
+    "version": "6.3.21"
+  },
+  "node_modules/typescript": {
+    "version": "6.0.3"
+  },
+  "node_modules/vitest": {
+    "version": "3.2.7"
+  },
+  "node_modules/zod": {
+    "version": "3.25.76"
+  }
+}

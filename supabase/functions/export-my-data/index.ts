@@ -7,6 +7,7 @@
 // resident is already allowed to read about themselves.
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { buildExport, cooldownSeconds, EXPORT_CONTRACT_VERSION, readHouseholdAttendanceExport, type Reader } from './export-v2.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,6 +16,10 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
+
+function json(payload: unknown, status: number, headers: Record<string, string> = {}): Response {
+  return new Response(JSON.stringify(payload), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json', ...headers } });
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
@@ -44,6 +49,22 @@ Deno.serve(async (req: Request) => {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // Contract v2 (resident iOS): a complete, paginated, sectioned export. A request without it keeps the v1 payload below, which
+    // the Android and web apps still read.
+    const body = await req.json().catch(() => null);
+    if (body && typeof body === 'object' && (body as { contractVersion?: unknown }).contractVersion === EXPORT_CONTRACT_VERSION) {
+      const last = await supabase.from('profiles').select('last_data_export_at').eq('id', user.id).maybeSingle();
+      if (last.error) return json({ error: 'Your export could not be prepared. Please try again.' }, 502);
+      const wait = cooldownSeconds(last.data?.last_data_export_at as string | null | undefined, new Date());
+      if (wait > 0) return json({ error: `Please wait ${wait}s before exporting again.` }, 429, { 'Retry-After': String(wait) });
+      const outcome = await buildExport(supabase as unknown as Reader, { id: user.id, email: user.email ?? null }, new Date());
+      // Nothing is recorded and no partial payload is returned: only the names of the sections that failed.
+      if (!outcome.complete) return json({ error: 'Some of your data could not be read, so no export was created. Please try again.', failedSections: outcome.failedSections }, 502);
+      // Best-effort, and only after a complete export: a failed write of the cooldown must not withhold the data.
+      await supabase.from('profiles').update({ last_data_export_at: outcome.envelope.exportedAt }).eq('id', user.id);
+      return json(outcome.envelope, 200);
     }
 
     // select('*') already covers every profiles column, including
@@ -84,6 +105,13 @@ Deno.serve(async (req: Request) => {
         supabase.from('push_tokens').select('device_type, last_used_at, created_at').eq('user_id', user.id),
       ]);
 
+    const attendance = await readHouseholdAttendanceExport(supabase as unknown as Reader, user.id);
+    const stays = attendance.household_attendance;
+    const confirmations = attendance.household_attendance_receipts;
+    if (stays.status !== 'complete' || confirmations.status !== 'complete') {
+      return json({ error: 'Attendance data could not be read completely, so no export was created. Please try again.' }, 502);
+    }
+
     // Best-effort — a failure to record the throttle timestamp must not block
     // the export the resident is actually waiting on.
     await supabase.from('profiles').update({ last_data_export_at: new Date().toISOString() }).eq('id', user.id);
@@ -96,6 +124,8 @@ Deno.serve(async (req: Request) => {
       incident_reports: incidents.data ?? [],
       medical_drive_registrations: driveRegistrations.data ?? [],
       evacuation_center_checkins: checkins.data ?? [],
+      household_attendance: stays.rows,
+      household_attendance_receipts: confirmations.rows,
       registered_devices: pushTokens.data ?? [],
     };
 

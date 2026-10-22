@@ -266,69 +266,21 @@ function harness(replies: Reply[]) {
   const client = createClient<Database>('https://example.supabase.co', 'sb_publishable_test', { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch } });
   return { api: residentApi(client, TENANT, USER), requests };
 }
-const receiptRow = { check_in_id: CHECK_IN, evacuation_center_id: CENTER, evacuation_center_name: 'Ampid 1 Covered Court', barangay_id: TENANT, checked_in_at: '2026-10-16T08:00:00+00:00', already_checked_in: false };
 const storedRow = { id: CHECK_IN, evacuation_center_id: CENTER, checked_in_at: new Date().toISOString(), evacuation_centers: { name: 'Ampid 1 Covered Court' } };
-const refusal = (code: string, message: string, status = 400) => ({ status, body: { code, message, details: null, hint: null } });
-
-describe('check-in contract (B14, migration 0121)', () => {
-  it('calls the online RPC for the scanned center and returns the server receipt', async () => {
-    const { api, requests } = harness([{ body: [receiptRow] }]);
-    expect(await api.checkInToCenter(CENTER)).toEqual({ checkInId: CHECK_IN, centerId: CENTER, centerName: 'Ampid 1 Covered Court', checkedInAt: '2026-10-16T08:00:00+00:00', repeated: false });
-    expect(requests).toHaveLength(1);
-    expect(requests[0].method).toBe('POST');
-    expect(requests[0].url.pathname).toBe('/rest/v1/rpc/check_in_to_evacuation_center');
-    expect(JSON.parse(requests[0].body ?? '')).toEqual({ p_center_id: CENTER });
+describe('resident check-in cutover', () => {
+  it('never calls the legacy API or reconciles an old scan as confirmed attendance', async () => {
+    for (const replies of [[], [{ body: [storedRow] }], ['network-error']] as Reply[][]) {
+      const { api, requests } = harness(replies);
+      const failure = await api.checkInToCenter(CENTER).catch((error: unknown) => error);
+      expect(failure).toMatchObject({ kind: 'authorization', code: 'staff_attendance_required' });
+      expect(residentError(failure)).toContain('staff to scan your Family QR');
+      expect(requests).toHaveLength(0);
+    }
   });
-  it('reports a repeat as the earlier check-in', async () => {
-    const { api } = harness([{ body: [{ ...receiptRow, already_checked_in: true }] }]);
-    expect((await api.checkInToCenter(CENTER)).repeated).toBe(true);
-  });
-  it('rejects a malformed center id locally, with no request', async () => {
+  it('still validates malformed center references before returning the compatibility response', async () => {
     const { api, requests } = harness([]);
     await expect(api.checkInToCenter('x')).rejects.toMatchObject({ kind: 'not-found' });
     expect(requests).toHaveLength(0);
-  });
-  it('never shows a receipt for another center, another barangay or an empty or malformed reply as this check-in', async () => {
-    for (const body of [[], [{ ...receiptRow, evacuation_center_id: OTHER_TENANT }], [{ ...receiptRow, barangay_id: OTHER_TENANT }], [{ ...receiptRow, already_checked_in: 'yes' }], { nope: true }]) {
-      const { api } = harness([{ body }]);
-      await expect(api.checkInToCenter(CENTER)).rejects.toMatchObject({ kind: 'schema' });
-    }
-  });
-  it('maps the server’s refusals to stable codes and resident wording', async () => {
-    const cases: [string, string, string, string][] = [
-      ['P0010', 'Only an active resident can check in', 'authorization', 'checkin_not_resident'],
-      ['P0011', 'Resident and evacuation center must belong to the same barangay', 'authorization', 'checkin_wrong_barangay'],
-      ['P0012', 'Evacuation center not found or inactive', 'not-found', 'checkin_center_unavailable'],
-    ];
-    for (const [pg, message, kind, code] of cases) {
-      const { api, requests } = harness([refusal(pg, message)]);
-      const failure = await api.checkInToCenter(CENTER).catch((error: unknown) => error);
-      expect(failure).toBeInstanceOf(DataError);
-      expect(failure).toMatchObject({ kind, code });
-      expect(residentError(failure)).not.toContain('This action is not available');
-      expect(requests).toHaveLength(1);
-    }
-    const { api } = harness([refusal('42501', 'authentication_required', 403)]);
-    await expect(api.checkInToCenter(CENTER)).rejects.toMatchObject({ kind: 'session' });
-  });
-  it('reconciles a lost reply with the resident’s own stored check-in for that center', async () => {
-    const { api, requests } = harness(['network-error', { body: [storedRow] }]);
-    const receipt = await api.checkInToCenter(CENTER);
-    expect(receipt).toMatchObject({ checkInId: CHECK_IN, centerId: CENTER, centerName: 'Ampid 1 Covered Court', repeated: false });
-    expect(requests).toHaveLength(2);
-    const read = requests[1];
-    expect(read.method).toBe('GET');
-    expect(read.url.pathname).toBe('/rest/v1/evacuation_center_checkins');
-    expect(read.url.searchParams.get('user_id')).toBe(`eq.${USER}`);
-    expect(read.url.searchParams.get('barangay_id')).toBe(`eq.${TENANT}`);
-    expect(read.url.searchParams.get('evacuation_center_id')).toBe(`eq.${CENTER}`);
-    expect(read.url.searchParams.get('checked_in_at')).toMatch(/^gte\.20\d\d-/);
-  });
-  it('leaves a lost reply unconfirmed when nothing stored can be found or the read also fails', async () => {
-    for (const second of [{ body: [] }, 'network-error', refusal('PGRST301', 'JWT expired', 401)] as Reply[]) {
-      const { api } = harness(['network-error', second]);
-      await expect(api.checkInToCenter(CENTER)).rejects.toMatchObject({ kind: 'unknown-commit' });
-    }
   });
   it('reads only the resident’s own newest check-ins and the barangay’s active QR guidance', async () => {
     const { api, requests } = harness([{ body: [storedRow] }, { body: [] }]);

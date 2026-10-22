@@ -1,0 +1,342 @@
+{
+  "date": "2026-10-21 Asia/Manila",
+  "phase": 0,
+  "status": "Complete \u2014 discovery/contracts only",
+  "checks": [
+    {
+      "command": "npm run typecheck --workspace=@barangayan/resident-web",
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase0-20261021/resident-typecheck.log",
+      "log_sha256": "6FACF901EE4A6663C7201E83B0198EB87F6A7015E831F980CEA2326CD89710A2"
+    },
+    {
+      "command": "npm run lint --workspace=@barangayan/resident-web",
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "result": "pass with pre-existing warning",
+      "errors": 0,
+      "warnings": 1,
+      "warning": "src/app/(resident)/settings/location-verification/location-verification-map.tsx:102 unused eslint-disable directive",
+      "log": "tmp/family-web-phase0-20261021/resident-lint.log",
+      "log_sha256": "BF994CA4E99FA8D2055D64CAE52603DA7B3EE5482EE4A72361C68EAFC447F17E"
+    },
+    {
+      "command": "npm run test --workspace=@barangayan/shared -- src/lib/auth-fetch.test.ts",
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "result": "pass",
+      "test_files": 1,
+      "tests": 3,
+      "log": "tmp/family-web-phase0-20261021/auth-fetch-test.log",
+      "log_sha256": "CFA7904454BA1B9ACEC4D34DA5AAD9CC6FA65E7B89227CCA49538280E7FC13DF"
+    },
+    {
+      "command": "python tmp/family-web-phase0-20261021/audit.py baseline",
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "result": "pass",
+      "passed": 25,
+      "failed": 0,
+      "evidence": "baseline-verification.json"
+    },
+    {
+      "command": "Repomix 1.18.1 generation + safe XML/source validation",
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "result": "pass",
+      "new_packets": 2,
+      "entries": 13,
+      "security": "No suspicious files detected",
+      "omissions": 0,
+      "evidence": [
+        "packet-manifest.json",
+        "read-ledger.json",
+        "deadline-manifest.json"
+      ]
+    }
+  ],
+  "discovery": {
+    "hosted_catalog_edge_aggregate_logs": "Read-only observations complete; not behavioral pass",
+    "docker": "Read-only escalation success, 29.8.1/PG17.6/pgTAP1.3.3; default DB behind at 0117",
+    "git": "Existing dirty changes preserved; current shared owner observed",
+    "new_dependencies": []
+  },
+  "phase_gates": {
+    "scope/prerequisites": "met",
+    "context inputs": "met",
+    "workflow": "met",
+    "baseline checks": "met",
+    "contract/coverage acceptance": "met",
+    "handoff": "met"
+  },
+  "product_acceptance": "A01-A17 pending; see acceptance-coverage.md",
+  "not_run": [
+    "app builds: no app/backend source edited by Phase 0",
+    "admin typecheck/lint/tests: inventory only, admin source unchanged by Phase 0",
+    "database mutation/concurrency suites: changing shared candidate not adopted, no independent current isolated baseline prepared",
+    "Brave signed-in UI/console and physical camera: pending A14-A16",
+    "deployment/remote migrations: not authorized"
+  ],
+  "diagnostics": [
+    "Initial oversized discovery output not credited; explicit bounded continuations completed",
+    "Evidence helpers corrected optional missing ranges, list-shaped catalog envelope and Windows stdout encoding before reuse",
+    "Initial final-document review found three links to reports not yet generated; first-review.json preserved locally, reports then created before final recheck",
+    "Sandbox Docker denial resolved by read-only escalation; not a remaining environment blocker"
+  ],
+  "remaining": [
+    "Verify finished Android Phase 1 shared candidate/role/race evidence before reuse",
+    "Reconcile hosted archive/Edge drift and target-specific migration identities",
+    "Current separately owned isolated migration baseline, synthetic Brave and real camera evidence",
+    "Separate authorization for commits/pushes/deployment/remote migration/external configuration"
+  ],
+  "plan_sha256_at_report": "3E9284F5543871FAFCB5532C7D38F1AFABE613E775E9467A8F17DA3745ACB415",
+  "final_structural_source_verification": {
+    "command": "python tmp/family-web-phase0-20261021/audit.py final",
+    "cwd": "C:\\Users\\User\\barangayan",
+    "exit": 0,
+    "checks": [
+      {
+        "check": "one Phase 0 heading",
+        "pass": true
+      },
+      {
+        "check": "all A01-A17 ledger rows",
+        "pass": true
+      },
+      {
+        "check": "phase 1-4 checklists preserved",
+        "pass": true
+      },
+      {
+        "check": "plan context and central workflow preserved",
+        "pass": true
+      },
+      {
+        "check": "plan link Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/baseline.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/context-index.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/verification.json",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/acceptance-coverage.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/context-index.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/baseline.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/context-index.md",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/source-observations.json",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/verification.json",
+        "pass": true
+      },
+      {
+        "check": "plan link evidence/family-web-qr-attendance/phase-0-2026-10-21/acceptance-coverage.md",
+        "pass": true
+      },
+      {
+        "check": "reused XML source equivalence tmp/family-web-plan-20261021/web-source.xml",
+        "pass": true
+      },
+      {
+        "check": "reused XML source equivalence tmp/family-web-plan-polish-20261021/conditional-save.supplement.xml",
+        "pass": true
+      },
+      {
+        "check": "reused XML source equivalence tmp/family-web-plan-polish-20261021/shared-phase0.supplement.xml",
+        "pass": true
+      },
+      {
+        "check": "shared contracts exact identity",
+        "pass": true
+      },
+      {
+        "check": "new XML packet identity",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/hooks/use-scoped-read.ts",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/lib/household-feedback.ts",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/lib/auth/get-optional-user.ts",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/components/shared/auth-gate.tsx",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/lib/supabase/client.ts",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/lib/supabase/server.ts",
+        "pass": true
+      },
+      {
+        "check": "supplement source unchanged apps/resident-web/src/lib/auth/sign-out.ts",
+        "pass": true
+      },
+      {
+        "check": "deadline packet source equivalence",
+        "pass": true
+      },
+      {
+        "check": "deadline packet security",
+        "pass": true
+      },
+      {
+        "check": "resident web source set and bytes unchanged since baseline checks",
+        "pass": true
+      },
+      {
+        "check": "Phase 0 six gates completed",
+        "pass": true
+      },
+      {
+        "check": "coverage has one row for every A01-A17",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> acceptance-coverage.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> ../../family-qr-attendance/phase-0-2026-10-21/contracts.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> context-index.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> source-observations.json",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> verification.json",
+        "pass": true
+      },
+      {
+        "check": "evidence link baseline.md -> acceptance-coverage.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link context-index.md -> baseline.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link context-index.md -> acceptance-coverage.md",
+        "pass": true
+      },
+      {
+        "check": "evidence link context-index.md -> verification.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON baseline-verification.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON deadline-manifest.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON final-verification.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON hosted-edge-identities.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON hosted-qr-log-summary.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON hosted-source-comparison.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON packet-manifest.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON read-ledger.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON reuse-packets.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON reuse-validation.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON source-observations.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON verification.json",
+        "pass": true
+      },
+      {
+        "check": "valid JSON versions.json",
+        "pass": true
+      }
+    ],
+    "passed": 59,
+    "failed": 0,
+    "evidence": "final-verification.json",
+    "rerun_reason": "Resolve first-review missing report links by creating required artifacts; no application checks repeated"
+  }
+}

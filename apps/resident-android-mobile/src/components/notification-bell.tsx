@@ -6,15 +6,15 @@ import { useTheme } from '@/hooks/use-theme';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
 /** Announcement unread count from the shared provider, used by the header bell. */
-export function NotificationBell({ size = 24, color }: { size?: number; color?: string }) {
+export function NotificationBell({ size = 24, color, presentation = 'default' }: { size?: number; color?: string; presentation?: 'default' | 'resident' }) {
   const theme = useTheme();
   const { announcementsUnreadCount } = useUnreadCounts();
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
       <Ionicons name="notifications-outline" size={size} color={color ?? theme.text} />
-      <View style={styles.badge}>
-        <CountBadge count={announcementsUnreadCount} background={theme.accentRed} />
+      <View style={[styles.badge, presentation === 'resident' && { top: -7, right: -5 }]}>
+        <CountBadge count={announcementsUnreadCount} background={theme.accentRed} presentation={presentation} size={18} outlineWidth={0} />
       </View>
     </View>
   );

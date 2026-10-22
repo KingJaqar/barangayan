@@ -1,81 +1,31 @@
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
-
+import { Pressable, StyleSheet, View } from 'react-native';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
-export interface FilterChip<K extends string> {
-  key: K;
-  label: string;
-  /** Fill colour when active; outline colour when inactive. */
-  color: string;
-}
+export interface FilterChip<K extends string> { key: K; label: string; color: string }
 
-/**
- * The horizontal pill filter row used by the Reports tab.
- *
- * Extracted verbatim from the Announcements feed so the Incident Reports filters are
- * pixel-identical to it rather than a look-alike reimplementation — both segments now
- * render this same component.
- */
-export function FilterChips<K extends string>({
-  chips,
-  active,
-  onSelect,
-}: {
-  chips: FilterChip<K>[];
-  active: K;
-  onSelect: (key: K) => void;
+export function FilterChips<K extends string>({ chips, active, onSelect }: {
+  chips: FilterChip<K>[]; active: K; onSelect: (key: K) => void;
 }) {
-  return (
-    // `alignItems: 'center'` is the critical fix — without it the horizontal ScrollView
-    // stretches each Pressable child to fill its full cross-axis height (the "tall pill" bug).
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={chipStyles.row}>
-      {chips.map(({ key, label, color }) => {
-        const isActive = active === key;
-        return (
-          <Pressable
-            key={key}
-            onPress={() => onSelect(key)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: isActive }}
-            style={[
-              chipStyles.chip,
-              isActive
-                ? { backgroundColor: color }
-                : { borderWidth: 1.5, borderColor: color },
-            ]}>
-            <ThemedText
-              type="small"
-              style={[chipStyles.chipLabel, { color: isActive ? '#ffffff' : color }]}>
-              {label}
-            </ThemedText>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
-  );
+  const { resident } = useTheme();
+  return <ScrollableChevronRow label="filters" contentContainerStyle={styles.row}>
+    {chips.map(({ key, label, color }) => {
+      const selected = active === key;
+      return <Pressable key={key} accessibilityRole="button" accessibilityState={{ selected }}
+        onPress={() => onSelect(key)} style={({ pressed }) => [styles.chip, {
+          backgroundColor: selected ? (pressed ? resident.accentPressed : resident.accent) : pressed ? resident.pressed : resident.surface,
+          borderColor: selected && resident.accentNeedsOutline ? resident.controlBorder : 'transparent',
+        }]}>
+        {({ pressed }) => <><View style={[styles.dot, { backgroundColor: selected ? (pressed ? resident.onAccentPressed : resident.onAccent) : color }]} />
+          <ThemedText style={[styles.label, { color: selected ? (pressed ? resident.onAccentPressed : resident.onAccent) : resident.text }]}>{label}</ThemedText></>}
+      </Pressable>;
+    })}
+  </ScrollableChevronRow>;
 }
-
-const chipStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',   // ← prevents cross-axis stretch; keeps chips compact pill height
-    gap: Spacing.two,
-    paddingHorizontal: Spacing.three,
-    paddingBottom: Spacing.one,
-  },
-  chip: {
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    alignSelf: 'center',   // belt-and-suspenders for any edge-case nesting
-  },
-  chipLabel: {
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 20,
-  },
+const styles = StyleSheet.create({
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 20, paddingVertical: 8 },
+  chip: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 100, paddingHorizontal: 16, paddingVertical: 6 },
+  label: { fontSize: 13.5, lineHeight: 20, fontWeight: '600' },
+  dot: { width: 8, height: 8, borderRadius: 4 },
 });

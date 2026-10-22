@@ -1,4 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
 
 /**
  * White-on-dark-color round badge used for the Reports bottom-tab's three live unread
@@ -13,7 +15,8 @@ import { StyleSheet, Text, View } from 'react-native';
  * text turned it into a stretched pill next to the other two's circles. Only the rare
  * "99+" overflow case is allowed to widen into a pill, same as most badge conventions.
  */
-export function CountBadge({ count, background }: { count: number; background: string }) {
+export function CountBadge({ count, background, presentation = 'default', size = 16, outlineWidth = 2 }: { count: number; background: string; presentation?: 'default' | 'resident'; size?: number; outlineWidth?: number }) {
+  const theme = useTheme();
   if (count <= 0) return null;
 
   const isOverflow = count > 99;
@@ -24,10 +27,13 @@ export function CountBadge({ count, background }: { count: number; background: s
         styles.badge,
         isOverflow ? styles.badgeOverflow : styles.badgeCircle,
         { backgroundColor: background },
+        presentation === 'resident' && { height: size, minWidth: size, width: isOverflow ? undefined : size, borderRadius: size / 2, outlineWidth, outlineStyle: 'solid', outlineColor: theme.resident.surface },
       ]}>
-      <Text style={styles.label} numberOfLines={1}>
+      {presentation === 'resident' ? <ThemedText style={[styles.label, { fontSize: 9.5 }]} numberOfLines={1}>
         {isOverflow ? '99+' : count}
-      </Text>
+      </ThemedText> : <Text style={styles.label} numberOfLines={1}>
+        {isOverflow ? '99+' : count}
+      </Text>}
     </View>
   );
 }

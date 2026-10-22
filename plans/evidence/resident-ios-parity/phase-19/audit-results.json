@@ -1,0 +1,1216 @@
+{
+  "generated": "2026-10-21",
+  "checkpoints": 1218,
+  "routes": {
+    "resolved": 64,
+    "deferred": 2
+  },
+  "modals": {
+    "resolved": 16
+  },
+  "auditClass": {
+    "C": 949,
+    "B": 254,
+    "A": 15
+  },
+  "gates": {
+    "householdEditing": false,
+    "privateIdUploads": false,
+    "qrph": true,
+    "pickup": true,
+    "mapProviders": false,
+    "routeService": true,
+    "emergencyContent": true,
+    "evacuationCheckin": true,
+    "householdQr": true,
+    "publicIncidents": false,
+    "medicalRegistration": true,
+    "completeExport": false,
+    "accountDeletion": false,
+    "remotePush": false
+  },
+  "openGates": [
+    "qrph",
+    "pickup",
+    "routeService",
+    "emergencyContent",
+    "evacuationCheckin",
+    "householdQr",
+    "medicalRegistration"
+  ],
+  "closedGates": [
+    "householdEditing",
+    "privateIdUploads",
+    "mapProviders",
+    "publicIncidents",
+    "completeExport",
+    "accountDeletion",
+    "remotePush"
+  ],
+  "phaseStatus": {
+    "P00": "Verified",
+    "P01": "Verified (non-device scope, OD-06/OD-07)",
+    "P02": "Verified (non-device scope, OD-06)",
+    "P03": "Partially complete",
+    "P04": "Partially complete",
+    "P05": "Partially complete",
+    "P06": "Partially complete",
+    "P07": "Verified (non-device scope, OD-06/OD-07)",
+    "P08": "Partially complete",
+    "P09": "Partially complete",
+    "P10": "Partially complete",
+    "P11": "Verified (non-device scope, OD-06/OD-07)",
+    "P12": "Partially complete",
+    "P13": "Partially complete",
+    "P14": "Partially complete",
+    "P15": "Partially complete",
+    "P16": "Partially complete",
+    "P17": "Partially complete",
+    "P18": "Partially complete",
+    "P19": "Partially complete",
+    "P20": "Partially complete"
+  },
+  "testFiles": 34,
+  "problems": [],
+  "routeAudit": [
+    {
+      "route_id": "R01",
+      "android_file": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "ios_file": "src/app/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R02",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "ios_file": "src/app/(tabs)/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R03",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/health/_layout.tsx",
+      "ios_file": "src/app/(tabs)/health/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R04",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "ios_file": "src/app/(tabs)/health/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R05",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "ios_file": "src/app/health/register/[id].tsx",
+      "how": "alias (id in the path instead of ?driveId=)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R06",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/_layout.tsx",
+      "ios_file": "src/app/(tabs)/home/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R07",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx",
+      "ios_file": "src/app/emergency.tsx",
+      "how": "converged (no nested home/emergency-info stack; one root route)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R08",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "ios_file": "src/app/emergency.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R09",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/qr-guide.tsx",
+      "ios_file": "src/app/emergency.tsx",
+      "how": "converged (?section=qr)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R10",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/scan.tsx",
+      "ios_file": "src/app/emergency.tsx",
+      "how": "converged (?section=qr, scan inside the section)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R11",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "ios_file": "src/app/(tabs)/home/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R12",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/index/emergency-info/qr-guide.tsx",
+      "ios_file": "src/app/emergency.tsx",
+      "how": "converged (duplicate of R09)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R13",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx",
+      "ios_file": "src/app/(tabs)/maps/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R14",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/maps/hotline-directory.tsx",
+      "ios_file": "src/app/(tabs)/maps/hotline-directory.tsx",
+      "how": "redirect to /emergency?section=hotlines",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R15",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "ios_file": "src/app/(tabs)/maps/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R16",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/maps/preparedness-guide.tsx",
+      "ios_file": "src/app/(tabs)/maps/preparedness-guide.tsx",
+      "how": "redirect to /emergency?section=guidelines",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R17",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx",
+      "ios_file": "src/app/(tabs)/reports/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R18",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx",
+      "ios_file": "src/app/(tabs)/reports/incidents/[incidentId].tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R19",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/reports/index.tsx",
+      "ios_file": "src/app/(tabs)/reports/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R20",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "ios_file": "src/app/(tabs)/reports/new.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R21",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/_layout.tsx",
+      "ios_file": "src/app/(tabs)/services/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R22",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/[documentId].tsx",
+      "ios_file": "src/app/(tabs)/services/[id].tsx",
+      "how": "alias ([id] for [documentId])",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R23",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "ios_file": "src/app/(tabs)/services/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R24",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx",
+      "ios_file": "src/app/services/payment/[requestId].tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R25",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx",
+      "ios_file": "src/app/services/payment/pickup/[requestId].tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R26",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx",
+      "ios_file": "src/app/services/payment/qrph/[requestId].tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R27",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx",
+      "ios_file": "src/app/services/payment/success.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R28",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "ios_file": "src/app/services/request/[id].tsx",
+      "how": "alias ([id] for [documentId])",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R29",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx",
+      "ios_file": "src/app/request/[id].tsx",
+      "how": "alias (/request/[id] for /services/requests/[requestId])",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R30",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx",
+      "ios_file": "src/app/(tabs)/settings/_layout.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R31",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/about.tsx",
+      "ios_file": "src/app/(tabs)/settings/about.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R32",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "ios_file": "src/app/(tabs)/settings/change-password.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R33",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "ios_file": "src/app/(tabs)/settings/email-verification.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R34",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/help/[articleId].tsx",
+      "ios_file": "src/app/(tabs)/settings/help/[id].tsx",
+      "how": "alias ([id] for [articleId])",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R35",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/help/index.tsx",
+      "ios_file": "src/app/(tabs)/settings/help/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R36",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "ios_file": "src/app/(tabs)/settings/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R37",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "ios_file": "src/app/(tabs)/settings/location-verification.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R38",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "ios_file": "src/app/(tabs)/settings/profile.tsx",
+      "how": "canonical (/profile redirects here)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R39",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/terms-privacy.tsx",
+      "ios_file": "src/app/(tabs)/settings/terms-privacy.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R40",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "ios_file": "src/app/_layout.tsx",
+      "how": "converged (auth routes live in the root stack, guarded)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R41",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/auth-choice.tsx",
+      "ios_file": "src/app/auth/choice.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R42",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/completion.tsx",
+      "ios_file": "src/app/onboarding/completion.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R43",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "ios_file": "src/app/auth/recovery.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R44",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "ios_file": "src/app/auth/login.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R45",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "ios_file": "src/app/auth/otp.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R46",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/personalization.tsx",
+      "ios_file": "src/app/onboarding/personalization.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R47",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "ios_file": "src/app/auth/register.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R48",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "ios_file": "src/app/auth/reset-password.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R49",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/value-prop.tsx",
+      "ios_file": "src/app/onboarding/value-prop.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R50",
+      "android_file": "apps/resident-android-mobile/src/app/(auth)/welcome.tsx",
+      "ios_file": "src/app/onboarding/welcome.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R51",
+      "android_file": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "ios_file": "src/app/account-setup.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R52",
+      "android_file": "apps/resident-android-mobile/src/app/auth/callback.tsx",
+      "ios_file": "src/app/auth/callback.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R53",
+      "android_file": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "ios_file": "src/app/complete-profile.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "R54",
+      "android_file": "apps/resident-android-mobile/src/app/index.tsx",
+      "ios_file": "src/app/index.tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "RD01",
+      "android_file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "ios_file": "",
+      "how": "deferred untriaged Android delta (OD-03), not iOS scope",
+      "state": "deferred"
+    },
+    {
+      "route_id": "RD02",
+      "android_file": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "ios_file": "",
+      "how": "deferred untriaged Android delta (OD-03/OD-11), not iOS scope",
+      "state": "deferred"
+    },
+    {
+      "route_id": "IR01",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/(tabs)/reports/announcements/[announcementId].tsx",
+      "how": "canonical",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR02",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/notifications.tsx",
+      "how": "canonical at /notifications (not /inbox)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR03",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/notifications.tsx",
+      "how": "converged (entries open their record from the list; no separate /inbox/[entryId])",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR04",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/auth/callback.tsx",
+      "how": "shares the callback state machine",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR05",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/services/request/[id].tsx",
+      "how": "in-screen review step (no /review path)",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR06",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/request/received.tsx",
+      "how": "canonical at /request/received",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR07",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/(tabs)/settings/download-data.tsx",
+      "how": "canonical at /settings/download-data",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR08",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/(tabs)/health/[id].tsx",
+      "how": "canonical at /health/[id]",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR09",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/(tabs)/settings/terms-privacy.tsx",
+      "how": "folded into Terms and Privacy / About",
+      "state": "resolved"
+    },
+    {
+      "route_id": "IR10",
+      "android_file": "iOS-only (plan B.2 addition)",
+      "ios_file": "src/app/(tabs)/services/index.tsx",
+      "how": "?segment=requests",
+      "state": "resolved"
+    }
+  ],
+  "modalAudit": [
+    {
+      "modal_id": "M01",
+      "family": "Onboarding feedback, OTP/setup/password inputs",
+      "files": [
+        "features/auth/register-screen.tsx",
+        "features/auth/password-step.tsx",
+        "features/auth/details-form.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M02",
+      "family": "Purpose selector, legacy ID selector, application review",
+      "files": [
+        "features/services/request-screen.tsx",
+        "features/services/request-form.ts"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M03",
+      "family": "Request/payment cancellation, pickup/QR/payment success",
+      "files": [
+        "features/services/request-detail.tsx",
+        "features/payments/qr-screen.tsx",
+        "features/payments/payment-screen.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M04",
+      "family": "DRRM draggable panel, center details, center picker",
+      "files": [
+        "features/maps/drrm-panel.tsx",
+        "features/centers/centers-section.tsx",
+        "features/centers/center-card.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M05",
+      "family": "QR permission explanation, camera scanner, center QR display/share/save",
+      "files": [
+        "features/qr/scanner-modal.tsx",
+        "features/qr/center-qr-sheet.tsx",
+        "features/qr/qr-section.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M06",
+      "family": "Family add/edit/remove and enlarged household QR",
+      "files": [
+        "features/profile/household-card.tsx",
+        "features/qr/household-qr-card.tsx",
+        "features/qr/family-section.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M07",
+      "family": "Emergency alert filters/detail",
+      "files": [
+        "features/emergency/alerts-section.tsx",
+        "features/emergency/alert-filters.ts"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M08",
+      "family": "Health month/date/type chooser and drive/detail/status presentation",
+      "files": [
+        "features/health/drive-calendar.tsx",
+        "features/health/filter-chips.tsx",
+        "features/health/drive-detail.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M09",
+      "family": "Incident location picker, photo viewer, feedback and corroboration/withdraw confirmation",
+      "files": [
+        "features/profile/pin-picker.tsx",
+        "features/reports/photo-viewer.tsx",
+        "features/reports/incident-detail.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M10",
+      "family": "Announcement modal and bulk read/unread controls",
+      "files": [
+        "features/reports/reports-hub.tsx",
+        "features/reports/use-read-actions.ts"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M11",
+      "family": "Profile field selectors, household editor, birthday calendar, ID type/front/back/image preview",
+      "files": [
+        "features/profile/profile-screen.tsx",
+        "features/profile/birthday-sheet.tsx",
+        "features/profile/id-screen.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M12",
+      "family": "Password show/hide, provider confirmation",
+      "files": [
+        "features/auth/password-step.tsx",
+        "auth/fresh-authentication.ts"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M13",
+      "family": "Appearance color hue/saturation/value picker, preview/font chips, long-press delete",
+      "files": [
+        "features/appearance/color-picker.tsx",
+        "features/appearance/appearance-screen.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M14",
+      "family": "Export PDF/JSON chooser, share sheet, delete-account warning/confirmation, logout notice",
+      "files": [
+        "features/privacy/download-screen.tsx",
+        "features/privacy/delete-screen.tsx",
+        "features/notifications/logout.ts"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M15",
+      "family": "Legal/help accordions and content links",
+      "files": [
+        "features/information/terms-privacy-screen.tsx",
+        "features/information/help-screen.tsx"
+      ],
+      "state": "resolved"
+    },
+    {
+      "modal_id": "M16",
+      "family": "Generic loading/skeleton, toast/result, errors and empty states",
+      "files": [
+        "components/ui.tsx",
+        "components/resource-list.tsx"
+      ],
+      "state": "resolved"
+    }
+  ],
+  "bySection": [
+    {
+      "section": "A01",
+      "total": 36,
+      "A": 0,
+      "B": 0,
+      "C": 36,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P01"
+    },
+    {
+      "section": "A02",
+      "total": 14,
+      "A": 0,
+      "B": 0,
+      "C": 14,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P06"
+    },
+    {
+      "section": "A03",
+      "total": 11,
+      "A": 0,
+      "B": 0,
+      "C": 11,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A04",
+      "total": 23,
+      "A": 0,
+      "B": 0,
+      "C": 23,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A05",
+      "total": 17,
+      "A": 0,
+      "B": 3,
+      "C": 14,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A06",
+      "total": 36,
+      "A": 0,
+      "B": 0,
+      "C": 36,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A07",
+      "total": 26,
+      "A": 0,
+      "B": 0,
+      "C": 26,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A08",
+      "total": 28,
+      "A": 0,
+      "B": 0,
+      "C": 28,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P18"
+    },
+    {
+      "section": "A09",
+      "total": 21,
+      "A": 0,
+      "B": 0,
+      "C": 21,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P07 P09"
+    },
+    {
+      "section": "A10",
+      "total": 25,
+      "A": 0,
+      "B": 0,
+      "C": 25,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P07"
+    },
+    {
+      "section": "A11",
+      "total": 45,
+      "A": 0,
+      "B": 2,
+      "C": 43,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P08"
+    },
+    {
+      "section": "A12",
+      "total": 24,
+      "A": 0,
+      "B": 11,
+      "C": 13,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P09"
+    },
+    {
+      "section": "A13",
+      "total": 35,
+      "A": 0,
+      "B": 22,
+      "C": 13,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P09 P10"
+    },
+    {
+      "section": "A14",
+      "total": 11,
+      "A": 0,
+      "B": 6,
+      "C": 5,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P09 P10"
+    },
+    {
+      "section": "A15",
+      "total": 14,
+      "A": 0,
+      "B": 0,
+      "C": 14,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P10"
+    },
+    {
+      "section": "A16",
+      "total": 20,
+      "A": 0,
+      "B": 8,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P10"
+    },
+    {
+      "section": "A17",
+      "total": 18,
+      "A": 0,
+      "B": 6,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P10"
+    },
+    {
+      "section": "A18",
+      "total": 9,
+      "A": 0,
+      "B": 0,
+      "C": 9,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P09"
+    },
+    {
+      "section": "A19",
+      "total": 33,
+      "A": 0,
+      "B": 14,
+      "C": 19,
+      "D": 0,
+      "closed_gates": "mapProviders",
+      "phase": "P13 P14"
+    },
+    {
+      "section": "A20",
+      "total": 11,
+      "A": 0,
+      "B": 0,
+      "C": 11,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P13"
+    },
+    {
+      "section": "A21",
+      "total": 13,
+      "A": 0,
+      "B": 0,
+      "C": 13,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P13"
+    },
+    {
+      "section": "A22",
+      "total": 10,
+      "A": 0,
+      "B": 2,
+      "C": 8,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P13"
+    },
+    {
+      "section": "A23",
+      "total": 37,
+      "A": 0,
+      "B": 24,
+      "C": 13,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P14"
+    },
+    {
+      "section": "A24",
+      "total": 24,
+      "A": 0,
+      "B": 22,
+      "C": 2,
+      "D": 0,
+      "closed_gates": "mapProviders",
+      "phase": "P14"
+    },
+    {
+      "section": "A25",
+      "total": 28,
+      "A": 0,
+      "B": 18,
+      "C": 10,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P15"
+    },
+    {
+      "section": "A26",
+      "total": 17,
+      "A": 0,
+      "B": 11,
+      "C": 6,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P15"
+    },
+    {
+      "section": "A27",
+      "total": 36,
+      "A": 0,
+      "B": 6,
+      "C": 30,
+      "D": 0,
+      "closed_gates": "householdEditing",
+      "phase": "P05 P15"
+    },
+    {
+      "section": "A28",
+      "total": 22,
+      "A": 0,
+      "B": 12,
+      "C": 10,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P13"
+    },
+    {
+      "section": "A29",
+      "total": 44,
+      "A": 0,
+      "B": 0,
+      "C": 44,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P16"
+    },
+    {
+      "section": "A30",
+      "total": 36,
+      "A": 0,
+      "B": 0,
+      "C": 36,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P16"
+    },
+    {
+      "section": "A31",
+      "total": 20,
+      "A": 0,
+      "B": 0,
+      "C": 20,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P16"
+    },
+    {
+      "section": "A32",
+      "total": 30,
+      "A": 0,
+      "B": 18,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "publicIncidents",
+      "phase": "P11 P12"
+    },
+    {
+      "section": "A33",
+      "total": 36,
+      "A": 0,
+      "B": 35,
+      "C": 1,
+      "D": 0,
+      "closed_gates": "publicIncidents",
+      "phase": "P12"
+    },
+    {
+      "section": "A34",
+      "total": 31,
+      "A": 0,
+      "B": 15,
+      "C": 16,
+      "D": 0,
+      "closed_gates": "publicIncidents",
+      "phase": "P12"
+    },
+    {
+      "section": "A35",
+      "total": 26,
+      "A": 7,
+      "B": 0,
+      "C": 19,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P11"
+    },
+    {
+      "section": "A36",
+      "total": 9,
+      "A": 7,
+      "B": 0,
+      "C": 2,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P11"
+    },
+    {
+      "section": "A37",
+      "total": 38,
+      "A": 0,
+      "B": 4,
+      "C": 34,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P05"
+    },
+    {
+      "section": "A38",
+      "total": 12,
+      "A": 0,
+      "B": 0,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P05"
+    },
+    {
+      "section": "A39",
+      "total": 35,
+      "A": 0,
+      "B": 0,
+      "C": 35,
+      "D": 0,
+      "closed_gates": "privateIdUploads",
+      "phase": "P05"
+    },
+    {
+      "section": "A40",
+      "total": 16,
+      "A": 0,
+      "B": 0,
+      "C": 16,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A41",
+      "total": 16,
+      "A": 0,
+      "B": 0,
+      "C": 16,
+      "D": 0,
+      "closed_gates": "mapProviders",
+      "phase": "P05"
+    },
+    {
+      "section": "A42",
+      "total": 16,
+      "A": 0,
+      "B": 1,
+      "C": 15,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A43",
+      "total": 35,
+      "A": 0,
+      "B": 1,
+      "C": 34,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P06"
+    },
+    {
+      "section": "A44",
+      "total": 18,
+      "A": 0,
+      "B": 11,
+      "C": 7,
+      "D": 0,
+      "closed_gates": "remotePush",
+      "phase": "P17"
+    },
+    {
+      "section": "A45",
+      "total": 20,
+      "A": 0,
+      "B": 0,
+      "C": 20,
+      "D": 0,
+      "closed_gates": "completeExport",
+      "phase": "P18"
+    },
+    {
+      "section": "A46",
+      "total": 12,
+      "A": 0,
+      "B": 0,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "accountDeletion",
+      "phase": "P18"
+    },
+    {
+      "section": "A47",
+      "total": 12,
+      "A": 0,
+      "B": 0,
+      "C": 12,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P04"
+    },
+    {
+      "section": "A48",
+      "total": 20,
+      "A": 0,
+      "B": 0,
+      "C": 20,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P18"
+    },
+    {
+      "section": "A49",
+      "total": 15,
+      "A": 0,
+      "B": 0,
+      "C": 15,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P18"
+    },
+    {
+      "section": "A50",
+      "total": 38,
+      "A": 1,
+      "B": 0,
+      "C": 37,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P01 P06 P02"
+    },
+    {
+      "section": "A51",
+      "total": 27,
+      "A": 0,
+      "B": 0,
+      "C": 27,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P02 P15 P10 P18"
+    },
+    {
+      "section": "A52",
+      "total": 12,
+      "A": 0,
+      "B": 2,
+      "C": 10,
+      "D": 0,
+      "closed_gates": "",
+      "phase": "P18 P07 P13 P17 P10 P15 P16 P06 P14"
+    }
+  ]
+}

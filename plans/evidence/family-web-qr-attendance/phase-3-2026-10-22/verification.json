@@ -1,0 +1,233 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Asia/Manila",
+  "phase": 3,
+  "status": "Partially complete",
+  "coding_status": "Complete; all independent local implementation and verification complete",
+  "new_dependencies": [],
+  "migrations_added": [],
+  "environment": {
+    "cwd": "C:/Users/User/barangayan",
+    "browser": "Brave 155.0.8059.85",
+    "database": "family_attendance_restore0139_20261022",
+    "postgresql": "17.6",
+    "pgtap": "1.3.3",
+    "postgrest": "14.5",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "supabase_js": "2.112.1",
+    "supabase_ssr": "0.12.4",
+    "zod": "3.25.76",
+    "qrcode_react": "4.2.0",
+    "repomix": "1.18.1",
+    "private_env": "Existing app .env.local used by builds; no values read into context packets/evidence; public client only, no service credential added",
+    "api_container": "family-web-phase3-rest (stopped)"
+  },
+  "checks": [
+    {
+      "name": "Resident typecheck baseline",
+      "command": "npm run typecheck --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase3-20261022/logs/typecheck.baseline.log"
+    },
+    {
+      "name": "Resident lint baseline",
+      "command": "npm run lint --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; one pre-existing warning",
+      "log": "tmp/family-web-phase3-20261022/logs/lint.baseline.log"
+    },
+    {
+      "name": "Resident production baseline",
+      "command": "BARANGAYAN_PREVIEW_DIST_DIR=.next-family-phase3-baseline npm run build --workspace=@barangayan/resident-web -- --webpack",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase3-20261022/logs/build.baseline.log"
+    },
+    {
+      "name": "Shared baseline",
+      "command": "npm run test --workspace=@barangayan/shared -- src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "44 pass",
+      "log": "tmp/family-web-phase3-20261022/logs/shared.baseline.log"
+    },
+    {
+      "name": "Resident final typecheck, original user config",
+      "command": "npm run typecheck --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase3-20261022/logs/typecheck.verified.log"
+    },
+    {
+      "name": "Resident final lint",
+      "command": "npm run lint --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; same one warning",
+      "log": "tmp/family-web-phase3-20261022/logs/lint.verified.log"
+    },
+    {
+      "name": "Resident final production build",
+      "command": "BARANGAYAN_PREVIEW_DIST_DIR=.next-family-phase3-final npm run build --workspace=@barangayan/resident-web -- --webpack",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; webpack compile, TypeScript, page generation and traces complete",
+      "log": "tmp/family-web-phase3-20261022/logs/build.verified.log"
+    },
+    {
+      "name": "Resident schema boundary tests",
+      "command": "npx --no-install vitest run tests/household.test.ts [cwd apps/resident-web]",
+      "cwd": "C:/Users/User/barangayan/apps/resident-web",
+      "exit": 0,
+      "result": "12 pass",
+      "log": "tmp/family-web-phase3-20261022/logs/household-unit.fixed.log"
+    },
+    {
+      "name": "Shared schemas and deadline",
+      "command": "npm run test --workspace=@barangayan/shared -- src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts src/lib/attendance-request.test.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "47 pass",
+      "log": "tmp/family-web-phase3-20261022/logs/shared.final.log"
+    },
+    {
+      "name": "Admin typecheck",
+      "command": "npm run typecheck --workspace=@barangayan/web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase3-20261022/logs/admin-typecheck.log"
+    },
+    {
+      "name": "Admin lint",
+      "command": "npm run lint --workspace=@barangayan/web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; same two warnings",
+      "log": "tmp/family-web-phase3-20261022/logs/admin-lint.log"
+    },
+    {
+      "name": "Admin attendance helper regression",
+      "command": "npm run test:tables --workspace=@barangayan/web -- tests/table-browse/household-attendance-web.test.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "6 pass",
+      "log": "tmp/family-web-phase3-20261022/logs/admin-attendance-tests.log"
+    },
+    {
+      "name": "Feedback and scanner cutover",
+      "command": "TEST_ARTIFACTS_DIR=tmp/family-web-phase3-20261022/unit-feedback node scripts/resident-web-feedback-regression.cjs rw-lt-05:unit",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "4 groups pass",
+      "log": "tmp/family-web-phase3-20261022/logs/feedback.log"
+    },
+    {
+      "name": "Existing notification browser regression",
+      "command": "node apps/resident-web/tests/toast-location-search-browser.mjs",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "49 scenarios pass; zero runtime errors/console errors/warnings",
+      "log": "tmp/family-web-phase3-20261022/logs/toast-browser.log"
+    },
+    {
+      "name": "Full actual component/API/database flow",
+      "command": "python tmp/family-web-phase3-20261022/browser-db.py run",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "20 groups pass; zero console errors",
+      "log": "tmp/family-web-phase3-20261022/logs/browser.verified.log"
+    },
+    {
+      "name": "0/30/31 real UI/API boundary",
+      "command": "python tmp/family-web-phase3-20261022/browser-db.py run boundary",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "log": "tmp/family-web-phase3-20261022/logs/boundary-browser.fixed.log"
+    },
+    {
+      "name": "Settled theme, keyboard, enlarged QR and console audit",
+      "command": "python tmp/family-web-phase3-20261022/browser-db.py run visual",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; Georgia/custom accent/dark/200% rendered QR decodes",
+      "log": "tmp/family-web-phase3-20261022/logs/visual.port-verified.log"
+    },
+    {
+      "name": "SQL tests",
+      "command": "python tmp/family-web-phase3-20261022/sql-checks.py",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "83 + 30 + 22 = 135 assertions, all rolled back",
+      "log": "tmp/family-web-phase3-20261022/logs/resident_household_conditional.test.sql"
+    },
+    {
+      "name": "Owned whitespace/diff check",
+      "command": "git diff --check -- apps/resident-web apps/admin-web/src/lib/household-attendance.ts packages/shared/src/index.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass; Git existing line-ending notices are not lint failures",
+      "log": "tmp/family-web-phase3-20261022/logs/diff-check.log"
+    }
+  ],
+  "candidate_sources": "sources.final.json",
+  "packets": [
+    "manifest.json",
+    "closure-manifest.json"
+  ],
+  "sql_results": [
+    {
+      "suite": "supabase/tests/household_attendance.test.sql",
+      "exit": 0,
+      "assertions": 83,
+      "passed": true
+    },
+    {
+      "suite": "supabase/tests/household_attendance_boundaries.test.sql",
+      "exit": 0,
+      "assertions": 30,
+      "passed": true
+    },
+    {
+      "suite": "supabase/tests/resident_household_conditional.test.sql",
+      "exit": 0,
+      "assertions": 22,
+      "passed": true
+    }
+  ],
+  "archive_observation": {
+    "query": "synthetic member cfb21000-0000-4000-8000-000000000001 after Family UI removal",
+    "archived": true,
+    "retained_stays": 1
+  },
+  "pending_manual": [
+    "Real staff camera scan of actual displayed resident Family QR on a separate screen",
+    "Approved staging real Auth/session/Back-Forward/mobile navigation and bottom clearance",
+    "Identify supported deployed older clients and endpoint traffic before shared image endpoint retirement"
+  ],
+  "phase4": "Not started; release/concurrency target revalidation/retained-data recovery outside selected phase",
+  "pre_existing_failures": [
+    "No new scope failure. One resident and two admin lint warnings remain. Prior unrelated admin request-editor suite failure was read in previous phase evidence; broad suite not rerun here."
+  ],
+  "diagnostics_and_reruns": [
+    "Initial candidate query-builder ordering corrected; callback dependency warnings fixed",
+    "Standalone browser environment and render-time notification fixture corrected; superseded reports retained",
+    "15-second save test uses an actually committed response delayed 17 seconds, followed by read-only reconciliation",
+    "The test boundary first incorrectly expected React to honor a manually enabled DOM button; corrected to observe no UI write and API 31-bound rejection",
+    "Initial final build mkdir EPERM resolved by creating exact generated directory, then successful builds",
+    "Closure diff omitted by default ignores; explicit ignore flags corrected manifest before any read was credited",
+    "SQL filename assertion preserved first two passing logs; only missing correctly named suite executed",
+    "Final warning-level visual audit initially used the stale dynamic port after container restart; refreshed port from Docker inspect and passed before stopping the container."
+  ],
+  "prohibited_actions_performed": [],
+  "cleanup": "Only temporary Phase 3 API stopped; existing services and disposable test data preserved; original user tsconfig and historical notification screenshot restored byte-for-byte",
+  "historical_harness_limit": "The pre-existing RW-LT-05 full historical browser harness still uses old PNG/CSS/PATCH assumptions. Its 4 unit groups pass; the full historical suite was not run or claimed passing. Current Family/Profile coverage is the saved Phase 3 real API harness.",
+  "dependency_identities": "dependencies.final.json"
+}

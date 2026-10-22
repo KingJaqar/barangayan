@@ -1,0 +1,7 @@
+{"chunk": 0, "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/preflight-checks.py", "start": 1, "end": 34, "characters": 2432, "next": null}
+{"chunk": 1, "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/README.md", "start": 1, "end": 16, "characters": 3540, "next": null}
+{"chunk": 2, "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/harness/rehearsal.py", "start": 1, "end": 151, "characters": 11756, "next": null}
+{"chunk": 3, "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md", "start": 1, "end": 58, "characters": 11867, "next": 59}
+{"chunk": 4, "path": "plans/evidence/family-web-qr-attendance/phase-4-2026-10-22/context-index.md", "start": 59, "end": 84, "characters": 5984, "next": null}
+{"chunk": 5, "path": "supabase/runbooks/family-attendance/preflight.sql", "start": 1, "end": 102, "characters": 5437, "next": null}
+{"chunk": 6, "path": "supabase/runbooks/family-attendance/README.md", "start": 1, "end": 37, "characters": 8405, "next": null}

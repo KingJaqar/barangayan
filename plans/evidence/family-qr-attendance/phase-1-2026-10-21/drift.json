@@ -1,0 +1,12 @@
+{
+  "database": "family_attendance_rehearsal_20261021_drift_v5",
+  "candidate_sha256": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E",
+  "result": "pass",
+  "checks": [
+    "schema-only restore; no resident records",
+    "0118\u20130136 applied",
+    "prior archive trigger and function deliberately absent",
+    "candidate migration restores required guard",
+    "83 attendance assertions pass"
+  ]
+}

@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
-import { useCountdown } from '@/hooks/use-countdown';
 import { useTheme } from '@/hooks/use-theme';
 
 function formatRemaining(ms: number): string {
@@ -14,13 +13,14 @@ function formatRemaining(ms: number): string {
 }
 
 /** "Expires in HH:MM:SS" pill counting down to a fixed expiry timestamp (unix ms). */
-export function CountdownTimer({ expiresAt }: { expiresAt: number }) {
+export function CountdownTimer({ remaining }: { remaining: number }) {
   const theme = useTheme();
-  const remaining = useCountdown(expiresAt) ?? 0;
+  const color = remaining <= 0 ? theme.resident.danger : remaining < 300000 ? theme.resident.warning : theme.resident.accentText;
+  const backgroundColor = remaining <= 0 ? theme.resident.dangerSoft : remaining < 300000 ? theme.resident.warningSoft : theme.resident.accentSoft;
 
   return (
-    <View style={[styles.pill, { backgroundColor: `${theme.primary}1A` }]}>
-      <ThemedText type="small" style={{ color: theme.primary }}>
+    <View style={[styles.pill, { backgroundColor }]}>
+      <ThemedText type="small" style={{ color }}>
         {remaining <= 0 ? 'Expired' : `Expires in ${formatRemaining(remaining)}`}
       </ThemedText>
     </View>

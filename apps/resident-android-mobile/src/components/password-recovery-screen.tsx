@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRef, useState, type ReactNode } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { ActivityIndicator, Animated, Easing, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 
 export function PasswordRecoveryScreen({ step, title, description, children }: {
   step: 1 | 2 | 3;
@@ -16,34 +17,55 @@ export function PasswordRecoveryScreen({ step, title, description, children }: {
   return <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
 }
 
-export function StepFlowScreen({ step, totalSteps, flowLabel, title, description, children }: {
+export function StepFlowScreen({ step, totalSteps, flowLabel, title, description, children, presentation = 'default', compact = false }: {
   step: number;
   totalSteps: number;
   flowLabel: string;
   title: string;
   description: string;
   children: ReactNode;
+  presentation?: 'default' | 'resident';
+  compact?: boolean;
 }) {
   const theme = useTheme();
+  const resident = presentation === 'resident';
+  const reducedMotion = useResidentReducedMotion(compact);
+  const [progress] = useState(() => new Animated.Value(1));
+  const previousStep = useRef(step);
+  useEffect(() => {
+    const changed = previousStep.current !== step;
+    previousStep.current = step;
+    if (!compact || reducedMotion || !changed) { progress.setValue(1); return; }
+    progress.setValue(0);
+    const animation = Animated.timing(progress, {
+      toValue: 1, duration: 180, easing: Easing.out(Easing.cubic), useNativeDriver: true,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [compact, reducedMotion, step, progress]);
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: theme.background }]} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={[styles.screen, { backgroundColor: resident ? theme.resident.card : theme.background }]} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView key={step} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-          <View style={styles.content}>
+        <ScrollView key={step} contentContainerStyle={[styles.scrollContent, resident && { padding: 20 }, compact && { padding: 16 }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <Animated.View style={[styles.content, compact && {
+            gap: 16,
+            opacity: progress.interpolate({ inputRange: [0, 1], outputRange: [0.65, 1] }),
+            transform: [{ translateY: progress.interpolate({ inputRange: [0, 1], outputRange: [4, 0] }) }],
+          }]}>
             <View style={styles.progress} accessibilityLabel={`${flowLabel}, step ${step} of ${totalSteps}`}>
               <ThemedText type="small" themeColor="textSecondary">Step {step} of {totalSteps}</ThemedText>
               <View style={styles.progressTrack} importantForAccessibility="no-hide-descendants">
                 {Array.from({ length: totalSteps }, (_, i) => i + 1).map((index) => (
-                  <View key={index} style={[styles.progressSegment, { backgroundColor: index <= step ? theme.primary : theme.backgroundSelected }]} />
+                  <View key={index} style={[styles.progressSegment, { backgroundColor: index <= step ? (resident ? theme.resident.accentText : theme.primary) : (resident ? theme.resident.border : theme.backgroundSelected) }]} />
                 ))}
               </View>
             </View>
-            <View style={styles.intro}>
-              <ThemedText accessibilityRole="header" style={styles.title}>{title}</ThemedText>
+            <View style={[styles.intro, compact && { gap: 6 }]}>
+              <ThemedText accessibilityRole="header" style={[styles.title, compact && { fontSize: 23, lineHeight: 30 }]}>{title}</ThemedText>
               <ThemedText themeColor="textSecondary" style={styles.description}>{description}</ThemedText>
             </View>
             {children}
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -71,13 +93,14 @@ export function RecoveryButton({ label, onPress, loading = false, disabled = fal
   );
 }
 
-export function RecoveryError({ message }: { message: string | null }) {
+export function RecoveryError({ message, presentation = 'default' }: { message: string | null; presentation?: 'default' | 'resident' }) {
   const theme = useTheme();
+  const color = presentation === 'resident' ? theme.resident.danger : theme.accentRed;
   if (!message) return null;
   return (
-    <View style={[styles.error, { borderColor: theme.accentRed }]} accessibilityLiveRegion="polite">
-      <Ionicons name="alert-circle-outline" size={20} color={theme.accentRed} />
-      <ThemedText type="small" themeColor="accentRed" style={styles.errorText}>{message}</ThemedText>
+    <View style={[styles.error, { borderColor: color }, presentation === 'resident' && { backgroundColor: theme.resident.dangerSoft }]} accessibilityLiveRegion="polite">
+      <Ionicons name="alert-circle-outline" size={20} color={color} />
+      <ThemedText type="small" style={[styles.errorText, { color }]}>{message}</ThemedText>
     </View>
   );
 }

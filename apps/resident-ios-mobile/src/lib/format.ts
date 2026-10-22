@@ -13,3 +13,9 @@ export function formatRelativeTime(iso: string, now: Date = new Date()): string 
   if (days < 7) return days === 1 ? '1 day ago' : `${days} days ago`;
   return formatDate(iso);
 }
+
+/** True when both instants fall on the same calendar day in the device's time zone (date-only boundary, not a 24-hour window). */
+export function isSameLocalDay(iso: string, now: Date = new Date()): boolean {
+  const date = new Date(iso);
+  return !Number.isNaN(date.getTime()) && date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth() && date.getDate() === now.getDate();
+}

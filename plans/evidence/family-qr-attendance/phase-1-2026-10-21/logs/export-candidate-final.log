@@ -1,0 +1,14 @@
+
+> @barangayan/resident-ios@1.0.0 test
+> vitest run tests/export-function.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-ios-mobile
+
+ ✓ tests/export-function.test.ts (15 tests) 39ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  20:30:29
+   Duration  1.79s (transform 115ms, setup 0ms, collect 168ms, tests 39ms, environment 0ms, prepare 234ms)
+

@@ -1,6 +1,5 @@
 import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
 
-import type { CheckInFailure, EvacuationCenterCheckin } from '@/hooks/use-qr-checkins';
 import { notify, type OperationId } from '@/lib/notify';
 
 /**
@@ -13,6 +12,7 @@ export type CenterQrParse = { ok: true; centerId: string } | { ok: false; title:
 /** Validates a decoded QR string exactly like before: JSON, the center check-in schema,
  * then the resident's own barangay. The barangay/center payload is not changed. */
 export function parseCenterQr(raw: string, userBarangayId: string | null): CenterQrParse {
+  if (raw.length > 2048) return { ok: false, title: 'This QR code is too large.' };
   let payload: unknown;
   try {
     payload = JSON.parse(raw.trim());
@@ -25,47 +25,10 @@ export function parseCenterQr(raw: string, userBarangayId: string | null): Cente
   return { ok: true, centerId: parsed.data.center_id };
 }
 
-export type CheckInOutcome = 'recorded' | 'partial' | 'failed' | 'unconfirmed';
-
-/**
- * Runs the existing check-in then household update and emits exactly one terminal
- * notification for the attempt:
- * - recorded: one success;
- * - partial (check-in saved, household update failed): one warning, no success;
- * - failed: one error (the check-in was rejected, nothing was recorded);
- * - unconfirmed (no answer arrived): one warning saying it may have been recorded — the
- *   resident should not scan again until they know. Nothing is retried.
- * Success is read from the existing return values (a row / true), never from a resolved
- * promise alone.
- */
-export async function completeCheckIn(args: {
-  centerId: string;
-  attempt: OperationId;
-  checkIn: (centerId: string) => Promise<EvacuationCenterCheckin | null>;
-  updateHouseholdStatus: () => Promise<boolean>;
-  lastCheckInFailure: () => CheckInFailure | null;
-}): Promise<CheckInOutcome> {
-  const { centerId, attempt, checkIn, updateHouseholdStatus, lastCheckInFailure } = args;
-  const row = await checkIn(centerId);
-  if (!row) {
-    if (lastCheckInFailure() === 'unconfirmed') {
-      notify.warning("We couldn't confirm your check-in.", {
-        id: attempt,
-        description: 'It may have been recorded. Ask center staff to confirm before you scan again.',
-      });
-      return 'unconfirmed';
-    }
-    notify.error("Couldn't record your check-in.", { id: attempt, description: 'Nothing was recorded. Please try again.' });
-    return 'failed';
-  }
-  const householdUpdated = await updateHouseholdStatus();
-  if (!householdUpdated) {
-    notify.warning('Check-in recorded.', {
-      id: attempt,
-      description: "Your own check-in is saved, but we couldn't update your household's status. Tell center staff so they can mark your household.",
-    });
-    return 'partial';
-  }
-  notify.success('Your presence has been registered at the evacuation center.', { id: attempt });
-  return 'recorded';
+/** A resident scan identifies a center; only staff can confirm attendance. */
+export function explainStaffCheckIn(attempt: OperationId): void {
+  notify.warning('Ask barangay staff to confirm your attendance.', {
+    id: attempt,
+    description: 'Show staff your Family QR and confirm who is present. This scan did not record attendance.',
+  });
 }

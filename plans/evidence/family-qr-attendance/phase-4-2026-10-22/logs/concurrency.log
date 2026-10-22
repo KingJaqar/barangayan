@@ -1,0 +1,130 @@
+PASS same-center: observed independent connection waiting on a database lock
+PASS different-centers: observed independent connection waiting on a database lock
+PASS same-request: observed independent connection waiting on a database lock
+PASS arrival-before-removal: observed independent connection waiting on a database lock
+PASS removal-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-center-deleted_at: observed independent connection waiting on a database lock
+PASS center-deleted_at-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-center-barangay_id: observed independent connection waiting on a database lock
+PASS center-barangay_id-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-household-move: observed independent connection waiting on a database lock
+PASS household-move-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-role-revocation: observed independent connection waiting on a database lock
+PASS role-revocation-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-auth-ban: observed independent connection waiting on a database lock
+PASS auth-ban-before-arrival: observed independent connection waiting on a database lock
+PASS arrival-before-member-archive: observed independent connection waiting on a database lock
+PASS member-archive-before-arrival: observed independent connection waiting on a database lock
+PASS cross-household-member-id: observed independent connection waiting on a database lock
+PASS arrival-before-household-erasure: observed independent connection waiting on a database lock
+PASS household-erasure-before-arrival: observed independent connection waiting on a database lock
+{
+  "database": "family_attendance_phase4_20261022",
+  "results": [
+    {
+      "name": "same-center",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "different-centers",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "same-request",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-removal",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "removal-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-center-deleted_at",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "center-deleted_at-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-center-barangay_id",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "center-barangay_id-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-household-move",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "household-move-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-role-revocation",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "role-revocation-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-auth-ban",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "auth-ban-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-member-archive",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "member-archive-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "bounded-timeout-explicit-retry",
+      "pass": true
+    },
+    {
+      "name": "cross-household-member-id",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-household-erasure",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "household-erasure-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    }
+  ],
+  "passed": 21
+}

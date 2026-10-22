@@ -42,6 +42,8 @@ function AccountAppearance({ profile, children }: { profile: Profile | null; chi
 
   // Light/Dark go through the native window so system chrome, alerts and pickers follow the choice.
   useEffect(() => {
+    // The localhost web test target (OD-14) has no native window to override, so the browser's own scheme applies there.
+    if (typeof Appearance.setColorScheme !== 'function') return undefined;
     Appearance.setColorScheme(theme === 'system' ? 'unspecified' : theme);
     return () => Appearance.setColorScheme('unspecified');
   }, [theme]);

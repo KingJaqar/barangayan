@@ -1,0 +1,77 @@
+
+> @barangayan/web@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 54ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 41s
+  Running TypeScript ...
+  Finished TypeScript in 24.6s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/45) ...
+  Generating static pages using 31 workers (11/45) 
+  Generating static pages using 31 workers (22/45) 
+  Generating static pages using 31 workers (33/45) 
+✓ Generating static pages using 31 workers (45/45) in 3.0s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /about-us
+├ ƒ /announcements
+├ ƒ /api/admin/residents
+├ ƒ /api/admin/staff/invite
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /archive
+├ ƒ /archive/[screen]
+├ ƒ /dashboard
+├ ƒ /emergency-qr
+├ ƒ /evacuation-centers
+├ ƒ /evacuation-routing
+├ ƒ /faq
+├ ○ /forgot-password
+├ ƒ /health
+├ ƒ /health/applicants
+├ ƒ /households-residents
+├ ƒ /hub
+├ ○ /icon.png
+├ ƒ /incident-map
+├ ƒ /incident-reports
+├ ƒ /login
+├ ƒ /profile
+├ ƒ /profile-proof
+├ ○ /profile/security-callback
+├ ƒ /requests
+├ ƒ /requests/[requestId]
+├ ○ /reset-password
+├ ƒ /resident
+├ ƒ /resident/profile
+├ ƒ /resident/reports
+├ ƒ /resident/reports/new
+├ ƒ /resident/requests
+├ ƒ /resident/requests/[requestId]
+├ ƒ /resident/requests/new
+├ ƒ /residents
+├ ƒ /search
+├ ƒ /search/[category]/[recordId]
+├ ƒ /services
+├ ƒ /services/sla
+├ ƒ /settings
+├ ƒ /staff
+├ ƒ /terms-privacy
+├ ƒ /theme
+├ ƒ /transactions
+└ ƒ /waste-management
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

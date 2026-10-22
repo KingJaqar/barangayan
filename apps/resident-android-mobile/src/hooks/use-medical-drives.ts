@@ -88,6 +88,8 @@ export function useMedicalDrives({
   const [loadingDrives, setLoadingDrives] = useState(false);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [monthError, setMonthError] = useState<string | null>(null);
+  const [registrationsError, setRegistrationsError] = useState<string | null>(null);
 
   // ── Fetch drives for the selected date (and type filter) ──────────────────
   const fetchDrives = useCallback(async () => {
@@ -158,6 +160,7 @@ export function useMedicalDrives({
    */
   const fetchMonthDrives = useCallback(async (year: number, month: number) => {
     setLoadingMonthDrives(true);
+    setMonthError(null);
     try {
       const pad = (n: number) => String(n).padStart(2, '0');
       const startDate = `${year}-${pad(month)}-01`;
@@ -182,7 +185,7 @@ export function useMedicalDrives({
       if (err) throw err;
       setMonthDrives((data ?? []) as MedicalDrive[]);
     } catch {
-      // Non-fatal: month view gracefully handles empty state
+      setMonthError('Could not load this month’s medical drives. Please try again.');
     } finally {
       setLoadingMonthDrives(false);
     }
@@ -193,9 +196,11 @@ export function useMedicalDrives({
     if (!userId) {
       setMyRegistrations([]);
       setRegisteredDriveIds(new Set());
+      setRegistrationsError(null);
       return;
     }
     setLoadingRegistrations(true);
+    setRegistrationsError(null);
     try {
       const { data, error: err } = await supabase
         .from('drive_registrations')
@@ -208,7 +213,7 @@ export function useMedicalDrives({
       setMyRegistrations(regs);
       setRegisteredDriveIds(new Set(regs.map((r) => r.drive_id)));
     } catch {
-      // Non-fatal: guest users land here; the UI gracefully handles no registrations.
+      setRegistrationsError('Could not load your registrations. Please try again.');
     } finally {
       setLoadingRegistrations(false);
     }
@@ -328,6 +333,9 @@ export function useMedicalDrives({
     // Actions
     registerForDrive,
     error,
+    monthError,
+    registrationsError,
     refetch: fetchDrives,
+    refetchRegistrations: fetchMyRegistrations,
   };
 }

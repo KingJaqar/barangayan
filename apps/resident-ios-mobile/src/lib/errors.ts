@@ -36,6 +36,7 @@ const CODE_MESSAGES: Record<string, string> = {
   profile_completion_required: 'Complete your profile in Settings before sending a report.',
   incident_state_invalid: 'This report could not be filed. Refresh and try again.',
   // Evacuation-center check-in (B14).
+  staff_attendance_required: 'Ask barangay staff to scan your Family QR and confirm who is present. This scan did not record attendance.',
   checkin_not_resident: 'Only a resident account can check in to an evacuation center.',
   checkin_wrong_barangay: 'This QR code belongs to a different barangay, so you cannot check in with it.',
   checkin_center_unavailable: 'This evacuation center is not open for check-in, or it no longer exists. Ask center staff for help.',

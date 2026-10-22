@@ -1,0 +1,35 @@
+{
+  "generator": "Repomix 1.18.1",
+  "packet": "tmp\\family-attendance-phase1-20261021\\export-contract.before.xml",
+  "packet_sha256": "E302BE569E42843079FFB5B9D9F1B955C00CDB7A1380F382C37925DCE0D76AC8",
+  "sources": [
+    {
+      "path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+      "sha256": "626E14FB1451847EE22956CA4288057E87AA402C5CAF89A300AD161ACB788CCA",
+      "lines": 68,
+      "source_equivalent": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+      "sha256": "97192C45A80E7C26F9607F1CA26268681B08E0071B0BA3026F91D1B6F6F1ADE7",
+      "lines": 147,
+      "source_equivalent": true
+    }
+  ],
+  "chunks": [
+    {
+      "path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+      "start": 1,
+      "end": 68,
+      "characters": 3761,
+      "next": null
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+      "start": 1,
+      "end": 147,
+      "characters": 9800,
+      "next": null
+    }
+  ]
+}

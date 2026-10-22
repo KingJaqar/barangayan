@@ -65,9 +65,21 @@ export type ServiceRequestPauseRow = {
   id: string; request_id: string; reason: string; started_by: string; started_at: string;
   resumed_by: string | null; resumed_at: string | null;
 }
+export type NotificationInboxRow = {
+  id: string; event_id: string; recipient_id: string; kind: string; title: string; body: string;
+  destination: Json; created_at: string; read_at: string | null;
+}
 /** Foundation tables are written exclusively through controlled operations. */
 type ReadOnlyTable<Row, Relationships extends { foreignKeyName: string; columns: string[]; isOneToOne: boolean; referencedRelation: string; referencedColumns: string[] }[] = []> = { Row: Row; Insert: never; Update: never; Relationships: Relationships };
 export type FoundationTables = {
+  // Migration 0135 (resident iOS Phase 17): a resident reads their own inbox and may change `read_at` only.
+  notification_inbox: {
+    Row: NotificationInboxRow; Insert: never; Update: { read_at?: string | null };
+    Relationships: [{ foreignKeyName: 'notification_inbox_recipient_id_fkey'; columns: ['recipient_id']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
+  };
+  notification_preferences: ReadOnlyTable<{ user_id: string; kinds: Json; updated_at: string }, [
+    { foreignKeyName: 'notification_preferences_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] },
+  ]>;
   service_request_sla_alerts: ReadOnlyTable<{
     id: string; request_id: string; threshold: 'near_target' | 'overdue';
     evaluated_at: string; agency_seconds: number;

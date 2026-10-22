@@ -35,15 +35,15 @@ export function LocationStatusCard({
   const message = describeDeviceLocation(state, 'android');
   if (!message) return null;
 
-  const iconColor = message.tone === 'info' ? theme.primary : theme.accentRed;
+  const iconColor = message.tone === 'info' ? theme.resident.accentText : theme.resident.danger;
 
   return (
     <View
       accessibilityLiveRegion="polite"
-      style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+      style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
       <View style={styles.headerRow}>
         {message.busy ? (
-          <ActivityIndicator size="small" color={theme.primary} />
+          <ActivityIndicator size="small" color={theme.resident.accentText} />
         ) : (
           <Ionicons name={TONE_ICONS[message.tone]} size={18} color={iconColor} />
         )}
@@ -69,9 +69,9 @@ export function LocationStatusCard({
                   styles.actionButton,
                   primary
                     ? { backgroundColor: theme.primary, borderColor: theme.primary }
-                    : { borderColor: theme.backgroundSelected },
+                    : { borderColor: theme.resident.border },
                 ]}>
-                <ThemedText type="smallBold" style={{ color: primary ? theme.onPrimary : theme.text }}>
+                <ThemedText type="smallBold" style={{ color: primary ? theme.resident.onAccent : theme.text }}>
                   {ACTION_LABELS[action]}
                 </ThemedText>
               </Pressable>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   actionButton: {
-    minHeight: 40,
+    minHeight: 44,
     paddingHorizontal: Spacing.three,
     borderRadius: 20,
     borderWidth: 1,

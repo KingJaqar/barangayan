@@ -290,14 +290,18 @@ function AvatarSection({ profileId, currentUrl }: { profileId: string; currentUr
 
 // ─── Household section ──────────────────────────────────────────────────────
 
-function HouseholdSection({ profileId }: { profileId: string }) {
-  const { members, isInitialLoading, isReady, error, errorAnnounced, refetch, addMember, updateMember, removeMember, lastWriteFailure } = useFamilyMembers(profileId);
+export function HouseholdSection({ profileId }: { profileId: string }) {
+  const { members, isInitialLoading, isReady, error, errorAnnounced, refetch, addMember, updateMember, removeMember, lastWriteFailure, canEdit, privateHidden, writeMessage, beginEdit, sessionVersion } = useFamilyMembers(profileId);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<(typeof members)[0] | null>(null);
   // Id of the member whose inline Remove is in flight; also blocks other roster edits so
   // two whole-roster writes never overlap.
   const [removingId, setRemovingId] = useState<string | null>(null);
   const removingRef = useRef(false);
+
+  useEffect(() => {
+    void Promise.resolve().then(() => { setDialogOpen(false); setEditing(null); });
+  }, [privateHidden, sessionVersion]);
 
   // Each handler reports success only from the write's own result and returns it, so the
   // dialog stays open (inputs kept) on failure. This screen owns the one notification.
@@ -311,7 +315,7 @@ function HouseholdSection({ profileId }: { profileId: string }) {
     }
     const failure = ok ? null : lastWriteFailure();
     notifyHouseholdOutcome(action, ok, failure, attempt);
-    if (failure === 'unconfirmed') refetch();
+    if (ok) refetch();
     return ok;
   }
 
@@ -328,6 +332,7 @@ function HouseholdSection({ profileId }: { profileId: string }) {
 
   async function handleInlineRemove(id: string) {
     if (removingRef.current) return;
+    beginEdit();
     removingRef.current = true;
     setRemovingId(id);
     try {
@@ -338,6 +343,8 @@ function HouseholdSection({ profileId }: { profileId: string }) {
     }
   }
 
+  if (privateHidden) return <p role="alert">Your session or account changed. Sign in again or refresh to load your household.</p>;
+
   return (
     <div className={`${cardCls} space-y-3`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -347,7 +354,7 @@ function HouseholdSection({ profileId }: { profileId: string }) {
           </span>
           <h3 className="text-sm font-bold">Household Members</h3>
         </div>
-        <Button type="button" size="sm" variant="outline" disabled={removingId !== null || !isReady} onClick={() => { setEditing(null); setDialogOpen(true); }}>
+        <Button type="button" size="sm" variant="outline" disabled={removingId !== null || !canEdit || members.length >= 30} onClick={() => { beginEdit(); setEditing(null); setDialogOpen(true); }}>
           <Plus size={14} className="mr-1" /> Add
         </Button>
       </div>
@@ -377,9 +384,9 @@ function HouseholdSection({ profileId }: { profileId: string }) {
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">{[m.relation, m.role].filter(Boolean).join(' · ')}</p>
               </div>
               <div className="flex shrink-0 gap-1">
-                <button type="button" disabled={removingId !== null} onClick={() => { setEditing(m); setDialogOpen(true); }}
+                <button type="button" disabled={removingId !== null || !canEdit} onClick={() => { beginEdit(); setEditing(m); setDialogOpen(true); }}
                   className="rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-200 disabled:opacity-50 dark:hover:bg-zinc-700">Edit</button>
-                <button type="button" disabled={removingId !== null} aria-busy={removingId === m.id || undefined}
+                <button type="button" disabled={removingId !== null || !canEdit} aria-busy={removingId === m.id || undefined}
                   aria-label={`Remove ${m.name}`} onClick={() => void handleInlineRemove(m.id)}
                   className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-950/20">
                   {removingId === m.id ? <Spinner delayed={false} className="size-3" /> : <Trash2 size={12} />}
@@ -389,10 +396,13 @@ function HouseholdSection({ profileId }: { profileId: string }) {
           ))}
         </ul>
       )}
+      {writeMessage ? <p role="status" className="text-sm text-muted-foreground">{writeMessage}</p> : null}
       <LoadingStatus active={isInitialLoading} label="Loading household members…" />
 
       <FamilyMemberDialog
         open={dialogOpen}
+        disabled={!canEdit}
+        message={writeMessage}
         initial={editing}
         onClose={() => { setDialogOpen(false); setEditing(null); }}
         onSave={handleSave}
@@ -752,7 +762,7 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
 
         {/* Household */}
         <div className="min-w-0 space-y-6">
-          <HouseholdSection profileId={profile.id} />
+          <HouseholdSection key={profile.id} profileId={profile.id} />
 
         </div>
       </div>

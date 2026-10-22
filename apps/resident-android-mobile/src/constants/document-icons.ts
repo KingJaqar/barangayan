@@ -7,7 +7,11 @@ import type { Ionicons } from '@expo/vector-icons';
  * document type name needs a specific icon; unmapped names still render correctly via
  * the fallback, so this never blocks adding new document_types rows.
  */
-const DOCUMENT_ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
+export type DocumentIconName = keyof typeof Ionicons.glyphMap | 'document-peso' | 'document-work';
+
+const DOCUMENT_ICON_MAP: Record<string, DocumentIconName> = {
+  'first time job seeker': 'document-work',
+  'issuance of barangay clearance for business establishments': 'document-peso',
   'barangay clearance': 'shield-checkmark-outline',
   'barangay id': 'card-outline',
   'business permit': 'briefcase-outline',
@@ -18,7 +22,7 @@ const DOCUMENT_ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
 
 const DEFAULT_DOCUMENT_ICON: keyof typeof Ionicons.glyphMap = 'document-text-outline';
 
-export function getDocumentIcon(name: string): keyof typeof Ionicons.glyphMap {
+export function getDocumentIcon(name: string): DocumentIconName {
   const key = name.trim().toLowerCase();
   if (DOCUMENT_ICON_MAP[key]) return DOCUMENT_ICON_MAP[key];
 

@@ -1,0 +1,1283 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: .gitignore, AGENTS.md, CLAUDE.md, apps/resident-android-mobile/.gitignore, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/app.json, apps/resident-android-mobile/eslint.config.js, apps/resident-android-mobile/metro.config.js, apps/resident-android-mobile/package.json, apps/resident-android-mobile/src/app/(app)/home/requests/*.tsx, apps/resident-android-mobile/src/app/(app)/services/_layout.tsx, apps/resident-android-mobile/src/app/(app)/services/payment/*.tsx, apps/resident-android-mobile/src/app/(app)/services/payment/pickup/*.tsx, apps/resident-android-mobile/src/app/(app)/services/payment/qrph/*.tsx, apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx, apps/resident-android-mobile/src/app/(app)/services/requests/*.tsx, apps/resident-android-mobile/src/components/card.tsx, apps/resident-android-mobile/src/components/divider.tsx, apps/resident-android-mobile/src/components/document-icon.tsx, apps/resident-android-mobile/src/components/primary-button.tsx, apps/resident-android-mobile/src/components/services/action-success-modal.tsx, apps/resident-android-mobile/src/components/services/agency-sla-status.tsx, apps/resident-android-mobile/src/components/services/countdown-timer.tsx, apps/resident-android-mobile/src/components/services/payment-method-row.tsx, apps/resident-android-mobile/src/components/services/payment-success-modal.tsx, apps/resident-android-mobile/src/components/services/qr-generating-indicator.tsx, apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx, apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx, apps/resident-android-mobile/src/components/services/service-screen-header.tsx, apps/resident-android-mobile/src/components/themed-text.tsx, apps/resident-android-mobile/src/constants/document-icons.ts, apps/resident-android-mobile/src/constants/fonts.ts, apps/resident-android-mobile/src/constants/payment.ts, apps/resident-android-mobile/src/constants/resident-theme.ts, apps/resident-android-mobile/src/constants/theme.ts, apps/resident-android-mobile/src/hooks/use-countdown.ts, apps/resident-android-mobile/src/hooks/use-font-preference.tsx, apps/resident-android-mobile/src/hooks/use-paymongo-source.ts, apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts, apps/resident-android-mobile/src/hooks/use-theme.ts, apps/resident-android-mobile/src/lib/home-request.ts, apps/resident-android-mobile/src/lib/payment-receipt-pdf.ts, apps/resident-android-mobile/tests/tracking-payment-ui.mjs, apps/resident-android-mobile/tsconfig.json, apps/resident-android-mobile/vitest.config.ts, eslint.config.js, package.json, packages/shared/package.json, packages/shared/src/index.ts, packages/shared/src/lib/agency-sla.test.ts, packages/shared/src/lib/agency-sla.ts, packages/shared/src/lib/format.ts, packages/shared/src/lib/request-status.ts, packages/shared/src/lib/service-catalog.test.ts, packages/shared/src/lib/service-catalog.ts, packages/shared/src/lib/service-tracking.test.ts, packages/shared/src/lib/service-tracking.ts, packages/shared/src/schemas/payment.test.ts, packages/shared/src/schemas/payment.ts, packages/shared/tsconfig.json, packages/shared/vitest.config.ts, tsconfig.json
+- Files matching these patterns are excluded: **/node_modules/**, **/.expo/**, **/android/**, **/ios/**, **/dist/**, **/build/**, tmp/**, repomix output files/**, .aws/**, .codex/**, **/.env*, **/*.pem, **/*.key, **/credentials*.json, **/*.png, **/*.svg, **/*.xml
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            requests/
+              [requestId].tsx
+          services/
+            payment/
+              pickup/
+                [requestId].tsx
+              qrph/
+                [requestId].tsx
+              [requestId].tsx
+              success.tsx
+            requests/
+              [requestId].tsx
+            _layout.tsx
+      components/
+        services/
+          action-success-modal.tsx
+          agency-sla-status.tsx
+          countdown-timer.tsx
+          payment-method-row.tsx
+          payment-success-modal.tsx
+          qr-generating-indicator.tsx
+          request-tracking-screen.tsx
+          resident-payment-screen.tsx
+          service-screen-header.tsx
+        card.tsx
+        divider.tsx
+        document-icon.tsx
+        primary-button.tsx
+        themed-text.tsx
+      constants/
+        document-icons.ts
+        fonts.ts
+        payment.ts
+        resident-theme.ts
+        theme.ts
+      hooks/
+        use-countdown.ts
+        use-font-preference.tsx
+        use-paymongo-source.ts
+        use-resident-reduced-motion.ts
+        use-theme.ts
+      lib/
+        home-request.ts
+        payment-receipt-pdf.ts
+    tests/
+      tracking-payment-ui.mjs
+    .gitignore
+    app.config.js
+    app.json
+    eslint.config.js
+    metro.config.js
+    package.json
+    tsconfig.json
+    vitest.config.ts
+packages/
+  shared/
+    src/
+      lib/
+        agency-sla.test.ts
+        agency-sla.ts
+        format.ts
+        request-status.ts
+        service-catalog.test.ts
+        service-catalog.ts
+        service-tracking.test.ts
+        service-tracking.ts
+      schemas/
+        payment.test.ts
+        payment.ts
+      index.ts
+    package.json
+    tsconfig.json
+    vitest.config.ts
+.gitignore
+AGENTS.md
+CLAUDE.md
+eslint.config.js
+package.json
+tsconfig.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/home/requests/[requestId].tsx"></file><file path="apps/resident-android-mobile/src/components/services/payment-method-row.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export function PaymentMethodRow({ label, description, icon, disabled, onPress }: {
+  label: string;
+  description: string;
+  icon: &apos;cash-outline&apos; | &apos;qr-code-outline&apos;;
+  disabled: boolean;
+onPress: ()</file><file path="apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx">import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, requestFee, requestFeeLabel, submittedDetailLines, type Tables } from &apos;@barangayan/shared&apos;;
+import { AgencySlaStatus } from &apos;@/components/services/agency-sla-status&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { Alert, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { Divider } from &apos;@/components/divider&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { ActionSuccessModal } from &apos;@/components/services/action-success-modal&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { SkeletonBlock } from &apos;@/components/services/skeleton&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useCountdown } from &apos;@/hooks/use-countdown&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+/** &quot;Continue Payment 12:34&quot; — mm:ss is enough for a button label; the QR PH window is a
+ * fixed 30 minutes, so it never needs the hours digit CountdownTimer&apos;s own pill shows. */
+function formatButtonCountdown(ms: number): string
+⋮----
+type ServiceRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  payments?: {document_fee_centavos:number|null;amount_centavos:number;status:string}[];
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;processing_target_hours&apos; | &apos;fee_centavos&apos;&gt; | null;
+};
+⋮----
+interface StatusHistoryEntry {
+  status: string;
+  at: string;
+  note: string | null;
+}
+⋮----
+/** Shimmer stand-in for the loading state, shaped like the progress/payment/timeline
+ * cards below it. Rendered only while `request === undefined` — same early-return slot
+ * `PlaceholderPanel` used to occupy. */
+function RequestTrackingSkeleton()
+⋮----
+// Each entry tab owns its tracking route so Back pops that tab&apos;s stack.
+⋮----
+// The most recent pending QR PH payment attempt on this request, if any — drives the
+// &quot;Cancel Payment&quot; button and the &quot;Continue Payment &lt;timer&gt;&quot; label below. Undefined =
+// not checked yet, null = none pending.
+⋮----
+// Drives the centered ActionSuccessModal — null means hidden. Set once a cancel
+// actually succeeds, instead of an Alert.alert(), so the confirmation reads as part
+// of the app rather than an OS-level dialog.
+⋮----
+// Ticks once a second while there&apos;s a pending payment to count down — drives the &quot;Pay
+// Now with QR PH&quot; button&apos;s swap to &quot;Continue Payment &lt;mm:ss&gt;&quot; below.
+⋮----
+// Unique per screen instance — same reason use-my-incidents.ts does this.
+// supabase.channel() returns the EXISTING channel when one with the same topic is
+// already registered, and .on() throws &quot;cannot add postgres_changes callbacks after
+// subscribe()&quot; on an already-subscribed channel. Two instances of this screen for the
+// same requestId are routinely alive at once — the payment success screen&apos;s &quot;Track My
+// Requests&quot; pushes a second one while the original is still in the navigation stack —
+// so a requestId-only topic collides. removeChannel() is also async, so a plain
+// remount can race the teardown the same way.
+⋮----
+function load()
+⋮----
+function loadPendingPayment()
+⋮----
+// Realtime: this screen reflects status changes live, without a manual refresh.
+⋮----
+function handleCancelPendingPayment()
+⋮----
+// Parse the Edge Function&apos;s error message the same way the payment
+// screen&apos;s hook does — supabase-js wraps non-2xx responses in a
+// FunctionsHttpError whose context is the raw Response.
+⋮----
+// Body wasn&apos;t JSON — keep generic message.
+⋮----
+// Lost the race — payment went through while they were deciding.
+⋮----
+function handleCancelRequest()
+⋮----
+// Unlike cancel-payment above, this is a supabase.rpc() call — Postgres
+// exceptions surface as a plain error.message, not the Edge Function&apos;s
+// context.json() shape.
+⋮----
+// No local state patch needed — the realtime subscription on service_requests
+// UPDATE (above) already calls load() and will pick up status: &apos;cancelled&apos;.
+⋮----
+// payment_method is null until the resident reaches the payment selection screen
+// (Stage 4). Show a &quot;Not yet selected&quot; fallback for requests still in that gap.
+⋮----
+// A pending QR row whose expires_at has already passed is functionally gone —
+// create-payment-source will self-heal it into a fresh QR on next open (see its resume
+// check) — so the button should read &quot;Pay Now&quot; again rather than &quot;Continue Payment
+// 0:00&quot; forever.
+⋮----
+// Either condition alone is sufficient to hide the cancel slot: once delivery has
+// started/finished/been cancelled, or once payment has actually cleared, there&apos;s
+// nothing left to self-cancel (a paid request needs the admin refund flow instead).
+⋮----
+&lt;View style=
+⋮----
+
+⋮----
+// Same QR/countdown is resumed, not regenerated — see
+// create-payment-source&apos;s resume check — so this reads as &quot;continue&quot;
+// rather than &quot;pay now&quot; once a payment attempt is already in flight.
+⋮----
+/* Loading skeleton */</file><file path="apps/resident-android-mobile/src/components/document-icon.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { ComponentProps } from &apos;react&apos;;
+import Svg, { Path } from &apos;react-native-svg&apos;;
+import type { DocumentIconName } from &apos;@/constants/document-icons&apos;;
+⋮----
+/** Document-and-stamp artwork for Indigency, inheriting the surrounding icon color. */</file><file path="apps/resident-android-mobile/src/lib/home-request.ts">import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from &apos;@barangayan/shared&apos;;
+⋮----
+export type HomeRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos;&gt; | null;
+};
+⋮----
+function validDate(value: unknown): string | null
+⋮----
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick&lt;HomeRequest, &apos;status&apos; | &apos;payment_status&apos; | &apos;created_at&apos; | &apos;status_history&apos;&gt;)
+⋮----
+export function homeGreeting(hour: number)
+⋮----
+export function homeTimestamp(value: string): string</file><file path="apps/resident-android-mobile/tests/tracking-payment-ui.mjs">// Actual components/controllers/contracts, isolated transport and native adapters.
+// Synthetic browser evidence supplements Android; it cannot certify native behavior.
+⋮----
+plugins: [
+⋮----
+const render=async patch=&gt;</file><file path="apps/resident-android-mobile/src/components/services/agency-sla-status.tsx">import { AGENCY_SLA_LABEL, calculateAgencySla, projectSlaTime, formatSlaDuration, type SlaRequest, type SlaPause } from &apos;@barangayan/shared&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export function AgencySlaStatus(
+⋮----
+async function load()</file><file path="apps/resident-android-mobile/src/components/services/countdown-timer.tsx">import { StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+function formatRemaining(ms: number): string
+⋮----
+/** &quot;Expires in HH:MM:SS&quot; pill counting down to a fixed expiry timestamp (unix ms). */
+export function CountdownTimer(</file><file path="apps/resident-android-mobile/src/constants/document-icons.ts">import type { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+/**
+ * document_types.name -&gt; Ionicons glyph. Keyed by lowercase exact match (names are
+ * freeform strings — no slug/category column exists in the schema) with a substring
+ * fallback for near-misses, then a generic default. Add an entry here whenever a new
+ * document type name needs a specific icon; unmapped names still render correctly via
+ * the fallback, so this never blocks adding new document_types rows.
+ */
+export type DocumentIconName = keyof typeof Ionicons.glyphMap | &apos;document-peso&apos; | &apos;document-work&apos;;
+⋮----
+export function getDocumentIcon(name: string): DocumentIconName
+⋮----
+// Loose substring fallback so a real-world name variation (&quot;Barangay Business Permit
+// Renewal&quot;) still lands on a sensible icon instead of the generic default.</file><file path="apps/resident-android-mobile/src/constants/fonts.ts">import { Platform } from &apos;react-native&apos;;
+⋮----
+import { FONT_OPTIONS as SHARED_FONT_OPTIONS, DEFAULT_FONT_ID } from &apos;@barangayan/shared&apos;;
+⋮----
+/**
+ * The Settings screen&apos;s font-style picker — up to 10 of the web admin Theme page&apos;s
+ * FONT_OPTIONS (packages/shared/src/constants/theme-fonts.ts), so the same `id` persisted
+ * to `profiles.font_preference` (0075 migration) means the same font on both apps. Dropped
+ * &apos;garamond&apos; and &apos;courier-new&apos; to stay within the 10-option cap this screen asks for.
+ */
+⋮----
+/**
+ * Maps a FONT_OPTIONS id to a font family React Native can actually render. Unlike the web
+ * (CSS font stacks with automatic fallback), RN needs one concrete family name per platform:
+ * iOS ships real system faces for most of these names (Georgia, Verdana, Trebuchet MS, ...),
+ * Android does not — none of the RN_FONT_FAMILIES below are custom-bundled, so Android falls
+ * back to its built-in Roboto/Noto generic families (&apos;sans-serif&apos;, &apos;serif&apos;, &apos;monospace&apos; and
+ * their weight/width variants) as the closest visual approximation for each choice.
+ */
+⋮----
+/** Returns the RN `fontFamily` value for a font id, or undefined to fall through to the
+ * OS default (system/inter, or an unrecognized id). */
+export function getMobileFontFamily(id: string): string | undefined</file><file path="apps/resident-android-mobile/src/constants/resident-theme.ts">type RGB = readonly [number, number, number];
+⋮----
+function rgb(hex: string): RGB
+⋮----
+function mix(color: string, surface: string, amount: number): string
+⋮----
+function luminance(hex: string): number
+⋮----
+function contrast(a: string, b: string): number
+⋮----
+function foreground(background: string): string
+⋮----
+function readable(color: string, surface: string, text: string): string
+⋮----
+/** Opt-in resident roles. Saved preferences and the legacy palette stay unchanged. */
+export function getResidentTheme(mode: &apos;light&apos; | &apos;dark&apos;, selectedAccent: string)
+⋮----
+const tone = (color: string) =&gt;</file><file path="apps/resident-android-mobile/src/hooks/use-countdown.ts">import { useEffect, useState } from &apos;react&apos;;
+⋮----
+/**
+ * Ticks once a second while `expiresAt` is set, returning ms remaining until it
+ * (negative once past). Returns null when there&apos;s nothing to count down to, so callers
+ * can hide/skip the timer entirely instead of showing a stale &quot;0:00&quot;.
+ *
+ * Shared by CountdownTimer (the QR payment screen&apos;s own pill) and the Request Tracking
+ * screen&apos;s &quot;Continue Payment&quot; button label, so both read off the same tick.
+ */
+export function useCountdown(expiresAt: number | null): number | null
+⋮----
+// Lazy initialiser: Date.now() runs once at mount, not on every re-render.</file><file path="apps/resident-android-mobile/src/hooks/use-font-preference.tsx">import { isValidFontId } from &apos;@barangayan/shared&apos;;
+import { createContext, useContext, useEffect, useState, type ReactNode } from &apos;react&apos;;
+⋮----
+import { DEFAULT_FONT_ID } from &apos;@/constants/fonts&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+interface FontPreferenceContextValue {
+  fontId: string;
+  setFontId: (id: string) =&gt; void;
+}
+⋮----
+/**
+ * Real, persisted font-style preference — same shape as ThemePreferenceProvider
+ * (use-theme-preference.tsx), writing/reading `profiles.font_preference` (0075 migration,
+ * shared with the web admin&apos;s Theme page). Guests get local-only state for the session.
+ */
+export function FontPreferenceProvider(
+⋮----
+// Same &quot;only overwrite on the initial load per session&quot; reasoning as
+// ThemePreferenceProvider — avoids a background refetch clobbering a change made seconds
+// ago.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function setFontId(id: string)</file><file path="apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts">import { useEffect, useState } from &apos;react&apos;;
+import { AccessibilityInfo } from &apos;react-native&apos;;
+⋮----
+/** Legacy consumers do not subscribe. Until queried, prefer the static accessible state. */
+export function useResidentReducedMotion(enabled: boolean)
+⋮----
+// Failure to read an optional motion preference must never enable geometric motion.</file><file path="apps/resident-android-mobile/src/lib/payment-receipt-pdf.ts">// Turns the params shown on the Payment Successful screen into a printable
+// HTML receipt for expo-print (Payment Successful → Download Receipt).
+// Mirrors data-export-pdf.ts&apos;s structure/style so the two on-device PDFs
+// (data export, payment receipt) look like they come from the same app.
+⋮----
+function escapeHtml(value: unknown): string
+⋮----
+export interface PaymentReceiptDetails {
+  refNumber: string;
+  amountLabel: string;
+  dateTimeLabel: string;
+  method: string;
+  documentFeeLabel?: string;
+  transactionRef?: string;
+}
+⋮----
+function row(label: string, value: string): string
+⋮----
+/** Builds a self-contained HTML document from the Payment Successful screen&apos;s
+ * details, ready for Print.printToFileAsync(). */
+export function buildPaymentReceiptHtml(details: PaymentReceiptDetails): string</file><file path="apps/resident-android-mobile/.gitignore"># @generated expo-cli sync-2b81b286409207a5da26e14c78851eb30d8ccbdb
+# The following patterns were generated by expo-cli
+
+expo-env.d.ts
+# @end expo-cli</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="apps/resident-android-mobile/tsconfig.json">{
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [
+        &quot;./src/*&quot;
+      ],
+      &quot;@/assets/*&quot;: [
+        &quot;./assets/*&quot;
+      ]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;.expo/types/**/*.ts&quot;,
+    &quot;expo-env.d.ts&quot;
+  ]
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="packages/shared/src/lib/agency-sla.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { calculateAgencySla, projectSlaTime, summarizeAgencySla, type SlaRequest } from &apos;./agency-sla&apos;;
+const at=(seconds:number)</file><file path="packages/shared/src/lib/agency-sla.ts">import type { RequestFoundationFields, ServiceRequestPauseRow } from &apos;../types/service-foundations&apos;;
+⋮----
+export type SlaRequest = Pick&lt;RequestFoundationFields, &apos;timing_model&apos; | &apos;target_minutes_snapshot&apos; | &apos;sla_state&apos; | &apos;accepted_at&apos; | &apos;ready_at&apos; | &apos;released_at&apos; | &apos;cancelled_at&apos;&gt; &amp; { created_at: string };
+export type SlaPause = Pick&lt;ServiceRequestPauseRow, &apos;started_at&apos; | &apos;resumed_at&apos; | &apos;reason&apos;&gt;;
+export type AgencyPosition = &apos;pre_processing&apos; | &apos;on_track&apos; | &apos;near_target&apos; | &apos;overdue&apos; | &apos;completed_within&apos; | &apos;completed_beyond&apos; | &apos;cancelled&apos; | &apos;legacy&apos;;
+⋮----
+const ms = (value: string)
+⋮----
+/** PostgreSQL timestamps retain microseconds; Date alone silently discards them. */
+const micros = (value: string) =&gt;
+const max = (a: bigint, b: bigint)
+const min = (a: bigint, b: bigint)
+/** Exact seconds, rounded only by the presentation layer. Ready stops agency time; release stops turnaround. */
+export function projectSlaTime(serverAt: string, elapsedMilliseconds: number): string
+export function calculateAgencySla(request: SlaRequest, pauses: readonly SlaPause[], now: Date | string = new Date())
+export function formatSlaDuration(seconds: number): string
+export function summarizeAgencySla(rows: readonly (SlaRequest &amp;
+⋮----
+const inWindow = (value: string | null)
+⋮----
+const average = (values: number[])</file><file path="packages/shared/src/lib/service-tracking.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { computeDocumentTypeTrends, getCompletionHours, getSlaFlag } from &apos;./service-tracking&apos;;
+⋮----
+const createdAt = new Date(&apos;2026-01-09T12:00:00Z&apos;).toISOString(); // 12h elapsed, target 24h
+⋮----
+const createdAt = new Date(&apos;2026-01-09T05:00:00Z&apos;).toISOString(); // 19h elapsed, target 24h (79.2%) -&gt; on_track
+⋮----
+const createdAt2 = new Date(&apos;2026-01-09T04:00:00Z&apos;).toISOString(); // 20h elapsed (83%) -&gt; near_target
+⋮----
+const createdAt = new Date(&apos;2026-01-08T00:00:00Z&apos;).toISOString(); // 48h elapsed, target 24h
+⋮----
+status_history: [{ status: &apos;completed&apos;, at: &apos;2026-01-02T00:00:00Z&apos; }], // 24h
+⋮----
+status_history: [{ status: &apos;completed&apos;, at: &apos;2026-01-01T12:00:00Z&apos; }], // 12h</file><file path="packages/shared/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/components/services/action-success-modal.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Presentation only: the caller reports success and owns acknowledgement/navigation. */</file><file path="apps/resident-android-mobile/src/components/services/payment-success-modal.tsx">import { formatCentavosAsPHP } from &apos;@barangayan/shared&apos;;
+import { ActionSuccessModal } from &apos;@/components/services/action-success-modal&apos;;</file><file path="apps/resident-android-mobile/src/components/services/qr-generating-indicator.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect } from &apos;react&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+import Animated, {
+  Easing,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/**
+ * Smooth, purpose-built loading state for the window while create-payment-source mints
+ * (or resumes) a QR PH intent — replaces a static &quot;Generating…&quot; line with a rotating
+ * ring around a gently breathing QR icon, so the wait reads as active progress instead
+ * of a frozen screen. Same visual slot/size as the QR image it&apos;s standing in for (see
+ * qrCard&apos;s minHeight in the payment screen), so nothing reflows once the real QR lands.
+ */
+export function QrGeneratingIndicator(</file><file path="apps/resident-android-mobile/src/components/card.tsx">import type { ReactNode } from &apos;react&apos;;
+import { StyleSheet, type ViewProps } from &apos;react-native&apos;;
+⋮----
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Rounded, clipped backgroundElement container for grouped rows — pair with &lt;Divider /&gt; between rows. */
+export function Card(</file><file path="apps/resident-android-mobile/src/components/divider.tsx">import { StyleSheet } from &apos;react-native&apos;;
+⋮----
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Hairline separator between rows inside a &lt;Card&gt;. */
+export function Divider(</file><file path="apps/resident-android-mobile/src/components/themed-text.tsx">import { Platform, StyleSheet, Text, type TextProps } from &apos;react-native&apos;;
+⋮----
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { Fonts, ThemeColor } from &apos;@/constants/theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ThemedTextProps = TextProps &amp; {
+  type?: &apos;default&apos; | &apos;title&apos; | &apos;small&apos; | &apos;smallBold&apos; | &apos;subtitle&apos; | &apos;link&apos; | &apos;linkPrimary&apos; | &apos;code&apos; | &apos;heading&apos; | &apos;body&apos; | &apos;residentHeader&apos;;
+  themeColor?: ThemeColor;
+};
+⋮----
+export function ThemedText(
+⋮----
+// &apos;code&apos; keeps the fixed monospace face regardless of the App Theme font pick — it&apos;s
+// meant to look like code, not prose.</file><file path="apps/resident-android-mobile/src/constants/theme.ts">/**
+ * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
+ * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ */
+⋮----
+import { ACCENT_COLORS as SHARED_ACCENT_COLORS } from &apos;@barangayan/shared&apos;;
+import { Platform } from &apos;react-native&apos;;
+⋮----
+// primary/onPrimary/accentRed sampled directly from the design file (see the plan&apos;s
+// Design Reference Review) — #0F6E5B is the button/active-state green, #93000A is the
+// locked red accent for the Maps (Emergency &amp; DRRM) section&apos;s active tab/toggle state.
+//
+// accentOrange/accentGreen back the Reports bottom-tab&apos;s &quot;active reports&quot; / &quot;resolved
+// reports&quot; live-count badges (white text on a dark fill, per the design brief) — picked
+// dark enough for white text to clear WCAG AA at the badges&apos; small size, and deliberately
+// NOT theme.primary/ACCENT_COLORS, for the same reason status-badge.tsx&apos;s STATUS_GREEN
+// isn&apos;t theme.primary either: status semantics must stay fixed regardless of the user&apos;s
+// chosen App Theme accent color. accentOrange is also kept visually distinct from
+// accentRed (the announcements badge) — the two used to be easy to mistake for each
+// other at the badges&apos; small size.
+⋮----
+export type ThemeColor = keyof typeof Colors.light &amp; keyof typeof Colors.dark;
+⋮----
+// Re-exported from packages/shared (now also read by the web admin&apos;s Theme page) —
+// kept as a named export here so existing mobile imports (Onboarding Personalization,
+// Settings) don&apos;t need to change. See theme-colors.ts&apos;s own comment for why this lives
+// in shared. The first entry matches use-theme-preference.tsx&apos;s DEFAULT_ACCENT_COLOR.
+⋮----
+/** iOS `UIFontDescriptorSystemDesignDefault` */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignSerif` */
+⋮----
+/** Custom Gideon Roman serif */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignRounded` */
+⋮----
+/** iOS `UIFontDescriptorSystemDesignMonospaced` */</file><file path="apps/resident-android-mobile/src/hooks/use-theme.ts">/**
+ * Learn more about light and dark modes:
+ * https://docs.expo.dev/guides/color-schemes/
+ */
+⋮----
+import { Colors } from &apos;@/constants/theme&apos;;
+import { useMemo } from &apos;react&apos;;
+import { getResidentTheme } from &apos;@/constants/resident-theme&apos;;
+import { useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+⋮----
+export function useTheme()
+⋮----
+// Real per-account accent color (Settings &gt; App Theme) overrides the constant —
+// onPrimary stays white regardless, it reads fine against all 4 accent swatches.</file><file path="apps/resident-android-mobile/eslint.config.js">// https://docs.expo.dev/guides/using-eslint/
+⋮----
+// All instances in this codebase are legitimate: loading-state resets, hydration
+// flags, derived-state initialisation from async data, and refetch-on-mount.
+// The rule fires for any synchronous setState call inside an effect body, which
+// is an overly broad heuristic for React Native projects where these patterns are
+// idiomatic and do not cause observable cascading-render problems.
+⋮----
+// React Native renders &amp;apos; literally — it is not HTML. Contractions in
+// user-facing text are not XSS vectors on native; the rule exists for the web DOM.
+⋮----
+// Animated.Value must be passed into Animated.View&apos;s style prop, which is
+// evaluated during render. The canonical React Native Animated pattern requires
+// this; there is no alternative that avoids touching .current in JSX.
+⋮----
+// Mutating `.value` on a Reanimated useSharedValue() is the canonical Reanimated
+// API, not an unsafe render-time mutation. The rule can recognize SharedValues via
+// its enableCustomTypeDefinitionForReanimated option, but that only self-enables
+// when it detects the Reanimated Babel plugin in the active compile pipeline —
+// which never happens under plain ESLint (no Babel transform pass runs here), so
+// it fires unconditionally on every `.value` assignment.</file><file path="packages/shared/src/lib/request-status.ts">export type ResidentRequestStatus =
+  | &apos;pending_payment&apos;
+  | &apos;paid&apos;
+  | &apos;processing&apos;
+  | &apos;ready_for_pickup&apos;
+  | &apos;completed&apos;
+  | &apos;cancelled&apos;;
+⋮----
+/**
+ * Derives the resident-facing status from the two underlying DB columns.
+ * service_requests.status alone can&apos;t distinguish &quot;submitted, awaiting payment&quot; from
+ * &quot;submitted, already paid&quot; — that distinction comes from payment_status.
+ */
+export function getResidentRequestStatus(status: string, paymentStatus: string): ResidentRequestStatus
+⋮----
+// status === &apos;submitted&apos;</file><file path="packages/shared/src/lib/service-catalog.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { BUSINESS_FEE_DESCRIPTION, catalogContract, charterSections, requestFee, requestFeeLabel, serviceDocumentTypeValues, servicePriceLabel } from &apos;./service-catalog&apos;;
+import type { Tables } from &apos;../types/database&apos;;
+import { serviceDocumentTypeSchema, submissionSchemaForCatalog, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;</file><file path="packages/shared/src/lib/service-catalog.ts">import { serviceCatalogContractSchema, serviceDocumentTypeSchema, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;
+import type { Json, Tables } from &apos;../types/database&apos;;
+import { formatProcessingTime } from &apos;./format&apos;;
+⋮----
+/** One validated mapping for create/edit. Legacy request contracts stay untouched. */
+export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput)
+⋮----
+export function catalogContract(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function servicePriceLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request:
+⋮----
+/** Charter guidance only; elapsed tracking remains a separate timing contract. */
+export function serviceProcessingLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function idVerificationState(
+  profile: Pick&lt;
+    Tables&lt;&apos;profiles&apos;&gt;,
+    &apos;id_verification_status&apos; | &apos;approved_id_submission_id&apos; | &apos;current_id_submission_id&apos; | &apos;id_repair_required&apos;
+  &gt; | null,
+)
+⋮----
+export function submittedDetailLines(value: Json | null): [string, string][]
+⋮----
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
+export function requestFee(
+  request: Pick&lt;
+    Tables&lt;&apos;service_requests&apos;&gt;,
+    &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos;
+  &gt; &amp; { legacy_fee_centavos?: number | null },
+  legacyCatalogFee: number,
+  recordedPaymentFee?: number | null,
+)</file><file path="packages/shared/src/lib/service-tracking.ts">/**
+ * Ticket 12 — Automated Service Tracking auto-flagging + rolling-average trend
+ * analysis. document_types.processing_target_hours was always stored, but
+ * nothing ever compared it to elapsed time or aggregated it into a trend —
+ * this fills that gap without any new DB columns, using status_history
+ * (already logged by the track_service_request_status trigger, 0002/0026) as
+ * the source of completion timestamps.
+ */
+⋮----
+export type SlaFlag = &apos;on_track&apos; | &apos;near_target&apos; | &apos;overdue&apos;;
+⋮----
+/** A request is &quot;near target&quot; once it&apos;s spent 80%+ of its target processing time. */
+⋮----
+/**
+ * Flags an in-flight request against its document type&apos;s target processing
+ * time. Only meaningful for requests still open (submitted/in_progress/
+ * ready_for_pickup) — callers should not call this for completed/cancelled
+ * requests, since &quot;elapsed since submission&quot; no longer means anything once
+ * the clock has stopped.
+ */
+export function getSlaFlag(createdAtIso: string, targetHours: number, now: Date = new Date()): SlaFlag
+⋮----
+type StatusHistoryEntry = { status: string; at: string };
+⋮----
+/**
+ * Reads the timestamp of the &apos;completed&apos; entry out of a request&apos;s
+ * status_history and returns the hours between submission and completion, or
+ * null if the request was never completed (cancelled, still open, or —
+ * defensively — history predates this column being populated).
+ */
+export function getCompletionHours(createdAtIso: string, statusHistory: unknown): number | null
+⋮----
+export interface DocumentTypeTrend {
+  documentTypeId: string;
+  documentTypeName: string;
+  targetHours: number;
+  /** Rolling average completion time (hours) over the sampled window. Null if no completions yet. */
+  averageHours: number | null;
+  completedCount: number;
+}
+⋮----
+/** Rolling average completion time (hours) over the sampled window. Null if no completions yet. */
+⋮----
+/**
+ * Groups a set of completed requests by document type and computes each
+ * type&apos;s rolling-average completion time. Callers pass in requests already
+ * filtered to a window (e.g. completed in the last 30 days) and status = &apos;completed&apos;.
+ */
+export function computeDocumentTypeTrends(
+  requests: Array&lt;{
+    document_type_id: string;
+    created_at: string;
+    status_history: unknown;
+  }&gt;,
+  documentTypes: Array&lt;{ id: string; name: string; processing_target_hours: number }&gt;,
+): DocumentTypeTrend[]</file><file path="packages/shared/src/schemas/payment.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+⋮----
+import { cancelRequestSchema, paymentMethodSchema, paymongoWebhookEventSchema } from &apos;./payment&apos;;</file><file path="packages/shared/src/schemas/payment.ts">import { z } from &apos;zod&apos;;
+⋮----
+/** The two payment methods offered on the mobile Payment screen: pay in cash at pickup
+ * (&apos;pickup&apos;), or QR PH. QR PH stays selectable in the UI even while gated by
+ * EXPO_PUBLIC_QRPH_SETTLEMENT_READY — this schema just describes the shape, not the
+ * gating (that&apos;s a client-side concern, not a validation rule, since an ungated QR PH
+ * submission should never reach here). */
+⋮----
+export type PaymentMethod = z.infer&lt;typeof paymentMethodSchema&gt;;
+⋮----
+/** Admin-side cancellation payload — mirrors the cancel_service_request RPC&apos;s args. */
+⋮----
+export type CancelRequestInput = z.infer&lt;typeof cancelRequestSchema&gt;;
+⋮----
+/**
+ * PayMongo&apos;s `source.chargeable` webhook payload shape (subset — only the fields the
+ * paymongo-webhook Edge Function reads). Not exhaustive of PayMongo&apos;s full API surface;
+ * extend as needed once the webhook is exercised against real sandbox payloads.
+ */
+⋮----
+export type PaymongoWebhookEvent = z.infer&lt;typeof paymongoWebhookEventSchema&gt;;</file><file path="packages/shared/tsconfig.json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2020&quot;,
+    &quot;lib&quot;: [&quot;ES2020&quot;],
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;strict&quot;: true,
+    &quot;declaration&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;rewriteRelativeImportExtensions&quot;: true
+  },
+  &quot;include&quot;: [&quot;src/**/*.ts&quot;, &quot;scripts/**/*.mts&quot;]
+}</file><file path="eslint.config.js">// https://docs.expo.dev/guides/using-eslint/</file><file path="tsconfig.json">{
+  &quot;compilerOptions&quot;: {},
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;
+}</file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx">import { useLocalSearchParams } from &apos;expo-router&apos;;
+import { ResidentPaymentScreen } from &apos;@/components/services/resident-payment-screen&apos;;
+export default function PaymentScreen()</file><file path="apps/resident-android-mobile/src/app/(app)/services/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+⋮----
+// Native Stack nested inside the &quot;Services&quot; NativeTabs tab, so screens here (Document
+// Detail, Request Form, Payment, Request Tracking detail) can push over the
+// Documents/Requests/Logs segmented-control index screen — see Expo Router&apos;s guidance on
+// nesting a Stack inside NativeTabs for header + push support.
+⋮----
+{/* index.tsx builds its own segmented-control header — the native Stack header
+          would otherwise show a stray &quot;index&quot; title above it (same fix as Settings). */}
+⋮----
+{/* Sequential flow steps get a lateral push — each is a &quot;next step&quot; the resident
+          can also back-swipe out of. The two arrival/confirmation screens (pay-at-pickup
+          confirmation, payment success receipt) get a softer fade-from-bottom reveal
+          instead, matching their &quot;you&apos;ve arrived&quot; feel. */}</file><file path="apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx">import { formatCentavosAsPHP, requestFee, requestFeeLabel, type Tables } from &apos;@barangayan/shared&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { PaymentMethodRow } from &apos;@/components/services/payment-method-row&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+type Request = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: { name: string; fee_centavos: number; service_kind: string | null } | null;
+  payments: { status: string; document_fee_centavos: number | null; amount_centavos: number }[];
+};
+function paymentErrorMessage(failure: unknown, fallback: string): string
+⋮----
+async function startQr()
+⋮----
+async function savePages()</file><file path="apps/resident-android-mobile/src/components/primary-button.tsx">import { useEffect, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+interface ButtonContentProps extends Omit&lt;PressableProps, &apos;style&apos;&gt; {
+  label: string;
+  leadingIcon?: ReactNode;
+  loading?: boolean;
+}
+⋮----
+type ButtonVariant = &apos;primary&apos; | &apos;secondary&apos; | &apos;destructive&apos;;
+export type PrimaryButtonProps = ButtonContentProps &amp; (
+  | { presentation?: &apos;default&apos;; variant?: ButtonVariant }
+  | { presentation: &apos;resident&apos;; variant?: ButtonVariant | &apos;destructiveFilled&apos;; compact?: boolean; appearance?: &apos;default&apos; | &apos;requestForm&apos; }
+);
+⋮----
+/** The green pill button used throughout the design file (Login, Register, Verify, etc.).
+ * &apos;destructive&apos; is the red-outlined variant for cancel/undo-style actions (e.g. cancelling
+ * a pending payment) — same shape as &apos;secondary&apos; but in theme.accentRed.
+ * Resident confirmation dialogs use &apos;destructiveFilled&apos; for the reference&apos;s filled action. */
+export function PrimaryButton(</file><file path="apps/resident-android-mobile/src/constants/payment.ts">/**
+ * Single source of truth for whether QR PH can complete a real transaction. Flipping
+ * this to &apos;true&apos; (once a settlement bank account is registered in the PayMongo
+ * dashboard — see the plan&apos;s Part G) is the only mobile-side change needed to go live;
+ * the UI, hook, and Edge Functions are already built and dormant behind this flag.
+ * Defaults to &apos;false&apos; (any value other than the literal string &apos;true&apos; stays gated).
+ */</file><file path="apps/resident-android-mobile/src/hooks/use-paymongo-source.ts">import { useEffect, useRef, useState } from &apos;react&apos;;
+⋮----
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export type PaymentStatus = &apos;idle&apos; | &apos;loading&apos; | &apos;pending&apos; | &apos;paid&apos; | &apos;already_paid&apos; | &apos;expired&apos; | &apos;cancelled&apos; | &apos;error&apos;;
+⋮----
+export interface PaymongoSource {
+  paymentId: string;
+  paymentIntentId: string;
+  qrImageUrl: string;
+  expiresAt: number;
+  documentFeeCentavos: number;
+  amountCentavos: number;
+}
+⋮----
+/**
+ * Creates a PayMongo QR PH charge for a service request (via the create-payment-source
+ * Edge Function, which holds the secret key — never in this app) and watches for
+ * settlement until paid or expired.
+ *
+ * QR PH is a PaymentIntent flow, not a Source — see migration 0065 and the Edge
+ * Function&apos;s own comment. The hook name is kept for continuity with its callers.
+ *
+ * S0-2: only `requestId` is sent — the Edge Function derives the fee itself from
+ * document_types, so a tampered amount here has no effect on what&apos;s actually charged or
+ * recorded.
+ */
+export function usePaymongoSource(requestId: string)
+⋮----
+// Unique per hook instance — see use-my-incidents.ts. Doubly needed here: the resume
+// check in create-payment-source deliberately hands back the SAME paymentId across
+// screen opens, so a `payment-${paymentId}` topic collides whenever two QR screens are
+// alive at once. The effect below also re-runs on `status` changes, and removeChannel()
+// is async, so even a single screen can race its own teardown.
+⋮----
+// Guards the polling callback against a race with cancelPayment(). clearInterval
+// prevents future polls but an already-in-flight async poll callback can still
+// complete after cancel — without this ref it could overwrite &apos;cancelled&apos; with
+// &apos;expired&apos; (since check-payment-status maps a voided PayMongo intent to &apos;expired&apos;).
+⋮----
+// The server may find that this request was already settled before this
+// screen was reopened. Keep it distinct from a payment settled on this visit
+// so the UI can return to the request instead of creating a second receipt.
+⋮----
+// The Edge Function returns { error: &quot;&lt;reason&gt;&quot; } with a non-2xx status, which
+// supabase-js surfaces as a FunctionsHttpError whose context is the Response.
+// Read it so the resident sees PayMongo&apos;s actual reason instead of a generic
+// failure (e.g. &quot;QR PH is not activated on this account&quot;).
+⋮----
+// Body wasn&apos;t JSON — fall through to the generic message.
+⋮----
+// Expiry comes from the Edge Function (30 minutes, PayMongo&apos;s dynamic QR PH
+// window) rather than being guessed client-side.
+⋮----
+// Network-level failure (e.g. unreachable Edge Function) — the destructured
+// {error} above only covers HTTP-level errors, so a thrown rejection needs its
+// own catch or the UI hangs on &quot;Generating…&quot; forever.
+⋮----
+// Reset the cancel guard when entering the polling state — a fresh payment
+// (e.g. the resident navigated back and reopened the QR screen) starts clean.
+⋮----
+// An in-flight poll may complete after cancelPayment() already voided the
+// intent. Without this guard, the poll&apos;s &apos;expired&apos; response would overwrite
+// the &apos;cancelled&apos; status the user just triggered.
+⋮----
+// Realtime: the paymongo-webhook function writes `paid` to this exact row the moment
+// PayMongo confirms — this fires in well under a second, versus waiting up to
+// POLL_INTERVAL_MS for the next poll. Polling above stays as a fallback in case a
+// Realtime event is ever missed (e.g. a brief reconnect).
+⋮----
+/**
+   * Cancels the in-flight QR PH attempt via the cancel-payment Edge Function (which also
+   * voids the PaymentIntent on PayMongo&apos;s side). No-ops outside &apos;pending&apos; — nothing to
+   * cancel once it&apos;s settled, expired, or already cancelled.
+   */
+async function cancelPayment(): Promise&lt;
+⋮----
+// Set immediately — before the async call — so any in-flight poll or Realtime
+// callback that resolves during the cancel request knows not to override status.
+⋮----
+// Body wasn&apos;t JSON — fall through without a specific message.
+⋮----
+cancelledRef.current = false; // cancel failed — let polling resume
+⋮----
+// Lost the race — payment actually went through moments ago.
+⋮----
+cancelledRef.current = false; // unexpected response — let polling resume
+⋮----
+cancelledRef.current = false; // cancel failed — let polling resume</file><file path="apps/resident-android-mobile/metro.config.js">// Metro config for the npm-workspaces monorepo.
+// Metro&apos;s default config only watches apps/resident-android-mobile, so it can&apos;t resolve
+// @barangayan/shared out of the box — this is the fix (see the plan&apos;s
+// &quot;Pre-Development Technical Risk Mitigations&quot;).
+⋮----
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+⋮----
+// Other tools create and delete short-lived refs under .git; if one vanishes while
+// the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+⋮----
+// `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
+// only sees the hoisted `entities@4` at the workspace root — which dropped the old
+// `lib/maps/*.json` layout that `markdown-it@10` (pulled in by
+// react-native-markdown-display) still `require`s. Redirect that legacy subpath to
+// markdown-it&apos;s own nested `entities@2` copy, leaving entities@4 consumers untouched.
+⋮----
+config.resolver.resolveRequest = (context, moduleName, platform) =&gt;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path=".gitignore"># Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# Supabase env files for apps/mobile (real values) — examples stay committed
+.env
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+.next-*/</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx">import { useLocalSearchParams } from &apos;expo-router&apos;;
+import { ResidentPaymentScreen } from &apos;@/components/services/resident-payment-screen&apos;;</file><file path="apps/resident-android-mobile/src/components/services/service-screen-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Fonts, Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { formatCentavosAsPHP, formatDateTime, type Tables } from &apos;@barangayan/shared&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { Alert, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { Card } from &apos;@/components/card&apos;;
+import { Divider } from &apos;@/components/divider&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// Reached only from the QR PH flow once usePaymongoSource observes status === &apos;paid&apos;
+// (payment/qrph/[requestId].tsx&apos;s redirect). Pay at Pickup never lands here — it has its
+// own confirmation screen (payment/pickup/[requestId].tsx) since there&apos;s nothing to
+// &quot;receive&quot; until pickup.
+⋮----
+async function handleDownloadReceipt()
+⋮----
+// Legacy filesystem API, not the new File/Paths one: in Expo Go, Paths.cache
+// resolves to an experience-isolated directory that Expo Go&apos;s bundled Android
+// FileProvider config doesn&apos;t recognize, so sharing a URI under it fails with
+// &quot;Not allowed to read file under given URL&quot;. FileSystem.cacheDirectory (legacy)
+// is the one directory Expo Go&apos;s sharing has reliably supported for years.
+⋮----
+// printToFileAsync is native Android code — it writes straight into the OS-level
+// cache dir, bypassing expo-file-system entirely, so its output isn&apos;t under the
+// scoped directory above either. Copying it there first gets the file into the one
+// place Expo Go&apos;s FileProvider will actually let expo-sharing read from.
+⋮----
+
+⋮----
+onPress=
+⋮----
+/* Design-system recipes (shared literally across the Services screens) */</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 5,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file><file path="packages/shared/src/lib/format.ts">/** Formats an integer centavos amount (as stored in `document_types.feeCentavos`, etc.) as PHP currency. */
+export function formatCentavosAsPHP(centavos: number): string
+⋮----
+/**
+ * Builds a display reference number for a vaccination/medicine drive registration,
+ * e.g. `#VAC-007` — format locked by the mobile screen spec (Health &amp; Medical section).
+ */
+export function formatDriveRegistrationNumber(sequence: number): string
+⋮----
+/** Short, locale-consistent date+time formatting used across both apps. */
+export function formatDateTime(iso: string): string
+⋮----
+/** Short, locale-consistent date-only formatting (no time) — parallel to formatDateTime. */
+export function formatDate(iso: string): string
+⋮----
+/**
+ * Buckets a document_types.processing_target_hours value into a human-readable
+ * estimate. General/data-driven, not tied to any specific seeded document type — renders
+ * correctly for any processing_target_hours value, now or in the future.
+ */
+export function formatProcessingTime(hours: number): string
+⋮----
+/**
+ * 0-1 fill fraction for a service_request&apos;s progress bar, derived from real
+ * created_at/target-hours data. Shared by the mobile RequestsList and Request Tracking
+ * screens (and reusable from the web admin&apos;s request detail page) so there&apos;s exactly one
+ * implementation of &quot;how far along is this request.&quot; Never called for &apos;cancelled&apos;.
+ */
+export function progressFraction(status: string, createdAt: string, targetHours: number): number
+⋮----
+// Floor so the bar never looks broken/empty; cap below 1 so only a real &apos;completed&apos;
+// status ever shows a full bar (100% must mean &quot;done&quot;, not &quot;on track&quot;).
+⋮----
+/**
+ * &quot;Est. N hour(s)/day(s)&quot; countdown label — a live per-request estimate, distinct from
+ * formatProcessingTime&apos;s static catalog bucketing. Not called for &apos;completed&apos; (always
+ * &quot;100%&quot;) or &apos;cancelled&apos; (no progress row).
+ */
+export function estimateLabel(createdAt: string, targetHours: number): string
+⋮----
+/**
+ * Time-Decay Weighted Frequency Score for trash/illegal-dumping incidents.
+ *
+ * Formula: score = confirmationCount * exp(-ln(2) / halfLifeDays * ageInDays)
+ *
+ * - `confirmationCount` acts as the frequency weight (more confirmations = higher score).
+ * - `halfLifeDays` controls how fast old reports decay. A 14-day half-life means a
+ *   10-confirmation report from 14 days ago scores ~5, while one from today scores 10.
+ * - Returns 0 for incidents with 0 confirmations, regardless of age.
+ */
+export function trashIncidentScore(createdAt: string, confirmationCount: number, halfLifeDays: number): number</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx">import { requestFeeLabel, requestFee, formatCentavosAsPHP, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import Constants, { ExecutionEnvironment } from &apos;expo-constants&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { Alert, Animated, AppState, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { captureRef } from &apos;react-native-view-shot&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { useCountdown } from &apos;@/hooks/use-countdown&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { CountdownTimer } from &apos;@/components/services/countdown-timer&apos;;
+import { PaymentSuccessModal } from &apos;@/components/services/payment-success-modal&apos;;
+import { QrGeneratingIndicator } from &apos;@/components/services/qr-generating-indicator&apos;;
+import { SkeletonBlock } from &apos;@/components/services/skeleton&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { usePaymongoSource } from &apos;@/hooks/use-paymongo-source&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// expo-media-library&apos;s native module isn&apos;t built into Expo Go — merely *importing* it
+// there throws synchronously while the module evaluates (before any try/catch around the
+// call site gets a chance to run), the same trap expo-notifications has in
+// lib/push-notifications.ts. So check this first and never import the module at all
+// inside Expo Go, rather than trying to catch our way out of it.
+⋮----
+type ServiceRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;fee_centavos&apos;&gt; | null;
+};
+⋮----
+/** PayMongo returns next_action.code.image_url as a base64 PNG. Depending on the
+ * account it arrives either already prefixed as a data URI or as bare base64 — expo-image
+ * only renders the former, so normalise before handing it over. A real http(s) URL is
+ * passed through untouched. */
+function toRenderableImageUri(imageUrl: string): string
+⋮----
+/** Shimmer stand-in for the loading state, shaped like the summary/QR/instructions cards
+ * below it. Rendered only while `request === undefined` — same early-return slot
+ * `PlaceholderPanel` used to occupy. */
+function QrphSkeleton()
+⋮----
+// State 2b of the payment flow. Only reachable once PAYMENT_SETTLEMENT_READY is true —
+// see constants/payment.ts and the plan&apos;s Part G for the settlement-account gating this
+// screen assumes is already satisfied by the time a resident lands here.
+//
+// Payment no longer depends on admin having moved the request to &quot;Processing&quot; — see
+// create-payment-source&apos;s comment (migration 0064 / &quot;instant payment&quot; plan). Any
+// non-terminal request can be paid the moment the resident lands on this screen.
+⋮----
+// Keep a ref to the Animated.Value; access .current outside render (in useEffect).
+⋮----
+// Fallback breakdown shown before the QR source has loaded — the source response
+// (once available) is the authoritative total actually being charged.
+⋮----
+// Shows the success modal instead of auto-navigating — the resident gets a clear,
+// deliberate &quot;OK&quot; confirmation step (they may have just switched back from their
+// bank/e-wallet app) rather than being yanked to a new screen mid-thought.
+⋮----
+function handleConfirmSuccess()
+⋮----
+function handleCancelPayment()
+⋮----
+// Saves the QR code as an image, named after this payment&apos;s own reference number, as
+// an alternative to screenshotting — same pattern as qr-show-modal.tsx&apos;s download flow.
+async function handleSaveQr()
+⋮----
+// Checked before any import — see isExpoGo&apos;s comment above for why this can&apos;t be a
+// try/catch around the import instead.
+⋮----
+// Rename to the reference number before saving, so the gallery entry reads as
+// e.g. &quot;REQ-2026-00035-QR.png&quot; instead of a generic temp filename.
+⋮----
+/* Loading skeleton */</file><file path="apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx"></file><file path="packages/shared/src/index.ts"></file></files></repomix>

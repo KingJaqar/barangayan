@@ -1,0 +1,130 @@
+{
+  "project": "pwjbucnyqexiepoinoke",
+  "captured_at": "2026-10-22T02:40:05.317548+00:00",
+  "history": [
+    {
+      "name": "household_attendance",
+      "version": "0137"
+    },
+    {
+      "name": "admin_household_attendance_projection",
+      "version": "0138"
+    },
+    {
+      "name": "remote_schema",
+      "version": "0139"
+    },
+    {
+      "name": "restore_household_attendance",
+      "version": "0140"
+    },
+    {
+      "name": "attendance_receipt_export_access",
+      "version": "0141"
+    }
+  ],
+  "before_counts": {
+    "profiles": 42,
+    "legacy_checkins": 3,
+    "household_members": 6
+  },
+  "after_counts": {
+    "profiles": 42,
+    "receipts": 0,
+    "attendance": 0,
+    "legacy_checkins": 3,
+    "household_members": 6
+  },
+  "existing_records_unchanged": true,
+  "before_fingerprints": {
+    "profiles": "24cec8f90729cb847e87d927da728558",
+    "legacy_checkins": "b5362de3adebde391e022cb82c87dc9a",
+    "household_members": "7bef64a87ed2f033ea81fc46c633ce19"
+  },
+  "after_fingerprints": {
+    "profiles": "24cec8f90729cb847e87d927da728558",
+    "legacy_checkins": "b5362de3adebde391e022cb82c87dc9a",
+    "household_members": "7bef64a87ed2f033ea81fc46c633ce19"
+  },
+  "source_sha256": {
+    "supabase/migrations/0137_household_attendance.sql": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e",
+    "supabase/migrations/0138_admin_household_attendance_projection.sql": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba",
+    "supabase/migrations/0139_remote_schema.sql": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2",
+    "supabase/migrations/0140_restore_household_attendance.sql": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44",
+    "supabase/migrations/0141_attendance_receipt_export_access.sql": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2"
+  },
+  "local_sql_tests": [
+    {
+      "test": "household_attendance.test.sql",
+      "assertions": 83,
+      "result": "pass"
+    },
+    {
+      "test": "household_attendance_boundaries.test.sql",
+      "assertions": 30,
+      "result": "pass"
+    },
+    {
+      "test": "admin_household_attendance_projection_web.test.sql",
+      "assertions": 27,
+      "result": "pass"
+    },
+    {
+      "test": "resident_household_conditional.test.sql",
+      "assertions": 22,
+      "result": "pass"
+    },
+    {
+      "test": "resident_ios_phase18_account_deletion.test.sql",
+      "assertions": 56,
+      "result": "pass"
+    },
+    {
+      "test": "household_attendance_receipt_exports.test.sql",
+      "assertions": 16,
+      "result": "pass"
+    }
+  ],
+  "local_concurrency_cases_passed": 21,
+  "local_receipt_recovery": "pass",
+  "pre_0139_function_definitions_restored": true,
+  "comparison_normalization": "Whitespace, line comments and equivalent auth.uid qualification under the inspected search paths.",
+  "intentional_view_improvement": [
+    "household_attendance_receipt_exports"
+  ],
+  "changed_existing_functions": [
+    "admin_add_household_member(uuid,text,text,text)",
+    "admin_mutate_record(text,uuid,text,jsonb,timestamp with time zone)",
+    "admin_remove_household_member(uuid,uuid)",
+    "admin_update_household_member(uuid,uuid,text,text,text)",
+    "check_in_to_evacuation_center(uuid)",
+    "erase_own_account_records()",
+    "request_own_account_deletion()",
+    "sync_household_members_from_jsonb()"
+  ],
+  "added_functions": [
+    "barangayan_private.attendance_actor(text)",
+    "barangayan_private.attendance_can_read(uuid,uuid)",
+    "barangayan_private.check_in_household_members(uuid,uuid,jsonb,uuid)",
+    "barangayan_private.check_out_household_attendance(uuid[],uuid)",
+    "barangayan_private.erase_household_attendance(uuid)",
+    "barangayan_private.get_my_household_attendance()",
+    "barangayan_private.get_my_household_attendance_receipt_exports()",
+    "barangayan_private.guard_attendance_lifecycle()",
+    "barangayan_private.guard_household_archive()",
+    "barangayan_private.initialize_attendance_household()",
+    "barangayan_private.lookup_household_for_attendance(text)",
+    "barangayan_private.mutate_attendance_household_member(uuid,text,jsonb,timestamp with time zone)",
+    "barangayan_private.read_household_attendance(uuid,uuid)",
+    "barangayan_private.reject_legacy_attendance()",
+    "barangayan_private.serialize_attendance_identity()",
+    "check_in_household_members(uuid,uuid,jsonb,uuid)",
+    "check_out_household_attendance(uuid[],uuid)",
+    "get_my_household_attendance()",
+    "lookup_household_for_attendance(text)"
+  ],
+  "known_limitations": [
+    "No historical attendance/receipt records were present to recover.",
+    "Full application UI and device-camera acceptance were not run in this database recovery."
+  ]
+}

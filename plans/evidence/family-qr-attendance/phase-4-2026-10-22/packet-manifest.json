@@ -1,0 +1,133 @@
+{
+  "version": "1.18.1",
+  "packet": "tmp/family-attendance-phase4-20261022/release.before.xml",
+  "sha256": "92e39e609a7c2ec7d93c4d4ba657563808527c947ca5c0beba22b97b8d89310c",
+  "security": "enabled; inspect log",
+  "compression": false,
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567"
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+    },
+    {
+      "path": "supabase/tests/household_attendance_concurrency.mjs",
+      "sha256": "0e28782d0c5b35eedc521ab5ba11038f910c40a5fdc2529eeff1f6e2b8b770dd"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "sha256": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "sha256": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "sha256": "344b6ca9c2ddd36f8eafa343bd0f10c6bb60b3806b0057fc859947269bd8a208"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "sha256": "763a084c9df68448baca85971c9a5c19a64f62013c4daac976760f69bd6128b8"
+    },
+    {
+      "path": "supabase/functions/generate-household-qr/index.ts",
+      "sha256": "5dc380091ffd9030845bd3b1fb4357a6aaacd8b8b1965f377749b3715c48b7a5"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "index": 0,
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "start": 1,
+      "end": 139,
+      "characters": 8482
+    },
+    {
+      "index": 1,
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "start": 1,
+      "end": 84,
+      "characters": 5470
+    },
+    {
+      "index": 2,
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "start": 1,
+      "end": 33,
+      "characters": 2048
+    },
+    {
+      "index": 3,
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "start": 1,
+      "end": 49,
+      "characters": 2703
+    },
+    {
+      "index": 4,
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "start": 1,
+      "end": 64,
+      "characters": 3786
+    },
+    {
+      "index": 5,
+      "path": "supabase/tests/household_attendance_concurrency.mjs",
+      "start": 1,
+      "end": 153,
+      "characters": 10925
+    },
+    {
+      "index": 6,
+      "path": "supabase/tests/household_attendance_concurrency.mjs",
+      "start": 154,
+      "end": 178,
+      "characters": 2233
+    },
+    {
+      "index": 7,
+      "path": "apps/admin-web/AGENTS.md",
+      "start": 1,
+      "end": 9,
+      "characters": 674
+    },
+    {
+      "index": 8,
+      "path": "apps/resident-web/AGENTS.md",
+      "start": 1,
+      "end": 9,
+      "characters": 674
+    },
+    {
+      "index": 9,
+      "path": "CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11
+    },
+    {
+      "index": 10,
+      "path": "supabase/functions/generate-household-qr/index.ts",
+      "start": 1,
+      "end": 138,
+      "characters": 5016
+    }
+  ]
+}

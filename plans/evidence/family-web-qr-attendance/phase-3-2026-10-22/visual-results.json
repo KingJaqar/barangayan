@@ -1,0 +1,39 @@
+{
+  "checks": [
+    "Settled light desktop and dark 390px custom account font/accent screenshot inspection; 200% QR fits and decodes, keyboard focus contained"
+  ],
+  "consoleErrors": [],
+  "calls": [
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    }
+  ],
+  "browser": "155.0.8059.85",
+  "limitations": [
+    "Synthetic Auth on loopback with actual components and real PostgREST/PostgreSQL; physical camera and deployed login/navigation remain manual."
+  ],
+  "consoleWarnings": [],
+  "colors": {
+    "font": "Georgia, serif",
+    "color": "rgb(237, 237, 237)",
+    "card": "rgba(0, 0, 0, 0)"
+  },
+  "pass": true
+}

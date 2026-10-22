@@ -11,23 +11,26 @@ import { useTheme } from '@/hooks/use-theme';
 export function PreferenceToggle({
   value,
   onValueChange,
+  label,
 }: {
   value: boolean;
   onValueChange: (value: boolean) => void;
+  label: string;
 }) {
   const theme = useTheme();
 
   return (
     <View style={styles.container}>
       <Switch
+        accessibilityLabel={label}
         value={value}
         onValueChange={onValueChange}
-        trackColor={{ true: theme.primary, false: theme.backgroundSelected }}
-        thumbColor="#ffffff"
+        trackColor={{ true: theme.resident.accent, false: theme.resident.controlBorder }}
+        thumbColor={value ? theme.resident.onAccent : theme.resident.card}
       />
       {value ? (
-        <View style={[styles.badge, { backgroundColor: theme.primary, borderColor: theme.background }]}>
-          <Ionicons name="checkmark" size={9} color="#ffffff" />
+        <View pointerEvents="none" accessible={false} style={[styles.badge, { backgroundColor: theme.resident.accent, borderColor: theme.resident.card }]}>
+          <Ionicons name="checkmark" size={9} color={theme.resident.onAccent} />
         </View>
       ) : null}
     </View>

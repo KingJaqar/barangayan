@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Actual local staff selects two participants; native status and Manila arrival visible",
+    "result": "pass"
+  },
+  {
+    "name": "Native error and explicit refresh recover without false attendance success",
+    "result": "pass"
+  },
+  {
+    "name": "Native theme/font/extreme accent changes do not issue data writes or refresh loops",
+    "result": "pass"
+  },
+  {
+    "name": "Native focus leave/return has bounded reads and stable idle",
+    "result": "pass"
+  },
+  {
+    "name": "Native background/resume refresh uses actual AppState",
+    "result": "pass"
+  },
+  {
+    "name": "Actual exact-stay staff departure appears natively with preserved Manila history",
+    "result": "pass"
+  },
+  {
+    "name": "Delayed read/account switch/logout clear private Family/QR state",
+    "result": "fail",
+    "reason": "\n\n\n\n\n\n\n\n\n\n\n\n\n\nLocal native test \u00b7 synthetic session \u00b7 real local API\n\nTEST THEME\n\nTEST FONT\n\nTEST ACCENT\n\nTEST ACCOUNT\n\nTEST LOGOUT\n\nTEST LEAVE\n\n\nHousehold: Your Household\nStaff confirm who is present. Showing a code alone does not record attendance.\n\n\n\uf4fd\nMy QR Code\n\nShow My Code\n\uf2e1\n\n\n\n\n\n\n\n\n\nShow this Family QR to barangay staff and confirm who is present.\nFamily Members\nFamily list unavailable\n\n\nRefresh family\n\n\n\nLoading family members\u2026"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "result": "pass",
+  "checks": [
+    "Idle dialog has stable request count; no background traffic or read/update loop",
+    "Holder + two members loaded, none preselected, empty confirmation disabled",
+    "Committed but unavailable response retains frozen exact request/payload; explicit retry retrieves receipt; failed refresh labels last-known data",
+    "Partial family arrival/departure uses actual authenticated-role RPCs; unselected member remains unchanged",
+    "Desktop/light and narrow/dark accent/font layouts, 200% CSS zoom, native dialog keyboard containment",
+    "Holder-only household supported; coalesced return-to-focus read invalidates stale review without a write",
+    "Denied/unavailable camera leaves useful directory fallback; scanner can close",
+    "Actual html5-qrcode decodes QRCodeCanvas synthetic video stream; one secured lookup, camera tracks released",
+    "Camera permission resolving after close releases late native tracks and ignores decode callbacks",
+    "Wrong QR type clears previous selectable household and receipt; cannot confirm old family",
+    "Malformed lookup response does not overwrite verified private data; edits disabled until refresh",
+    "Double confirmation sends one write; checkout succeeds with no active arrival center and recorded center inactive",
+    "Sign-out closes and clears private dialog; no automatic write replay",
+    "Switching synthetic accounts closes private dialog and disregards old-account state"
+  ],
+  "errors": []
+}

@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Camera } from 'expo-camera';
-
+import { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useIsFocused } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { qrStepItemSchema } from '@barangayan/shared';
+
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { PrimaryButton } from '@/components/primary-button';
+import { DrrmIconTile, DrrmSourceState, OfflineBadge } from '@/components/drrm/presentation';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
 import { useEmergencyQrContent } from '@/hooks/use-emergency-qr-content';
@@ -13,310 +15,66 @@ import { QrPermissionModal } from '@/components/qr-permission-modal';
 import { QrShowModal } from '@/components/qr-show-modal';
 
 export function QrGuideContent() {
-  const theme = useTheme();
+  const { resident } = useTheme();
   const { profile } = useProfile();
-  const barangayId = profile?.barangay_id ?? null;
-  const { content, isLoading, error, isOffline } = useEmergencyQrContent(barangayId);
-  const [showScanner, setShowScanner] = useState(false);
-  const [showShowQr, setShowShowQr] = useState(false);
-  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const focused = useIsFocused();
+  const { content, isLoading, error, isOffline, refetch } = useEmergencyQrContent(profile?.barangay_id ?? null);
+  const [overlay, setOverlay] = useState<'permission' | 'scanner' | 'qr' | null>(null);
+  const close = useCallback(() => setOverlay(null), []);
+  useEffect(() => { if (!focused) close(); }, [focused, close]);
+  const why = content.find(c => c.section === 'why_scan');
+  const how = content.find(c => c.section === 'how_it_works');
+  const steps = qrStepItemSchema.array().safeParse(how?.content);
 
-  const whyScan = content.find((c) => c.section === 'why_scan');
-  const howItWorks = content.find((c) => c.section === 'how_it_works');
-
-  const handleStartScanning = useCallback(async () => {
-    const { status, canAskAgain } = await Camera.getCameraPermissionsAsync();
-    if (status === 'granted') {
-      setShowScanner(true);
-    } else if (!canAskAgain) {
-      setShowPermissionModal(true);
-    } else {
-      setShowPermissionModal(true);
-    }
-  }, []);
-
-  const handleCloseScanner = useCallback(() => {
-    setShowScanner(false);
-  }, []);
-
-  const handleOpenShowQr = useCallback(() => {
-    setShowShowQr(true);
-  }, []);
-
-  const handleCloseShowQr = useCallback(() => {
-    setShowShowQr(false);
-  }, []);
-
-  const handleClosePermissionModal = useCallback(() => {
-    setShowPermissionModal(false);
-  }, []);
-
-  const handlePermissionGranted = useCallback(() => {
-    setShowPermissionModal(false);
-    setShowScanner(true);
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.intro}>
-          <View style={styles.titleRow}>
-            <ThemedText style={[styles.mainTitle, { color: theme.primary }]}>
-              QR Check-In Guide
-            </ThemedText>
-            {isOffline && (
-              <View style={[styles.offlineBadge, { borderColor: theme.primary }]}>
-                <Ionicons name="wifi-outline" size={10} color={theme.primary} />
-                <ThemedText style={[styles.offlineBadgeText, { color: theme.primary }]}>Offline</ThemedText>
-              </View>
-            )}
-          </View>
-          <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-            Follow these quick steps to register your presence securely.
-          </ThemedText>
-        </View>
-
-        <View style={styles.buttonRow}>
-          <Pressable
-            style={[styles.startButton, { backgroundColor: theme.primary }]}
-            onPress={handleStartScanning}
-            accessibilityRole="button"
-            accessibilityLabel="Scan QR code">
-            <Ionicons name="qr-code-outline" size={20} color={theme.onPrimary} />
-            <ThemedText style={[styles.startButtonText, { color: theme.onPrimary }]}>
-              Scan QR
-            </ThemedText>
-          </Pressable>
-          <Pressable
-            style={[styles.startButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
-            onPress={handleOpenShowQr}
-            accessibilityRole="button"
-            accessibilityLabel="Show QR code">
-            <Ionicons name="checkbox-outline" size={20} color={theme.primary} />
-            <ThemedText style={[styles.startButtonText, { color: theme.primary }]}>
-              Show QR
-            </ThemedText>
-          </Pressable>
-        </View>
-
-        {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ThemedText themeColor="textSecondary">Loading instructions...</ThemedText>
-          </View>
-        ) : error ? (
-          <View style={styles.loadingContainer}>
-            <ThemedText themeColor="textSecondary">Unable to load instructions.</ThemedText>
-          </View>
-        ) : (
-          <>
-            {whyScan && (
-              <View style={[styles.whyCard, { backgroundColor: whyScan.icon_bg || '#FEF9E7' }]}>
-                <View style={styles.whyHeader}>
-                  <Ionicons name={whyScan.icon as any} size={20} color={whyScan.icon_color || theme.primary} />
-                  {/* whyCard's background is a fixed light pastel from the DB (icon_bg),
-                      not theme-linked — its text must stay fixed dark too, or it goes
-                      invisible against the light card in dark mode. */}
-                  <ThemedText type="smallBold" style={[styles.whyTitle, { color: '#1F2937' }]}>
-                    {whyScan.title}
-                  </ThemedText>
-                </View>
-                <ThemedText style={[styles.whyBody, { color: '#4B5563' }]}>
-                  {whyScan.body}
-                </ThemedText>
-              </View>
-            )}
-
-            {howItWorks && (() => {
-              const steps = (howItWorks.content as unknown as { step: number; title: string; desc: string }[] | undefined) ?? [];
-              return (
-                <View style={[styles.stepsCard, { borderColor: theme.backgroundSelected }]}>
-                  <ThemedText type="smallBold" style={[styles.howTitle, { color: theme.text }]}>
-                    {howItWorks.title}
-                  </ThemedText>
-                  <ThemedText themeColor="textSecondary" style={styles.howBody}>
-                    {howItWorks.body}
-                  </ThemedText>
-                  <View style={styles.stepsContainer}>
-                    {steps.map((step, idx) => (
-                      <View key={idx} style={styles.stepRow}>
-                        <View style={styles.stepLeft}>
-                          <View style={[styles.stepNumber, { backgroundColor: theme.primary }]}>
-                            <ThemedText style={[styles.stepNumberText, { color: theme.onPrimary }]}>
-                              {step.step}
-                            </ThemedText>
-                          </View>
-                        </View>
-                        <View style={styles.stepContent}>
-                          <View style={styles.stepTextColumn}>
-                            <ThemedText type="smallBold" style={styles.stepTitle}>
-                              {step.title}
-                            </ThemedText>
-                            <ThemedText themeColor="textSecondary" style={styles.stepBody}>
-                              {step.desc}
-                            </ThemedText>
-                          </View>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              );
-            })()}
-          </>
-        )}
+  return <View style={styles.root}>
+    <View>
+      <View style={styles.headingRow}>
+        <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>QR Check-In Guide</ThemedText>
+        {isOffline ? <OfflineBadge /> : null}
       </View>
-
-      <QrScannerOverlay visible={showScanner} onClose={handleCloseScanner} />
-      <QrShowModal visible={showShowQr} onClose={handleCloseShowQr} />
-      <QrPermissionModal
-        visible={showPermissionModal}
-        onClose={handleClosePermissionModal}
-        onGranted={handlePermissionGranted}
-      />
+      <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Show your Family QR to barangay staff to confirm who is present. Scanning a center code does not record attendance.</ThemedText>
     </View>
-  );
+    <View style={styles.buttons}>
+      <View style={styles.button}><PrimaryButton presentation="resident" compact label="Scan QR" accessibilityLabel="Scan QR code" disabled={!profile?.barangay_id}
+        leadingIcon={<Ionicons name="scan-outline" size={20} color={resident.onAccent} />} onPress={() => setOverlay('permission')} /></View>
+      <View style={styles.button}><PrimaryButton presentation="resident" compact variant="secondaryAccent" label="Show QR" accessibilityLabel="Show QR code"
+        leadingIcon={<Ionicons name="qr-code-outline" size={20} color={resident.accentText} />} onPress={() => setOverlay('qr')} /></View>
+    </View>
+    {error ? <DrrmSourceState message={content.length ? 'Unable to refresh instructions. Showing available information.' : 'Unable to load instructions.'} retry={refetch} /> : null}
+    {isLoading && !content.length ? <DrrmSourceState loading message="Loading instructions…" /> : null}
+    {!isLoading && !error && !content.length ? <DrrmSourceState message="No check-in instructions available." /> : null}
+    {why ? <View style={[styles.why, { backgroundColor: resident.accentSoft }]}>
+      <DrrmIconTile compact icon={why.icon ?? 'information-circle-outline'} color={why.icon_color ?? resident.accent} background={why.icon_bg ?? resident.accentSoft} />
+      <View style={styles.copy}>
+        <ThemedText accessibilityRole="header" style={[styles.whyTitle, { color: resident.text }]}>{why.title}</ThemedText>
+        <ThemedText style={[styles.body, { color: resident.text }]}>{why.body}</ThemedText>
+      </View>
+    </View> : null}
+    {how ? <View>
+      <ThemedText accessibilityRole="header" style={[styles.howTitle, { color: resident.text }]}>{how.title}</ThemedText>
+      <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{how.body}</ThemedText>
+      <View style={styles.steps}>
+        {steps.success ? steps.data.map((step, index) => <View key={`${step.step}-${index}`} style={styles.step}>
+          <View style={[styles.number, { backgroundColor: resident.accent }]}><ThemedText style={[styles.numberText, { color: resident.onAccent }]}>{step.step}</ThemedText></View>
+          <View style={styles.copy}><ThemedText style={[styles.stepTitle, { color: resident.text }]}>{step.title}</ThemedText>
+            <ThemedText style={[styles.body, { color: resident.muted }]}>{step.desc}</ThemedText></View>
+        </View>) : <DrrmSourceState message="The scan steps are unavailable. Please refresh instructions." retry={refetch} />}
+      </View>
+    </View> : null}
+    <QrScannerOverlay visible={focused && overlay === 'scanner'} onClose={close} />
+    <QrShowModal visible={focused && overlay === 'qr'} onClose={close} />
+    <QrPermissionModal visible={focused && overlay === 'permission'} onClose={close} onGranted={() => setOverlay('scanner')} />
+  </View>;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  content: {
-    gap: 12,
-  },
-  intro: {
-    gap: 4,
-  },
-  mainTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 26,
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    flexWrap: 'wrap',
-  },
-  offlineBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-  },
-  offlineBadgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  subtitle: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  whyCard: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#F3E8C7',
-    padding: 12,
-    gap: 6,
-  },
-  whyHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  whyTitle: {
-    flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-  },
-  whyBody: {
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  stepsCard: {
-    padding: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-  howTitle: {
-    fontSize: 15,
-    lineHeight: 21,
-    fontWeight: '700',
-  },
-  howBody: {
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 2,
-    marginBottom: 12,
-  },
-  stepsContainer: {
-    gap: 12,
-  },
-  stepRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-  },
-  stepLeft: {
-    alignItems: 'center',
-    width: 24,
-    flexShrink: 0,
-  },
-  stepNumber: {
-    width: 24,
-    minHeight: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepNumberText: {
-    fontSize: 12,
-    lineHeight: 20,
-    fontWeight: '700',
-  },
-  stepContent: {
-    flex: 1,
-  },
-  stepTextColumn: {
-    flex: 1,
-    gap: 3,
-  },
-  stepTitle: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-  },
-  stepBody: {
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  startButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing.two,
-    minHeight: 48,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  startButtonText: {
-    flexShrink: 1,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-  },
-  loadingContainer: {
-    paddingVertical: 24,
-    alignItems: 'center',
-  },
+  root: { gap: 14 }, headingRow: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
+  title: { fontSize: 22, lineHeight: 28, fontWeight: '800', letterSpacing: -0.5 },
+  subtitle: { marginTop: 4, fontSize: 13.5, lineHeight: 20 },
+  buttons: { flexDirection: 'row', gap: 12 }, button: { flex: 1, minWidth: 0 },
+  why: { flexDirection: 'row', padding: 12, gap: 10, borderRadius: 16 }, copy: { flex: 1, minWidth: 0, gap: 4 },
+  whyTitle: { fontSize: 15, lineHeight: 21, fontWeight: '700' }, body: { fontSize: 13.5, lineHeight: 20 },
+  howTitle: { fontSize: 17, lineHeight: 23, fontWeight: '700' }, steps: { marginTop: 12, gap: 12 },
+  step: { flexDirection: 'row', gap: 10 }, number: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  numberText: { fontSize: 14, fontWeight: '700' }, stepTitle: { fontSize: 15, lineHeight: 20, fontWeight: '700' },
 });

@@ -1,0 +1,544 @@
+{
+  "date": "2026-10-21",
+  "timezone": "Asia/Manila",
+  "phase": 1,
+  "status": "Complete \u2014 local shared backend/data scope",
+  "cwd": "C:/Users/User/barangayan",
+  "candidate": {
+    "migration": "supabase/migrations/20261021111056_household_attendance.sql",
+    "sha256": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E",
+    "sources": "sources.json",
+    "versions": "versions.json"
+  },
+  "environment": {
+    "container": "supabase_db_barangayan",
+    "database": "family_attendance_web_phase1_20261021_clean",
+    "postgres": "17.6",
+    "pgtap": "1.3.3",
+    "fixture_owner": "supabase_admin",
+    "actors": "authenticated role plus synthetic request.jwt.claim.sub; anon negative checks"
+  },
+  "checks": [
+    {
+      "check": "admin_record_lifecycle.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/admin_record_lifecycle.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 153,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\admin_record_lifecycle.test.sql.log"
+    },
+    {
+      "check": "household_attendance.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/household_attendance.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 83,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\household_attendance.test.sql.log"
+    },
+    {
+      "check": "household_attendance_boundaries.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/household_attendance_boundaries.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 30,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\household_attendance_boundaries.test.sql.log"
+    },
+    {
+      "check": "resident_household_conditional.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/resident_household_conditional.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 22,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\resident_household_conditional.test.sql.log"
+    },
+    {
+      "check": "resident_ios_phase18_account_deletion.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 56,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\resident_ios_phase18_account_deletion.test.sql.log"
+    },
+    {
+      "check": "resident_ios_phase3_backend.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/resident_ios_phase3_backend.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 86,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\resident_ios_phase3_backend.test.sql.log"
+    },
+    {
+      "check": "resident_ios_tenant_write_guards.test.sql",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "supabase_db_barangayan",
+        "psql",
+        "-U",
+        "supabase_admin",
+        "-d",
+        "family_attendance_web_phase1_20261021_clean",
+        "-X",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1"
+      ],
+      "stdin": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "exit": 0,
+      "result": "pass",
+      "assertions": 7,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\resident_ios_tenant_write_guards.test.sql.log"
+    },
+    {
+      "check": "independent PostgreSQL concurrency",
+      "command": "node supabase/tests/household_attendance_concurrency.mjs",
+      "env": {
+        "ATTENDANCE_TEST_DB": "family_attendance_web_phase1_20261021_clean",
+        "ATTENDANCE_DB_OWNER": "supabase_admin"
+      },
+      "result": "pass",
+      "exit": 0,
+      "scenarios": 21,
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\concurrency-final-receipt-id.log"
+    },
+    {
+      "check": "shared schemas",
+      "command": "npm run test --workspace=@barangayan/shared -- src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\shared-final.log",
+      "log_sha256": "27845AFB3ECBD7FFD2E9F8CA1B4D77D985F5A16520658711287393B8916C4DCA",
+      "tests": 42
+    },
+    {
+      "check": "export v1/v2 helpers",
+      "command": "npm run test --workspace=@barangayan/resident-ios -- tests/export-function.test.ts",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\export-final.log",
+      "log_sha256": "897CEA7D2212895B236CE5CADEA3F0984E7723BA1249BB1EB3A2BD21B5EA61C0",
+      "tests": 15
+    },
+    {
+      "check": "resident typecheck",
+      "command": "npm run typecheck --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\web-typecheck.final.log",
+      "log_sha256": "6FACF901EE4A6663C7201E83B0198EB87F6A7015E831F980CEA2326CD89710A2"
+    },
+    {
+      "check": "admin typecheck",
+      "command": "npm run typecheck --workspace=@barangayan/web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\admin-typecheck.final.log",
+      "log_sha256": "ABF4A2CAAB86D9D096E9E55274110690E4905F51E3EA8D86DC10A05445909AF0"
+    },
+    {
+      "check": "resident lint",
+      "command": "npm run lint --workspace=@barangayan/resident-web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\web-lint.final.log",
+      "log_sha256": "BF994CA4E99FA8D2055D64CAE52603DA7B3EE5482EE4A72361C68EAFC447F17E",
+      "pre_existing_warnings": 1
+    },
+    {
+      "check": "admin lint",
+      "command": "npm run lint --workspace=@barangayan/web",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\admin-lint.final.log",
+      "log_sha256": "895DE1FE3B3D48F15D0F92493140A42092E34A06DD789E11C237EDEBBF8FA699",
+      "pre_existing_warnings": 2
+    },
+    {
+      "check": "resident production build",
+      "command": "npm run build --workspace=@barangayan/resident-web -- --webpack",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\web-build.final.log",
+      "log_sha256": "CFB90AEB9C559577D3DA4445CA9F0E78078AF07F5C9BACDFC8FAC7A2DB19BB53",
+      "env": {
+        "BARANGAYAN_PREVIEW_DIST_DIR": ".next-family-web-phase1-20261021"
+      }
+    },
+    {
+      "check": "admin production build",
+      "command": "npm run build --workspace=@barangayan/web -- --webpack",
+      "cwd": "C:/Users/User/barangayan",
+      "exit": 0,
+      "result": "pass",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\admin-build.final.log",
+      "log_sha256": "55C33D2613BCB1FA75D861E90AA0B9C96E56287EA26F34922B10FA9D36C53227",
+      "env": {
+        "BARANGAYAN_PREVIEW_DIST_DIR": ".next-family-web-phase1-20261021"
+      }
+    },
+    {
+      "check": "admin table suite",
+      "command": "npm run test:tables --workspace=@barangayan/web",
+      "exit": 1,
+      "result": "pre-existing-failure",
+      "passed": 152,
+      "failed": 1,
+      "failure": "record-lifecycle.test.ts: versioned request editable fields expectation is stale",
+      "evidence": "tmp\\family-web-phase1-20261021\\logs\\admin-tables.log",
+      "source_evidence": "Both test and record-config.ts match HEAD; no attendance imports or owned changes."
+    }
+  ],
+  "races": [
+    {
+      "name": "same-center",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "different-centers",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "same-request",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-removal",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "removal-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-center-deleted_at",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "center-deleted_at-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-center-barangay_id",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "center-barangay_id-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-household-move",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "household-move-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-role-revocation",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "role-revocation-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-auth-ban",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "auth-ban-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-member-archive",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "member-archive-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "bounded-timeout-explicit-retry",
+      "pass": true
+    },
+    {
+      "name": "cross-household-member-id",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "arrival-before-household-erasure",
+      "pass": true,
+      "observedLockWait": true
+    },
+    {
+      "name": "household-erasure-before-arrival",
+      "pass": true,
+      "observedLockWait": true
+    }
+  ],
+  "migration_rehearsal": {
+    "database": "family_attendance_web_phase1_20261021_receipt_final",
+    "steps": [
+      {
+        "step": "create",
+        "exit": 0,
+        "sha256": "c2ede168fca08bf9b09b5071bcb3c0e451fdda50a818c09e878a3b27cb2a43db"
+      },
+      {
+        "step": "schema",
+        "exit": 0,
+        "sha256": "7f83aab33834ff56b030e7ce0ec6d923166cb7b1c3b10ea180eed62c0a81fa65"
+      },
+      {
+        "step": "0118_resident_front_id_submission",
+        "exit": 0,
+        "sha256": "f063101a9257d45b0111b043e200d325ccf94f4ff49ba169c2045ca88a93c337"
+      },
+      {
+        "step": "0119_admin_profile_and_verified_association",
+        "exit": 0,
+        "sha256": "b3444289658f366826d4bc529f8e26daa9222135c79d2b20024786488760765f"
+      },
+      {
+        "step": "0120_flood_shadow_runs",
+        "exit": 0,
+        "sha256": "7689e8503718be870828b7be6bb9deca46bed5ef3215a7368b9a96f7bbd2c65e"
+      },
+      {
+        "step": "0121_resident_ios_write_boundaries",
+        "exit": 0,
+        "sha256": "0bb25cbad213ec580a28c1c197b37d30abd9ce04a975ff609b34c76cdf9fa7bb"
+      },
+      {
+        "step": "0122_resident_apple_account_setup",
+        "exit": 0,
+        "sha256": "cd44658d997cf7196573240df09737f10fc1f4148ddb4c455686921bc96c5765"
+      },
+      {
+        "step": "0123_resident_household_conditional_save",
+        "exit": 0,
+        "sha256": "f41a74428b519bbc694c9c6ee58dc3deb114325f5b65b28138204eb6b3c40242"
+      },
+      {
+        "step": "0124_unreferenced_upload_objects",
+        "exit": 0,
+        "sha256": "09f2f8cfd77f9fe531a9180a17a53ceda8c2297344db94565ea79270da82eacb"
+      },
+      {
+        "step": "0125_automatic_document_request_payments",
+        "exit": 0,
+        "sha256": "8ee3a83422ae44148e2fc1a88516ba5ab0b2120db24e25ee81c426956b1a20d2"
+      },
+      {
+        "step": "0126_restore_automatic_request_submission",
+        "exit": 0,
+        "sha256": "2008cab74d67c16dd5d2ea46d632c6f0e578205744f4070472761592ec610e7c"
+      },
+      {
+        "step": "0127_admin_resident_document_requests",
+        "exit": 0,
+        "sha256": "b1efd479a4bd34f249837b5543bf826a378fe40a77605fed221e87c5ffba2636"
+      },
+      {
+        "step": "0128_admin_personal_profile_editing",
+        "exit": 0,
+        "sha256": "2598cc612300dd299fc9e051ddc8422a0478cbb4389dcfc79ace2c76d2332015"
+      },
+      {
+        "step": "0129_admin_record_sheet_edit_parity",
+        "exit": 0,
+        "sha256": "4428439ed520aadab02fc7467eba7aa5fee13bb2e78d095e8ba9b451ce2589ac"
+      },
+      {
+        "step": "0130_resident_directory_admin_visibility",
+        "exit": 0,
+        "sha256": "c73d4e2d9e75e869d706ca6985961997e8a0141cb940a3164de731f6d29ed02e"
+      },
+      {
+        "step": "0131_request_editor_admin_resident_options",
+        "exit": 0,
+        "sha256": "1d4545d5f5a83adf2b6c4fce9588e2d028b6c14e2cd381668d36d505a57ca2b6"
+      },
+      {
+        "step": "0132_request_payment_column_editors",
+        "exit": 0,
+        "sha256": "96064dc3558b49ea745f962d0fb3fdc27aaf3136f7e97d474cc0347945165a98"
+      },
+      {
+        "step": "0133_full_versioned_request_record_editor",
+        "exit": 0,
+        "sha256": "059472c21de4a378f86d2e53ad80430576ccd87cf74b3b32ca2b3056d51dee55"
+      },
+      {
+        "step": "0134_medical_applicant_email",
+        "exit": 0,
+        "sha256": "bf72658a22174e5d090e4231e78a5afd08ac9cc85ad13143f48f528bd0794e27"
+      },
+      {
+        "step": "0135_resident_notifications",
+        "exit": 0,
+        "sha256": "c4cd5186f959cefe88e49b29dd22f55969cef7ab84bcc65621aaabf1912c5980"
+      },
+      {
+        "step": "0136_account_deletion_state",
+        "exit": 0,
+        "sha256": "88a5012543e07c04e37a27faee5959ecfc0f23dd8024f7c682c5883dc9ed172b"
+      },
+      {
+        "step": "attendance",
+        "exit": 0,
+        "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+      }
+    ]
+  },
+  "schema_restore": {
+    "result": "pass",
+    "data_copied": false,
+    "schema_sha256": "1DF64485EAEA6B4EF5917BBED11A7838084FF3E9BE05E8E0917FE35B9ADDAD05",
+    "evidence": "tmp\\family-web-phase1-20261021\\logs\\final-schema-restore.log",
+    "candidate_migration_sha256": "DD48D2717BC97560BD3F8289428411A6EFF6E1E1CCDFCCD6AAC96D9143972E25",
+    "note": "Preceding candidate schema recovery; final receipt-ID source has its own passing full migration rehearsal."
+  },
+  "baseline": {
+    "shared_schema_tests": 22,
+    "roster_assertions": 22,
+    "admin_lifecycle_assertions": 153,
+    "deletion_assertions": 56,
+    "tenant_guard_expected_pre_cutover_failure": "legacy self-check-in denial: caught no exception; wanted 42501",
+    "typecheck_lint": "both pass; existing 1 resident/2 admin lint warnings",
+    "default_builds": "admin failed external Google font fetch; resident stopped after prolonged compile inactivity",
+    "recovery": "tmp\\family-web-phase1-20261021"
+  },
+  "repeat_reasons": [
+    "Concurrent owner changed migration and test candidate; invalidated affected source/results.",
+    "Final restored schema used mixed historical function owners and attendance owner; verify effective grants and fixtures as actual owner.",
+    "New response/boundary test cases or diagnosed fixture scope failure.",
+    "Default build font/inactivity problem; installed webpack succeeds.",
+    "Shared response refinement changed; final build uses final source.",
+    "Final owner receipt-ID pagination fix invalidated affected schema/export evidence; complete delta packed/read, full migration and affected checks reran."
+  ],
+  "pending": [
+    "Phases 2\u20133 staff and resident web UI integration/cutover",
+    "Phase 4 Brave/hardware camera and deployed-target verification",
+    "Phase 4 retained-data release recovery and deployment authorization"
+  ],
+  "forbidden_actions_performed": [],
+  "new_dependencies": [],
+  "checks_reused_after_final_delta": "Private receipt/export and erased view metadata changed; affected SQL, races, export tests and both typechecks reran. Web runtime/shared-schema JS unchanged, so final webpack/lint results remain applicable."
+}

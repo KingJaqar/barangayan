@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Asia/Manila",
+  "phase": 4,
+  "status": "Partially complete",
+  "local_work": "Complete: independent authorized verification and release/recovery preparation",
+  "new_dependencies": [],
+  "application_changes": [],
+  "historical_migration_changes": [],
+  "environment": {
+    "local_database": "family_attendance_web4_20261022",
+    "restored_database": "family_attendance_web4_backup_20261022",
+    "postgresql": "17.6",
+    "postgrest": "14.5",
+    "brave": "155.0.8059.85",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "supabase_js": "2.112.1",
+    "ssr": "0.12.4",
+    "repomix": "1.18.1",
+    "hosted_read_only_project": "pwjbucnyqexiepoinoke",
+    "staging_web_urls": null,
+    "vercel": "Barangayan team has zero returned projects"
+  },
+  "checks": [
+    {
+      "name": "Resident typecheck/lint",
+      "command": "npm run typecheck --workspace=@barangayan/resident-web; npm run lint --workspace=@barangayan/resident-web",
+      "result": "pass; no type/lint errors, one pre-existing warning",
+      "log": "logs/resident-static.baseline.log"
+    },
+    {
+      "name": "Admin typecheck/lint",
+      "command": "npm run typecheck --workspace=@barangayan/web; npm run lint --workspace=@barangayan/web",
+      "result": "pass; no type/lint errors, two pre-existing warnings",
+      "log": "logs/admin-static.baseline.log"
+    },
+    {
+      "name": "Resident production build",
+      "command": "BARANGAYAN_PREVIEW_DIST_DIR=.next-family-phase4-baseline npm run build --workspace=@barangayan/resident-web -- --webpack",
+      "result": "pass with required local permissions; first sandboxed attempt hit generated-directory EPERM",
+      "log": "logs/resident-build.permitted.log"
+    },
+    {
+      "name": "Admin production build",
+      "command": "BARANGAYAN_PREVIEW_DIST_DIR=.next-family-phase4-baseline npm run build --workspace=@barangayan/web -- --webpack",
+      "result": "pass with generated-directory/font-network permissions; sandboxed attempt hit EPERM and font DNS",
+      "log": "logs/admin-build.permitted.log"
+    },
+    {
+      "name": "Shared QR/attendance/deadline",
+      "command": "npm run test --workspace=@barangayan/shared -- src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts src/lib/attendance-request.test.ts",
+      "result": "47 pass",
+      "log": "logs/shared-tests.baseline.log"
+    },
+    {
+      "name": "Resident boundaries",
+      "command": "npx --no-install vitest run tests/household.test.ts [cwd apps/resident-web]",
+      "result": "12 pass",
+      "log": "logs/resident-tests.baseline.log"
+    },
+    {
+      "name": "Admin table regressions",
+      "command": "npm run test:tables --workspace=@barangayan/web",
+      "result": "159 pass / one pre-existing unrelated requests editable-field assertion failure; six attendance tests pass",
+      "log": "logs/admin-tests.baseline.log"
+    },
+    {
+      "name": "Feedback/cutover",
+      "command": "TEST_ARTIFACTS_DIR=tmp/family-web-phase4-20261022/unit-feedback node scripts/resident-web-feedback-regression.cjs rw-lt-05:unit",
+      "result": "4 groups pass",
+      "log": "logs/feedback.log"
+    },
+    {
+      "name": "Shared export contract",
+      "command": "npm run test --workspace=@barangayan/resident-ios -- tests/export-function.test.ts",
+      "result": "15 pass; shared server export test housed in native workspace, no native runtime/build test",
+      "log": "logs/export-tests.verified.log"
+    },
+    {
+      "name": "Resident component/API/database",
+      "command": "python tmp/family-web-phase4-20261022/browser-db.py run",
+      "result": "20 groups pass; no introduced console errors",
+      "log": "logs/browser.log"
+    },
+    {
+      "name": "Roster 0/30/31 UI/API",
+      "command": "python tmp/family-web-phase4-20261022/browser-db.py run boundary",
+      "result": "pass",
+      "log": "logs/boundary.log"
+    },
+    {
+      "name": "Visual/QR/keyboard",
+      "command": "python tmp/family-web-phase4-20261022/browser-db.py run visual",
+      "result": "pass, including 320px light/dark, 390px custom accent/font, 200% QR decoding; zero console errors/warnings",
+      "log": "logs/visual-320.log"
+    },
+    {
+      "name": "Admin component/API/database",
+      "command": "python tmp/family-web-phase4-20261022/browser-db.py run admin",
+      "result": "14 groups pass; synthetic video decoding/denial/late permission cleanup, directory, original-payload retry, double confirmation, inactive-center departure and session cleanup",
+      "log": "logs/admin-browser.log"
+    }
+  ],
+  "database_checks": {
+    "sql_assertions": 387,
+    "independent_connection_cases": 21,
+    "preflight_cases": 8,
+    "migration_rehearsal": "pass; exact synthetic legacy rows, zero backfill",
+    "pause_resume": "pass",
+    "full_restore": "pass; two visits, three receipts and legacy rows exactly preserved",
+    "hosted_preflight": "pass, read-only; nine operation/export bodies/config/definer flags match local candidate; owner ACLs independently checked"
+  },
+  "pending": [
+    "Approved actual resident/admin HTTPS staging candidate and real Auth/navigation/Back\u2013Forward/mobile bottom-navigation checks",
+    "Physical staff camera scans actual resident web QR on another display",
+    "Compatible hosted account-function deployment and synthetic actual export/deletion acceptance",
+    "Supported deployed Android/iOS versions and attributed legacy image endpoint transition/retirement approval"
+  ],
+  "pre_existing": [
+    "Three lint warnings",
+    "One admin request-editor assertion failure",
+    "Historical full RW-LT-05 browser fixture has superseded QR/PNG/PATCH household assumptions; not executed or accepted; unrelated/user-owned scenarios preserved"
+  ],
+  "diagnostics": [
+    "Sandboxed builds required filesystem/font-network access; permitted builds passed",
+    "Initial hosted inventory used an unconfirmed obsolete qr_checkins table name and failed read-only; source confirmed evacuation_center_checkins, corrected query passed with no hosted mutation",
+    "Root export test filter matched recovery copies, then wrong inferred workspace name was rejected; verified package manifest/config and used exact resident-ios workspace, 15 pass",
+    "One inline cleanup command failed shell parsing before writes; file-based guarded cleanup restored exact baseline config bytes",
+    "Full restore succeeded; initial post-restore assertion assumed holder first but SQL intentionally orders members first. Corrected lookup by kind and continued verification without repeating migration/restore or replacing existing DBs"
+  ],
+  "not_performed": [
+    "commit",
+    "push",
+    "deployment",
+    "remote migration",
+    "hosted data mutation/deletion",
+    "external configuration change",
+    "third-party message"
+  ],
+  "source_identities": "sources.json",
+  "ownership": "All captured pre-existing source/config/lock bytes unchanged. Only new runbook/preflight, selected Phase 4 plan text and Phase 4 evidence are owned."
+}

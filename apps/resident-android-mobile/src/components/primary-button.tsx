@@ -17,7 +17,7 @@ interface ButtonContentProps extends Omit<PressableProps, 'style'> {
 type ButtonVariant = 'primary' | 'secondary' | 'destructive';
 export type PrimaryButtonProps = ButtonContentProps & (
   | { presentation?: 'default'; variant?: ButtonVariant }
-  | { presentation: 'resident'; variant?: ButtonVariant | 'destructiveFilled' }
+  | { presentation: 'resident'; variant?: ButtonVariant | 'destructiveFilled' | 'secondaryAccent'; compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' }
 );
 
 /** The green pill button used throughout the design file (Login, Register, Verify, etc.).
@@ -64,7 +64,7 @@ function DefaultButton({ label, leadingIcon, loading, variant = 'primary', disab
   );
 }
 
-function ResidentButton({ label, leadingIcon, loading, variant = 'primary', disabled, onPressIn, onPressOut, accessibilityState, ...props }: Omit<PrimaryButtonProps, 'presentation'>) {
+function ResidentButton({ label, leadingIcon, loading, variant = 'primary', compact = false, appearance = 'default', disabled, onPressIn, onPressOut, accessibilityState, ...props }: Omit<PrimaryButtonProps, 'presentation'> & { compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const scale = useSharedValue(1);
@@ -75,7 +75,8 @@ function ResidentButton({ label, leadingIcon, loading, variant = 'primary', disa
     return () => cancelAnimation(scale);
   }, [isDisabled, reducedMotion, scale]);
   const filledDanger = variant === 'destructiveFilled';
-  const color = isDisabled ? resident.muted : filledDanger ? resident.onDangerFill : variant === 'primary' ? resident.onAccent : variant === 'destructive' ? resident.danger : resident.text;
+  const accentOutline = variant === 'secondaryAccent';
+  const color = isDisabled ? resident.muted : filledDanger ? resident.onDangerFill : variant === 'primary' ? resident.onAccent : variant === 'destructive' ? resident.danger : accentOutline ? resident.accentText : resident.text;
   return (
     <Animated.View style={animationStyle}>
       <Pressable
@@ -85,23 +86,25 @@ function ResidentButton({ label, leadingIcon, loading, variant = 'primary', disa
         accessibilityState={{ ...accessibilityState, disabled: isDisabled, busy: Boolean(loading) }}
         disabled={isDisabled}
         onPressIn={(event) => {
-          scale.value = reducedMotion ? 1 : withTiming(0.98, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+          scale.value = reducedMotion ? 1 : withTiming(appearance === 'healthDrive' ? 0.97 : 0.98, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
           scale.value = reducedMotion ? 1 : withTiming(1, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
           onPressOut?.(event);
         }}
-        style={({ pressed }) => [styles.residentButton, {
-          backgroundColor: isDisabled ? resident.surface : filledDanger ? (pressed ? resident.dangerFillPressed : resident.dangerFill) : variant === 'primary' ? (pressed ? resident.accentPressed : resident.accent) : pressed ? (variant === 'destructive' ? resident.dangerSoft : resident.pressed) : resident.card,
-          borderColor: variant === 'destructive' ? resident.danger : resident.controlBorder,
-          borderWidth: isDisabled ? 1 : filledDanger ? (resident.dangerFillNeedsOutline ? 1 : 0) : variant === 'destructive' ? 2 : variant === 'primary' && !resident.accentNeedsOutline ? 0 : 1,
-        }]}>
+        style={({ pressed }) => [styles.residentButton, compact && styles.compactButton, appearance === 'requestForm' && (variant === 'secondary' ? styles.formSecondary : styles.formPrimary), {
+          backgroundColor: isDisabled ? resident.surface : filledDanger ? (pressed ? resident.dangerFillPressed : resident.dangerFill) : variant === 'primary' ? (pressed ? resident.accentPressed : resident.accent) : pressed ? (variant === 'destructive' ? resident.dangerSoft : accentOutline ? resident.accentSoft : resident.pressed) : resident.card,
+          borderColor: variant === 'destructive' ? resident.danger : accentOutline ? resident.accentText : appearance === 'requestForm' ? resident.border : resident.controlBorder,
+          borderWidth: isDisabled ? 1 : filledDanger ? (resident.dangerFillNeedsOutline ? 1 : 0) : variant === 'destructive' || accentOutline ? 2 : variant === 'primary' && !resident.accentNeedsOutline ? 0 : 1,
+        }, appearance === 'requestForm' && isDisabled && (variant === 'primary' ? { backgroundColor: resident.pressed, borderWidth: 0 } : { backgroundColor: resident.card, borderWidth: 1 }),
+        // Reserve the border in both consent states so the pinned Health footer never shrinks.
+        appearance === 'healthForm' && { borderWidth: 1, borderColor: isDisabled || resident.accentNeedsOutline ? resident.controlBorder : 'transparent' }]}>
         {({ pressed }) => {
           const foreground = !isDisabled && variant === 'primary' && pressed ? resident.onAccentPressed : color;
           return <>
             {loading ? <ActivityIndicator color={foreground} accessible={false} /> : leadingIcon ? <View accessible={false} importantForAccessibility="no-hide-descendants">{leadingIcon}</View> : null}
-            <ThemedText type="smallBold" style={{ color: foreground, fontSize: 15, lineHeight: 22.5, flexShrink: 1, textAlign: 'center' }}>{label}</ThemedText>
+            <ThemedText type="smallBold" style={[{ color: foreground, fontSize: 15, lineHeight: 22.5, flexShrink: 1, textAlign: 'center' }, compact && styles.compactLabel, appearance === 'requestForm' && variant === 'secondary' && { fontSize: 14, lineHeight: 21 }]}>{label}</ThemedText>
           </>;
         }}
       </Pressable>
@@ -110,6 +113,10 @@ function ResidentButton({ label, leadingIcon, loading, variant = 'primary', disa
 }
 
 const styles = StyleSheet.create({
+  formPrimary: { paddingHorizontal: 28 },
+  formSecondary: { paddingVertical: 12 },
+  compactButton: { minHeight: 44, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12 },
+  compactLabel: { fontSize: 13, lineHeight: 18 },
   residentButton: { minHeight: ResidentLayout.controlHeight, borderRadius: ResidentLayout.controlRadius, paddingHorizontal: 20, paddingVertical: 14, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
   withIcon: {
     flexDirection: 'row',

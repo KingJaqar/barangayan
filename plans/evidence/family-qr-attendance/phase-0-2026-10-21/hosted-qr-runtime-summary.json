@@ -1,0 +1,16 @@
+{
+  "result": [
+    {
+      "count": 23,
+      "event_type": "Shutdown",
+      "reason": "WallClockTime",
+      "version": "9"
+    },
+    {
+      "count": 23,
+      "event_type": "Boot",
+      "reason": "",
+      "version": "9"
+    }
+  ]
+}

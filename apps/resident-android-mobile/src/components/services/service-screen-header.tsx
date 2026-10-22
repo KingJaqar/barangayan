@@ -10,14 +10,18 @@ import { useTheme } from '@/hooks/use-theme';
 export function ServiceScreenHeader({
   title,
   backLabel = 'Go back',
+  backIcon = 'chevron-back',
   onBack,
   compact = false,
-  presentation = 'default',
+  singleLine = false,
+  presentation = 'resident',
 }: {
   title: string;
   backLabel?: string;
+  backIcon?: keyof typeof Ionicons.glyphMap;
   onBack?: () => void;
   compact?: boolean;
+  singleLine?: boolean;
   presentation?: 'default' | 'resident';
 }) {
   const router = useRouter();
@@ -25,19 +29,21 @@ export function ServiceScreenHeader({
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.header, { backgroundColor: presentation === 'resident' ? theme.resident.accent : theme.primary, paddingTop: insets.top + Spacing.two }]}>
-      <Pressable
-        onPress={onBack ?? (() => router.back())}
-        style={styles.backBtn}
-        accessibilityRole="button"
-        accessibilityLabel={backLabel}
-        hitSlop={Spacing.two}>
-        <Ionicons name="chevron-back" size={26} color={presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary} />
-      </Pressable>
-      <View style={[styles.headerContent, compact && styles.compactContent]}>
-        <ThemedText type={presentation === 'resident' ? 'residentHeader' : 'default'} style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
-          {title}
-        </ThemedText>
+    <View style={{ backgroundColor: presentation === 'resident' ? theme.resident.accent : theme.primary, paddingTop: insets.top, paddingLeft: insets.left, paddingRight: insets.right }}>
+      <View style={styles.header}>
+        <Pressable
+          onPress={onBack ?? (() => router.back())}
+          style={styles.backBtn}
+          accessibilityRole="button"
+          accessibilityLabel={backLabel}>
+          <Ionicons name={backIcon} size={24} color={presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary} />
+        </Pressable>
+        <View style={[styles.headerContent, compact && styles.compactContent]}>
+          <ThemedText accessibilityRole="header" numberOfLines={singleLine ? 1 : undefined} adjustsFontSizeToFit={singleLine} type={presentation === 'resident' ? 'residentHeader' : 'default'} style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
+            {title}
+          </ThemedText>
+        </View>
+        <View style={styles.balance} />
       </View>
     </View>
   );
@@ -45,24 +51,25 @@ export function ServiceScreenHeader({
 
 const styles = StyleSheet.create({
   header: {
-    paddingBottom: Spacing.three,
+    minHeight: 56,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    flexDirection: 'row',
     alignItems: 'center',
-    position: 'relative',
   },
   headerContent: {
-    height: 25,
+    flex: 1,
+    minWidth: 0,
     justifyContent: 'center',
   },
   backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
     width: 44,
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
-  compactContent: { height: 'auto', minHeight: 28, paddingHorizontal: 52 },
-  compactTitle: { fontSize: 18, lineHeight: 24, fontWeight: '700', textAlign: 'center' },
+  balance: { width: 44 },
+  headerTitle: { fontSize: 21, lineHeight: 26, textAlign: 'center', fontFamily: Fonts.gideonRoman },
+  compactContent: { paddingHorizontal: Spacing.one },
+  compactTitle: { fontSize: 21, lineHeight: 26, textAlign: 'center' },
 });

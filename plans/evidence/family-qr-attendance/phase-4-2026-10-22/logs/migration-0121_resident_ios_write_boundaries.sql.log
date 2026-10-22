@@ -1,0 +1,62 @@
+BEGIN
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+DROP TRIGGER
+CREATE TRIGGER
+DELETE 0
+CREATE INDEX
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+CREATE FUNCTION
+DROP POLICY
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+GRANT
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+GRANT
+NOTIFY
+COMMIT
+
+NOTICE:  trigger "a_guard_incident_write" for relation "public.incidents" does not exist, skipping
+NOTICE:  trigger "guard_announcement_read" for relation "public.announcement_reads" does not exist, skipping
+NOTICE:  constraint "push_tokens_expo_push_token_format" of relation "push_tokens" does not exist, skipping
+NOTICE:  policy "residents can create a payment on their own request" for relation "public.payments" does not exist, skipping

@@ -1,0 +1,164 @@
+{
+  "path": "tmp/family-web-phase2-20261021/final.xml",
+  "sha256": "d1c5cd2a6aaa5ff2d28c75b6b3dcf2e01973b68edaf9f26888ec03167271133f",
+  "selectors": [
+    "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+    "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+    "apps/admin-web/src/hooks/use-household-attendance.ts",
+    "apps/admin-web/src/lib/household-attendance.ts",
+    "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+    "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+    "supabase/tests/admin_household_attendance_projection_web.test.sql",
+    "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/owned-existing.diff"
+  ],
+  "security": "passed; no suspicious files",
+  "equivalence": true,
+  "omissions": [],
+  "sources": [
+    {
+      "path": "apps/admin-web/package.json",
+      "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944"
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "sha256": "6d4a7a35fb94375ddd90f12dbecca8bbc10955460f36a4d5dcb60591b1703f41"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sha256": "474e9253ce7ef1e928ca18f0886942e153d67fb90ef8be652646ce5c320fb43a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sha256": "20f529eb5d8a4d8de88f67fabb737ffdb7c26e35f1592f897c94cb13a0940bec"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "sha256": "85a1ea2256c928481a16a03026ffe3016ff1a8be936ca2d981b89cb3f57b3f70"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "sha256": "4c7d06e058b633b2112ce7f23022f0af983db5bac47da15664163a7eb2f0ec1e"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "sha256": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "sha256": "71c1c11d8ad5b8a86291248e26080268e63d9c5dd9e59a58797a9402f3e970a1"
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "sha256": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+      "sha256": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "sha256": "f98bfbaecf7adc52355434aad36ef70ac41f7aae0f4357014ec2b8f0a165fc28"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "sha256": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "sha256": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "sha256": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "sha256": "87afb13f8c09566257f35ea04b304bbdc01fabaad69b6b5a4c3fd61330361a7c"
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace"
+    },
+    {
+      "path": "supabase/migrations/20261021111056_household_attendance.sql",
+      "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+    }
+  ],
+  "chunks": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "start": 1,
+      "end": 121,
+      "characters": 10040,
+      "next": null
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "start": 1,
+      "end": 68,
+      "characters": 3539,
+      "next": null
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "start": 1,
+      "end": 139,
+      "characters": 8482,
+      "next": null
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "start": 1,
+      "end": 84,
+      "characters": 5470,
+      "next": null
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "start": 1,
+      "end": 60,
+      "characters": 4131,
+      "next": null
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/owned-existing.diff",
+      "start": 1,
+      "end": 200,
+      "characters": 11205,
+      "next": 201
+    },
+    {
+      "path": "plans/evidence/family-web-qr-attendance/phase-2-2026-10-21/owned-existing.diff",
+      "start": 201,
+      "end": 327,
+      "characters": 9260,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "start": 1,
+      "end": 64,
+      "characters": 3786,
+      "next": null
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "start": 1,
+      "end": 72,
+      "characters": 6742,
+      "next": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "187a2ab331dd6dce1cfa54d397fc245d1232a9a0",
+  "working_tree": "uncommitted on the base commit; nothing was committed",
+  "ios_workspace": {
+    "files": 337,
+    "sha256": "2f4b72fb587b232b22da85bfec461b71e4054e7efb35a6c7a52ed42eeb2d3737"
+  },
+  "shared_package": {
+    "files": 98,
+    "sha256": "4b6358fb5bfb6a4071beaa2dd58b13bbf8c08eb87effe5a8325fa0b4524e6f61"
+  },
+  "supabase": {
+    "migrations": {
+      "files": 134,
+      "sha256": "5668c778189b4ac627b8b2a9d34a97232ec0e6c812a773db7b85e9ee2bdaf362"
+    },
+    "functions": {
+      "files": 40,
+      "sha256": "9c2182a43d06eb99f52389beaed1c7f51f49ed63136164aa83be69d206bc2352"
+    },
+    "tests": {
+      "files": 45,
+      "sha256": "3d3056775fe9047677f8c1cfb85553d04ae0002dfbca27fdc7b9d5a9af03ec58"
+    }
+  },
+  "lockfile_sha256": "1f2bdf4181c61999ded2b550669cfb3318763201b60be95e7845a3131d05646e",
+  "repository_migrations": {
+    "count": 134,
+    "first": "0001_barangays_and_profiles.sql",
+    "last": "0136_account_deletion_state.sql"
+  },
+  "hosted_read_only_2026_10_21": {
+    "project": "pwjbucnyqexiepoinoke",
+    "last_migration": "0136 (applied 2026-10-21 as versions 20261021094448 and 20261021094513, see phase-20/P20-D01)",
+    "not_applied": [],
+    "functions": {
+      "create-payment-source": 21,
+      "check-payment-status": 16,
+      "paymongo-webhook": 16,
+      "refund-payment": 13,
+      "cancel-payment": 11,
+      "export-my-data": 9,
+      "delete-my-account": 9,
+      "generate-household-qr": 9,
+      "verify-resident-email": 9,
+      "evacuation-route": 9,
+      "extract-resident-id": 9,
+      "extract-resident-id-ocrspace": 2,
+      "send-notifications": "not deployed"
+    }
+  },
+  "toolchain": {
+    "node": "v24.13.1",
+    "expo": "57.0.10",
+    "reactNative": "0.86.2"
+  },
+  "native_build": "none (OD-06)",
+  "release_candidate_name": "none: a source candidate only; no ios-rc-<version>-<build> name is issued",
+  "hosted_after_phase20_deploy": "2026-10-21: 0135 and 0136 applied to the hosted project; functions unchanged (send-notifications not deployed; export-my-data and delete-my-account still v9)"
+}

@@ -1,0 +1,20 @@
+{
+  "packet": "tmp\\family-attendance-phase4-20261022\\maintenance.before.xml",
+  "sha256": "b1dccd5ccbde72756bfeb809d9cc86b47fa082f540ddbcdbcfa5e46345e3b85b",
+  "version": "1.18.1",
+  "sources": [
+    {
+      "path": "packages/shared/src/schemas/household-attendance.test.ts",
+      "sha256": "d0b41eb8cdf76e56928c8548a0a9dcc2509188966a87f21e74d170a3c6f28b6d",
+      "lines": 61,
+      "characters": 4446
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace",
+      "lines": 126,
+      "characters": 7157
+    }
+  ],
+  "omissions": []
+}

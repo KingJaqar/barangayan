@@ -58,8 +58,12 @@ export function getResidentTheme(mode: 'light' | 'dark', selectedAccent: string)
   const success = tone('#0F6E5B');
   const warning = tone('#B86E00');
   const info = tone('#2563EB');
+  const rose = tone('#C2416B');
+  const callFill = '#E8930C';
   return {
     card, surface, text, muted, accent, accentSoft, accentPressed,
+    // Optical media surfaces preserve the original evidence image in either theme.
+    mediaBackdrop: '#000000', mediaForeground: '#FFFFFF', mediaScrim: 'rgba(0,0,0,0.55)',
     onAccent: foreground(accent),
     accentNeedsOutline: contrast(accent, card) < 3,
     onAccentPressed: foreground(accentPressed),
@@ -74,6 +78,9 @@ export function getResidentTheme(mode: 'light' | 'dark', selectedAccent: string)
     success: success.ink, successSoft: success.soft,
     warning: warning.ink, warningSoft: warning.soft,
     info: info.ink, infoSoft: info.soft,
+    onWarning: foreground(warning.ink), onInfo: foreground(info.ink),
+    callFill, onCallFill: foreground(callFill), callNeedsOutline: contrast(callFill, card) < 3,
+    rose: rose.ink, onRose: foreground(rose.ink),
   };
 }
 

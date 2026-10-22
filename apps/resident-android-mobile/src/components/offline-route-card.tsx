@@ -108,13 +108,13 @@ export function OfflineRouteCard({
   style?: ViewStyle;
 }) {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(dense);
 
   if (routing.phase === 'loading') {
     return (
-      <View style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+      <View style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
         <View style={styles.row}>
-          <ActivityIndicator size="small" color={theme.primary} />
+          <ActivityIndicator size="small" color={theme.resident.accentText} />
           <ThemedText type="small" style={dense && styles.denseText}>Loading the offline map…</ThemedText>
         </View>
       </View>
@@ -134,7 +134,8 @@ export function OfflineRouteCard({
     } else {
       lines.push({ text: `Road closures checked ${formatAge(now - lastCheck)}.`, tone: 'info' });
     }
-    if (routing.pendingUpdate) lines.push({ text: `A newer map is waiting: ${DEFERRAL_TEXT[routing.pendingUpdate.reason]}.`, tone: 'info' });
+    if (routing.pendingUpdate) lines.push({ text: `A newer map is waiting: ${DEFERRAL_TEXT[routing.pendingUpdate.reason]}.`, tone: 'warning' });
+    if (routing.unresolvedAvoidanceIds.length > 0) lines.push({ text: 'Some saved blocked roads do not match this map. Review your blocked roads before routing.', tone: 'warning' });
     if (routing.avoidanceUnreadable) lines.push({ text: 'Your saved blocked roads could not be read and were set aside.', tone: 'warning' });
   }
   const message = routeMessage(route);
@@ -164,52 +165,34 @@ export function OfflineRouteCard({
   const candidates = route.status === 'done' && route.result.status === 'attachment_ambiguous' ? route.result.candidates : [];
   const osmDate = routing.pack?.manifest.osmBaseTimestamp?.slice(0, 10);
 
-  // Collapsed summary: the most important line (a warning first, then a running calculation, then
-  // the route outcome or mode). Choosing a street needs the full card, so it never collapses then.
-  if (compact && !expanded && candidates.length === 0) {
-    const warning = message?.tone === 'warning' ? message : lines.find(line => line.tone === 'warning');
-    const summary = warning ?? message ?? modeLine ?? lines[0];
-    const busy = summary === message && message?.busy === true;
-    const hiddenCount = lines.length + (message ? 1 : 0) - 1;
-    return (
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLiveRegion="polite"
-        accessibilityState={{ expanded: false }}
-        accessibilityHint="Shows road condition and route details"
-        onPress={() => setExpanded(true)}
-        style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
-        <View style={styles.row}>
-          {busy ? (
-            <ActivityIndicator size="small" color={theme.primary} />
-          ) : (
-            <Ionicons
-              name={summary.tone === 'info' ? 'cloud-done-outline' : 'alert-circle-outline'}
-              size={16}
-              color={summary.tone === 'info' ? theme.primary : theme.accentRed}
-            />
-          )}
-          <ThemedText type="smallBold" numberOfLines={2} style={styles.text}>
-            {summary.text}
-          </ThemedText>
-          {hiddenCount > 0 ? (
-            <ThemedText type="small" themeColor="textSecondary">
-              +{hiddenCount}
-            </ThemedText>
-          ) : null}
-          <Ionicons name="chevron-down" size={16} color={theme.textSecondary} />
-        </View>
+  // Only informational diagnostics collapse. Every warning and required street choice
+  // stays readable without opening the summary, even when several failures coexist.
+  if ((compact || dense) && !expanded && candidates.length === 0) {
+    const warnings = lines.filter(line => line.tone === 'warning');
+    if (message?.tone === 'warning') warnings.push(message);
+    return <View accessibilityLiveRegion="polite" style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Show full routing status" accessibilityState={{ expanded: false }}
+        onPress={() => setExpanded(true)} style={[styles.row, { minHeight: 44 }]}>
+        <Ionicons name="information-circle-outline" size={18} color={theme.resident.accentText} />
+        <ThemedText type="smallBold" style={styles.text}>Routing status</ThemedText>
+        <ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>Show</ThemedText>
+        <Ionicons name="chevron-down" size={16} color={theme.resident.muted} />
       </Pressable>
-    );
+      {warnings.map(line => <View key={line.text} style={[styles.row, { alignItems: 'flex-start' }]}>
+        <Ionicons name="alert-circle-outline" size={16} color={theme.resident.danger} />
+        <ThemedText type="small" style={[styles.text, { color: theme.resident.text }]}>{line.text}</ThemedText>
+      </View>)}
+      {message?.busy ? <View style={styles.row}><ActivityIndicator color={theme.resident.accentText} /><ThemedText type="small" style={styles.text}>{message.text}</ThemedText></View> : null}
+    </View>;
   }
 
   return (
     <View
       accessibilityLiveRegion="polite"
-      style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+      style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
       {lines.map(line => (
         <View key={line.text} style={[styles.row, dense && styles.denseRow]}>
-          <Ionicons name={line.tone === 'info' ? 'cloud-done-outline' : 'cloud-offline-outline'} size={16} color={line.tone === 'info' ? theme.primary : theme.accentRed} />
+          <Ionicons name={line.tone === 'info' ? 'cloud-done-outline' : 'cloud-offline-outline'} size={16} color={line.tone === 'info' ? theme.resident.accentText : theme.resident.danger} />
           <ThemedText type="small" style={[styles.text, dense && styles.denseText]}>
             {line.text}
           </ThemedText>
@@ -218,9 +201,9 @@ export function OfflineRouteCard({
       {message ? (
         <View style={[styles.row, dense && styles.denseRow]}>
           {message.busy ? (
-            <ActivityIndicator size="small" color={theme.primary} />
+            <ActivityIndicator size="small" color={theme.resident.accentText} />
           ) : (
-            <Ionicons name={message.tone === 'info' ? 'walk-outline' : 'alert-circle-outline'} size={16} color={message.tone === 'info' ? theme.primary : theme.accentRed} />
+            <Ionicons name={message.tone === 'info' ? 'walk-outline' : 'alert-circle-outline'} size={16} color={message.tone === 'info' ? theme.resident.accentText : theme.resident.danger} />
           )}
           <ThemedText type="smallBold" style={[styles.text, dense && styles.denseText, dense && styles.denseMessage]}>
             {message.text}
@@ -235,7 +218,7 @@ export function OfflineRouteCard({
               accessibilityRole="button"
               onPress={() => onChooseSegment(candidate)}
               style={[styles.choice, { borderColor: theme.primary }]}>
-              <ThemedText type="smallBold" style={{ color: theme.primary }}>
+              <ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>
                 {candidate.name ?? 'Unnamed path'} · {Math.round(candidate.distanceMeters)} m
               </ThemedText>
             </Pressable>
@@ -247,15 +230,16 @@ export function OfflineRouteCard({
           Offline map{osmDate ? ` (${osmDate})` : ''} · {routing.pack.manifest.attribution}
         </ThemedText>
       ) : null}
-      {compact && candidates.length === 0 ? (
+      {(compact || dense) && candidates.length === 0 ? (
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel="Hide routing status"
           accessibilityState={{ expanded: true }}
           onPress={() => setExpanded(false)}
           hitSlop={8}
           style={styles.collapse}>
           <ThemedText type="smallBold" themeColor="textSecondary">
-            Show less
+            Hide routing status
           </ThemedText>
           <Ionicons name="chevron-up" size={16} color={theme.textSecondary} />
         </Pressable>
@@ -307,6 +291,8 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   choice: {
+    minHeight: 44,
+    justifyContent: 'center',
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: Spacing.three,
@@ -316,6 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   collapse: {
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-end',

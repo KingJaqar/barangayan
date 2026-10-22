@@ -1,0 +1,670 @@
+[
+  {
+    "time": 1792638063.3569088,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638063.360102,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638063.3641307,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638063.3661833,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638063.3686528,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638063.7959504,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638064.1981676,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638144.416819,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638196.6591566,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638196.6610835,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638354.3852031,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638354.3875134,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638361.102172,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638361.1039948,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638362.1742692,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638364.2437215,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638368.3088343,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638370.7232108,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638370.725311,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638402.3849,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638402.387696,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638405.0715501,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638405.0737624,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638409.3675358,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638409.3701568,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638416.237352,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638416.238807,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638419.1082993,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638419.1116004,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638419.115375,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638419.124543,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638419.1255474,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638423.1374192,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": {}
+  },
+  {
+    "time": 1792638423.2290926,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638486.1015344,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638486.103349,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638486.1146245,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638486.126244,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638486.1356559,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638486.177407,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638486.3923776,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638491.9696546,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638491.9715576,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638494.8592126,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638494.8657777,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638494.8673723,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638494.869441,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638494.870667,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638498.8853796,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": {}
+  },
+  {
+    "time": 1792638498.9597197,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+    "owner": "dfb21000-0000-4000-8000-000000000003",
+    "body": null
+  },
+  {
+    "time": 1792638514.758518,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638514.7616265,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638514.76394,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638514.7661045,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638514.767486,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638514.79476,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638514.923849,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638579.112338,
+    "method": "POST",
+    "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {
+      "p_members": [
+        {
+          "id": "cfb21000-0000-4000-8000-000000000001",
+          "name": "Selected Child",
+          "relation": "child",
+          "role": "member"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000002",
+          "name": "Unselected Child",
+          "relation": "child",
+          "role": "member"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000003",
+          "name": "Second Unselected Child",
+          "relation": "child",
+          "role": "member"
+        },
+        {
+          "id": "43354f87-72dc-484e-b2e0-c5c93ccc9165",
+          "name": "Native test member",
+          "relation": "Spouse",
+          "role": "Head of Family"
+        }
+      ],
+      "p_expected": [
+        {
+          "id": "cfb21000-0000-4000-8000-000000000001",
+          "name": "Selected Child",
+          "role": "member",
+          "relation": "child"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000002",
+          "name": "Unselected Child",
+          "role": "member",
+          "relation": "child"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000003",
+          "name": "Second Unselected Child",
+          "role": "member",
+          "relation": "child"
+        }
+      ]
+    }
+  },
+  {
+    "time": 1792638579.1859558,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638579.424887,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638600.0466855,
+    "method": "POST",
+    "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {
+      "p_members": [
+        {
+          "id": "cfb21000-0000-4000-8000-000000000001",
+          "name": "Selected Child",
+          "relation": "child",
+          "role": "member"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000002",
+          "name": "Unselected Child",
+          "relation": "child",
+          "role": "member"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000003",
+          "name": "Second Unselected Child",
+          "relation": "child",
+          "role": "member"
+        }
+      ],
+      "p_expected": [
+        {
+          "id": "cfb21000-0000-4000-8000-000000000001",
+          "name": "Selected Child",
+          "role": "member",
+          "relation": "child"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000002",
+          "name": "Unselected Child",
+          "role": "member",
+          "relation": "child"
+        },
+        {
+          "id": "cfb21000-0000-4000-8000-000000000003",
+          "name": "Second Unselected Child",
+          "role": "member",
+          "relation": "child"
+        },
+        {
+          "id": "43354f87-72dc-484e-b2e0-c5c93ccc9165",
+          "name": "Native test member",
+          "role": "Head of Family",
+          "relation": "Spouse"
+        }
+      ]
+    }
+  },
+  {
+    "time": 1792638600.1080754,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638600.4406521,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.0776966,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638676.0862887,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.3410754,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.3435512,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.3464792,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.3497367,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.3526833,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638676.4118147,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638676.5921628,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.096702,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.0991478,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638705.4009397,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.403779,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.4067671,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.4099662,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.4126105,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638705.4303186,
+    "method": "POST",
+    "path": "/rest/v1/rpc/get_my_household_attendance",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": {}
+  },
+  {
+    "time": 1792638705.5800636,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  },
+  {
+    "time": 1792638710.9299347,
+    "method": "GET",
+    "path": "/rest/v1/profiles?select=id%2Cfull_name%2Clast_name%2Chousehold_members%2Cbarangay_id&id=eq.dfb21000-0000-4000-8000-000000000002",
+    "owner": "dfb21000-0000-4000-8000-000000000002",
+    "body": null
+  }
+]

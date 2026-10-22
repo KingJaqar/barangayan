@@ -43,9 +43,9 @@ select throws_ok(
 select throws_ok(
   $$ insert into public.evacuation_center_checkins (evacuation_center_id, user_id, barangay_id) values ('e2000000-0000-0000-0000-000000000003', 'b1000000-0000-0000-0000-00000000000a', 'a1000000-0000-0000-0000-000000000001') $$,
   'P0012', null, 'Resident cannot check into an inactive center');
-select lives_ok(
+select throws_ok(
   $$ insert into public.evacuation_center_checkins (evacuation_center_id, user_id, barangay_id) values ('e2000000-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-00000000000a', 'a1000000-0000-0000-0000-000000000001') $$,
-  'Resident can check into an active own-barangay center');
+  '42501', null, 'Resident legacy self-check-in is blocked after staff attendance cutover');
 
 reset role;
 set local role authenticated;

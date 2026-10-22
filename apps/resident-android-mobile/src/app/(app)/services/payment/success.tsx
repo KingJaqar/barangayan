@@ -2,15 +2,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing, Fonts } from '@/constants/theme';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
@@ -29,7 +29,6 @@ export default function PaymentSuccessScreen() {
   }>();
   const router = useRouter();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
   const [isDownloading, setIsDownloading] = useState(false);
   const [receipt, setReceipt] = useState<(Tables<'payments'> & { service_requests: { reference_number: string } }) | null>(null);
   const [receiptError, setReceiptError] = useState<string | null>(null);
@@ -42,7 +41,7 @@ export default function PaymentSuccessScreen() {
         if (!active) return;
         setReceipt(data);
         setReceiptError(error || !data ? 'No confirmed payment receipt is available. Reconnect and retry or return to the request.' : null);
-      });
+      }, () => { if (active) setReceiptError('Could not load the confirmed receipt. Reconnect and retry.'); });
     return () => { active = false; };
   }, [requestId, retry]);
   const amountCentavos = receipt?.amount_centavos ?? 0;
@@ -97,56 +96,32 @@ export default function PaymentSuccessScreen() {
     }
   }
 
-  // One-shot celebratory pop on mount — purely additive, not tied to any conditional
-  // prop, so it carries zero behavior risk.
-  const checkScale = useSharedValue(0.7);
-  useEffect(() => {
-    checkScale.value = withSpring(1, { damping: 12, stiffness: 160 });
-  }, [checkScale]);
-  const checkAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: checkScale.value }],
-  }));
-
-  if (!receipt || receipt.service_request_id !== requestId) return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole={receiptError ? 'alert' : undefined}>{receiptError ?? 'Loading confirmed payment receipt…'}</ThemedText><PrimaryButton label="Retry receipt" onPress={() => setRetry(value => value + 1)}/><PrimaryButton label="Return to request" variant="secondary" onPress={() => router.replace(`/services/requests/${requestId}`)}/></View></SafeAreaView>;
+  if (!receipt || receipt.service_request_id !== requestId) return <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.resident.card }}><ServiceScreenHeader title="Payment receipt" /><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole={receiptError ? 'alert' : undefined}>{receiptError ?? 'Loading confirmed payment receipt…'}</ThemedText><PrimaryButton presentation="resident" label="Retry receipt" onPress={() => setRetry(value => value + 1)}/><PrimaryButton presentation="resident" label="Return to request" variant="secondary" onPress={() => router.replace(`/services/requests/${requestId}`)}/></View></SafeAreaView>;
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable
-            onPress={() => router.back()}
-            style={styles.backBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Payment Successful
-            </ThemedText>
-          </View>
-        </View>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
+      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+        <ServiceScreenHeader title="Payment Successful" />
 
         <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.checkWrap}>
-          <View style={[styles.checkGlow, { backgroundColor: `${theme.primary}14` }]} />
-          <Animated.View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }, checkAnimatedStyle]}>
-            <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
-              <Ionicons name="checkmark" size={36} color={theme.onPrimary} />
+          <View style={[styles.checkGlow, { backgroundColor: theme.resident.accentSoft }]} />
+          <View style={[styles.checkOuter, { backgroundColor: theme.resident.accentSoft }]}>
+            <View style={[styles.checkInner, { backgroundColor: theme.resident.accent }]}>
+              <Ionicons name="checkmark" size={36} color={theme.resident.onAccent} />
             </View>
-          </Animated.View>
+          </View>
         </View>
 
         <ThemedText type="title" style={styles.title}>
           Payment Successful
         </ThemedText>
-        <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
+        <ThemedText type="title" style={[styles.amount, { color: theme.resident.accentText }]}>
           {formatCentavosAsPHP(amountCentavos)}
         </ThemedText>
 
         <View style={[styles.cardShadowWrap, styles.detailsCard]}>
-          <Card>
+          <Card variant="resident">
             <ThemedText type="small" style={[styles.sectionLabel, styles.detailsHeader]} themeColor="textSecondary">
               Transaction Details
             </ThemedText>
@@ -174,11 +149,11 @@ export default function PaymentSuccessScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <PrimaryButton
+        <PrimaryButton presentation="resident"
           label="Track My Request →"
           onPress={() => router.replace(`/services/requests/${requestId}`)}
         />
-        <PrimaryButton
+        <PrimaryButton presentation="resident"
           label="Download Receipt ↓"
           variant="secondary"
           loading={isDownloading}
@@ -212,40 +187,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   root: { flex: 1 },
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
-    padding: Spacing.four,
+    padding: 20,
     alignItems: 'center',
-    gap: Spacing.two,
+    gap: 16,
   },
 
   /* Design-system recipes (shared literally across the Services screens) */
   cardShadowWrap: {
-    // Card has overflow:'hidden' internally, which would clip a shadow applied directly
-    // to it — this wrapper carries the shadow instead, without touching Card itself.
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-    borderRadius: Spacing.three,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+    borderRadius: 16,
     width: '100%',
   },
   sectionLabel: {
@@ -284,10 +235,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 24, lineHeight: 30, fontWeight: '800',
   },
   amount: {
-    fontSize: 24,
+    fontSize: 24, lineHeight: 30, fontWeight: '800',
   },
   detailsCard: {
     marginTop: Spacing.three,
@@ -298,10 +249,10 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: Spacing.three,
+    padding: 16, gap: 8, flexWrap: 'wrap',
   },
   footer: {
-    padding: Spacing.four,
+    padding: 20,
     gap: Spacing.two,
   },
   returnLink: {

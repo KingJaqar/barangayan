@@ -2,50 +2,63 @@ import { AgencySlaStatus } from './agency-sla-status';
 import { Ionicons } from '@expo/vector-icons';
 import {
   estimateLabel,
-  formatDate,
   getResidentRequestStatus,
   progressFraction,
   RESIDENT_STATUS_LABEL,
   type ResidentRequestStatus,
   type Tables,
 } from '@barangayan/shared';
-import { Link } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { ProgressBar } from '@/components/progress-bar';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ServiceListLink, ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
-import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { supabase } from '@/lib/supabase';
 
 type ServiceRequest = Tables<'service_requests'> & {
   document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours'> | null;
 };
 
-// Fixed brand green/blue — deliberately NOT theme.primary (see status-badge.tsx's own
-// comment on this). theme.primary is the user's Settings > App Theme accent color, so
-// status semantics must never key off it.
-const STATUS_GREEN = Colors.light.primary; // '#0F6E5B' — same green StatusBadge uses
-const STATUS_BLUE = '#2563EB'; // same literal StatusBadge uses for in_progress
-
 interface RequestStatusConfig {
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
-  /** true only for 'completed' — pill renders as a solid fill, not a tint. */
-  solid: boolean;
+  background: string;
 }
 
 type Filter = 'all' | 'active' | 'pickup' | 'history';
 type ActiveSubFilter = 'all' | 'pending_payment' | 'paid' | 'processing';
 
-// Filter chips match the design file (All/Active/Ready/History); our status enum maps
-// as: Active = submitted+in_progress, Ready = completed, History = cancelled.
+function RequestFilterChip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  const { resident } = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const [pressed, setPressed] = useState(false);
+  const color = selected ? (pressed ? resident.accentPressed : resident.accent) : (pressed ? resident.pressed : resident.surface);
+  const fill = useSharedValue(color);
+  useEffect(() => {
+    fill.value = reducedMotion ? color : withTiming(color, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+    return () => cancelAnimation(fill);
+  }, [color, fill, reducedMotion]);
+  const feedback = useAnimatedStyle(() => ({ backgroundColor: fill.value }));
+  return <Pressable accessibilityRole="tab" accessibilityLabel={label} accessibilityState={{ selected }} onPress={onPress}
+    onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} style={styles.chipHit}>
+    <Animated.View style={[styles.chip, { borderColor: selected && resident.accentNeedsOutline ? resident.controlBorder : 'transparent' }, feedback]}>
+      <ThemedText type="smallBold" style={[styles.chipLabel, { color: selected ? (pressed ? resident.onAccentPressed : resident.onAccent) : resident.text }]}>{label}</ThemedText>
+    </Animated.View>
+  </Pressable>;
+}
+
+// Preserve the existing status predicates, including ready_for_pickup and both terminal states.
 function matchesFilter(status: string, filter: Filter): boolean {
   if (filter === 'all') return true;
   if (filter === 'active') return status === 'submitted' || status === 'in_progress';
@@ -65,51 +78,13 @@ function FilterChips<Key extends string>({
   onChange: (key: Key) => void;
   compact?: boolean;
 }) {
-  const theme = useTheme();
+  if (compact) return <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.statusTabs}>
+    <SegmentedControl segments={options} activeKey={activeKey} onChange={onChange} sizing="content" variant="underline" presentation="resident" />
+  </ScrollView>;
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={compact && styles.statusTabs}
-      contentContainerStyle={compact
-        ? [styles.statusTabRow, { borderBottomColor: theme.backgroundSelected }]
-        : styles.chipRow}>
-      {options.map((option) => {
-        const isActive = option.key === activeKey;
-        return (
-          <Pressable
-            key={option.key}
-            onPress={() => onChange(option.key)}
-            accessibilityRole="tab"
-            accessibilityLabel={option.label}
-            accessibilityState={{ selected: isActive }}
-            style={({ pressed }) => [
-              compact ? styles.statusTab : styles.chip,
-              !compact && (isActive
-                ? { backgroundColor: theme.primary, borderColor: theme.primary }
-                : { backgroundColor: theme.background, borderColor: theme.backgroundSelected }),
-              pressed && styles.pressed,
-            ]}>
-            <ThemedText
-              type="smallBold"
-              style={[
-                compact && styles.statusTabLabel,
-                { color: compact
-                  ? (isActive ? theme.text : theme.textSecondary)
-                  : (isActive ? theme.onPrimary : theme.text) },
-              ]}>
-              {option.label}
-            </ThemedText>
-            {compact ? (
-              <View style={[
-                styles.statusTabIndicator,
-                { backgroundColor: isActive ? theme.primary : 'transparent' },
-              ]} />
-            ) : null}
-          </Pressable>
-        );
-      })}
-    </ScrollView>
+    <ScrollableChevronRow label="request filters" contentContainerStyle={styles.chipRow}>
+      {options.map(option => <RequestFilterChip key={option.key} label={option.label} selected={option.key === activeKey} onPress={() => onChange(option.key)} />)}
+    </ScrollableChevronRow>
   );
 }
 
@@ -117,7 +92,7 @@ export function RequestsList({
   header,
   contentContainerStyle,
 }: {
-  /** Rendered above the title; scrolls away, leaving the filter chips pinned. */
+  /** Actionable profile guidance scrolls away, leaving the filter chips pinned. */
   header?: ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
 }) {
@@ -189,12 +164,12 @@ export function RequestsList({
   // before it gets here, so there's no separate 'submitted'/'in_progress' entry.
   function statusConfig(status: ResidentRequestStatus): RequestStatusConfig {
     const config: Record<ResidentRequestStatus, RequestStatusConfig> = {
-      pending_payment: { icon: 'time-outline', color: theme.textSecondary, solid: false },
-      paid: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: false },
-      processing: { icon: 'sync-outline', color: STATUS_BLUE, solid: false },
-      ready_for_pickup: { icon: 'storefront-outline', color: STATUS_GREEN, solid: false },
-      completed: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: true },
-      cancelled: { icon: 'close-circle-outline', color: theme.accentRed, solid: false },
+      pending_payment: { icon: 'time-outline', color: theme.resident.muted, background: theme.resident.surface },
+      paid: { icon: 'checkmark-circle-outline', color: theme.resident.success, background: theme.resident.successSoft },
+      processing: { icon: 'sync-outline', color: theme.resident.info, background: theme.resident.infoSoft },
+      ready_for_pickup: { icon: 'storefront-outline', color: theme.resident.success, background: theme.resident.successSoft },
+      completed: { icon: 'checkmark-circle-outline', color: theme.resident.success, background: theme.resident.successSoft },
+      cancelled: { icon: 'close-circle-outline', color: theme.resident.danger, background: theme.resident.dangerSoft },
     };
     return config[status];
   }
@@ -211,22 +186,14 @@ export function RequestsList({
   }
 
   return (
-    // Children: 0 header, 1 title, 2 filters (pinned), 3 content.
+    // Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
     <ScrollView
-      stickyHeaderIndices={[2]}
+      stickyHeaderIndices={[1]}
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={[contentContainerStyle, styles.container]}>
+      contentContainerStyle={contentContainerStyle}>
       <View>{header}</View>
-      <View style={styles.header}>
-        <ThemedText type="heading" style={styles.title}>
-          My Requests
-        </ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          Track your service applications
-        </ThemedText>
-      </View>
-
-      <View style={[styles.filters, { backgroundColor: theme.background }]}>
+      {/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
+      <View style={[styles.filters, { backgroundColor: theme.resident.card }]}>
         <FilterChips
           options={[
             { key: 'all', label: 'All' },
@@ -265,60 +232,49 @@ export function RequestsList({
         />
       ) : (
         <View style={styles.list}>
-          {filtered.map((request) => {
-            const residentStatus = getResidentRequestStatus(request.status, request.payment_status);
-            const config = statusConfig(residentStatus);
-            return (
-              <Link key={request.id} href={`/services/requests/${request.id}`} asChild>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={request.document_types?.name ?? 'Document Request'}
-                  style={({ pressed }) => pressed && styles.pressed}>
-                  <ThemedView
-                    style={[
-                      styles.card,
-                      { borderColor: theme.backgroundSelected, shadowColor: theme.text },
-                    ]}>
-                    <View style={styles.cardTop}>
-                      <View style={[styles.iconTile, { backgroundColor: `${config.color}1F` }]}>
-                        <Ionicons
-                          name={getDocumentIcon(request.document_types?.name ?? '')}
-                          size={26}
-                          color={config.color}
-                        />
-                      </View>
-                      <View style={styles.cardInfo}>
-                        <ThemedText type="smallBold" style={styles.cardTitle} numberOfLines={2}>
-                          {request.document_types?.name ?? 'Document Request'}
-                        </ThemedText>
-                        <ThemedText type="small" themeColor="textSecondary">
-                          Req ID: #{request.reference_number} • {formatDate(request.created_at)}
-                        </ThemedText>
-                      </View>
-                      <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
-                    </View>
-
-                    <View
+          <ServicesPanel>
+            {filtered.map((request, index) => {
+              const residentStatus = getResidentRequestStatus(request.status, request.payment_status);
+              const config = statusConfig(residentStatus);
+              const statusBadge = (<View
                       style={[
                         styles.pill,
-                        { backgroundColor: config.solid ? config.color : `${config.color}26` },
+                        { backgroundColor: config.background },
                       ]}>
                       <Ionicons
                         name={config.icon}
                         size={14}
-                        color={config.solid ? theme.onPrimary : config.color}
+                        color={config.color}
+                        accessible={false}
                       />
                       <ThemedText
                         type="smallBold"
-                        style={{ color: config.solid ? theme.onPrimary : config.color }}>
+                        style={[styles.statusLabel, { color: config.color }]}>
                         {RESIDENT_STATUS_LABEL[residentStatus]}
                       </ThemedText>
-                    </View>
-
-                    {request.timing_model !== 'agency_minutes_v1' ? <ThemedText type="small">Previous timing model</ThemedText> : null}
-                    {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} compact /> : request.status !== 'cancelled' ? (
+                    </View>);
+              return (
+                <ServiceListLink key={request.id} href={`/services/requests/${request.id}`} label={request.document_types?.name ?? 'Document Request'} divider={index > 0} style={styles.requestRow}>
+                  <View style={[serviceListStyles.icon, styles.requestIcon, { backgroundColor: theme.resident.accent, borderColor: theme.resident.controlBorder, borderWidth: theme.resident.accentNeedsOutline ? 1 : 0 }]}>
+                    <DocumentIcon
+                      name={getDocumentIcon(request.document_types?.name ?? '')}
+                      size={20}
+                      color={theme.resident.onAccent}
+                      accessible={false}
+                    />
+                  </View>
+                  <View style={serviceListStyles.info}>
+                    <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={[serviceListStyles.title, styles.requestTitle]}>
+                      {request.document_types?.name ?? 'Document Request'}
+                    </ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary" style={serviceListStyles.meta}>
+                      Req ID: #{request.reference_number}
+                    </ThemedText>
+                    {request.timing_model !== 'agency_minutes_v1' ? <ThemedText type="small" style={styles.detailText}>Previous timing model</ThemedText> : null}
+                    {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} compact footer={statusBadge} /> : request.status !== 'cancelled' ? (
                       <View style={styles.progressRow}>
                         <ProgressBar
+                          presentation="resident"
                           fraction={progressFraction(
                             request.status,
                             request.created_at,
@@ -329,11 +285,11 @@ export function RequestsList({
                         <ThemedText
                           type="small"
                           themeColor={request.status === 'completed' ? undefined : 'textSecondary'}
-                          style={
+                          style={[styles.detailText,
                             request.status === 'completed'
-                              ? { color: STATUS_GREEN, fontWeight: '700' }
+                              ? { color: theme.resident.success, fontWeight: '700' }
                               : undefined
-                          }>
+                          ]}>
                           {request.status === 'completed'
                             ? '100%'
                             : request.status === 'ready_for_pickup'
@@ -345,11 +301,13 @@ export function RequestsList({
                         </ThemedText>
                       </View>
                     ) : null}
-                  </ThemedView>
-                </Pressable>
-              </Link>
-            );
-          })}
+                  </View>
+                  <Ionicons name="chevron-forward" size={16} color={theme.resident.muted} style={styles.requestChevron} accessible={false} />
+
+                </ServiceListLink>
+              );
+            })}
+          </ServicesPanel>
         </View>
       )}
     </ScrollView>
@@ -357,112 +315,21 @@ export function RequestsList({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: Spacing.three,
-  },
-  guest: {
-    padding: 20,
-  },
-  header: {
-    paddingHorizontal: 20,
-    gap: Spacing.half,
-  },
-  title: {
-    fontSize: 24,
-    lineHeight: 30,
-  },
-  filters: {
-    gap: Spacing.two,
-    paddingVertical: Spacing.two,
-  },
-  chipRow: {
-    paddingHorizontal: 20,
-    gap: Spacing.two,
-  },
-  chip: {
-    minHeight: 40,
-    paddingHorizontal: Spacing.three,
-    borderRadius: 20,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statusTabs: {
-    marginHorizontal: 20,
-  },
-  statusTabRow: {
-    flexGrow: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  statusTab: {
-    flexGrow: 1,
-    minHeight: 32,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  statusTabLabel: {
-    fontSize: 12,
-    lineHeight: 16,
-    paddingHorizontal: 8,
-    paddingBottom: 6,
-  },
-  statusTabIndicator: {
-    height: 3,
-    alignSelf: 'stretch',
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
-  },
-  list: {
-    paddingHorizontal: 20,
-    gap: Spacing.three,
-  },
-  card: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 20,
-    padding: Spacing.three,
-    gap: Spacing.three,
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-  pressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.99 }],
-  },
-  cardTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  iconTile: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardInfo: {
-    flex: 1,
-    minWidth: 0,
-    gap: Spacing.half,
-  },
-  cardTitle: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: Spacing.four,
-    alignSelf: 'flex-start',
-  },
-  progressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
+  guest: { padding: 20 },
+  filters: { paddingTop: 4, paddingBottom: 8 },
+  chipRow: { paddingHorizontal: 20, paddingVertical: 4, alignItems: 'center', gap: 8 },
+  chipHit: { minHeight: 44, justifyContent: 'center' },
+  chip: { minHeight: 32, paddingHorizontal: 16, paddingVertical: 6, borderRadius: 100, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  chipLabel: { fontSize: 13.5, lineHeight: 20 },
+  statusTabs: { marginHorizontal: 20 },
+  list: { paddingHorizontal: 20 },
+  requestRow: { gap: 10, paddingHorizontal: 12, paddingVertical: 10, minHeight: 72 },
+  requestIcon: { width: 36, height: 36, borderRadius: 10 },
+  requestTitle: { fontSize: 14, lineHeight: 18 },
+  requestChevron: { alignSelf: 'center', flexShrink: 0 },
+  detailText: { fontSize: 12.5, lineHeight: 16 },
+  pill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 100, alignSelf: 'flex-end', maxWidth: '100%' },
+  statusFooter: { width: '100%', alignItems: 'flex-end' },
+  statusLabel: { fontSize: 12, lineHeight: 16, flexShrink: 1 },
+  progressRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 2 },
 });

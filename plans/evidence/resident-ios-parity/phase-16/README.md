@@ -1,6 +1,6 @@
 # Phase 16 — Health calendar, drive discovery, self-registration and registration history (`P16`)
 
-**Status (2026-10-16):** Partially complete (non-device scope, OD-06/OD-07). Calendar, list, detail and registration history are built and tested; self-registration is built and tested behind the closed `medicalRegistration` gate (no owner decision has opened it); live, two-tenant, race and device runs are Skipped or open. Phase 3, 4, 5, 6 and 11 open exits carried. See `P16_2026-10-16_implementation-and-verification.md`.
+**Status (2026-10-16):** Partially complete (non-device scope, OD-06/OD-07/OD-13). T01–T06 verified on non-device checks; `medicalRegistration` opened by owner decision OD-13; T07 partial; G16 two-tenant tests, G01, G17 and the live, race and device runs are open or Skipped. Phase 3, 4, 5, 6 and 11 open exits carried. See `P16_2026-10-16_implementation-and-verification.md`.
 
 **Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 5, Phase 6, Phase 11. These are Partially complete or Verified as recorded in the plan; their open exits are carried as blockers. Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Native keyboard/add/edit/remove uses real conditional-save API",
+    "result": "pass"
+  },
+  {
+    "name": "Native idle after all interactions has stable request count",
+    "result": "pass"
+  }
+]

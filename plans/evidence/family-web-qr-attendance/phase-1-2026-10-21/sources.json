@@ -1,0 +1,78 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "path": "CLAUDE.md",
+    "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "0B8E5D22A6E9EC2A39608B1CF3E5D04C80C2685714B21A320C2B05D7B498EFCB"
+  },
+  {
+    "path": "packages/shared/src/index.ts",
+    "sha256": "709B037C661E61831A75F298F7475C1419A075D6B459DD1028C07A4C764EF7C1"
+  },
+  {
+    "path": "packages/shared/src/types/database.ts",
+    "sha256": "DC5820B0D290D3754C8596BCF3E422178A4DEB0BD4B9E0CFD386763CCB9976BB"
+  },
+  {
+    "path": "packages/shared/src/types/household-attendance.database.ts",
+    "sha256": "EFBFFAA3008213BBE0A37965ABCAD40BC7F7F5E4A3F1CB999373A075D8A65B60"
+  },
+  {
+    "path": "packages/shared/src/schemas/household-attendance.ts",
+    "sha256": "25AE9521711F65BCE2043F4EC2482B1FC420C9C029156462BD4EA164E24C3ACE"
+  },
+  {
+    "path": "packages/shared/src/schemas/household-attendance.test.ts",
+    "sha256": "D0B41EB8CDF76E56928C8548A0A9DCC2509188966A87F21E74D170A3C6F28B6D"
+  },
+  {
+    "path": "packages/shared/src/schemas/household-attendance-responses.test.ts",
+    "sha256": "BA5FF727729CCC02B764C29781B4F09BE90B729EC436D155554A2CC5DA10ACCE"
+  },
+  {
+    "path": "supabase/migrations/20261021111056_household_attendance.sql",
+    "sha256": "44986A0EEDC28B3ED7500C7696259178B24098FEBBBBE3D4D5AF8455AB0CC69E"
+  },
+  {
+    "path": "supabase/tests/household_attendance.test.sql",
+    "sha256": "67AABD3F1E154D5409040E9D08081939703EA7298E707E5DC015F0435F426215"
+  },
+  {
+    "path": "supabase/tests/household_attendance_boundaries.test.sql",
+    "sha256": "813ACCA07E59C02BCD4EEF15622BA363AF0BD22582919FF3B0BECF2C021F1698"
+  },
+  {
+    "path": "supabase/tests/household_attendance_concurrency.mjs",
+    "sha256": "0E28782D0C5B35EEDC521AB5BA11038F910C40A5FDC2529EEFF1F6E2B8B770DD"
+  },
+  {
+    "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+    "sha256": "721E519CA2B1D7F90EB8E3A3E4FC9637A9E49A1C0924A8F54FC4CF191D3A86A9"
+  },
+  {
+    "path": "supabase/functions/export-my-data/index.ts",
+    "sha256": "EA8A7A7B83ADA037B43A3F472ACF4CFADE45FAD6848F47718437FD2A10B72D63"
+  },
+  {
+    "path": "supabase/functions/export-my-data/export-v2.ts",
+    "sha256": "25BB5C80B0EDE7DACA443BD98D96F78ADA3464FC325DBF66F46463B27915DB27"
+  },
+  {
+    "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+    "sha256": "069079FE00384649CB9B7EAC4693726AA4ABA57873CDA8A723E0D084EB312C7A"
+  },
+  {
+    "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+    "sha256": "CAA0C56E8D9DCEEE2A7949045D90D7B1515747E2658CBA96FD76DA9F9324E45C"
+  },
+  {
+    "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+    "sha256": "FEF6616B9A66AC0FE7E4A1E2305C0315BE2681808A86D94E055D5CBE30E1662C"
+  }
+]

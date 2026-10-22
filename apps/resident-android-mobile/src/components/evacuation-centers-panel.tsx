@@ -1,28 +1,23 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
-  FadeInUp,
-  FadeOut,
-  LinearTransition,
-} from 'react-native-reanimated';
+import { ActivityIndicator, AppState, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useFocusEffect, useIsFocused } from 'expo-router';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useAmpid1Boundary } from '@/hooks/use-ampid1-boundary';
 import { EvacuationCenterCard } from '@/components/evacuation-center-card';
-import { HorizontalCenterPicker, type CenterPickerItem } from '@/components/horizontal-center-picker';
 import { CenterDetailCard } from '@/components/center-detail-card';
 import { LocationStatusCard } from '@/components/location-status-card';
 import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from '@/components/map-view';
-import { ShimmerSkeleton } from '@/components/shimmer-skeleton';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { SegmentedControl } from '@/components/segmented-control';
 import { OfflineRouteCard } from '@/components/offline-route-card';
@@ -33,56 +28,6 @@ import { nearestEdge } from '@/lib/offline-routing';
 import type { LatLng, LocationAction, MapLngLat, MapMarker } from '@barangayan/shared';
 import type { AttachmentCandidate, RoutingEdge } from '@barangayan/shared/src/lib/evacuation-routing';
 import { useNetInfo } from '@react-native-community/netinfo';
-
-function AnimatedCenterCard({
-  center,
-  index,
-  minHeight,
-  onMeasure,
-}: {
-  center: ReturnType<typeof useEvacuationCenters>['centers'][number];
-  index: number;
-  minHeight: number;
-  onMeasure: (id: string, height: number) => void;
-}) {
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  function handlePressIn() {
-    scale.value = withSpring(0.97, { damping: 26, stiffness: 300, overshootClamping: true });
-  }
-
-  function handlePressOut() {
-    scale.value = withSpring(1, { damping: 26, stiffness: 300, overshootClamping: true });
-  }
-
-  return (
-    <Animated.View
-      entering={FadeInUp.duration(300).delay(index * 50)}
-      exiting={FadeOut.duration(150)}
-      layout={LinearTransition.duration(200)}>
-      <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
-        <Animated.View style={animatedStyle}>
-          <EvacuationCenterCard
-            name={center.name}
-            address={center.address ?? ''}
-            distanceKm={(center.distanceMeters ?? 0) / 1000}
-            estimatedMinutes={center.estimatedMinutes ?? 0}
-            currentOccupancy={center.current_occupancy}
-            capacity={center.capacity}
-            facilities={center.facilities}
-            verified={center.verified}
-            minHeight={minHeight}
-            onContentLayout={({ nativeEvent }) => onMeasure(center.id, nativeEvent.layout.height)}
-          />
-        </Animated.View>
-      </Pressable>
-    </Animated.View>
-  );
-}
 
 export function CentersContent({
   theme,
@@ -97,6 +42,7 @@ export function CentersContent({
   userPosition,
   location,
   onFitAll,
+  resident = false,
 }: {
   theme: ReturnType<typeof useTheme>;
   centers: ReturnType<typeof useEvacuationCenters>['centers'];
@@ -110,32 +56,44 @@ export function CentersContent({
   userPosition: LatLng | null;
   location: ReturnType<typeof useDeviceLocation>;
   onFitAll?: () => void;
+  resident?: boolean;
 }) {
   const boundary = useAmpid1Boundary();
   const [searchQuery, setSearchQuery] = useState('');
-  const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
-  const measureCard = useCallback((id: string, height: number) => {
-    // Include the outer card's two border pixels; round up to avoid clipping.
-    const measured = Math.ceil(height) + 2;
-    setCardHeights(previous => previous[id] === measured ? previous : { ...previous, [id]: measured });
-  }, []);
+  const reducedMotion = useResidentReducedMotion(true);
+  const { fontId } = useFontPreference();
+  const isFocused = useIsFocused();
+  const fullTabInset = useFloatingTabInset(true);
+  const { mapNavHidden, setMapNavHidden, mapNavProgress } = useFloatingTabLayout();
+  const navVisibleBottom = resident ? Math.max(48, fullTabInset + 12) : 12;
+  const navHiddenBottom = resident ? 48 : 12;
+  const navBottom = resident && !mapNavHidden ? navVisibleBottom : navHiddenBottom;
+  const overlayMotion = useAnimatedStyle(() => ({ bottom: resident ? navVisibleBottom + (navHiddenBottom - navVisibleBottom) * (mapNavProgress?.value ?? 0) : 12 }));
+  const revealMotion = useAnimatedStyle(() => ({ bottom: 10 + (1 - (mapNavProgress?.value ?? 0)) * Math.max(0, fullTabInset - 14) }));
+  useFocusEffect(useCallback(() => {
+    if (!resident || view !== 'map') return;
+    setMapNavHidden(true);
+    const subscription = AppState.addEventListener('change', next => { if (next !== 'active') setMapNavHidden(false); });
+    return () => { subscription.remove(); setMapNavHidden(false); };
+  }, [resident, view, setMapNavHidden]));
   const locating = location.state.activeRequestId !== null;
   const origin = location.state.origin;
   const originRevision = origin?.revision;
   const pendingFix = location.state.pending?.fix ?? null;
   const [focusCenter, setFocusCenter] = useState<LatLng | null>(null);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
-  const [boundaryRefitKey] = useState(0);
-  const mapRef = useRef<MapViewHandle>(null);
 
-  const cardOpacity = useSharedValue(0);
-  const [cardCenterId, setCardCenterId] = useState<string | null>(null);
+  const mapRef = useRef<MapViewHandle>(null);
+  useEffect(() => {
+    if (focusCenter) mapRef.current?.flyTo({ ...focusCenter, zoom: 17 });
+  }, [focusCenter]);
+
 
   // Walking routes are computed on this phone from the installed routing pack, verified
   // closures and the resident's own blocked roads (DRRM routing plan R6), so they work
   // offline. A route that cannot be computed is explained in words and never drawn as a
   // straight line (invariant 7).
-  const routing = useOfflineRouting(true);
+  const routing = useOfflineRouting(isFocused);
   const { pack, conditions, avoidance, unresolvedAvoidanceIds } = routing.state;
   const conditionsSnapshot = conditions?.snapshot ?? null;
   const netInfo = useNetInfo();
@@ -197,16 +155,8 @@ export function CentersContent({
     : centers;
 
   const filteredCenters = searchQuery.trim().length > 0
-    ? displayCenters.filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? displayCenters.filter((c) => c.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
     : displayCenters;
-  const centerCardHeight = Math.max(0, ...filteredCenters.map(center => cardHeights[center.id] ?? 0));
-
-  const pickerItems: CenterPickerItem[] = filteredCenters.map((c) => ({
-    id: c.id,
-    name: c.name,
-    distanceKm: c.distanceMeters !== undefined ? c.distanceMeters / 1000 : undefined,
-  }));
-
   const evacuationMarkers: MapMarker[] = filteredCenters.map((center) => ({
     id: center.id,
     position: center.position,
@@ -214,37 +164,37 @@ export function CentersContent({
     label: center.name,
   }));
 
-  const centerFromId = (id: string) => centers.find((c) => c.id === id)!;
-
-  const mapCenter = focusCenter ?? AMPID_I_SAN_MATEO_CENTER;
-
-  const selectedCenter = selectedCenterId ? centerFromId(selectedCenterId) : null;
-  const cardCenter = cardCenterId ? centers.find((c) => c.id === cardCenterId) ?? null : null;
-  // Height of everything floating over the bottom of the map (status, location and center cards,
-  // picker), measured so the selected pin and the route are framed in the visible gap.
+  const selectedCenter = selectedCenterId ? filteredCenters.find(c => c.id === selectedCenterId) ?? null : null;
+  useEffect(() => {
+    if (selectedCenterId !== null && selectedCenter === null) setSelectedCenterId(null);
+  }, [selectedCenterId, selectedCenter]);
   const [overlayHeight, setOverlayHeight] = useState(0);
-  const coveredTop = MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT;
-  const coveredBottom = MAP_OVERLAY_BOTTOM + overlayHeight;
+  const [mapHeight, setMapHeight] = useState(400);
+  const [searchHeight, setSearchHeight] = useState(44);
+  const coveredTop = 12 + searchHeight + 12;
+  const coveredBottom = navBottom + overlayHeight + 20;
   const routePadding = useMemo(() => ({ top: coveredTop, bottom: coveredBottom }), [coveredTop, coveredBottom]);
   const selectedLat = selectedCenter?.position.lat;
   const selectedLng = selectedCenter?.position.lng;
   const hasRoute = routePoints !== null;
-  // Shift the map center south so the selected pin sits in the open area between the search bar
-  // and the floating overlay. Once the route is drawn, the route fit frames both ends instead.
-  const mapFocusPosition = useMemo(() => {
-    if (selectedLat === undefined || selectedLng === undefined || hasRoute) return undefined;
+  const cameraPadding = useRef(routePadding);
+  cameraPadding.current = routePadding;
+  const focusSelected = useCallback(() => {
+    if (selectedLat === undefined || selectedLng === undefined || hasRoute) return;
     const zoom = 17;
-    const offsetPx = Math.max(0, (coveredBottom - coveredTop) / 2);
-    const metersPerPx = (156543.03 * Math.cos((selectedLat * Math.PI) / 180)) / 2 ** zoom;
-    return { lat: selectedLat - (offsetPx * metersPerPx) / 111320, lng: selectedLng, zoom };
-  }, [selectedLat, selectedLng, hasRoute, coveredTop, coveredBottom]);
-
+    const offsetPx = Math.max(0, (cameraPadding.current.bottom - cameraPadding.current.top) / 2);
+    const metersPerPx = (156543.03 * Math.cos(selectedLat * Math.PI / 180)) / 2 ** zoom;
+    mapRef.current?.flyTo({ lat: selectedLat - offsetPx * metersPerPx / 111320, lng: selectedLng, zoom });
+  }, [selectedLat, selectedLng, hasRoute]);
+  // Layout/theme changes update clearance without replaying camera movement.
+  useEffect(() => { if (view === 'map') focusSelected(); }, [view, focusSelected]);
   // Ages shown in the status card are refreshed once a minute.
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
+    if (!isFocused) return;
     const timer = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isFocused]);
 
   // Marking a road as blocked on this phone (local avoidance).
   const [marking, setMarking] = useState(false);
@@ -259,6 +209,7 @@ export function CentersContent({
     setMarkError(null);
   };
   const handleMapTap = (position: LatLng) => {
+    if (resident) setMapNavHidden(true);
     if (!pack) return;
     const edge = nearestEdge(pack.graph, position);
     setMarkCandidate(edge);
@@ -266,7 +217,7 @@ export function CentersContent({
     setMarkError(null);
   };
   const handleConfirmMark = () => {
-    if (!markCandidate) return;
+    if (!markCandidate || markBusy) return;
     setMarkBusy(true);
     routing
       .markSegment(markCandidate.id)
@@ -288,6 +239,7 @@ export function CentersContent({
       .finally(() => setMarkBusy(false));
   };
   const handleRemoveMark = (recordId: string) => {
+    if (markBusy) return;
     setMarkBusy(true);
     routing
       .unmarkSegment(recordId)
@@ -302,40 +254,26 @@ export function CentersContent({
     return { closures: closureLines, avoided: avoidedLines, selected: markCandidate ? markCandidate.geometry : null };
   }, [conditionsSnapshot, avoidance, markCandidate]);
 
-  const cardAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: cardOpacity.value,
-  }));
-
-  const handleMarkerTap = (markerId: string) => {
-    const center = centers.find((c) => c.id === markerId);
-    if (center) {
-      selectCenter(center);
-    }
-  };
-
   const selectCenter = (center: ReturnType<typeof useEvacuationCenters>['centers'][number]) => {
     setSelectedCenterId(center.id);
-    setCardCenterId(center.id);
-    cardOpacity.value = 0;
-    cardOpacity.value = withTiming(1, { duration: 200 });
+    if (resident) setMapNavHidden(true);
+    if (view !== 'map') onViewChange('map');
   };
-
+  const handleMarkerTap = (id: string) => {
+    const center = filteredCenters.find(c => c.id === id);
+    if (center) selectCenter(center);
+  };
+  const dismissCenter = () => setSelectedCenterId(null);
   const handleShowAll = () => {
-    setSelectedCenterId(null);
+    dismissCenter();
     setSearchQuery('');
-    // Keep the card mounted until the fade-out finishes; an interrupted fade (a new
-    // selection mid-fade) reports finished=false and leaves the card in place.
-    cardOpacity.value = withTiming(0, { duration: 200 }, (finished) => {
-      if (finished) runOnJS(setCardCenterId)(null);
-    });
     mapRef.current?.fitAll();
     onFitAll?.();
   };
-
   const handleResetMap = () => {
-    setFocusCenter({ lat: AMPID_I_SAN_MATEO_CENTER.lat, lng: AMPID_I_SAN_MATEO_CENTER.lng });
+    dismissCenter();
+    mapRef.current?.fitBoundary();
   };
-
   // "Locate me" updates the shared controller (marker + routing origin), not just the
   // viewport. The map follows the result of an explicit request only.
   const locateRequestedRef = useRef(false);
@@ -349,8 +287,7 @@ export function CentersContent({
     if (!locateRequestedRef.current || !origin) return;
     locateRequestedRef.current = false;
     setFocusCenter({ lat: origin.lat, lng: origin.lng });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originRevision]);
+  }, [origin]);
 
   useEffect(() => {
     if (!locateRequestedRef.current || !pendingFix) return;
@@ -389,497 +326,98 @@ export function CentersContent({
     return null;
   }, [pendingFix, origin]);
 
-  // The toggle reflects `view` immediately; the body below swaps to it only after
-  // fading out, then fades back in, so the header stays put like one screen.
-  const [bodyView, setBodyView] = useState(view);
-  const centersViewOpacity = useSharedValue(1);
-
-  const centersViewStyle = useAnimatedStyle(() => ({
-    opacity: centersViewOpacity.value,
-  }));
-
-  useEffect(() => {
-    if (view === bodyView) {
-      centersViewOpacity.value = withTiming(1, { duration: 180 });
-      return;
-    }
-    centersViewOpacity.value = withTiming(0, { duration: 120 }, (finished) => {
-      if (finished) runOnJS(setBodyView)(view);
-    });
-  }, [view, bodyView, centersViewOpacity]);
-
-  return (
-    <View style={[styles.centersContent, styles.centersContentMap]}>
-      <View style={styles.sectionControlsRow}>
-        <View style={styles.segmentWrap}>
-          <SegmentedControl
-            segments={[
-              { key: 'list', label: 'List' },
-              { key: 'map', label: 'Map' },
-            ]}
-            activeKey={view}
-            onChange={(key) => onViewChange(key as 'list' | 'map')}
-            activeColor="accentRed"
-          />
-        </View>
-        <Pressable
-          onPress={() => onNearestToggle(!nearestFirst)}
-          accessibilityRole="button"
-          accessibilityState={{ selected: nearestFirst }}
-          style={[
-            styles.nearestButton,
-            { borderColor: theme.backgroundSelected },
-            nearestFirst && { backgroundColor: theme.primary, borderColor: theme.primary },
-          ]}>
-          <Ionicons name="swap-vertical" size={16} color={nearestFirst ? theme.onPrimary : theme.textSecondary} />
-          <ThemedText type="smallBold" style={[styles.nearestText, { color: nearestFirst ? theme.onPrimary : theme.textSecondary }]}>
-            Nearest
-          </ThemedText>
-        </Pressable>
-      </View>
-
-      <Animated.View style={[centersViewStyle, styles.centersBody]}>
-        {bodyView === 'map' ? (
-          <View style={styles.sectionMap}>
-            <View style={styles.centersMapContainer}>
-            <MapView
-              ref={mapRef}
-              markers={evacuationMarkers}
-              center={mapCenter}
-              focusPosition={mapFocusPosition}
-              boundary={boundary}
-              boundaryRefitKey={boundaryRefitKey}
-              userLocation={mapUserLocation}
-              kindColors={{ evacuation: '#F59E0B' }}
-              style={styles.centersMap}
-              onMarkerTap={handleMarkerTap}
-              zoomControlTop={MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT + 10}
-              showTiles={showTiles}
-              packMap={pack?.map ?? null}
-              roadMarks={roadMarks}
-              route={routePoints}
-              routePadding={routePadding}
-              onMapTap={marking ? handleMapTap : null}
-            />
-
-            <View style={[styles.mapSearchBar, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
-              <Ionicons name="search-outline" size={18} color={theme.textSecondary} style={styles.mapSearchIcon} />
-              <TextInput
-                style={[styles.mapSearchInput, { color: theme.text }]}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                placeholder={`Search ${centers.length} evacuation centers...`}
-                placeholderTextColor={theme.textSecondary}
-              />
-              {searchQuery.length > 0 && (
-                <Pressable onPress={() => setSearchQuery('')} hitSlop={8}>
-                  <Ionicons name="close-circle" size={18} color={theme.textSecondary} />
-                </Pressable>
-              )}
-            </View>
-
-            <View style={styles.mapFabColumn}>
-              <Pressable
-                style={[styles.mapFab, { backgroundColor: theme.background }]}
-                onPress={handleLocateMe}
-                accessibilityLabel="Use my location"
-                disabled={locating}>
-                {locating ? (
-                  <ActivityIndicator size="small" color={theme.primary} />
-                ) : (
-                  <Ionicons name="navigate" size={18} color={theme.primary} />
-                )}
-              </Pressable>
-              <Pressable
-                style={[styles.mapFab, { backgroundColor: theme.background }]}
-                onPress={handleResetMap}
-                accessibilityLabel="Reset map to Ampid I">
-                <Ionicons name="locate-outline" size={20} color={theme.primary} />
-              </Pressable>
-              {pack ? (
-                <Pressable
-                  style={[styles.mapFab, { backgroundColor: marking ? theme.accentRed : theme.background }]}
-                  onPress={() => (marking ? closeMarking() : setMarking(true))}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: marking }}
-                  accessibilityLabel="Block a road you cannot pass">
-                  <Ionicons name="remove-circle-outline" size={20} color={marking ? theme.onPrimary : theme.accentRed} />
-                </Pressable>
-              ) : null}
-            </View>
-
-            {isLoading && (
-              <View style={[styles.mapOverlayCenter, { backgroundColor: `${theme.background}99` }]} pointerEvents="none">
-                <View style={[styles.mapSkeletonCard, { backgroundColor: theme.backgroundElement }]}>
-                  <ShimmerSkeleton theme={theme} width={100} height={100} borderRadius={50} />
-                  <ShimmerSkeleton theme={theme} width={120} height={14} style={{ marginTop: 16 }} />
-                  <ShimmerSkeleton theme={theme} width={90} height={12} style={{ marginTop: 8 }} />
-                </View>
-              </View>
-            )}
-
-            {!isLoading && error && (
-              <View style={styles.mapErrorBanner}>
-                <Ionicons name="alert-circle-outline" size={18} color="#B91C1C" />
-                <ThemedText type="small" themeColor="textSecondary" style={styles.mapErrorText}>
-                  {error}
-                </ThemedText>
-                <Pressable onPress={refetch} style={styles.mapRetryButton}>
-                  <ThemedText type="smallBold" style={{ color: '#FFFFFF' }}>Retry</ThemedText>
-                </Pressable>
-              </View>
-            )}
-
-            {!isLoading && !error && filteredCenters.length === 0 && (
-              <View style={[styles.mapOverlayCenter, { backgroundColor: `${theme.background}99` }]} pointerEvents="none">
-                <View style={[styles.mapEmptyCard, { backgroundColor: theme.backgroundElement }]}>
-                  <Ionicons name="home-outline" size={28} color={theme.textSecondary} />
-                  <ThemedText themeColor="textSecondary" style={styles.mapEmptyText}>
-                    {searchQuery.trim().length > 0 ? 'No matching centers found' : 'No evacuation centers found'}
-                  </ThemedText>
-                </View>
-              </View>
-            )}
-
-            {!isLoading && filteredCenters.length > 0 && (
-              <View
-                style={styles.mapBottomOverlay}
-                pointerEvents="box-none"
-                onLayout={(e) => setOverlayHeight(Math.round(e.nativeEvent.layout.height))}>
-                {marking ? (
-                  <RoadMarkCard
-                    selected={markCandidate}
-                    noRoadAtTap={noRoadAtTap}
-                    records={avoidance}
-                    unresolvedIds={unresolvedAvoidanceIds}
-                    busy={markBusy}
-                    error={markError}
-                    onConfirm={handleConfirmMark}
-                    onRemove={handleRemoveMark}
-                    onClose={closeMarking}
-                    style={styles.mapLocationCard}
-                  />
-                ) : (
-                  <OfflineRouteCard
-                    routing={routing.state}
-                    route={route}
-                    mode={mode}
-                    connectedFailure={connectedFailure}
-                    connectedPending={connectedPending}
-                    now={now}
-                    onChooseSegment={handleChooseSegment}
-                    compact
-                    style={styles.mapLocationCard}
-                  />
-                )}
-                <LocationStatusCard state={location.state} onAction={handleLocationAction} style={styles.mapLocationCard} />
-                {cardCenter ? (
-                  <Animated.View style={[styles.mapDetailWrap, cardAnimatedStyle]}>
-                    <CenterDetailCard
-                      name={cardCenter.name}
-                      address={cardCenter.address ?? 'No address'}
-                      distanceKm={(bestRoute?.distanceMeters ?? cardCenter.distanceMeters ?? 0) / 1000}
-                      walkingTimeMins={
-                        bestRoute
-                          ? Math.max(1, Math.round(bestRoute.durationSeconds / 60))
-                          : (cardCenter.estimatedMinutes ?? 0)
-                      }
-                      isRoadRoute={!!bestRoute}
-                      currentOccupancy={cardCenter.current_occupancy}
-                      capacity={cardCenter.capacity}
-                      onClose={handleShowAll}
-                    />
-                  </Animated.View>
-                ) : null}
-
-                <HorizontalCenterPicker
-                  items={pickerItems}
-                  selectedId={selectedCenterId}
-                  onSelect={(id) => {
-                    const center = centerFromId(id);
-                    if (center) {
-                      selectCenter(center);
-                    }
-                  }}
-                  onShowAll={handleShowAll}
-                />
-              </View>
-            )}
-          </View>
-        </View>
-        ) : (
-          <ScrollView
-            style={styles.centersBody}
-            contentContainerStyle={styles.centersListScroll}
-            showsVerticalScrollIndicator={false}>
-            <ThemedText type="small" themeColor="textSecondary" style={styles.showingText}>
-              Showing {centers.length} Locations
-            </ThemedText>
-            <LocationStatusCard state={location.state} onAction={handleLocationAction} />
-            <OfflineRouteCard
-              dense
-              routing={routing.state}
-              route={route}
-              mode={mode}
-              connectedFailure={connectedFailure}
-              connectedPending={connectedPending}
-              now={now}
-              onChooseSegment={handleChooseSegment}
-            />
-            <View style={styles.sectionList}>
-              {isLoading ? (
-                <View style={styles.skeletonList}>
-                  {[0, 1, 2].map((i) => (
-                    <View key={i} style={[styles.skeletonCard, { backgroundColor: theme.backgroundElement }]}>
-                      <ShimmerSkeleton theme={theme} width="70%" height={16} />
-                      <ShimmerSkeleton theme={theme} width="50%" height={12} style={{ marginTop: 6 }} />
-                      <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
-                        <ShimmerSkeleton theme={theme} width={60} height={20} borderRadius={10} />
-                        <ShimmerSkeleton theme={theme} width={60} height={20} borderRadius={10} />
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              ) : filteredCenters.length === 0 ? (
-                <View style={styles.loadingContainer}>
-                  <ThemedText themeColor="textSecondary">
-                    {searchQuery.trim().length > 0 ? 'No matching centers found.' : 'No evacuation centers configured.'}
-                  </ThemedText>
-                </View>
-              ) : (
-                filteredCenters.map((center, index) => (
-                  <AnimatedCenterCard
-                    key={center.id}
-                    center={center}
-                    index={index}
-                    minHeight={centerCardHeight}
-                    onMeasure={measureCard}
-                  />
-                ))
-              )}
-            </View>
-          </ScrollView>
-        )}
-      </Animated.View>
+  const place: MapPlace | null = selectedCenter ? {
+    id: selectedCenter.id, title: selectedCenter.name, label: 'Evacuation center', detail: selectedCenter.address,
+    color: theme.resident.warning, icon: 'home-outline',
+  } : null;
+  const diagnosticProps = { routing: routing.state, route, mode, connectedFailure, connectedPending, now, onChooseSegment: handleChooseSegment };
+  const controls = <View style={styles.controlRow}>
+    <View style={[styles.controlPill, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Reset map to Ampid I" onPress={handleResetMap} style={styles.controlButton}>
+        <Ionicons name="map-outline" size={18} color={theme.resident.accentText} /><ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>Maps</ThemedText>
+      </Pressable>
+      <Pressable accessibilityRole="button" accessibilityLabel="Use my location" accessibilityState={{ disabled: locating, busy: locating }} disabled={locating} onPress={handleLocateMe} style={styles.controlButton}>
+        {locating ? <ActivityIndicator color={theme.resident.accentText} /> : <Ionicons name="navigate-outline" size={18} color={theme.resident.accentText} />}<ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>You</ThemedText>
+      </Pressable>
     </View>
-  )
+    <View style={[styles.controlPill, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Zoom out" onPress={() => mapRef.current?.zoomOut()} style={styles.zoomButton}><Ionicons name="remove" size={20} color={theme.resident.text} /></Pressable>
+      <Pressable accessibilityRole="button" accessibilityLabel="Zoom in" onPress={() => mapRef.current?.zoomIn()} style={styles.zoomButton}><Ionicons name="add" size={20} color={theme.resident.text} /></Pressable>
+    </View>
+  </View>;
+  const feedback = isLoading ? <View style={styles.feedback}><ActivityIndicator color={theme.resident.accentText} /><ThemedText type="small">Loading evacuation centers…</ThemedText></View>
+    : error ? <View accessibilityLiveRegion="polite" style={[styles.feedback, { backgroundColor: theme.resident.dangerSoft }]}><ThemedText type="small" style={{ color: theme.resident.danger, flex: 1 }}>{error}</ThemedText><Pressable accessibilityRole="button" onPress={refetch} style={styles.action}><ThemedText type="smallBold" style={{ color: theme.resident.danger }}>Retry</ThemedText></Pressable></View>
+    : filteredCenters.length === 0 ? <ThemedText style={styles.empty}>{searchQuery.trim() ? 'No matching centers found.' : 'No evacuation centers configured.'}</ThemedText> : null;
+  return <View style={styles.root}>
+    <View style={styles.toolbar}>
+      <View style={styles.viewToggle}><SegmentedControl segments={[{ key: 'list', label: 'List' }, { key: 'map', label: 'Map' }]} activeKey={view} onChange={onViewChange} presentation="resident" compact /></View>
+      <Pressable accessibilityRole="button" accessibilityLabel={nearestFirst ? 'Sorted by nearest. Change sort' : 'Default order. Change sort'} accessibilityState={{ selected: nearestFirst }} onPress={() => onNearestToggle(!nearestFirst)} style={[styles.sort, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+        <Ionicons name="swap-vertical" size={14} color={theme.resident.accentText} /><ThemedText style={styles.sortLabel}>{nearestFirst ? 'Nearest' : 'Default order'}</ThemedText>
+      </Pressable>
+    </View>
+    {view === 'map' ? <View style={styles.map} onLayout={e => { const height = Math.round(e.nativeEvent.layout.height); setMapHeight(current => current === height ? current : height); }}>
+      <View style={StyleSheet.absoluteFill} onTouchStart={() => { if (resident) setMapNavHidden(true); }}>
+      <MapView ref={mapRef} markers={evacuationMarkers} center={AMPID_I_SAN_MATEO_CENTER} onMapReady={focusSelected} boundary={boundary}
+        userLocation={mapUserLocation} kindColors={{ evacuation: theme.resident.warning }} style={{ flex: 1 }} onMarkerTap={handleMarkerTap}
+        showTiles={showTiles} packMap={pack?.map ?? null} roadMarks={roadMarks} route={routePoints} routePadding={routePadding}
+        presentation={{ selectedMarkerId: selectedCenter?.id ?? null, padding: routePadding, attributionBottom: navBottom + overlayHeight + 4,
+          reducedMotion, surface: theme.resident.card, text: theme.resident.text, border: theme.resident.border, fontFamily: getMobileFontFamily(fontId) ?? 'sans-serif' }}
+        onBackgroundTap={() => { if (resident) setMapNavHidden(true); dismissCenter(); }} onMapTap={marking ? handleMapTap : null} />
+      </View>
+      <View style={[styles.search, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setSearchHeight(current => current === height ? current : height); }}>
+        <Ionicons name="search-outline" size={18} color={theme.resident.text} />
+        <TextInput accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={setSearchQuery} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+        {searchQuery ? <Pressable accessibilityRole="button" accessibilityLabel="Clear center search" onPress={() => setSearchQuery('')} style={styles.action}><Ionicons name="close" size={18} color={theme.resident.text} /></Pressable> : null}
+      </View>
+      <Animated.View style={[styles.overlay, overlayMotion]}>
+        <ScrollView nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ maxHeight: Math.max(44, mapHeight - coveredTop - navBottom - 24) }} contentContainerStyle={styles.overlayContent}
+          onLayout={event => { const height = Math.ceil(event.nativeEvent.layout.height); setOverlayHeight(current => current === height ? current : height); }}>
+          {feedback}
+          <OfflineRouteCard {...diagnosticProps} compact />
+          <LocationStatusCard state={location.state} onAction={handleLocationAction} />
+          {marking ? <RoadMarkCard selected={markCandidate} noRoadAtTap={noRoadAtTap} records={avoidance} unresolvedIds={unresolvedAvoidanceIds} busy={markBusy} error={markError} onConfirm={handleConfirmMark} onRemove={handleRemoveMark} onClose={closeMarking} /> : null}
+          <MapSelectionOverlay place={place} controls={controls} onClose={dismissCenter} reducedMotion={reducedMotion} maxHeight={mapHeight}
+            renderPlace={shown => {
+              const center = centers.find(item => item.id === shown.id);
+              return center ? <CenterDetailCard name={center.name} address={center.address ?? 'No address'} distanceKm={center.distanceMeters === undefined ? undefined : center.distanceMeters / 1000} walkingTimeMins={center.estimatedMinutes} isRoadRoute={!!bestRoute && bestRoute.centerId === center.id} currentOccupancy={center.current_occupancy} capacity={center.capacity} onClose={dismissCenter} /> : null;
+            }} />
+          <View style={styles.routeActions}>
+            {selectedCenter ? <Pressable accessibilityRole="button" onPress={handleShowAll} style={styles.action}><ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>Clear route / Show all</ThemedText></Pressable> : null}
+            {pack ? <Pressable accessibilityRole="button" accessibilityLabel="Block a road you cannot pass" accessibilityState={{ selected: marking }} onPress={() => marking ? closeMarking() : setMarking(true)} style={styles.action}><Ionicons name="remove-circle-outline" size={18} color={theme.resident.danger} /><ThemedText type="smallBold" style={{ color: theme.resident.danger }}>{marking ? 'Finish road blocking' : 'Block road'}</ThemedText></Pressable> : null}
+          </View>
+        </ScrollView>
+      </Animated.View>
+      {resident ? <Animated.View style={[styles.reveal, revealMotion]}><Pressable accessibilityRole="button" accessibilityLabel={mapNavHidden ? 'Show bottom tabs' : 'Hide bottom tabs'} onPress={() => setMapNavHidden(!mapNavHidden)} style={[styles.revealButton, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}><Ionicons name={mapNavHidden ? 'chevron-up' : 'chevron-down'} size={20} color={theme.resident.text} /></Pressable></Animated.View> : null}
+    </View> : <ScrollView style={{ flex: 1 }} contentContainerStyle={[styles.list, { paddingBottom: resident ? fullTabInset + 20 : 20 }]} keyboardShouldPersistTaps="handled">
+      <ThemedText type="small" themeColor="textSecondary">Showing {filteredCenters.length} Locations</ThemedText>
+      <LocationStatusCard state={location.state} onAction={handleLocationAction} />
+      <OfflineRouteCard {...diagnosticProps} dense />
+      {feedback}
+      <View style={[styles.group, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+        {filteredCenters.map(center => <Pressable key={center.id} accessibilityRole="button" accessibilityLabel={`View ${center.name} on map`} onPress={() => selectCenter(center)}>
+          <EvacuationCenterCard name={center.name} address={center.address ?? ''} distanceKm={center.distanceMeters === undefined ? undefined : center.distanceMeters / 1000} estimatedMinutes={center.estimatedMinutes} currentOccupancy={center.current_occupancy} capacity={center.capacity} facilities={center.facilities} verified={center.verified} />
+        </Pressable>)}
+      </View>
+    </ScrollView>}
+  </View>;
 }
-
-const MAP_SEARCH_TOP = 12;
-const MAP_SEARCH_HEIGHT = 44;
-const MAP_OVERLAY_BOTTOM = 12;
-
 const styles = StyleSheet.create({
-  loadingContainer: {
-    paddingVertical: Spacing.six,
-    alignItems: 'center',
-  },
-  centersContent: {
-    gap: Spacing.three,
-  },
-  centersContentMap: {
-    flex: 1,
-    minHeight: 0,
-  },
-  sectionControlsRow: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: Spacing.two,
-  },
-  segmentWrap: {
-    flex: 1,
-  },
-  centersBody: {
-    flex: 1,
-  },
-  centersListScroll: {
-    gap: Spacing.two,
-    paddingBottom: Spacing.six,
-  },
-  // Bleeds past mapScreen's side/bottom padding so the map runs edge to edge,
-  // matching the Maps & DRRM Info Hub tab.
-  sectionMap: {
-    flex: 1,
-    minHeight: 0,
-    marginHorizontal: -Spacing.four,
-    marginBottom: -Spacing.three,
-  },
-  sectionList: {
-    gap: Spacing.two,
-  },
-  skeletonList: {
-    gap: Spacing.three,
-    paddingTop: Spacing.two,
-  },
-  skeletonCard: {
-    gap: 6,
-    padding: Spacing.four,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(128,128,128,0.25)',
-  },
-  centersMapContainer: {
-    flex: 1,
-    minHeight: 220,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  centersMap: {
-    flex: 1,
-  },
-  mapSearchBar: {
-    position: 'absolute',
-    top: MAP_SEARCH_TOP,
-    left: 12,
-    right: 12,
-    height: MAP_SEARCH_HEIGHT,
-    borderRadius: MAP_SEARCH_HEIGHT / 2,
-    borderWidth: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    zIndex: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.10,
-        shadowRadius: 6,
-      },
-      android: { elevation: 4 },
-    }),
-  },
-  mapSearchIcon: {
-    marginRight: 8,
-  },
-  mapSearchInput: {
-    flex: 1,
-    fontSize: 14,
-    paddingVertical: 0,
-  },
-  mapFabColumn: {
-    position: 'absolute',
-    top: MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT + 10,
-    right: 12,
-    gap: Spacing.two,
-    zIndex: 10,
-  },
-  mapFab: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 6,
-      },
-      android: { elevation: 4 },
-    }),
-  },
-  mapBottomOverlay: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: MAP_OVERLAY_BOTTOM,
-    gap: Spacing.two,
-    zIndex: 10,
-  },
-  mapLocationCard: {
-    marginHorizontal: 12,
-  },
-  mapDetailWrap: {
-    marginHorizontal: 12,
-    borderRadius: 14,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-      },
-      android: { elevation: 5 },
-    }),
-  },
-  mapOverlayCenter: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mapSkeletonCard: {
-    borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
-    gap: 12,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.10,
-        shadowRadius: 6,
-      },
-      android: { elevation: 4 },
-    }),
-  },
-  mapErrorBanner: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    right: 12,
-    backgroundColor: '#FEE2E2',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#FCA5A5',
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    zIndex: 20,
-  },
-  mapErrorText: {
-    flex: 1,
-    color: '#B91C1C',
-    fontSize: 12,
-  },
-  mapRetryButton: {
-    backgroundColor: '#B91C1C',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  mapEmptyCard: {
-    borderRadius: 14,
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    alignItems: 'center',
-    gap: 8,
-  },
-  mapEmptyText: {
-    fontSize: 13,
-    textAlign: 'center',
-  },
-  showingText: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  nearestButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    borderRadius: Spacing.four,
-    borderWidth: 1,
-    paddingHorizontal: Spacing.three,
-  },
-  nearestText: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
+  root: { flex: 1, minHeight: 0, marginHorizontal: -24, marginBottom: -16 },
+  toolbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingHorizontal: 16, paddingBottom: 6, marginTop: -8 },
+  viewToggle: { flex: 1, maxWidth: 168, minWidth: 0 },
+  sort: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 44, borderWidth: 1, borderRadius: 12, paddingHorizontal: 10, flexShrink: 1 },
+  sortLabel: { fontSize: 13, lineHeight: 18, fontWeight: '600', flexShrink: 1 },
+  list: { paddingHorizontal: 16, gap: 8 }, group: { borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
+  map: { flex: 1, minHeight: 220, overflow: 'hidden' },
+  search: { position: 'absolute', left: 16, right: 16, top: 12, borderRadius: 28, borderWidth: 1, paddingLeft: 16, paddingRight: 4, minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 10, elevation: 4 },
+  input: { flex: 1, minWidth: 0, minHeight: 44, fontSize: 14, paddingVertical: 8 },
+  overlay: { position: 'absolute', left: 16, right: 16 }, overlayContent: { gap: 6 },
+  controlRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 },
+  controlPill: { flexDirection: 'row', borderRadius: 24, borderWidth: 1, overflow: 'hidden' },
+  controlButton: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 12 },
+  zoomButton: { width: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center' },
+  action: { minWidth: 44, minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 8 },
+  routeActions: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  feedback: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 16, padding: 12 }, empty: { padding: 12, fontSize: 13 },
+  reveal: { position: 'absolute', alignSelf: 'center' }, revealButton: { width: 48, height: 44, borderWidth: 1, borderRadius: 24, alignItems: 'center', justifyContent: 'center', elevation: 5 },
 });

@@ -1,0 +1,84 @@
+{
+  "command": [
+    "node",
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "package.json,apps/resident-android-mobile/package.json,apps/resident-ios-mobile/package.json,apps/admin-web/package.json,apps/resident-web/package.json,packages/shared/package.json,apps/resident-android-mobile/src/components/family-content.tsx,apps/resident-android-mobile/src/components/household-qr-modal.tsx,apps/admin-web/src/app/(admin)/households-residents/page.tsx,apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts,apps/resident-ios-mobile/src/features/profile/household.ts,supabase/tests/resident_household_conditional.test.sql",
+    "--style",
+    "xml",
+    "--parsable-style",
+    "--no-git-sort-by-changes",
+    "--ignore",
+    "**/.env*,**/*secret*,**/*credentials*,**/node_modules/**,**/.git/**,**/repomix-output.xml,**/tmp/**",
+    "-o",
+    "C:\\Users\\User\\barangayan\\tmp\\family-attendance-phase0-20261021\\consumers.before.xml"
+  ],
+  "exit": 0,
+  "packet_sha256": "B65AF6F0B96285A3C03A76526CDBADA543CAFC104ADD6C4C602E0FBACDFC2BE3",
+  "sources": [
+    {
+      "path": "package.json",
+      "sha256": "F05EA72034CDA86E5063E3E1DAE73B26BC1F97840E656B3417B9CEAAD814F343"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "37F814F883736F55D36252A62689F4257DC47A6775315329D9F411917E35CF7B"
+    },
+    {
+      "path": "apps/resident-ios-mobile/package.json",
+      "sha256": "A8F875B0407E66840706FCD4EDEDB79547CDBA8E9CC016CD130353D30EB1A944"
+    },
+    {
+      "path": "apps/admin-web/package.json",
+      "sha256": "778D52C0834502F5BD0C6B00AE0044ECD57E86941197C667211004DFFDAE270E"
+    },
+    {
+      "path": "apps/resident-web/package.json",
+      "sha256": "460B994A5A185AC6497154A5113DA3D57A3758F8BB3054D61613D6C25784315E"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625A5CD8D59380A32E2C392E7E3153EDDDB409FC4D744AC3EA39E0A600AEE"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "F60B04EE317783BE9C7793960DEB26921A3429B046F5659ED7064E62B1D3D672"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "sha256": "0A3F3BD192A0FF4629816D11BB360E2A7BA26B74F98948099877D4F5E72363E2"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sha256": "D23EE623B915B9217F55662841B17EC39DD93122EDC0EDC271EA05DF784FD553"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "sha256": "945CE4A31164933C7D626BC6C9777A9FDDBF72326D2D5149AE23B9B5E846F87C"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+      "sha256": "6A366E2C7FFE588E0D4AADB7BFDEDA0E338F75140AB6C6A72FB11D04ADC6CA46"
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "sha256": "DCC4FD2707809D0977ADD745AE3DF7D299AE0356DC3324465E32E2394B0AA6DF"
+    }
+  ],
+  "actual": [
+    "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+    "apps/admin-web/package.json",
+    "apps/resident-android-mobile/src/components/family-content.tsx",
+    "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-ios-mobile/src/features/profile/household.ts",
+    "apps/resident-ios-mobile/package.json",
+    "apps/resident-web/package.json",
+    "packages/shared/package.json",
+    "supabase/tests/resident_household_conditional.test.sql",
+    "package.json"
+  ],
+  "omissions": [],
+  "compressed": false
+}

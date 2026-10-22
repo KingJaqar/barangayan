@@ -1,0 +1,127 @@
+{
+  "passed": 30,
+  "failed": 0,
+  "checks": [
+    {
+      "check": "Every final source identity still matches",
+      "pass": true
+    },
+    {
+      "check": "Other phase preserved: ### 6.1",
+      "pass": true
+    },
+    {
+      "check": "Other phase preserved: ### 6.3",
+      "pass": true
+    },
+    {
+      "check": "Other phase preserved: ### 6.4",
+      "pass": true
+    },
+    {
+      "check": "Other phase preserved: ### 6.5",
+      "pass": true
+    },
+    {
+      "check": "Six completed Phase 1 gates",
+      "pass": true
+    },
+    {
+      "check": "No missing Phase 1 links",
+      "pass": true
+    },
+    {
+      "check": "All A01\u2013A17 coverage rows",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: packet-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: supplement-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: legacy-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: final-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: role-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: closure-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Reader continuations complete: delta-manifest.json",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: packages/shared/src/schemas/household-attendance.test.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: packages/shared/src/schemas/household-attendance.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/migrations/20261021111056_household_attendance.sql",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/tests/household_attendance_concurrency.mjs",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/tests/household_attendance.test.sql",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: CLAUDE.md",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: AGENTS.md",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: apps/resident-ios-mobile/tests/export-function.test.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: packages/shared/src/types/household-attendance.database.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/functions/export-my-data/export-v2.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/functions/export-my-data/index.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: packages/shared/src/schemas/household-attendance-responses.test.ts",
+      "pass": true
+    },
+    {
+      "check": "Current packed source: supabase/tests/household_attendance_boundaries.test.sql",
+      "pass": true
+    },
+    {
+      "check": "No tracked app-source/config delta",
+      "pass": true
+    },
+    {
+      "check": "No obsolete owned response-person restriction",
+      "pass": true
+    }
+  ],
+  "plan_sha256": "66E5AD4998E3341FF0C6290FCD1A032D0E580D21F913B8E85F41658109D3A3FF"
+}

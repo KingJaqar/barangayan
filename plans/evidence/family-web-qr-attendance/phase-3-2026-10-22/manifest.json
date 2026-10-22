@@ -1,0 +1,171 @@
+{
+  "command": [
+    "node",
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "AGENTS.md,CLAUDE.md,apps/resident-web/AGENTS.md,apps/resident-web/CLAUDE.md,apps/resident-web/src/components/emergency/family-content.tsx,apps/resident-web/src/components/emergency/household-qr-dialog.tsx,apps/resident-web/src/hooks/use-family-members.ts,apps/resident-web/src/hooks/use-scoped-read.ts,apps/resident-web/src/components/emergency/family-member-dialog.tsx,apps/resident-web/src/lib/household-feedback.ts,apps/resident-web/src/lib/qr-checkin.ts,apps/resident-web/src/app/(resident)/emergency/family/page.tsx,packages/shared/src/schemas/household-attendance.ts",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/.git/**,tmp/**",
+    "--style",
+    "xml",
+    "--parsable-style",
+    "--output",
+    "tmp\\family-web-phase3-20261022\\context.xml"
+  ],
+  "selectors": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "apps/resident-web/AGENTS.md",
+    "apps/resident-web/CLAUDE.md",
+    "apps/resident-web/src/components/emergency/family-content.tsx",
+    "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "apps/resident-web/src/hooks/use-family-members.ts",
+    "apps/resident-web/src/hooks/use-scoped-read.ts",
+    "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+    "apps/resident-web/src/lib/household-feedback.ts",
+    "apps/resident-web/src/lib/qr-checkin.ts",
+    "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+    "packages/shared/src/schemas/household-attendance.ts"
+  ],
+  "packet_sha256": "c4fa5ffdf076da8c5b1bd1a45efe966ffd3c86c861e3dd0353ea3c4f4e05cf6a",
+  "sources": [
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97"
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+      "sha256": "23ab7321a60150141eae8d99bc448cec2f12c62a1af9533149baad74c2fb088a"
+    },
+    {
+      "path": "apps/resident-web/src/lib/household-feedback.ts",
+      "sha256": "a3ec46b0026ea294e5836f6bd3c3840fd5c9d4aa01f0a119d66ca676b01bf49b"
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "sha256": "e3b4a4d59104479ef1926abb999dd42540d019effec5cf264e54a5c64f7fc770"
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-scoped-read.ts",
+      "sha256": "dedb0dab5b41fdaf70ba08286b204b01c09ca952db3bb21d0c9f51841cc5d65c"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+      "sha256": "2febdd3a58517e1a559d8ac41d7ffae94c455670f0d779c0f9a902a9e91af799"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "sha256": "fe56a894c4d979edf44e609e1b14a7eb9520388012ba6f24d7138f22a53dc25d"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "sha256": "e2e2ad6713450ad5fdb3a1c8e858dc84e94c5ba3c8faa6cd02db40d4cea1a163"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+      "sha256": "f362c12df6b7abd5d9b585cac02213b445711ae8998f893064c9c665b50264e7"
+    }
+  ],
+  "chunks": [
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "start": 1,
+      "end": 128,
+      "characters": 7474,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+      "start": 1,
+      "end": 16,
+      "characters": 842,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/lib/household-feedback.ts",
+      "start": 1,
+      "end": 34,
+      "characters": 1583,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "start": 1,
+      "end": 34,
+      "characters": 1618,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "start": 1,
+      "end": 9,
+      "characters": 674,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11,
+      "next": null
+    },
+    {
+      "path": "CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-scoped-read.ts",
+      "start": 1,
+      "end": 97,
+      "characters": 3825,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+      "start": 1,
+      "end": 164,
+      "characters": 6089,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "start": 1,
+      "end": 184,
+      "characters": 7746,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "start": 1,
+      "end": 119,
+      "characters": 5152,
+      "next": null
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+      "start": 1,
+      "end": 197,
+      "characters": 8316,
+      "next": null
+    }
+  ]
+}

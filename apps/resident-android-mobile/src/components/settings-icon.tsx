@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '@/hooks/use-theme';
 
-/** The tinted-circle icon treatment used on every Settings row. */
+/** Resident Settings row tile. Semantic destructive colors stay independent of the accent. */
 export function SettingsIcon({
   name,
   color,
@@ -13,20 +13,20 @@ export function SettingsIcon({
   color?: string;
 }) {
   const theme = useTheme();
-  const tint = color ?? theme.primary;
+  const tint = color ?? theme.resident.accentText;
 
   return (
-    <View style={[styles.circle, { backgroundColor: `${tint}26` }]}>
-      <Ionicons name={name} size={18} color={tint} />
+    <View style={[styles.circle, { backgroundColor: color ? theme.resident.dangerSoft : theme.resident.accentSoft }]}>
+      <Ionicons name={name} size={20} color={tint} accessible={false} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   circle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },

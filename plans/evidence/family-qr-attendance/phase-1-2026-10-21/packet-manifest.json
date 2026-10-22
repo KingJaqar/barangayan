@@ -1,0 +1,147 @@
+{
+  "generator": "Repomix 1.18.1",
+  "packet": "tmp\\family-attendance-phase1-20261021\\prerequisites.before.xml",
+  "packet_sha256": "53683B535A96FBD335F8FB1F564BEC3E35B552F118F5F6E498C30D06A533EB34",
+  "sources": [
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "B8D7D5CC0BAA3080839CFD896FCB1CAC90FD87F3D26874C1E87492431B8C47C8",
+      "lines": 34,
+      "source_equivalent": true
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "sha256": "649EE31B82FC0D2791EA352A59C3BFC5EEF0A711979B04782852596296C0A224",
+      "lines": 41,
+      "source_equivalent": true
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+      "sha256": "0B50BF2FF9CEA1D563972876D53F13F5E4C64D2A1F1066A0745C12D04B3763B1",
+      "lines": 100,
+      "source_equivalent": true
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "sha256": "79CC96B438142C1D197B5D065F98A56EE6D20EEC4BB1D75187E6CCBF9A8EB72F",
+      "lines": 283,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0046_household_members.sql",
+      "sha256": "21E7EEDF8AF78811301ADDB43D8030CED9B673BE759691B6C664841D47B63F00",
+      "lines": 58,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "sha256": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982",
+      "lines": 118,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "sha256": "DCC4FD2707809D0977ADD745AE3DF7D299AE0356DC3324465E32E2394B0AA6DF",
+      "lines": 75,
+      "source_equivalent": true
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "lines": 0,
+      "source_equivalent": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+      "lines": 1,
+      "source_equivalent": true
+    }
+  ],
+  "chunks": [
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "start": 1,
+      "end": 34,
+      "characters": 1267,
+      "next": null
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "start": 1,
+      "end": 41,
+      "characters": 971,
+      "next": null
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+      "start": 1,
+      "end": 63,
+      "characters": 11680,
+      "next": 64
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+      "start": 64,
+      "end": 100,
+      "characters": 9969,
+      "next": null
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "start": 1,
+      "end": 118,
+      "characters": 11895,
+      "next": 119
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "start": 119,
+      "end": 187,
+      "characters": 11514,
+      "next": 188
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "start": 188,
+      "end": 234,
+      "characters": 11778,
+      "next": 235
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "start": 235,
+      "end": 283,
+      "characters": 8150,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0046_household_members.sql",
+      "start": 1,
+      "end": 58,
+      "characters": 2088,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "start": 1,
+      "end": 118,
+      "characters": 6716,
+      "next": null
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "start": 1,
+      "end": 75,
+      "characters": 6792,
+      "next": null
+    },
+    {
+      "path": "CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11,
+      "next": null
+    }
+  ]
+}

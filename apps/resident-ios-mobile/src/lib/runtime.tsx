@@ -5,16 +5,19 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { AppState } from 'react-native';
 import '../auth/native-pkce-crypto';
 import { AuthFlowProvider } from '../auth/auth-flow';
+import { clearAppleAuthorizationCode } from '../auth/apple-authorization';
 import { clearAuthHints } from '../auth/hints';
 import { RECOVERY_HINT_MS } from '../auth/recovery-flow';
+import { releaseDeviceForLogout } from '../features/notifications/logout';
 import type { Configuration } from './config';
 import { finishPendingDraftPurge, purgeAllDrafts, purgeOtherAccountDrafts } from './drafts';
+import { purgePrivateFiles } from './private-files';
 import { newSessionStorage } from './secure-storage';
 
 export type Profile = Tables<'profiles'>;
 type Client = SupabaseClient<Database>;
 /** Why the resident is back at the signed-out entry; shown once as feedback. */
-export type SignedOutNotice = 'logged-out' | 'session-ended' | 'access-denied';
+export type SignedOutNotice = 'logged-out' | 'session-ended' | 'access-denied' | 'account-deleted';
 export type LogoutReason = SignedOutNotice;
 type Runtime = {
   client: Client;
@@ -123,6 +126,8 @@ export function ResidentProvider({ config, children, fallback }: {
     async function initialize() {
       setReady(false);
       setError(false);
+      // Files left by a killed process or an earlier session (exports, receipts, QR images, picked photos) never outlive it.
+      purgePrivateFiles();
       const mode = await AsyncStorage.getItem(marker);
       const storage = newSessionStorage(`resident-ios.${new URL(config.url).hostname}`);
       const key = `sb-${new URL(config.url).hostname.split('.')[0]}-auth-token`;
@@ -169,7 +174,11 @@ export function ResidentProvider({ config, children, fallback }: {
         if (profileError) throw profileError;
         if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) throw new AccessDenied();
         if (!alive || version !== revision.current) return;
-        if (validatedUser !== next.user.id) await purgeOtherAccountDrafts({ environment: config.environment, barangayId: config.barangayId, userId: next.user.id });
+        if (validatedUser !== next.user.id) {
+          await purgeOtherAccountDrafts({ environment: config.environment, barangayId: config.barangayId, userId: next.user.id });
+          // A session that ended without this app's own logout may have left an earlier account's temporary files behind.
+          purgePrivateFiles();
+        }
         if (!alive || version !== revision.current) return;
         validatedUser = next.user.id;
         setSession(next);
@@ -218,6 +227,8 @@ export function ResidentProvider({ config, children, fallback }: {
     const current = connection.current;
     const token = session?.access_token;
     closing.current = true;
+    // The push token can only be released while the session is still valid; it never throws and waits briefly at most.
+    if (current) await releaseDeviceForLogout(current.client, config, session?.user.id);
     setForceClear(true);
     revision.current++;
     setReady(false);
@@ -230,7 +241,10 @@ export function ResidentProvider({ config, children, fallback }: {
       await current?.clear();
       if (current) await AsyncStorage.removeItem(current.recoveryUntil);
       await clearAuthHints();
+      clearAppleAuthorizationCode();
       await purgeAllDrafts();
+      // Temporary files are not part of the sign-out guarantee: a failure here is retried by the purge at the next launch.
+      purgePrivateFiles();
       setNotice(reason);
       closing.current = false;
       setEpoch((value) => value + 1);

@@ -1,0 +1,46 @@
+BEGIN
+INSERT 0 2
+INSERT 0 5
+INSERT 0 5
+UPDATE 1
+INSERT 0 1
+UPDATE 1
+CREATE TABLE
+GRANT
+ok 1 - Anonymous directory access revoked
+ok 2 - Anonymous summary access revoked
+ok 3 - All projections preserve invoker RLS
+SET
+dfb20000-0000-4000-8000-000000000001
+ok 4 - Two holders and two members counted
+ok 5 - Holder-only household counted
+ok 6 - Legacy boolean not counted
+ok 7 - No active stay is counted independently
+ok 8 - Existing table remains additional members
+ok 9 - Filters and sorts ignore legacy compatibility fields
+ok 10 - Payload ignores stale legacy boolean
+ok 11 - Record details ignore stale legacy center
+INSERT 0 1
+ok 12 - Selected holder and member counted exactly once
+ok 13 - Unselected holder and member unchanged
+ok 14 - Only selected additional member in active filter
+ok 15 - Directory shows authoritative center
+ok 16 - Directory arrival equals committed server timestamp
+ok 17 - Generic mutation cannot change attendance
+INSERT 0 1
+ok 18 - Departures remove holder and member from active count
+ok 19 - Departure clears active filter
+ok 20 - Checked-out member archive remains supported
+ok 21 - Archived member excluded from totals
+ok 22 - Archive records retain member lifecycle ID
+dfb20000-0000-4000-8000-000000000002
+ok 23 - Other barangay sees only its holder
+ok 24 - Other barangay cannot see members
+ok 25 - Other barangay cannot see archived member
+dfb20000-0000-4000-8000-000000000003
+ok 26 - Resident cannot query admin summary
+ok 27 - Resident cannot query admin directory
+RESET
+1..27
+ROLLBACK
+

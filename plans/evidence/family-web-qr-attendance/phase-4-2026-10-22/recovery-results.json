@@ -1,0 +1,13 @@
+{
+  "database": "family_attendance_web4_20261022",
+  "result": "pass",
+  "checks": [
+    "paused arrivals and departures rejected at public/private boundaries",
+    "resident reads continue and legacy writes remain blocked",
+    "two visits and three receipts unchanged during pause",
+    "exact dump/restore of all stay and receipt fields",
+    "resume restores only authenticated mutation access",
+    "delayed arrival/departure receipts replay exactly and leave the later stay open"
+  ],
+  "backup_sha256": "b30210e29d32c2b1513eba2e2e04c9c1cefa9f1cf21f0891076a6816d11e3d0c"
+}

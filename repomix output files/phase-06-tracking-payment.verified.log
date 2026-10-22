@@ -1,0 +1,123 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{59bfaa5f-eeab-4ac0-a64f-1e67853f3d2c}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Collecting files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Running security check... (62/62) tsconfig.json
+
+[K[1A
+[K[?25l⠙ Processing file... (2/62) apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx
+
+[K[1A
+[K[?25l⠹ Processing file... (4/62) apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx
+
+[K[1A
+[K[?25l⠸ Processing file... (13/62) apps/resident-android-mobile/src/components/services/qr-generating-indicator.tsx
+
+[K[1A
+[K[?25l⠼ Processing file... (28/62) apps/resident-android-mobile/src/hooks/use-font-preference.tsx
+
+[K[1A
+[K[?25l⠴ Processing file... (33/62) apps/resident-android-mobile/src/lib/payment-receipt-pdf.ts
+
+[K[1A
+[K[?25l⠦ Processing file... (62/62) tsconfig.json
+
+[K[1A
+[K[?25l⠧ Processing file... (62/62) tsconfig.json
+
+[K[1A
+[K[?25l⠇ Writing output file...
+
+[K[1A
+[K[?25l⠏ Calculating metrics... (62/62) packages/shared/src/index.ts
+
+[K[1A
+[K[?25l✔ Packing completed successfully!
+[?25h
+📈 Top 5 Files by Token Count:
+──────────────────────────────
+1.  apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx (1,227 tokens, 5,377 chars, 6.6%)
+2.  apps/resident-android-mobile/src/hooks/use-paymongo-source.ts (1,008 tokens, 4,284 chars, 5.5%)
+3.  apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx (964 tokens, 4,216 chars, 5.2%)
+4.  apps/resident-android-mobile/package.json (745 tokens, 2,057 chars, 4%)
+5.  packages/shared/src/lib/format.ts (602 tokens, 2,573 chars, 3.3%)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+
+📊 Pack Summary:
+────────────────
+  Total Files: 62 files
+ Total Tokens: 18,466 tokens
+  Total Chars: 72,562 chars
+       Output: repomix output files\phase-06-tracking-payment.verified.xml
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com

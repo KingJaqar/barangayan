@@ -20,36 +20,37 @@ import { Ionicons } from '@expo/vector-icons';
 import type { LatLng } from '@barangayan/shared';
 import { reverseGeocode, isPointInPolygon } from '@barangayan/shared';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GuestPrompt } from '@/components/guest-prompt';
+import { AuthHeader } from '@/components/auth-header';
 import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
-import { useFontPreference } from '@/hooks/use-font-preference';
-import { getMobileFontFamily } from '@/constants/fonts';
+import { isMapPosition } from '@/lib/map-presentation';
 import { supabase } from '@/lib/supabase';
 
 export default function LocationVerificationScreen() {
-  const { fontId } = useFontPreference();
-  const router = useRouter();
+  const { session } = useAuth();
+  return <LocationVerificationContent key={session?.user.id ?? 'guest'} />;
+}
+
+function LocationVerificationContent() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { session } = useAuth();
-  const { profile, isLoading, refetch } = useProfile();
+  const { profile, isLoading, error: profileError, refetch } = useProfile();
 
   const boundary = (profile?.barangays?.boundary as unknown as Polygon | MultiPolygon | null) ?? null;
-  const savedLocation = (profile as any)?.verified_location as LatLng | null | undefined;
-  const savedAddress = (profile as any)?.verified_location_address as string | null | undefined;
+  const savedLocation = isMapPosition(profile?.verified_location) ? profile.verified_location : null;
+  const savedAddress = profile?.verified_location_address;
 
   const [position, setPosition] = useState<LatLng | null>(null);
   const [address, setAddress] = useState('');
@@ -63,6 +64,14 @@ export default function LocationVerificationScreen() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const geocodeRequestId = useRef(0);
+  const active = useRef(true);
+  const savingRef = useRef(false);
+  const [mapError, setMapError] = useState(false);
+  const [mapAttempt, setMapAttempt] = useState(0);
+  useEffect(() => {
+    active.current = true;
+    return () => { active.current = false; geocodeRequestId.current += 1; };
+  }, []);
 
   async function fetchAddressFor(pos: LatLng) {
     const requestId = ++geocodeRequestId.current;
@@ -70,7 +79,7 @@ export default function LocationVerificationScreen() {
     setAddressDetectFailed(false);
     const result = await reverseGeocode(pos);
     // Ignore stale responses from a since-superseded pin placement.
-    if (requestId !== geocodeRequestId.current) return;
+    if (!active.current || requestId !== geocodeRequestId.current) return;
     setAddressLoading(false);
     if (result) setAddress(result);
     else setAddressDetectFailed(true);
@@ -127,9 +136,11 @@ export default function LocationVerificationScreen() {
    * with an alert rather than silently falling back to the barangay's default center.
    */
   async function handleDetectLocation() {
+    if (locating || savingRef.current) return;
     setLocating(true);
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
+      if (!active.current) return;
       if (status !== 'granted') {
         Alert.alert(
           'Location Permission Needed',
@@ -138,6 +149,7 @@ export default function LocationVerificationScreen() {
         return;
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      if (!active.current) return;
       const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       if (!boundary || !isPointInPolygon(point, boundary)) { setRejectedNotice(true); return; }
       setPosition(point);
@@ -145,13 +157,14 @@ export default function LocationVerificationScreen() {
       setSaved(false);
       void fetchAddressFor(point);
     } catch {
-      Alert.alert('Location Unavailable', "Couldn't detect your current location. Please try again or drag the pin manually.");
+      if (active.current) Alert.alert('Location Unavailable', "Couldn't detect your current location. Please try again or drag the pin manually.");
     } finally {
-      setLocating(false);
+      if (active.current) setLocating(false);
     }
   }
 
   function handlePickerMoved(pos: LatLng) {
+    if (savingRef.current || !isMapPosition(pos)) return;
     setPosition(pos);
     setRejectedNotice(false);
     setSaved(false);
@@ -163,229 +176,104 @@ export default function LocationVerificationScreen() {
   }
 
   async function handleSave() {
-    if (!session || !position) return;
+    if (savingRef.current || !session || profile?.id !== session.user.id || isLoading || profileError || !position) return;
     if (!boundary || !isPointInPolygon(position, boundary)) { setRejectedNotice(true); return; }
+    savingRef.current = true;
     setSaving(true);
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        verified_location: position as any,
-        verified_location_address: address.trim() || null,
-        location_verified_at: new Date().toISOString(),
-      } as any)
-      .eq('id', session.user.id);
-    setSaving(false);
-    if (error) {
-      Alert.alert('Location not saved', 'Check your connection and choose a pin inside the boundary, then retry.');
-      return;
+    // Freeze the address paired with this pin while its existing save is pending.
+    geocodeRequestId.current += 1;
+    setAddressLoading(false);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          verified_location: { lat: position.lat, lng: position.lng },
+          verified_location_address: address.trim() || null,
+          location_verified_at: new Date().toISOString(),
+        })
+        .eq('id', session.user.id);
+      if (error) throw error;
+      if (active.current) { setSaved(true); refetch(); }
+    } catch {
+      if (active.current) Alert.alert('Location not saved', 'Check your connection and choose a pin inside the boundary, then retry.');
+    } finally {
+      savingRef.current = false;
+      if (active.current) setSaving(false);
     }
-    setSaved(true);
-    refetch();
   }
 
+  const unavailable = isLoading || !!profileError || profile?.id !== session?.user.id;
   return (
-    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable
-            onPress={() => router.back()}
-            style={styles.backBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Location Verification
-            </ThemedText>
+    <SafeAreaView edges={['left', 'right']} style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <AuthHeader presentation="resident" title="Location Verification" />
+      {!session ? <GuestPrompt label="Log in to verify your location." /> : unavailable ? <View style={styles.body}>
+        <ThemedText accessibilityLiveRegion="polite" themeColor="textSecondary">{profileError ?? 'Loading your saved location…'}</ThemedText>
+        {profileError ? <PrimaryButton presentation="resident" label="Retry" onPress={refetch} /> : null}
+      </View> : <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.mapArea}>
+          <MapView key={mapAttempt} markers={[]} boundary={boundary}
+            picker={{ enabled: !saving, position }} onPickerMoved={handlePickerMoved} onPickerRejected={handlePickerRejected}
+            onMapError={() => setMapError(true)} zoomControlTop={70} style={StyleSheet.absoluteFill} />
+          <View style={[styles.hintPill, { backgroundColor: theme.resident.mediaScrim }]} pointerEvents="none">
+            <Ionicons name="hand-left-outline" size={16} color={theme.resident.mediaForeground} />
+            <ThemedText type="small" style={{ color: theme.resident.mediaForeground }}>{locating ? 'Locating you…' : 'Tap or drag the pin'}</ThemedText>
           </View>
+          {rejectedNotice ? <View style={[styles.rejectedBanner, { backgroundColor: theme.resident.dangerSoft, borderColor: theme.resident.danger }]} accessibilityLiveRegion="polite">
+            <Ionicons name="warning-outline" size={18} color={theme.resident.danger} />
+            <ThemedText type="small" style={{ flex: 1, color: theme.resident.danger }}>Please pin a location inside {profile?.barangays?.name ?? 'the barangay'}'s boundary.</ThemedText>
+          </View> : null}
         </View>
-
-        {!session ? (
-          <GuestPrompt label="Log in to verify your location." />
-        ) : (
-          <>
-            <View style={styles.mapArea}>
-              <MapView
-                markers={[]}
-                boundary={boundary}
-                picker={{ enabled: true, position }}
-                onPickerMoved={handlePickerMoved}
-                onPickerRejected={handlePickerRejected}
-                style={StyleSheet.absoluteFill}
-              />
-              <View style={[styles.hintPill, { backgroundColor: theme.text + 'BF' }]} pointerEvents="none">
-                <Ionicons name="hand-left-outline" size={13} color={theme.background} />
-                <ThemedText type="small" style={[styles.hintPillText, { color: theme.background }]}>
-                  {locating ? 'Locating you…' : 'Tap or drag the pin'}
-                </ThemedText>
-              </View>
-              {rejectedNotice && (
-                <View style={[styles.rejectedBanner, { backgroundColor: theme.accentRed }]}>
-                  <Ionicons name="warning-outline" size={16} color={theme.onPrimary} />
-                  <ThemedText type="small" style={[styles.rejectedBannerText, { color: theme.onPrimary }]}>
-                    Please pin a location inside {profile?.barangays?.name ?? 'the barangay'}&apos;s boundary.
-                  </ThemedText>
-                </View>
-              )}
+        <ScrollView style={styles.sheet} contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
+          <ThemedText style={styles.hint} themeColor="textSecondary">Drag the pin to your exact home location inside the barangay boundary, then save.</ThemedText>
+          {mapError ? <View style={styles.message} accessibilityLiveRegion="polite">
+            <ThemedText style={{ color: theme.resident.danger }}>The map could not load. Check your connection and retry.</ThemedText>
+            <PrimaryButton presentation="resident" variant="secondary" label="Retry map" onPress={() => { setMapError(false); setMapAttempt(value => value + 1); }} />
+          </View> : null}
+          {savedLocation ? <View style={[styles.savedCard, { backgroundColor: theme.resident.surface }]}>
+            <View style={styles.savedRow}>
+              <Ionicons name="checkmark-circle-outline" size={16} color={theme.resident.accentText} />
+              <ThemedText style={[styles.savedTitle, { color: theme.resident.accentText }]}>Previously Saved Location</ThemedText>
             </View>
-
-            <ScrollView
-              style={[styles.sheet, { backgroundColor: theme.backgroundElement, borderTopColor: theme.backgroundSelected }]}
-              contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.two, gap: Spacing.two }}
-              keyboardShouldPersistTaps="handled">
-              <ThemedText themeColor="textSecondary" style={styles.sheetHint}>
-                Drag the pin to your exact home location inside the barangay boundary, then save.
-              </ThemedText>
-
-              {/* Previously saved location — a static reference to what's actually on file
-                  right now (profile.verified_location*), independent of the pin below. It
-                  does not change as the pin is dragged; only a successful Save updates it. */}
-              {savedLocation && (
-                <View style={[styles.savedCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-                  <View style={styles.savedRow}>
-                    <Ionicons name="checkmark-circle" size={14} color={theme.primary} />
-                    <ThemedText type="small" style={{ color: theme.primary, fontWeight: '700' }}>
-                      Previously Saved Location
-                    </ThemedText>
-                  </View>
-                  <ThemedText type="small">{savedAddress ?? 'No address on file'}</ThemedText>
-                  <ThemedText type="small" themeColor="textSecondary">
-                    {savedLocation.lat.toFixed(5)}, {savedLocation.lng.toFixed(5)}
-                  </ThemedText>
-                </View>
-              )}
-
-              <View style={styles.addressLabelRow}>
-                <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-                  Detected Address
-                </ThemedText>
-                {addressLoading && <ActivityIndicator size="small" color={theme.primary} />}
-              </View>
-              <TextField
-                style={{ fontFamily: getMobileFontFamily(fontId) }}
-                placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}
-                value={address}
-                onChangeText={(v) => {
-                  setAddress(v);
-                  setSaved(false);
-                  setAddressDetectFailed(false);
-                }}
-                maxLength={300}
-                error={addressDetectFailed && !address ? "Couldn't detect this address automatically — please type it in." : undefined}
-              />
-
-              {position && (
-                <ThemedText type="small" themeColor="textSecondary">
-                  {position.lat.toFixed(5)}, {position.lng.toFixed(5)}
-                </ThemedText>
-              )}
-              <PrimaryButton
-                label="Detect Your Location"
-                leadingIcon={<Ionicons name="location-outline" size={18} color={theme.text} />}
-                variant="secondary"
-                onPress={handleDetectLocation}
-                loading={locating}
-                disabled={isLoading}
-              />
-              <PrimaryButton
-                label={saved ? 'Location Saved ✓' : 'Save My Location'}
-                onPress={handleSave}
-                loading={saving}
-                disabled={!position || isLoading}
-              />
-            </ScrollView>
-          </>
-        )}
-      </View>
+            <ThemedText style={styles.savedAddress}>{savedAddress ?? 'No address on file'}</ThemedText>
+            <ThemedText type="small" themeColor="textSecondary">{savedLocation.lat.toFixed(5)}, {savedLocation.lng.toFixed(5)}</ThemedText>
+          </View> : null}
+          <View style={styles.message}>
+            <TextField presentation="resident" label="Detected Address" accessibilityLabel="Detected Address" multiline
+              placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}
+              value={address} editable={!saving} maxLength={300} onChangeText={value => {
+                geocodeRequestId.current += 1;
+                setAddressLoading(false); setAddress(value); setSaved(false); setAddressDetectFailed(false);
+              }} error={addressDetectFailed && !address ? "Couldn't detect this address automatically — please type it in." : undefined} />
+            <View style={styles.savedRow} accessibilityLiveRegion="polite">
+              {addressLoading ? <ActivityIndicator size="small" color={theme.resident.accentText} /> : null}
+              <ThemedText type="small" themeColor="textSecondary">{position ? position.lat.toFixed(5) + ', ' + position.lng.toFixed(5) : 'Choose a location on the map'}{addressLoading ? ' · Finding address…' : ''}</ThemedText>
+            </View>
+          </View>
+          {!boundary ? <ThemedText accessibilityLiveRegion="polite" style={{ color: theme.resident.danger }}>The barangay boundary is unavailable. Reopen this screen after your profile has loaded before saving.</ThemedText> : null}
+          <PrimaryButton presentation="resident" label="Detect Your Location" variant="secondary" onPress={handleDetectLocation} loading={locating} disabled={saving}
+            leadingIcon={<Ionicons name="locate-outline" size={20} color={theme.resident.text} />} />
+        </ScrollView>
+        <View style={[styles.footer, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 24) }]}>
+          <PrimaryButton presentation="resident" label={saved ? 'Location Saved ✓' : 'Save My Location'} onPress={handleSave} loading={saving}
+            disabled={!position || !boundary || locating || (position !== null && boundary !== null && !isPointInPolygon(position, boundary))} />
+        </View>
+      </KeyboardAvoidingView>}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
   root: { flex: 1 },
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-  },
-  mapArea: { flex: 1 },
-  hintPill: {
-    position: 'absolute',
-    top: Spacing.three,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  hintPillText: {},
-  rejectedBanner: {
-    position: 'absolute',
-    bottom: Spacing.three,
-    left: Spacing.three,
-    right: Spacing.three,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    borderRadius: 14,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-  },
-  rejectedBannerText: { flex: 1 },
-  // Capped so the map above (mapArea, flex: 1) always gets the majority of the
-  // screen — without a cap this ScrollView sizes to its content and, with the
-  // "Previously Saved Location" card showing, was squeezing the map down to a
-  // sliver. Content still fits without scrolling in the common case; the
-  // ScrollView is there for smaller devices / longer detected addresses.
-  sheet: {
-    maxHeight: '34%',
-    padding: Spacing.two + Spacing.one,
-    gap: Spacing.one,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  sheetHint: { lineHeight: 18 },
-  addressLabelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  sectionLabel: {
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-  },
-  savedRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  savedCard: {
-    borderWidth: 1,
-    borderRadius: Spacing.two,
-    padding: Spacing.two,
-    gap: 2,
-  },
+  mapArea: { flexBasis: '42%', flexShrink: 1, minHeight: 120 },
+  sheet: { flex: 1, minHeight: 80 },
+  body: { padding: 20, paddingVertical: 16, gap: 16 },
+  message: { gap: 8 },
+  hint: { fontSize: 14, lineHeight: 20 },
+  hintPill: { position: 'absolute', top: 12, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
+  rejectedBanner: { position: 'absolute', bottom: 12, left: 12, right: 12, flexDirection: 'row', alignItems: 'flex-start', gap: 8, borderWidth: 1, borderRadius: 14, padding: 12 },
+  savedCard: { borderRadius: 16, padding: 16, gap: 6 },
+  savedRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 },
+  savedTitle: { fontSize: 13.5, lineHeight: 20, fontWeight: '700', flexShrink: 1 },
+  savedAddress: { fontSize: 14, lineHeight: 20, fontWeight: '600' },
+  footer: { borderTopWidth: 1, paddingHorizontal: 20, paddingTop: 12 },
 });

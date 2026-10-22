@@ -1,0 +1,41 @@
+[
+  {
+    "id": "cb847b1d-0ac0-4d73-b5d3-69faec6206a4",
+    "slug": "export-my-data",
+    "name": "export-my-data",
+    "status": "ACTIVE",
+    "version": 9,
+    "created_at": 1787029564939,
+    "updated_at": 1787029564939,
+    "verify_jwt": true,
+    "import_map": false,
+    "entrypoint_path": "file:///tmp/user_fn_pwjbucnyqexiepoinoke_cb847b1d-0ac0-4d73-b5d3-69faec6206a4_1/source/supabase/functions/export-my-data/index.ts",
+    "ezbr_sha256": "b3a00b40cf425870b5108c5273f2026757a1803b13f011aeaabf5e6ea45cf425"
+  },
+  {
+    "id": "f766c03e-faae-4a48-8618-2f38cada52fd",
+    "slug": "delete-my-account",
+    "name": "delete-my-account",
+    "status": "ACTIVE",
+    "version": 9,
+    "created_at": 1787029564939,
+    "updated_at": 1787029564939,
+    "verify_jwt": true,
+    "import_map": false,
+    "entrypoint_path": "file:///tmp/user_fn_pwjbucnyqexiepoinoke_f766c03e-faae-4a48-8618-2f38cada52fd_1/source/supabase/functions/delete-my-account/index.ts",
+    "ezbr_sha256": "f4f3d23e341d9e78b3ada74cd0dc3842d951cbe5dac1cdf2b08f3bf26df9aa41"
+  },
+  {
+    "id": "8d326c35-05bf-4101-8b13-e507097083c2",
+    "slug": "generate-household-qr",
+    "name": "generate-household-qr",
+    "status": "ACTIVE",
+    "version": 9,
+    "created_at": 1787029564939,
+    "updated_at": 1787029564939,
+    "verify_jwt": true,
+    "import_map": false,
+    "entrypoint_path": "file:///tmp/user_fn_pwjbucnyqexiepoinoke_8d326c35-05bf-4101-8b13-e507097083c2_1/source/supabase/functions/generate-household-qr/index.ts",
+    "ezbr_sha256": "6ec65bc02af303a0126f2035d57dd4b0c6277aa10cce5270d01b11a28b1e4b59"
+  }
+]

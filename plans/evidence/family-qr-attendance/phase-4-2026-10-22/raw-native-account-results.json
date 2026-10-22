@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Delayed read/account switch/logout clear private Family/QR state",
+    "result": "pass"
+  },
+  {
+    "name": "Native keyboard/add/edit/remove uses real conditional-save API",
+    "result": "fail",
+    "reason": "Control unavailable: Full Name"
+  }
+]

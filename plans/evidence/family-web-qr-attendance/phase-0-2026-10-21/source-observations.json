@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-21 Asia/Manila",
+  "scope": "Phase 0 documentation/discovery only",
+  "shared_owner": {
+    "track": "Resident Android Phase 1",
+    "chat_title": "Implement Phase 1",
+    "thread_id": "01a15e1b-96ca-7f73-9b09-bddcda8a0a77",
+    "evidence": "Read-only thread inspection showed CLI migration creation and ongoing source implementation; no message sent",
+    "migration": "supabase/migrations/20261021111056_household_attendance.sql",
+    "current_sha256": "5BC2AB572BF5FBD38C51A240041ECFD39BBFE24D57290F0043AC3F64C4D236CD",
+    "current_bytes": 50332,
+    "state": "Changing external candidate; initial observation empty, later populated. No completed implementation or behavioral result adopted.",
+    "database": "family_attendance_phase1_20261021",
+    "rule": "Revalidate finished handoff; no duplicate migration or fixtures in another owner database"
+  },
+  "hosted": {
+    "project_id": "pwjbucnyqexiepoinoke",
+    "name": "Barangayan",
+    "region": "ap-northeast-2",
+    "postgres": "17.6",
+    "project_build": "17.6.1.155",
+    "access": "Read-only catalog/definitions/deployment metadata/aggregate logs; no resident records or mutation",
+    "attendance_tables_at_catalog_observation": false,
+    "four_operations_at_catalog_observation": false,
+    "archive_guard": null,
+    "archive_guard_trigger_count": 0,
+    "legacy_table_rls": true,
+    "legacy_table_grants": "anon and authenticated retain SELECT, INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE for household_members and evacuation_center_checkins",
+    "legacy_policies": "household resident-own and same-barangay admin ALL; residents insert/read own scans; admins read tenant scans",
+    "new_mutation_tests": "Not executed; catalog observations are not authenticated behavioral tests"
+  },
+  "local_environment": {
+    "node": "24.13.1",
+    "python": "3.13.14",
+    "docker_client": "29.8.1",
+    "docker_server": "29.8.1",
+    "container": "supabase_db_barangayan",
+    "image": "public.ecr.aws/supabase/postgres:17.6.1.155",
+    "status": "healthy",
+    "postgres": "17.6",
+    "pgtap": "1.3.3",
+    "default_database": "postgres",
+    "latest_default_migration": "0117 admin_request_row_workflows",
+    "default_schema_current": false,
+    "read_only_commands": [
+      "docker version --format {{.Client.Version}}|{{if .Server}}{{.Server.Version}}{{end}}",
+      "docker ps --format {{.Names}}|{{.Image}}|{{.Status}}|{{.Ports}}",
+      "docker exec supabase_db_barangayan psql -U postgres -d postgres -At -c <version/database/extension/migration catalog SELECT>"
+    ],
+    "sandbox_note": "Initial pipe permission denial; distinct read-only escalation succeeded; no container/database created, reset, deleted or reconfigured"
+  },
+  "runtime_web": {
+    "brave_executable": "C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe",
+    "installed": true,
+    "browser_version": "not verified",
+    "app_ports_3000_3001_3002_at_inventory": "no listener observed",
+    "private_session_used": false,
+    "qr_request_invoked": false,
+    "web_failure_observed": false,
+    "manual_checks": "Pending A14-A16 in acceptance-coverage.md"
+  },
+  "source_facts": {
+    "raw_snapshot": "Verified migration 0123 and hosted private/public CAS; p_expected raw JSON, canonical JSONB array result, max 30 additional members, PT409 conflict",
+    "lock_order": "Required request key -> household -> sorted centers -> sorted stays; current hosted generic writer member-first is a Phase 1 remediation gate",
+    "deadline": "boundedAuthFetch only /auth/v1/; pilotOptions explicit AbortSignal.timeout(15000) + retry(false).abortSignal(signal) pattern",
+    "web_consumers": [
+      "FamilyContent and Settings Profile HouseholdSection -> useFamilyMembers",
+      "QrScannerDialog and QrUploadFallback -> completeCheckIn -> useQrCheckins",
+      "HouseholdQrDialog -> generate-household-qr",
+      "QrShowDialog -> QRCodeCanvas (center payload)"
+    ],
+    "lifecycle": "Hosted v1 Edge; local v1/v2; delete new records before clearing roster, retain de-identified referenced staff; no actor SET NULL"
+  },
+  "protected_recovery": {
+    "plan": "tmp/family-web-phase0-20261021/plan.before.md",
+    "git_status": "tmp/family-web-phase0-20261021/git-status.before.txt",
+    "prior_user_patch": "tmp/family-web-phase0-20261021/relevant-user-changes.before.patch",
+    "web_candidate_before_hashes": "tmp/family-web-phase0-20261021/web-candidate.before.json",
+    "sensitive_inputs": "Only paths inventoried; no environment/credential contents read or packed"
+  },
+  "original_direct_reads": {
+    "supabase/migrations/0123_resident_household_conditional_save.sql": "1-118 complete",
+    "supabase/migrations/0115_admin_record_lifecycle.sql": "99-112 archive guard",
+    "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts": "1-36 complete",
+    "apps/admin-web/src/app/(admin)/households-residents/page.tsx": "1-29 complete",
+    "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx": "77-114 and 181-205; other caller leads via rg",
+    "packages/shared/src/schemas/household.ts": "complete",
+    "packages/shared/src/schemas/emergency-qr.ts": "complete",
+    "supabase/functions/generate-household-qr/index.ts": "complete",
+    "hosted request_own_account_deletion / erase_own_account_records": "complete current bodies",
+    "hosted QR/delete/export Edge": "complete 138/129/120 lines",
+    "counterpart contract": "1-100 complete; body identity verified"
+  },
+  "product_acceptance": {
+    "A01": "Pending; allocated, not behaviorally verified",
+    "A02": "Pending; allocated, not behaviorally verified",
+    "A03": "Pending; allocated, not behaviorally verified",
+    "A04": "Pending; allocated, not behaviorally verified",
+    "A05": "Pending; allocated, not behaviorally verified",
+    "A06": "Pending; allocated, not behaviorally verified",
+    "A07": "Pending; allocated, not behaviorally verified",
+    "A08": "Pending; allocated, not behaviorally verified",
+    "A09": "Pending; allocated, not behaviorally verified",
+    "A10": "Pending; allocated, not behaviorally verified",
+    "A11": "Pending; allocated, not behaviorally verified",
+    "A12": "Pending; allocated, not behaviorally verified",
+    "A13": "Pending; allocated, not behaviorally verified",
+    "A14": "Pending; allocated, not behaviorally verified",
+    "A15": "Pending; allocated, not behaviorally verified",
+    "A16": "Pending; allocated, not behaviorally verified",
+    "A17": "Pending; allocated, not behaviorally verified"
+  }
+}

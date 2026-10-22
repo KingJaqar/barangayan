@@ -13,15 +13,16 @@ import {
   SEXES,
   type EmploymentStatus,
   type Sex,
+  type Json,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
+import { HouseholdError, householdRequest, readHouseholdMembers, saveHouseholdMembers } from '@/lib/household';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -29,20 +30,15 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
+import { PrimaryButton } from '@/components/primary-button';
+import { SettingsSheet } from '@/components/settings-sheet';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
@@ -104,7 +100,15 @@ interface HouseholdMember {
   id: string;          // client uuid for React keys
   name: string;
   relation: string;
-  role: string;
+  role?: string | null;
+}
+
+function profileMember(value: Json): HouseholdMember | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)
+    || typeof value.id !== 'string' || typeof value.name !== 'string' || typeof value.relation !== 'string'
+    || (value.role !== undefined && value.role !== null && typeof value.role !== 'string')) return null;
+  // Retain optional draft fields; conditional saves compare the untouched raw snapshot.
+  return { ...value, id: value.id, name: value.name, relation: value.relation };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -155,9 +159,9 @@ function useCompactFields() {
 function VerifiedBadge() {
   const theme = useTheme();
   return (
-    <View style={[badgeStyles.pill, { backgroundColor: theme.primary + '1E' }]}>
-      <Ionicons name="checkmark-circle" size={14} color={theme.primary} />
-      <ThemedText style={[badgeStyles.text, { color: theme.primary }]}>Verified Resident</ThemedText>
+    <View style={[badgeStyles.pill, { backgroundColor: theme.resident.accentSoft }]}>
+      <Ionicons name="checkmark-circle" size={14} color={theme.resident.accentText} />
+      <ThemedText style={[badgeStyles.text, { color: theme.resident.accentText }]}>Verified Resident</ThemedText>
     </View>
   );
 }
@@ -181,8 +185,9 @@ const badgeStyles = StyleSheet.create({
 
 /** Red asterisk suffix for required-field labels — matches Register's RequiredMark. */
 function RequiredMark() {
+  const { resident } = useTheme();
   return (
-    <ThemedText type="small" themeColor="accentRed">
+    <ThemedText type="small" style={{ color: resident.danger }}>
       {' '}
       *
     </ThemedText>
@@ -197,16 +202,16 @@ function FieldStatusRow({ error, success }: { error?: string; success?: string }
   if (error) {
     return (
       <View style={fieldStyles.statusRow}>
-        <Ionicons name="alert-circle-outline" size={13} color={theme.accentRed} />
-        <ThemedText type="small" themeColor="accentRed" style={fieldStyles.statusText}>{error}</ThemedText>
+        <Ionicons name="alert-circle-outline" size={13} color={theme.resident.danger} />
+        <ThemedText accessibilityRole="alert" type="small" style={[fieldStyles.statusText, { color: theme.resident.danger }]}>{error}</ThemedText>
       </View>
     );
   }
   if (success?.trim()) {
     return (
       <View style={fieldStyles.statusRow}>
-        <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} />
-        <ThemedText type="small" themeColor="accentGreen">{success}</ThemedText>
+        <Ionicons name="checkmark-circle-outline" size={13} color={theme.resident.success} />
+        <ThemedText type="small" style={{ color: theme.resident.success }}>{success}</ThemedText>
       </View>
     );
   }
@@ -242,14 +247,14 @@ function FieldRow({
             {label}
             {required ? <RequiredMark /> : null}
             {success && !success.trim() && !error ? (
-              <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} accessible={false} /></>
+              <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.resident.success} accessible={false} /></>
             ) : null}
           </ThemedText>
           <ThemedText style={[fieldStyles.value, compact && fieldStyles.compactValue, !value && { color: theme.textSecondary }]}>
             {value || placeholder}
           </ThemedText>
         </View>
-        <Ionicons name="create-outline" size={18} color={theme.primary} />
+        <Ionicons name="create-outline" size={18} color={theme.resident.accentText} />
       </Pressable>
       <FieldStatusRow error={error} success={success} />
     </View>
@@ -268,8 +273,8 @@ const fieldStyles = StyleSheet.create({
   compactBody: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   compactLabel: { width: 108, flexShrink: 0 },
   compactValue: { flex: 1, minWidth: 0 },
-  label: { fontSize: 12, lineHeight: 18, fontWeight: '500' },
-  value: { fontSize: 16 },
+  label: { fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
+  value: { fontSize: 16, fontWeight: '600' },
   fieldWrapper: { gap: 2 },
   inlineRow: { paddingVertical: Spacing.one, gap: 2 },
   inputBody: { gap: 2 },
@@ -324,7 +329,7 @@ function InlineFieldInput({
           {label}
           {required ? <RequiredMark /> : null}
           {success && !success.trim() && !error ? (
-            <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} accessible={false} /></>
+            <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.resident.success} accessible={false} /></>
           ) : null}
         </ThemedText>
         <TextInput
@@ -356,7 +361,7 @@ function MemberRow({
   const theme = useTheme();
   return (
     <Pressable style={memberStyles.row} onPress={onPress} accessibilityRole="button">
-      <View style={[memberStyles.avatar, { backgroundColor: theme.backgroundSelected }]}>
+      <View style={[memberStyles.avatar, { backgroundColor: theme.resident.border }]}>
         <ThemedText themeColor="textSecondary" style={memberStyles.initials}>{getInitials(member.name)}</ThemedText>
       </View>
       <View style={memberStyles.info}>
@@ -391,9 +396,12 @@ const memberStyles = StyleSheet.create({
 });
 
 /** Section card wrapper */
-function SectionCard({ children }: { children: React.ReactNode }) {
+function SectionCard({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
   const theme = useTheme();
-  return <View style={[cardStyles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>{children}</View>;
+  return <View>
+    <View style={styles.sectionHeaderRow}><ThemedText accessibilityRole="header" style={styles.sectionTitle}>{title}</ThemedText>{action}</View>
+    <View style={[cardStyles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>{children}</View>
+  </View>;
 }
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
@@ -402,15 +410,16 @@ type ToastType = 'success' | 'error';
 
 function Toast({ message, type }: { message: string; type: ToastType }) {
   const theme = useTheme();
+  const foreground = type === 'error' ? theme.resident.onDanger : theme.resident.onAccent;
   return (
     <View style={toastStyles.overlay} pointerEvents="none">
-      <View style={[toastStyles.pill, { backgroundColor: type === 'error' ? theme.accentRed : theme.primary, shadowColor: theme.text }]}>
+      <View accessibilityLiveRegion="polite" style={[toastStyles.pill, { backgroundColor: type === 'error' ? theme.resident.danger : theme.resident.accent, shadowColor: theme.text }]}>
         <Ionicons
           name={type === 'success' ? 'checkmark-circle' : 'alert-circle-outline'}
           size={16}
-          color={theme.onPrimary}
+          color={foreground}
         />
-        <ThemedText style={[toastStyles.text, { color: theme.onPrimary }]}>{message}</ThemedText>
+        <ThemedText style={[toastStyles.text, { color: foreground }]}>{message}</ThemedText>
       </View>
     </View>
   );
@@ -450,78 +459,7 @@ const cardStyles = StyleSheet.create({
 
 function Divider() {
   const theme = useTheme();
-  return <View style={{ height: 1, backgroundColor: theme.backgroundSelected, marginLeft: 0 }} />;
-}
-
-// ─── Slide Sheet Modal ────────────────────────────────────────────────────────
-// Shared bottom-sheet shell for the Sex / Employment Status / ID Type pickers.
-// react-native's built-in `Modal animationType="slide"` is a fixed-duration,
-// non-interruptible platform animation (and on Android it visibly steps rather
-// than eases) — this instead drives the slide with Reanimated shared values so
-// the sheet springs up on open and eases down on close at 60fps, with the
-// backdrop cross-fading in step. `Modal`'s `visible` prop unmounts natively the
-// instant it flips to false, which would cut the close animation short, so this
-// keeps the native Modal mounted (`visible` always true while `mounted`) and
-// only actually unmounts once the slide-down animation has finished.
-//
-// Per the entering/exiting/layout web bug (see project memory), this uses only
-// shared-value-driven `useAnimatedStyle`, never Reanimated's `entering`/
-// `exiting`/`layout` props.
-const SHEET_OFFSCREEN = 700;
-const SHEET_OPEN_SPRING = { damping: 24, stiffness: 260, mass: 0.9, overshootClamping: true } as const;
-const SHEET_CLOSE_DURATION = 220;
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-function SlideSheetModal({
-  visible,
-  onClose,
-  maxHeight,
-  children,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  maxHeight?: number | `${number}%`;
-  children: React.ReactNode;
-}) {
-  const theme = useTheme();
-  const [mounted, setMounted] = useState(visible);
-  const translateY = useSharedValue(SHEET_OFFSCREEN);
-  const backdropOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (visible) {
-      setMounted(true);
-      translateY.value = withSpring(0, SHEET_OPEN_SPRING);
-      backdropOpacity.value = withTiming(1, { duration: 220 });
-    } else if (mounted) {
-      translateY.value = withTiming(
-        SHEET_OFFSCREEN,
-        { duration: SHEET_CLOSE_DURATION, easing: Easing.in(Easing.cubic) },
-        (finished) => {
-          if (finished) runOnJS(setMounted)(false);
-        },
-      );
-      backdropOpacity.value = withTiming(0, { duration: SHEET_CLOSE_DURATION });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
-
-  const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translateY.value }] }));
-  const backdropStyle = useAnimatedStyle(() => ({ opacity: backdropOpacity.value }));
-
-  if (!mounted) return null;
-
-  return (
-    <Modal visible transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
-      <AnimatedPressable style={[idModalStyles.backdrop, { backgroundColor: theme.text + '73' }, backdropStyle]} onPress={onClose} />
-      <Animated.View
-        style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement, maxHeight }, sheetStyle]}>
-        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
-        {children}
-      </Animated.View>
-    </Modal>
-  );
+  return <View style={{ height: 1, backgroundColor: theme.resident.border, marginLeft: 0 }} />;
 }
 
 // ─── Household Member Modal ───────────────────────────────────────────────────
@@ -555,146 +493,54 @@ function MemberModal({
 
   const isEdit = !!initial;
 
-  return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={[mModalStyles.backdrop, { backgroundColor: theme.text + '73' }]} onPress={onClose} />
-      <View style={[mModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
-        <View style={[mModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
-        <ThemedText style={mModalStyles.title}>{isEdit ? 'Edit Member' : 'Add Household Member'}</ThemedText>
-
-        <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Full Name</ThemedText>
-        <TextInput
-          style={[mModalStyles.input, { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text, fontFamily: getMobileFontFamily(fontId) }]}
-          value={name}
-          onChangeText={setName}
-          placeholder="e.g. Juan Santos"
-          placeholderTextColor={theme.textSecondary}
-          returnKeyType="done"
-        />
-
-        <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Relation</ThemedText>
-        <OptionRow options={RELATIONS} value={relation} onChange={setRelation} />
-
-        <ThemedText themeColor="textSecondary" style={[mModalStyles.label, { marginTop: Spacing.two }]}>Role</ThemedText>
-        <OptionRow options={ROLES} value={role} onChange={setRole} />
-
-        <View style={mModalStyles.actions}>
-          {isEdit && onDelete && (
-            <Pressable style={[mModalStyles.deleteBtn, { borderColor: theme.accentRed }]} onPress={() => { onDelete(initial!.id); onClose(); }}>
-              <ThemedText style={{ fontWeight: '700', color: theme.accentRed }}>Remove</ThemedText>
-            </Pressable>
-          )}
-          <Pressable
-            style={[mModalStyles.saveBtn, { backgroundColor: theme.primary }, !name.trim() && { opacity: 0.5 }]}
-            disabled={!name.trim()}
-            onPress={() => {
-              onSave({ id: initial?.id ?? genId(), name: name.trim(), relation, role });
-              onClose();
-            }}>
-            <ThemedText style={{ fontWeight: '700', color: theme.onPrimary }}>{isEdit ? 'Update' : 'Add Member'}</ThemedText>
-          </Pressable>
-        </View>
-      </View>
-    </Modal>
-  );
+  return <SettingsSheet visible={visible} title={isEdit ? 'Edit Member' : 'Add Household Member'} onClose={onClose} footer={
+    <View style={mModalStyles.actions}>
+      {initial && onDelete ? <View style={{ flex: 1 }}><PrimaryButton presentation="resident" variant="destructive" label="Remove" onPress={() => { onDelete(initial.id); onClose(); }} /></View> : null}
+      <View style={{ flex: 2 }}><PrimaryButton presentation="resident" label={isEdit ? 'Update' : 'Add Member'} disabled={!name.trim()} onPress={() => { onSave({ id: initial?.id ?? genId(), name: name.trim(), relation, role }); onClose(); }} /></View>
+    </View>
+  }>
+    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Full Name</ThemedText>
+    <TextInput accessibilityLabel="Household member full name" style={[mModalStyles.input, { borderColor: theme.resident.controlBorder, backgroundColor: theme.resident.surface, color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} value={name} onChangeText={setName} placeholder="e.g. Juan Santos" placeholderTextColor={theme.resident.muted} returnKeyType="done" />
+    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Relation</ThemedText>
+    <OptionRow options={RELATIONS} value={relation} onChange={setRelation} />
+    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Role</ThemedText>
+    <OptionRow options={ROLES} value={role} onChange={setRole} />
+    <ThemedText type="small" themeColor="textSecondary">Member changes are saved with Save Changes on your profile.</ThemedText>
+  </SettingsSheet>;
 }
 
 const mModalStyles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill },
-  sheet: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: Spacing.three,
-    gap: Spacing.two,
-    paddingBottom: 40,
-  },
-  handle: {
-    alignSelf: 'center',
-    width: 38, height: 4,
-    borderRadius: 2,
-    marginBottom: Spacing.one,
-  },
-  title: { fontSize: 16, fontWeight: '700' },
-  label: { fontSize: 12, fontWeight: '600', marginBottom: -4 },
-  input: {
-    borderWidth: 1.5,
-    borderRadius: 12,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two + 2,
-    fontSize: 15,
-  },
-  chip: {
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderWidth: 1,
-  },
+  label: { fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
+  input: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, minHeight: 48, fontSize: 16 },
+  chip: { borderRadius: 20, paddingHorizontal: 12, paddingVertical: 10, minHeight: 44, borderWidth: 1 },
   chipText: { fontSize: 13, fontWeight: '600' },
-  actions: { flexDirection: 'row', gap: Spacing.two, marginTop: Spacing.two },
-  deleteBtn: {
-    flex: 1,
-    borderRadius: 24,
-    paddingVertical: 13,
-    alignItems: 'center',
-    borderWidth: 1.5,
-  },
-  saveBtn: {
-    flex: 2,
-    borderRadius: 24,
-    paddingVertical: 13,
-    alignItems: 'center',
-  },
+  actions: { flexDirection: 'row', gap: 12 },
 });
 
 function OptionRow({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) {
   const theme = useTheme();
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: Spacing.two, flexDirection: 'row' }}>
+    <View style={{ gap: 8, flexDirection: 'row', flexWrap: 'wrap' }}>
       {options.map((opt) => (
         <Pressable
           key={opt}
+          accessibilityRole="button" accessibilityState={{ selected: value === opt }}
           onPress={() => onChange(opt)}
           style={[
             mModalStyles.chip,
-            { backgroundColor: theme.backgroundSelected, borderColor: theme.backgroundSelected },
-            value === opt && { backgroundColor: theme.primary, borderColor: theme.primary },
+            { backgroundColor: theme.resident.border, borderColor: theme.resident.border },
+            value === opt && { backgroundColor: theme.resident.accent, borderColor: theme.resident.accentText },
           ]}>
-          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: theme.onPrimary }]}>{opt}</ThemedText>
+          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: theme.resident.onAccent }]}>{opt}</ThemedText>
         </Pressable>
       ))}
-    </ScrollView>
+    </View>
   );
 }
 
 const idModalStyles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill },
-  sheet: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
-    // No default cap here — callers that need one (e.g. IdTypeModal's 16-item list)
-    // pass `maxHeight` explicitly to SlideSheetModal, which layers it on top of this.
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: Spacing.three,
-    paddingBottom: 40,
-  },
-  handle: {
-    alignSelf: 'center',
-    width: 38, height: 4,
-    borderRadius: 2,
-    marginBottom: Spacing.two,
-  },
-  title: { fontSize: 16, fontWeight: '700', marginBottom: Spacing.two },
-  optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-  },
-  optionText: { fontSize: 15 },
+  optionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 48, paddingVertical: 14, borderBottomWidth: 1 },
+  optionText: { fontSize: 16, flex: 1 },
 });
 
 // ─── Choice List Modal (Sex / Employment Status) ──────────────────────────────
@@ -721,22 +567,20 @@ function ChoiceListModal<T extends string>({
 }) {
   const theme = useTheme();
   return (
-    <SlideSheetModal visible={visible} onClose={onClose}>
-      <ThemedText style={idModalStyles.title}>{title}</ThemedText>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SettingsSheet visible={visible} title={title} onClose={onClose}>
         {options.map((opt) => (
           <Pressable
             key={opt}
+            accessibilityRole="button" accessibilityState={{ selected: current === opt }}
             onPress={() => { onSelect(opt); onClose(); }}
-            style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
-            <ThemedText style={[idModalStyles.optionText, current === opt && { color: theme.primary, fontWeight: '700' }]}>
+            style={[idModalStyles.optionRow, { borderBottomColor: theme.resident.border }]}>
+            <ThemedText style={[idModalStyles.optionText, current === opt && { color: theme.resident.accentText, fontWeight: '700' }]}>
               {labels[opt]}
             </ThemedText>
-            {current === opt && <Ionicons name="checkmark" size={18} color={theme.primary} />}
+            {current === opt && <Ionicons name="checkmark" size={18} color={theme.resident.accentText} />}
           </Pressable>
         ))}
-      </ScrollView>
-    </SlideSheetModal>
+    </SettingsSheet>
   );
 }
 
@@ -753,7 +597,7 @@ export default function ProfileScreen() {
 function ProfileScreenContent() {
   const router   = useRouter();
   const { session, refreshCompletion } = useAuth();
-  const { profile, isLoading, refetch } = useProfile();
+  const { profile, isLoading, error: profileError, refetch } = useProfile();
   const insets   = useSafeAreaInsets();
   const theme    = useTheme();
   const compactFields = useCompactFields();
@@ -786,6 +630,11 @@ function ProfileScreenContent() {
 
   // ── Household ─────────────────────────────────────────────────────────────
   const [members, setMembers] = useState<HouseholdMember[]>([]);
+  const householdSnapshot = useRef<Json>([]);
+  const [householdMustReload, setHouseholdMustReload] = useState(false);
+  const householdSave = useRef<AbortController | null>(null);
+  const saveOwner = useRef(session?.user.id);
+  saveOwner.current = session?.user.id;
 
   // ── Avatar ────────────────────────────────────────────────────────────────
   const [avatarUrl, setAvatarUrl]         = useState<string | null>(null);
@@ -803,10 +652,22 @@ function ProfileScreenContent() {
   // messages shown under empty required fields (fieldStatus below handles the
   // as-you-type format errors on non-empty values on its own).
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hydratedAccount = useRef<string | null>(null);
+  const preserveDraft = useRef(false);
+  const saveBusy = useRef(false);
+  useEffect(() => {
+    saveBusy.current = false;
+    setSaving(false);
+    return () => { householdSave.current?.abort(); householdSave.current = null; };
+  }, [session?.user.id]);
+  const photoBusy = useRef(false);
+  useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
 
   function showToast(message: string, type: ToastType = 'success') {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast({ message, type });
-    setTimeout(() => setToast(null), 2800);
+    toastTimer.current = setTimeout(() => setToast(null), 2800);
   }
 
   /** Drops a stale save-attempt error for one field once the resident corrects it —
@@ -832,6 +693,10 @@ function ProfileScreenContent() {
   // ── Sync from profile ────────────────────────────────────────────────────
   useEffect(() => {
     if (!profile) return;
+    setAvatarUrl(profile.avatar_url);
+    // An immediate photo save/refetch must not discard the separate form draft.
+    if (hydratedAccount.current === profile.id && preserveDraft.current) return;
+    hydratedAccount.current = profile.id;
     setFirstName(profile.first_name ?? '');
     setLastName(profile.last_name ?? '');
     setMiddleName(profile.middle_name ?? '');
@@ -845,14 +710,15 @@ function ProfileScreenContent() {
     setEmploymentStatus((profile.employment_status as EmploymentStatus | null) ?? null);
     setOccupation(profile.occupation ?? '');
     setBirthDateIso(profile.birth_date ?? null);
-    setAvatarUrl((profile as any).avatar_url ?? null);
-    setEmailVerifStatus((profile as any).email_verification_status ?? null);
+    setEmailVerifStatus(profile.email_verification_status);
     setFieldErrors({}); // reset any stale save-attempt errors on a fresh profile sync
     // Parse JSONB members array
-    const raw = (profile as any).household_members;
+    const raw = profile.household_members;
+    householdSnapshot.current = raw ?? [];
+    setHouseholdMustReload(false);
     if (Array.isArray(raw)) {
-      setMembers(raw as HouseholdMember[]);
-    }
+      setMembers(raw.flatMap(value => { const member = profileMember(value); return member ? [member] : []; }));
+    } else setMembers([]);
   }, [profile]);
 
   // ── Dirty-state detection ─────────────────────────────────────────────────
@@ -874,7 +740,7 @@ function ProfileScreenContent() {
     if (mobileNumber !== (profile.mobile_number ?? '')) return true;
     if (birthDateIso !== (profile.birth_date ?? null))  return true;
     // Household comparison — stringify for deep equality
-    const rawMembers = (profile as any).household_members;
+    const rawMembers = profile.household_members;
     const profileMembersJson = JSON.stringify(Array.isArray(rawMembers) ? rawMembers : []);
     if (JSON.stringify(members) !== profileMembersJson) return true;
     return false;
@@ -882,6 +748,9 @@ function ProfileScreenContent() {
     profile, firstName, lastName, middleName, suffix, sex, email, houseNo, street, city,
     employmentStatus, occupation, mobileNumber, birthDateIso, members,
   ]);
+  useEffect(() => { preserveDraft.current = isDirty; }, [isDirty]);
+  const householdUnavailable = profile?.household_members != null && (!Array.isArray(profile.household_members)
+    || profile.household_members.some(value => profileMember(value) === null));
 
   // ── Required-field / format validation ───────────────────────────────────
   // Run on every Save Changes attempt (see handleSave) — populates fieldErrors so
@@ -923,13 +792,12 @@ function ProfileScreenContent() {
   // resident sees their new photo reflected in the app right away without
   // having to scroll down and tap the CTA.
   async function handleAvatarUpload() {
-    if (!session) return;
-
-    const picked = await pickImageAsset();
-    if (!picked) return;
-
+    if (!session || photoBusy.current) return;
+    photoBusy.current = true;
     setAvatarUploading(true);
     try {
+      const picked = await pickImageAsset();
+      if (!picked) return;
       const bytes = await readImageBytes(picked);
       const ext   = imageExtension(picked.mimeType);
       // Single canonical path per resident — upsert:true overwrites the old file.
@@ -952,7 +820,7 @@ function ProfileScreenContent() {
       // completes, which could overwrite avatar_url with null.
       const { error: dbErr } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl } as any)
+        .update({ avatar_url: publicUrl })
         .eq('id', session.user.id);
       if (dbErr) throw dbErr;
 
@@ -966,13 +834,16 @@ function ProfileScreenContent() {
         e instanceof Error ? e.message : 'Could not upload profile photo. Please try again.',
       );
     } finally {
+      photoBusy.current = false;
       setAvatarUploading(false);
     }
   }
 
   // ── Save all changes ──────────────────────────────────────────────────────
   async function handleSave() {
-    if (!session || !isDirty) return;
+    if (!session || !isDirty || saveBusy.current) return;
+    if (householdMustReload) { showToast('Reload Profile before saving again. Your family changes may already have been saved.', 'error'); return; }
+    if (householdUnavailable) { showToast('Your saved household details are unavailable. Reopen Profile or contact barangay staff before saving.', 'error'); return; }
 
     const errors = validateRequiredFields();
     if (Object.keys(errors).length > 0) {
@@ -982,84 +853,99 @@ function ProfileScreenContent() {
     }
     setFieldErrors({});
 
+    saveBusy.current = true;
     setSaving(true);
+    const owner = session.user.id;
+    const controller = new AbortController();
+    householdSave.current = controller;
+    let familySaved = false;
+    try {
+      const payload = members.map(member => ({ id: member.id, name: member.name, relation: member.relation, ...(member.role ? { role: member.role } : {}) }));
+      readHouseholdMembers(payload);
+      if (JSON.stringify(payload) !== JSON.stringify(readHouseholdMembers(householdSnapshot.current))) {
+        const saved = await saveHouseholdMembers(payload, householdSnapshot.current, controller.signal);
+        if (controller.signal.aborted || saveOwner.current !== owner) return;
+        householdSnapshot.current = saved.snapshot;
+        familySaved = true;
+      }
+      if (controller.signal.aborted || saveOwner.current !== owner) return;
+      // Editing the email address invalidates whatever verification was
+      // previously recorded for the old address — clear it so the "Verified
+      // Resident" badge doesn't keep showing for an address nobody confirmed.
+      const emailChanged = email.trim() !== (profile?.email ?? '');
+      const nextEmailStatus = emailChanged ? null : emailVerificationStatus;
 
-    // Editing the email address invalidates whatever verification was
-    // previously recorded for the old address — clear it so the "Verified
-    // Resident" badge doesn't keep showing for an address nobody confirmed.
-    const emailChanged = email.trim() !== (profile?.email ?? '');
-    const nextEmailStatus = emailChanged ? null : emailVerificationStatus;
+      const { data: updatedProfile, error: updateErr } = await householdRequest(signal => supabase
+        .from('profiles')
+        .update({
+          // full_name is derived by the DB from these (migration 0081's
+          // compose_profiles_display_fields trigger) — always sent together so the
+          // trigger never partially recomposes it from a stale subset.
+          first_name:                firstName.trim() || null,
+          last_name:                 lastName.trim() || null,
+          middle_name:               middleName.trim() || null,
+          suffix:                    suffix.trim() || null,
+          sex,
+          email:                    email.trim() || null,
+          mobile_number:            mobileNumber.trim() || null,
+          // home_address is likewise derived from these three.
+          house_no:                 houseNo.trim() || null,
+          street:                   street.trim() || null,
+          ...(!profile?.barangays?.barangay_localities ? { city: city.trim() || null } : {}),
+          employment_status:        employmentStatus,
+          occupation:               occupation.trim() || null,
+          birth_date:               birthDateIso,
+        })
+        .eq('id', owner).select('id').abortSignal(signal).single(), controller.signal);
 
-    const { error: updateErr } = await supabase
-      .from('profiles')
-      .update({
-        // full_name is derived by the DB from these (migration 0081's
-        // compose_profiles_display_fields trigger) — always sent together so the
-        // trigger never partially recomposes it from a stale subset.
-        first_name:                firstName.trim() || null,
-        last_name:                 lastName.trim() || null,
-        middle_name:               middleName.trim() || null,
-        suffix:                    suffix.trim() || null,
-        sex,
-        email:                    email.trim() || null,
-        mobile_number:            mobileNumber.trim() || null,
-        // home_address is likewise derived from these three.
-        house_no:                 houseNo.trim() || null,
-        street:                   street.trim() || null,
-        ...(!profile?.barangays?.barangay_localities ? { city: city.trim() || null } : {}),
-        employment_status:        employmentStatus,
-        occupation:               occupation.trim() || null,
-        birth_date:               birthDateIso,
-        household_members:        members as any,
-      } as any)
-      .eq('id', session.user.id);
+      if (controller.signal.aborted || saveOwner.current !== owner) return;
 
-    setSaving(false);
-
-    if (updateErr) {
-      setSaving(false);
-      showToast(updateErr.message, 'error');
-      return;
+      if (updateErr || updatedProfile?.id !== owner) {
+        showToast(familySaved ? 'Family changes saved, but other profile details could not be saved. Retry Save Changes.' : 'Could not save your profile details. Reconnect and try again.', 'error');
+        return;
+      }
+      void refreshCompletion();
+      setEmailVerifStatus(nextEmailStatus);
+      showToast('Profile saved successfully ✓');
+      preserveDraft.current = false;
+      refetch();
+    } catch (error: unknown) {
+      if (!controller.signal.aborted && saveOwner.current === owner) {
+        setHouseholdMustReload(true);
+        showToast(error instanceof HouseholdError ? error.message : 'Could not confirm your profile changes. Reload Profile before saving again.', 'error');
+      }
+    } finally {
+      if (householdSave.current === controller) {
+        householdSave.current = null;
+        saveBusy.current = false;
+        setSaving(false);
+      }
     }
-    void refreshCompletion();
-    setEmailVerifStatus(nextEmailStatus);
-    setSaving(false);
-    showToast('Profile saved successfully ✓');
-    refetch();
   }
 
   // ── Guards ────────────────────────────────────────────────────────────────
   if (!session) return <GuestPrompt label="Log in to see your profile." />;
-  if (isLoading) return <PlaceholderPanel label="Loading profile…" />;
+  if (isLoading && !profile) return <PlaceholderPanel label="Loading profile…" />;
+  if (!profile) return <View style={{ flex: 1, padding: 20, backgroundColor: theme.background }}><PlaceholderPanel label={profileError ?? 'Profile unavailable'} /><PrimaryButton presentation="resident" label="Retry profile" onPress={refetch} /></View>;
 
   const isVerified  = emailVerificationStatus === 'verified';
 
   return (
-    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
 
-      {/* ── ① Header ──────────────────────────────────────────────────────── */}
-      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <Pressable
-          onPress={() => router.back()}
-          style={styles.backBtn}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          hitSlop={Spacing.two}>
-          <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
-        </Pressable>
-        <View style={styles.headerContent}>
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Profile
-          </ThemedText>
-        </View>
-      </View>
+      <ServiceScreenHeader title="Profile" onBack={() => router.back()} />
 
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 100 }]}
+        contentContainerStyle={[styles.content, { paddingBottom: 24 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
+        {householdMustReload ? <View style={{ gap: 8 }}>
+          <ThemedText accessibilityRole="alert" style={{ color: theme.resident.danger }}>Reload Profile to review the saved family list before trying again. Reloading discards unsaved form edits.</ThemedText>
+          <PrimaryButton presentation="resident" label="Reload Profile" onPress={() => { preserveDraft.current = false; refetch(); }} />
+        </View> : null}
 
+        {profileError ? <View><ThemedText accessibilityRole="alert" style={{ color: theme.resident.danger }}>{profileError}</ThemedText><PrimaryButton presentation="resident" variant="secondary" label="Retry profile" onPress={refetch} /></View> : null}
         {/* ── ② Avatar ────────────────────────────────────────────────────── */}
         <View style={styles.avatarSection}>
           {/* Keep the camera badge outside the photo's clipping boundary. */}
@@ -1072,7 +958,7 @@ function ProfileScreenContent() {
 
             <View style={styles.avatarOuter}>
               {/* Circle — photo or initials + upload spinner */}
-              <View style={[styles.avatarCircle, { backgroundColor: theme.primary, borderColor: theme.backgroundElement, shadowColor: theme.text }]}>
+              <View style={[styles.avatarCircle, { backgroundColor: theme.resident.accent, borderColor: theme.resident.card, shadowColor: theme.text }]}>
                 {avatarUrl ? (
                   <Image
                     source={{ uri: avatarUrl }}
@@ -1081,23 +967,23 @@ function ProfileScreenContent() {
                     cachePolicy="memory-disk"
                   />
                 ) : (
-                  <ThemedText style={[styles.avatarInitials, { color: theme.onPrimary }]}>
+                  <ThemedText style={[styles.avatarInitials, { color: theme.resident.onAccent }]}>
                     {getInitials((liveFullName || session.user.email?.split('@')[0]) ?? '?')}
                   </ThemedText>
                 )}
 
                 {avatarUploading && (
                   <View style={[styles.avatarSpinnerOverlay, { backgroundColor: theme.text + '73' }]}>
-                    <ActivityIndicator size="large" color={theme.onPrimary} />
+                    <ActivityIndicator size="large" color={theme.resident.onAccent} />
                   </View>
                 )}
               </View>
 
               {/* Camera badge — sibling of circle, paints on top */}
-              <View style={[styles.cameraBadge, { backgroundColor: theme.primary, borderColor: theme.backgroundElement }]}>
+              <View style={[styles.cameraBadge, { backgroundColor: theme.resident.accent, borderColor: theme.resident.card }]}>
                 {avatarUploading
-                  ? <ActivityIndicator size="small" color={theme.onPrimary} />
-                  : <Ionicons name="camera" size={13} color={theme.onPrimary} />}
+                  ? <ActivityIndicator size="small" color={theme.resident.onAccent} />
+                  : <Ionicons name="camera" size={13} color={theme.resident.onAccent} />}
               </View>
             </View>
           </Pressable>
@@ -1105,14 +991,12 @@ function ProfileScreenContent() {
           {/* ③ Name + badge */}
           <View style={styles.identityText}>
             <ThemedText style={styles.nameText}>{liveFullName || '—'}</ThemedText>
+            <ThemedText style={{ fontSize: 13, lineHeight: 19, color: theme.resident.muted }}>Fields marked <RequiredMark /> are required.</ThemedText>
             {isVerified && <View style={styles.identityBadge}><VerifiedBadge /></View>}
           </View>
         </View>
 
-        {/* ── ④ Personal Information ────────────────────────────────────── */}
-        <SectionCard>
-          <ThemedText style={styles.sectionTitle}>Personal Information</ThemedText>
-
+        <SectionCard title="Personal Information">
           <InlineFieldInput
             label="First Name"
             required
@@ -1123,20 +1007,20 @@ function ProfileScreenContent() {
           />
           <Divider />
           <InlineFieldInput
+            label="Middle Name"
+            value={middleName}
+            placeholder="Optional"
+            onChangeText={setMiddleName}
+            {...fieldStatus(middleName, fieldErrors.middleName, validateName)}
+          />
+          <Divider />
+          <InlineFieldInput
             label="Last Name"
             required
             value={lastName}
             placeholder="Enter last name"
             onChangeText={setLastName}
             {...fieldStatus(lastName, fieldErrors.lastName, validateName)}
-          />
-          <Divider />
-          <InlineFieldInput
-            label="Middle Name"
-            value={middleName}
-            placeholder="Optional"
-            onChangeText={setMiddleName}
-            {...fieldStatus(middleName, fieldErrors.middleName, validateName)}
           />
           <Divider />
           <InlineFieldInput
@@ -1157,6 +1041,33 @@ function ProfileScreenContent() {
             onEdit={() => setSexModal(true)}
           />
           <Divider />
+          <FieldRow
+            label="Date of Birth"
+            required
+            value={fmtDate(birthDateIso)}
+            placeholder="Select your date of birth"
+            error={fieldErrors.birthDate}
+            success={birthDateIso ? ' ' : undefined}
+            onEdit={() => setShowBirthPicker(true)}
+          />
+          <Divider />
+          <FieldRow
+            label="Employment Status"
+            required
+            value={employmentStatus ? EMPLOYMENT_STATUS_LABELS[employmentStatus] : ''}
+            placeholder="Select employment status"
+            error={fieldErrors.employmentStatus}
+            success={employmentStatus ? ' ' : undefined}
+            onEdit={() => setEmploymentModal(true)}
+          />
+          {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
+            <>
+              <Divider />
+              <InlineFieldInput label="Occupation" value={occupation} placeholder="Optional" onChangeText={setOccupation} />
+            </>
+          ) : null}
+        </SectionCard>
+        <SectionCard title="Contact">
           <InlineFieldInput
             label="Email"
             required
@@ -1167,6 +1078,19 @@ function ProfileScreenContent() {
             {...fieldStatus(email, fieldErrors.email, validateEmail)}
           />
           <Divider />
+          <InlineFieldInput
+            label="Mobile Number"
+            required
+            value={mobileNumber}
+            placeholder="09171234567"
+            onChangeText={setMobile}
+            keyboardType="phone-pad"
+            maxLength={11}
+            {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}
+          />
+        </SectionCard>
+        {email.trim() !== (profile.email ?? '') ? <ThemedText accessibilityLiveRegion="polite" style={{ color: theme.resident.warning, fontSize: 12.5, lineHeight: 18 }}>You'll need to verify your new email again after saving.</ThemedText> : null}
+        <SectionCard title="Address">
           <InlineFieldInput
             label="House No."
             required
@@ -1186,72 +1110,31 @@ function ProfileScreenContent() {
           />
           <Divider />
           {profile?.barangays?.barangay_localities ? <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`City, ${profile?.city ?? 'Not configured'}, read only`}>
-            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>City</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.city ?? 'Not configured'}</ThemedText></View>
+            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>City</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.city ?? 'Not configured'}</ThemedText></View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
           </View> : <InlineFieldInput label="City" required value={city} placeholder="Enter city/municipality" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />}
           <Divider />
           {/* Read-only — this is profiles.barangay_id, assigned automatically at
               registration (AGENTS.md §0), not a free-text address component. */}
-          <View style={fieldStyles.row}>
+          <View style={fieldStyles.row} accessible accessibilityLabel={`Barangay, ${profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? 'Not configured'}, read only`}>
             <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}>
               <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Barangay</ThemedText>
               <ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? '—'}</ThemedText>
-            </View>
+            </View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
           </View>
           <Divider />
           <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`Province, ${profile?.province ?? 'Not configured'}, read only`}>
-            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Province</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.province ?? 'Not configured'}</ThemedText></View>
+            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Province</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.province ?? 'Not configured'}</ThemedText></View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
           </View>
-          <Divider />
-          <InlineFieldInput
-            label="Mobile Number"
-            required
-            value={mobileNumber}
-            placeholder="09171234567"
-            onChangeText={setMobile}
-            keyboardType="phone-pad"
-            maxLength={11}
-            {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}
-          />
-          <Divider />
-          <FieldRow
-            label="Employment Status"
-            required
-            value={employmentStatus ? EMPLOYMENT_STATUS_LABELS[employmentStatus] : ''}
-            placeholder="Select employment status"
-            error={fieldErrors.employmentStatus}
-            success={employmentStatus ? ' ' : undefined}
-            onEdit={() => setEmploymentModal(true)}
-          />
-          {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
-            <>
-              <Divider />
-              <InlineFieldInput label="Occupation" value={occupation} placeholder="Optional" onChangeText={setOccupation} />
-            </>
-          ) : null}
-          <Divider />
-          <FieldRow
-            label="Date of Birth"
-            required
-            value={fmtDate(birthDateIso)}
-            placeholder="Select your date of birth"
-            error={fieldErrors.birthDate}
-            success={birthDateIso ? ' ' : undefined}
-            onEdit={() => setShowBirthPicker(true)}
-          />
         </SectionCard>
 
         {/* ── ⑤ Household Information ──────────────────────────────────── */}
-        <SectionCard>
-          <View style={styles.sectionHeaderRow}>
-            <ThemedText style={styles.sectionTitle}>Household Information</ThemedText>
-            <Pressable
-              onPress={() => setMemberModal({ member: null })}
-              accessibilityRole="button"
-              accessibilityLabel="Add household member"
-              style={styles.addMemberBtn}>
-              <ThemedText style={[styles.addLink, { color: theme.primary }]}>Add Member</ThemedText>
-            </Pressable>
-          </View>
+        <SectionCard title="Household Information" action={
+          <Pressable onPress={() => setMemberModal({ member: null })} accessibilityRole="button" accessibilityLabel="Add household member" style={styles.addMemberBtn}>
+            <Ionicons name="add" size={16} color={theme.resident.accentText} />
+            <ThemedText style={[styles.addLink, { color: theme.resident.accentText }]}>Add Member</ThemedText>
+          </Pressable>
+        }>
+          {householdUnavailable ? <ThemedText accessibilityRole="alert" style={{ color: theme.resident.danger, paddingVertical: 12 }}>Your saved household details are unavailable. Reopen Profile or contact barangay staff before saving.</ThemedText> : null}
 
           {members.length === 0 ? (
             <ThemedText themeColor="textSecondary" style={styles.emptyHousehold}>No household members added yet.</ThemedText>
@@ -1267,18 +1150,8 @@ function ProfileScreenContent() {
 
       </ScrollView>
 
-      {/* ── ⑦ Fixed Save button ──────────────────────────────────────────── */}
-      <View style={[styles.saveBar, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected, paddingBottom: insets.bottom + Spacing.two }]}>
-        <Pressable
-          onPress={handleSave}
-          disabled={!isDirty || saving}
-          accessibilityRole="button"
-          accessibilityLabel="Save changes"
-          style={[styles.saveBtn, { backgroundColor: !isDirty || saving ? theme.backgroundSelected : theme.primary }]}>
-          {saving
-            ? <ActivityIndicator size="small" color={theme.onPrimary} />
-            : <ThemedText style={[styles.saveBtnText, { color: !isDirty || saving ? theme.textSecondary : theme.onPrimary }]}>Save Changes</ThemedText>}
-        </Pressable>
+      <View style={[styles.saveBar, { backgroundColor: theme.resident.card, borderTopColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 16) }]}>
+        <PrimaryButton presentation="resident" label={saving ? 'Saving…' : 'Save Changes'} disabled={!isDirty || householdUnavailable} loading={saving} onPress={handleSave} />
       </View>
 
       {/* ── Centered toast ────────────────────────────────────────────────── */}
@@ -1286,6 +1159,7 @@ function ProfileScreenContent() {
 
       {/* ── Modals ────────────────────────────────────────────────────────── */}
       <BirthdayCalendarModal
+        presentation="resident"
         visible={showBirthPicker}
         value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
         onClose={() => setShowBirthPicker(false)}
@@ -1346,115 +1220,21 @@ function ProfileScreenContent() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  root: { flex: 1 },
-
-  /* Header */
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20 },
-
-  /* Avatar */
-  avatarSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: Spacing.two,
-    paddingBottom: Spacing.two,
-    gap: Spacing.three,
-  },
-  identityText: { flex: 1, minWidth: 0, gap: Spacing.one },
-  identityBadge: { alignSelf: 'flex-start', maxWidth: '100%' },
-  // The badge is a sibling so the photo's overflow never clips it.
-  avatarOuter: {
-    width: 72,
-    height: 76,
-    position: 'relative',
-  },
-  avatarCircle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 68, height: 68,
-    borderRadius: 34,
-    // backgroundColor applied inline in ProfileScreen with the live accent color.
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',   // clips photo + spinner to the circle shape
-    borderWidth: 3,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  avatarInitials: { fontSize: 26, fontWeight: '700', lineHeight: 34 },
+  safeArea: { flex: 1 }, root: { flex: 1 },
+  avatarSection: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  identityText: { flex: 1, minWidth: 0, gap: 4 }, identityBadge: { alignSelf: 'flex-start', maxWidth: '100%' },
+  avatarOuter: { width: 76, height: 76, position: 'relative' },
+  avatarCircle: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  avatarInitials: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
   avatarImage: { width: '100%', height: '100%' },
-  avatarSpinnerOverlay: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // Badge sits at the bottom-right corner of avatarOuter.
-  // It is a SIBLING (not child) of avatarCircle → overflow:hidden never clips it.
-  cameraBadge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 30, height: 30,
-    borderRadius: 15,
-    // backgroundColor applied inline in ProfileScreen with the live accent color.
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2.5,
-  },
-  nameText: { fontSize: 20, lineHeight: 26, fontWeight: '700' },
-
-  /* Content */
-  content: { paddingHorizontal: Spacing.three, gap: Spacing.two },
-
-  /* Section headers */
-  sectionTitle: { fontSize: 14, fontWeight: '700', marginBottom: Spacing.one },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.one,
-  },
-  addLink: { fontSize: 13, fontWeight: '600' },
-  addMemberBtn: { minHeight: 44, justifyContent: 'center' },
-
-  /* Household empty */
-  emptyHousehold: { fontSize: 14, paddingVertical: Spacing.two, textAlign: 'center' },
-
-  /* Fixed save bar */
-  saveBar: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
-    borderTopWidth: 1,
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.two,
-  },
-  saveBtn: {
-    borderRadius: 28,
-    paddingVertical: 12,
-    minHeight: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  saveBtnText: { fontSize: 16, fontWeight: '700' },
+  avatarSpinnerOverlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
+  cameraBadge: { position: 'absolute', bottom: 0, right: 0, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 3 },
+  nameText: { fontSize: 22, lineHeight: 28, fontWeight: '800' },
+  content: { padding: 16, gap: 16 },
+  sectionTitle: { fontSize: 15, lineHeight: 21, fontWeight: '700', flexShrink: 1 },
+  sectionHeaderRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, paddingHorizontal: 4, gap: 8 },
+  addLink: { fontSize: 14, fontWeight: '700' },
+  addMemberBtn: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  emptyHousehold: { fontSize: 14, paddingVertical: 16, textAlign: 'center' },
+  saveBar: { borderTopWidth: 1, paddingHorizontal: 16, paddingTop: 12 },
 });

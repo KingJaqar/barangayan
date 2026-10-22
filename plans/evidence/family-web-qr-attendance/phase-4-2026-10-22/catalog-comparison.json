@@ -1,0 +1,85 @@
+{
+  "result": "pass",
+  "functions": [
+    {
+      "signature": "barangayan_private.check_in_household_members(uuid,uuid,jsonb,uuid)",
+      "source_md5": "5b26627b14d54204dbff3363cde29473",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "barangayan_private.check_out_household_attendance(uuid[],uuid)",
+      "source_md5": "cf289c9c1d3bbebbe892723faddc12df",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "barangayan_private.get_my_household_attendance_receipt_exports()",
+      "source_md5": "ecd87184eaa39bcbe82ce44f99b4fc78",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "barangayan_private.get_my_household_attendance()",
+      "source_md5": "ee7f1169fe060290813e514dad622f17",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "barangayan_private.lookup_household_for_attendance(text)",
+      "source_md5": "87a63dea63e4c1643e8db7b79b090ffb",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "check_in_household_members(uuid,uuid,jsonb,uuid)",
+      "source_md5": "2c139e1f1613170033ea22934383d34c",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "check_out_household_attendance(uuid[],uuid)",
+      "source_md5": "d23294d98a22ec0b4301fac489e826ba",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "get_my_household_attendance()",
+      "source_md5": "83577e4c27a9b747a6be0a9ff9c9b5ce",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    },
+    {
+      "signature": "lookup_household_for_attendance(text)",
+      "source_md5": "03de59fea946d71dfd76b9c9c663d14b",
+      "source_config_definer_match": true,
+      "local_owner": "supabase_admin",
+      "hosted_owner": "postgres",
+      "acl": "Owner names differ; both preflights independently verify effective client grants."
+    }
+  ],
+  "hosted_counts": {
+    "stays": 0,
+    "legacy": 3,
+    "members": 6,
+    "profiles": 42,
+    "receipts": 0
+  },
+  "limit": "Definition identity and read-only catalog checks do not demonstrate hosted concurrency, sessions or deployed browser behavior."
+}

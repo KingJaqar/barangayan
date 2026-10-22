@@ -4,8 +4,9 @@ import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
 
-import type { Tables } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { mutateAdminRecord } from '@/actions/admin-record-actions';
+import { AttendanceDialog } from './attendance-dialog';
+import { useCallback, useState } from 'react';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
 import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
@@ -24,11 +25,6 @@ import type { HouseholdMemberRow } from './types';
 import { RELATION_OPTIONS as RELATION_FILTER_OPTIONS, TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
-
-const CHECKED_IN_OPTIONS = [
-  { value: 'true', label: 'Yes' },
-  { value: 'false', label: 'No' },
-];
 
 const RELATION_OPTIONS = [
   { value: 'spouse', label: 'Spouse' },
@@ -56,9 +52,9 @@ function formatDateTimeShort(iso: string | null): string {
   return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Manila' }).format(new Date(iso));
 }
 
-export function HouseholdsTable({ result, summary, requestedState, barangayId, residents, optionsError }: {
+export function HouseholdsTable({ result, summary, requestedState, actorId, barangayId, residents, optionsError }: {
   result: QueryOutcome<BrowseResult<HouseholdMemberRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
-  barangayId: string;
+  actorId: string; barangayId: string;
   residents: { id: string; full_name: string }[]; optionsError: string | null;
 }) {
   const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.households, requestedState, result, true);
@@ -66,53 +62,21 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
   const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
   const [addOpen, setAddOpen] = useState(false);
 
-  const [channelName] = useState(() => 'admin-household-members-' + Math.random().toString(36).slice(2));
-  useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
-    const channel = supabase.channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'household_members' }, browse.refresh).subscribe();
-    return () => { void supabase.removeChannel(channel); };
-  }, [channelName, browse.refresh]);
+  const [attendanceTarget, setAttendanceTarget] = useState<{ profileId?: string } | null>(null);
+  const [attendanceAccessLost, setAttendanceAccessLost] = useState(false);
+  const closeAttendance = useCallback(() => setAttendanceTarget(null), []);
+  const loseAttendanceAccess = useCallback(() => { setAttendanceTarget(null); setAttendanceAccessLost(true); }, []);
+  const openAttendance = async (profileId?: string) => {
+    if (attendanceAccessLost) return;
+    if (await browse.settle()) setAttendanceTarget({ profileId });
+  };
 
-  async function updateField(row: HouseholdMemberRow, patch: Partial<Tables<'household_members'>>) {
-    // Avoid a database write when an editable cell is committed without a change.
-    const before: Record<string, unknown> = {};
-    const after: Record<string, unknown> = {};
-    let changed = false;
-    for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
-      const prevValue = (row as unknown as Record<string, unknown>)[key as string];
-      const nextValue = patch[key];
-      before[key as string] = prevValue;
-      after[key as string] = nextValue;
-      if (prevValue !== nextValue) changed = true;
-    }
-    if (!changed) return { error: null, row };
-
-    const supabase = createSupabaseBrowserClient();
-    const { data: updated, error } = await supabase
-      .from('household_members')
-      .update(patch)
-      .eq('id', row.id)
-      .select('id, profile_id, name, relation, role, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, created_at, updated_at')
-      .maybeSingle();
-    if (error) return { error: error.message };
-    if (!updated) {
-      return { error: 'No household member was updated. Check that you still have access to this barangay.' };
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'household',
-      entityId: updated.id,
-      entityLabel: row.name,
-      changes: { before, after },
-    }).catch(() => {});
-    browse.refresh();
-    return { error: null, row: updated };
+  async function updateField(row: HouseholdMemberRow, patch: { name?: string; relation?: string; role?: string }) {
+    if (Object.entries(patch).every(([key, value]) => row[key as keyof typeof patch] === value)) return { error: null, row };
+    const result = await mutateAdminRecord('households', row.id, 'save', row.updated_at, patch);
+    if (!result.error) browse.refresh();
+    return result;
   }
-
-  /** Shared hard-delete used by both the table row's inline action and the detail modal —
-   * kept as one function so the audit log call is only written once. */
 
   const lifecycle = useRecordWorkspace<HouseholdMemberRow>('households', browse.refresh, browse.settle, { editHandle: browse.editHandle });
 
@@ -166,8 +130,8 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
     },
     {
       id: 'checked_in', header: 'Checked In',
-      initialWidth: 118,
-      minWidth: 104,
+      initialWidth: 148,
+      minWidth: 132,
       wrap: 'nowrap',
       render: (r) => (
         <span
@@ -177,26 +141,9 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
               : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'
           }`}
         >
-          {r.is_checked_in ? 'Yes' : 'No'}
+          {r.is_checked_in ? 'Active stay' : 'No recorded check-in'}
         </span>
       ),
-      edit: {
-        type: 'select', selectKind: 'boolean',
-        options: CHECKED_IN_OPTIONS,
-        getValue: (r) => String(r.is_checked_in),
-        onSave: (r, value) => {
-          const next = value === 'true';
-          if (next === r.is_checked_in) return Promise.resolve({ error: null });
-          const patch: Partial<Tables<'household_members'>> = { is_checked_in: next };
-          if (!next) {
-            patch.checked_in_at = null;
-            patch.checked_in_center_id = null;
-            patch.checked_in_center_name = null;
-          }
-          return updateField(r, patch);
-        },
-        commitOnChange: true,
-      },
     },
     {
       id: 'center', header: 'Checked-In Center',
@@ -212,15 +159,21 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       wrap: 'nowrap',
       render: (r) => <span className="whitespace-nowrap text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTimeShort(r.created_at)}</span>,
     },
+    { id: 'attendance', header: 'Attendance', render: row => <button type="button" className={cancelButtonClass} disabled={attendanceAccessLost}
+      onClick={() => void openAttendance(row.profile_id)}>Manage attendance</button> },
     lifecycle.column,
   ];
 
-  return <div  className="min-w-0">
+  return <div className="min-w-0">
+    {attendanceTarget && <AttendanceDialog key={`${actorId}:${attendanceTarget.profileId ?? 'scan'}`} actorId={actorId} barangayId={barangayId}
+      initialProfileId={attendanceTarget.profileId} residents={residents} optionsError={optionsError} onClose={closeAttendance} onIdentityLost={loseAttendanceAccess} onChanged={browse.refresh} />}
+    {attendanceAccessLost && <p role="alert">Your session or attendance access changed. Reload the page to continue.</p>}
+    <button type="button" className={`${submitButtonClass} mb-4`} disabled={attendanceAccessLost} onClick={() => void openAttendance()}>Scan Family QR / Attendance</button>
     <RecordArchiveLink name="households" beforeOpen={browse.settle} />
     <ProfileTableSummary name="households" summary={summary} onRetry={browse.refresh} />
     <div>{optionsError && <div role="alert">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddMemberForm residents={residents} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
-    <ProfileTablePanel label="Households & Residents" browse={browse}
+    <ProfileTablePanel label="Additional household members" browse={browse}
       category={<label className="table-browse-field">Relation <AdminSelect kind="relation" aria-label="Relation" value={state.filters.relation} onValueChange={nextValue => void browse.commit({ filters: { relation: nextValue } })}>
         <option value="">All relations</option>{RELATION_FILTER_OPTIONS.map(rel => <option key={rel} value={rel}>{rel.charAt(0).toUpperCase() + rel.slice(1)}</option>)}
       </AdminSelect></label>}
@@ -231,7 +184,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
-        onRowClick={row => lifecycle.open(row)} emptyLabel={browse.pending ? 'Updating results…' : 'No household members found.'}
+        onRowClick={row => lifecycle.open(row)} emptyLabel={browse.pending ? 'Updating results…' : 'No household people found.'}
         resizableColumns density="compact" tableMinWidth={1280} cellOverflow="hidden" />
     </ProfileTablePanel>
     {lifecycle.view}

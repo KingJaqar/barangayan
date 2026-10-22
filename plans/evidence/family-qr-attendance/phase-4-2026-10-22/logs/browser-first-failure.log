@@ -1,0 +1,38 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByText('4 people', { exact: true }) to be visible
+
+    at C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\browser-final.mjs:97:53 {
+  log: [
+    "  - waiting for getByText('4 people', { exact: true }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+Open attendance
+Family attendance
+Close
+
+Confirm the household’s identity in person. Select only people physically present. Times are shown in Asia/Manila.
+
+Arrival center
+Choose an active center…
+Synthetic Center A
+Synthetic Center B
+
+Selected center: Synthetic Center A
+
+Scan Family QR
+Or select from the resident directory
+Resident (account holder)
+Choose a resident…
+Choose a resident…
+Synthetic Family
+Synthetic Holder Only
+Load household
+Refresh current attendance
+{
+  "result": "fail",
+  "checks": [],
+  "errors": [],
+  "failure": "TimeoutError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('4 people', { exact: true }) to be visible\u001b[22m\n"
+}

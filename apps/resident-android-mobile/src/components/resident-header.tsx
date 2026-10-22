@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, usePathname } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { NotificationBell } from '@/components/notification-bell';
@@ -12,6 +12,8 @@ import { useSearchDraft } from '@/hooks/use-resident-search';
 import { useTheme } from '@/hooks/use-theme';
 import { getMobileFontFamily } from '@/constants/fonts';
 import { useFontPreference } from '@/hooks/use-font-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
 const TITLES: Record<string, string> = {
   '/home': 'Home',
@@ -31,6 +33,8 @@ export function ResidentHeader() {
   const searching = pathname === '/search';
   const title = TITLES[pathname];
   const theme = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { announcementsUnreadCount } = useUnreadCounts();
   const { fontId } = useFontPreference();
   const insets = useSafeAreaInsets();
   const { query, setQuery, rememberSearch } = useSearchDraft();
@@ -39,18 +43,21 @@ export function ResidentHeader() {
   const [searchX, setSearchX] = useState(140);
   const progress = useSharedValue(searching ? 1 : 0);
   useEffect(() => {
-    progress.value = withTiming(searching ? 1 : 0, { duration: 200 });
+    progress.value = reducedMotion ? (searching ? 1 : 0) : withTiming(searching ? 1 : 0, { duration: 200 });
+    return () => cancelAnimation(progress);
+  }, [searching, reducedMotion, progress]);
+  useEffect(() => {
     if (!searching) {
       input.current?.blur();
       return;
     }
     const frame = requestAnimationFrame(() => input.current?.focus());
     return () => cancelAnimationFrame(frame);
-  }, [searching, progress]);
+  }, [searching]);
   const fieldStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
-    left: searchX + (48 - searchX) * progress.value,
-    width: 44 + (width - 48 - 44) * progress.value,
+    left: searchX + 12 + (48 - searchX - 12) * progress.value,
+    width: 44 + (width - 40 - 44) * progress.value,
   }));
   const normalStyle = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
   const closeSearch = () => {
@@ -60,12 +67,12 @@ export function ResidentHeader() {
   };
   return <View style={{
     display: title || searching ? 'flex' : 'none',
-    backgroundColor: theme.primary,
+    backgroundColor: theme.resident.accent,
     paddingTop: insets.top,
     paddingLeft: insets.left,
     paddingRight: insets.right,
   }}>
-    <View style={styles.row} onLayout={event => setWidth(event.nativeEvent.layout.width)}>
+    <View style={styles.row} onLayout={event => { const next = event.nativeEvent.layout.width; setWidth(current => current === next ? current : next); }}>
       <Animated.View
         style={[styles.normal, normalStyle]}
         pointerEvents={searching ? 'none' : 'auto'}
@@ -74,21 +81,25 @@ export function ResidentHeader() {
         <Image source={require('@/assets/logo/barangayan-logo-1024.png')}
           style={styles.logo} contentFit="contain" accessibilityLabel="Barangayan" />
         <ThemedText type="residentHeader" accessibilityRole="header"
-          style={[styles.title, { color: theme.resident.onAccent }]}>{title}</ThemedText>
-        <View onLayout={event => setSearchX(event.nativeEvent.layout.x)}>
+          numberOfLines={pathname === '/announcements' ? 1 : undefined}
+          adjustsFontSizeToFit={pathname === '/announcements'}
+          minimumFontScale={0.6}
+          style={[styles.title, title && title.length > 14 ? styles.longTitle : undefined, { color: theme.resident.onAccent }]}>{title}</ThemedText>
+        <View onLayout={event => { const next = event.nativeEvent.layout.x; setSearchX(current => current === next ? current : next); }}>
           <Pressable accessibilityRole="button" accessibilityLabel="Search"
             onPress={() => router.navigate('/search')} style={styles.button}>
-            <Ionicons name="search" size={24} color={theme.resident.onAccent} />
+            <Ionicons name="search" size={22} color={theme.resident.onAccent} />
           </Pressable>
         </View>
-        <Pressable accessibilityRole="button" accessibilityLabel="View announcements"
-          onPress={() => router.navigate('/announcements')} style={styles.button}>
-          <NotificationBell color={theme.resident.onAccent} />
-        </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel="Open settings"
-          onPress={() => router.navigate('/settings')} style={styles.button}>
-          <Ionicons name="menu" size={26} color={theme.resident.onAccent} />
-        </Pressable>
+        <HeaderAction label={announcementsUnreadCount > 0 ? `View announcements, ${announcementsUnreadCount} unread` : 'View announcements'}
+          selected={pathname === '/announcements'} reducedMotion={reducedMotion}
+          onPress={() => router.navigate('/announcements')}>
+            <NotificationBell size={22} color={pathname === '/announcements' ? theme.resident.accentText : theme.resident.onAccent} presentation="resident" />
+        </HeaderAction>
+        <HeaderAction label="Open settings" selected={pathname === '/settings'} reducedMotion={reducedMotion}
+          onPress={() => router.navigate('/settings')}>
+            <Ionicons name="menu" size={24} color={pathname === '/settings' ? theme.resident.accentText : theme.resident.onAccent} />
+        </HeaderAction>
       </Animated.View>
       <View style={styles.searchLayer} pointerEvents={searching ? 'box-none' : 'none'}
         accessibilityElementsHidden={!searching}
@@ -99,18 +110,19 @@ export function ResidentHeader() {
             <Ionicons name="arrow-back" size={24} color={theme.resident.onAccent} />
           </Pressable>
         ) : null}
-        <Animated.View style={[styles.field, { backgroundColor: theme.backgroundElement }, fieldStyle]}>
-          <Ionicons name="search" size={20} color={theme.textSecondary} />
+        <Animated.View style={[styles.field, fieldStyle]}>
+          <View pointerEvents="none" style={[styles.fieldSurface, { backgroundColor: theme.resident.card }]} />
+          <Ionicons name="search" size={18} color={theme.resident.muted} />
           <TextInput
             ref={input} value={query} onChangeText={setQuery} maxLength={120} editable={searching}
             accessibilityLabel="Search services, announcements and your records"
-            placeholder="Search Barangayan" placeholderTextColor={theme.textSecondary}
+            placeholder="Search Barangayan" placeholderTextColor={theme.resident.muted}
             returnKeyType="search" autoCorrect={false}
-            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.text, fontFamily: getMobileFontFamily(fontId) }]} />
+            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
               onPress={() => { setQuery(''); input.current?.focus(); }} style={styles.clear}>
-              <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
+              <Ionicons name="close-circle" size={18} color={theme.resident.muted} />
             </Pressable>
           ) : null}
         </Animated.View>
@@ -118,14 +130,66 @@ export function ResidentHeader() {
     </View>
   </View>;
 }
+
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+function HeaderAction({ label, selected, reducedMotion, onPress, children }: {
+  label: string;
+  selected: boolean;
+  reducedMotion: boolean;
+  onPress: () => void;
+  children: ReactNode;
+}) {
+  const { resident } = useTheme();
+  const selection = useSharedValue(Number(selected));
+  const press = useSharedValue(0);
+  useEffect(() => {
+    selection.value = reducedMotion ? Number(selected) : withTiming(Number(selected), {
+      duration: selected ? 260 : 180,
+      easing: Easing.bezier(0.16, 1, 0.3, 1),
+    });
+    return () => cancelAnimation(selection);
+  }, [selected, reducedMotion, selection]);
+  useEffect(() => {
+    if (reducedMotion) { cancelAnimation(press); press.value = 0; }
+    return () => cancelAnimation(press);
+  }, [reducedMotion, press]);
+  const surfaceStyle = useAnimatedStyle(() => ({
+    opacity: selection.value,
+    transform: [{ scale: reducedMotion ? 1 : 0.84 + selection.value * 0.16 }],
+  }));
+  const pressStyle = useAnimatedStyle(() => ({ opacity: press.value * 0.14 }));
+  const contentStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: reducedMotion ? 1 : 1 - press.value * 0.08 }],
+  }));
+  const setPressed = (value: number) => {
+    press.value = reducedMotion ? value : withTiming(value, {
+      duration: value ? 90 : 180,
+      easing: Easing.out(Easing.cubic),
+    });
+  };
+  return <Pressable accessibilityRole="button" accessibilityLabel={label}
+    accessibilityState={{ selected }} onPress={onPress}
+    onPressIn={() => setPressed(1)} onPressOut={() => setPressed(0)} style={styles.button}>
+    <Animated.View pointerEvents="none" style={[styles.actionContent, contentStyle]}>
+      <Animated.View style={[styles.iconHighlight, { backgroundColor: resident.accentSoft, borderColor: resident.onAccent }, surfaceStyle]} />
+      <Animated.View style={[styles.pressHighlight, { backgroundColor: selected ? resident.accentText : resident.onAccent }, pressStyle]} />
+      {children}
+    </Animated.View>
+  </Pressable>;
+}
 const styles = StyleSheet.create({
-  row: { minHeight: 64, paddingVertical: 8, marginHorizontal: 12, justifyContent: 'center' },
-  normal: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: 2 },
-  logo: { width: 32, height: 32, borderRadius: 16, marginRight: 6, flexShrink: 0 },
-  title: { fontSize: 18, lineHeight: 24, flex: 1, minWidth: 0 },
-  button: { width: 44, height: 48, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
-  searchLayer: { position: 'absolute', left: 0, right: 0, top: 8, height: 48 },
-  field: { position: 'absolute', top: 0, height: 48, borderRadius: 24, paddingLeft: 12, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
-  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 16, height: 48 },
-  clear: { width: 44, height: 48, justifyContent: 'center', alignItems: 'center' },
+  row: { minHeight: 56, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: 'center' },
+  normal: { minHeight: 44, flexDirection: 'row', alignItems: 'center' },
+  logo: { width: 36, height: 36, borderRadius: 18, marginRight: 12, flexShrink: 0 },
+  title: { fontSize: 22, lineHeight: 28, flex: 1, minWidth: 0 },
+  longTitle: { fontSize: 19, lineHeight: 22 },
+  button: { width: 44, height: 44, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
+  actionContent: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  iconHighlight: { position: 'absolute', inset: 0, borderRadius: 24, borderWidth: 1 },
+  pressHighlight: { position: 'absolute', inset: 0, borderRadius: 24 },
+  searchLayer: { position: 'absolute', left: -12, right: 4, top: 6, height: 44 },
+  field: { position: 'absolute', top: 0, height: 44, borderRadius: 24, paddingLeft: 14, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
+  fieldSurface: { position: 'absolute', left: 0, right: 0, top: 2, bottom: 2, borderRadius: 24 },
+  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 44 },
+  clear: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
 });

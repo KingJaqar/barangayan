@@ -1,0 +1,2751 @@
+{
+  "date": "2026-10-22 Asia/Manila",
+  "phase": 4,
+  "status": "Partially complete \u2014 local implementation, database/browser/native harness checks complete; physical-camera/full release/remote gates pending",
+  "source_identities": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567"
+    },
+    {
+      "path": "apps/admin-web/CLAUDE.md",
+      "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3"
+    },
+    {
+      "path": "apps/admin-web/package.json",
+      "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944"
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "sha256": "6d4a7a35fb94375ddd90f12dbecca8bbc10955460f36a4d5dcb60591b1703f41"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "sha256": "fcb1234f3673ae067524efd2549c095e9e8aa73dd1c9fa8ea63eca5dad12ddca"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "sha256": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sha256": "4bf791692d458561c7c5583d562b6d50eb7806a3f8d26a3f1c53f94ca243ea80"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sha256": "20f529eb5d8a4d8de88f67fabb737ffdb7c26e35f1592f897c94cb13a0940bec"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "sha256": "85a1ea2256c928481a16a03026ffe3016ff1a8be936ca2d981b89cb3f57b3f70"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "sha256": "4c7d06e058b633b2112ce7f23022f0af983db5bac47da15664163a7eb2f0ec1e"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "sha256": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "sha256": "945ce4a31164933c7d626bc6c9777a9fddbf72326d2d5149ae23b9b5e846f87c"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "sha256": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "sha256": "71c1c11d8ad5b8a86291248e26080268e63d9c5dd9e59a58797a9402f3e970a1"
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "sha256": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2"
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "sha256": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "sha256": "87afb13f8c09566257f35ea04b304bbdc01fabaad69b6b5a4c3fd61330361a7c"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+      "sha256": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "ba392be564402d2cb225fd9aa36ea2aa45545a11a8bec2ae610d6e5f59952d09"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "sha256": "763a084c9df68448baca85971c9a5c19a64f62013c4daac976760f69bd6128b8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "63d89e1176151bf984eb8072a7fa926ec5fd862ce9d7133f917ff1825c1d0ce8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "sha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "sha256": "e53edc8291ecd89648aef25ff98f7eaac13e0795f42c2e4da1215e350d16bfae"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "sha256": "b563926a027abfd9a25d869e840b5bd3be76ec801557f7eb76d598a07e0befd8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "sha256": "3a7d2b66dcaa53dee07dc74f679320630b79abaeb600131649ab9b2a4e8d161b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "sha256": "344b6ca9c2ddd36f8eafa343bd0f10c6bb60b3806b0057fc859947269bd8a208"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "sha256": "ed261da13bc24510d5829240298d39d26d902c5e663955203e66e7998a44a77a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "sha256": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.test.ts",
+      "sha256": "263ca0610e7b8cae2f29c595868931ba3bbbc82aa5e24ecb90d57c2979b97f0f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.ts",
+      "sha256": "61556698978baa4256a5c8975da1d7eea4590310a0abc05a8991ab29624eeb4c"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "sha256": "d786293565d4b94e1a0e1a98dea32112dca18a689ec50b2b124a11ff84e2f318"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "sha256": "614601e3d1df69403fce05ada776384405d83bf4b3c51ad0f1c979f4418ef27b"
+    },
+    {
+      "path": "apps/resident-ios-mobile/package.json",
+      "sha256": "a8f875b0407e66840706fcd4ededb79547cdba8e9cc016cd130353d30eb1a944"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "sha256": "65b4e413b1dfab194012af133db237065b2e78b360536549aaf77b1914c77ecc"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/schemas.ts",
+      "sha256": "86175584cc991910c4177ae5280ad746c8bc140b67be791e7df2ade5b53566e7"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+      "sha256": "95a4c97499b0210de6a709836c4623309ee2c882b41c0bc6d1a839117de2c45e"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+      "sha256": "6a366e2c7ffe588e0d4aadb7bfdeda0e338f75140ab6c6a72fb11d04adc6ca46"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+      "sha256": "8187d1dc65e946faff08edb0cab2a61f1e4e7e5705b362eaf3ad267a1a9d64e8"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/qr-section.tsx",
+      "sha256": "bc9c6433a55bbd1fe027595f5d61fb5977333c13bd9054a99c6e3315c7c69cda"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/lib/errors.ts",
+      "sha256": "eb65453254cc5b427a41b55b62872b2f0eeee94e4d1731a8fd3f3df6b53845d0"
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+      "sha256": "069079fe00384649cb9b7eac4693726aa4aba57873cda8a723e0d084eb312c7a"
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/qr.test.ts",
+      "sha256": "336157b5548872fb1b84abe2597563bbafa2b627c05dfc732e41b3d8467437ae"
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-web/package.json",
+      "sha256": "460b994a5a185ac6497154a5113da3d57a3758f8bb3054d61613d6c25784315e"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "sha256": "e2e2ad6713450ad5fdb3a1c8e858dc84e94c5ba3c8faa6cd02db40d4cea1a163"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "sha256": "bb032f97166597f1b04627884e19edb6ece02a7b271b5c2ddfb254e644c5c5a8"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "sha256": "aff07ded02491dc090a5f2e89020cd3f049006eef1f88c524875e0c1173af5c8"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "sha256": "8ec79e3c50b15ea04d66bed541e34849024af81686914ea8532bd839c7db0c8d"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "sha256": "fe56a894c4d979edf44e609e1b14a7eb9520388012ba6f24d7138f22a53dc25d"
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "sha256": "e3b4a4d59104479ef1926abb999dd42540d019effec5cf264e54a5c64f7fc770"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "709b037c661e61831a75f298f7475c1419a075d6b459dd1028c07a4c764ef7c1"
+    },
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "b8d7d5cc0baa3080839cfd896fcb1cac90fd87f3d26874c1e87492431b8c47c8"
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.test.ts",
+      "sha256": "1555634ca1b0f6e62089fc03515c68eee28f6244c4ad26540900e4f1c87c5c8f"
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "ecbc9b495d8aac4c3f68644b35995131bdcc100e7e8334b6e4e12337dc25bf97"
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "sha256": "649ee31b82fc0d2791ea352a59c3bfc5eef0a711979b04782852596296c0a224"
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "sha256": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb"
+    },
+    {
+      "path": "packages/shared/src/types/household-attendance.database.ts",
+      "sha256": "efbffaa3008213bbe0a37965abcad40bc7f7f5e4a3f1cb999373a075d8a65b60"
+    },
+    {
+      "path": "packages/shared/vitest.config.ts",
+      "sha256": "ab62155f398c51eab4e82c644ad2c943e15fe60e4ee983ecaa916f4567d93e9f"
+    },
+    {
+      "path": "plans/Family_QR_Attendance_Context_Index.md",
+      "sha256": "effb5e842e933edd21d6ff62308f9015295eef11b8705c27a1e284a821ceb2f1"
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "sha256": "a133d3171eff4e0e635694097af05844fd17457dc35b9b8d250778fffd68b4d9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-1-2026-10-21/verification.json",
+      "sha256": "4c697bdbb8bd3a5306aff9f32c6ea32a0e49fc5f419e714ff8aa51cf3a47894d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-2-2026-10-21/verification.json",
+      "sha256": "291295ca6704f3760d5c53a1010a7bb75e51f00038ae55d42792bff9da111141"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-3-2026-10-22/verification.json",
+      "sha256": "e4c5f6034ed4806c26c5b552ceba85fc8bf894fcbf78f8d272d9bd23130c2fd7"
+    },
+    {
+      "path": "scripts/resident-web-feedback-regression.cjs",
+      "sha256": "ecce0d245949afb733d5b6c7a2a4344a04e79ace0271f149054d13a5939443c2"
+    },
+    {
+      "path": "supabase/config.toml",
+      "sha256": "5a23277a8f8768d83cf6274bd877dc703e71a76d7b5e7ee76ed64464447c6820"
+    },
+    {
+      "path": "supabase/functions/delete-my-account/delete-v2.ts",
+      "sha256": "e8e978e7608308bdaf3f8b4a2e5d1edc9cdb1f0153c1c411115f704c2ac2431b"
+    },
+    {
+      "path": "supabase/functions/delete-my-account/index.ts",
+      "sha256": "ab9008b1195e81b4abf022fc980a45009f769801171bf064ca04cea1876f960e"
+    },
+    {
+      "path": "supabase/functions/export-my-data/export-v2.ts",
+      "sha256": "25bb5c80b0ede7daca443bd98d96f78ada3464fc325dbf66f46463b27915db27"
+    },
+    {
+      "path": "supabase/functions/export-my-data/index.ts",
+      "sha256": "ea8a7a7b83ada037b43a3f472acf4cfade45fad6848f47718437fd2a10b72d63"
+    },
+    {
+      "path": "supabase/functions/generate-household-qr/index.ts",
+      "sha256": "5dc380091ffd9030845bd3b1fb4357a6aaacd8b8b1965f377749b3715c48b7a5"
+    },
+    {
+      "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+      "sha256": "8c7227a915051f90b4a05863a41e80434690fb1460646a828c55d72534d1202c"
+    },
+    {
+      "path": "supabase/migrations/0046_household_members.sql",
+      "sha256": "21e7eedf8af78811301addb43d8030ced9b673be759691b6c664841d47b63f00"
+    },
+    {
+      "path": "supabase/migrations/0052_household_admin_management.sql",
+      "sha256": "c73bdd9564b86a71445b4ae81497c16134ebfd6f6c79e133bf3c5c8f70996581"
+    },
+    {
+      "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "sha256": "92a47f905e7344b64cc218a323cc6cb2488c487f15207bc62b9a514c5e45b6ff"
+    },
+    {
+      "path": "supabase/migrations/0110_admin_table_browse_projections.sql",
+      "sha256": "c1270164a661639ac1690226d49050d85d5b3d54d019fa7830b94eaf898ef966"
+    },
+    {
+      "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "sha256": "c0db58cda7ff27ef5d813b446f5fb78cc08a9555b78452bd1eaf21d07e47b598"
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "sha256": "8b1fbabd7332ad3638c455b204493beb3253c744c769d6c50a24032cb1caf26e"
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "sha256": "0fb386afec26e4f399d804b1708fcba514b5f20612b3dd3aeee3a065aab63982"
+    },
+    {
+      "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "sha256": "ff0d2bf1cbc2b70987d08029924146ab026a15441990114bff6cfc0861ec8489"
+    },
+    {
+      "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+      "sha256": "059472c21de4a378f86d2e53ad80430576ccd87cf74b3b32ca2b3056d51dee55"
+    },
+    {
+      "path": "supabase/migrations/0136_account_deletion_state.sql",
+      "sha256": "88a5012543e07c04e37a27faee5959ecfc0f23dd8024f7c682c5883dc9ed172b"
+    },
+    {
+      "path": "supabase/migrations/0137_household_attendance.sql",
+      "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+    },
+    {
+      "path": "supabase/migrations/0138_admin_household_attendance_projection.sql",
+      "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+    },
+    {
+      "path": "supabase/migrations/0139_remote_schema.sql",
+      "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2"
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/pause.sql",
+      "sha256": "442635efd92a60f92727e1ce4444dcd34a2ffe38b0751f975d5aa5453b7ce181"
+    },
+    {
+      "path": "supabase/runbooks/family-attendance/resume.sql",
+      "sha256": "369608cbfb6e1057a59f989dc6e30a634224ba8190f4c6df250e54d68d42d7d6"
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca"
+    },
+    {
+      "path": "supabase/tests/household_attendance.test.sql",
+      "sha256": "67aabd3f1e154d5409040e9d08081939703ea7298e707e5dc015f0435f426215"
+    },
+    {
+      "path": "supabase/tests/household_attendance_concurrency.mjs",
+      "sha256": "0e28782d0c5b35eedc521ab5ba11038f910c40a5fdc2529eeff1f6e2b8b770dd"
+    },
+    {
+      "path": "supabase/tests/household_attendance_recovery.mjs",
+      "sha256": "638a2060b71933cf122cf20eb3669afdf71d813070710fdb62e41486efcc4839"
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "sha256": "dcc4fd2707809d0977add745ae3df7d299ae0356dc3324465e32e2394b0aa6df"
+    },
+    {
+      "path": "supabase/tests/resident_ios_phase3_concurrency.mjs",
+      "sha256": "7c377ec8d16926804ab5a11e98d6edeeb11834caf2ab67b19f5358be9db8cec0"
+    },
+    {
+      "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "sha256": "7263b2aadc13e7ab298344b870b83631bd311a6f4595a54645180938b518d316"
+    },
+    {
+      "path": "tmp/family-attendance-phase3-20261022/export-candidate/_expo/static/js/android/entry-ec71d9058c332970c19fd5dc9e8298fa.hbc",
+      "sha256": "d7ced160394a6b9a0ffc6c6a37f10eb30122d40f2ff50d42cb329064562c4e7c"
+    },
+    {
+      "path": "tmp/family-attendance-phase3-20261022/export-candidate/metadata.json",
+      "sha256": "e4388a313b0c632df9517d9fb6978318b95610d5c1d233109eab055f44a9c0ce"
+    },
+    {
+      "path": "supabase/migrations/0140_restore_household_attendance.sql",
+      "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44"
+    },
+    {
+      "path": "supabase/migrations/0141_attendance_receipt_export_access.sql",
+      "sha256": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2"
+    },
+    {
+      "path": "supabase/tests/household_attendance_receipt_exports.test.sql",
+      "sha256": "c9f42b6b658a1094f582d43c520b585252cb4c2809bea17a4b267d925fffc932"
+    }
+  ],
+  "owned": [
+    "packages/shared/src/schemas/household-attendance.ts",
+    "packages/shared/src/schemas/household-attendance.test.ts",
+    "supabase/runbooks/family-attendance/pause.sql",
+    "supabase/runbooks/family-attendance/resume.sql",
+    "supabase/tests/household_attendance_recovery.mjs",
+    "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "plans/Family_QR_Attendance_Context_Index.md"
+  ],
+  "external_renames": {
+    "supabase/migrations/20261021111056_household_attendance.sql": "supabase/migrations/0137_household_attendance.sql",
+    "supabase/migrations/20261021125435_admin_household_attendance_projection.sql": "supabase/migrations/0138_admin_household_attendance_projection.sql"
+  },
+  "protected_sources": [
+    {
+      "path": "AGENTS.md",
+      "prior_path": "AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "prior_path": "CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "prior_path": "apps/admin-web/AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/CLAUDE.md",
+      "prior_path": "apps/admin-web/CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/package.json",
+      "prior_path": "apps/admin-web/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "prior_path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "prior_path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "prior_path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "prior_path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "prior_path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "prior_path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "prior_path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "prior_path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "prior_path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "prior_path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "prior_path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "prior_path": "apps/admin-web/src/lib/household-attendance.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "prior_path": "apps/admin-web/src/lib/supabase/client.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "prior_path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+      "prior_path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "prior_path": "apps/resident-android-mobile/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "prior_path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "prior_path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "prior_path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "prior_path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "prior_path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.test.ts",
+      "prior_path": "apps/resident-android-mobile/src/lib/household.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.ts",
+      "prior_path": "apps/resident-android-mobile/src/lib/household.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "prior_path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "prior_path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/package.json",
+      "prior_path": "apps/resident-ios-mobile/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "prior_path": "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/schemas.ts",
+      "prior_path": "apps/resident-ios-mobile/src/data/schemas.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+      "prior_path": "apps/resident-ios-mobile/src/features/privacy/export-contract.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+      "prior_path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+      "prior_path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/qr-section.tsx",
+      "prior_path": "apps/resident-ios-mobile/src/features/qr/qr-section.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/lib/errors.ts",
+      "prior_path": "apps/resident-ios-mobile/src/lib/errors.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+      "prior_path": "apps/resident-ios-mobile/tests/export-function.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-ios-mobile/tests/qr.test.ts",
+      "prior_path": "apps/resident-ios-mobile/tests/qr.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "prior_path": "apps/resident-web/AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "prior_path": "apps/resident-web/CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/package.json",
+      "prior_path": "apps/resident-web/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "prior_path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "prior_path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "prior_path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "prior_path": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "prior_path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "prior_path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "prior_path": "package-lock.json",
+      "unchanged": true
+    },
+    {
+      "path": "package.json",
+      "prior_path": "package.json",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/package.json",
+      "prior_path": "packages/shared/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "prior_path": "packages/shared/src/index.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "prior_path": "packages/shared/src/schemas/emergency-qr.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "prior_path": "packages/shared/src/schemas/household.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "prior_path": "packages/shared/src/types/database.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/types/household-attendance.database.ts",
+      "prior_path": "packages/shared/src/types/household-attendance.database.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/vitest.config.ts",
+      "prior_path": "packages/shared/vitest.config.ts",
+      "unchanged": true
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-1-2026-10-21/verification.json",
+      "prior_path": "plans/evidence/family-qr-attendance/phase-1-2026-10-21/verification.json",
+      "unchanged": true
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-2-2026-10-21/verification.json",
+      "prior_path": "plans/evidence/family-qr-attendance/phase-2-2026-10-21/verification.json",
+      "unchanged": true
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-3-2026-10-22/verification.json",
+      "prior_path": "plans/evidence/family-qr-attendance/phase-3-2026-10-22/verification.json",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/resident-web-feedback-regression.cjs",
+      "prior_path": "scripts/resident-web-feedback-regression.cjs",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/config.toml",
+      "prior_path": "supabase/config.toml",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/functions/delete-my-account/delete-v2.ts",
+      "prior_path": "supabase/functions/delete-my-account/delete-v2.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/functions/delete-my-account/index.ts",
+      "prior_path": "supabase/functions/delete-my-account/index.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/functions/export-my-data/export-v2.ts",
+      "prior_path": "supabase/functions/export-my-data/export-v2.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/functions/export-my-data/index.ts",
+      "prior_path": "supabase/functions/export-my-data/index.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/functions/generate-household-qr/index.ts",
+      "prior_path": "supabase/functions/generate-household-qr/index.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+      "prior_path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0046_household_members.sql",
+      "prior_path": "supabase/migrations/0046_household_members.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0052_household_admin_management.sql",
+      "prior_path": "supabase/migrations/0052_household_admin_management.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "prior_path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0110_admin_table_browse_projections.sql",
+      "prior_path": "supabase/migrations/0110_admin_table_browse_projections.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "prior_path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "prior_path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "prior_path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "prior_path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+      "prior_path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0136_account_deletion_state.sql",
+      "prior_path": "supabase/migrations/0136_account_deletion_state.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0137_household_attendance.sql",
+      "prior_path": "supabase/migrations/20261021111056_household_attendance.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0138_admin_household_attendance_projection.sql",
+      "prior_path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "prior_path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/household_attendance.test.sql",
+      "prior_path": "supabase/tests/household_attendance.test.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/household_attendance_concurrency.mjs",
+      "prior_path": "supabase/tests/household_attendance_concurrency.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "prior_path": "supabase/tests/resident_household_conditional.test.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/resident_ios_phase3_concurrency.mjs",
+      "prior_path": "supabase/tests/resident_ios_phase3_concurrency.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "prior_path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "unchanged": true
+    },
+    {
+      "path": "tmp/family-attendance-phase3-20261022/export-candidate/_expo/static/js/android/entry-ec71d9058c332970c19fd5dc9e8298fa.hbc",
+      "prior_path": "tmp/family-attendance-phase3-20261022/export-candidate/_expo/static/js/android/entry-ec71d9058c332970c19fd5dc9e8298fa.hbc",
+      "unchanged": true
+    },
+    {
+      "path": "tmp/family-attendance-phase3-20261022/export-candidate/metadata.json",
+      "prior_path": "tmp/family-attendance-phase3-20261022/export-candidate/metadata.json",
+      "unchanged": true
+    }
+  ],
+  "unowned_release_blocker": {
+    "path": "supabase/migrations/0139_remote_schema.sql",
+    "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2",
+    "lines_read": [
+      "1\u2013105",
+      "323\u2013334",
+      "415\u2013436",
+      "576\u2013618"
+    ],
+    "applied": false,
+    "state": "Historical intermediate state; another actor has pushed 0140 restoration. Do not remove or edit pushed 0139."
+  },
+  "baseline_checks": [
+    {
+      "name": "android-types",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "apps/resident-android-mobile/tsconfig.json"
+      ],
+      "exit": 2,
+      "seconds": 66.5,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-android-types.log"
+    },
+    {
+      "name": "android-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/mobile"
+      ],
+      "exit": 0,
+      "seconds": 20.8,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-android-lint.log"
+    },
+    {
+      "name": "android-tests",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "apps/resident-android-mobile"
+      ],
+      "exit": 0,
+      "seconds": 9.3,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-android-tests.log"
+    },
+    {
+      "name": "shared-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--workspace=@barangayan/shared"
+      ],
+      "exit": 0,
+      "seconds": 7.9,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-shared-tests.log"
+    },
+    {
+      "name": "admin-types",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--workspace=@barangayan/web"
+      ],
+      "exit": 0,
+      "seconds": 36.1,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-admin-types.log"
+    },
+    {
+      "name": "admin-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/web"
+      ],
+      "exit": 0,
+      "seconds": 73.0,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-admin-lint.log"
+    },
+    {
+      "name": "admin-tests",
+      "command": [
+        "npm.cmd",
+        "run",
+        "test:tables",
+        "--workspace=@barangayan/web"
+      ],
+      "exit": 1,
+      "seconds": 15.3,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-admin-tests.log"
+    },
+    {
+      "name": "web-types",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--workspace=@barangayan/resident-web"
+      ],
+      "exit": 0,
+      "seconds": 10.5,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-web-types.log"
+    },
+    {
+      "name": "web-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/resident-web",
+        "--",
+        "src/lib/qr-checkin.ts",
+        "src/components/emergency/qr-scanner-dialog.tsx",
+        "src/components/emergency/qr-upload-fallback.tsx",
+        "src/components/emergency/scan-content.tsx"
+      ],
+      "exit": 0,
+      "seconds": 21.3,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-web-lint.log"
+    },
+    {
+      "name": "ios-types",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--workspace=@barangayan/resident-ios"
+      ],
+      "exit": 0,
+      "seconds": 23.7,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-ios-types.log"
+    },
+    {
+      "name": "ios-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--workspace=@barangayan/resident-ios"
+      ],
+      "exit": 0,
+      "seconds": 86.6,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-ios-lint.log"
+    },
+    {
+      "name": "ios-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--workspace=@barangayan/resident-ios",
+        "--",
+        "tests/qr.test.ts",
+        "tests/resident-api.test.ts",
+        "tests/export-function.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 9.2,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-ios-tests.log"
+    },
+    {
+      "name": "web-cutover",
+      "command": [
+        "node",
+        "scripts/resident-web-feedback-regression.cjs",
+        "rw-lt-05:unit"
+      ],
+      "exit": 0,
+      "seconds": 0.7,
+      "log": "tmp/family-attendance-phase4-20261022/logs/baseline-web-cutover.log"
+    }
+  ],
+  "final_checks": [
+    {
+      "name": "shared-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--workspace=@barangayan/shared",
+        "--",
+        "src/schemas/household-attendance.test.ts",
+        "src/schemas/household-attendance-responses.test.ts"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 7.0,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-shared-tests.log"
+    },
+    {
+      "name": "admin-tests",
+      "command": [
+        "npm.cmd",
+        "run",
+        "test:tables",
+        "--workspace=@barangayan/web",
+        "--",
+        "tests/table-browse/household-attendance-web.test.ts"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 6.6,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-admin-tests.log"
+    },
+    {
+      "name": "owned-lint",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\eslint\\bin\\eslint.js",
+        "../../packages/shared/src/schemas/household-attendance.ts",
+        "../../packages/shared/src/schemas/household-attendance.test.ts",
+        "../../supabase/tests/household_attendance_recovery.mjs"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\admin-web",
+      "exit": 0,
+      "seconds": 14.8,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-owned-lint.log"
+    },
+    {
+      "name": "syntax",
+      "command": [
+        "node",
+        "--check",
+        "supabase/tests/household_attendance_recovery.mjs"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 0.1,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-syntax.log"
+    },
+    {
+      "name": "admin-types",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit",
+        "-p",
+        "C:\\Users\\User\\barangayan\\apps\\admin-web\\tsconfig.json"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 2,
+      "seconds": 33.2,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-admin-types.log"
+    },
+    {
+      "name": "web-types",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit",
+        "-p",
+        "C:\\Users\\User\\barangayan\\apps\\resident-web\\tsconfig.json"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 27.4,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-web-types.log"
+    },
+    {
+      "name": "ios-types",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit",
+        "-p",
+        "C:\\Users\\User\\barangayan\\apps\\resident-ios-mobile\\tsconfig.json"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 23.5,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-ios-types.log"
+    },
+    {
+      "name": "android-types",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit",
+        "-p",
+        "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile\\tsconfig.json"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 2,
+      "seconds": 47.5,
+      "log": "tmp/family-attendance-phase4-20261022/logs/final-android-types.log"
+    }
+  ],
+  "baseline_builds": [
+    {
+      "name": "android-export",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\expo\\bin\\cli",
+        "export",
+        "--platform",
+        "android",
+        "--max-workers",
+        "2",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\family-attendance-phase4-20261022\\android-export"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "exit": 0,
+      "seconds": 81.6,
+      "log": "logs/android-export.log"
+    },
+    {
+      "name": "admin-build",
+      "command": [
+        "npm.cmd",
+        "run",
+        "build",
+        "--workspace=@barangayan/web",
+        "--",
+        "--webpack"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 138.6,
+      "log": "logs/admin-build.log"
+    }
+  ],
+  "final_builds": [
+    {
+      "name": "android-export",
+      "command": [
+        "node",
+        "C:\\Users\\User\\barangayan\\node_modules\\expo\\bin\\cli",
+        "export",
+        "--platform",
+        "android",
+        "--max-workers",
+        "2",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\family-attendance-phase4-20261022\\android-export-final"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "exit": 0,
+      "seconds": 56.8,
+      "log": "logs/final-android-export.log"
+    },
+    {
+      "name": "admin-build",
+      "command": [
+        "npm.cmd",
+        "run",
+        "build",
+        "--workspace=@barangayan/web",
+        "--",
+        "--webpack"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan",
+      "exit": 0,
+      "seconds": 89.5,
+      "log": "logs/final-admin-build.log"
+    }
+  ],
+  "supported_admin_final": {
+    "command": "npm run typecheck --workspace=@barangayan/web",
+    "compiler": "5.9.3",
+    "exit": 0,
+    "log": "logs/admin-types-verified.log"
+  },
+  "owned_lint": {
+    "exit": 0,
+    "log": "logs/owned-lint-final.log",
+    "rules": "Existing admin config; Next root corrected, no suppression"
+  },
+  "database": {
+    "database": "family_attendance_phase4_20261022",
+    "postgres": "17.6",
+    "schema_sha256": "16cf7db32b288b98be7efb78fe3d121d340097c5fa80ae1f76ee9111ee54ceef",
+    "source": "Existing verified schema-only 0117 dump; no resident records copied",
+    "migrations": [
+      {
+        "path": "supabase/migrations/0118_resident_front_id_submission.sql",
+        "sha256": "f063101a9257d45b0111b043e200d325ccf94f4ff49ba169c2045ca88a93c337",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0119_admin_profile_and_verified_association.sql",
+        "sha256": "b3444289658f366826d4bc529f8e26daa9222135c79d2b20024786488760765f",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0120_flood_shadow_runs.sql",
+        "sha256": "7689e8503718be870828b7be6bb9deca46bed5ef3215a7368b9a96f7bbd2c65e",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+        "sha256": "8b1fbabd7332ad3638c455b204493beb3253c744c769d6c50a24032cb1caf26e",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0122_resident_apple_account_setup.sql",
+        "sha256": "b67fd9ce4f4c1956e86d8f2f76904d33517876ae9eef253980ce708029de4989",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+        "sha256": "0fb386afec26e4f399d804b1708fcba514b5f20612b3dd3aeee3a065aab63982",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0124_unreferenced_upload_objects.sql",
+        "sha256": "09f2f8cfd77f9fe531a9180a17a53ceda8c2297344db94565ea79270da82eacb",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0125_automatic_document_request_payments.sql",
+        "sha256": "8ee3a83422ae44148e2fc1a88516ba5ab0b2120db24e25ee81c426956b1a20d2",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0126_restore_automatic_request_submission.sql",
+        "sha256": "2008cab74d67c16dd5d2ea46d632c6f0e578205744f4070472761592ec610e7c",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0127_admin_resident_document_requests.sql",
+        "sha256": "b1efd479a4bd34f249837b5543bf826a378fe40a77605fed221e87c5ffba2636",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0128_admin_personal_profile_editing.sql",
+        "sha256": "dc562d15255225a6d0366c625c16c3e5131156f3b4c1df6fac4c09b325c15405",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+        "sha256": "ff0d2bf1cbc2b70987d08029924146ab026a15441990114bff6cfc0861ec8489",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0130_resident_directory_admin_visibility.sql",
+        "sha256": "c73d4e2d9e75e869d706ca6985961997e8a0141cb940a3164de731f6d29ed02e",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0131_request_editor_admin_resident_options.sql",
+        "sha256": "1d4545d5f5a83adf2b6c4fce9588e2d028b6c14e2cd381668d36d505a57ca2b6",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0132_request_payment_column_editors.sql",
+        "sha256": "96064dc3558b49ea745f962d0fb3fdc27aaf3136f7e97d474cc0347945165a98",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+        "sha256": "059472c21de4a378f86d2e53ad80430576ccd87cf74b3b32ca2b3056d51dee55",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0134_medical_applicant_email.sql",
+        "sha256": "bf72658a22174e5d090e4231e78a5afd08ac9cc85ad13143f48f528bd0794e27",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0135_resident_notifications.sql",
+        "sha256": "c4cd5186f959cefe88e49b29dd22f55969cef7ab84bcc65621aaabf1912c5980",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0136_account_deletion_state.sql",
+        "sha256": "88a5012543e07c04e37a27faee5959ecfc0f23dd8024f7c682c5883dc9ed172b",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/20261021111056_household_attendance.sql",
+        "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+        "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba",
+        "exit": 0
+      }
+    ],
+    "tests": [
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "sha256": "67aabd3f1e154d5409040e9d08081939703ea7298e707e5dc015f0435f426215",
+        "assertions": 83,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "sha256": "813acca07e59c02bcd4eef15622ba363af0bd22582919ff3b0becf2c021f1698",
+        "assertions": 30,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+        "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca",
+        "assertions": 27,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_record_lifecycle.test.sql",
+        "sha256": "e203f022fb42b37d150fb5bebc30ef6e4275c67ebd3627b164de19bd396c409c",
+        "assertions": 153,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_household_conditional.test.sql",
+        "sha256": "dcc4fd2707809d0977add745ae3df7d299ae0356dc3324465e32e2394b0aa6df",
+        "assertions": 22,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+        "sha256": "7664b90e39eb6f7ee1c150b20bea27951385c38b460c9e99c6f4f66690f3f231",
+        "assertions": 56,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "sha256": "721e519ca2b1d7f90eb8e3a3e4fc9637a9e49a1c0924a8f54fc4cf191d3a86a9",
+        "assertions": 86,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+        "sha256": "7263b2aadc13e7ab298344b870b83631bd311a6f4595a54645180938b518d316",
+        "assertions": 7,
+        "exit": 0
+      }
+    ],
+    "concurrency": {
+      "exit": 0,
+      "log": "logs/concurrency.log"
+    },
+    "no_backfill": true
+  },
+  "recovery": {
+    "database": "family_attendance_phase4_recovery_20261022",
+    "result": "pass",
+    "checks": [
+      "paused arrivals and departures rejected at public/private boundaries",
+      "resident reads continue and legacy writes remain blocked",
+      "two visits and three receipts unchanged during pause",
+      "exact dump/restore of all stay and receipt fields",
+      "resume restores only authenticated mutation access",
+      "delayed arrival/departure receipts replay exactly and leave the later stay open"
+    ],
+    "backup_sha256": "56ab247c529c9a661478e86eb647212f639ccd21d934a0845fc0648cc5ce1e0c"
+  },
+  "browser": {
+    "path": "browser-restored/browser-results.json",
+    "groups": 17,
+    "result": "pass",
+    "console_errors": [],
+    "synthetic_auth_native_adapters": true,
+    "database": "family_attendance_phase4_recovery_20261022",
+    "schema": "Full local chain through 0140"
+  },
+  "acceptance": [
+    {
+      "id": "A01",
+      "status": "Pending manual verification",
+      "local_evidence": "83 attendance assertions; holder-only staff flow; actual Family hooks/real-REST roundtrip; native local API holder arrival/departure displayed with Manila times",
+      "remaining": "Actual installed candidate/staging holder-only camera-to-Family flow"
+    },
+    {
+      "id": "A02",
+      "status": "Pending manual verification",
+      "local_evidence": "Final browser groups: exactly two of four, two unchanged; arrival/departure shown in actual Family components; actual native local staff two-participant arrival/departure status",
+      "remaining": "Full authenticated installed Android/staff target roundtrip"
+    },
+    {
+      "id": "A03",
+      "status": "Pending manual verification",
+      "local_evidence": "21-session suite same-center/request races, original arrival preserved; browser duplicate confirm one write",
+      "remaining": "Recheck immutable staging candidate after migration resolution"
+    },
+    {
+      "id": "A04",
+      "status": "Pending manual verification",
+      "local_evidence": "Independent-session different-center conflict and source-current admin rejection",
+      "remaining": "Recheck staging candidate/target"
+    },
+    {
+      "id": "A05",
+      "status": "Pending manual verification",
+      "local_evidence": "SQL replay/access revocation; browser response loss exact UUID/payload; recovery delayed replay",
+      "remaining": "Actual staging Auth/session revocation and target replay"
+    },
+    {
+      "id": "A06",
+      "status": "Pending manual verification",
+      "local_evidence": "Exact-stay SQL/browser departure; recovery closed receipt replays without closing later visit",
+      "remaining": "Staging candidate/target replay"
+    },
+    {
+      "id": "A07",
+      "status": "Pending manual verification",
+      "local_evidence": "83 + 30 SQL boundary assertions: atomic batch/key conflicts/forged authority; UI response ownership",
+      "remaining": "Staging candidate/target"
+    },
+    {
+      "id": "A08",
+      "status": "Pending manual verification",
+      "local_evidence": "Authenticated-role RLS/tenant/history tests and real REST; actual DB authority, synthetic Auth endpoint",
+      "remaining": "Real staging Auth/role/account/tenant revocation"
+    },
+    {
+      "id": "A09",
+      "status": "Pending manual verification",
+      "local_evidence": "Local tested candidate blocks direct/generic/legacy/queued writers; clients send no attendance writes",
+      "remaining": "0140 restores server boundary and final local chain checks pass; actual target role/legacy/queued write behavior still requires separately authorized staging tests"
+    },
+    {
+      "id": "A10",
+      "status": "Pending manual verification",
+      "local_evidence": "Lifecycle/rename/roster/race suites; stable member identities; no production code change",
+      "remaining": "Attended target rename/removal/arrival flow"
+    },
+    {
+      "id": "A11",
+      "status": "Pending manual verification",
+      "local_evidence": "Center lifecycle/reassignment races; real browser inactive-center checkout",
+      "remaining": "Candidate/target recheck"
+    },
+    {
+      "id": "A12",
+      "status": "Pending manual verification",
+      "local_evidence": "22 conditional-save assertions; prior hash-current Android two-editor UI evidence",
+      "remaining": "Full candidate target multi-editor Family/Settings flow"
+    },
+    {
+      "id": "A13",
+      "status": "Pending manual verification",
+      "local_evidence": "Final 480 SQL assertions include 16 receipt-export boundary tests, 56 deletion, 86 backend and seven tenant checks; 15 export tests within 64 iOS tests. Final 0141 helper/view source and target static catalog inspected.",
+      "remaining": "Deploy/smoke both actual erasure/export Edge versions under separate authorization"
+    },
+    {
+      "id": "A14",
+      "status": "Pending manual verification",
+      "local_evidence": "Native actual QR: direct settled enlarged decode; normal captured pixels decode after documented nearest-neighbor doubling through staff html5-qrcode 2.3.8. Physical camera unavailable per user; directory fallback passes locally.",
+      "remaining": "Physical camera scans displayed normal/enlarged QR; authenticated target fallback"
+    },
+    {
+      "id": "A15",
+      "status": "Pending manual verification",
+      "local_evidence": "Brave states, error copy, theme/narrow/200% zoom, account cleanup; actual Family arrival/departure screenshots inspected; nine MuMu flow groups, 320dp/130% text, serif/extreme accent/dark, native conditional editing and account isolation pass",
+      "remaining": "Full installed release app/actual Auth and bottom-tab clearance; visual keyboard overlap. User keeps remote checks pending."
+    },
+    {
+      "id": "A16",
+      "status": "Pending manual verification",
+      "local_evidence": "Real browser stable idle counts, timeout/key retry, double-confirm and late camera cleanup; actual recovery pause has clear mapped copy; native idle/focus/resume/error/Retry/delayed-account/logout pass; post-restart ReactNativeJS warning/AndroidRuntime error log empty",
+      "remaining": "Actual deployed Auth/session behavior and full app navigation; remote verification pending per user"
+    },
+    {
+      "id": "A17",
+      "status": "Pending manual verification",
+      "local_evidence": "Owned diff/retirement/source/artifact ledgers; fresh migration-through-0138 and recovery pass; no new dependency",
+      "remaining": "Final local chain through 0141 verified; preserve pushed history. Operator must reconcile any data affected by external 0139; physical-camera/full-release/target gates remain pending."
+    }
+  ],
+  "logs": [
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-admin_household_attendance_projection_web.test.sql.log",
+      "sha256": "46a972a322eb7f547da1a2ba3efca0ae8bc4dfad6cb0268e37f448dbb14aca3b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-admin_record_lifecycle.test.sql.log",
+      "sha256": "81fe4aa9fb70c54ac68c3e4d2cf392b510ca6103af1e9eb1f47dde7c6c1f9c9a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-household_attendance.test.sql.log",
+      "sha256": "5cafcf0826e1c97bf9d9b1392c1063ff6c07c4e07d43bab92414550a0a57395d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-household_attendance_boundaries.test.sql.log",
+      "sha256": "af11d1c68c17cedef7449f82077e0e255a80514d7fb07abf566e409b0c19aee3"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-household_attendance_receipt_exports.test.sql.log",
+      "sha256": "9270da19be73ad24d07fec87f50509850cad7c4b92672db8351eb2f0818cf377"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-migration.log",
+      "sha256": "e5c39e8baee06d2ec56495023852be2c5bca17e7c853c4b265cba5df0f7bd23a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-resident_household_conditional.test.sql.log",
+      "sha256": "0bb74390b25b7aaaabe4ac5ee5238ca3a16a7e900371d6f47a525f616e8cc072"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-resident_ios_phase18_account_deletion.test.sql.log",
+      "sha256": "7c9d4145ee6b4ccce230c201038f5a40e4f346b61567edd067d8ca934465add2"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-resident_ios_phase3_backend.test.sql.log",
+      "sha256": "8679cc145c49950fe012adb35fdfd2ed4ede21b8079a6f3ee1e8db3c10b7f5f8"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/0141-resident_ios_tenant_write_guards.test.sql.log",
+      "sha256": "f8488f8247e296d502a9c081731f3a835109fafec58b702f6e7289c65b24bcbc"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/admin-build.log",
+      "sha256": "25f238b2f8a17ad994c4b457f2ce44145a52b795cd855a55ab5ae384748c6c5d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/admin-types-verified.log",
+      "sha256": "abf4a2caab86d9d096e9e55274110690e4905f51e3ea8d86dc10a05445909af0"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/android-export.log",
+      "sha256": "d64cf7476d85ef4a871742ec764e3418a99c3a62eac0730085421ae5ea9423e4"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-admin-lint.log",
+      "sha256": "895de1fe3b3d48f15d0f92493140a42092e34a06dd789e11c237edebbf8fa699"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-admin-tests.log",
+      "sha256": "52318bef4b75f1ef223a5d0fab6bfaa738c82457943f116514dffc3d4ff70726"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-admin-types.log",
+      "sha256": "abf4a2caab86d9d096e9e55274110690e4905f51e3ea8d86dc10a05445909af0"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-android-lint.log",
+      "sha256": "28c3afee3fc4fba6648fa6834b4d3e15727ba386c4b32068da75a344f0392d16"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-android-tests.log",
+      "sha256": "fac5857490c43175a1b7a921ec3166d0de86487ce5d853e2205e0f3f25bcb06b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-android-types.log",
+      "sha256": "e6d189c33fc1bdba8a2b22ec98cfabdbb3c2cafd5812339d87e74fec24d4aeb3"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-ios-lint.log",
+      "sha256": "3a9fcaabd658fb595906469335611c6218de47ff7db88fcc0a6a9cf976c97904"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-ios-tests.log",
+      "sha256": "eef9fd89aa57f16f3a40ddedb5ae833347d4bd0af8cae80e2da0bdea2fbd5a3e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-ios-types.log",
+      "sha256": "9e538d7efef7a705fd4a8ac302c64b8ade140e10459682bf09929bbf352fea4a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-shared-tests.log",
+      "sha256": "b70d093bafb92225462b1ee73740fc7386da452b28ea9c438629a79f26af70bf"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-web-cutover.log",
+      "sha256": "a40e9061fdd3f7a0287f838bd6826080006720ee1a9eb625fb053b7b8fda528b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-web-lint.log",
+      "sha256": "d13662f448283be7ad661491c708f61d86fd2d8657cdc05f88a70a3741ba1c1b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/baseline-web-types.log",
+      "sha256": "6facf901ee4a6663c7201e83b0198eb87f6a7015e831f980cea2326cd89710a2"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/browser-final-verified.log",
+      "sha256": "6b7077ca52fa19cc2c7aa8e8715f16c60418cbc21432ec4a5f0ce2cd701ac8d5"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/browser-final.log",
+      "sha256": "974e92de34912496c00ce851467cb04efc613d133efab0ecde97adfbfa734690"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/browser-first-failure.log",
+      "sha256": "974e92de34912496c00ce851467cb04efc613d133efab0ecde97adfbfa734690"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/browser-fixtures.log",
+      "sha256": "0dcbcbaf7d499fd4fd103be1015a8b854d832b426d436df09dc5d5b396d966a6"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/browser-restored.log",
+      "sha256": "6b7077ca52fa19cc2c7aa8e8715f16c60418cbc21432ec4a5f0ce2cd701ac8d5"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-0139_remote_schema.sql.log",
+      "sha256": "62ac30906e5d8a4dbbc9e456ab582d06fcdabd1e50cf260078a9b2144117a597"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-0140_restore_household_attendance.sql.log",
+      "sha256": "2ec93034f2d6730dae91d8605a3d6a322a563124d6b78359a5a4cb7ff740bca0"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-admin_household_attendance_projection_web.test.sql.log",
+      "sha256": "46a972a322eb7f547da1a2ba3efca0ae8bc4dfad6cb0268e37f448dbb14aca3b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-admin_record_lifecycle.test.sql.log",
+      "sha256": "81fe4aa9fb70c54ac68c3e4d2cf392b510ca6103af1e9eb1f47dde7c6c1f9c9a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-empty.log",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-final-counts.log",
+      "sha256": "5f1b7d30c386f33617ce15bdae1c56ca1d5eacc90334d003c608b722a944f0d6"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-household_attendance.test.sql.log",
+      "sha256": "a45285e558098f66b1472961cdbea9f66f59f8d1cfc2862754c6362b2f64b76b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-household_attendance_boundaries.test.sql.log",
+      "sha256": "8a84985174b1df280d13caa116cf1e89ada03b646169df14510f6e9ed5342cf7"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-household_attendance_concurrency.mjs.log",
+      "sha256": "3ba73c628916cbf020ac0e46c2894a7740f1fc06c880d9f7bc5b563ccc73b1c6"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-household_attendance_recovery.mjs.log",
+      "sha256": "34895aae17ff6644ffa60108e2984a3f750102a03444bf729d99b78ef0ee1ab3"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-resident_household_conditional.test.sql.log",
+      "sha256": "0bb74390b25b7aaaabe4ac5ee5238ca3a16a7e900371d6f47a525f616e8cc072"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-resident_ios_phase18_account_deletion.test.sql.log",
+      "sha256": "b71af59f9530b8d6bb7d7903008f7b7674f64f9223bd8ca6897e44bdc50f661a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-resident_ios_phase3_backend.test.sql.log",
+      "sha256": "8679cc145c49950fe012adb35fdfd2ed4ede21b8079a6f3ee1e8db3c10b7f5f8"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/chain-resident_ios_tenant_write_guards.test.sql.log",
+      "sha256": "f8488f8247e296d502a9c081731f3a835109fafec58b702f6e7289c65b24bcbc"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/concurrency.log",
+      "sha256": "5c789c7c0058f39511db79b035041eb7b6c90196ef58105e60764b43da5c6ca9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-create.log",
+      "sha256": "0fbcb9213b6105ebc8b78b766e850654482cae9e4b66231370949cf6e5528219"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-empty.log",
+      "sha256": "933b971c6388d594a23fa1559825db5bec8ade2db1240aa8fc9d0c684949e8c9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-name.log",
+      "sha256": "933b971c6388d594a23fa1559825db5bec8ade2db1240aa8fc9d0c684949e8c9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-no-backfill.log",
+      "sha256": "933b971c6388d594a23fa1559825db5bec8ade2db1240aa8fc9d0c684949e8c9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-post-races.log",
+      "sha256": "933b971c6388d594a23fa1559825db5bec8ade2db1240aa8fc9d0c684949e8c9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-schema.log",
+      "sha256": "7678d705af5b01c50b5974f1b887f6e25bff6571f6592c5e187f63cb97b0cd8e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/db-version.log",
+      "sha256": "d716d24e1e49dc2cf7bea9414d2f10386ea4d95d93fea81c55efc75102ef3339"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-admin-build.log",
+      "sha256": "e81429dd13a030cdf95f5abdd00226ac6e2708dfea54afa6739e3c09510c4135"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-admin-tests.log",
+      "sha256": "b17bfe06566262ff390fe74ba7e27957a27bdc5bbeddd271451ea7a4df3b8287"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-admin-types.log",
+      "sha256": "2715229732b89bb3d38bb674cd2ff1c16a062f6c0c1450103636a929ad1ae03c"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-android-export.log",
+      "sha256": "4101bc27e5d98151ae51a5c0c1b8a50f0394130af8d5ac0695f800d8c2ea730c"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-android-types.log",
+      "sha256": "fa0ac4cfcc113423e203e5450fbaa6fbd7b05bd80b1a836965a594c425b6156d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-ios-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-owned-lint.log",
+      "sha256": "028c4cfc23a52e7e0a48318b9d592a2c0d29e9b87120e1f5b19082bf97d67929"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-owned-repomix.log",
+      "sha256": "55b10ae16f1ffad0238dea7be9a35b1d21b9ad053bf0069a075995b49bc5261f"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-shared-tests.log",
+      "sha256": "689213b2f00cf02ab5a7475b8ed165728ca0a76d7346eab3ea3a21091d488091"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-syntax.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/final-web-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/maintenance-repomix.log",
+      "sha256": "0b7a77851a5ced4275606a07602264cf281e385bc3683df50a00217b817ef655"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0118_resident_front_id_submission.sql.log",
+      "sha256": "efc3c9fd89e0c8f36c635c2b6edecf161e8de132a120d7bfe670f6f2d32352fe"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0119_admin_profile_and_verified_association.sql.log",
+      "sha256": "3a290412ec4a399352feb8a2ac42afdacba566b55137895da211259c3a38f6f6"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0120_flood_shadow_runs.sql.log",
+      "sha256": "a5a1e6ee6b922d388769ec08141b659dd2492f16b6ec7731cd0b7ddaab2e8020"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0121_resident_ios_write_boundaries.sql.log",
+      "sha256": "a4ac4f56bccaaf03eb83ffdff9f345fbc39b2c5f2006bb379b42c1c97372378d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0122_resident_apple_account_setup.sql.log",
+      "sha256": "74c9689a70f5ba2807650f2ad2725eca577540f8617dc50b38292736fe8f40cd"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0123_resident_household_conditional_save.sql.log",
+      "sha256": "4e3ae19d5840c42724f7fc5d120efba3fe3229f7ee85136e6e1d3845fe0afe81"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0124_unreferenced_upload_objects.sql.log",
+      "sha256": "434d9f571d6e1864b0bc16b03977d0a71567143862ed96bb8525fce38cc6f209"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0125_automatic_document_request_payments.sql.log",
+      "sha256": "8560ec78e015fbb248e2734b0e987f090d8f2c10acf808b1d08618f7b8935b0b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0126_restore_automatic_request_submission.sql.log",
+      "sha256": "8560ec78e015fbb248e2734b0e987f090d8f2c10acf808b1d08618f7b8935b0b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0127_admin_resident_document_requests.sql.log",
+      "sha256": "79a7968cab1d4ecddeffc6d54e3c189807272056f4fcc1fd4ed6b5086957300c"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0128_admin_personal_profile_editing.sql.log",
+      "sha256": "b459dce3e67a40a86a8c83e5c748755b5b73c135b22e87eba50ab9d7f496f75b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0129_admin_record_sheet_edit_parity.sql.log",
+      "sha256": "aefd22c9e3cbafccaafe819e585a3ac2355978012bc9b0d98cae763a825cb4b5"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0130_resident_directory_admin_visibility.sql.log",
+      "sha256": "b65fad08e11717216e61cbbe62d81436641a39d4308e86085c80c9e7b2d851c8"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0131_request_editor_admin_resident_options.sql.log",
+      "sha256": "89a23fe9031cbfa12f2b6acd2b9839e75a117c6e1ccc2644e2808dfb6a983dbb"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0132_request_payment_column_editors.sql.log",
+      "sha256": "bb1c7261f6393cc9c3705bbac6245d03fba5e8866cdb2b3a5c2d703ef50dbf6c"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0133_full_versioned_request_record_editor.sql.log",
+      "sha256": "6911cbbbeb77a2f58e2ff921cdcfb2cf2631fac06d9114e892062bd944af4d92"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0134_medical_applicant_email.sql.log",
+      "sha256": "89a23fe9031cbfa12f2b6acd2b9839e75a117c6e1ccc2644e2808dfb6a983dbb"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0135_resident_notifications.sql.log",
+      "sha256": "fd6f039284a71df5c3152679e1462a7453498be7c07471aa5e20f4bd2fd953c0"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-0136_account_deletion_state.sql.log",
+      "sha256": "2f2532c035b9be43f4700786bded5c7ac2e613895f42556750c18cf63b38ecc9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-20261021111056_household_attendance.sql.log",
+      "sha256": "2a81f36c68c16ecb048b68a76e27358818f5a51e99bfd840ea5f762c2d5f38b9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/migration-20261021125435_admin_household_attendance_projection.sql.log",
+      "sha256": "8ceb501d3e0b31b8ef81614c37ca90f595259106727cd4b5eaa419bd12d5691e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-enlarged-decode.log",
+      "sha256": "0ae5a3df729a35c7399cea10a451e6aad03a554d1d56f575e25fd53ee44b6e51"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-extra.log",
+      "sha256": "33ab16fe7fbd412486f024b8f12186b4ddd0fbb8db6cd6a0f841aafa5333d12f"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-followup.log",
+      "sha256": "5f45f307853e66a727d9670c2ea6ecdbfde9fc017b2890f8bd80a747605457b1"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-input-method.log",
+      "sha256": "45c9988796897364f1b3e61ca795903970c1d6ffbb3b4bd837894f56732a90ff"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-keyboard.log",
+      "sha256": "c15ee7856150bee4e3315355a37c4b0d916a2d6d40476e2b79707349aabc9629"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-metro.log",
+      "sha256": "17019bb95ce3d8f05d6164a3818124461a9ed3b4652d6ce187228006ca991c3b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-normal-scaled-decode.log",
+      "sha256": "647e13c6c8ee0be2f63feb1f3d4cf9cecac6ac6cff0357fb5e723dc6d6db57c4"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-proxy.log",
+      "sha256": "f710f990dc8f225270e406742c3d5731d0910eab724bcbe1f460a998e3510f9e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-qr-decode.log",
+      "sha256": "607063b824066103ce9d2e8c524cd9338d202d41c96b3bdffa6a9da3c18ffecb"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-runtime-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/native-scenarios.log",
+      "sha256": "f0ccc592ebd68cda852eeea714121ebfa4cd18bc5c32e8a22305561c54f62191"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/owned-lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/owned-lint-verified.log",
+      "sha256": "8fdff48b96907ef0365e20fd64a6a2c0d20a1ac4ac0926e7b8124afd6a6ad98e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/pause-http.log",
+      "sha256": "78c0b292f18b28cc2501a3d58bf371a1b3b694f52d3cc4575309ae40b6b25648"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/receipt-export-repomix.log",
+      "sha256": "d0c5d7d96937b29f71ca1be4b996a2e210e5023afd9e342d14ed9458a4a2bb6e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/recovery-verified.log",
+      "sha256": "dee957e64117f0660225058cc2fc8974a5875ed148f8cb95323f28ce37b1d96b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/recovery.log",
+      "sha256": "ddd80f2e8a2faa0b4aa649bc085e7ff9929d76b25312ed1e9e1a1707c7ef05bc"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/repomix.log",
+      "sha256": "1694faee5900b1ce0228195ef3bfd6929a8a3f8bce07d6fb1c2dea9c398131dc"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/restore-repomix.log",
+      "sha256": "04b6379bd42af5d9fad49f897cbb1a74558a56622fd5adc1049c0e2192bf0e70"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-admin_household_attendance_projection_web.test.sql.log",
+      "sha256": "3171eb25a4c29821cda30e69d5309cef48d85067514ef1019824b3fd87d9537e"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-admin_record_lifecycle.test.sql.log",
+      "sha256": "504ca488f373e9ac1e1f4591307472684f9518da9d4104c14612527d71e0cc26"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-household_attendance.test.sql.log",
+      "sha256": "bbc6e851e73c8f16e9a675ef6c388e50aebadba685dbaa1b6204bd89a774f9a3"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-household_attendance_boundaries.test.sql.log",
+      "sha256": "894a91143af5a555a05c1e2a7d0bf8eb8698f3756fe6a7e4c69264737bf716f3"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-resident_household_conditional.test.sql.log",
+      "sha256": "70c39bb20d6e6c9a1175112beaa001e5867285be5d50f2f24bd6c05c73f7ddba"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-resident_ios_phase18_account_deletion.test.sql.log",
+      "sha256": "a374ecda358d74156e9fdcfda20b5fb1fee2652e80a6703afaa141893d1d5362"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-resident_ios_phase3_backend.test.sql.log",
+      "sha256": "450a91d2191b066fb9338f172ce7dee1d5cadcad256b7b803f6edbd59ebbf406"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/logs/sql-resident_ios_tenant_write_guards.test.sql.log",
+      "sha256": "9697e74599c346e7976a334ce27236e2d64c9853fb9b902f60d3bc7088a1c752"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/_expo/static/js/android/entry-00d99ed6b070a9a0f7d2262509d97e55.hbc",
+      "sha256": "05221d9364f871425840d5f3d41b062b7a7b8a6245df6ea7df28aa3ed41ae094"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/017bc6ba3fc25503e5eb5e53826d48a8",
+      "sha256": "6deca32b56b97fa1fa87facd6996b46cc45190a553400e7febdf1d2093099b57"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/02bc1fa7c0313217bde2d65ccbff40c9",
+      "sha256": "ffa7ee45b76405ba73921495008f7d68c9de6395f4b6941db063465f6e382320"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/069d99eb1fa6712c0b9034a58c6b57dd",
+      "sha256": "5300f50be3659d17d8cee868ec4e6c0d3f4e89944fd5899d3c20f6a767a045f5"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/0747a1317bbe9c6fc340b889ef8ab3ae",
+      "sha256": "2325c53a73e54c438cbbc60dffdd8b513d471ba42e2f56713ef404b95e0ca1fc"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/0a328cd9c1afd0afe8e3b1ec5165b1b4",
+      "sha256": "9adb8c5efca932e2b732b293da813bd2e31952263056bce9e2517fec0f0b6a76"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/1190ab078c57159f4245a328118fcd9a",
+      "sha256": "cbdf9213e55f65c48d076acd8423b7c9aee4f1b81101ff6c95a38c4cd8a86461"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/140c53a7643ea949007aa9a282153849",
+      "sha256": "a5caeb4d395c5e32f1d5a30acb382aebc664f1badfd149319907f2215e4e3e26"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/1508c3e3ed9f1cac698d9cddd3d53c81",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/1681f34aaca71b8dfb70756bca331eb2",
+      "sha256": "dd8ee403bbcbf5e58b77dca4ac03ebafa13a284a3d87d8ea9ca490435a86fa48"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/19eeb73b9593a38f8e9f418337fc7d10",
+      "sha256": "a69a2edb5b6c60b8433d5b6d23c69f520ccd8a602f3f60e7996e489718bc175c"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/1f77739ca9ff2188b539c36f30ffa2be",
+      "sha256": "c651b8a67d3193206f622c3c3b0fbca4a2f2727108c4212b52c1e2a2e84c9b31"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/20e71bdf79e3a97bf55fd9e164041578",
+      "sha256": "efc79da3c4c97dfb1571bff6202958ab0529c5aa31e8392600578b3e359d1447"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/286d67d3f74808a60a78d3ebf1a5fb57",
+      "sha256": "5d075e0c287c4f4441b5b5c8fc7ea5cd27c11bb617ecea09755955bcb1889083"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/2bbfebc5c3db0d7a97b8cf8fe25cc8c8",
+      "sha256": "d1ce9c2af0b10a7333abc99bc706f9a6a199e5b65bf3e3009624f076b8638e6a"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/2d3c05d794b67831424063056d8c2be9",
+      "sha256": "8edd923657529e420382016e8f0a395d2d526c391328fc97cf4d42ed2d18bdce"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/31b5ffea3daddc69dd01a1f3d6cf63c5",
+      "sha256": "16f92298587bab2b469bc13c0dfc6d5d171bca10bad0c9053ad16bc023bf717d"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/35ba0eaec5a4f5ed12ca16fabeae451d",
+      "sha256": "84cf5eb3b20250f69e0e4733beb4da5f417f0682892a5ad1b5e62570753c21b1"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/370dd5af19f8364907b6e2c41f45dbbf",
+      "sha256": "64f9fb623681f112261e9a2f97826782439f3925dea8f44a57d1e4db95ba6cfd"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/3b89dd103490708d19a95adcae52210e",
+      "sha256": "06f4d00923ea24697df5df0b92984175991d8bd25776a02d531bb401e393ec42"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/3cd68ccdb8938e3711da2e8831b85493",
+      "sha256": "c86bb485eee687e06c500fc4234f51a6784b4530c2ae11d0c76481110bce3105"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/3f78af31cca60105799838a1a7a59fbd",
+      "sha256": "08a9d5b513cf947e22ede81e9a843bd8d7763a63444cd21484bfde7662cc6543"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/412dd9275b6b48ad28f5e3d81bb1f626",
+      "sha256": "acf691957a3bcce7d195856dce98a5cf14dce10bea28aa5c10b3550c078e23b5"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/425d0975e04ac69f126787a729c8e701",
+      "sha256": "9710364e91652ea48567e70a2070d95c5ced7015bc5d5907d15434085e407e3f"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/4403c6117ec30c859bc95d70ce4a71d3",
+      "sha256": "ba722fb24bff0a4c52e656cdf205deac5c5df85e5bae2bf6d30713bd50c6d5f7"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/46e3e4cbd76529d757738d5d05793866",
+      "sha256": "05ab33a1fc0ef98694433c5d59a3eba89f75da161ea412000730cc64abd0b640"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/4e85bc9ebe07e0340c9c4fc2f6c38908",
+      "sha256": "ef149f08bdd2ff09a4e2c8573476b7b0f3fbb15b623954ade59899e7175bedda"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/56c8d80832e37783f12c05db7c8849e2",
+      "sha256": "bc844b5b02d3f3adabb514de4e0c0208252d3123413bd03f6287fa446acee859"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/605e6a311060c29da3fbea293c75f640",
+      "sha256": "f19072b4591e87ffb0ec0779e14871a0813cecd6c808a3a35b64722d8cfe4355"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/605ed7926cf39a2ad5ec2d1f9d391d3d",
+      "sha256": "3d06af1f31cd83ace7a265a014b8fb5dee15770ecac8f7a55555190e627e03c2"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/61ca7e64b7d605716c57706cef640b9a",
+      "sha256": "d03a5cd7a66ef10c5147916f9d5878b2d0a0a5ad46f405a31cd9967efaa55afd"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/6e435534bd35da5fef04168860a9b8fa",
+      "sha256": "61e8aba5a4e981fe22cf7c8e8bcdbea00476e75c62c37f01bf7ee33361d68428"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/778ffc9fe8773a878e9c30a6304784de",
+      "sha256": "8b61a4c7ef70dc92753f0494976482f66fd4150ec23dfc772ab65e10373afa55"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/78c625386b4d0690b421eb0fc78f7b9c",
+      "sha256": "d05c9d30d79f45a78e5585a2e7ec67c6a06a883dd9137e1d5059e8c87b33ce76"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/819ecfa61d69f91db4cd5cec98c43684",
+      "sha256": "16722db293b537aa6a073d4ee02dd804301355bbfaee10de79e4c448112ea979"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/871378c6eab492a3e689a9385dc45a12",
+      "sha256": "9bc4d9f5e994e774bdc3ef9a9a87da749af5f50b861473ef7d1cc3d6f8229267"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/98a4e3d00dbf5d65da99a69b38a7def2",
+      "sha256": "e53f1e69f862e595f5d119c042863ff2a444fe42996d22bbab876b30073d0fba"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/9b5cb09b4e669ed0f28f3b3f2871a0a5",
+      "sha256": "fda3f183ae85e63bcbce70a74276ea220332ae841f746c370b0b2ab40355a357"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/ab19f4cbc543357183a20571f68380a3",
+      "sha256": "27f4d229d440925bf7212d5dfffa45d596b2c7b3bb2905c96b839b2081a1dbeb"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/adec7d6f310bc577f05e8fe06a5daccf",
+      "sha256": "31f099c13f6e4ba05f1b471bf170cb5493249474222917372de3ca5cf29e6a1a"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/aff2c65b39a296d4f7e96d0f58169170",
+      "sha256": "ab5613d2ce70fa67c5926e831353664945199fc195fa6fe76c5fe3cec452e31a"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/b06871f281fee6b241d60582ae9369b9",
+      "sha256": "aa58f33f239a0fb02f5c7a6c45c043d7a9ac9a093335806694ecd6d4edc0d6a8"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/b49ae8ab2dbccb02c4d11caaacf09eab",
+      "sha256": "94dab9f1d5b13ea0769d124a2da0d02433f3b99d6dea5a07c0446a77158100c0"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/b4eb097d35f44ed943676fd56f6bdc51",
+      "sha256": "fa2ab7d2557819b2bfe5009e46844efa7170cf177be7735d43aa2ac1295f1d54"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/c3273c9e5321f20d1e42c2efae2578c4",
+      "sha256": "6c8f11bfd1c7e22769dc135c16ecd0e053bb55554da88b9611d9cf71d12136f1"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/c79c3606a1cf168006ad3979763c7e0c",
+      "sha256": "906666dd689346ada232ce3689adef907b4257fa1b593f03638d2b9497f64884"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/ca4b48e04dc1ce10bfbddb262c8b835f",
+      "sha256": "02b88ead91ade5710d7ca18edb43a6965a71d93732c06f290cc07a6dd249e987"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/d1ea1496f9057eb392d5bbf3732a61b7",
+      "sha256": "c15ec72a74d13957211808313d5c35deb7f7606c6d22dbddceb0000d4e0547ad"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/d2285965fe34b05465047401b8595dd0",
+      "sha256": "3f501ddb05c70829bbb51cfe9ca9fff57f39e060457c257b3ccf25df767f0870"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/d84e297c3b3e49a614248143d53e40ca",
+      "sha256": "b1bc1810ca23e2c38cd76971c43591d726161061240d8b792b05757196ddb528"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/d8b800c443b8972542883e0b9de2bdc6",
+      "sha256": "708a79cf561b8a2a4850ce0254584d3a5231046be08fb7fadf4b6edfdb31178b"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/d8e7601e3df962f83c62371ac14964d8",
+      "sha256": "c4e54e6a0a7de636aa153378fbc62ea4a41695bfedf807f90df7b18ffd733f67"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/da1340bb8bfa100cd7b2ccc2e834e962",
+      "sha256": "011d8d7d302b9c8f41ceedcb8510729253047c8cc8201eb269185d07f0a0d88c"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/assets/e20945d7c929279ef7a6f1db184a4470",
+      "sha256": "7e1dd03dd4ce90b658052554cd7459df16716717389a552fa4c6d56a5f8933e6"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/android-export-final/metadata.json",
+      "sha256": "c9fb636f720bf4c30539aca32dbeaecec9559c8f7ba6e8fcd786ab892d362491"
+    },
+    {
+      "path": "apps/admin-web/.next-family-phase4-20261022-final/BUILD_ID",
+      "sha256": "e435a7ff9cc90392f76e6e78085b8ad89d5099df4dd5c6f82c5ebf18ec5d66fb"
+    },
+    {
+      "path": "apps/admin-web/.next-family-phase4-20261022-final/build-manifest.json",
+      "sha256": "e1522c1f384b50552c2374b48fc7c538e7ab54d40fdcde707dc2176444373793"
+    },
+    {
+      "path": "apps/admin-web/.next-family-phase4-20261022-final/app-path-routes-manifest.json",
+      "sha256": "a96933becf03418849d2d296c2956c0cac78596a5f61a79da77f081d119a3d6f"
+    },
+    {
+      "path": "apps/admin-web/.next-family-phase4-20261022-final/required-server-files.json",
+      "sha256": "731e35d12b06188cca0d9e853448c21c6523dd6c3d7fbcee912bd19a72244a11"
+    }
+  ],
+  "hosted_catalog": {
+    "path": "hosted-catalog-restored.json",
+    "previous_observation": "hosted-catalog.json",
+    "migrations": "target-migrations.json",
+    "mode": "read-only",
+    "project": "pwjbucnyqexiepoinoke",
+    "current_state": "0140 recorded externally; tables/APIs/guards restored; no direct/member/private/anon/service mutation shortcuts in inspected grants",
+    "receipt_export_latest": "receipt-export-catalog.json; read-only history records external 0141; helper/view definition and denial grants match inspected source"
+  },
+  "new_dependencies": [],
+  "no_commits": true,
+  "no_pushes": true,
+  "no_deployment": true,
+  "no_remote_migration": true,
+  "no_external_configuration_change": true,
+  "no_real_data_deletion": true,
+  "documentation": {
+    "other_plan_phases_and_acceptance_unchanged": true,
+    "unique_acceptance_rows": 17,
+    "latest_external_restoration_supersedes_intermediate_blocker": true,
+    "all_other_phase_sections_and_A01_A17_definitions_preserved": true
+  },
+  "cleanup": {
+    "test_rest_stopped": true,
+    "recovery_fixture_counts": {
+      "profiles": 0,
+      "stays": 0,
+      "receipts": 0
+    },
+    "mumu_android": "12",
+    "mumu_font_scale": "1.0",
+    "restored_test_rest_stopped": true,
+    "font_and_display_restored": true,
+    "reverse_ports_removed": true,
+    "metro_and_proxy_stopped": true,
+    "test_app_closed": true,
+    "previous_approval_review_failure": "usage-limit review failure; continuation cleanup subsequently approved and completed"
+  },
+  "external_restoration": {
+    "database": "family_attendance_phase4_recovery_20261022",
+    "migrations": [
+      {
+        "path": "supabase/migrations/0139_remote_schema.sql",
+        "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2",
+        "exit": 0
+      },
+      {
+        "path": "supabase/migrations/0140_restore_household_attendance.sql",
+        "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44",
+        "exit": 0
+      }
+    ],
+    "body_identity": "Verified 0137/0138 equality after top-level transaction wrapper removal and the inspected deletion-v2 executable anchor replacement",
+    "tests": [
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "assertions": 83,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "assertions": 30,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+        "assertions": 27,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_record_lifecycle.test.sql",
+        "assertions": 153,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_household_conditional.test.sql",
+        "assertions": 22,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+        "assertions": 56,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "assertions": 86,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+        "assertions": 7,
+        "exit": 0
+      }
+    ],
+    "concurrency": 21,
+    "recovery": "pass",
+    "empty_final": "{\"stays\": 0, \"profiles\": 0, \"receipts\": 0}",
+    "limits": "Fresh empty synthetic chain only. 0139 drops data if applied to a populated target; 0140 does not recover that data. Pushed history left untouched; operator backup reconciliation required."
+  },
+  "receipt_export_verification": {
+    "database": "family_attendance_phase4_recovery_20261022",
+    "migration": {
+      "path": "supabase/migrations/0141_attendance_receipt_export_access.sql",
+      "sha256": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2"
+    },
+    "tests": [
+      {
+        "path": "supabase/tests/household_attendance.test.sql",
+        "sha256": "67aabd3f1e154d5409040e9d08081939703ea7298e707e5dc015f0435f426215",
+        "assertions": 83,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/household_attendance_boundaries.test.sql",
+        "sha256": "813acca07e59c02bcd4eef15622ba363af0bd22582919ff3b0becf2c021f1698",
+        "assertions": 30,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+        "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca",
+        "assertions": 27,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/admin_record_lifecycle.test.sql",
+        "sha256": "e203f022fb42b37d150fb5bebc30ef6e4275c67ebd3627b164de19bd396c409c",
+        "assertions": 153,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_household_conditional.test.sql",
+        "sha256": "dcc4fd2707809d0977add745ae3df7d299ae0356dc3324465e32e2394b0aa6df",
+        "assertions": 22,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+        "sha256": "7664b90e39eb6f7ee1c150b20bea27951385c38b460c9e99c6f4f66690f3f231",
+        "assertions": 56,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+        "sha256": "721e519ca2b1d7f90eb8e3a3e4fc9637a9e49a1c0924a8f54fc4cf191d3a86a9",
+        "assertions": 86,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+        "sha256": "7263b2aadc13e7ab298344b870b83631bd311a6f4595a54645180938b518d316",
+        "assertions": 7,
+        "exit": 0
+      },
+      {
+        "path": "supabase/tests/household_attendance_receipt_exports.test.sql",
+        "sha256": "c9f42b6b658a1094f582d43c520b585252cb4c2809bea17a4b267d925fffc932",
+        "assertions": 16,
+        "exit": 0
+      }
+    ],
+    "total_assertions": 480,
+    "concurrency_reuse": "21 passing independent-session checks on identical 0140 mutation/lifecycle functions; 0141 only changes export view/helper grants",
+    "recovery_reuse": "Verified pause/resume/restore/replay on identical attendance/receipt/mutation schema; 0141 only changes read-only export helper/view"
+  },
+  "native": {
+    "result": "pass within harness scope",
+    "flow_groups": [
+      {
+        "name": "Actual local staff selects two participants; native status and Manila arrival visible",
+        "result": "pass"
+      },
+      {
+        "name": "Native error and explicit refresh recover without false attendance success",
+        "result": "pass"
+      },
+      {
+        "name": "Native theme/font/extreme accent changes do not issue data writes or refresh loops",
+        "result": "pass"
+      },
+      {
+        "name": "Native focus leave/return has bounded reads and stable idle",
+        "result": "pass"
+      },
+      {
+        "name": "Native background/resume refresh uses actual AppState",
+        "result": "pass"
+      },
+      {
+        "name": "Actual exact-stay staff departure appears natively with preserved Manila history",
+        "result": "pass"
+      },
+      {
+        "name": "Delayed read/account switch/logout clear private Family/QR state",
+        "result": "pass"
+      },
+      {
+        "name": "Native keyboard/add/edit/remove uses real conditional-save API",
+        "result": "pass"
+      },
+      {
+        "name": "Native idle after all interactions has stable request count",
+        "result": "pass"
+      }
+    ],
+    "additional_checks": [
+      {
+        "name": "320dp width and 130% native text permit Family/Add controls and member sheet",
+        "result": "pass"
+      },
+      {
+        "name": "Native member input focus",
+        "result": "pass",
+        "software_keyboard": "Observed via input-method log; requires visual/visibility review before claiming keyboard overlap gate"
+      }
+    ],
+    "qr": [
+      {
+        "name": "native-enlarged-settled",
+        "bounds": [
+          225,
+          1086,
+          855,
+          1716
+        ],
+        "payload": {
+          "type": "household",
+          "version": "1.0",
+          "profileId": "dfb21000-0000-4000-8000-000000000002"
+        },
+        "method": "Actual native pixels cropped to UIAutomator QR bounds, decoded by html5-qrcode 2.3.8; no physical camera"
+      },
+      {
+        "name": "native-normal-settled",
+        "bounds": [
+          357,
+          852,
+          723,
+          1218
+        ],
+        "payload": {
+          "type": "household",
+          "version": "1.0",
+          "profileId": "dfb21000-0000-4000-8000-000000000002"
+        },
+        "method": "Actual native pixels cropped to UIAutomator QR bounds and doubled with nearest-neighbor scaling, decoded by html5-qrcode 2.3.8; no physical camera"
+      }
+    ],
+    "runtime_warning_error_log": "logs/native-runtime-final.log",
+    "runtime_log_bytes": 0,
+    "emulator": {
+      "version": "6.3.1.0",
+      "android": "12",
+      "initial_serial": "127.0.0.1:16384",
+      "verified_transport": "emulator-5554",
+      "instance": 0,
+      "installed_version": "1.0.0/code 1",
+      "installed_date": "2026-10-15",
+      "display_original": "1080x1920 at 480dpi",
+      "display_tested": "320dp x 640dp, fontScale 1.3",
+      "display_restored": "1080x1920, fontScale 1.0"
+    },
+    "limitations": [
+      "Current actual Family/QR/hooks/conditional-save components run natively in the existing development client; synthetic session/profile preference/router providers, actual local Supabase SDK/PostgREST/PostgreSQL data and mutation boundaries.",
+      "Not an installed full release app, actual Auth, actual app bottom navigation or deployed Edge verification.",
+      "Input focus and native conditional add/edit/remove pass; input-method reports keyboard shown, but screenshot does not visibly establish keyboard overlap, so that visual gate remains pending.",
+      "Normal QR passes only after explicit nearest-neighbor doubling of its captured pixels; enlarged settled capture decodes directly. No physical camera."
+    ],
+    "recovery_notes": [
+      "IPv6-only localhost binding diagnosed, restarted IPv4-first.",
+      "ADB transport stalled/offline; alternate transport also stalled. Used installed MuMu 6.3.1.0 CLI help/info to verify only instance 0 then restart it without clearing data; native API requests and UI recovered.",
+      "Account test fixed a five-second settling assumption; sheet test fixed animation wait. Retained failed logs and reran affected checks only.",
+      "Initial screenshot/QR decode failed; settled enlarged capture and documented doubled-pixel normal capture pass. No production code adjusted."
+    ],
+    "cleanup": {
+      "font_and_display_restored": true,
+      "reverse_ports_removed": true,
+      "metro_and_proxy_stopped": true,
+      "test_rest_stopped": true,
+      "test_app_closed": true
+    },
+    "user_preferences": {
+      "remote_checks": "Explicitly keep pending",
+      "physical_camera": "Only MuMu/software available; explicitly keep physical-camera pending"
+    }
+  },
+  "native_harness_sources": [
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/app.json",
+      "sha256": "cbda51809a2edba65844b682aaf7c3941fce31892375356da4fcc8a0eadfcbb7"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/appearance.ts",
+      "sha256": "5e2f74ff8ec107b7eb4907958499c588ea20eb17925efd0a630a21d6c3802319"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/auth.ts",
+      "sha256": "a91b95748c4ef0fc57e0688e0955d5e152930fd1e83d49d988d8979eca0bc4fe"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/babel.config.js",
+      "sha256": "52d4470ca3f60657daec507282371858994ab3d3de77d5ef25a2f9bf0f43f491"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/fixture.ts",
+      "sha256": "8e28fe229a190a19503917c2d6305c958b8f6bcadb71b42982014051a03f4df2"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/font.ts",
+      "sha256": "a4865171a45573ab078f0d93defd97e05356a505b37b7424e9813a1a1a096509"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/index.tsx",
+      "sha256": "e6c6a73a36b3b12d4f823cfe7ebaf3caf1751be35a3f00d7edbd113266cb1652"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/metro.config.js",
+      "sha256": "ddcb1d0657b62c12d62055ab140c7258255b368751c31d7cf3023421b901160f"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/package.json",
+      "sha256": "018a112fb1acba12b24d07d35f71193f01072889a02ac9530d745dd14420b90b"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/profile.ts",
+      "sha256": "9488be88b29b82e1110ab29aba6857cd22e159930dc287d320935f3c046fdfde"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/router.ts",
+      "sha256": "71ad6a008a3364f8be8ce2c18237869f4e01ffcaa56166ad4b8abf69a4da10a0"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/transport.ts",
+      "sha256": "c33b1e82bac6b7b174a9e05abd9a14a0e68031f73fe4acce29f747652156b580"
+    },
+    {
+      "path": "tmp/family-attendance-phase4-20261022/native/tsconfig.json",
+      "sha256": "93b9bdce1c00805826ec26adc2cdb9e59177a4ab899b77e0fe2bf759af2707c7"
+    }
+  ],
+  "native_evidence": [
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-320dp-130text-sheet.png",
+      "sha256": "7dc812232926ba4d069e607d52f23eec96a2430597750ad562550f3940f81287"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-320dp-130text-sheet.xml",
+      "sha256": "f9c7a808a239f14bb01e5392e8397683c9701dbe138db5ebfd6b92612682840d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-320dp-130text.png",
+      "sha256": "d0cc6b9204d4a0898a179a08c0fbdb53ea70113a40e9553eb668134a34b4a7a8"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-320dp-130text.xml",
+      "sha256": "89409caf0ca6d1a01716dd5adf5084c7950022b9235107ea351ac9b997d91bc9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-arrival-status.png",
+      "sha256": "6a139ac4d5962353d84d51a80c9acc9cfb5af06e05b58da322af6f1cb4592256"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-arrival-status.xml",
+      "sha256": "31ce07e76baecf9bba21d45f4f7db57a006e79bbcf980e2731e97b8d095bd04c"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-dark-serif-white-accent.png",
+      "sha256": "2e6655be7c7db532c8156a5ae015212b5ddbe52e8e33e344a99612580455b098"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-dark-serif-white-accent.xml",
+      "sha256": "5b152612102066b5412cad53f3e1e4633174938d61bb20e07564c70a14c96c81"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-departure-status.png",
+      "sha256": "845ef95e0b2dc47325f2b5af6ff89818cc1762fbc8aa9cfdc3de791d3d026f20"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-departure-status.xml",
+      "sha256": "1b220219e16a9039d7960c9528b8914d0ab16f7d9ad19431ce56b367995f291a"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-edit-member.png",
+      "sha256": "27a689eca764c8524d381d71557d097d8a8ad1570287533edaa360f67383b03b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-edit-member.xml",
+      "sha256": "5f7110e77f56239c42e2c6d590b13b37b3905fa7e74fac3b29cbe956fd7f2bf9"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-enlarged-settled.png",
+      "sha256": "effb7ee6d54b48a8805cddb130cea84594f3620bbae0c43ac13ccc5877bb1bab"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-enlarged-settled.xml",
+      "sha256": "1ee42e82338ca6b6e3f9c44c860bd31610992d85e56d3d2738dde32b373a0c1d"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-final.png",
+      "sha256": "3c3a7879c63a0a08873064cab5055f712e8ce1409b0eb658409b4a5ed7288532"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-final.xml",
+      "sha256": "41937bbb359a375b58339b499941916a92c48b440b636fcf5ef32afcd7cfdec4"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-normal-settled.png",
+      "sha256": "48eff9eb21d89fafd5e8928dd12fbf3cdbd5984e8acf0b655fc7cb70849ff002"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-normal-settled.xml",
+      "sha256": "bcf05e0c11b033466d1f6ddea66807155ef68683d8754478adf26c2366557eb6"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-other-account.png",
+      "sha256": "5956fb8ea3153e6ed00d66ae736a9a2d6518357c95cfdd3f975e8e8651af1916"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-other-account.xml",
+      "sha256": "3517831e8ef1b7008c059292a581c8f1432c643c0809581bf3cf912c988c5f99"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-signed-out.png",
+      "sha256": "845161ad60e96c4c1d7a6077c5436f1e7fe64433471ed5d17cd560aabb31ebce"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-signed-out.xml",
+      "sha256": "68ab3b7f3e928795baf4f288f280d0e09eff936ae12da9edc8a35476ac129ded"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-soft-keyboard.png",
+      "sha256": "00711a9e7f0f45ffb26ccad92fa4381b7445ddc3fdacce8471aa360c11d6651b"
+    },
+    {
+      "path": "plans/evidence/family-qr-attendance/phase-4-2026-10-22/native/native-soft-keyboard.xml",
+      "sha256": "e3cc39900d3e0c22b3cebd05a03a90a4cbfb622d5603f2a8260e8df513823f4a"
+    }
+  ],
+  "final_owned_diff_review": "New production behavior limited to two permission-error messages; operator scripts and recovery test reviewed; no unused owned imports/dependencies/debug code.",
+  "pause_http": {
+    "result": "pass",
+    "results": [
+      {
+        "operation": "check_in_household_members",
+        "status": 403,
+        "response": {
+          "code": "42501",
+          "details": null,
+          "hint": null,
+          "message": "permission denied for function check_in_household_members"
+        }
+      },
+      {
+        "operation": "check_out_household_attendance",
+        "status": 403,
+        "response": {
+          "code": "42501",
+          "details": null,
+          "hint": null,
+          "message": "permission denied for function check_out_household_attendance"
+        }
+      }
+    ],
+    "records_unchanged": true,
+    "authenticated_grants_restored": true
+  },
+  "final_audit": {
+    "protected_inputs": 94,
+    "source_identities": 105,
+    "artifact_identities": 59,
+    "native_artifacts": 24,
+    "other_plan_phases_preserved": true,
+    "acceptance_definitions_preserved": true,
+    "unique_acceptance_rows": 17,
+    "added_trailing_whitespace": 0,
+    "historical_test_evidence_restored": true,
+    "owned_diff_sha256": "8d9f7e50c7f80faad504249cacab288f46090e1ff2874f55f2cf81836eb29202",
+    "result": "pass"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-21 Asia/Manila",
+  "phase": 2,
+  "status": "Partially complete \u2014 implementation and local gates met; physical-camera and staging/session gates pending",
+  "ownership": "User-authorized coordinated shared implementation; this chat independently reviewed source/packets/reports and updated Android-only evidence.",
+  "source_identities": [
+    {
+      "path": "apps/admin-web/package.json",
+      "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944"
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "sha256": "6d4a7a35fb94375ddd90f12dbecca8bbc10955460f36a4d5dcb60591b1703f41"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sha256": "4bf791692d458561c7c5583d562b6d50eb7806a3f8d26a3f1c53f94ca243ea80"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sha256": "20f529eb5d8a4d8de88f67fabb737ffdb7c26e35f1592f897c94cb13a0940bec"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "sha256": "85a1ea2256c928481a16a03026ffe3016ff1a8be936ca2d981b89cb3f57b3f70"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "sha256": "4c7d06e058b633b2112ce7f23022f0af983db5bac47da15664163a7eb2f0ec1e"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "sha256": "be40c66199bc72cbc31006829c6f714c888f165f86983ae57ac429db0ade3ac7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "sha256": "71c1c11d8ad5b8a86291248e26080268e63d9c5dd9e59a58797a9402f3e970a1"
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "sha256": "0b51089448d75ed6b012efdc3deeff26cd0315d7df3c2a2dae93812407535f95"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/record-lifecycle.test.ts",
+      "sha256": "2488f42318af12f396ed1b6a2a0fc227e56ffaff75b62546aa3441aae23b30fa"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "sha256": "fcb1234f3673ae067524efd2549c095e9e8aa73dd1c9fa8ea63eca5dad12ddca"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "sha256": "bc9d38d5a5d54c3ec39908ac55c1659207d683cfd91a2deac5dea8fcd1ff3820"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "sha256": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "sha256": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/household-attendance-web.test.ts",
+      "sha256": "87afb13f8c09566257f35ea04b304bbdc01fabaad69b6b5a4c3fd61330361a7c"
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba"
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "sha256": "79f2e699893ac8a5f54772313b07ad971abbbb0ead09ee77027fcce6d3e066ca"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace"
+    },
+    {
+      "path": "supabase/migrations/20261021111056_household_attendance.sql",
+      "sha256": "44986a0eedc28b3ed7500c7696259178b24098febbbbe3d4d5af8455ab0cc69e"
+    }
+  ],
+  "checks": [
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/typecheck.candidate.log",
+      "sha256": "abf4a2caab86d9d096e9e55274110690e4905f51e3ea8d86dc10a05445909af0"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/lint.verified.log",
+      "sha256": "895de1fe3b3d48f15d0f92493140a42092e34a06dd789e11c237edebbf8fa699"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/tests.closure.log",
+      "sha256": "ef19628880f17b91548176c9b890659db1df3c1d141a13a203eedf7930cd62e3"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/shared.closure.log",
+      "sha256": "79d3bc86103e4be2212b20bec3ca3012b116fb40efd739f7538f918f0bbee6e1"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/build.verified.log",
+      "sha256": "cfd5bb1c8d5a7e3ac71ebbf450a3f875cce1c73d6bb725896a88cbe69ea6d247"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/browser.acceptance.log",
+      "sha256": "1a3488131214f7e8f1098f411cc30d63597fef33958ece6d046efcf7e365cfc8"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/final-admin_household_attendance_projection_web.test.sql.log",
+      "sha256": "46a972a322eb7f547da1a2ba3efca0ae8bc4dfad6cb0268e37f448dbb14aca3b"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/final-household_attendance.test.sql.log",
+      "sha256": "022b57380a06f7757de70783eb12a4a8c9d510f10cb4cd4be535c66cb8027410"
+    },
+    {
+      "log": "tmp/family-web-phase2-20261021/logs/final-admin_record_lifecycle.test.sql.log",
+      "sha256": "3da14b1972ae99448f2ce77c462ac198ac5c1a253a42fca5b563270fdd642239"
+    }
+  ],
+  "results": {
+    "typecheck": "pass",
+    "lint": "exit 0; same 2 baseline warnings; no owned warnings",
+    "admin_tests": "159 pass; 1 pre-existing request-editor failure",
+    "shared_affected_tests": "45 pass",
+    "sql_assertions": 263,
+    "browser": "14 groups pass; real local PostgREST/PostgreSQL with synthetic Auth/media; zero console errors",
+    "build": "network-enabled Webpack pass"
+  },
+  "manual": [
+    "Physical staff camera scans Phase 3 Android display at normal/enlarged sizes",
+    "Authorized staging real Auth/role/tenant/Back-Forward and coordinated staff-resident flow"
+  ],
+  "unperformed": [
+    "commit",
+    "push",
+    "remote migration",
+    "deployment",
+    "production data mutation"
+  ]
+}

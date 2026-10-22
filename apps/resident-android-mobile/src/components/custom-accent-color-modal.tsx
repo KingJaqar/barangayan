@@ -1,165 +1,71 @@
 import { useEffect, useState } from 'react';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 import { ColorPicker } from '@/components/color-picker';
+import { PrimaryButton } from '@/components/primary-button';
+import { SettingsSheet } from '@/components/settings-sheet';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { getResidentTheme } from '@/constants/resident-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
 import { useTheme } from '@/hooks/use-theme';
-import { DEFAULT_ACCENT_COLOR } from '@/hooks/use-theme-preference';
+import { DEFAULT_ACCENT_COLOR, isValidHexColor, MAX_CUSTOM_COLORS, useThemePreference } from '@/hooks/use-theme-preference';
 
 interface CustomAccentColorModalProps {
   visible: boolean;
   onClose: () => void;
-  /** Returns false (and the modal stays open, showing an error) if the list is already
-   * at the MAX_CUSTOM_COLORS cap — mirrors the web admin Theme page's addCustomColor(). */
   onSave: (color: string) => boolean;
   atLimit: boolean;
+  initialColor: string;
 }
 
-/**
- * Visual color picker for the Settings screen's App Theme section — lets a resident pick
- * any accent color via a saturation/value square + hue slider (components/color-picker.tsx)
- * instead of typing a hex code. Saved colors persist to profiles.custom_accent_colors
- * (0075 migration), capped at MAX_CUSTOM_COLORS, mirroring the web admin Theme page's
- * accent-controller.tsx behavior.
- */
-export function CustomAccentColorModal({ visible, onClose, onSave, atLimit }: CustomAccentColorModalProps) {
-  const theme = useTheme();
+export function CustomAccentColorModal({ visible, onClose, onSave, atLimit, initialColor }: CustomAccentColorModalProps) {
+  const { resident } = useTheme();
+  const { scheme } = useThemePreference();
+  const { fontId } = useFontPreference();
   const [pickedColor, setPickedColor] = useState(DEFAULT_ACCENT_COLOR);
+  const [hexText, setHexText] = useState(DEFAULT_ACCENT_COLOR);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
-    if (visible) {
-      setPickedColor(DEFAULT_ACCENT_COLOR);
-      setError(null);
-    }
-  }, [visible]);
-
-  function handleClose() {
-    onClose();
-  }
-
+    if (!visible) return;
+    const initial = isValidHexColor(initialColor) ? initialColor : DEFAULT_ACCENT_COLOR;
+    setPickedColor(initial);
+    setHexText(initial.toUpperCase());
+    setError(null);
+  }, [visible, initialColor]);
+  const preview = getResidentTheme(scheme, pickedColor);
   function handleSave() {
-    if (atLimit) {
-      setError('You can save up to 10 custom colors. Remove one to add another.');
-      return;
-    }
-    const saved = onSave(pickedColor);
-    if (saved) {
-      handleClose();
-    } else {
-      setError('That color is already saved.');
-    }
+    if (!isValidHexColor(hexText)) { setError('Enter a six-digit hex color, for example #0F6E5B.'); return; }
+    if (atLimit) { setError(`You can save up to ${MAX_CUSTOM_COLORS} custom colors. Remove one to add another.`); return; }
+    if (onSave(hexText)) onClose();
+    else setError('That color is already saved.');
   }
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
-      <Pressable style={styles.overlay} onPress={handleClose}>
-        <Pressable style={[styles.sheet, { backgroundColor: theme.background }]} onPress={(e) => e.stopPropagation()}>
-          <View style={styles.handle} />
-          <ThemedText type="smallBold" style={styles.title}>
-            Custom Accent Color
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.subtitle}>
-            Drag to pick any color. Up to 10 custom colors can be saved.
-          </ThemedText>
-
-          <View style={styles.pickerWrap}>
-            <ColorPicker value={pickedColor} onChange={(hex) => { setPickedColor(hex); setError(null); }} />
-          </View>
-
-          <View style={styles.previewRow}>
-            <View style={[styles.previewSwatch, { backgroundColor: pickedColor, borderColor: theme.backgroundSelected }]} />
-            <ThemedText type="smallBold" style={styles.previewHex}>
-              {pickedColor}
-            </ThemedText>
-          </View>
-
-          {error ? (
-            <ThemedText type="small" style={[styles.error, { color: theme.accentRed }]}>
-              {error}
-            </ThemedText>
-          ) : null}
-
-          <View style={styles.actionsRow}>
-            <Pressable style={[styles.actionButton, { backgroundColor: theme.backgroundElement }]} onPress={handleClose}>
-              <ThemedText style={styles.actionText}>Cancel</ThemedText>
-            </Pressable>
-            <Pressable style={[styles.actionButton, { backgroundColor: pickedColor }]} onPress={handleSave}>
-              <ThemedText style={[styles.actionText, { color: '#ffffff' }]}>Save Color</ThemedText>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Pressable>
-    </Modal>
-  );
+  return <SettingsSheet visible={visible} title="Custom Accent Color" onClose={onClose} footer={
+    <View style={styles.actions}>
+      <View style={styles.action}><PrimaryButton presentation="resident" variant="secondary" label="Cancel" onPress={onClose} /></View>
+      <View style={styles.action}><PrimaryButton presentation="resident" label="Save Color" disabled={!isValidHexColor(hexText)} onPress={handleSave} /></View>
+    </View>
+  }>
+    <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Drag to pick any color. Up to {MAX_CUSTOM_COLORS} custom colors can be saved.</ThemedText>
+    <View style={styles.picker}><ColorPicker value={pickedColor} onChange={hex => { setPickedColor(hex); setHexText(hex.toUpperCase()); setError(null); }} /></View>
+    <View style={styles.preview}>
+      <View style={[styles.swatch, { backgroundColor: pickedColor, borderColor: preview.accentNeedsOutline ? resident.controlBorder : resident.border }]}>
+        <ThemedText style={{ color: preview.onAccent, fontWeight: '700' }}>Aa</ThemedText>
+      </View>
+      <TextInput accessibilityLabel="Hex color" value={hexText} maxLength={7} autoCapitalize="characters" autoCorrect={false}
+        style={[styles.input, { color: resident.text, backgroundColor: resident.surface, borderColor: resident.controlBorder, fontFamily: getMobileFontFamily(fontId) }]}
+        onChangeText={value => { const next = (value.startsWith('#') ? value : `#${value}`).toUpperCase(); setHexText(next); setError(null); if (isValidHexColor(next)) setPickedColor(next); }} />
+    </View>
+    {error ? <ThemedText accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: resident.danger }}>{error}</ThemedText> : null}
+  </SettingsSheet>;
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.six,
-    gap: Spacing.three,
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#D1D5DB',
-    alignSelf: 'center',
-    marginBottom: Spacing.two,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  subtitle: {
-    textAlign: 'center',
-  },
-  pickerWrap: {
-    alignItems: 'center',
-    marginTop: Spacing.one,
-  },
-  previewRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing.three,
-  },
-  previewSwatch: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  previewHex: {
-    letterSpacing: 1,
-  },
-  error: {
-    textAlign: 'center',
-  },
-  actionsRow: {
-    flexDirection: 'row',
-    gap: Spacing.two,
-    marginTop: Spacing.two,
-  },
-  actionButton: {
-    flex: 1,
-    borderRadius: 14,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
-  },
-  actionText: {
-    fontSize: 15,
-    fontWeight: '700',
-  },
+  subtitle: { textAlign: 'center', fontSize: 14, lineHeight: 20 },
+  picker: { alignItems: 'center', paddingVertical: 8 },
+  preview: { flexDirection: 'row', alignItems: 'center', gap: 12, maxWidth: 260, width: '100%', alignSelf: 'center' },
+  swatch: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  input: { flex: 1, minWidth: 0, minHeight: 44, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, fontSize: 16, fontWeight: '700', letterSpacing: 1 },
+  actions: { flexDirection: 'row', gap: 12 },
+  action: { flex: 1 },
 });

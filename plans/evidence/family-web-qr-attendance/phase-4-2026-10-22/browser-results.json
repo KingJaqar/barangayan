@@ -1,0 +1,811 @@
+{
+  "checks": [
+    "StrictMode entry and idle have stable request counts; holder included, no false attendance",
+    "Actual rendered QR pixels decode with installed decoder and resolve through real secured staff lookup; no image endpoint",
+    "Real staff partial arrival reaches resident display; holder/member selected and unselected person unchanged",
+    "Active removal rejected with retained dialog; real checkout displays latest departure in Manila time",
+    "Family/Profile two-tab CAS rejects stale draft, rereads once, retains inputs and preserves other edits on explicit save",
+    "Settings Profile also rejects a stale editor; focus refresh cannot silently rebase an open draft",
+    "Committed lost response reconciles by read; explicit retry reuses added UUID without duplicate write",
+    "Error-free empty save response is unconfirmed, never a success or automatic replacement write",
+    "Real 15-second response deadline ends busy state and reconciles committed roster using a read",
+    "Malformed roster keeps verified same-account list and disables unsafe edits until successful retry",
+    "Failed attendance refresh retains labeled last-known records, without false empty statuses",
+    "Genuine focus return coalesces visibility/focus callbacks into one attendance read",
+    "390px dark/custom accent/font, QR contrast and keyboard focus; 200% zoom has no horizontal overflow",
+    "Guest inline gate and unavailable-profile message issue no private household calls",
+    "After departure, Family removal excludes archived member from future staff selections",
+    "Account switch clears dialogs, QR and roster; no stale-account results applied",
+    "Holder-only household shows one person and displays real arrival and departure with no dependent row",
+    "Persisted page restoration revalidates private state and closes QR; never replays writes",
+    "Logout clears private QR and data immediately",
+    "Resident components issue zero attendance mutations and no retired QR image request"
+  ],
+  "consoleErrors": [],
+  "calls": [
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Unselected Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Unselected Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Unselected Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Unselected Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Profile Draft",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Selected Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Other Tab Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Profile Draft",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Profile Draft",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Uncertain Add",
+            "relation": "Spouse",
+            "role": "Head of Family"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Empty Response Draft",
+            "relation": "Spouse",
+            "role": "Head of Family"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Uncertain Add",
+            "role": "Head of Family",
+            "relation": "Spouse"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Deadline Draft",
+            "relation": "Spouse",
+            "role": "Head of Family"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Empty Response Draft",
+            "role": "Head of Family",
+            "relation": "Spouse"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/save_resident_household_if_unchanged",
+      "method": "POST",
+      "body": {
+        "p_members": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "relation": "child",
+            "role": "member"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Deadline Draft",
+            "relation": "Spouse",
+            "role": "Head of Family"
+          }
+        ],
+        "p_expected": [
+          {
+            "id": "cfb21000-0000-4000-8000-000000000001",
+            "name": "Draft Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "cfb21000-0000-4000-8000-000000000002",
+            "name": "Family Other Child",
+            "role": "member",
+            "relation": "child"
+          },
+          {
+            "id": "1190ff2a-3b00-434f-8a69-68b0d3ef3ecc",
+            "name": "Deadline Draft",
+            "role": "Head of Family",
+            "relation": "Spouse"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    }
+  ],
+  "browser": "155.0.8059.85",
+  "limitations": [
+    "Synthetic Auth on loopback with actual components and real PostgREST/PostgreSQL; physical camera and deployed login/navigation remain manual."
+  ],
+  "decoded": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000002\"}",
+  "pass": true
+}

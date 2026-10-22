@@ -8,6 +8,6 @@ export function createSupabaseBrowserClient() {
   return createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookieOptions: getAuthCookieOptions(), auth: { flowType: 'pkce' }, global: { fetch: boundedAuthFetch } },
+    { cookieOptions: getAuthCookieOptions(), auth: { flowType: 'pkce' }, global: { fetch: (input, init) => boundedAuthFetch(input, { ...init, cache: 'no-store' }) } },
   );
 }

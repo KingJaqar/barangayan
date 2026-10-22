@@ -1,0 +1,301 @@
+Current Input Method Manager state:
+  Input Methods: mMethodMapUpdateCount=7
+  InputMethod #0:
+    mId=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME mSettingsActivityName=null mIsVrOnly=false mSupportsSwitchingToNextInputMethod=false mInlineSuggestionsEnabled=false mSuppressesSpellChecker=false mShowInInputMethodPicker=true
+    mIsDefaultResId=0x0
+    Service:
+      priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+      ServiceInfo:
+        name=com.sohu.inputmethod.sogou.SogouIME
+        packageName=com.sohu.inputmethod.sogou.chuizi
+        enabled=true exported=true directBootAware=false
+        permission=android.permission.BIND_INPUT_METHOD
+        flags=0x0
+        ApplicationInfo:
+          packageName=com.sohu.inputmethod.sogou.chuizi
+          labelRes=0x7f040000 nonLocalizedLabel=null icon=0x0 banner=0x0
+          processName=com.sohu.inputmethod.sogou.chuizi
+          taskAffinity=com.sohu.inputmethod.sogou.chuizi
+          uid=1000 flags=0x2888be4d privateFlags=0xa4101008 theme=0x0
+          requiresSmallestWidthDp=0 compatibleWidthLimitDp=0 largestWidthLimitDp=0
+          sourceDir=/system/priv-app/nemu-vinput-pack/nemu-vinput-pack.apk
+          resourceDirs=[]
+          overlayPaths=[/data/resource-cache/com.android.systemui-neutral-XsQf.frro, /data/resource-cache/com.android.systemui-accent-1tGU.frro]
+          seinfo=platform:privapp:targetSdkVersion=28
+          seinfoUser=:complete
+          dataDir=/data/user/0/com.sohu.inputmethod.sogou.chuizi
+          deviceProtectedDataDir=/data/user_de/0/com.sohu.inputmethod.sogou.chuizi
+          credentialProtectedDataDir=/data/user/0/com.sohu.inputmethod.sogou.chuizi
+          sharedLibraryFiles=[/system/framework/android.test.base.jar, /system/framework/android.hidl.manager-V1.0-java.jar, /system/framework/android.hidl.base-V1.0-java.jar]
+          enabled=true minSdkVersion=28 targetSdkVersion=28 versionCode=219 targetSandboxVersion=1
+          supportsRtl=false
+          fullBackupContent=true
+          crossProfile=false
+          HiddenApiEnforcementPolicy=0
+          usesNonSdkApi=false
+          allowsPlaybackCapture=false
+          nativeHeapZeroInitialized=0
+  Clients:
+  Client ClientState{b8354da uid=10057 pid=2924 displayId=0}:
+    client=com.android.internal.view.IInputMethodClient$Stub$Proxy@b4b18e8
+    inputContext=com.android.internal.view.IInputContext$Stub$Proxy@c007b01
+    sessionRequested=false
+    curSession=SessionState{uid 10057 pid 2924 method 574dda6 session 2af23e7 channel ClientState{b8354da uid=10057 pid=2924 displayId=0} (server)}
+  Client ClientState{1c6bd48 uid=10017 pid=1614 displayId=0}:
+    client=com.android.internal.view.IInputMethodClient$Stub$Proxy@d2cdb94
+    inputContext=com.android.internal.view.IInputContext$Stub$Proxy@f78c63d
+    sessionRequested=false
+    curSession=SessionState{uid 10017 pid 1614 method 574dda6 session 3012e32 channel ClientState{1c6bd48 uid=10017 pid=1614 displayId=0} (server)}
+  Client ClientState{401783 uid=10045 pid=1483 displayId=0}:
+    client=com.android.internal.view.IInputMethodClient$Stub$Proxy@4c61d00
+    inputContext=com.android.internal.view.IInputContext$Stub$Proxy@3308939
+    sessionRequested=false
+    curSession=null
+  Client ClientState{8ffb7e uid=10030 pid=2782 displayId=0}:
+    client=com.android.internal.view.IInputMethodClient$Stub$Proxy@d62a8df
+    inputContext=com.android.internal.view.IInputContext$Stub$Proxy@df0092c
+    sessionRequested=false
+    curSession=null
+  Client ClientState{6077ff5 uid=1000 pid=2295 displayId=0}:
+    client=com.android.internal.view.IInputMethodClient$Stub$Proxy@6ac518a
+    inputContext=com.android.internal.view.IInputContext$Stub$Proxy@2f2f3fb
+    sessionRequested=false
+    curSession=null
+  mCurMethodId=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME
+  mCurClient=ClientState{b8354da uid=10057 pid=2924 displayId=0} mCurSeq=19
+  mCurPerceptible=true
+  mCurFocusedWindow=android.os.BinderProxy@43ff4e9 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE client=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+  mCurId=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME mHaveConnection=true mBoundToMethod=true mVisibleBound=true
+  mCurToken=android.os.Binder@c8b0555
+  mCurTokenDisplayId=0
+  mCurHostInputToken=null
+  mCurIntent=Intent { act=android.view.InputMethod cmp=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME (has extras) }
+  mCurMethod=com.android.internal.view.IInputMethod$Stub$Proxy@574dda6
+  mEnabledSession=SessionState{uid 10057 pid 2924 method 574dda6 session 2af23e7 channel ClientState{b8354da uid=10057 pid=2924 displayId=0} (server)}
+  mShowRequested=true mShowExplicitlyRequested=true mShowForced=false mInputShown=true
+  mInFullscreenMode=false
+  mSystemReady=true mInteractive=true
+  mSettingsObserver=SettingsObserver{mUserId=0 mRegistered=true mLastEnabled=}
+  mImeHiddenByDisplayPolicy=false
+  mSwitchingController:
+    mSwitchingAwareRotationList:
+    mSwitchingUnawareRotationList:
+      rank=0 item=ImeSubtypeListItem{mImeName=SogouIME-chuizi mSubtypeName=English (United States) mSubtypeId=0 mIsSystemLocale=true mIsSystemLanguage=true}
+  mSettings:
+    mCurrentUserId=0
+    mCurrentProfileIds=[0]
+    mCopyOnWrite=false
+    mEnabledInputMethodsStrCache=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME
+  mStartInputHistory:
+   StartInput #0:
+    time=2026-10-22 11:02:01.328 (timestamp=14018) reason=SESSION_CREATED_BY_IME restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@1da3ca7 [app.lawnchair] targetUserId=0 targetDisplayId=0 clientBindSeq=2
+    softInputMode=STATE_UNSPECIFIED|ADJUST_NOTHING
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #1:
+    time=2026-10-22 11:02:29.299 (timestamp=41990) reason=SESSION_CREATED_BY_IME restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@a1ea615 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=3
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #2:
+    time=2026-10-22 11:03:58.782 (timestamp=131472) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@c9a9798 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=4
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #3:
+    time=2026-10-22 11:04:48.766 (timestamp=181456) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@a1ea615 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=5
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #4:
+    time=2026-10-22 11:08:19.417 (timestamp=392107) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@a1ea615 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=6
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #5:
+    time=2026-10-22 11:10:19.468 (timestamp=512159) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@477cd2 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=7
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #6:
+    time=2026-10-22 11:11:08.119 (timestamp=560810) reason=CHECK_FOCUS restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@477cd2 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=8
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x4001 imeOptions=0x8000006 fieldId=0x8ce fieldName=null actionId=0 actionLabel=null
+   StartInput #7:
+    time=2026-10-22 11:11:13.665 (timestamp=566356) reason=APP_CALLED_RESTART_INPUT_API restarting=true
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@477cd2 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=9
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x4001 imeOptions=0x8000006 fieldId=0x8ce fieldName=null actionId=0 actionLabel=null
+   StartInput #8:
+    time=2026-10-22 11:11:14.131 (timestamp=566821) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@a1ea615 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=10
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #9:
+    time=2026-10-22 11:11:27.536 (timestamp=580226) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@ec1370b [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=11
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #10:
+    time=2026-10-22 11:11:34.932 (timestamp=587622) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@a1ea615 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=12
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #11:
+    time=2026-10-22 11:12:50.501 (timestamp=663192) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@1a26fd3 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=13
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #12:
+    time=2026-10-22 11:13:07.402 (timestamp=680092) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@9b5439a [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=14
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #13:
+    time=2026-10-22 11:13:19.491 (timestamp=692181) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@56974ac [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=15
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #14:
+    time=2026-10-22 11:13:25.271 (timestamp=697962) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@2d777f3 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=16
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #15:
+    time=2026-10-22 11:13:33.997 (timestamp=706687) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@56974ac [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=17
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #16:
+    time=2026-10-22 11:13:41.744 (timestamp=714434) reason=WINDOW_FOCUS_GAIN restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@43ff4e9 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=18
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x0 imeOptions=0x0 fieldId=0xffffffff fieldName=null actionId=0 actionLabel=null
+   StartInput #17:
+    time=2026-10-22 11:13:48.662 (timestamp=721352) reason=CHECK_FOCUS restarting=false
+    imeToken=android.os.Binder@c8b0555 [com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME] imeUserId=0 imeDisplayId=0
+    targetWin=android.os.BinderProxy@43ff4e9 [com.barangayan.resident.dev] targetUserId=0 targetDisplayId=0 clientBindSeq=19
+    softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+    inputType=0x4001 imeOptions=0x8000006 fieldId=0xefa fieldName=null actionId=0 actionLabel=null
+  mSoftInputShowHideHistory:
+   SoftInputShowHideHistory #0:
+    time=2026-10-22 11:11:08.123 (timestamp=560813)
+    reason=SHOW_SOFT_INPUT inFullscreenMode=false
+    requestClient=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+    focusedWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    requestWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeControlTargetName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeTargetNameFromWm=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    editorInfo:  inputType=16385 privateImeOptions=null fieldId (viewId)=2254
+    focusedWindowSoftInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+   SoftInputShowHideHistory #1:
+    time=2026-10-22 11:11:08.199 (timestamp=560889)
+    reason=SHOW_SOFT_INPUT inFullscreenMode=false
+    requestClient=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+    focusedWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    requestWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeControlTargetName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeTargetNameFromWm=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    editorInfo:  inputType=16385 privateImeOptions=null fieldId (viewId)=2254
+    focusedWindowSoftInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+   SoftInputShowHideHistory #2:
+    time=2026-10-22 11:11:11.004 (timestamp=563695)
+    reason=HIDE_MY_SOFT_INPUT inFullscreenMode=false
+    requestClient=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+    focusedWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    requestWindowName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeControlTargetName=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeTargetNameFromWm=2e451a3 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    editorInfo:  inputType=16385 privateImeOptions=null fieldId (viewId)=2254
+    focusedWindowSoftInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+   SoftInputShowHideHistory #3:
+    time=2026-10-22 11:13:48.663 (timestamp=721354)
+    reason=SHOW_SOFT_INPUT inFullscreenMode=false
+    requestClient=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+    focusedWindowName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    requestWindowName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeControlTargetName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeTargetNameFromWm=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    editorInfo:  inputType=16385 privateImeOptions=null fieldId (viewId)=3834
+    focusedWindowSoftInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+   SoftInputShowHideHistory #4:
+    time=2026-10-22 11:13:48.732 (timestamp=721422)
+    reason=SHOW_SOFT_INPUT inFullscreenMode=false
+    requestClient=ClientState{b8354da uid=10057 pid=2924 displayId=0}
+    focusedWindowName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    requestWindowName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeControlTargetName=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    imeTargetNameFromWm=110756e com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity
+    editorInfo:  inputType=16385 privateImeOptions=null fieldId (viewId)=3834
+    focusedWindowSoftInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE
+ 
+Input method client state for android.view.inputmethod.InputMethodManager@636b227:
+  mService=com.android.internal.view.IInputMethodManager$Stub$Proxy@bbecd4
+  mMainLooper=Looper (main, tid 2) {2249e7d}
+  mIInputContext=IInputConnectionWrapper{connection=android.view.inputmethod.BaseInputConnection@38fc172 finished=false mParentInputMethodManager.isActive()=true mServedView=null}
+  mActive=true mRestartOnNextWindowFocus=false mBindSequence=19 mCurId=com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME
+  mFullscreenMode=false
+  mCurMethod=com.android.internal.view.IInputMethodSession$Stub$Proxy@15249c3
+  mCurRootView=android.view.ViewRootImpl@2550240
+  mServedView=com.facebook.react.views.textinput.ReactEditText{f188c6b VFED..CL. .F...... 48,96-1032,240 #efa aid=1073741826}
+  mServedView pos x= 48, y= 1005
+  mNextServedView=com.facebook.react.views.textinput.ReactEditText{f188c6b VFED..CL. .F...... 48,96-1032,240 #efa aid=1073741826}
+  mServedConnecting=false
+  mCurrentTextBoxAttribute:
+    inputType=0x4001 imeOptions=0x8000006 privateImeOptions=null
+    actionLabel=null actionId=0
+    initialSelStart=0 initialSelEnd=0 initialCapsMode=0x2000
+    hintText=Enter full name label=null
+    packageName=com.barangayan.resident.dev autofillId=1073741826 fieldId=3834 fieldName=null
+    extras=Bundle[{nemu.vinput.editor.type=textview, android.support.text.emoji.emojiCompat_metadataVersion=12, nemu.vinput.editor.location.onscreen.height=144, nemu.vinput.editor.location.onscreen.width=984, android.support.text.emoji.emojiCompat_replaceAll=false, nemu.vinput.editor.location.onscreen.x=48, nemu.vinput.editor.location.onscreen.y=1005}]
+    hintLocales=null
+    contentMimeTypes=null
+  mServedInputConnectionWrapper=IInputConnectionWrapper{connection=androidx.emoji2.viewsintegration.EmojiInputConnection@261a579 finished=false mParentInputMethodManager.isActive()=true mServedView=com.facebook.react.views.textinput.ReactEditText{f188c6b VFED..CL. .F...... 48,96-1032,240 #efa aid=1073741826}}
+  mCompletions=null
+  mCursorRect=Rect(0, 0 - 0, 0)
+  mCursorSelStart=0 mCursorSelEnd=0 mCursorCandStart=-1 mCursorCandEnd=-1
+ 
+Input method service state for com.sohu.inputmethod.sogou.SogouIME@238c9e3:
+  mViewsCreated=true
+  mDecorViewVisible=true mDecorViewWasVisible=true mWindowVisible=true mInShowWindow=false
+  Configuration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.2 s.24 fontWeightAdjustment=0}
+  mToken=android.os.BinderProxy@da4213f
+  mInputBinding=InputBinding{android.os.BinderProxy@5c9640d / uid 10057 / pid 2924}
+  mInputConnection=InputConnectionWrapper{idHash=#249bfc2 mMissingMethods=}
+  mStartedInputConnection=InputConnectionWrapper{idHash=#3dff1d3 mMissingMethods=}
+  mInputStarted=true mInputViewStarted=true mCandidatesViewStarted=false
+  mInputEditorInfo:
+    inputType=0x4001 imeOptions=0x8000006 privateImeOptions=null
+    actionLabel=null actionId=0
+    initialSelStart=0 initialSelEnd=0 initialCapsMode=0x2000
+    hintText=Enter full name label=null
+    packageName=com.barangayan.resident.dev autofillId=1073741826 fieldId=3834 fieldName=null
+    extras=Bundle[{nemu.vinput.editor.type=textview, android.support.text.emoji.emojiCompat_metadataVersion=12, nemu.vinput.editor.location.onscreen.height=144, nemu.vinput.editor.location.onscreen.width=984, android.support.text.emoji.emojiCompat_replaceAll=false, nemu.vinput.editor.location.onscreen.x=48, nemu.vinput.editor.location.onscreen.y=1005}]
+    hintLocales=null
+    contentMimeTypes=null
+  mShowInputRequested=true mLastShowInputRequested=true mShowInputFlags=0x1
+  mCandidatesVisibility=4 mFullscreenApplied=true mIsFullscreen=false mExtractViewHidden=false
+  mExtractedText: null
+  mExtractedToken=0
+  mIsInputViewShown=true mStatusIcon=0
+Last computed insets:
+  contentTopInsets=0 visibleTopInsets=0 touchableInsets=2 touchableRegion=SkRegion()
+ mSettingsObserver=SettingsObserver{mShowImeWithHardKeyboard=2}

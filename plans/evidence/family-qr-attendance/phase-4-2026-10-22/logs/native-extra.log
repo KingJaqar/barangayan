@@ -1,0 +1,11 @@
+[
+  {
+    "name": "320dp width and 130% native text permit Family/Add controls and member sheet",
+    "result": "pass"
+  },
+  {
+    "name": "Native member input focus",
+    "result": "pass",
+    "software_keyboard": "Observed via input-method log; requires visual/visibility review before claiming keyboard overlap gate"
+  }
+]

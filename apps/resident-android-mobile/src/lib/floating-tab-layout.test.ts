@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useFloatingTabInset as readFloatingTabInset } from '../hooks/use-floating-tab-inset';
 
-const screen = vi.hoisted(() => ({ pathname: '/home', bottom: 0 }));
+const screen = vi.hoisted(() => ({ pathname: '/home', bottom: 0, barHeight: 72, keyboardVisible: false, mapNavHidden: false }));
+
+vi.mock('../hooks/use-floating-tab-layout', () => ({ useFloatingTabLayout: () => screen }));
 
 vi.mock('expo-router', () => ({ usePathname: () => screen.pathname }));
 vi.mock('react-native-safe-area-context', () => ({
@@ -12,6 +14,38 @@ describe('floating tab screen clearance', () => {
   beforeEach(() => {
     screen.pathname = '/home';
     screen.bottom = 0;
+    screen.barHeight = 72;
+    screen.keyboardVisible = false;
+    screen.mapNavHidden = false;
+  });
+
+  it('removes temporary map clearance only on the two DRRM aliases and retains the measured reveal target', () => {
+    const visible = readFloatingTabInset();
+    screen.mapNavHidden = true;
+    for (const pathname of ['/drrm', '/home/emergency-info']) {
+      screen.pathname = pathname;
+      expect(readFloatingTabInset()).toBe(0);
+      expect(readFloatingTabInset(true)).toBe(visible);
+    }
+    screen.pathname = '/maps';
+    expect(readFloatingTabInset()).toBe(visible);
+    screen.pathname = '/emergency-centers';
+    expect(readFloatingTabInset(true)).toBe(0);
+  });
+
+  it('tracks a taller measured bar after font relayout and restores it after keyboard dismissal', () => {
+    screen.bottom = 24;
+    const initial = readFloatingTabInset();
+    screen.barHeight = 108;
+    expect(readFloatingTabInset()).toBe(initial + 36);
+    screen.keyboardVisible = true;
+    expect(readFloatingTabInset()).toBe(0);
+    screen.pathname = '/settings';
+    expect(readFloatingTabInset()).toBe(0);
+    screen.keyboardVisible = false;
+    expect(readFloatingTabInset()).toBe(initial + 36);
+    screen.pathname = '/settings/profile';
+    expect(readFloatingTabInset()).toBe(0);
   });
 
   it.each([0, 24])('keeps the same viewport mode across root destinations with a %i bottom safe area', (bottom) => {

@@ -1,0 +1,108 @@
+{
+  "functions": [
+    {
+      "schema": "public",
+      "name": "admin_mutate_record",
+      "signature": "p_screen text, p_id uuid, p_operation text, p_patch jsonb, p_expected timestamp with time zone",
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "F742A648B71B7897914C3E46CE155EF5F92215F7A31A2AC22590D463B1BF8D5B"
+    },
+    {
+      "schema": "public",
+      "name": "erase_own_account_records",
+      "signature": "",
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "B9DE0C00C451432418C218197B8372047D6DBCFC18CFF8FCADC448F9DE875FB9"
+    },
+    {
+      "schema": "public",
+      "name": "request_own_account_deletion",
+      "signature": "",
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "8D78A5965AAA803E1C1251B2F8CFC9427620D9F5A5CF74311ABCED89BFFC2609"
+    },
+    {
+      "schema": "public",
+      "name": "save_resident_household_if_unchanged",
+      "signature": "p_members jsonb, p_expected jsonb",
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "89BA5C30E0E7A1B654E56DA2795F83D3C5F4BF417EE8489FA69D2AB257CCE925"
+    },
+    {
+      "schema": "barangayan_private",
+      "name": "save_resident_household_if_unchanged",
+      "signature": "p_members jsonb, p_expected jsonb",
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "180A820F06F6E09B90E031F6D241C1981936C2CB3D34092B38D9136909D3B34F"
+    },
+    {
+      "schema": "public",
+      "name": "sync_household_members_from_jsonb",
+      "signature": "",
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "comparison": "unchanged",
+      "sha256": "E3C10E6CC8BBD4C01C1D1801E31D73514C04995E34743005C9F92C97892CDEFB"
+    }
+  ],
+  "rls": [
+    {
+      "rls": true,
+      "table": "evacuation_center_checkins"
+    },
+    {
+      "rls": true,
+      "table": "household_members"
+    },
+    {
+      "rls": true,
+      "table": "profiles"
+    }
+  ],
+  "profile_auth_fk": [
+    "FOREIGN KEY (approved_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)",
+    "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+    "FOREIGN KEY (current_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)",
+    "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+  ],
+  "triggers": [
+    "CREATE TRIGGER a_guard_profile_foundations BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.guard_profile_foundations()",
+    "CREATE TRIGGER a_require_id_operations BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.require_id_operations()",
+    "CREATE TRIGGER b_enforce_profile_locality BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.enforce_profile_locality()",
+    "CREATE TRIGGER compose_profiles_display_fields BEFORE INSERT OR UPDATE OF first_name, last_name, middle_name, suffix, house_no, street, city ON public.profiles FOR EACH ROW EXECUTE FUNCTION compose_profile_display_fields()",
+    "CREATE TRIGGER guard_verification_fields BEFORE UPDATE ON public.profiles FOR EACH ROW WHEN ((((current_setting('request.jwt.claims'::text, true))::json ->> 'role'::text) = 'authenticated'::text)) EXECUTE FUNCTION prevent_verification_field_update()",
+    "CREATE TRIGGER reset_changed_profile_email_verification BEFORE UPDATE OF email ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.reset_changed_profile_email_verification()",
+    "CREATE TRIGGER set_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION set_updated_at()",
+    "CREATE TRIGGER sync_household_members_from_jsonb BEFORE UPDATE OF household_members ON public.profiles FOR EACH ROW WHEN ((old.household_members IS DISTINCT FROM new.household_members)) EXECUTE FUNCTION sync_household_members_from_jsonb()",
+    "CREATE TRIGGER trg_guard_id_verification_status BEFORE UPDATE OF id_verification_status ON public.profiles FOR EACH ROW EXECUTE FUNCTION guard_id_verification_status()",
+    "CREATE TRIGGER trg_guard_role_escalation BEFORE UPDATE OF role ON public.profiles FOR EACH ROW EXECUTE FUNCTION guard_role_escalation()",
+    "CREATE TRIGGER trg_sync_barangay_official AFTER INSERT OR UPDATE OF role, deleted_at, barangay_id ON public.profiles FOR EACH ROW EXECUTE FUNCTION sync_barangay_official()",
+    "CREATE TRIGGER z_clear_id_repair_on_publication BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.clear_id_repair_on_publication()",
+    "CREATE TRIGGER z_guard_profile_locations BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.guard_profile_locations()"
+  ]
+}

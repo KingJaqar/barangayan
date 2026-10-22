@@ -1,0 +1,194 @@
+[
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "start": 1,
+    "end": 9,
+    "characters": 674,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/admin-web/CLAUDE.md",
+    "start": 1,
+    "end": 1,
+    "characters": 11,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+    "start": 1,
+    "end": 35,
+    "characters": 2481,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+    "start": 1,
+    "end": 154,
+    "characters": 5826,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+    "start": 1,
+    "end": 126,
+    "characters": 3721,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "start": 1,
+    "end": 51,
+    "characters": 3074,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "start": 1,
+    "end": 119,
+    "characters": 5152,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+    "start": 1,
+    "end": 100,
+    "characters": 3976,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-web/AGENTS.md",
+    "start": 1,
+    "end": 9,
+    "characters": 674,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/resident-web/CLAUDE.md",
+    "start": 1,
+    "end": 1,
+    "characters": 11,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "packages/shared/src/schemas/emergency-qr.ts",
+    "start": 1,
+    "end": 34,
+    "characters": 1267,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "packages/shared/src/schemas/household.ts",
+    "start": 1,
+    "end": 41,
+    "characters": 971,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "plans/Family_QR_Attendance_Context_Index.md",
+    "start": 1,
+    "end": 98,
+    "characters": 10889,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "start": 1,
+    "end": 118,
+    "characters": 11895,
+    "complete": false,
+    "reused": true
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "start": 119,
+    "end": 187,
+    "characters": 11514,
+    "complete": false,
+    "reused": true
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "start": 188,
+    "end": 246,
+    "characters": 11914,
+    "complete": false,
+    "reused": true
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "start": 247,
+    "end": 281,
+    "characters": 6256,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "supabase/functions/delete-my-account/delete-v2.ts",
+    "start": 1,
+    "end": 67,
+    "characters": 3793,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "supabase/functions/generate-household-qr/index.ts",
+    "start": 1,
+    "end": 138,
+    "characters": 5016,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+    "start": 1,
+    "end": 50,
+    "characters": 2154,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "supabase/migrations/0046_household_members.sql",
+    "start": 1,
+    "end": 58,
+    "characters": 2088,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "start": 1,
+    "end": 118,
+    "characters": 6716,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "supabase/migrations/0136_account_deletion_state.sql",
+    "start": 1,
+    "end": 142,
+    "characters": 9719,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "CLAUDE.md",
+    "start": 1,
+    "end": 1,
+    "characters": 11,
+    "complete": true,
+    "reused": true
+  }
+]

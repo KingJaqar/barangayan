@@ -1,0 +1,74 @@
+BEGIN
+INSERT 0 2
+INSERT 0 4
+INSERT 0 4
+INSERT 0 1
+UPDATE 1
+CREATE TABLE
+GRANT
+SET
+dfa30000-0000-4000-8000-000000000001
+ok 1 - A07 multibyte QR boundary uses raw bytes
+ok 2 - A07 forged authority keys rejected
+ok 3 - A07 raw participant limit precedes deduplication
+ok 4 - A07 raw checkout limit precedes deduplication
+INSERT 0 1
+ok 5 - A07 invalid checkout batch rejected atomically
+ok 6 - A07 failed checkout preserves both active stays
+RESET
+ok 7 - A07 invalid operations leave no orphan receipt
+SET
+ok 8 - A07 request key shared across operation kinds
+ok 9 - A01 holder/member departure
+ok 10 - A10 remove historical member
+dfa30000-0000-4000-8000-000000000003
+ok 11 - A10 stale payload cannot resurrect archived identity
+dfa30000-0000-4000-8000-000000000001
+ok 12 - A10 explicit authorized restore retains identity
+ok 13 - A10 restore retains history
+RESET
+UPDATE 2
+UPDATE 1
+SET
+ok 14 - A05 moving actor household and center together cannot replay former-tenant receipt
+ok 15 - A08 moved admin cannot read old tenant history
+RESET
+UPDATE 2
+UPDATE 1
+ALTER TABLE
+UPDATE 1
+ALTER TABLE
+SET
+dfa30000-0000-4000-8000-000000000003
+ok 16 - A12 reconstructed expected snapshot rejected
+INSERT 0 1
+ok 17 - A12 raw expected snapshot returns persisted canonical list
+ok 18 - A12 zero additional members valid
+ok 19 - A12 thirty additional members valid
+ok 20 - A12 thirty plus holder bounded read
+ok 21 - A12 thirty-one additional members rejected
+ok 22 - A12 direct JSON writes cannot bypass the roster limit
+RESET
+UPDATE 1
+SET
+dfa30000-0000-4000-8000-000000000004
+ok 23 - A08 anonymous Auth user cannot read attendance
+RESET
+UPDATE 1
+SET
+ok 24 - A08 deleted Auth user rejected despite retained profile and JWT
+RESET
+UPDATE 1
+SET
+dfa30000-0000-4000-8000-000000000002
+INSERT 0 1
+{"amr": [{"method": "password", "timestamp": 1792646693}], "sub": "dfa30000-0000-4000-8000-000000000002", "role": "authenticated"}
+ok 25 - A13 staff erasure retains referenced actor row
+RESET
+ok 26 - A13 other household attendance survives actor erasure
+ok 27 - A13 retained actor de-identified
+ok 28 - A13 erased actor receipts removed
+ok 29 - A13 referenced actor cannot be hard-deleted
+ok 30 - A13 departure requires actor and time together
+1..30
+ROLLBACK

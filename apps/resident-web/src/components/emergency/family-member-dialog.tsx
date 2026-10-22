@@ -28,12 +28,16 @@ export function FamilyMemberDialog({
   onClose,
   onSave,
   onDelete,
+  disabled = false,
+  message,
 }: {
   open: boolean;
   initial: HouseholdMember | null;
   onClose: () => void;
   onSave: (member: { id?: string; name: string; relation: string; role: string }) => Promise<boolean>;
   onDelete?: (id: string) => Promise<boolean>;
+  disabled?: boolean;
+  message?: string | null;
 }) {
   const [name, setName] = useState('');
   const [relation, setRelation] = useState<string>(RELATIONS[0]);
@@ -52,8 +56,8 @@ export function FamilyMemberDialog({
       // react-hooks/set-state-in-effect.
       Promise.resolve().then(() => {
         setName(initial?.name ?? '');
-        setRelation(initial?.relation && (RELATIONS as readonly string[]).includes(initial.relation) ? initial.relation : RELATIONS[0]);
-        setRole(initial?.role && (ROLES as readonly string[]).includes(initial.role) ? initial.role : ROLES[0]);
+        setRelation(initial?.relation ?? RELATIONS[0]);
+        setRole(initial?.role ?? ROLES[0]);
         setPending(null);
       });
     }
@@ -62,7 +66,7 @@ export function FamilyMemberDialog({
   const isEdit = !!initial;
 
   async function run(kind: 'save' | 'remove', write: () => Promise<boolean>) {
-    if (busyRef.current) return;
+    if (busyRef.current || disabled) return;
     busyRef.current = true;
     setPending(kind);
     const opening = openingRef.current;
@@ -100,7 +104,7 @@ export function FamilyMemberDialog({
           <div className="flex flex-col gap-1.5">
             <Label>Relation</Label>
             <div className="flex flex-wrap gap-2">
-              {RELATIONS.map((opt) => (
+              {[...new Set([...RELATIONS, relation])].map((opt) => (
                 <button
                   key={opt}
                   type="button"
@@ -116,7 +120,7 @@ export function FamilyMemberDialog({
           <div className="flex flex-col gap-1.5">
             <Label>Role</Label>
             <div className="flex flex-wrap gap-2">
-              {ROLES.map((opt) => (
+              {[...new Set([...ROLES, role])].map((opt) => (
                 <button
                   key={opt}
                   type="button"
@@ -130,13 +134,14 @@ export function FamilyMemberDialog({
           </div>
         </div>
 
+        {message ? <p role="status" className="text-sm text-muted-foreground">{message}</p> : null}
         <DialogFooter>
           {isEdit && onDelete ? (
             <Button
               type="button"
               variant="outline"
               className="border-destructive text-destructive hover:bg-destructive/10"
-              disabled={pending !== null}
+              disabled={disabled || pending !== null}
               loading={pending === 'remove'}
               loadingLabel="Removing…"
               onClick={() => {
@@ -151,7 +156,7 @@ export function FamilyMemberDialog({
           <Button
             type="button"
             className={styles.primaryButton}
-            disabled={!name.trim() || pending === 'remove'}
+            disabled={disabled || !name.trim() || pending === 'remove'}
             loading={pending === 'save'}
             loadingLabel={isEdit ? 'Updating…' : 'Adding…'}
             onClick={handleSubmit}>

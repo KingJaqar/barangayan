@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\barangayan\tmp\family-web-phase4-20261022\rehearsal.py", line 125, in <module>
+    assert current['people'][0]['current_stay']['attendance_id']==later['stays'][0]['attendance_id']
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable

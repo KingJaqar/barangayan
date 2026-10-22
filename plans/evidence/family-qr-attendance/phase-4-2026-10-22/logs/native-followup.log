@@ -1,0 +1,15 @@
+PASS Delayed read/account switch/logout clear private Family/QR state
+FAIL Native keyboard/add/edit/remove uses real conditional-save API: Control unavailable: Full Name
+Traceback (most recent call last):
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 106, in <module>
+    check('Native keyboard/add/edit/remove uses real conditional-save API',keyboard_edit)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 37, in check
+    try:fn();results.append(dict(name=name,result='pass'));print('PASS '+name,flush=True)
+        ~~^^
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 91, in keyboard_edit
+    tap('Add Family Member',scroll=True);tap('Full Name')
+                                         ~~~^^^^^^^^^^^^^
+  File "C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\native-scenarios.py", line 20, in tap
+    raise AssertionError('Control unavailable: '+label)
+AssertionError: Control unavailable: Full Name

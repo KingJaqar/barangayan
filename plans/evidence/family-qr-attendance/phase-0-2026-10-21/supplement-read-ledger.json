@@ -1,0 +1,98 @@
+[
+  {
+    "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "start": 1,
+    "end": 28,
+    "characters": 1771,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+    "start": 1,
+    "end": 37,
+    "characters": 2001,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "start": 1,
+    "end": 50,
+    "characters": 1416,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+    "start": 1,
+    "end": 74,
+    "characters": 7252,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+    "start": 1,
+    "end": 16,
+    "characters": 951,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "start": 1,
+    "end": 66,
+    "characters": 2058,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+    "start": 1,
+    "end": 94,
+    "characters": 5074,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "apps/resident-ios-mobile/package.json",
+    "start": 1,
+    "end": 61,
+    "characters": 1777,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "apps/resident-web/package.json",
+    "start": 1,
+    "end": 52,
+    "characters": 1401,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "packages/shared/package.json",
+    "start": 1,
+    "end": 20,
+    "characters": 491,
+    "complete": true,
+    "reused": true
+  },
+  {
+    "path": "supabase/tests/resident_household_conditional.test.sql",
+    "start": 1,
+    "end": 75,
+    "characters": 6792,
+    "complete": true,
+    "reused": false
+  },
+  {
+    "path": "package.json",
+    "start": 1,
+    "end": 20,
+    "characters": 390,
+    "complete": true,
+    "reused": true
+  }
+]

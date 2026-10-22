@@ -16,6 +16,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Colors, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 
 const PRIMARY_GREEN = Colors.light.primary; // #0F6E5B — always brand green
 
@@ -53,13 +54,20 @@ export function BirthdayCalendarModal({
   value,
   onClose,
   onSave,
+  presentation = 'default',
 }: {
   visible: boolean;
   value: Date | null;
   onClose: () => void;
   onSave: (date: Date) => void;
+  presentation?: 'default' | 'resident';
 }) {
   const theme = useTheme();
+  const resident = presentation === 'resident';
+  const reduced = useResidentReducedMotion(resident);
+  const accent = resident ? theme.resident.accent : PRIMARY_GREEN;
+  const accentText = resident ? theme.resident.accentText : PRIMARY_GREEN;
+  const onAccent = resident ? theme.resident.onAccent : '#ffffff';
   const today = new Date();
   const todayIso = dateToIso(today);
   const maxYear = today.getFullYear();
@@ -127,7 +135,7 @@ export function BirthdayCalendarModal({
   const rows = Array.from({ length: 6 }, (_, i) => cells.slice(i * 7, i * 7 + 7));
 
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+    <Modal visible transparent animationType={resident && reduced ? 'none' : 'fade'} onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={bcStyles.backdrop} onPress={onClose} />
       <View style={bcStyles.overlay} pointerEvents="box-none">
         <View style={[bcStyles.card, { backgroundColor: theme.background }]}>
@@ -145,6 +153,9 @@ export function BirthdayCalendarModal({
               minYear={MIN_BIRTH_YEAR}
               maxYear={maxYear}
               maxMonthInMaxYear={maxMonthInMaxYear}
+              accent={accent}
+              onAccent={onAccent}
+              resident={resident}
               onSelect={(y, m) => { setViewYear(y); setViewMonth(m); setJumpMode(false); }}
             />
           ) : (
@@ -157,15 +168,16 @@ export function BirthdayCalendarModal({
                   onPress={() => setJumpMode(true)}
                   accessibilityRole="button"
                   accessibilityLabel={`Open year and month picker, currently ${MONTH_NAMES[viewMonth - 1]} ${viewYear}`}>
-                  <ThemedText style={{ color: PRIMARY_GREEN, fontSize: 15, fontWeight: '700', lineHeight: 20 }}>
+                  <ThemedText style={{ color: accentText, fontSize: 15, fontWeight: '700', lineHeight: 20 }}>
                     {MONTH_NAMES[viewMonth - 1]} {viewYear}
                   </ThemedText>
-                  <Ionicons name="chevron-down" size={13} color={PRIMARY_GREEN} />
+                  <Ionicons name="chevron-down" size={13} color={accentText} />
                 </Pressable>
                 <View style={bcStyles.navRow}>
                   <Pressable
                     onPress={() => changeMonth(-1)}
                     disabled={!canGoPrev}
+                    accessibilityRole="button" accessibilityLabel="Previous birth month"
                     hitSlop={12}
                     style={[bcStyles.navBtn, !canGoPrev && { opacity: 0.3 }]}>
                     <Ionicons name="chevron-back" size={17} color={theme.text} />
@@ -173,6 +185,7 @@ export function BirthdayCalendarModal({
                   <Pressable
                     onPress={() => changeMonth(1)}
                     disabled={!canGoNext}
+                    accessibilityRole="button" accessibilityLabel="Next birth month"
                     hitSlop={12}
                     style={[bcStyles.navBtn, !canGoNext && { opacity: 0.3 }]}>
                     <Ionicons name="chevron-forward" size={17} color={theme.text} />
@@ -184,7 +197,7 @@ export function BirthdayCalendarModal({
               <View style={bcStyles.dayHeaderRow}>
                 {DAY_LABELS.map((l, i) => (
                   <View key={i} style={bcStyles.dayHeaderCell}>
-                    <ThemedText style={bcStyles.dayHeaderText}>{l}</ThemedText>
+                    <ThemedText style={[bcStyles.dayHeaderText, resident && { color: accentText }]}>{l}</ThemedText>
                   </View>
                 ))}
               </View>
@@ -202,21 +215,22 @@ export function BirthdayCalendarModal({
                         key={ci}
                         onPress={() => onSave(isoToLocalDate(cell.iso))}
                         disabled={isFuture}
+                        accessibilityRole="button" accessibilityLabel={cell.iso} accessibilityState={{ selected: isSelected, disabled: isFuture }}
                         style={bcStyles.cell}
                         hitSlop={2}>
                         <View
                           style={[
                             bcStyles.circle,
-                            isSelected && { backgroundColor: PRIMARY_GREEN },
-                            isToday && !isSelected && { borderWidth: 2, borderColor: PRIMARY_GREEN },
+                            isSelected && { backgroundColor: accent },
+                            isToday && !isSelected && { borderWidth: 2, borderColor: accentText },
                           ]}>
                           <ThemedText
                             style={[
                               bcStyles.dayNum,
                               !cell.inMonth && { color: theme.textSecondary, opacity: 0.4 },
                               isFuture && { color: theme.textSecondary, opacity: 0.3 },
-                              isSelected && { color: '#ffffff' },
-                              isToday && !isSelected && { color: PRIMARY_GREEN },
+                              isSelected && { color: onAccent },
+                              isToday && !isSelected && { color: accentText },
                             ]}>
                             {cell.day}
                           </ThemedText>
@@ -244,6 +258,9 @@ function BirthdayYearMonthGrid({
   maxYear,
   maxMonthInMaxYear,
   onSelect,
+  accent,
+  onAccent,
+  resident,
 }: {
   viewYear: number;
   viewMonth: number;
@@ -251,7 +268,11 @@ function BirthdayYearMonthGrid({
   maxYear: number;
   maxMonthInMaxYear: number;
   onSelect: (year: number, month: number) => void;
+  accent: string;
+  onAccent: string;
+  resident: boolean;
 }) {
+  const theme = useTheme();
   const [pickerYear, setPickerYear] = useState(viewYear);
   const listRef = useRef<ScrollView>(null);
 
@@ -284,8 +305,8 @@ function BirthdayYearMonthGrid({
             <Pressable
               key={y}
               onPress={() => setPickerYear(y)}
-              style={[bymStyles.yearChip, isSelected && { backgroundColor: PRIMARY_GREEN }]}>
-              <ThemedText style={[bymStyles.yearChipText, isSelected && { color: '#ffffff', fontWeight: '700' }]}>
+              style={[bymStyles.yearChip, resident && { backgroundColor: theme.resident.surface }, isSelected && { backgroundColor: accent }]}>
+              <ThemedText style={[bymStyles.yearChipText, resident && { color: theme.resident.muted }, isSelected && { color: onAccent, fontWeight: '700' }]}>
                 {y}
               </ThemedText>
             </Pressable>
@@ -293,7 +314,7 @@ function BirthdayYearMonthGrid({
         })}
       </ScrollView>
 
-      <View style={bymStyles.divider} />
+      <View style={[bymStyles.divider, resident && { backgroundColor: theme.resident.border }]} />
 
       <View style={bymStyles.monthGrid}>
         {MONTH_ABBR.map((abbr, idx) => {
@@ -308,14 +329,16 @@ function BirthdayYearMonthGrid({
               onPress={() => onSelect(pickerYear, m)}
               style={[
                 bymStyles.monthCell,
-                isSelected && { backgroundColor: PRIMARY_GREEN },
+                resident && { backgroundColor: theme.resident.surface },
+                isSelected && { backgroundColor: accent },
                 disabled && { opacity: 0.3 },
               ]}>
               <ThemedText
                 type="small"
                 style={[
                   bymStyles.monthCellText,
-                  isSelected && { color: '#ffffff', fontWeight: '700' },
+                  resident && { color: theme.resident.muted },
+                  isSelected && { color: onAccent, fontWeight: '700' },
                 ]}>
                 {abbr}
               </ThemedText>

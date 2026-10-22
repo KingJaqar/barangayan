@@ -14,6 +14,7 @@ export function useCountdown(expiresAt: number | null): number | null {
 
   useEffect(() => {
     if (expiresAt === null) return;
+    setNow(Date.now());
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, [expiresAt]);

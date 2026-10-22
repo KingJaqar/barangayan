@@ -1,0 +1,106 @@
+{
+  "checks": [
+    {
+      "check": "one Phase 0 heading",
+      "pass": true
+    },
+    {
+      "check": "all A01-A17 ledger rows",
+      "pass": true
+    },
+    {
+      "check": "phase 1-4 checklists preserved",
+      "pass": true
+    },
+    {
+      "check": "plan context and central workflow preserved",
+      "pass": true
+    },
+    {
+      "check": "plan link Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "pass": true
+    },
+    {
+      "check": "plan link evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+      "pass": true
+    },
+    {
+      "check": "reused XML source equivalence tmp/family-web-plan-20261021/web-source.xml",
+      "pass": true
+    },
+    {
+      "check": "reused XML source equivalence tmp/family-web-plan-polish-20261021/conditional-save.supplement.xml",
+      "pass": true
+    },
+    {
+      "check": "reused XML source equivalence tmp/family-web-plan-polish-20261021/shared-phase0.supplement.xml",
+      "pass": true
+    },
+    {
+      "check": "shared contracts exact identity",
+      "pass": true
+    },
+    {
+      "check": "new XML packet identity",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/hooks/use-scoped-read.ts",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/lib/household-feedback.ts",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/lib/auth/get-optional-user.ts",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/components/shared/auth-gate.tsx",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/lib/supabase/client.ts",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/lib/supabase/server.ts",
+      "pass": true
+    },
+    {
+      "check": "supplement source unchanged apps/resident-web/src/lib/auth/sign-out.ts",
+      "pass": true
+    },
+    {
+      "check": "deadline packet source equivalence",
+      "pass": true
+    },
+    {
+      "check": "deadline packet security",
+      "pass": true
+    },
+    {
+      "check": "baseline six unchecked phase gates",
+      "pass": true
+    }
+  ],
+  "passed": 25,
+  "failed": 0
+}

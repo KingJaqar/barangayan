@@ -1,0 +1,144 @@
+BEGIN
+INSERT 0 2
+INSERT 0 6
+INSERT 0 6
+INSERT 0 3
+UPDATE 1
+CREATE TABLE
+GRANT
+ok 1 - No direct attendance insert
+ok 2 - No direct compatibility write
+ok 3 - Receipts are private
+ok 4 - Anonymous lookup revoked
+ok 5 - No service-role mutation shortcut
+ok 6 - Public mutation is invoker
+SET
+ok 7 - A08 anonymous read denied
+ok 8 - A08 anonymous write denied
+RESET
+SET
+
+ok 9 - A08 missing authenticated subject denied
+dfa10000-0000-4000-8000-000000000005
+ok 10 - A01 holder-only household has one person
+ok 11 - A08 resident cannot confirm attendance
+ok 12 - A09 legacy blanket write denied
+ok 13 - A09 direct/queued legacy center scan denied
+ok 14 - A09 legacy scan RPC denied
+dfa10000-0000-4000-8000-000000000001
+ok 15 - URL is data, never a lookup
+ok 16 - Null version rejected
+ok 17 - Non-string version rejected
+ok 18 - Raw byte bound precedes trim
+ok 19 - Authority-bearing extra keys rejected
+ok 20 - Legacy QR accepted through authorization
+ok 21 - A08 cross-barangay lookup denied
+INSERT 0 1
+ok 22 - A01 holder arrival created
+ok 23 - A03/A05 duplicate normalized retry returns exact receipt
+ok 24 - A03 a new request preserves original arrival
+ok 25 - A04 conflict at another center
+ok 26 - A07 changed input under same key rejected
+ok 27 - A07 mixed invalid batch rejected
+ok 28 - A07 invalid batch leaves no partial stays
+RESET
+ok 29 - A07 invalid batch leaves no orphan receipt
+SET
+INSERT 0 1
+ok 30 - A02 exactly two of four participants recorded
+ok 31 - A02 compatibility projection matches selected people
+ok 32 - A08 member from a real different household denied
+RESET
+ok 33 - A03 unique active holder constraint is the final guard
+ok 34 - A03 unique active member constraint covers every center
+ok 35 - A08 composite foreign key prevents mismatched member ownership
+ok 36 - A13 departure requires an actor and timestamp together
+ok 37 - A13 departure cannot precede arrival
+SET
+ok 38 - A09 generic boolean edit denied
+ok 39 - A10 active member cannot be removed
+ok 40 - A10 current-version archive of active member rejected
+ok 41 - A07 empty arrival rejected
+ok 42 - A07 empty checkout rejected
+ok 43 - A07 null checkout reference rejected
+ok 44 - A07 multidimensional checkout rejected at boundary
+dfa10000-0000-4000-8000-000000000004
+ok 45 - A02 resident sees holder and all three members
+ok 46 - A12 stale roster editor rejected
+ok 47 - A10 rename preserves stable member identity
+ok 48 - A08 resident reads only own household
+ok 49 - A13 export projection includes own receipt metadata
+ok 50 - A13 exported receipt has an opaque unique pagination identity
+RESET
+ok 51 - A11 active household cannot move barangay
+ok 52 - A11 active household cannot archive
+ok 53 - A11 active center cannot archive
+ok 54 - A11 active center cannot move barangay
+UPDATE 1
+SET
+dfa10000-0000-4000-8000-000000000001
+INSERT 0 1
+ok 55 - A11 inactive center permits departure
+ok 56 - A05 delayed arrival retry returns original receipt after departure
+ok 57 - A05 delayed arrival cannot reopen stay
+INSERT 0 1
+ok 58 - A06 checkout retry returns exact receipt
+ok 59 - A06 stale departure remains bound to original stay
+ok 60 - A06 later visit stays open
+ok 61 - A07 mixed-household checkout is atomic and denied
+ok 62 - A02 selected family departs atomically
+ok 63 - A10 removal after departure succeeds
+ok 64 - A10 referenced removed member archived
+ok 65 - A10 removed member history retained
+ok 66 - A10 restore retains historical member ID
+ok 67 - A10 restore preserves history
+RESET
+UPDATE 1
+SET
+ok 68 - A05 role removal denies original receipt
+RESET
+
+UPDATE 1
+UPDATE 1
+SET
+dfa10000-0000-4000-8000-000000000001
+ok 69 - A08 banned actor rejected despite JWT
+RESET
+UPDATE 1
+UPDATE 1
+SET
+dfa10000-0000-4000-8000-000000000003
+ok 70 - A08 new barangay staff cannot read former tenant history
+ok 71 - A08 lookup filters historical tenant
+dfa10000-0000-4000-8000-000000000004
+ok 72 - A08 resident retains previous-barangay history
+RESET
+UPDATE 1
+UPDATE 1
+SET
+dfa10000-0000-4000-8000-000000000001
+ok 73 - A05 moved actor/household/center cannot replay former tenant receipt
+{"amr": [{"method": "password", "timestamp": 1792594272}], "sub": "dfa10000-0000-4000-8000-000000000001", "role": "authenticated"}
+ok 74 - A13 staff actor can be de-identified
+RESET
+ok 75 - A13 other households retain stays referencing the erased actor
+ok 76 - A13 erased actor receipts removed
+ok 77 - A13 actor profile retained for non-null foreign keys
+SET
+ok 78 - A08 erased actor is denied despite retained JWT subject
+RESET
+SET
+dfa10000-0000-4000-8000-000000000004
+{"amr": [{"method": "password", "timestamp": 1792594272}], "sub": "dfa10000-0000-4000-8000-000000000004", "role": "authenticated"}
+ok 79 - A13 v2 erasure completes with historical member references
+RESET
+ok 80 - A13 erasure removes own history
+ok 81 - A13 erasure removes household receipts
+SET
+dfa10000-0000-4000-8000-000000000005
+{"amr": [{"method": "password", "timestamp": 1792594272}], "sub": "dfa10000-0000-4000-8000-000000000005", "role": "authenticated"}
+ok 82 - A13 v1 erasure handles an active holder stay
+RESET
+ok 83 - A13 v1 removes active and closed own stays
+1..83
+ROLLBACK

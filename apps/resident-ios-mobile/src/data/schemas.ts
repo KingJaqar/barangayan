@@ -266,8 +266,18 @@ export const emergencyInformationRow = z.object({
 });
 export const EMERGENCY_INFORMATION_COLUMNS = 'id,category,title,body,icon,icon_color,icon_bg,content,sort_order';
 
-export const siteContentRow = z.object({ id, section: text, title: text, body: text });
-export const SITE_CONTENT_COLUMNS = 'id,section,title,body';
+/** Terms of Service and Privacy Policy (`site_content`), with the instant the barangay last published each. */
+export const siteContentRow = z.object({ id, section: text, title: text, body: text, updated_at: timestamp });
+export const SITE_CONTENT_COLUMNS = 'id,section,title,body,updated_at';
+
+/** About Us (`about_us`) and its developer cards (`developer_profiles`). Addresses are table values: screens validate them before use. */
+export const aboutUsRow = z.object({
+  id, title: text, mission: text, vision: text, history: text,
+  contact_email: text.nullable(), contact_phone: text.nullable(), address: text.nullable(), logo_url: text.nullable(), updated_at: timestamp,
+});
+export const ABOUT_US_COLUMNS = 'id,title,mission,vision,history,contact_email,contact_phone,address,logo_url,updated_at';
+export const developerRow = z.object({ id, name: text, role: text, bio: text, photo_url: text.nullable(), sort_order: z.number().int() });
+export const DEVELOPER_COLUMNS = 'id,name,role,bio,photo_url,sort_order';
 
 export const faqRow = z.object({ id, category: text, question: text, answer: text });
 export const FAQ_COLUMNS = 'id,category,question,answer';
@@ -305,12 +315,21 @@ export const emergencyQrContentRow = z.object({
 });
 export const EMERGENCY_QR_COLUMNS = 'id,section,title,body,content,icon,icon_color,icon_bg,sort_order';
 
-/** The authoritative receipt `check_in_to_evacuation_center` returns (B14); a repeat within ten minutes returns the first one. */
-export const checkInReceiptRow = z.object({
-  check_in_id: id, evacuation_center_id: id, evacuation_center_name: text, barangay_id: id, checked_in_at: timestamp, already_checked_in: z.boolean(),
-});
-/** One of the resident's own stored check-ins, with the center's name when the center is still listed. */
+/** A legacy scan log, retained for compatibility; it is not staff-confirmed attendance. */
 export const ownCheckInRow = z.object({
   id, evacuation_center_id: id, checked_in_at: timestamp, evacuation_centers: z.object({ name: text }).nullable(),
 });
 export const OWN_CHECKIN_COLUMNS = 'id,evacuation_center_id,checked_in_at,evacuation_centers(name)';
+
+/**
+ * One inbox entry (B18, migration 0135). `kind` and `destination` are kept loose on purpose: a kind or destination this app
+ * version does not know must show as a plain, unopenable entry instead of failing the whole page. `features/notifications`
+ * validates both per entry.
+ */
+export const inboxRow = z.object({ id, kind: text, title: text, body: text, destination: z.unknown(), created_at: timestamp, read_at: timestamp.nullable() });
+export const INBOX_COLUMNS = 'id,kind,title,body,destination,created_at,read_at';
+export const inboxIdRow = z.object({ id });
+/** The resident's saved per-kind phone-alert switches; an absent row means every kind is on. */
+export const notificationPreferencesRow = z.object({ kinds: z.record(z.boolean()) });
+/** What `set_notification_preferences` returns: the global switch and the merged per-kind map. */
+export const savedPreferencesRow = z.object({ push_enabled: z.boolean(), kinds: z.record(z.boolean()) });

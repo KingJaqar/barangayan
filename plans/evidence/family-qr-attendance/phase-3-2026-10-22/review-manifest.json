@@ -1,0 +1,49 @@
+{
+  "version": "1.18.1",
+  "packet_sha256": "e71cc768e3852dd99aaabc39226e859eae652a1bc91719c5ddb9c23166e45d45",
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.ts",
+      "sha256": "61556698978baa4256a5c8975da1d7eea4590310a0abc05a8991ab29624eeb4c"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "sha256": "344b6ca9c2ddd36f8eafa343bd0f10c6bb60b3806b0057fc859947269bd8a208"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "sha256": "ed261da13bc24510d5829240298d39d26d902c5e663955203e66e7998a44a77a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "63d89e1176151bf984eb8072a7fa926ec5fd862ce9d7133f917ff1825c1d0ce8"
+    }
+  ],
+  "chunks": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "start": 1,
+      "end": 49,
+      "characters": 2703
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/household.ts",
+      "start": 1,
+      "end": 67,
+      "characters": 4455
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "start": 1,
+      "end": 103,
+      "characters": 5364
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "start": 1,
+      "end": 106,
+      "characters": 10250
+    }
+  ],
+  "omissions": []
+}

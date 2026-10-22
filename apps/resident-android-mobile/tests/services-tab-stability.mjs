@@ -20,12 +20,15 @@ const mocks = {
   '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
   '@/hooks/use-profile': `export const useProfile=()=>window.profileState;`,
-  '@/hooks/use-theme': `export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff'});`,
+  '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
+  '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+  'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
   '@/components/profile-completion-banner': `export const ProfileCompletionBanner=()=>null;`,
-  '@/constants/theme': `export const Spacing={one:4,two:8,three:16,four:24,five:32};`,
+  '@/constants/theme': `export const Spacing={one:4,two:8,three:16,four:24,five:32};export const Colors={light:{accentRed:'#93000A'}};`,
   '@/components/themed-text': `import React from 'react';import {Text} from 'react-native';export const ThemedText=({type,themeColor,style,...props})=><Text {...props} style={[{fontSize:type?.startsWith('small')?14:16,lineHeight:type?.startsWith('small')?20:24,fontWeight:type==='smallBold'?700:500},style]}/>;`,
-  '@/components/services/documents-list': `import React from 'react';import {View,Text} from 'react-native';export const DocumentsList=()=> <View testID="document-list" style={{height:600,padding:16}}><Text>Available documents</Text></View>;`,
+  '@/components/services/documents-list': `import React from 'react';import {View,Text} from 'react-native';export const DocumentsList=({verification})=> <View testID="document-list" style={{height:600,padding:16}}><Text>Available documents</Text>{verification}</View>;`,
+  '@/components/services/services-list-presentation': `export const ServicesNewRequestButton=()=>null;`,
   '@/components/services/logs-list': `export const LogsList=()=>null;`,
   '@/components/services/requests-list': `export const RequestsList=()=>null;`,
   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size}}/>;`,
@@ -34,7 +37,7 @@ const mocks = {
 
 await build({
   stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));window.renderServices=()=>root.render(<Services/>);window.renderServices();`, resolveDir: app, loader: 'tsx' },
-  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic',
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.png': 'dataurl' },
   define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
   plugins: [{ name: 'fixtures', setup(b) {
     b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : args.path === 'react-native' ? { path: require.resolve('react-native-web') } : undefined);

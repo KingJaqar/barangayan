@@ -21,6 +21,7 @@ export * from './schemas/routing-conditions';
 export * from './schemas/emergency-qr';
 export * from './schemas/waste-management';
 export * from './schemas/household';
+export * from './schemas/household-attendance';
 export * from './schemas/staff';
 export * from './schemas/settings';
 export * from './schemas/admin-audit-log';
@@ -54,3 +55,5 @@ export * from './lib/service-catalog';
 export * from './lib/resident-submission';
 export * from './lib/service-request-validation';
 export * from './lib/agency-sla';
+
+export * from './lib/attendance-request';

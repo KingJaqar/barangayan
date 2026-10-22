@@ -1,5 +1,6 @@
 import type { CatalogFoundationFields, ProfileFoundationFields, RequestFoundationFields, FoundationTables, FoundationFunctions } from './service-foundations';
 import type { RoutingConditionsFunctions, RoutingConditionsTables } from './routing-conditions.database';
+import type { HouseholdAttendanceFunctions, HouseholdAttendanceTables, HouseholdAttendanceViews } from './household-attendance.database';
 
 export type Json =
   | string
@@ -41,7 +42,7 @@ export type Database = {
     }
   }
   public: {
-    Tables: FoundationTables & RoutingConditionsTables & {
+    Tables: FoundationTables & RoutingConditionsTables & HouseholdAttendanceTables & {
       about_us: {
         Row: {
           address: string | null
@@ -1651,10 +1652,8 @@ export type Database = {
         ]
       }
     }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: FoundationFunctions & RoutingConditionsFunctions & {
+    Views: HouseholdAttendanceViews
+    Functions: FoundationFunctions & RoutingConditionsFunctions & HouseholdAttendanceFunctions & {
       ensure_google_resident_profile: { Args: Record<string, never>; Returns: string };
       admin_add_household_member: {
         Args: {

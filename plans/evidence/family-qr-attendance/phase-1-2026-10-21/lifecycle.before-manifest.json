@@ -1,0 +1,270 @@
+{
+  "generator": "Repomix 1.18.1",
+  "packet": "tmp\\family-attendance-phase1-20261021\\lifecycle.before.xml",
+  "packet_sha256": "A20B58AAEECF6F4AB417C1D1E25C7DE07E3CD5D0E042C41485018D1E5E2417D0",
+  "sources": [
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "sha256": "67468644695170BE9129FF743A1B2935DD5C22188F7AAF7E4F49183A4A7CF30A",
+      "lines": 1935,
+      "source_equivalent": true
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "B25029B04B2B65BBEC56D76C26BAE36E9A1D4FB6476DF266673E23315A14CE24",
+      "lines": 56,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/functions/export-my-data/export-v2.ts",
+      "sha256": "A303A29D8DCE4D83F125663F8A307CDA2C973A8C1C8BC58B33536D95E2E12B91",
+      "lines": 173,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/functions/export-my-data/index.ts",
+      "sha256": "003D4410498389246F3E495B369918148D08E9D6D8D57D3ED1CE4705608BB9FD",
+      "lines": 141,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "sha256": "92A47F905E7344B64CC218A323CC6CB2488C487F15207BC62B9A514C5E45B6FF",
+      "lines": 277,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "sha256": "C0DB58CDA7FF27EF5D813B446F5FB78CC08A9555B78452BD1EAF21D07E47B598",
+      "lines": 211,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "sha256": "8B1FBABD7332AD3638C455B204493BEB3253C744C769D6C50A24032CB1CAF26E",
+      "lines": 387,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "sha256": "FF0D2BF1CBC2B70987D08029924146AB026A15441990114BFF6CFC0861EC8489",
+      "lines": 159,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0131_request_editor_admin_resident_options.sql",
+      "sha256": "1D4545D5F5A83ADF2B6C4FCE9588E2D028B6C14E2CD381668D36D505A57CA2B6",
+      "lines": 22,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0132_request_payment_column_editors.sql",
+      "sha256": "96064DC3558B49EA745F962D0FB3FDC27AAF3136F7E97D474CC0347945165A98",
+      "lines": 142,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+      "sha256": "059472C21DE4A378F86D2E53AD80430576CCD87CF74B3B32CA2B3056D51DEE55",
+      "lines": 85,
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/0136_account_deletion_state.sql",
+      "sha256": "88A5012543E07C04E37A27FAEE5959ECFC0F23DD8024F7C682C5883DC9ED172B",
+      "lines": 142,
+      "source_equivalent": true
+    }
+  ],
+  "chunks": [
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1,
+      "end": 200,
+      "characters": 5500,
+      "next": 201
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 201,
+      "end": 400,
+      "characters": 5533,
+      "next": 401
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 401,
+      "end": 600,
+      "characters": 5920,
+      "next": 601
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 601,
+      "end": 800,
+      "characters": 5868,
+      "next": 801
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 801,
+      "end": 1000,
+      "characters": 5722,
+      "next": 1001
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1001,
+      "end": 1200,
+      "characters": 6387,
+      "next": 1201
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1201,
+      "end": 1400,
+      "characters": 7005,
+      "next": 1401
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1401,
+      "end": 1600,
+      "characters": 6025,
+      "next": 1601
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1601,
+      "end": 1800,
+      "characters": 5557,
+      "next": 1801
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "start": 1801,
+      "end": 1935,
+      "characters": 4438,
+      "next": null
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "start": 1,
+      "end": 56,
+      "characters": 2150,
+      "next": null
+    },
+    {
+      "path": "supabase/functions/export-my-data/export-v2.ts",
+      "start": 1,
+      "end": 169,
+      "characters": 11998,
+      "next": 170
+    },
+    {
+      "path": "supabase/functions/export-my-data/export-v2.ts",
+      "start": 170,
+      "end": 173,
+      "characters": 220,
+      "next": null
+    },
+    {
+      "path": "supabase/functions/export-my-data/index.ts",
+      "start": 1,
+      "end": 141,
+      "characters": 7012,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "start": 1,
+      "end": 200,
+      "characters": 6198,
+      "next": 201
+    },
+    {
+      "path": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "start": 201,
+      "end": 277,
+      "characters": 3265,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "start": 1,
+      "end": 155,
+      "characters": 11887,
+      "next": 156
+    },
+    {
+      "path": "supabase/migrations/0115_admin_record_lifecycle.sql",
+      "start": 156,
+      "end": 211,
+      "characters": 3887,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "start": 1,
+      "end": 200,
+      "characters": 10593,
+      "next": 201
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "start": 201,
+      "end": 382,
+      "characters": 11954,
+      "next": 383
+    },
+    {
+      "path": "supabase/migrations/0121_resident_ios_write_boundaries.sql",
+      "start": 383,
+      "end": 387,
+      "characters": 211,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "start": 1,
+      "end": 134,
+      "characters": 11923,
+      "next": 135
+    },
+    {
+      "path": "supabase/migrations/0129_admin_record_sheet_edit_parity.sql",
+      "start": 135,
+      "end": 159,
+      "characters": 1506,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0131_request_editor_admin_resident_options.sql",
+      "start": 1,
+      "end": 22,
+      "characters": 1008,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0132_request_payment_column_editors.sql",
+      "start": 1,
+      "end": 142,
+      "characters": 11012,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0133_full_versioned_request_record_editor.sql",
+      "start": 1,
+      "end": 85,
+      "characters": 6157,
+      "next": null
+    },
+    {
+      "path": "supabase/migrations/0136_account_deletion_state.sql",
+      "start": 1,
+      "end": 142,
+      "characters": 9719,
+      "next": null
+    }
+  ]
+}

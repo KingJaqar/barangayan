@@ -1,96 +1,51 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import { useEffect } from 'react';
-import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import { useEffect, useState } from 'react';
+import { Animated, Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ReportPhoto } from '@/components/reports/report-photo';
+import { ThemedText } from '@/components/themed-text';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
+import { useTheme } from '@/hooks/use-theme';
 
-import { Spacing } from '@/constants/theme';
-
-/**
- * Full-screen photo preview — slides/fades up from the card it was opened from instead
- * of the abrupt full-bleed `<Image>` swap the detail screen used to do implicitly.
- * Presentation only: no new data is fetched, it just displays the URI it's given.
- */
-export function PhotoViewerModal({
-  visible,
-  uri,
-  onClose,
-}: {
-  visible: boolean;
-  uri: string | null;
-  onClose: () => void;
+/** Original images stay contained; retained content survives the opacity-only exit. */
+export function PhotoViewerModal({ visible, uri, photos, onClose }: {
+  visible: boolean; uri: string | null; photos?: string[]; onClose: () => void;
 }) {
+  const { resident } = useTheme();
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
-  const translateY = useSharedValue(height * 0.06);
-  const opacity = useSharedValue(0);
-
+  const { mounted, panel } = useReportModalMotion(visible, 200);
+  const [retained, setRetained] = useState(uri);
+  const [index, setIndex] = useState(0);
+  const requestedIndex = Math.max(0, photos?.indexOf(uri ?? '') ?? 0);
   useEffect(() => {
-    if (visible) {
-      translateY.value = withSpring(0, { damping: 25, stiffness: 220, mass: 0.8, overshootClamping: true });
-      opacity.value = withTiming(1, { duration: 200 });
-    } else {
-      translateY.value = height * 0.06;
-      opacity.value = 0;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
-
-  const sheetStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  if (!uri) return null;
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
-      <View style={styles.backdrop}>
-        <Animated.View style={[styles.content, sheetStyle]}>
-          <Image source={{ uri }} style={styles.image} contentFit="contain" />
-        </Animated.View>
-        <Pressable
-          onPress={onClose}
-          accessibilityRole="button"
-          accessibilityLabel="Close photo preview"
-          style={[styles.closeBtn, { top: insets.top + Spacing.two }]}
-          hitSlop={Spacing.two}>
-          <Ionicons name="close" size={22} color="#fff" />
-        </Pressable>
-      </View>
-    </Modal>
-  );
+    if (uri) { setRetained(uri); setIndex(requestedIndex); }
+    // An account theme/font update or same-list refresh must not reset a viewed photo.
+  }, [uri, visible, requestedIndex]);
+  const current = Math.min(index, Math.max(0, (photos?.length ?? 1) - 1));
+  const image = photos?.[current] ?? retained;
+  const multiple = (photos?.length ?? 0) > 1;
+  return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
+    <Animated.View accessibilityViewIsModal style={[styles.backdrop, { opacity: panel, backgroundColor: resident.mediaBackdrop }]}>
+      <View style={styles.content}>{image ? <ReportPhoto uri={image} viewer /> : null}</View>
+      {multiple ? <>
+        <ThemedText accessibilityLiveRegion="polite" style={[styles.counter, { top: insets.top + 20, color: resident.mediaForeground }]}>{current + 1} / {photos?.length}</ThemedText>
+        <View pointerEvents="box-none" style={styles.navigation}>
+          {(['back', 'forward'] as const).map(direction => <Pressable key={direction} accessibilityRole="button" accessibilityLabel={direction === 'back' ? 'Previous full-screen photo' : 'Next full-screen photo'}
+            onPress={() => setIndex(value => { const length = photos?.length ?? 0; return length ? (value + (direction === 'back' ? -1 : 1) + length) % length : 0; })} style={styles.arrow}>
+            <Ionicons name={direction === 'back' ? 'chevron-back' : 'chevron-forward'} size={26} color={resident.mediaForeground} />
+          </Pressable>)}
+        </View>
+      </> : null}
+      <Pressable accessibilityRole="button" accessibilityLabel="Close photo preview" onPress={onClose} style={[styles.close, { top: insets.top + 12 }]}>
+        <Ionicons name="close" size={26} color={resident.mediaForeground} />
+      </Pressable>
+    </Animated.View>
+  </Modal>;
 }
-
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.92)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  content: {
-    width: '100%',
-    height: '80%',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  closeBtn: {
-    position: 'absolute',
-    right: Spacing.three,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  backdrop: { flex: 1, justifyContent: 'center', alignItems: 'center' }, content: { width: '100%', height: '80%' },
+  counter: { position: 'absolute', left: 20, fontSize: 14, fontWeight: '700' },
+  close: { position: 'absolute', right: 12, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  navigation: { position: 'absolute', left: 12, right: 12, top: '50%', flexDirection: 'row', justifyContent: 'space-between' },
+  arrow: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
 });

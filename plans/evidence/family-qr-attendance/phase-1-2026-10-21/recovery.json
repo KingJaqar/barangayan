@@ -1,0 +1,12 @@
+{
+  "database": "family_attendance_rehearsal_20261021_v5",
+  "backup_sha256": "6792C115E57C998EFB5880CAE17FE593AF871D396A9D74AF41B1DB1DAE355D2A",
+  "result": "pass",
+  "checks": [
+    "all stay/receipt fields restored exactly",
+    "restore transaction rolled back without losing recorded data",
+    "original request still replays after recovery",
+    "synthetic fixtures removed"
+  ],
+  "production_recovery": "not exercised or authorized"
+}

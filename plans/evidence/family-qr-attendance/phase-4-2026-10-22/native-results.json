@@ -1,0 +1,121 @@
+{
+  "result": "pass within harness scope",
+  "flow_groups": [
+    {
+      "name": "Actual local staff selects two participants; native status and Manila arrival visible",
+      "result": "pass"
+    },
+    {
+      "name": "Native error and explicit refresh recover without false attendance success",
+      "result": "pass"
+    },
+    {
+      "name": "Native theme/font/extreme accent changes do not issue data writes or refresh loops",
+      "result": "pass"
+    },
+    {
+      "name": "Native focus leave/return has bounded reads and stable idle",
+      "result": "pass"
+    },
+    {
+      "name": "Native background/resume refresh uses actual AppState",
+      "result": "pass"
+    },
+    {
+      "name": "Actual exact-stay staff departure appears natively with preserved Manila history",
+      "result": "pass"
+    },
+    {
+      "name": "Delayed read/account switch/logout clear private Family/QR state",
+      "result": "pass"
+    },
+    {
+      "name": "Native keyboard/add/edit/remove uses real conditional-save API",
+      "result": "pass"
+    },
+    {
+      "name": "Native idle after all interactions has stable request count",
+      "result": "pass"
+    }
+  ],
+  "additional_checks": [
+    {
+      "name": "320dp width and 130% native text permit Family/Add controls and member sheet",
+      "result": "pass"
+    },
+    {
+      "name": "Native member input focus",
+      "result": "pass",
+      "software_keyboard": "Observed via input-method log; requires visual/visibility review before claiming keyboard overlap gate"
+    }
+  ],
+  "qr": [
+    {
+      "name": "native-enlarged-settled",
+      "bounds": [
+        225,
+        1086,
+        855,
+        1716
+      ],
+      "payload": {
+        "type": "household",
+        "version": "1.0",
+        "profileId": "dfb21000-0000-4000-8000-000000000002"
+      },
+      "method": "Actual native pixels cropped to UIAutomator QR bounds, decoded by html5-qrcode 2.3.8; no physical camera"
+    },
+    {
+      "name": "native-normal-settled",
+      "bounds": [
+        357,
+        852,
+        723,
+        1218
+      ],
+      "payload": {
+        "type": "household",
+        "version": "1.0",
+        "profileId": "dfb21000-0000-4000-8000-000000000002"
+      },
+      "method": "Actual native pixels cropped to UIAutomator QR bounds and doubled with nearest-neighbor scaling, decoded by html5-qrcode 2.3.8; no physical camera"
+    }
+  ],
+  "runtime_warning_error_log": "logs/native-runtime-final.log",
+  "runtime_log_bytes": 0,
+  "emulator": {
+    "version": "6.3.1.0",
+    "android": "12",
+    "initial_serial": "127.0.0.1:16384",
+    "verified_transport": "emulator-5554",
+    "instance": 0,
+    "installed_version": "1.0.0/code 1",
+    "installed_date": "2026-10-15",
+    "display_original": "1080x1920 at 480dpi",
+    "display_tested": "320dp x 640dp, fontScale 1.3",
+    "display_restored": "1080x1920, fontScale 1.0"
+  },
+  "limitations": [
+    "Current actual Family/QR/hooks/conditional-save components run natively in the existing development client; synthetic session/profile preference/router providers, actual local Supabase SDK/PostgREST/PostgreSQL data and mutation boundaries.",
+    "Not an installed full release app, actual Auth, actual app bottom navigation or deployed Edge verification.",
+    "Input focus and native conditional add/edit/remove pass; input-method reports keyboard shown, but screenshot does not visibly establish keyboard overlap, so that visual gate remains pending.",
+    "Normal QR passes only after explicit nearest-neighbor doubling of its captured pixels; enlarged settled capture decodes directly. No physical camera."
+  ],
+  "recovery_notes": [
+    "IPv6-only localhost binding diagnosed, restarted IPv4-first.",
+    "ADB transport stalled/offline; alternate transport also stalled. Used installed MuMu 6.3.1.0 CLI help/info to verify only instance 0 then restart it without clearing data; native API requests and UI recovered.",
+    "Account test fixed a five-second settling assumption; sheet test fixed animation wait. Retained failed logs and reran affected checks only.",
+    "Initial screenshot/QR decode failed; settled enlarged capture and documented doubled-pixel normal capture pass. No production code adjusted."
+  ],
+  "cleanup": {
+    "font_and_display_restored": true,
+    "reverse_ports_removed": true,
+    "metro_and_proxy_stopped": true,
+    "test_rest_stopped": true,
+    "test_app_closed": true
+  },
+  "user_preferences": {
+    "remote_checks": "Explicitly keep pending",
+    "physical_camera": "Only MuMu/software available; explicitly keep physical-camera pending"
+  }
+}

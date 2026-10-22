@@ -1,0 +1,255 @@
+{
+  "date": "2026-10-21",
+  "checks": [
+    {
+      "id": "permissions.exact",
+      "pass": true,
+      "detail": [
+        "NSCameraUsageDescription",
+        "NSLocationWhenInUseUsageDescription",
+        "NSPhotoLibraryAddUsageDescription"
+      ]
+    },
+    {
+      "id": "permissions.no-always-location-microphone-tracking",
+      "pass": true,
+      "detail": [
+        "NSCameraUsageDescription",
+        "NSLocalNetworkUsageDescription",
+        "NSLocationWhenInUseUsageDescription",
+        "NSPhotoLibraryAddUsageDescription"
+      ]
+    },
+    {
+      "id": "permissions.purpose-strings-nonempty",
+      "pass": true,
+      "detail": 4
+    },
+    {
+      "id": "background-modes.none",
+      "pass": true,
+      "detail": "absent"
+    },
+    {
+      "id": "ats.no-arbitrary-loads",
+      "pass": true,
+      "detail": {
+        "NSAllowsArbitraryLoads": false,
+        "NSAllowsLocalNetworking": true
+      }
+    },
+    {
+      "id": "entitlements.exact",
+      "pass": true,
+      "detail": [
+        "aps-environment",
+        "com.apple.developer.applesignin"
+      ]
+    },
+    {
+      "id": "ios.deployment-target",
+      "pass": true,
+      "detail": "16.4"
+    },
+    {
+      "id": "ios.iphone-only",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "id": "updates.ota-disabled",
+      "pass": true,
+      "detail": "no expo-updates plugin or updates block (first release keeps OTA off)"
+    },
+    {
+      "id": "dev-launcher.debug-only",
+      "pass": true,
+      "detail": "the Info.plist keys NSBonjourServices/NSLocalNetworkUsageDescription come from the dev client config plugin; the native module is Debug-only"
+    },
+    {
+      "id": "eas.profiles-exact",
+      "pass": true,
+      "detail": [
+        "simulator",
+        "development",
+        "device",
+        "staging",
+        "production"
+      ]
+    },
+    {
+      "id": "eas.simulator.environment-label",
+      "pass": true,
+      "detail": "development"
+    },
+    {
+      "id": "eas.simulator.no-secret-names",
+      "pass": true,
+      "detail": [
+        "EXPO_PUBLIC_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "eas.development.environment-label",
+      "pass": true,
+      "detail": "development"
+    },
+    {
+      "id": "eas.development.no-secret-names",
+      "pass": true,
+      "detail": [
+        "EXPO_PUBLIC_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "eas.device.environment-label",
+      "pass": true,
+      "detail": "development"
+    },
+    {
+      "id": "eas.device.no-secret-names",
+      "pass": true,
+      "detail": [
+        "EXPO_PUBLIC_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "eas.staging.environment-label",
+      "pass": true,
+      "detail": "staging"
+    },
+    {
+      "id": "eas.staging.no-secret-names",
+      "pass": true,
+      "detail": [
+        "EXPO_PUBLIC_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "eas.production.environment-label",
+      "pass": true,
+      "detail": "production"
+    },
+    {
+      "id": "eas.production.no-secret-names",
+      "pass": true,
+      "detail": [
+        "EXPO_PUBLIC_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "eas.production.store-distribution",
+      "pass": true,
+      "detail": "store"
+    },
+    {
+      "id": "eas.staging.internal-not-dev-client",
+      "pass": true,
+      "detail": "internal"
+    },
+    {
+      "id": "endpoints.source-hosts-allowlisted",
+      "pass": true,
+      "detail": [
+        "bugs.chromium.org",
+        "bugzilla.mozilla.org",
+        "leafletjs.com",
+        "maps.apple.com",
+        "tile.openstreetmap.org",
+        "www.w3.org"
+      ]
+    },
+    {
+      "id": "endpoints.no-cleartext-literals",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "bundle.no-secrets",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "open": [
+    {
+      "id": "P20-F01",
+      "detail": "bundle identifier is \"com.placeholder.appid\" (IOS_BUNDLE_IDENTIFIER unset; PR-02 needs an Apple team and App ID)"
+    },
+    {
+      "id": "P20-F02",
+      "detail": "URL scheme \"com.placeholder.appid\" is a placeholder (IOS_URL_SCHEME unset; PR-03 skipped by OD-07)"
+    },
+    {
+      "id": "P20-F03",
+      "detail": "aps-environment is \"development\" in the generated entitlements; Expo documents that Xcode switches it to production in a release archive (not observable without a signed archive)"
+    },
+    {
+      "id": "P20-F04",
+      "detail": "ITSAppUsesNonExemptEncryption is not declared; the export-compliance answer is the owner's legal declaration and is left to App Store Connect"
+    },
+    {
+      "id": "P20-F05",
+      "detail": "no app icon is configured; the preserved logo has an alpha channel (RGBA) and Apple requires an opaque 1024x1024 icon, which the owner must supply or approve"
+    },
+    {
+      "id": "P20-F06",
+      "detail": "no app-level privacyManifests entry; NSPrivacyCollectedDataTypes values could not be verified against Apple's list, so the App Store Connect labels are the disclosure of record and the Xcode privacy report is a macOS/Xcode step"
+    }
+  ],
+  "bundle": {
+    "files": 2,
+    "bytes": 5230913,
+    "https_hosts_in_bundle": [
+      "barangayan.app",
+      "bugs.chromium.org",
+      "bugzilla.mozilla.org",
+      "classic-assets.eascdn.net",
+      "developer.mozilla.org",
+      "docs.expo.dev",
+      "docs.swmansion.com",
+      "exp.host",
+      "expo.developerprofileschemaxdate",
+      "expo.fyi",
+      "github.com",
+      "leafletjs.com",
+      "maps.apple.com",
+      "nominatim.openstreetmap.organizationnamedical",
+      "pwjbucnyqexiepoinoke.supabase.column",
+      "react.dev",
+      "reactnavigation.org",
+      "resident.invalid",
+      "tile.openstreetmap.organization"
+    ]
+  },
+  "generated": {
+    "bundleIdentifier": "com.placeholder.appid",
+    "urlSchemes": [
+      "com.placeholder.appid",
+      "exp+barangayan-resident-ios"
+    ],
+    "version": "1.0.0",
+    "buildNumber": "1",
+    "deploymentTarget": "16.4",
+    "permissionKeys": [
+      "NSCameraUsageDescription",
+      "NSLocalNetworkUsageDescription",
+      "NSLocationWhenInUseUsageDescription",
+      "NSPhotoLibraryAddUsageDescription"
+    ],
+    "entitlements": {
+      "aps-environment": "development",
+      "com.apple.developer.applesignin": [
+        "Default"
+      ]
+    },
+    "atsLocalNetworking": true,
+    "orientations": [
+      "UIInterfaceOrientationPortrait",
+      "UIInterfaceOrientationPortraitUpsideDown"
+    ],
+    "requiredDeviceCapabilities": [
+      "armv7"
+    ]
+  },
+  "passed": true
+}

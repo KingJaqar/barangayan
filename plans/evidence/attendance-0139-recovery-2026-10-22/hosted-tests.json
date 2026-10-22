@@ -1,0 +1,22 @@
+[
+  {
+    "test": "household_attendance.test.sql",
+    "failures": [],
+    "assertions": 83
+  },
+  {
+    "test": "household_attendance_boundaries.test.sql",
+    "failures": [],
+    "assertions": 30
+  },
+  {
+    "test": "admin_household_attendance_projection_web.test.sql",
+    "failures": [],
+    "assertions": 27
+  },
+  {
+    "test": "household_attendance_receipt_exports.test.sql",
+    "failures": [],
+    "assertions": 16
+  }
+]

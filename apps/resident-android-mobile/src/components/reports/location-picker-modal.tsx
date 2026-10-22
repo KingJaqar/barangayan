@@ -1,239 +1,133 @@
-/**
- * Full-screen map picker for Incident Reports' Location section — lets the resident drop
- * (or drag) a pin anywhere inside the barangay boundary, auto-fetches the pin's address via
- * reverse geocoding, and lets them correct that address by typing before confirming.
- *
- * The boundary constraint is enforced by MapView itself (it validates every tap/drag
- * against the `boundary` prop and snaps the pin back on a rejected move) — this component
- * just surfaces that rejection as a transient banner.
- */
 import { Ionicons } from '@expo/vector-icons';
-import type { LatLng } from '@barangayan/shared';
-import { reverseGeocode } from '@barangayan/shared';
+import { isPointInPolygon, reverseGeocode, type LatLng } from '@barangayan/shared';
+import * as Location from 'expo-location';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, ActivityIndicator, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { MapView, type MapViewHandle } from '@/components/map-view';
+import { isMapPosition } from '@/lib/map-presentation';
+import { ReportMapControls } from '@/components/reports/report-map-controls';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { PrimaryButton } from '@/components/primary-button';
+import { ReportSourceState } from '@/components/reports/report-presentation';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
 import { useTheme } from '@/hooks/use-theme';
 
-import { MapView } from '@/components/map-view';
-
-export interface LocationPickerResult {
-  position: LatLng;
-  address: string | null;
-}
-
+export interface LocationPickerResult { position: LatLng; address: string | null }
 interface LocationPickerModalProps {
-  visible: boolean;
-  /** Where the pin starts — the resident's current GPS fix, a previous pick, or the barangay centroid. */
-  initialPosition: LatLng | null;
-  initialAddress?: string | null;
-  boundary: Polygon | MultiPolygon | null;
-  barangayName?: string | null;
-  onCancel: () => void;
-  onConfirm: (result: LocationPickerResult) => void;
+  visible: boolean; initialPosition: LatLng | null; initialAddress?: string | null;
+  boundary: Polygon | MultiPolygon | null; barangayName?: string | null;
+  onCancel: () => void; onConfirm: (result: LocationPickerResult) => void;
 }
-
-export function LocationPickerModal({
-  visible,
-  initialPosition,
-  initialAddress,
-  boundary,
-  barangayName,
-  onCancel,
-  onConfirm,
-}: LocationPickerModalProps) {
-  const theme = useTheme();
-  const [position, setPosition] = useState<LatLng | null>(initialPosition);
+export function LocationPickerModal(props: LocationPickerModalProps) {
+  const { mounted, panel, reduced } = useReportModalMotion(props.visible);
+  const { height } = useWindowDimensions();
+  return <Modal visible={mounted} animationType="none" statusBarTranslucent onRequestClose={props.onCancel}>
+    <Animated.View style={{ flex: 1, opacity: reduced ? panel : 1, transform: [{ translateY: reduced ? 0 : panel.interpolate({ inputRange: [0, 1], outputRange: [height, 0] }) }] }}>
+      {mounted ? <PickerContent {...props} /> : null}
+    </Animated.View>
+  </Modal>;
+}
+function PickerContent({ visible, initialPosition, initialAddress, boundary, barangayName, onCancel, onConfirm }: LocationPickerModalProps) {
+  const { resident } = useTheme();
+  const { fontId } = useFontPreference();
+  const reducedMotion = useResidentReducedMotion(true);
+  const map = useRef<MapViewHandle>(null);
+  const [initialFocus] = useState(() => isMapPosition(initialPosition) ? { ...initialPosition, zoom: 17 } : undefined);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const locationOwner = useRef(0);
+  const locationBusy = useRef(false);
+  const locationTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const colors = useMemo(() => ({ picker: resident.accent }), [resident.accent]);
+  const presentation = useMemo(() => ({ selectedMarkerId: null, padding: { top: 44, bottom: 88 }, attributionBottom: 0,
+    reducedMotion, surface: resident.card, text: resident.text, border: resident.border, fontFamily: getMobileFontFamily(fontId) ?? 'sans-serif',
+  }), [reducedMotion, resident.card, resident.text, resident.border, fontId]);
+  useEffect(() => () => { locationOwner.current++; if (locationTimeout.current) clearTimeout(locationTimeout.current); }, []);
+  async function locate() {
+    if (locationBusy.current) return;
+    locationBusy.current = true; setLocating(true); setLocationError(null);
+    const owner = ++locationOwner.current;
+    try {
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (owner !== locationOwner.current) return;
+      if (permission.status !== 'granted') throw new Error('Allow location access to use your current position. You can still place the pin manually.');
+      const fix = await Promise.race([Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), new Promise<never>((_, reject) => {
+        locationTimeout.current = setTimeout(() => reject(new Error('Location timed out. Try again or place the pin manually.')), 10000);
+      })]);
+      if (owner !== locationOwner.current) return;
+      const point = { lat: fix.coords.latitude, lng: fix.coords.longitude };
+      if (boundary && !isPointInPolygon(point, boundary)) { setRejected(true); return; }
+      setPosition(point); setAddress(''); setGeocodeTarget(point); setRejected(false); map.current?.flyTo({ ...point, zoom: 17 });
+    } catch (error) { if (owner === locationOwner.current) setLocationError(error instanceof Error ? error.message : 'Unable to get your location. Place the pin manually.'); }
+    finally { if (locationTimeout.current) { clearTimeout(locationTimeout.current); locationTimeout.current = undefined; } if (owner === locationOwner.current) { locationBusy.current = false; setLocating(false); } }
+  }
+  const [position, setPosition] = useState(initialPosition);
   const [address, setAddress] = useState(initialAddress ?? '');
-  const [addressLoading, setAddressLoading] = useState(false);
-  const [rejectedNotice, setRejectedNotice] = useState(false);
-  const geocodeRequestId = useRef(0);
-
-  async function fetchAddressFor(pos: LatLng) {
-    const requestId = ++geocodeRequestId.current;
-    setAddressLoading(true);
-    const result = await reverseGeocode(pos);
-    // Ignore stale responses from a since-superseded pin placement.
-    if (requestId !== geocodeRequestId.current) return;
-    setAddressLoading(false);
-    if (result) setAddress(result);
-  }
-
-  // Reset to the caller's starting point each time the modal opens, and auto-fetch its
-  // address if one wasn't already known (e.g. reopening after a previous confirm).
+  const [geocodeTarget, setGeocodeTarget] = useState(initialAddress ? null : initialPosition);
+  const [loading, setLoading] = useState(false);
+  const [geocodeFailed, setGeocodeFailed] = useState(false);
+  const [rejected, setRejected] = useState(false);
+  const [mapFailed, setMapFailed] = useState(false);
+  const [mapAttempt, setMapAttempt] = useState(0);
+  const request = useRef(0);
+  const wasVisible = useRef(false);
   useEffect(() => {
-    if (!visible) return;
-    setPosition(initialPosition);
-    setAddress(initialAddress ?? '');
-    setRejectedNotice(false);
-    if (initialPosition && !initialAddress) {
-      void fetchAddressFor(initialPosition);
+    if (visible && !wasVisible.current) {
+      setPosition(initialPosition); setAddress(initialAddress ?? ''); setRejected(false); setMapFailed(false);
+      setGeocodeTarget(initialAddress ? null : initialPosition);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
-
-  function handlePickerMoved(pos: LatLng) {
-    setPosition(pos);
-    setRejectedNotice(false);
-    void fetchAddressFor(pos);
-  }
-
-  function handlePickerRejected() {
-    setRejectedNotice(true);
-  }
-
-  function handleConfirm() {
-    if (!position) return;
-    onConfirm({ position, address: address.trim() || null });
-  }
-
-  return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onCancel} statusBarTranslucent>
-      <SafeAreaView style={[styles.root, { backgroundColor: theme.background }]} edges={['top', 'bottom']}>
-        {/* Header */}
-        <View style={[styles.header, { borderBottomColor: theme.backgroundSelected }]}>
-          <Pressable
-            onPress={onCancel}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-            hitSlop={Spacing.two}
-            style={styles.headerBtn}>
-            <Ionicons name="close" size={24} color={theme.text} />
-          </Pressable>
-          <ThemedText type="smallBold" style={styles.headerTitle}>
-            Pin Your Location
-          </ThemedText>
-          <View style={styles.headerBtn} />
-        </View>
-
-        {/* Map */}
-        <View style={styles.mapArea}>
-          <MapView
-            markers={[]}
-            boundary={boundary}
-            picker={{ enabled: true, position }}
-            onPickerMoved={handlePickerMoved}
-            onPickerRejected={handlePickerRejected}
-            style={StyleSheet.absoluteFill}
-          />
-          <View style={styles.hintPill} pointerEvents="none">
-            <Ionicons name="hand-left-outline" size={13} color="#fff" />
-            <ThemedText type="small" style={styles.hintPillText}>
-              Tap or drag the pin
-            </ThemedText>
-          </View>
-          {rejectedNotice && (
-            <View style={styles.rejectedBanner}>
-              <Ionicons name="warning-outline" size={16} color="#fff" />
-              <ThemedText type="small" style={styles.rejectedBannerText}>
-                Please pin a location inside {barangayName ?? 'the barangay'}&apos;s boundary.
-              </ThemedText>
-            </View>
-          )}
-        </View>
-
-        {/* Confirm sheet */}
-        <ThemedView type="backgroundElement" style={[styles.sheet, { borderTopColor: theme.backgroundSelected }]}>
-          <View style={styles.addressLabelRow}>
-            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
-              Address
-            </ThemedText>
-            {addressLoading && <ActivityIndicator size="small" color={theme.primary} />}
-          </View>
-          <TextField
-            placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}
-            value={address}
-            onChangeText={setAddress}
-            maxLength={300}
-          />
-          {position && (
-            <ThemedText type="small" themeColor="textSecondary">
-              {position.lat.toFixed(5)}, {position.lng.toFixed(5)}
-            </ThemedText>
-          )}
-          <PrimaryButton label="Use This Location" onPress={handleConfirm} disabled={!position} />
-        </ThemedView>
-      </SafeAreaView>
-    </Modal>
-  );
+    wasVisible.current = visible;
+  }, [visible, initialPosition, initialAddress]);
+  useEffect(() => {
+    const ticket = ++request.current;
+    if (!visible || !geocodeTarget) { setLoading(false); return; }
+    let active = true;
+    setLoading(true); setGeocodeFailed(false);
+    void reverseGeocode(geocodeTarget).then(result => {
+      if (!active || request.current !== ticket) return;
+      setLoading(false);
+      if (result) setAddress(result); else setGeocodeFailed(true);
+    }).catch(() => { if (active && request.current === ticket) { setLoading(false); setGeocodeFailed(true); } });
+    return () => { active = false; };
+  }, [geocodeTarget, visible]);
+  return <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: resident.card }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <ServiceScreenHeader title="Pin Your Location" onBack={onCancel} backLabel="Cancel" backIcon="close" />
+      <View style={styles.map}>
+        <MapView key={mapAttempt} ref={map} markers={[]} focusPosition={initialFocus} boundary={boundary} kindColors={colors} presentation={presentation} picker={{ enabled: visible, position }}
+          onPickerMoved={next => { setAddress(''); setPosition(next); setGeocodeTarget(next); setRejected(false); }}
+          onPickerRejected={() => setRejected(true)} onMapError={() => setMapFailed(true)} style={StyleSheet.absoluteFill} />
+        <View pointerEvents="none" style={[styles.hint, { backgroundColor: resident.mediaScrim }]}><Ionicons name="hand-left-outline" size={16} color={resident.mediaForeground} /><ThemedText style={{ color: resident.mediaForeground, fontSize: 13, fontWeight: '700' }}>Tap or drag the pin</ThemedText></View>
+        <ReportMapControls onZoomIn={() => map.current?.zoomIn()} onZoomOut={() => map.current?.zoomOut()} onFit={() => map.current?.fitBoundary()} onLocate={() => { void locate(); }} locating={locating} />
+        {mapFailed ? <ReportSourceState message="The map could not be loaded." retry={() => { setMapFailed(false); setMapAttempt(value => value + 1); }} /> : null}
+        {rejected ? <View style={[styles.rejected, { backgroundColor: resident.dangerSoft }]}><ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>Please pin a location inside {barangayName ?? 'the barangay'}'s boundary.</ThemedText></View> : null}
+      </View>
+      <View style={[styles.sheet, { borderTopColor: resident.border }]}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 8 }}>
+          {locationError ? <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>{locationError}</ThemedText> : null}
+          <View style={styles.label}><ThemedText style={{ fontSize: 15, fontWeight: '700', color: resident.text }}>Address</ThemedText>{loading ? <ActivityIndicator color={resident.accentText} /> : null}</View>
+          <TextField presentation="resident" appearance="requestForm" accessibilityLabel="Address, optional"
+            value={address} onChangeText={value => { request.current++; setLoading(false); setAddress(value); }}
+            placeholder={loading ? 'Detecting address…' : 'Type to correct the detected address'} maxLength={300} />
+          {geocodeFailed ? <ThemedText accessibilityRole="alert" style={{ fontSize: 12.5, color: resident.muted }}>The address could not be detected. You can type it or continue with the pinned coordinates.</ThemedText> : null}
+          {position ? <ThemedText style={{ color: resident.muted, fontSize: 12.5 }}>{position.lat.toFixed(5)}, {position.lng.toFixed(5)}</ThemedText> : null}
+        </ScrollView>
+        <PrimaryButton presentation="resident" label="Use This Location" disabled={!position} onPress={() => { if (position) onConfirm({ position, address: address.trim() || null }); }} />
+      </View>
+    </KeyboardAvoidingView>
+  </SafeAreaView>;
 }
-
 const styles = StyleSheet.create({
-  root: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.two,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 16,
-  },
-  mapArea: {
-    flex: 1,
-  },
-  hintPill: {
-    position: 'absolute',
-    top: Spacing.three,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    backgroundColor: 'rgba(15,23,42,0.75)',
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  hintPillText: {
-    color: '#fff',
-  },
-  rejectedBanner: {
-    position: 'absolute',
-    bottom: Spacing.three,
-    left: Spacing.three,
-    right: Spacing.three,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    backgroundColor: '#DC2626',
-    borderRadius: 14,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-  },
-  rejectedBannerText: {
-    color: '#fff',
-    flex: 1,
-  },
-  sheet: {
-    padding: Spacing.four,
-    gap: Spacing.two,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  sectionLabel: {
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-  },
-  addressLabelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
+  map: { flex: 1, minHeight: 80 },
+  hint: { position: 'absolute', top: 12, alignSelf: 'center', flexDirection: 'row', gap: 6, alignItems: 'center', borderRadius: 100, paddingHorizontal: 14, paddingVertical: 10 },
+  rejected: { position: 'absolute', bottom: 84, left: 16, right: 16, padding: 12, borderRadius: 12 },
+  sheet: { maxHeight: '55%', padding: 20, borderTopWidth: 1, gap: 18 },
+  label: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
 });

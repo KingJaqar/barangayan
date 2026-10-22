@@ -1,0 +1,62 @@
+{
+  "database": "family_attendance_phase4_recovery_20261022",
+  "migrations": [
+    {
+      "path": "supabase/migrations/0139_remote_schema.sql",
+      "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2",
+      "exit": 0
+    },
+    {
+      "path": "supabase/migrations/0140_restore_household_attendance.sql",
+      "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44",
+      "exit": 0
+    }
+  ],
+  "body_identity": "Verified 0137/0138 equality after top-level transaction wrapper removal and the inspected deletion-v2 executable anchor replacement",
+  "tests": [
+    {
+      "path": "supabase/tests/household_attendance.test.sql",
+      "assertions": 83,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/household_attendance_boundaries.test.sql",
+      "assertions": 30,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/admin_household_attendance_projection_web.test.sql",
+      "assertions": 27,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/admin_record_lifecycle.test.sql",
+      "assertions": 153,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/resident_household_conditional.test.sql",
+      "assertions": 22,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/resident_ios_phase18_account_deletion.test.sql",
+      "assertions": 56,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/resident_ios_phase3_backend.test.sql",
+      "assertions": 86,
+      "exit": 0
+    },
+    {
+      "path": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "assertions": 7,
+      "exit": 0
+    }
+  ],
+  "concurrency": 21,
+  "recovery": "pass",
+  "empty_final": "{\"stays\": 0, \"profiles\": 0, \"receipts\": 0}",
+  "limits": "Fresh empty synthetic chain only. 0139 drops data if applied to a populated target; 0140 does not recover that data. Pushed history left untouched; operator backup reconciliation required."
+}

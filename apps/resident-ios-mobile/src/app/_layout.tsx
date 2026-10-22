@@ -6,9 +6,13 @@ import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Action, Body, confirmDestructive, Loading, Screen } from '../components/ui';
 import { readConfiguration } from '../lib/config';
+import { releaseGates } from '../lib/release-gates';
 import { ResidentProvider, useResident } from '../lib/runtime';
 import { AppearanceProvider } from '../features/appearance/provider';
 import { SetupEnforcer } from '../features/auth/setup-enforcer';
+import { InboxCountProvider } from '../features/notifications/inbox-count';
+import { PushLifecycle } from '../features/notifications/push-lifecycle';
+import { NotificationTapHandler } from '../features/notifications/tap-handler';
 import { useColors } from '../lib/theme';
 
 // Keep the splash until the first authoritative session decision; module scope so it runs before the first render.
@@ -53,7 +57,7 @@ function Navigator() {
     const base = dark ? DarkTheme : DefaultTheme;
     return { ...base, colors: { ...base.colors, primary: colors.primary, background: colors.canvas, card: colors.surface, text: colors.textPrimary, border: colors.border } };
   }, [dark, colors]);
-  return <ThemeProvider value={navigationTheme}>
+  return <ThemeProvider value={navigationTheme}><InboxCountProvider>
     <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal', headerTintColor: colors.primary, contentStyle: { backgroundColor: colors.canvas } }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Protected guard={!recovery}>
@@ -68,6 +72,7 @@ function Navigator() {
         <Stack.Screen name="account-setup" options={{ title: 'Set up your account', headerBackVisible: false, gestureEnabled: false }} />
         <Stack.Screen name="complete-profile" options={{ title: 'Complete your profile' }} />
         <Stack.Screen name="emergency" options={{ title: 'Emergency information' }} />
+        <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
         <Stack.Screen name="requests" options={{ title: 'My requests' }} />
         <Stack.Screen name="request/[id]" options={{ title: 'Request details' }} />
         <Stack.Screen name="request/received" options={{ title: 'Request received', headerBackVisible: false, gestureEnabled: false }} />
@@ -89,5 +94,6 @@ function Navigator() {
       <Stack.Screen name="recovery" options={{ headerShown: false }} />
     </Stack>
     <SetupEnforcer />
-  </ThemeProvider>;
+    {releaseGates.remotePush && <><PushLifecycle /><NotificationTapHandler /></>}
+  </InboxCountProvider></ThemeProvider>;
 }

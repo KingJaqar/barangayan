@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
+import { DrrmDisclosure } from '@/components/drrm/disclosure';
+import { DrrmIconTile, drrmStyles } from '@/components/drrm/presentation';
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -14,134 +14,32 @@ export interface AccordionItem {
   content: string[];
 }
 
-interface Props {
-  items: AccordionItem[];
-}
-
-export function EmergencyAccordion({ items }: Props) {
-  const theme = useTheme();
+export function EmergencyAccordion({ items }: { items: AccordionItem[] }) {
+  const { resident } = useTheme();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  function handleToggle(index: number) {
-    setOpenIndex((prev) => (prev === index ? null : index));
-  }
-
-  return (
-    <View style={[styles.container, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
-      {items.map((item, index) => {
-        const isOpen = openIndex === index;
-        return (
-          <View
-            key={index}
-            style={[
-              styles.item,
-              index < items.length - 1 && [styles.itemBorder, { borderBottomColor: theme.backgroundSelected }],
-            ]}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ expanded: isOpen }}
-              accessibilityLabel={`${item.title} guidelines`}
-              onPress={() => handleToggle(index)}
-              style={styles.itemHeader}
-              hitSlop={Spacing.one}
-            >
-              <View style={[styles.iconCircle, { backgroundColor: item.iconBg }]}>
-                <Ionicons name={item.icon as any} size={22} color={item.iconColor} />
-              </View>
-              <ThemedText type="smallBold" style={styles.itemTitle}>
-                {item.title}
-              </ThemedText>
-              <View style={styles.chevronWrapper}>
-                <Ionicons
-                  name="chevron-down"
-                  size={18}
-                  color={theme.textSecondary}
-                  style={[styles.chevron, isOpen && styles.chevronOpen]}
-                />
-              </View>
-            </Pressable>
-
-            {isOpen && (
-              <View style={styles.contentWrapper}>
-                {item.content.map((step, stepIndex) => (
-                  <View key={stepIndex} style={styles.stepRow}>
-                    <View style={[styles.bullet, { backgroundColor: theme.textSecondary }]} />
-                    <ThemedText type="small" themeColor="textSecondary" style={styles.stepText}>
-                      {step}
-                    </ThemedText>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-        );
-      })}
-    </View>
-  );
+  return <View style={[drrmStyles.group, { backgroundColor: resident.card, borderColor: resident.border }]}>
+    {items.map((item, index) => <View key={index}
+      style={index > 0 && { borderTopWidth: 1, borderTopColor: resident.border }}>
+      <DrrmDisclosure open={openIndex === index} onToggle={() => setOpenIndex(previous => previous === index ? null : index)}
+        label={`${item.title} guidelines`} headerStyle={styles.header}
+        header={<><DrrmIconTile icon={item.icon} color={item.iconColor} background={item.iconBg} />
+          <ThemedText style={[styles.title, { color: resident.text }]}>{item.title}</ThemedText></>}>
+        <View style={styles.steps}>
+          {item.content.map((step, stepIndex) => <View key={stepIndex} style={styles.step}>
+            <View style={[styles.bullet, { backgroundColor: resident.muted }]} />
+            <ThemedText style={[styles.text, { color: resident.text }]}>{step}</ThemedText>
+          </View>)}
+        </View>
+      </DrrmDisclosure>
+    </View>)}
+  </View>;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 16,
-    borderWidth: 1,
-    overflow: 'hidden',
-  },
-  item: {
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.three,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-  },
-  itemHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemTitle: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  chevronWrapper: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chevron: {
-    transform: [{ rotate: '0deg' }],
-  },
-  chevronOpen: {
-    transform: [{ rotate: '180deg' }],
-  },
-  contentWrapper: {
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.two,
-    gap: Spacing.two,
-  },
-  stepRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.two,
-  },
-  bullet: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginTop: 6,
-    marginLeft: 3,
-  },
-  stepText: {
-    flex: 1,
-    fontSize: 13,
-    lineHeight: 19,
-  },
+  header: { paddingHorizontal: 12, paddingVertical: 10 },
+  title: { flex: 1, minWidth: 0, fontSize: 15, lineHeight: 20, fontWeight: '700' },
+  steps: { paddingLeft: 58, paddingRight: 12, paddingBottom: 12, gap: 8 },
+  step: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
+  bullet: { width: 6, height: 6, borderRadius: 3, marginTop: 7 },
+  text: { flex: 1, fontSize: 13.5, lineHeight: 20 },
 });

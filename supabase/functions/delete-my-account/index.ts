@@ -12,6 +12,8 @@
 // See supabase/migrations/0074_account_deletion.sql for the full rationale.
 
 import { createClient } from '@supabase/supabase-js';
+import { type Fetcher, readAppleConfig, revokeAppleAuthorization } from './apple-revocation.ts';
+import { DELETE_CONTRACT_VERSION, deleteAccountV2 } from './delete-v2.ts';
 import { hasFreshAuthentication } from './fresh-authentication.ts';
 import { removeOwnedStorageObjects } from './storage-cleanup.ts';
 
@@ -55,6 +57,46 @@ Deno.serve(async (req: Request) => {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // Contract v2 (resident iOS): Apple disconnection, the retain/de-identify/erase matrix, a recorded state and a truthful result.
+    // A request without it keeps the v1 flow below, which the Android and web apps still use. Freshness is enforced inside the
+    // database step, and only for the first request, so a retry after a partial failure can finish what the resident started.
+    const body = await req.json().catch(() => null) as { contractVersion?: unknown; appleAuthorizationCode?: unknown } | null;
+    if (body && body.contractVersion === DELETE_CONTRACT_VERSION) {
+      const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const appleConfig = readAppleConfig((name) => Deno.env.get(name));
+      const accessToken = authHeader.replace(/^Bearer\s+/i, '');
+      const result = await deleteAccountV2({
+        hasAppleIdentity: (user.identities ?? []).some((identity) => identity.provider === 'apple'),
+        appleAuthorizationCode: typeof body.appleAuthorizationCode === 'string' && body.appleAuthorizationCode.length > 0 && body.appleAuthorizationCode.length <= 2048 ? body.appleAuthorizationCode : null,
+        revokeApple: async (code) => appleConfig ? await revokeAppleAuthorization(appleConfig, code, Math.floor(Date.now() / 1000), fetch as unknown as Fetcher) : 'unavailable',
+        erase: async () => {
+          const { data, error } = await callerClient.rpc('erase_own_account_records');
+          return error ? { ok: false, code: error.code ?? 'unknown', message: error.message } : { ok: true, state: String(data) };
+        },
+        setState: async (state, detail) => {
+          const { error } = await adminClient.rpc('set_account_deletion_state', { p_user: user.id, p_state: state, p_error: detail ?? null });
+          return !error;
+        },
+        cleanStorage: async () => {
+          const failed: string[] = [];
+          for (const bucket of ['profile-photos', 'id-documents', 'request-attachments', 'incident-photos']) {
+            try { await removeOwnedStorageObjects(adminClient.storage.from(bucket), user.id); } catch { failed.push(bucket); }
+          }
+          return failed;
+        },
+        revokeAuth: async () => {
+          const banned = await adminClient.auth.admin.updateUserById(user.id, { ban_duration: '876000h' });
+          if (banned.error) return false;
+          // Ending the sessions is repeated by the soft delete below, so a failure here is not fatal.
+          await adminClient.auth.admin.signOut(accessToken, 'global').catch(() => undefined);
+          // A soft delete removes the sign-in's email, password and linked identities and keeps the id that retained records point at.
+          const removed = await adminClient.auth.admin.deleteUser(user.id, true);
+          return !removed.error;
+        },
+      });
+      return new Response(JSON.stringify(result.body), { status: result.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // Destructive and irreversible: require a recent Auth authentication proven by

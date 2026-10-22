@@ -1,0 +1,22 @@
+{
+  "packet": "tmp\\family-attendance-phase4-20261022\\receipt-export.xml",
+  "sha256": "9cd6b978e3e97ddf7a858997afd1328e9e93ae2f9c6f7b542eb1e21a55599bcf",
+  "version": "1.18.1",
+  "security": "enabled, no suspicious files",
+  "sources": [
+    {
+      "path": "supabase/migrations/0141_attendance_receipt_export_access.sql",
+      "sha256": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2",
+      "lines": 28,
+      "characters": 1608
+    },
+    {
+      "path": "supabase/tests/household_attendance_receipt_exports.test.sql",
+      "sha256": "c9f42b6b658a1094f582d43c520b585252cb4c2809bea17a4b267d925fffc932",
+      "lines": 60,
+      "characters": 4535
+    }
+  ],
+  "omissions": [],
+  "completed_reads": "both entries completely read in bounded output"
+}

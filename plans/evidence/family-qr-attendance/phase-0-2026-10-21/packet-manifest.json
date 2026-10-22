@@ -1,0 +1,134 @@
+{
+  "command": [
+    "node",
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "AGENTS.md,CLAUDE.md,apps/admin-web/AGENTS.md,apps/admin-web/CLAUDE.md,apps/resident-web/AGENTS.md,apps/resident-web/CLAUDE.md,plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md,plans/Family_QR_Attendance_Context_Index.md,supabase/migrations/0045_evacuation_center_checkins.sql,supabase/migrations/0046_household_members.sql,supabase/migrations/0123_resident_household_conditional_save.sql,supabase/migrations/0136_account_deletion_state.sql,supabase/functions/generate-household-qr/index.ts,supabase/functions/delete-my-account/delete-v2.ts,packages/shared/src/schemas/household.ts,packages/shared/src/schemas/emergency-qr.ts,apps/resident-android-mobile/src/components/drrm/household-code.tsx,apps/resident-android-mobile/src/hooks/use-profile-household-members.ts,apps/resident-android-mobile/src/hooks/use-qr-checkins.ts,apps/resident-web/src/hooks/use-qr-checkins.ts,apps/resident-web/src/components/emergency/household-qr-dialog.tsx,apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "--style",
+    "xml",
+    "--parsable-style",
+    "--no-git-sort-by-changes",
+    "--ignore",
+    "**/.env*,**/*secret*,**/*credentials*,**/node_modules/**,**/.git/**,**/repomix-output.xml,**/tmp/**",
+    "-o",
+    "C:\\Users\\User\\barangayan\\tmp\\family-attendance-phase0-20261021\\contracts.before.xml"
+  ],
+  "exit": 0,
+  "packet_sha256": "A62360D78DAC7DD581D0CEEE62C382495142CEBECF305DE091EC44F70011CA73",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49"
+    },
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "sha256": "EC1B6E023814AE1A510B02EA62229E5EB035D75E39E3335D5EA7F5CE5654D567"
+    },
+    {
+      "path": "apps/admin-web/CLAUDE.md",
+      "sha256": "D631D88045F74623D568ADFB4783B72E3D1B732330D749BC6C72E6648D4581D3"
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63F2C50380ED6303237CCE215CE27AF1D620D094C215E28D1B1538A3C070E3BB"
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49"
+    },
+    {
+      "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+      "sha256": "EEF56761546FAEFFBC483B617D17DB24195EC9C8DB394C7D2C128B4347396FF2"
+    },
+    {
+      "path": "plans/Family_QR_Attendance_Context_Index.md",
+      "sha256": "FAD03A24BB260F454A3492F770CC37AFDD6E7B4228535EE55913CCB5BD56904A"
+    },
+    {
+      "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+      "sha256": "8C7227A915051F90B4A05863A41E80434690FB1460646A828C55D72534D1202C"
+    },
+    {
+      "path": "supabase/migrations/0046_household_members.sql",
+      "sha256": "21E7EEDF8AF78811301ADDB43D8030CED9B673BE759691B6C664841D47B63F00"
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "sha256": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982"
+    },
+    {
+      "path": "supabase/migrations/0136_account_deletion_state.sql",
+      "sha256": "88A5012543E07C04E37A27FAEE5959ECFC0F23DD8024F7C682C5883DC9ED172B"
+    },
+    {
+      "path": "supabase/functions/generate-household-qr/index.ts",
+      "sha256": "5DC380091FFD9030845BD3B1FB4357A6AAACD8B8B1965F377749B3715C48B7A5"
+    },
+    {
+      "path": "supabase/functions/delete-my-account/delete-v2.ts",
+      "sha256": "E8E978E7608308BDAF3F8B4A2E5D1EDC9CDB1F0153C1C411115F704C2AC2431B"
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "sha256": "649EE31B82FC0D2791EA352A59C3BFC5EEF0A711979B04782852596296C0A224"
+    },
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "B8D7D5CC0BAA3080839CFD896FCB1CAC90FD87F3D26874C1E87492431B8C47C8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "sha256": "14B5E589122A6F8022AF04C7A93A2EE66C43C569C6BD4AB8DCEFE15CF36991EB"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "sha256": "6DC32483CE1509AB188DB082E671773D230A16E484DCD7F4013C9808C63BEF3F"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+      "sha256": "EF8534CEF9C9C824FE11C27B158C6EEC7F0668C507015B06947478205A28C44D"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+      "sha256": "1C00FA129C875F40F813484CB601980F7E026C4E814267B972558ED0026BF541"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "sha256": "E2E2AD6713450AD5FDB3A1C8E858DC84E94C5BA3C8FAA6CD02DB40D4CEA1A163"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+      "sha256": "8187D1DC65E946FAFF08EDB0CAB2A61F1E4E7E5705B362EAF3AD267A1A9D64E8"
+    }
+  ],
+  "actual": [
+    "apps/admin-web/AGENTS.md",
+    "apps/admin-web/CLAUDE.md",
+    "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+    "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+    "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+    "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "apps/resident-web/src/hooks/use-qr-checkins.ts",
+    "apps/resident-web/AGENTS.md",
+    "apps/resident-web/CLAUDE.md",
+    "packages/shared/src/schemas/emergency-qr.ts",
+    "packages/shared/src/schemas/household.ts",
+    "plans/Family_QR_Attendance_Context_Index.md",
+    "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "supabase/functions/delete-my-account/delete-v2.ts",
+    "supabase/functions/generate-household-qr/index.ts",
+    "supabase/migrations/0045_evacuation_center_checkins.sql",
+    "supabase/migrations/0046_household_members.sql",
+    "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "supabase/migrations/0136_account_deletion_state.sql",
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "omissions": [],
+  "compressed": false
+}

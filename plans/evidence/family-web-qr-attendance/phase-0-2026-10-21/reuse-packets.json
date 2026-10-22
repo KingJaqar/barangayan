@@ -1,0 +1,80 @@
+[
+  {
+    "path": "tmp/family-web-plan-20261021/web-source.xml",
+    "sha256": "8668E8E3EDDA7A5DE3C2230698EF3833ACC950332E50020382F288EBA609A07B",
+    "entries": [
+      {
+        "path": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+        "sha256": "23AB7321A60150141EAE8D99BC448CEC2F12C62A1AF9533149BAAD74C2FB088A",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/src/lib/qr-checkin.ts",
+        "sha256": "FD855B54F39B53F30131E734294DA1AC5E1F189D39082E83C158C875742166A6",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/AGENTS.md",
+        "sha256": "63F2C50380ED6303237CCE215CE27AF1D620D094C215E28D1B1538A3C070E3BB",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/package.json",
+        "sha256": "460B994A5A185AC6497154A5113DA3D57A3758F8BB3054D61613D6C25784315E",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+        "sha256": "1C00FA129C875F40F813484CB601980F7E026C4E814267B972558ED0026BF541",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/src/hooks/use-family-members.ts",
+        "sha256": "FE56A894C4D979EDF44E609E1B14A7EB9520388012BA6F24D7138F22A53DC25D",
+        "normalized_match": true
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+        "sha256": "E2E2AD6713450AD5FDB3A1C8E858DC84E94C5BA3C8FAA6CD02DB40D4CEA1A163",
+        "normalized_match": true
+      },
+      {
+        "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+        "sha256": "F362C12DF6B7ABD5D9B585CAC02213B445711AE8998F893064C9C665B50264E7",
+        "normalized_match": true
+      }
+    ]
+  },
+  {
+    "path": "tmp/family-web-plan-polish-20261021/conditional-save.supplement.xml",
+    "sha256": "359D33F9FE16946ED98A16D35F75DFFE5C0F3220A480785B74038520E937E12A",
+    "entries": [
+      {
+        "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+        "sha256": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982",
+        "normalized_match": true
+      }
+    ]
+  },
+  {
+    "path": "tmp/family-web-plan-polish-20261021/shared-phase0.supplement.xml",
+    "sha256": "97A77B7CE0268DE81474881E5C53805BE8FFCF07BF9103B8E530415E9FA3A52B",
+    "entries": [
+      {
+        "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md",
+        "sha256": "0B50BF2FF9CEA1D563972876D53F13F5E4C64D2A1F1066A0745C12D04B3763B1",
+        "normalized_match": true
+      },
+      {
+        "path": "plans/evidence/family-qr-attendance/phase-0-2026-10-21/verification.json",
+        "sha256": "AEBDE989B3CD90E6E8DAB0C87AF41D86AF5DC77E0550F26567CAA8267FE44D2C",
+        "normalized_match": true
+      }
+    ]
+  }
+]

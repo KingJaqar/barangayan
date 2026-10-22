@@ -2,17 +2,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { centerOccupancy } from '@/lib/center-presentation';
 import { useTheme } from '@/hooks/use-theme';
 
 export interface CenterDetailCardProps {
   name: string;
   address: string;
-  distanceKm: number;
-  walkingTimeMins: number;
+  distanceKm?: number;
+  walkingTimeMins?: number;
   currentOccupancy: number;
   capacity: number | null;
-  /** True when distance/time come from a real OSRM road-following route (ticket 17)
-   *  rather than the Haversine straight-line fallback. */
+  /** True when metrics come from the selected walking route. */
   isRoadRoute?: boolean;
   onClose?: () => void;
 }
@@ -29,40 +29,31 @@ export function CenterDetailCard({
 }: CenterDetailCardProps) {
   const theme = useTheme();
 
-  const occupancyFraction = capacity && capacity > 0 ? currentOccupancy / capacity : 0;
-  const occupancyPercent = Math.round(occupancyFraction * 100);
-
-  const isFull = occupancyPercent >= 100;
-  const isHigh = occupancyPercent >= 80;
-
-  const barColor = isFull ? '#DC2626' : isHigh ? '#D97706' : '#0F6E5B';
-  const badgeBg = isFull ? '#FEE2E2' : isHigh ? '#FEF3C7' : '#D1FAE5';
-
-  const displayOccupancy = isFull ? 'FULL' : `${occupancyPercent}% full`;
-  const capacityText =
-    capacity !== null && capacity !== undefined
-      ? `${currentOccupancy.toLocaleString()} / ${capacity.toLocaleString()}`
-      : null;
-
-  const hasRoute = distanceKm > 0 && walkingTimeMins > 0;
+  const occupancy = centerOccupancy(currentOccupancy, capacity);
+  const barColor = theme.resident[occupancy.tone];
+  const badgeBg = occupancy.tone === 'muted' ? theme.resident.surface : theme.resident[`${occupancy.tone}Soft`];
+  const displayOccupancy = occupancy.percent === null ? 'Capacity unknown' : occupancy.percent >= 100 ? 'FULL' : `${occupancy.percent}% full`;
+  const capacityText = capacity !== null && capacity > 0 ? `${currentOccupancy.toLocaleString()} / ${capacity.toLocaleString()}` : null;
+  const hasRoute = distanceKm !== undefined && Number.isFinite(distanceKm) && distanceKm >= 0 && walkingTimeMins !== undefined && walkingTimeMins > 0;
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
+    <View style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
       <View style={styles.headerRow}>
         <View style={styles.titleColumn}>
-          <ThemedText type="smallBold" style={[styles.name, { color: theme.text }]} numberOfLines={1}>
+          <ThemedText type="smallBold" style={[styles.name, { color: theme.text }]}>
             {name}
           </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.address} numberOfLines={1}>
+          <ThemedText type="small" themeColor="textSecondary" style={styles.address}>
             {address}
           </ThemedText>
         </View>
         {onClose ? (
           <Pressable
+            accessibilityRole="button"
             onPress={onClose}
             hitSlop={10}
             accessibilityLabel="Close center details"
-            style={[styles.closeButton, { backgroundColor: theme.backgroundElement }]}>
+            style={[styles.closeButton, { backgroundColor: theme.resident.surface }]}>
             <Ionicons name="close" size={16} color={theme.textSecondary} />
           </Pressable>
         ) : null}
@@ -83,13 +74,13 @@ export function CenterDetailCard({
         <Ionicons name="walk-outline" size={14} color={theme.textSecondary} />
         <ThemedText type="smallBold" style={[styles.metaText, { color: theme.text }]}>
           {hasRoute
-            ? `${walkingTimeMins} min · ${distanceKm.toFixed(1)} km${isRoadRoute ? '' : ' (est.)'}`
-            : 'Location needed'}
+            ? `${walkingTimeMins} min · ${distanceKm?.toFixed(1)} km${isRoadRoute ? '' : ' (est.)'}`
+            : 'Walking distance unavailable'}
         </ThemedText>
       </View>
 
-      <View style={[styles.track, { backgroundColor: theme.backgroundSelected }]}>
-        <View style={[styles.fill, { backgroundColor: barColor, width: `${Math.min(occupancyPercent, 100)}%` }]} />
+      <View style={[styles.track, { backgroundColor: theme.resident.surface }]}>
+        <View style={[styles.fill, { backgroundColor: barColor, width: `${occupancy.fill}%` }]} />
       </View>
     </View>
   );
@@ -99,7 +90,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     borderWidth: 1,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     paddingVertical: 12,
     gap: 8,
   },
@@ -122,14 +113,15 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   closeButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     gap: 6,
   },

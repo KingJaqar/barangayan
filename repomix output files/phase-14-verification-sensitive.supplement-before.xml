@@ -1,0 +1,403 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx, apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx, apps/resident-android-mobile/src/components/primary-button.tsx, apps/resident-android-mobile/src/components/services/action-success-modal.tsx, apps/resident-android-mobile/src/components/services/service-screen-header.tsx, apps/resident-android-mobile/src/components/settings-sheet.tsx, apps/resident-android-mobile/src/components/text-field.tsx, apps/resident-android-mobile/src/components/themed-text.tsx, apps/resident-android-mobile/src/constants/fonts.ts, apps/resident-android-mobile/src/constants/resident-theme.ts, apps/resident-android-mobile/src/hooks/use-report-modal-motion.ts, apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts, apps/resident-android-mobile/src/hooks/use-theme.ts, apps/resident-android-mobile/src/lib/image-upload.ts, CLAUDE.md, packages/shared/src/lib/reverse-geocode.ts, packages/shared/src/lib/service-catalog.ts
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, .git/**, **/.expo/**, **/ios/**, **/android/**, **/dist/**, **/.next*/**, **/build/**, **/coverage/**, **/.cache/**, **/.turbo/**, tmp/**, repomix output files/**, **/*.tsbuildinfo, **/*.log, **/*.map, **/*.xml, .aws/**, .codex/**, .claude/**, **/.env*, **/*.pem, **/*.key, **/*.p8, **/*.p12, **/*.jks, **/*.keystore, **/credentials*.json, **/*service-account*.json, **/*.jpg, **/*.jpeg, **/*.webp, **/*.gif, **/*.mp4, **/*.pdf
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          settings/
+            _layout.tsx
+      components/
+        services/
+          action-success-modal.tsx
+          service-screen-header.tsx
+        birthday-wheel-modal.tsx
+        primary-button.tsx
+        settings-sheet.tsx
+        text-field.tsx
+        themed-text.tsx
+      constants/
+        fonts.ts
+        resident-theme.ts
+      hooks/
+        use-report-modal-motion.ts
+        use-resident-reduced-motion.ts
+        use-theme.ts
+      lib/
+        image-upload.ts
+packages/
+  shared/
+    src/
+      lib/
+        service-catalog.ts
+AGENTS.md
+CLAUDE.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/settings-sheet.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useState, type ReactNode } from &apos;react&apos;;
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useReportModalMotion } from &apos;@/hooks/use-report-modal-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Shared presentation for the color, profile-option and local household editors. */</file><file path="apps/resident-android-mobile/src/hooks/use-report-modal-motion.ts">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing } from &apos;react-native&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+/** Shared by news, the location picker and single-photo viewer. Owns presentation only. */
+export function useReportModalMotion(visible: boolean, duration = 280, scrimDuration = 200)</file><file path="apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx">import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { Modal, Pressable, ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { RecoveryButton } from &apos;@/components/password-recovery-screen&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { BIRTHDAY_MONTHS, birthdayIso, birthdayParts, daysInBirthdayMonth, limitBirthday, type BirthdayParts } from &apos;@/lib/birthday-wheel&apos;;
+⋮----
+type WheelItem = { value: number; label: string };
+⋮----
+// A fresh draft on each opening; scrolling and Cancel never change the form.
+⋮----
+const theme = useTheme();
+const insets = useSafeAreaInsets();
+const today = useMemo(()
+const [draft, setDraft] = useState(()
+const minimumYear = useMemo(()
+const years = useMemo(() =&gt; Array.from(
+⋮----
+const months = BIRTHDAY_MONTHS.slice(0, maximumMonth).map((label, index) =&gt; (
+const maximumDay = draft.year === today.getFullYear() &amp;&amp; draft.month === today.getMonth() + 1 ? today.getDate() : daysInBirthdayMonth(draft.year, draft.month);
+⋮----
+&lt;WheelColumn label=&quot;Day&quot; items=
+&lt;WheelColumn label=&quot;Year&quot; items=
+⋮----
+function select(index: number)
+function onScroll(event: NativeSyntheticEvent&lt;NativeScrollEvent&gt;)</file><file path="apps/resident-android-mobile/src/constants/fonts.ts">import { Platform } from &apos;react-native&apos;;
+⋮----
+import { FONT_OPTIONS as SHARED_FONT_OPTIONS, DEFAULT_FONT_ID } from &apos;@barangayan/shared&apos;;
+⋮----
+/**
+ * The Settings screen&apos;s font-style picker — up to 10 of the web admin Theme page&apos;s
+ * FONT_OPTIONS (packages/shared/src/constants/theme-fonts.ts), so the same `id` persisted
+ * to `profiles.font_preference` (0075 migration) means the same font on both apps. Dropped
+ * &apos;garamond&apos; and &apos;courier-new&apos; to stay within the 10-option cap this screen asks for.
+ */
+⋮----
+/**
+ * Maps a FONT_OPTIONS id to a font family React Native can actually render. Unlike the web
+ * (CSS font stacks with automatic fallback), RN needs one concrete family name per platform:
+ * iOS ships real system faces for most of these names (Georgia, Verdana, Trebuchet MS, ...),
+ * Android does not — none of the RN_FONT_FAMILIES below are custom-bundled, so Android falls
+ * back to its built-in Roboto/Noto generic families (&apos;sans-serif&apos;, &apos;serif&apos;, &apos;monospace&apos; and
+ * their weight/width variants) as the closest visual approximation for each choice.
+ */
+⋮----
+/** Returns the RN `fontFamily` value for a font id, or undefined to fall through to the
+ * OS default (system/inter, or an unrecognized id). */
+export function getMobileFontFamily(id: string): string | undefined</file><file path="apps/resident-android-mobile/src/constants/resident-theme.ts">type RGB = readonly [number, number, number];
+⋮----
+function rgb(hex: string): RGB
+⋮----
+function mix(color: string, surface: string, amount: number): string
+⋮----
+function luminance(hex: string): number
+⋮----
+function contrast(a: string, b: string): number
+⋮----
+function foreground(background: string): string
+⋮----
+function readable(color: string, surface: string, text: string): string
+⋮----
+/** Opt-in resident roles. Saved preferences and the legacy palette stay unchanged. */
+export function getResidentTheme(mode: &apos;light&apos; | &apos;dark&apos;, selectedAccent: string)
+⋮----
+const tone = (color: string) =&gt;
+⋮----
+// Optical media surfaces preserve the original evidence image in either theme.</file><file path="apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts">import { useEffect, useState } from &apos;react&apos;;
+import { AccessibilityInfo } from &apos;react-native&apos;;
+⋮----
+/** Legacy consumers do not subscribe. Until queried, prefer the static accessible state. */
+export function useResidentReducedMotion(enabled: boolean)
+⋮----
+// Failure to read an optional motion preference must never enable geometric motion.</file><file path="apps/resident-android-mobile/src/lib/image-upload.ts">/**
+ * Picking an image and reading its bytes for a Supabase Storage upload.
+ *
+ * ── The bug this fixes ──────────────────────────────────────────────────────────
+ * Submitting an incident report with a photo failed with:
+ *
+ *   Photo upload failed: Call to function &apos;FileSystemFile.bytes&apos; has been rejected.
+ *   → Caused by: Missing &apos;READ&apos; permission for accessing the file.
+ *
+ * Cause: the screens picked with `DocumentPicker.getDocumentAsync({ copyToCacheDirectory:
+ * true })` and then read the result with `new File(asset.uri).arrayBuffer()`. On Android
+ * the picker copies the document into the *host app&apos;s* `context.cacheDir`
+ * (`cache/DocumentPicker/…`) and hands back a `file://` URI. `expo-file-system` (SDK 54+)
+ * validates every read against its own permission service, which only grants READ for
+ * paths it considers app-owned — and under Expo Go / scoped storage that copy is not one
+ * of them. So the picker succeeds, the thumbnail renders (expo-image reads it through a
+ * different path), and only the upload fails.
+ *
+ * Fix: pick through `File.pickFileAsync()` instead. The file system module runs the
+ * system picker itself, calls `takePersistableUriPermission()` on the result, and returns
+ * a `File` bound to the `content://` URI — which its permission check accepts
+ * unconditionally (content URIs carry their own grant). On iOS it hands back a temporary
+ * copy inside the app container. `DocumentPicker` stays as a fallback for providers that
+ * refuse a persistable grant; there we deliberately skip the cache copy on Android so we
+ * keep the readable `content://` URI.
+ *
+ * Docs: https://docs.expo.dev/versions/v57.0.0/sdk/filesystem/
+ */
+⋮----
+import { File } from &apos;expo-file-system&apos;;
+import { Platform } from &apos;react-native&apos;;
+⋮----
+/** Mime types the `incident-photos` and `id-documents` buckets accept (migrations 0020 / 0025). */
+⋮----
+export interface PickedImage {
+  uri: string;
+  mimeType: string;
+  /** Bytes, or `null` when the provider does not report a size. */
+  size: number | null;
+  /**
+   * Best-effort file name for display. Content providers often expose only an opaque
+   * document id, so use `displayName` in the UI rather than this.
+   */
+  name: string;
+}
+⋮----
+/** Bytes, or `null` when the provider does not report a size. */
+⋮----
+/**
+   * Best-effort file name for display. Content providers often expose only an opaque
+   * document id, so use `displayName` in the UI rather than this.
+   */
+⋮----
+/**
+ * A label safe to show the resident. `File.pickFileAsync` derives `name` from the
+ * `content://` URI&apos;s last segment, which is usually a bare document id (&quot;1000000042&quot;),
+ * so anything without a file extension is replaced with a generic description.
+ */
+export function displayName(image: PickedImage): string
+⋮----
+/** Storage-path extension for a mime type. Defaults to `jpg` for `image/jpeg` and anything odd. */
+export function imageExtension(mimeType: string): string
+⋮----
+/**
+ * Opens the system image picker.
+ *
+ * @returns the picked image, or `null` when the user cancelled.
+ */
+export async function pickImageAsset(): Promise&lt;PickedImage | null&gt;
+⋮----
+// Falls through to DocumentPicker — e.g. a content provider that refuses a
+// persistable URI grant, or web, where pickFileAsync is not implemented.
+⋮----
+// Android: the cache copy is exactly what expo-file-system refuses to read (see the
+// file header), so keep the original content:// URI. iOS/web: the copy lands inside
+// the app container and reads fine.
+⋮----
+/**
+ * Reads a picked image into the byte array `supabase.storage.upload()` expects.
+ *
+ * @throws a resident-readable Error when the file can no longer be read (the URI grant
+ *         was revoked, or the file was deleted between picking and submitting).
+ */
+export async function readImageBytes(image: PickedImage): Promise&lt;Uint8Array&gt;
+⋮----
+// DocumentPicker returns a blob:/data: URL on web; expo-file-system cannot open it.
+⋮----
+/** `true` when the image is within the per-file byte limit of its destination bucket. */
+export function isWithinSizeLimit(image: PickedImage, maxBytes: number): boolean</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/components/services/action-success-modal.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Presentation only: the caller reports success and owns acknowledgement/navigation. */</file><file path="apps/resident-android-mobile/src/components/themed-text.tsx">import { Platform, StyleSheet, Text, type TextProps } from &apos;react-native&apos;;
+⋮----
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { Fonts, ThemeColor } from &apos;@/constants/theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ThemedTextProps = TextProps &amp; {
+  type?: &apos;default&apos; | &apos;title&apos; | &apos;small&apos; | &apos;smallBold&apos; | &apos;subtitle&apos; | &apos;link&apos; | &apos;linkPrimary&apos; | &apos;code&apos; | &apos;heading&apos; | &apos;body&apos; | &apos;residentHeader&apos;;
+  themeColor?: ThemeColor;
+};
+⋮----
+export function ThemedText(
+⋮----
+// &apos;code&apos; keeps the fixed monospace face regardless of the App Theme font pick — it&apos;s
+// meant to look like code, not prose.</file><file path="apps/resident-android-mobile/src/hooks/use-theme.ts">/**
+ * Learn more about light and dark modes:
+ * https://docs.expo.dev/guides/color-schemes/
+ */
+⋮----
+import { Colors } from &apos;@/constants/theme&apos;;
+import { useMemo } from &apos;react&apos;;
+import { getResidentTheme } from &apos;@/constants/resident-theme&apos;;
+import { useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+⋮----
+export function useTheme()
+⋮----
+// Real per-account accent color (Settings &gt; App Theme) overrides the constant —
+// onPrimary stays white regardless, it reads fine against all 4 accent swatches.</file><file path="packages/shared/src/lib/service-catalog.ts">import { serviceCatalogContractSchema, serviceDocumentTypeSchema, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;
+import type { Json, Tables } from &apos;../types/database&apos;;
+import { formatProcessingTime } from &apos;./format&apos;;
+⋮----
+/** One validated mapping for create/edit. Legacy request contracts stay untouched. */
+export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput)
+⋮----
+export function catalogContract(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function servicePriceLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request:
+⋮----
+/** Charter guidance only; elapsed tracking remains a separate timing contract. */
+export function serviceProcessingLabel(row: Tables&lt;&apos;document_types&apos;&gt;)
+⋮----
+export function idVerificationState(
+  profile: Pick&lt;
+    Tables&lt;&apos;profiles&apos;&gt;,
+    &apos;id_verification_status&apos; | &apos;approved_id_submission_id&apos; | &apos;current_id_submission_id&apos; | &apos;id_repair_required&apos;
+  &gt; | null,
+)
+⋮----
+export function submittedDetailLines(value: Json | null): [string, string][]
+⋮----
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
+export function requestFee(
+  request: Pick&lt;
+    Tables&lt;&apos;service_requests&apos;&gt;,
+    &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos;
+  &gt; &amp; { legacy_fee_centavos?: number | null },
+  legacyCatalogFee: number,
+  recordedPaymentFee?: number | null,
+)</file><file path="apps/resident-android-mobile/src/components/primary-button.tsx">import { useEffect, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+interface ButtonContentProps extends Omit&lt;PressableProps, &apos;style&apos;&gt; {
+  label: string;
+  leadingIcon?: ReactNode;
+  loading?: boolean;
+}
+⋮----
+type ButtonVariant = &apos;primary&apos; | &apos;secondary&apos; | &apos;destructive&apos;;
+export type PrimaryButtonProps = ButtonContentProps &amp; (
+  | { presentation?: &apos;default&apos;; variant?: ButtonVariant }
+  | { presentation: &apos;resident&apos;; variant?: ButtonVariant | &apos;destructiveFilled&apos; | &apos;secondaryAccent&apos;; compact?: boolean; appearance?: &apos;default&apos; | &apos;requestForm&apos; | &apos;healthForm&apos; | &apos;healthDrive&apos; }
+);
+⋮----
+/** The green pill button used throughout the design file (Login, Register, Verify, etc.).
+ * &apos;destructive&apos; is the red-outlined variant for cancel/undo-style actions (e.g. cancelling
+ * a pending payment) — same shape as &apos;secondary&apos; but in theme.accentRed.
+ * Resident confirmation dialogs use &apos;destructiveFilled&apos; for the reference&apos;s filled action. */
+export function PrimaryButton(
+⋮----
+// Reserve the border in both consent states so the pinned Health footer never shrinks.</file><file path="apps/resident-android-mobile/src/components/text-field.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, TextInput, type TextInputProps, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface TextFieldProps extends TextInputProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  appearance?: &apos;default&apos; | &apos;requestForm&apos;;
+  label?: string;
+  error?: string;
+  /** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+  success?: string;
+  /** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+  required?: boolean;
+  /** Enables an in-field control for revealing or masking password text. */
+  passwordVisibility?: {
+    visible: boolean;
+    onToggle: () =&gt; void;
+  };
+}
+⋮----
+/** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+⋮----
+/** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+⋮----
+/** Enables an in-field control for revealing or masking password text. */
+⋮----
+export function TextField({
+  label,
+  error,
+  success,
+  required,
+  style,
+  passwordVisibility,
+  secureTextEntry,
+  presentation = &apos;default&apos;,
+  appearance = &apos;default&apos;,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps)
+⋮----
+function handlePasswordVisibilityToggle()
+⋮----
+// Tapping the affordance should not interrupt typing or dismiss the keyboard.
+⋮----
+onBlur=
+⋮----</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/src/components/services/service-screen-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Fonts, Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;</file><file path="apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx">import { Stack } from &apos;expo-router&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+⋮----
+{/* index.tsx builds its own colored header (matching the reference screenshot) —
+          the native Stack header would otherwise show a stray &quot;index&quot; title above it. */}
+⋮----
+{/* Logout removes account routes from history and returns to the guest overview. */}</file></files></repomix>

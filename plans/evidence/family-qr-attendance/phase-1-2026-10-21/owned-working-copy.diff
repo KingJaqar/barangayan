@@ -1,0 +1,1824 @@
+--- snapshot/apps/resident-ios-mobile/src/features/privacy/export-contract.ts
++++ candidate/apps/resident-ios-mobile/src/features/privacy/export-contract.ts
+@@ -19,6 +19,8 @@
+   { name: 'announcement_reads', label: 'Announcement read state' },
+   { name: 'medical_drive_registrations', label: 'Medical drive registrations' },
+   { name: 'evacuation_center_checkins', label: 'Evacuation center check-ins' },
++  { name: 'household_attendance', label: 'Household attendance' },
++  { name: 'household_attendance_receipts', label: 'Household attendance confirmations' },
+   { name: 'notification_preferences', label: 'Notification preferences' },
+   { name: 'notification_inbox', label: 'Notification inbox' },
+   { name: 'registered_devices', label: 'Registered devices' },
+--- snapshot/apps/resident-ios-mobile/tests/export-function.test.ts
++++ candidate/apps/resident-ios-mobile/tests/export-function.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import { buildExport, cooldownSeconds, EXPORT_COOLDOWN_MS, PAGE_SIZE, REQUIRED_SECTIONS, residentHistory, type Query, type Reader } from '../../../supabase/functions/export-my-data/export-v2';
++import { buildExport, cooldownSeconds, EXPORT_COOLDOWN_MS, PAGE_SIZE, readHouseholdAttendanceExport, REQUIRED_SECTIONS, residentHistory, type Query, type Reader } from '../../../supabase/functions/export-my-data/export-v2';
+ import { EXPORT_SECTIONS, validateExport } from '../src/features/privacy/export-contract';
+ 
+ const USER = '11111111-1111-4111-8111-111111111111';
+@@ -133,6 +133,33 @@
+   });
+ });
+ 
++describe('household attendance exports', () => {
++  const stays = Array.from({ length: 7 }, (_, n) => ({ id: id(n), household_profile_id: USER, checked_in_at: stamp(1) }));
++  // Different staff can reuse a request UUID, even at the same timestamp.
++  const receipts = Array.from({ length: 7 }, (_, n) => ({ id: id(n), request_id: id(1), household_profile_id: USER, created_at: stamp(1) }));
++  const tables = { profiles: [{ id: USER }], household_attendance: stays,
++    household_attendance_receipt_exports: [...receipts, { id: id(90), request_id: id(1), household_profile_id: id(90), created_at: stamp(1) }] };
++
++  it('paginates both new sections, including timestamp ties, for v1 and v2', async () => {
++    const legacy = await readHouseholdAttendanceExport(reader(tables), USER, { pageSize: 3, maxPages: 5 });
++    const current = await buildExport(reader(tables), { id: USER, email: null }, new Date(), { pageSize: 3, maxPages: 5 });
++    expect(legacy.household_attendance).toMatchObject({ status: 'complete', rowCount: 7, rows: stays });
++    expect(legacy.household_attendance_receipts).toMatchObject({ status: 'complete', rowCount: 7, rows: receipts });
++    expect(current.complete && current.envelope.sections.household_attendance).toEqual(legacy.household_attendance);
++    expect(current.complete && current.envelope.sections.household_attendance_receipts).toEqual(legacy.household_attendance_receipts);
++  });
++
++  it('fails a later attendance or receipt page without claiming a complete export', async () => {
++    for (const table of ['household_attendance', 'household_attendance_receipt_exports']) {
++      const sections = await readHouseholdAttendanceExport(reader(tables, { failAfterPages: { [table]: 1 } }), USER, { pageSize: 3, maxPages: 5 });
++      const section = table === 'household_attendance' ? 'household_attendance' : 'household_attendance_receipts';
++      expect(sections[section]).toMatchObject({ status: 'failed', rowCount: 0 });
++      const result = await buildExport(reader(tables, { failAfterPages: { [table]: 1 } }), { id: USER, email: null }, new Date(), { pageSize: 3, maxPages: 5 });
++      expect(result).toMatchObject({ complete: false, failedSections: [section] });
++    }
++  });
++});
++
+ describe('export function v2: cooldown', () => {
+   const now = new Date('2026-10-21T00:10:00Z');
+   it('asks for the remaining seconds within a minute of the last export', () => {
+--- snapshot/packages/shared/src/index.ts
++++ candidate/packages/shared/src/index.ts
+@@ -21,6 +21,7 @@
+ export * from './schemas/emergency-qr';
+ export * from './schemas/waste-management';
+ export * from './schemas/household';
++export * from './schemas/household-attendance';
+ export * from './schemas/staff';
+ export * from './schemas/settings';
+ export * from './schemas/admin-audit-log';
+--- snapshot/packages/shared/src/schemas/household-attendance.test.ts
++++ candidate/packages/shared/src/schemas/household-attendance.test.ts
+@@ -0,0 +1,61 @@
++import { describe, expect, it } from 'vitest';
++import { householdAttendanceErrorMessage, householdAttendanceIdsSchema, householdAttendanceParticipantsSchema, householdAttendanceReceiptSchema, householdAttendanceSchema,
++  householdQrPayloadSchema, householdQrTextSchema } from './household-attendance';
++
++const id = 'ABCDEF00-0000-4000-8000-000000000001';
++const qr = { type: 'household', version: '1.0', profileId: id };
++
++describe('household QR boundary', () => {
++  it('accepts canonical and legacy data and normalizes UUIDs', () => {
++    expect(householdQrTextSchema.parse(JSON.stringify(qr))).toEqual({ ...qr, profileId: id.toLowerCase() });
++    expect(householdQrPayloadSchema.parse({ type: 'household', profileId: id })).toEqual({ ...qr, profileId: id.toLowerCase() });
++  });
++  it.each([null, [], {}, { ...qr, type: 'EVACUATION_CENTER_CHECKIN' }, { ...qr, version: null },
++    { ...qr, version: '2.0' }, { ...qr, version: 1 }, { ...qr, profileId: 'bad' }, { ...qr, barangay_id: id }])('rejects untrusted payload %j', (value) => {
++    expect(householdQrPayloadSchema.safeParse(value).success).toBe(false);
++  });
++  it('rejects URLs and malformed JSON as data', () => {
++    expect(householdQrTextSchema.safeParse('https://example.com').success).toBe(false);
++    expect(householdQrTextSchema.safeParse('{').success).toBe(false);
++  });
++  it('enforces raw UTF-8 bytes before trimming, including multibyte whitespace', () => {
++    const text = JSON.stringify(qr);
++    expect(householdQrTextSchema.safeParse(text.padEnd(2048)).success).toBe(true);
++    expect(householdQrTextSchema.safeParse(text.padEnd(2049)).success).toBe(false);
++    expect(householdQrTextSchema.safeParse('\u3000'.repeat(700) + text).success).toBe(false);
++  });
++});
++
++describe('attendance batch boundaries', () => {
++  it('validates holder-only reads and rejects contradictory receipt identities', () => {
++    expect(householdAttendanceSchema.safeParse({ household_profile_id: id, people: [
++      { kind: 'holder', member_id: null, name: 'Resident', relation: null, role: null, current_stay: null, latest_departure: null },
++    ] }).success).toBe(true);
++    expect(householdAttendanceSchema.safeParse({ household_profile_id: id, people: [] }).success).toBe(false);
++    const receipt = { request_id: id, operation: 'check_in', household_profile_id: id, stays: [
++      { attendance_id: id, kind: 'member', member_id: null, center_id: id, checked_in_at: '2026-10-21T00:00:00Z', checked_out_at: null, outcome: 'created' },
++    ] };
++    expect(householdAttendanceReceiptSchema.safeParse(receipt).success).toBe(false);
++    expect(householdAttendanceReceiptSchema.safeParse({ ...receipt, stays: [{ ...receipt.stays[0], kind: 'holder' }] }).success).toBe(true);
++  });
++  it('maps known failures and never displays raw unknown diagnostics', () => {
++    expect(householdAttendanceErrorMessage({ message: 'attendance_active_elsewhere' }, 'mutation')).toContain('another center');
++    expect(householdAttendanceErrorMessage({ message: 'SQL ERROR 55P03 secret identifier' }, 'mutation')).toBe('We could not confirm the result. Retry this confirmation to check its original result.');
++    expect(householdAttendanceErrorMessage(null, 'read')).toBe('Could not load attendance. Reconnect and try again.');
++    expect(householdAttendanceErrorMessage({ message: 'toString' }, 'read')).toBe('Could not load attendance. Reconnect and try again.');
++  });
++  it('deduplicates participants and normalizes member references', () => {
++    expect(householdAttendanceParticipantsSchema.parse([{ kind: 'member', member_id: id },
++      { kind: 'holder' }, { kind: 'member', member_id: id.toLowerCase() }])).toEqual([
++      { kind: 'holder' }, { kind: 'member', member_id: id.toLowerCase() },
++    ]);
++    expect(householdAttendanceIdsSchema.parse([id, id.toLowerCase()])).toEqual([id.toLowerCase()]);
++  });
++  it.each([[], null, [{ kind: 'holder', member_id: id }], [{ kind: 'member' }], [{ kind: 'member', member_id: null }],
++    [{ kind: 'member', member_id: id, checked_in_at: new Date().toISOString() }], Array.from({ length: 32 }, () => ({ kind: 'holder' }))])('rejects invalid selection %j', (value) => {
++    expect(householdAttendanceParticipantsSchema.safeParse(value).success).toBe(false);
++  });
++  it('rejects null, empty and oversized checkout references', () => {
++    for (const value of [[], [null], Array(32).fill(id)]) expect(householdAttendanceIdsSchema.safeParse(value).success).toBe(false);
++  });
++});
+--- snapshot/packages/shared/src/schemas/household-attendance.ts
++++ candidate/packages/shared/src/schemas/household-attendance.ts
+@@ -0,0 +1,126 @@
++import { z } from 'zod';
++
++export const HOUSEHOLD_QR_MAX_BYTES = 2048;
++export const HOUSEHOLD_ATTENDANCE_MAX_PARTICIPANTS = 31;
++const uuid = z.string().uuid().transform((value) => value.toLowerCase());
++
++const canonicalHouseholdQrSchema = z.object({
++  type: z.literal('household'),
++  version: z.literal('1.0'),
++  profileId: uuid,
++}).strict();
++const legacyHouseholdQrSchema = z.object({ type: z.literal('household'), profileId: uuid }).strict();
++
++export const householdQrPayloadSchema = z.union([canonicalHouseholdQrSchema, legacyHouseholdQrSchema])
++  .transform((value) => ({ ...value, version: '1.0' as const }));
++
++// Count UTF-8 bytes, including replacement bytes for unpaired UTF-16 surrogates,
++// without depending on a browser or native TextEncoder implementation.
++function utf8Bytes(value: string): number {
++  let bytes = 0;
++  for (const character of value) {
++    const point = character.codePointAt(0) ?? 0;
++    bytes += point <= 0x7f ? 1 : point <= 0x7ff ? 2 : point <= 0xffff ? 3 : 4;
++    if (bytes > HOUSEHOLD_QR_MAX_BYTES) return bytes;
++  }
++  return bytes;
++}
++
++export const householdQrTextSchema = z.string().superRefine((value, context) => {
++  if (utf8Bytes(value) > HOUSEHOLD_QR_MAX_BYTES) {
++    context.addIssue({ code: z.ZodIssueCode.custom, message: 'This Family QR code is too large.' });
++  }
++}).transform((value, context): unknown => {
++  try { return JSON.parse(value) as unknown; } catch {
++    context.addIssue({ code: z.ZodIssueCode.custom, message: 'This is not a valid Family QR code.' });
++    return z.NEVER;
++  }
++}).pipe(householdQrPayloadSchema);
++
++export const householdAttendanceParticipantSchema = z.discriminatedUnion('kind', [
++  z.object({ kind: z.literal('holder') }).strict(),
++  z.object({ kind: z.literal('member'), member_id: uuid }).strict(),
++]);
++export const householdAttendanceParticipantsSchema = z.array(householdAttendanceParticipantSchema)
++  .min(1).max(HOUSEHOLD_ATTENDANCE_MAX_PARTICIPANTS).transform((values) => {
++    const key = (value: z.infer<typeof householdAttendanceParticipantSchema>) =>
++      value.kind === 'holder' ? 'holder' : `member:${value.member_id}`;
++    return [...new Map(values.map((value) => [key(value), value])).values()]
++      .sort((a, b) => key(a).localeCompare(key(b)));
++  });
++export const householdAttendanceIdsSchema = z.array(uuid).min(1).max(HOUSEHOLD_ATTENDANCE_MAX_PARTICIPANTS)
++  .transform((values) => [...new Set(values)].sort());
++
++const timestamp = z.string().datetime({ offset: true });
++export const householdAttendanceStaySchema = z.object({
++  attendance_id: uuid,
++  center_id: uuid,
++  center_name: z.string(),
++  checked_in_at: timestamp,
++  checked_out_at: timestamp.nullable(),
++}).strict().refine((stay) => stay.checked_out_at === null || Date.parse(stay.checked_out_at) >= Date.parse(stay.checked_in_at),
++  'Departure cannot precede arrival.');
++const personFields = {
++  name: z.string(),
++  current_stay: householdAttendanceStaySchema.nullable(),
++  latest_departure: householdAttendanceStaySchema.nullable(),
++};
++export const householdAttendanceSchema = z.object({
++  household_profile_id: uuid,
++  people: z.array(z.discriminatedUnion('kind', [
++    z.object({ ...personFields, kind: z.literal('holder'), member_id: z.null(), relation: z.null(), role: z.null() }).strict(),
++    z.object({ ...personFields, kind: z.literal('member'), member_id: uuid, relation: z.string(), role: z.string().nullable() }).strict(),
++  ])).min(1).max(HOUSEHOLD_ATTENDANCE_MAX_PARTICIPANTS),
++}).strict().refine(({ people }) => people.filter((person) => person.kind === 'holder').length === 1
++  && new Set(people.map((person) => person.member_id)).size === people.length
++  && people.every((person) => (person.current_stay === null || person.current_stay.checked_out_at === null)
++    && (person.latest_departure === null || person.latest_departure.checked_out_at !== null)), 'Invalid household attendance roster.');
++export const householdAttendanceReceiptSchema = z.object({
++  request_id: uuid,
++  operation: z.enum(['check_in', 'check_out']),
++  household_profile_id: uuid,
++  stays: z.array(z.object({
++    attendance_id: uuid,
++    kind: z.enum(['holder', 'member']),
++    member_id: uuid.nullable(),
++    center_id: uuid,
++    checked_in_at: timestamp,
++    checked_out_at: timestamp.nullable(),
++    outcome: z.enum(['created', 'already_active', 'closed', 'already_closed']),
++  }).strict()).min(1).max(HOUSEHOLD_ATTENDANCE_MAX_PARTICIPANTS),
++}).strict().refine((receipt) => new Set(receipt.stays.map((stay) => stay.attendance_id)).size === receipt.stays.length
++  && (receipt.operation !== 'check_in'
++    || (new Set(receipt.stays.map((stay) => stay.member_id)).size === receipt.stays.length
++      && new Set(receipt.stays.map((stay) => stay.center_id)).size === 1))
++  && receipt.stays.every((stay) => (stay.kind === 'holder') === (stay.member_id === null)
++    && (receipt.operation === 'check_in'
++      ? ['created', 'already_active'].includes(stay.outcome) && stay.checked_out_at === null
++      : ['closed', 'already_closed'].includes(stay.outcome) && stay.checked_out_at !== null)
++    && (stay.checked_out_at === null || Date.parse(stay.checked_out_at) >= Date.parse(stay.checked_in_at))), 'Invalid attendance receipt.');
++
++export type HouseholdQrPayload = z.infer<typeof householdQrPayloadSchema>;
++export type HouseholdAttendanceParticipant = z.infer<typeof householdAttendanceParticipantSchema>;
++export type HouseholdAttendance = z.infer<typeof householdAttendanceSchema>;
++export type HouseholdAttendanceReceipt = z.infer<typeof householdAttendanceReceiptSchema>;
++
++const attendanceErrors: Readonly<Record<string, string>> = {
++  authentication_required: 'Your session ended. Sign in again.',
++  attendance_forbidden: 'You do not have permission to register this household.',
++  invalid_household_qr: "This is not a valid Family QR code. Scan the household's Family code.",
++  household_unavailable: 'This household is unavailable. Choose a resident again or ask barangay staff.',
++  invalid_attendance_selection: 'Choose at least one person from this household, then try again.',
++  household_roster_changed: 'The family list changed. Reload it and choose the people again.',
++  attendance_center_unavailable: 'This center is unavailable for arrivals. Choose an active center.',
++  attendance_active_elsewhere: 'A selected person is already checked in at another center. Check them out first.',
++  attendance_request_conflict: 'This confirmation no longer matches the original request. Reload before confirming again.',
++  attendance_lifecycle_conflict: 'Check out active stays before removing this person or changing this household or center.',
++};
++
++/** Unknown diagnostics are never used as display copy, including unconfirmed writes. */
++export function householdAttendanceErrorMessage(error: { message?: string } | null, operation: 'read' | 'mutation'): string {
++  const known = error?.message && Object.prototype.hasOwnProperty.call(attendanceErrors, error.message)
++    ? attendanceErrors[error.message] : undefined;
++  return known ?? (operation === 'read'
++    ? 'Could not load attendance. Reconnect and try again.'
++    : 'We could not confirm the result. Retry this confirmation to check its original result.');
++}
+--- snapshot/packages/shared/src/types/database.ts
++++ candidate/packages/shared/src/types/database.ts
+@@ -1,5 +1,6 @@
+ import type { CatalogFoundationFields, ProfileFoundationFields, RequestFoundationFields, FoundationTables, FoundationFunctions } from './service-foundations';
+ import type { RoutingConditionsFunctions, RoutingConditionsTables } from './routing-conditions.database';
++import type { HouseholdAttendanceFunctions, HouseholdAttendanceTables, HouseholdAttendanceViews } from './household-attendance.database';
+ 
+ export type Json =
+   | string
+@@ -41,7 +42,7 @@
+     }
+   }
+   public: {
+-    Tables: FoundationTables & RoutingConditionsTables & {
++    Tables: FoundationTables & RoutingConditionsTables & HouseholdAttendanceTables & {
+       about_us: {
+         Row: {
+           address: string | null
+@@ -1651,10 +1652,8 @@
+         ]
+       }
+     }
+-    Views: {
+-      [_ in never]: never
+-    }
+-    Functions: FoundationFunctions & RoutingConditionsFunctions & {
++    Views: HouseholdAttendanceViews
++    Functions: FoundationFunctions & RoutingConditionsFunctions & HouseholdAttendanceFunctions & {
+       ensure_google_resident_profile: { Args: Record<string, never>; Returns: string };
+       admin_add_household_member: {
+         Args: {
+--- snapshot/packages/shared/src/types/household-attendance.database.ts
++++ candidate/packages/shared/src/types/household-attendance.database.ts
+@@ -0,0 +1,126 @@
++// Generated from the isolated PostgreSQL 17 catalog for migration 20261021111056.
++import type { Json } from './database';
++
++export type HouseholdAttendanceTables = {
++  household_attendance: {
++    Row: {
++      id: string;
++      household_profile_id: string;
++      household_member_id: string | null;
++      barangay_id: string;
++      evacuation_center_id: string;
++      checked_in_at: string;
++      checked_in_by: string;
++      checked_out_at: string | null;
++      checked_out_by: string | null;
++    };
++    Insert: {
++      id?: string;
++      household_profile_id: string;
++      household_member_id?: string | null;
++      barangay_id: string;
++      evacuation_center_id: string;
++      checked_in_at?: string;
++      checked_in_by: string;
++      checked_out_at?: string | null;
++      checked_out_by?: string | null;
++    };
++    Update: {
++      id?: string;
++      household_profile_id?: string;
++      household_member_id?: string | null;
++      barangay_id?: string;
++      evacuation_center_id?: string;
++      checked_in_at?: string;
++      checked_in_by?: string;
++      checked_out_at?: string | null;
++      checked_out_by?: string | null;
++    };
++    Relationships: [
++      {
++        foreignKeyName: "household_attendance_barangay_id_fkey";
++        columns: ["barangay_id"];
++        isOneToOne: false;
++        referencedRelation: "barangays";
++        referencedColumns: ["id"];
++      },
++      {
++        foreignKeyName: "household_attendance_checked_in_by_fkey";
++        columns: ["checked_in_by"];
++        isOneToOne: false;
++        referencedRelation: "profiles";
++        referencedColumns: ["id"];
++      },
++      {
++        foreignKeyName: "household_attendance_checked_out_by_fkey";
++        columns: ["checked_out_by"];
++        isOneToOne: false;
++        referencedRelation: "profiles";
++        referencedColumns: ["id"];
++      },
++      {
++        foreignKeyName: "household_attendance_evacuation_center_id_fkey";
++        columns: ["evacuation_center_id"];
++        isOneToOne: false;
++        referencedRelation: "evacuation_centers";
++        referencedColumns: ["id"];
++      },
++      {
++        foreignKeyName: "household_attendance_household_member_id_household_profile_fkey";
++        columns: ["household_member_id", "household_profile_id"];
++        isOneToOne: false;
++        referencedRelation: "household_members";
++        referencedColumns: ["id", "profile_id"];
++      },
++      {
++        foreignKeyName: "household_attendance_household_profile_id_fkey";
++        columns: ["household_profile_id"];
++        isOneToOne: false;
++        referencedRelation: "profiles";
++        referencedColumns: ["id"];
++      },
++    ];
++  };
++};
++
++export type HouseholdAttendanceViews = {
++  household_attendance_receipt_exports: {
++    Row: {
++      id: string | null;
++      household_profile_id: string | null;
++      request_id: string | null;
++      operation: string | null;
++      created_at: string | null;
++    };
++    Relationships: [];
++  };
++};
++
++export type HouseholdAttendanceFunctions = {
++  check_in_household_members: {
++    Args: {
++      p_profile_id: string;
++      p_center_id: string;
++      p_participants: Json;
++      p_request_id: string;
++    };
++    Returns: Json;
++  };
++  check_out_household_attendance: {
++    Args: {
++      p_attendance_ids: string[];
++      p_request_id: string;
++    };
++    Returns: Json;
++  };
++  get_my_household_attendance: {
++    Args: Record<string, never>;
++    Returns: Json;
++  };
++  lookup_household_for_attendance: {
++    Args: {
++      p_qr_payload: string;
++    };
++    Returns: Json;
++  };
++};
+--- snapshot/plans/Family_QR_Attendance_Context_Index.md
++++ candidate/plans/Family_QR_Attendance_Context_Index.md
+@@ -1,6 +1,6 @@
+ # Family QR Attendance — Compact Context Index
+ 
+-Updated: October 21, 2026 (Asia/Manila). Scope: Phase 0 discovery/contracts completed under the execution request; no feature implementation or deployment has started. Shared execution rules live in [plan Section 6.0](Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md#60-shared-execution-workflow--mandatory-for-every-phase). The plan was renamed at the user's request; historical packet selectors below retain the original name.
++Updated: October 21, 2026 (Asia/Manila). Scope: Phase 1 backend implementation complete under the execution request; Phases 2–4 and deployment remain unstarted. Shared execution rules live in [plan Section 6.0](Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md#60-shared-execution-workflow--mandatory-for-every-phase). The plan was renamed at the user's request; historical packet selectors below retain the original name.
+ 
+ Update changed facts in place. Add a small row only for a new source, packet, question, or result. Do not copy full logs or prior narratives here. The index is a navigation and evidence ledger, not proof of correctness.
+ 
+@@ -10,7 +10,7 @@
+ | --- | --- | --- |
+ | Planning revision | Documentation reviewed; structural checks recorded below | Current user requirements incorporated; no product behavior verified. |
+ | 0 — Baseline/contracts | Complete — discovery/contracts only | [Baseline and gate evidence](evidence/family-qr-attendance/phase-0-2026-10-21/baseline.md); [resolved contracts](evidence/family-qr-attendance/phase-0-2026-10-21/contracts.md). Linked hosted project compared read-only. Phase 1 requires a healthy isolated PostgreSQL 17 database. |
+-| 1 — Backend | Not started | Verified Phase 0 contracts and isolated database baseline. |
++| 1 — Backend | Complete — backend only | [Implementation, acceptance and handoff](evidence/family-qr-attendance/phase-1-2026-10-21/README.md); [candidate/check identities](evidence/family-qr-attendance/phase-1-2026-10-21/verification.json). Isolated PostgreSQL 17.6 gates passed; UI/device/release gates stay in later phases. |
+ | 2 — Admin | Not started | Phase 1 contracts and gates. |
+ | 3 — Android/cutover | Not started | Phases 1–2 and legacy caller inventory. |
+ | 4 — Release readiness | Not started | Tested candidate, all acceptance evidence, environment/deployment gates. |
+@@ -18,7 +18,7 @@
+ ## Ownership and recoverable baseline
+ 
+ - Phase 0 owned changes: only plan Section 6.1, Phase 0 facts in this index, `plans/evidence/family-qr-attendance/phase-0-2026-10-21/`, and local `tmp/family-attendance-phase0-20261021/` evidence. Recoverable pre-edit plan/index copies, status and existing-path patch live in that local root. Existing product/migration/lockfile changes remain user work; no product edits or Git mutations made.
+-- Owned changes for this revision: the implementation plan and this index only. Existing application, database, lockfile, and other working-copy changes belong to prior/user work and were not edited.
++- Historical planning-revision ownership: the implementation plan and index only. Phase 1 owns the additive attendance migration/tests, shared attendance contracts/type composition, required export compatibility, Phase 1 plan progress and evidence. Its exact file/snapshot identities are in Phase 1 verification; all other existing work remains user work.
+ - The plan was untracked, not ignored, at this revision's baseline; HEAD did not contain its content. Preserve it as a file snapshot, not merely an empty Git diff.
+ - Evidence root: `tmp/family-plan-polish-20261021/`. `plan.before.md` is the original recoverable snapshot; `git-status.before.txt` records working-copy status; `plan.before.patch` is empty because the plan was untracked. `plan.polish.diff` records the documentation delta against the snapshot. Evidence paths are local working files, not guaranteed committed artifacts; verify availability before reuse.
+ - No sensitive input was read or packed. No credentials, environment files, or ignored application runtime state were required for this documentation edit. Product phases must inventory their own relevant ignored/untracked inputs under Section 6.0.
+@@ -64,6 +64,21 @@
+ | Reuse boundary | Plan/index packet entries are now historical due to Phase 0 edits; unchanged product entries remain reusable after source/dependency verification. Artifact token estimates do not establish actual usage savings. |
+ | Discovery / final checks | [Baseline inventory](evidence/family-qr-attendance/phase-0-2026-10-21/baseline-inventory.json), read-only catalog/log evidence and [final structural/protected-source verification](evidence/family-qr-attendance/phase-0-2026-10-21/verification.json). No app build, mutation/concurrency test, or camera acceptance pass claimed. |
+ 
++### Phase 1 packet and verification ledger — October 21, 2026
++
++| Item | Completed work / evidence |
++| --- | --- |
++| Baseline/ownership | `tmp/family-attendance-phase1-20261021/git-status.before.txt`, `existing-user-work.patch`, `before/`; working-copy snapshots include pre-existing untracked privacy code. No Git commit/push or historical migration edit. |
++| Discovery/reuse | Phase 0 source identities checked; required conditional-save/mirror/grant/deletion functions confirmed in code/catalog. Initial requirement classification and documentation/version context: [report](evidence/family-qr-attendance/phase-1-2026-10-21/README.md). |
++| Prerequisites packet | [Manifest](evidence/family-qr-attendance/phase-1-2026-10-21/packet-manifest.json): 9 entries, chunks 0–11 fully inspected; empty AGENTS complete. Conditional test original lines 42–55 close an output omission. |
++| Lifecycle packet | [Manifest](evidence/family-qr-attendance/phase-1-2026-10-21/lifecycle.before-manifest.json): 12 entries, chunks 0–26 fully inspected, including all database-type continuations and exact existing generic-editor/deletion definitions. |
++| Export supplement | [Manifest](evidence/family-qr-attendance/phase-1-2026-10-21/export-contract.before-manifest.json): 2 entries/chunks fully inspected. |
++| Packet validation | Repomix 1.18.1; security enabled, uncompressed parsable XML; generation/source equivalence passed, no unexplained omissions; ≤12,000 characters/200 lines per extraction. Full hashes/selectors/boundaries in manifests. Changed entries now historical; no measured usage-savings claim. No optional Repowise. |
++| Implementation/contract | Migration `20261021111056_household_attendance.sql`; four authenticated invoker APIs/private checked implementations; opaque receipt export ID; generated types match final candidate PostgreSQL 17.6 catalog. No dependency changes. |
++| Checks | 321 SQL assertions (83 new + 238 regression), 21 independent-session races, 569 shared tests, 15 export tests, four app typechecks, supported owned lint pass. Five shared standalone type diagnostics and one Edge jsr lint diagnostic are pre-existing. Exact logs and candidate hashes: [verification](evidence/family-qr-attendance/phase-1-2026-10-21/verification.json). |
++| Rehearsal/recovery | Fresh local canonical and missing-archive-guard schema rehearsals pass; no backfill. Exact synthetic attendance/receipt restore and request replay pass; fixtures removed. No production recovery performed. |
++| Ownership boundary | `household-attendance-responses.test.ts` appeared as separate user work: preserved, read and run. Only Phase 1 plan section changes; acceptance definitions and other phases unchanged. |
++
+ ## Decisions and unresolved evidence
+ 
+ | Topic | Current decision / evidence still needed |
+@@ -71,39 +86,37 @@
+ | Authority and identity | Existing admins confirm attendance; holder comes from the profile; one member ID identifies one additional roster person. No invitations, account linking, or real-world identity matching. |
+ | UI scope | Existing Family/admin areas only; necessary scan/select/confirm/checkout controls. Reuse resident selection for camera fallback. No redesign, extra history view, polling, or subscriptions. |
+ | Failure handling | Plain messages; internal failures remain observable in diagnostics. Finite timeouts, explicit retry with original request UUID, no automatic resubmission loops. |
+-| Retry and tenant boundaries | Validate current access before receipt replay; stored attendance barangay constrains admin history reads. Phase 1 proves replay/tenant races. |
++| Retry and tenant boundaries | Validate current access before receipt replay; stored attendance barangay constrains admin history reads. Phase 1 role/tenant/auth replay and independent-session races pass; target/UI checks remain later-phase gates. |
+ | Cleanup | Delete a replacement only after verifying callers/runtime entry points; keep historical migrations and user work. Active cross-client callers require a recorded retirement condition. |
+ | Actual QR failure / remaining diagnosis | Observed exact-function hosted logs: two HTTP 546 `WORKER_RESOURCE_LIMIT` and one 504 `IDLE_TIMEOUT`, all ~150 seconds; runtime shutdowns `WallClockTime`. Android/web lack explicit image-request deadlines. Internal stall cause remains unproven; do not blame provider/auth/default handler without further evidence. Phase 3 local rendering removes this dependency. |
+-| Effective schema / lifecycle | Phase 0 compared read-only hosted catalogs with local source. Current mirror/save verified (30 members). Hosted archive guard absent despite local `0115`; local v2 deletion/export Edge sources are not deployed although SQL exists. Both erasure versions must remove attendance/receipts before JSON cleanup. Historical actor references retain de-identified profiles. See baseline for exact drift and migration identities. |
+-| Exact API / cutover contracts | Resolved in Phase 0 contracts: four named JSON-returning operations with `p_` arguments, actual `barangayan_private` schema, 2,048 UTF-8 QR bytes, ≤31 participants, canonical replay inputs, ordered locks, history isolation, error copy and legacy retirement gates. APIs remain unimplemented. Existing generic writer has reversed locks; Android Settings is another direct roster writer. |
+-| Runtime environments | ADB read-only inventory reaches `127.0.0.1:16384` (Android 12, SM-S918U, `com.barangayan.resident.dev`) and `7555`. MuMu candidate/build parity still needs verification. Docker unsandboxed API returned HTTP 500; bounded version diagnostic timed out, so no DB tests ran. Brave and actual camera workflow remain future acceptance gates. |
+-| Deployment | Read-only comparison target: linked Barangayan `pwjbucnyqexiepoinoke`, PostgreSQL 17.6. No production deployment/migration/config/data-mutation authorization. Phase 1 needs a disposable PostgreSQL 17 test target; Phase 4 needs exact supported build and release-target evidence. |
++| Effective schema / lifecycle | Phase 0 compared read-only hosted catalogs with local source. Current mirror/save verified (30 members). Hosted archive guard absent despite local `0115`; local v2 deletion/export Edge sources are not deployed although SQL exists. Phase 1 implements and tests attendance/receipt removal before JSON cleanup in both erasure versions; fresh missing-guard drift rehearsal passes. Historical actor references retain de-identified profiles. See baseline for exact drift and migration identities. |
++| Exact API / cutover contracts | Resolved in Phase 0 contracts: four named JSON-returning operations with `p_` arguments, actual `barangayan_private` schema, 2,048 UTF-8 QR bytes, ≤31 participants, canonical replay inputs, ordered locks, history isolation, error copy and legacy retirement gates. Phase 1 implements all four APIs and normalizes the generic household lock path. Android Settings remains a direct roster writer to migrate in Phase 3; server bypass guards now reject direct member writes. |
++| Runtime environments | ADB read-only inventory reaches `127.0.0.1:16384` (Android 12, SM-S918U, `com.barangayan.resident.dev`) and `7555`. MuMu candidate/build parity still needs verification. Docker was restored with user authorization; isolated PostgreSQL 17.6 backend/race/recovery tests pass. No MuMu/Brave/camera acceptance run is claimed. Brave and actual camera workflow remain future acceptance gates. |
++| Deployment | Read-only comparison target: linked Barangayan `pwjbucnyqexiepoinoke`, PostgreSQL 17.6. No production deployment/migration/config/data-mutation authorization. Phase 1 completed on disposable PostgreSQL 17.6 targets; Phase 4 needs exact supported build and release-target evidence. |
+ 
+ ## Acceptance coverage ledger
+ 
+-All behavioral checks below are **pending implementation**. Replace “pending” with exact command/manual procedure, candidate source/dependency/environment identities, exit/result, and evidence path. Reuse valid evidence rather than repeating unchanged checks; split a row only if separate environments produce different outcomes.
+-
+-Phase 0 assigned each row below to its responsible implementation phases and concrete scenario. Existing household SQL and other regression inventories are linked in the baseline; none was executed against hosted records. A12's existing conditional-save SQL test was completely read, but remains unexecuted because Docker is unavailable. Future phase tests must add authoritative attendance/receipt and independent-connection coverage rather than treating existing legacy tests as sufficient. Phase 0's six discovery acceptance gates are all met; this does not change A01–A17 results.
++Phase 1 proves the backend portions of A01–A13 and A16–A17 in isolated PostgreSQL 17.6. Each row below records its scoped evidence and remaining UI/release responsibility. A14–A15 are pending their assigned phases; no overall release acceptance or physical-camera pass is inferred. Exact candidate hashes, commands, environment and pass/failure logs are linked in Phase 1 verification. Reuse only while source/dependency identities remain valid.
+ 
+ | IDs | Responsible phases | Required evidence | Current result |
+ | --- | --- | --- | --- |
+-| A01 | 1, 2, 3; final 4 | Holder-only SQL and staff-to-Android workflow | Pending |
+-| A02 | 1, 2, 3; final 4 | Partial-family selection and unchanged unselected people | Pending |
+-| A03 | 1, 2; final 4 | Two connections and repeated UI submission at the same center | Pending |
+-| A04 | 1; final 4 | Two independent connections attempting different centers | Pending |
+-| A05 | 1, 2; final 4 | Lost response, delayed arrival replay, changed permissions | Pending |
+-| A06 | 1, 2; final 4 | Delayed/repeated departure cannot close a later visit | Pending |
+-| A07 | 1, 2; final 4 | Invalid batch atomicity and request-key input mismatch | Pending |
+-| A08 | 1, 2; final 4 | Authenticated-role and tenant-history isolation | Pending |
+-| A09 | 1, 2, 3; final 4 | Direct/generic/legacy/queued write bypass rejection | Pending |
+-| A10 | 1, 2, 3; final 4 | Rename, remove/archive, and simultaneous arrival | Pending |
+-| A11 | 1, 2; final 4 | Inactive center departures and lifecycle/reassignment races | Pending |
+-| A12 | 1, 3; final 4 | Conditional roster save rejects a stale editor | Pending |
+-| A13 | 1, 3 where affected; final 4 | Account deletion/export and actor constraint regressions | Pending |
+-| A14 | 2, 3; final 4 | MuMu/Brave QR workflow, real camera, camera fallback | Pending |
+-| A15 | 2, 3; final 4 | Screen states, readable failures, accessibility/account change | Pending |
+-| A16 | 1, 2, 3; final 4 | Timed-out request reconciliation, bounded callbacks/effects, observed write counts | Pending |
+-| A17 | 1, 2, 3; final 4 | Owned diff, consumer/retirement ledger, candidate checks, recovery rehearsal | Pending |
++| A01 | 1, 2, 3; final 4 | Holder-only SQL and staff-to-Android workflow | Backend met: holder arrival/read/departure/history SQL; staff/Android flow pending 2–4 |
++| A02 | 1, 2, 3; final 4 | Partial-family selection and unchanged unselected people | Backend met: partial-family/unchanged unselected SQL; selection UI pending 2–4 |
++| A03 | 1, 2; final 4 | Two connections and repeated UI submission at the same center | Backend met: same-center independent sessions, stable IDs/times; UI double-submit pending 2/4 |
++| A04 | 1; final 4 | Two independent connections attempting different centers | Backend met: different-center independent sessions, one explicit conflict; target recheck 4 |
++| A05 | 1, 2; final 4 | Lost response, delayed arrival replay, changed permissions | Backend met: exact receipt replay, delayed arrival, permission/tenant/auth races; UI retry pending 2/4 |
++| A06 | 1, 2; final 4 | Delayed/repeated departure cannot close a later visit | Backend met: delayed/repeated original-stay checkout preserves later visit; UI pending 2/4 |
++| A07 | 1, 2; final 4 | Invalid batch atomicity and request-key input mismatch | Backend met: invalid batch atomicity/key mismatch SQL; UI error handling pending 2/4 |
++| A08 | 1, 2; final 4 | Authenticated-role and tenant-history isolation | Backend met: role/RLS/ownership/tenant-history SQL; target/UI verification pending 2/4 |
++| A09 | 1, 2, 3; final 4 | Direct/generic/legacy/queued write bypass rejection | Backend met: direct/generic/legacy/service/queued denial; caller migration pending 2–4 |
++| A10 | 1, 2, 3; final 4 | Rename, remove/archive, and simultaneous arrival | Backend met: rename/metadata/removal/archive and both-order races; client behavior pending 2–4 |
++| A11 | 1, 2; final 4 | Inactive center departures and lifecycle/reassignment races | Backend met: inactive-center departure and lifecycle/tenant races; UI pending 2/4 |
++| A12 | 1, 3; final 4 | Conditional roster save rejects a stale editor | Backend met: current/stale conditional save and attendance preservation SQL; editor integration pending 3/4 |
++| A13 | 1, 3 where affected; final 4 | Account deletion/export and actor constraint regressions | Backend met: v1/v2 erasure, actor constraints, scoped paginated export tests; deployed Edge smoke pending 4 |
++| A14 | 2, 3; final 4 | MuMu/Brave QR workflow, real camera, camera fallback | Pending manual verification in 2–4: Brave/MuMu/real camera and fallback after implementation |
++| A15 | 2, 3; final 4 | Screen states, readable failures, accessibility/account change | Pending manual verification in 2–4: states/accessibility/themes/account changes after implementation |
++| A16 | 1, 2, 3; final 4 | Timed-out request reconciliation, bounded callbacks/effects, observed write counts | Backend met: bounded lock timeout, explicit original-key retry; callbacks/request counts pending 2–4 |
++| A17 | 1, 2, 3; final 4 | Owned diff, consumer/retirement ledger, candidate checks, recovery rehearsal | Backend met: owned diff, preservation, catalog and migration/drift/recovery evidence; remaining retirement/release checks 2–4 |
+ 
+ ## Documentation verification
+ 
+--- snapshot/plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md
++++ candidate/plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md
+@@ -210,12 +210,14 @@
+ 
+ ### 6.2 Phase 1 checklist — data and operations
+ 
+-- [ ] **Scope/prerequisites:** Phase 0 contracts verified; isolated database supports current migrations and authenticated-role tests. Implement only Section 4 and necessary shared contracts.
+-- [ ] **Context inputs:** Verified Phase 0 packet/index, relevant functions/policies/guards, member mirror, deletion/export/archive handlers, shared schemas/types, and existing focused SQL tests.
+-- [ ] **Workflow:** Apply shared steps 1–8; supplement changed SQL/contracts and verify original function bodies and effective grants before editing.
+-- [ ] **Baseline checks:** Run existing household/lifecycle/security tests once; record current schema/grant results and failures. Save reversible migration evidence without destructive resets of shared state.
+-- [ ] **Acceptance gate:** Prove backend portions of A01–A13 and A16–A17 using role-aware tests and independent database connections; UI/device portions stay pending for their assigned phases. Verify receipt replay after permission changes and every alternate write path. Exercise new operations only in isolation/staging until coordinated production cutover is authorized.
+-- [ ] **Handoff:** Record migration identities, signatures, grants, exact results, and compatibility changes required next. Preserve existing APIs until their verified callers are migrated or deliberately blocked.
++- [x] **Scope/prerequisites:** Phase 0 contracts and actual conditional-save/mirror/lifecycle code verified. User-authorized Docker recovery provided isolated PostgreSQL 17.6; only Section 4, shared contracts and necessary export compatibility implemented. No repository-instruction conflict found.
++- [x] **Context inputs:** Working-copy snapshots/patch and ownership saved; Phase 0 identities revalidated; three scoped Repomix 1.18.1 XML packets fully analyzed across bounded continuations, followed by original-body/grant verification. [Phase 1 evidence](evidence/family-qr-attendance/phase-1-2026-10-21/README.md) and context index record sources, versions, initial done/partial/not-started comparison, omissions and closure.
++- [x] **Workflow:** Git → ripgrep → Reader validation → scoped Repomix → Reader XML analysis → original-source verification followed. Cached tooling and existing dependencies reused. Historical packets retained; final candidate identities and snapshot-owned diff recorded separately.
++- [x] **Baseline checks:** Before feature edits, 238 existing SQL assertions, 527 shared tests, 13 export tests, iOS typecheck/privacy lint passed. Existing shared standalone typecheck diagnostics and Edge ESLint jsr import failure recorded. Rehearsals used empty local schemas/synthetic accounts; no production data copied or remote changes made.
++- [x] **Acceptance gate:** Backend portions A01–A13 and A16–A17 met: 83 attendance plus 238 affected regression assertions; 21 independent-session concurrency scenarios with observed locks; 569 shared tests; 15 export tests; all four app typechecks and supported owned lint pass. Shared standalone diagnostics match baseline. Fresh canonical and missing-guard drift migration rehearsals, exact synthetic recovery/replay and final catalog checks pass. UI/device/deployed-runtime portions remain assigned to Phases 2–4.
++- [x] **Handoff:** Phase 1 **Complete (backend only)**. CLI-created migration `20261021111056_household_attendance.sql`, exact four signatures, grants/RLS, source hashes, results and consumer/retirement ledger recorded in [evidence](evidence/family-qr-attendance/phase-1-2026-10-21/README.md) and `verification.json`. Existing signatures/history retained; direct/generic projection writes and legacy arrivals deliberately blocked. No commits, pushes, deployments or remote migration applied.
++
++**Progress — October 21, 2026 (Asia/Manila):** Implemented authoritative holder/member stays, private canonical replay receipts, bounded household reads, current auth/tenant isolation, ordered lifecycle/identity/request locks, guarded stable-ID roster mirror/conditional edits, both account-erasure APIs, and complete owner-scoped paginated exports v1/v2 with shared validation/catalog types. Final review added opaque receipt IDs so different staff using the same request UUID/timestamp cannot cause pagination omissions; the corrected candidate was re-rehearsed and checked. Rehearsals also resolved preserved trusted-owner helper permissions and household-erasure lock inversion. Final local databases `family_attendance_rehearsal_20261021_v5` and `_drift_v5` contain no copied resident data or attendance backfill; fixtures were cleaned. Exact pass/failure history and identities are in the evidence ledgers. Pre-existing five shared type diagnostics and one unsupported Edge jsr-import lint diagnostic remain; no new diagnostics introduced. Plan discrepancies: earlier planning-only wording is superseded by this execution request; hosted missing archive guard and migration-history drift, plus undeployed local v2 privacy code, remain rollout inputs. The migration is a coordinated server cutover and must not be deployed ahead of the later staff/client release. Phases 2–4, Brave/MuMu/physical-camera flows, deployed Edge smoke/console checks and production recovery remain pending their assigned phase/authorization; no completion is claimed for those gates.
+ 
+ ### 6.3 Phase 2 checklist — admin workflow
+ 
+--- snapshot/supabase/functions/export-my-data/export-v2.ts
++++ candidate/supabase/functions/export-my-data/export-v2.ts
+@@ -49,9 +49,18 @@
+   'profile_completed_at', 'created_at', 'updated_at', 'last_data_export_at',
+ ].join(',');
+ 
++const ATTENDANCE_SECTIONS: readonly (SectionSpec & { kind: 'list' })[] = [
++  { name: 'household_attendance', kind: 'list', table: 'household_attendance', ownerColumn: 'household_profile_id',
++    label: 'Household attendance', order: ['checked_in_at', 'id'],
++    select: 'id,household_profile_id,household_member_id,barangay_id,evacuation_center_id,checked_in_at,checked_out_at' },
++  { name: 'household_attendance_receipts', kind: 'list', table: 'household_attendance_receipt_exports', ownerColumn: 'household_profile_id',
++    label: 'Household attendance confirmations', order: ['created_at', 'id'],
++    select: 'id,household_profile_id,request_id,operation,created_at' },
++];
++
+ /**
+- * Required sections of contract v2. Staff identities, token and device secrets, storage paths, provider internals, idempotency keys and
+- * other residents' data are never selected.
++ * Required sections of contract v2. Staff identities, token and device secrets, storage paths, provider internals,
++ * receipt fingerprints and other residents' data are never selected.
+  */
+ export const REQUIRED_SECTIONS: readonly SectionSpec[] = [
+   { name: 'profile', kind: 'single', table: 'profiles', select: PROFILE_COLUMNS, ownerColumn: 'id', label: 'Profile' },
+@@ -77,6 +86,7 @@
+     select: 'id,drive_id,applicant_number,age,is_pwd,comorbidities,prior_dose_date,status,created_at,updated_at,medical_drives(title,drive_date)' },
+   { name: 'evacuation_center_checkins', kind: 'list', table: 'evacuation_center_checkins', ownerColumn: 'user_id', label: 'Evacuation center check-ins', order: ['created_at', 'id'],
+     select: 'id,evacuation_center_id,checked_in_at,created_at,evacuation_centers(name)' },
++  ...ATTENDANCE_SECTIONS,
+   { name: 'notification_preferences', kind: 'single', table: 'notification_preferences', ownerColumn: 'user_id', label: 'Notification preferences', select: 'kinds,updated_at' },
+   { name: 'notification_inbox', kind: 'list', table: 'notification_inbox', ownerColumn: 'recipient_id', label: 'Notification inbox', order: ['created_at', 'id'],
+     select: 'id,kind,title,body,created_at,read_at' },
+@@ -119,6 +129,16 @@
+ 
+ export type Limits = { pageSize: number; maxPages: number };
+ const DEFAULT_LIMITS: Limits = { pageSize: PAGE_SIZE, maxPages: MAX_PAGES };
++
++/** The v1 envelope uses the same bounded, owner-filtered attendance reads as v2. */
++export async function readHouseholdAttendanceExport(reader: Reader, userId: string, limits: Limits = DEFAULT_LIMITS): Promise<Record<string, SectionResult>> {
++  const sections: Record<string, SectionResult> = {};
++  for (const spec of ATTENDANCE_SECTIONS) {
++    try { sections[spec.name] = await readList(reader, spec, userId, limits); }
++    catch { sections[spec.name] = failed(spec, 'The section could not be read.'); }
++  }
++  return sections;
++}
+ 
+ async function readList(reader: Reader, spec: SectionSpec & { kind: 'list' }, userId: string, limits: Limits): Promise<SectionResult> {
+   const [primary, tiebreak] = spec.order;
+--- snapshot/supabase/functions/export-my-data/index.ts
++++ candidate/supabase/functions/export-my-data/index.ts
+@@ -7,7 +7,7 @@
+ // resident is already allowed to read about themselves.
+ 
+ import { createClient } from 'jsr:@supabase/supabase-js@2';
+-import { buildExport, cooldownSeconds, EXPORT_CONTRACT_VERSION, type Reader } from './export-v2.ts';
++import { buildExport, cooldownSeconds, EXPORT_CONTRACT_VERSION, readHouseholdAttendanceExport, type Reader } from './export-v2.ts';
+ 
+ const corsHeaders = {
+   'Access-Control-Allow-Origin': '*',
+@@ -105,6 +105,13 @@
+         supabase.from('push_tokens').select('device_type, last_used_at, created_at').eq('user_id', user.id),
+       ]);
+ 
++    const attendance = await readHouseholdAttendanceExport(supabase as unknown as Reader, user.id);
++    const stays = attendance.household_attendance;
++    const confirmations = attendance.household_attendance_receipts;
++    if (stays.status !== 'complete' || confirmations.status !== 'complete') {
++      return json({ error: 'Attendance data could not be read completely, so no export was created. Please try again.' }, 502);
++    }
++
+     // Best-effort — a failure to record the throttle timestamp must not block
+     // the export the resident is actually waiting on.
+     await supabase.from('profiles').update({ last_data_export_at: new Date().toISOString() }).eq('id', user.id);
+@@ -117,6 +124,8 @@
+       incident_reports: incidents.data ?? [],
+       medical_drive_registrations: driveRegistrations.data ?? [],
+       evacuation_center_checkins: checkins.data ?? [],
++      household_attendance: stays.rows,
++      household_attendance_receipts: confirmations.rows,
+       registered_devices: pushTokens.data ?? [],
+     };
+ 
+--- snapshot/supabase/migrations/20261021111056_household_attendance.sql
++++ candidate/supabase/migrations/20261021111056_household_attendance.sql
+@@ -0,0 +1,765 @@
++-- Phase 1: staff-confirmed household attendance. No legacy attendance is backfilled.
++begin;
++
++alter table public.household_members add constraint household_members_id_profile_key unique(id,profile_id);
++create table public.household_attendance (
++ id uuid primary key default gen_random_uuid(),
++ household_profile_id uuid not null references public.profiles(id),
++ household_member_id uuid,
++ barangay_id uuid not null references public.barangays(id),
++ evacuation_center_id uuid not null references public.evacuation_centers(id),
++ checked_in_at timestamptz not null default clock_timestamp(),
++ checked_in_by uuid not null references public.profiles(id),
++ checked_out_at timestamptz,
++ checked_out_by uuid references public.profiles(id),
++ foreign key(household_member_id,household_profile_id) references public.household_members(id,profile_id),
++ check ((checked_out_at is null) = (checked_out_by is null)),
++ check (checked_out_at is null or checked_out_at >= checked_in_at)
++);
++create unique index household_attendance_active_holder on public.household_attendance(household_profile_id)
++ where household_member_id is null and checked_out_at is null;
++create unique index household_attendance_active_member on public.household_attendance(household_member_id)
++ where household_member_id is not null and checked_out_at is null;
++create index household_attendance_history on public.household_attendance
++ (household_profile_id,household_member_id,checked_in_at desc,id desc);
++create index household_attendance_departures on public.household_attendance
++ (household_profile_id,household_member_id,checked_out_at desc,id desc) where checked_out_at is not null;
++create index household_attendance_center_active on public.household_attendance(barangay_id,evacuation_center_id)
++ where checked_out_at is null;
++create index household_attendance_center_history on public.household_attendance(evacuation_center_id);
++create index household_attendance_arrival_actor on public.household_attendance(checked_in_by);
++create index household_attendance_departure_actor on public.household_attendance(checked_out_by);
++
++create table barangayan_private.household_attendance_receipts (
++ id uuid not null unique default gen_random_uuid(),
++ actor_profile_id uuid not null references public.profiles(id),
++ request_id uuid not null,
++ household_profile_id uuid not null references public.profiles(id),
++ operation text not null check(operation in ('check_in','check_out')),
++ input_fingerprint jsonb not null,
++ result jsonb not null,
++ created_at timestamptz not null default clock_timestamp(),
++ primary key(actor_profile_id,request_id)
++);
++create index household_attendance_receipts_household on barangayan_private.household_attendance_receipts
++ (household_profile_id,created_at,request_id);
++alter table public.household_attendance enable row level security;
++alter table barangayan_private.household_attendance_receipts enable row level security;
++revoke all on public.household_attendance from public,anon,authenticated,service_role;
++grant select on public.household_attendance to authenticated,service_role;
++revoke all on barangayan_private.household_attendance_receipts from public,anon,authenticated,service_role;
++
++-- Identity changes serialize against in-flight confirmations. This is a separate
++-- actor advisory lock, never an actor row lock acquired after a household lock.
++create function barangayan_private.serialize_attendance_identity() returns trigger
++language plpgsql security definer set search_path='' as $$
++begin
++ perform pg_advisory_xact_lock(hashtextextended('attendance-identity:'||old.id::text,4));
++ if tg_op='DELETE' then return old; end if;
++ return new;
++end $$;
++create trigger attendance_profile_identity before update of role,barangay_id,deleted_at or delete on public.profiles
++ for each row execute function barangayan_private.serialize_attendance_identity();
++create trigger attendance_auth_identity before update of banned_until,deleted_at,is_anonymous or delete on auth.users
++ for each row execute function barangayan_private.serialize_attendance_identity();
++
++create function barangayan_private.attendance_actor(p_role text) returns public.profiles
++language plpgsql security definer set search_path='' set lock_timeout='5s' as $$
++declare actor public.profiles; uid uuid := (select auth.uid());
++begin
++ if uid is null then raise exception 'authentication_required' using errcode='42501'; end if;
++ -- Parent key-share locks precede the advisory lock, so a concurrent hard
++ -- deletion cannot hold a parent row while waiting for our identity lock.
++ perform 1 from auth.users where id=uid for key share;
++ perform 1 from public.profiles where id=uid for key share;
++ perform pg_advisory_xact_lock_shared(hashtextextended('attendance-identity:'||uid::text,4));
++ select p.* into actor from public.profiles p join auth.users u on u.id=p.id
++ where p.id=uid and p.role=p_role and p.deleted_at is null and p.barangay_id is not null
++ and u.deleted_at is null and not coalesce(u.is_anonymous,false)
++ and (u.banned_until is null or u.banned_until<=clock_timestamp());
++ if not found then raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ return actor;
++end $$;
++
++create function barangayan_private.attendance_can_read(p_household uuid,p_barangay uuid) returns boolean
++language sql stable security definer set search_path='' as $$
++ select exists(select 1 from public.profiles a join auth.users u on u.id=a.id
++ join public.profiles h on h.id=p_household
++ where a.id=(select auth.uid()) and a.deleted_at is null and u.deleted_at is null
++ and not coalesce(u.is_anonymous,false) and (u.banned_until is null or u.banned_until<=now())
++ and ((a.role='resident' and a.id=p_household) or
++ (a.role='admin' and a.barangay_id=p_barangay and h.barangay_id=a.barangay_id and h.deleted_at is null)))
++$$;
++create policy household_attendance_read on public.household_attendance for select to authenticated
++ using (barangayan_private.attendance_can_read(household_profile_id,barangay_id));
++
++-- Bounded per-person reads, including holder-only households. Stored tenant
++-- ownership filters historical records even after both household and actor move.
++create function barangayan_private.read_household_attendance(p_household uuid,p_barangay uuid) returns jsonb
++language sql stable security definer set search_path='' as $$
++ select jsonb_build_object('household_profile_id',p_household,'people',coalesce(jsonb_agg(
++ jsonb_build_object('kind',person.kind,'member_id',person.member_id,'name',person.name,
++ 'relation',person.relation,'role',person.role,'current_stay',active.stay,'latest_departure',departed.stay)
++ order by person.kind desc,person.sort_order,person.member_id),'[]'::jsonb))
++ from (
++ select 'holder'::text kind,null::uuid member_id,p.full_name name,null::text relation,null::text role,-1 sort_order
++ from public.profiles p where p.id=p_household
++ union all select 'member',m.id,m.name,m.relation,m.role,m.sort_order from public.household_members m
++ where m.profile_id=p_household and m.deleted_at is null
++ ) person
++ left join lateral (
++ select jsonb_build_object('attendance_id',s.id,'center_id',s.evacuation_center_id,'center_name',c.name,
++ 'checked_in_at',s.checked_in_at,'checked_out_at',s.checked_out_at) stay
++ from public.household_attendance s join public.evacuation_centers c on c.id=s.evacuation_center_id
++ where s.household_profile_id=p_household and s.household_member_id is not distinct from person.member_id
++ and s.checked_out_at is null and (p_barangay is null or s.barangay_id=p_barangay)
++ order by s.checked_in_at desc,s.id desc limit 1
++ ) active on true
++ left join lateral (
++ select jsonb_build_object('attendance_id',s.id,'center_id',s.evacuation_center_id,'center_name',c.name,
++ 'checked_in_at',s.checked_in_at,'checked_out_at',s.checked_out_at) stay
++ from public.household_attendance s join public.evacuation_centers c on c.id=s.evacuation_center_id
++ where s.household_profile_id=p_household and s.household_member_id is not distinct from person.member_id
++ and s.checked_out_at is not null and (p_barangay is null or s.barangay_id=p_barangay)
++ order by s.checked_out_at desc,s.id desc limit 1
++ ) departed on true
++$$;
++
++create function barangayan_private.get_my_household_attendance() returns jsonb
++language plpgsql security definer set search_path='' as $$
++declare actor public.profiles;
++begin
++ actor:=barangayan_private.attendance_actor('resident');
++ if (select count(*) from public.household_members where profile_id=actor.id and deleted_at is null)>30 then
++  raise exception 'household_roster_changed' using errcode='PT409'; end if;
++ return barangayan_private.read_household_attendance(actor.id,null);
++end $$;
++
++create function barangayan_private.lookup_household_for_attendance(p_qr_payload text) returns jsonb
++language plpgsql security definer set search_path='' as $$
++declare actor public.profiles; payload jsonb; household uuid;
++begin
++ actor:=barangayan_private.attendance_actor('admin');
++ if p_qr_payload is null or octet_length(p_qr_payload)>2048 then
++  raise exception 'invalid_household_qr' using errcode='22023'; end if;
++ begin
++  payload:=p_qr_payload::jsonb;
++  if jsonb_typeof(payload) is distinct from 'object' or payload->>'type' is distinct from 'household'
++   or (payload ? 'version' and (jsonb_typeof(payload->'version') is distinct from 'string' or payload->>'version' is distinct from '1.0'))
++   or jsonb_typeof(payload->'profileId') is distinct from 'string'
++   or (payload->>'profileId') !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
++   or payload-array['type','version','profileId']<>'{}'::jsonb then
++   raise exception 'invalid_household_qr' using errcode='22023'; end if;
++  household:=(payload->>'profileId')::uuid;
++ exception when invalid_text_representation then
++  raise exception 'invalid_household_qr' using errcode='22023';
++ end;
++ if not exists(select 1 from public.profiles h join auth.users u on u.id=h.id
++  where h.id=household and h.role='resident' and h.barangay_id=actor.barangay_id and h.deleted_at is null
++  and u.deleted_at is null and not coalesce(u.is_anonymous,false) and (u.banned_until is null or u.banned_until<=clock_timestamp())) then
++  raise exception 'household_unavailable' using errcode='42501'; end if;
++ if (select count(*) from public.household_members where profile_id=household and deleted_at is null)>30 then
++  raise exception 'household_roster_changed' using errcode='PT409'; end if;
++ return barangayan_private.read_household_attendance(household,actor.barangay_id);
++end $$;
++
++create function barangayan_private.check_in_household_members(p_profile_id uuid,p_center_id uuid,p_participants jsonb,p_request_id uuid)
++returns jsonb language plpgsql security definer set search_path='' set lock_timeout='5s' as $$
++declare actor public.profiles; household public.profiles; center public.evacuation_centers;
++ item jsonb; normalized jsonb; member uuid; stay public.household_attendance;
++ fingerprint jsonb; receipt barangayan_private.household_attendance_receipts;
++ results jsonb:='[]'; result jsonb; outcome text;
++begin
++ if p_request_id is null or p_profile_id is null or p_center_id is null then
++  raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ perform pg_advisory_xact_lock(hashtextextended((select auth.uid())::text||':'||p_request_id::text,5));
++ actor:=barangayan_private.attendance_actor('admin');
++ if jsonb_typeof(p_participants) is distinct from 'array' then
++  raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ if jsonb_array_length(p_participants) not between 1 and 31 then
++  raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ for item in select value from jsonb_array_elements(p_participants) loop
++  if jsonb_typeof(item) is distinct from 'object' then
++   raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++  if item->>'kind'='holder' and item-'kind'='{}'::jsonb then continue; end if;
++  if item->>'kind' is distinct from 'member' or item-array['kind','member_id']<>'{}'::jsonb
++   or jsonb_typeof(item->'member_id') is distinct from 'string'
++   or (item->>'member_id') !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then
++   raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ end loop;
++ select jsonb_agg(v order by v::text) into normalized from (
++  select distinct case when e->>'kind'='holder' then jsonb_build_object('kind','holder') else
++   jsonb_build_object('kind','member','member_id',(e->>'member_id')::uuid) end v
++  from jsonb_array_elements(p_participants) e) s;
++ perform 1 from auth.users where id=p_profile_id for key share;
++ select * into household from public.profiles where id=p_profile_id for update;
++ perform pg_advisory_xact_lock_shared(hashtextextended('attendance-identity:'||p_profile_id::text,4));
++ if household.id is null or household.role<>'resident' or household.deleted_at is not null or household.barangay_id is distinct from actor.barangay_id
++  or not exists(select 1 from auth.users u where u.id=p_profile_id and u.deleted_at is null
++   and not coalesce(u.is_anonymous,false) and (u.banned_until is null or u.banned_until<=clock_timestamp())) then
++  raise exception 'household_unavailable' using errcode='42501'; end if;
++ perform 1 from public.evacuation_centers c where c.id=p_center_id or c.id in (
++  select s.evacuation_center_id from public.household_attendance s where s.household_profile_id=p_profile_id and s.checked_out_at is null
++  ) order by c.id for update;
++ select * into center from public.evacuation_centers where id=p_center_id;
++ if not found or center.barangay_id is distinct from actor.barangay_id then
++  raise exception 'attendance_center_unavailable' using errcode='PT409'; end if;
++ fingerprint:=jsonb_build_object('operation','check_in','household',p_profile_id,'center',p_center_id,
++  'participants',normalized,'barangay',actor.barangay_id);
++ select * into receipt from barangayan_private.household_attendance_receipts
++ where actor_profile_id=actor.id and request_id=p_request_id;
++ if found then
++  if receipt.input_fingerprint->>'barangay' is distinct from actor.barangay_id::text then
++   raise exception 'attendance_forbidden' using errcode='42501'; end if;
++  if receipt.input_fingerprint is distinct from fingerprint then
++   raise exception 'attendance_request_conflict' using errcode='PT409'; end if;
++  return receipt.result;
++ end if;
++ if center.deleted_at is not null or not center.is_active then
++  raise exception 'attendance_center_unavailable' using errcode='PT409'; end if;
++ if (select count(*) from public.household_members where profile_id=p_profile_id and deleted_at is null)>30 then
++  raise exception 'household_roster_changed' using errcode='PT409'; end if;
++ perform 1 from public.household_attendance where household_profile_id=p_profile_id and checked_out_at is null order by id for update;
++ for item in select value from jsonb_array_elements(normalized) loop
++  member:=(item->>'member_id')::uuid;
++  if member is not null and not exists(select 1 from public.household_members
++   where id=member and profile_id=p_profile_id and deleted_at is null) then
++   raise exception 'household_roster_changed' using errcode='PT409'; end if;
++  select * into stay from public.household_attendance where household_profile_id=p_profile_id
++   and household_member_id is not distinct from member and checked_out_at is null;
++  if found then
++   if stay.evacuation_center_id<>p_center_id or stay.barangay_id<>actor.barangay_id then
++    raise exception 'attendance_active_elsewhere' using errcode='PT409'; end if;
++   outcome:='already_active';
++  else
++   insert into public.household_attendance(household_profile_id,household_member_id,barangay_id,evacuation_center_id,checked_in_by)
++   values(p_profile_id,member,actor.barangay_id,p_center_id,actor.id) returning * into stay;
++   outcome:='created';
++  end if;
++  if member is not null then
++   update public.household_members set is_checked_in=true,checked_in_at=stay.checked_in_at,
++    checked_in_center_id=p_center_id,checked_in_center_name=center.name where id=member;
++  end if;
++  results:=results||jsonb_build_array(jsonb_build_object('attendance_id',stay.id,'kind',item->>'kind','member_id',member,
++   'center_id',stay.evacuation_center_id,'checked_in_at',stay.checked_in_at,'checked_out_at',stay.checked_out_at,'outcome',outcome));
++ end loop;
++ result:=jsonb_build_object('request_id',p_request_id,'operation','check_in','household_profile_id',p_profile_id,'stays',results);
++ insert into barangayan_private.household_attendance_receipts
++ (actor_profile_id,request_id,household_profile_id,operation,input_fingerprint,result,created_at)
++ values(actor.id,p_request_id,p_profile_id,'check_in',fingerprint,result,clock_timestamp());
++ return result;
++end $$;
++
++create function barangayan_private.check_out_household_attendance(p_attendance_ids uuid[],p_request_id uuid)
++returns jsonb language plpgsql security definer set search_path='' set lock_timeout='5s' as $$
++declare actor public.profiles; household public.profiles; ids uuid[]; household_id uuid;
++ receipt barangayan_private.household_attendance_receipts; fingerprint jsonb; stay public.household_attendance;
++ active public.household_attendance; results jsonb:='[]'; result jsonb; outcome text; center_name text;
++begin
++ if array_ndims(p_attendance_ids) is distinct from 1 then
++  raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ if p_request_id is null or coalesce(cardinality(p_attendance_ids),0) not between 1 and 31
++  or array_position(p_attendance_ids,null) is not null then
++  raise exception 'invalid_attendance_selection' using errcode='22023'; end if;
++ perform pg_advisory_xact_lock(hashtextextended((select auth.uid())::text||':'||p_request_id::text,5));
++ actor:=barangayan_private.attendance_actor('admin');
++ select array_agg(distinct id order by id) into ids from unnest(p_attendance_ids) id;
++ select household_profile_id into household_id from public.household_attendance where id=ids[1];
++ perform 1 from auth.users where id=household_id for key share;
++ select * into household from public.profiles where id=household_id for update;
++ perform pg_advisory_xact_lock_shared(hashtextextended('attendance-identity:'||household_id::text,4));
++ if household.id is null or household.role<>'resident' or household.deleted_at is not null or household.barangay_id is distinct from actor.barangay_id then
++  raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ perform 1 from public.evacuation_centers where id in (
++  select evacuation_center_id from public.household_attendance where id=any(ids)) order by id for update;
++ perform 1 from public.household_attendance where id=any(ids) order by id for update;
++ if (select count(*) from public.household_attendance s join public.evacuation_centers c on c.id=s.evacuation_center_id
++  where s.id=any(ids) and s.household_profile_id=household_id and s.barangay_id=actor.barangay_id
++  and c.barangay_id=actor.barangay_id)<>cardinality(ids) then
++  raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ fingerprint:=jsonb_build_object('operation','check_out','household',household_id,'attendance_ids',to_jsonb(ids),'barangay',actor.barangay_id);
++ select * into receipt from barangayan_private.household_attendance_receipts where actor_profile_id=actor.id and request_id=p_request_id;
++ if found then
++  if receipt.input_fingerprint->>'barangay' is distinct from actor.barangay_id::text then
++   raise exception 'attendance_forbidden' using errcode='42501'; end if;
++  if receipt.input_fingerprint is distinct from fingerprint then
++   raise exception 'attendance_request_conflict' using errcode='PT409'; end if;
++  return receipt.result;
++ end if;
++ for stay in select * from public.household_attendance where id=any(ids) order by id loop
++  outcome:='already_closed';
++  if stay.checked_out_at is null then
++   update public.household_attendance set checked_out_at=greatest(clock_timestamp(),checked_in_at),checked_out_by=actor.id
++    where id=stay.id returning * into stay;
++   outcome:='closed';
++  end if;
++  if stay.household_member_id is not null then
++   select * into active from public.household_attendance where household_member_id=stay.household_member_id and checked_out_at is null;
++   select name into center_name from public.evacuation_centers where id=active.evacuation_center_id;
++   update public.household_members set is_checked_in=active.id is not null,checked_in_at=active.checked_in_at,
++    checked_in_center_id=active.evacuation_center_id,checked_in_center_name=center_name where id=stay.household_member_id;
++  end if;
++  results:=results||jsonb_build_array(jsonb_build_object('attendance_id',stay.id,
++   'kind',case when stay.household_member_id is null then 'holder' else 'member' end,'member_id',stay.household_member_id,
++   'center_id',stay.evacuation_center_id,'checked_in_at',stay.checked_in_at,'checked_out_at',stay.checked_out_at,'outcome',outcome));
++ end loop;
++ result:=jsonb_build_object('request_id',p_request_id,'operation','check_out','household_profile_id',household_id,'stays',results);
++ insert into barangayan_private.household_attendance_receipts
++ (actor_profile_id,request_id,household_profile_id,operation,input_fingerprint,result,created_at)
++ values(actor.id,p_request_id,household_id,'check_out',fingerprint,result,clock_timestamp());
++ return result;
++end $$;
++
++create function public.get_my_household_attendance() returns jsonb language sql security invoker set search_path='' as $$
++ select barangayan_private.get_my_household_attendance()
++$$;
++create function public.lookup_household_for_attendance(p_qr_payload text) returns jsonb language sql security invoker set search_path='' as $$
++ select barangayan_private.lookup_household_for_attendance(p_qr_payload)
++$$;
++create function public.check_in_household_members(p_profile_id uuid,p_center_id uuid,p_participants jsonb,p_request_id uuid)
++returns jsonb language sql security invoker set search_path='' as $$
++ select barangayan_private.check_in_household_members(p_profile_id,p_center_id,p_participants,p_request_id)
++$$;
++create function public.check_out_household_attendance(p_attendance_ids uuid[],p_request_id uuid)
++returns jsonb language sql security invoker set search_path='' as $$
++ select barangayan_private.check_out_household_attendance(p_attendance_ids,p_request_id)
++$$;
++
++-- The profile row is the common household mutex. Conditional saves keep their
++-- seed-1 advisory lock BEFORE that row; other writers never acquire seed 1 after
++-- taking a row lock. Direct member DML is removed, avoiding member->profile locks.
++create or replace function public.sync_household_members_from_jsonb() returns trigger
++language plpgsql security definer set search_path='' as $$
++declare item jsonb; member uuid; retained uuid[]:='{}'; normalized jsonb:='[]'; affected integer;
++ member_name text; member_relation text; member_role text;
++begin
++ if jsonb_typeof(coalesce(new.household_members,'[]')) is distinct from 'array' then
++  raise exception 'invalid_household_members' using errcode='22023'; end if;
++ if jsonb_array_length(coalesce(new.household_members,'[]'))>30 then
++  raise exception 'invalid_household_members' using errcode='22023'; end if;
++ for item in select value from jsonb_array_elements(coalesce(new.household_members,'[]')) loop
++  if jsonb_typeof(item) is distinct from 'object' or jsonb_typeof(item->'name') is distinct from 'string'
++   or jsonb_typeof(item->'relation') is distinct from 'string'
++   or (item ? 'role' and jsonb_typeof(item->'role') not in ('string','null')) then
++   raise exception 'invalid_household_member' using errcode='22023'; end if;
++  if item ? 'id' and (jsonb_typeof(item->'id') is distinct from 'string'
++   or (item->>'id') !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$') then
++   raise exception 'invalid_household_member_id' using errcode='22023'; end if;
++  begin member:=coalesce((item->>'id')::uuid,gen_random_uuid());
++  exception when invalid_text_representation then
++   raise exception 'invalid_household_member_id' using errcode='22023'; end;
++  if member=any(retained) then raise exception 'duplicate_household_member_id' using errcode='22023'; end if;
++  member_name:=btrim(item->>'name'); member_relation:=btrim(item->>'relation');
++  member_role:=coalesce(nullif(btrim(item->>'role'),''),'member');
++  if char_length(member_name) not between 1 and 200 or char_length(member_relation) not between 1 and 100
++   or char_length(member_role)>50 then raise exception 'invalid_household_member' using errcode='22023'; end if;
++  if exists(select 1 from public.household_members where id=member and profile_id<>new.id) then
++   raise exception 'household_roster_changed' using errcode='PT409'; end if;
++  if exists(select 1 from public.household_members where id=member and deleted_at is not null) then
++   raise exception 'household_roster_changed' using errcode='PT409'; end if;
++  retained:=array_append(retained,member);
++  normalized:=normalized||jsonb_build_array(jsonb_strip_nulls(jsonb_build_object(
++   'id',member,'name',member_name,'relation',member_relation,'role',nullif(btrim(item->>'role'),''))));
++ end loop;
++ -- A concurrent household can introduce a previously unseen UUID after the
++ -- ownership read above. Revalidate ownership inside ON CONFLICT itself, and
++ -- acquire member rows in UUID order while retaining the original JSON order.
++ insert into public.household_members as canonical(id,profile_id,name,relation,role)
++ select (e->>'id')::uuid,new.id,e->>'name',e->>'relation',coalesce(e->>'role','member')
++ from jsonb_array_elements(normalized) e order by (e->>'id')::uuid
++ on conflict(id) do update set name=excluded.name,relation=excluded.relation,role=excluded.role
++ where canonical.profile_id=excluded.profile_id and canonical.deleted_at is null;
++ get diagnostics affected=row_count;
++ if affected<>cardinality(retained) then raise exception 'household_roster_changed' using errcode='PT409'; end if;
++ if exists(select 1 from public.household_attendance where household_profile_id=new.id
++  and household_member_id is not null and not(household_member_id=any(retained)) and checked_out_at is null) then
++  raise exception 'attendance_lifecycle_conflict' using errcode='PT409'; end if;
++ update public.household_members m set deleted_at=clock_timestamp()
++ where m.profile_id=new.id and m.deleted_at is null and not(m.id=any(retained))
++ and exists(select 1 from public.household_attendance s where s.household_member_id=m.id);
++ delete from public.household_members m where m.profile_id=new.id and m.deleted_at is null and not(m.id=any(retained));
++ new.household_members:=normalized;
++ return new;
++end $$;
++
++-- Covers INSERT as well as legacy direct JSON updates; new IDs are persisted in
++-- the JSON, not regenerated on every edit. Existing update trigger is replaced.
++drop trigger if exists sync_household_members_from_jsonb on public.profiles;
++create trigger sync_household_members_from_jsonb before update of household_members on public.profiles
++ for each row execute function public.sync_household_members_from_jsonb();
++create function barangayan_private.initialize_attendance_household() returns trigger
++language plpgsql security definer set search_path='' as $$
++begin
++ if new.household_members is distinct from '[]'::jsonb then
++  update public.profiles set household_members=new.household_members where id=new.id;
++ end if;
++ return new;
++end $$;
++create trigger initialize_attendance_household after insert on public.profiles
++ for each row execute function barangayan_private.initialize_attendance_household();
++revoke insert,update,delete on public.household_members from anon,authenticated,service_role;
++
++create or replace function barangayan_private.guard_household_archive() returns trigger
++language plpgsql security invoker set search_path='' as $$
++begin
++ if current_user in ('anon','authenticated','service_role') then
++  raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ if tg_op='DELETE' or new.deleted_at is distinct from old.deleted_at or new.profile_id is distinct from old.profile_id then
++  if exists(select 1 from public.household_attendance where household_member_id=old.id and checked_out_at is null) then
++   raise exception 'attendance_lifecycle_conflict' using errcode='PT409'; end if;
++ end if;
++ if tg_op='DELETE' then return old; end if;
++ return new;
++end $$;
++drop trigger if exists guard_household_archive on public.household_members;
++create trigger guard_household_archive before update or delete on public.household_members
++ for each row execute function barangayan_private.guard_household_archive();
++
++create function barangayan_private.guard_attendance_lifecycle() returns trigger
++language plpgsql security definer set search_path='' as $$
++begin
++ if tg_op='DELETE' or new.barangay_id is distinct from old.barangay_id
++  or new.deleted_at is distinct from old.deleted_at
++  or (tg_table_name='profiles' and to_jsonb(new)->>'role' is distinct from to_jsonb(old)->>'role') then
++  if exists(select 1 from public.household_attendance where checked_out_at is null and
++   ((tg_table_name='profiles' and household_profile_id=old.id) or
++    (tg_table_name='evacuation_centers' and evacuation_center_id=old.id))) then
++   raise exception 'attendance_lifecycle_conflict' using errcode='PT409'; end if;
++ end if;
++ if tg_op='DELETE' then return old; end if;
++ return new;
++end $$;
++create trigger guard_attendance_household before update of role,barangay_id,deleted_at or delete on public.profiles
++ for each row execute function barangayan_private.guard_attendance_lifecycle();
++create trigger guard_attendance_center before update of barangay_id,deleted_at or delete on public.evacuation_centers
++ for each row execute function barangayan_private.guard_attendance_lifecycle();
++
++-- Generic household mutations use this narrow privileged operation. The public
++-- generic editor retains its invoker mode for every other screen.
++create function barangayan_private.mutate_attendance_household_member(p_id uuid,p_operation text,p_patch jsonb,p_expected timestamptz)
++returns jsonb language plpgsql security definer set search_path='' as $$
++declare actor public.profiles; household public.profiles; member public.household_members; household_id uuid;
++ members jsonb; replacement jsonb;
++begin
++ actor:=barangayan_private.attendance_actor('admin');
++ select profile_id into household_id from public.household_members where id=p_id;
++ select * into household from public.profiles where id=household_id for update;
++ if not found or household.role<>'resident' or household.barangay_id is distinct from actor.barangay_id then
++  raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ select * into member from public.household_members where id=p_id and profile_id=household_id for update;
++ if not found then raise exception 'household_roster_changed' using errcode='PT409'; end if;
++ if p_expected is null or member.updated_at is distinct from p_expected then
++  raise exception 'Record changed. Reload details.' using errcode='40001'; end if;
++ if p_operation not in ('save','archive','restore','delete') or p_operation is null then
++  raise exception 'Invalid action' using errcode='22023'; end if;
++ if (p_operation='archive' and member.deleted_at is not null) or (p_operation='restore' and member.deleted_at is null) then
++  raise exception 'Archive state changed. Reload details.' using errcode='40001'; end if;
++ members:=coalesce(household.household_members,'[]');
++ if p_operation='save' then
++  if jsonb_typeof(p_patch) is distinct from 'object' or p_patch='{}' or p_patch-array['name','relation','role']<>'{}'
++   or exists(select 1 from jsonb_each(p_patch) where jsonb_typeof(value)<>'string') then
++   raise exception 'Invalid editable fields' using errcode='22023'; end if;
++  replacement:=jsonb_build_object('id',member.id,'name',coalesce(p_patch->>'name',member.name),
++   'relation',coalesce(p_patch->>'relation',member.relation),'role',coalesce(p_patch->>'role',member.role));
++  if char_length(btrim(replacement->>'name')) not between 1 and 200
++   or char_length(btrim(replacement->>'relation')) not between 1 and 100
++   or char_length(btrim(replacement->>'role')) not between 1 and 50 then
++   raise exception 'invalid_household_member' using errcode='22023'; end if;
++  if member.deleted_at is null then
++   select jsonb_agg(case when e->>'id'=p_id::text then replacement else e end order by n)
++   into members from jsonb_array_elements(members) with ordinality a(e,n);
++   update public.profiles set household_members=members where id=household_id;
++  else
++   update public.household_members set name=replacement->>'name',relation=replacement->>'relation',role=replacement->>'role' where id=p_id;
++  end if;
++ elsif p_operation='restore' then
++  if jsonb_array_length(members)>=30 then raise exception 'invalid_household_members' using errcode='22023'; end if;
++  update public.household_members set deleted_at=null where id=p_id;
++  update public.profiles set household_members=members||jsonb_build_array(jsonb_build_object('id',member.id,'name',member.name,
++   'relation',member.relation,'role',member.role)) where id=household_id;
++ else
++  if exists(select 1 from public.household_attendance where household_member_id=p_id and checked_out_at is null) then
++   raise exception 'attendance_lifecycle_conflict' using errcode='PT409'; end if;
++  if p_operation='archive' then update public.household_members set deleted_at=clock_timestamp() where id=p_id; end if;
++  if member.deleted_at is null then
++   update public.profiles set household_members=(select coalesce(jsonb_agg(e order by n),'[]')
++    from jsonb_array_elements(members) with ordinality a(e,n) where e->>'id'<>p_id::text) where id=household_id;
++  end if;
++  if p_operation='delete' then
++   if exists(select 1 from public.household_attendance where household_member_id=p_id) then
++    update public.household_members set deleted_at=coalesce(deleted_at,clock_timestamp()) where id=p_id;
++   else delete from public.household_members where id=p_id; end if;
++  end if;
++ end if;
++ return jsonb_build_object('id',p_id);
++end $$;
++
++-- Keep the three verified roster APIs and strengthen their identity checks.
++do $$
++declare signature text; definition text; anchor text;
++begin
++ foreach signature in array array['public.admin_add_household_member(uuid,text,text,text)',
++ 'public.admin_update_household_member(uuid,uuid,text,text,text)','public.admin_remove_household_member(uuid,uuid)'] loop
++  definition:=pg_get_functiondef(signature::regprocedure);
++  anchor:='if auth.uid() is null or public.current_role() is distinct from ''admin'' then';
++  if strpos(definition,anchor)=0 then raise exception 'Roster authorization boundary missing: %',signature; end if;
++  definition:=replace(definition,anchor,'perform barangayan_private.attendance_actor(''admin''); '||anchor);
++  definition:=replace(definition,'and role = ''resident''','and role = ''resident'' and deleted_at is null');
++  execute definition;
++ end loop;
++end $$;
++
++-- Erasure runs only inside the existing fresh-authenticated deletion operations.
++create function barangayan_private.erase_household_attendance(p_household uuid) returns void
++language plpgsql security definer set search_path='' as $$
++begin
++ if p_household is distinct from (select auth.uid()) then raise exception 'attendance_forbidden' using errcode='42501'; end if;
++ perform 1 from public.profiles where id=p_household for update;
++ perform pg_advisory_xact_lock(hashtextextended('attendance-identity:'||p_household::text,4));
++ delete from barangayan_private.household_attendance_receipts where household_profile_id=p_household or actor_profile_id=p_household;
++ delete from public.household_attendance where household_profile_id=p_household;
++end $$;
++do $$
++declare definition text; anchor text;
++begin
++ definition:=pg_get_functiondef('public.request_own_account_deletion()'::regprocedure);
++ anchor:='update public.profiles set';
++ if strpos(definition,anchor)=0 then raise exception 'Deletion v1 boundary missing'; end if;
++ execute replace(definition,anchor,'perform barangayan_private.erase_household_attendance(v_user_id); '||anchor);
++ definition:=pg_get_functiondef('public.erase_own_account_records()'::regprocedure);
++ anchor:='-- References first:';
++ if strpos(definition,anchor)=0 then raise exception 'Deletion v2 boundary missing'; end if;
++ execute replace(definition,anchor,'perform barangayan_private.erase_household_attendance(v_user); '||anchor);
++end $$;
++
++-- A security-barrier export projection exposes only caller-owned metadata,
++-- never staff identity, the fingerprint, or the private receipt result.
++create view public.household_attendance_receipt_exports with (security_barrier=true) as
++ select r.id,r.household_profile_id,r.request_id,r.operation,r.created_at
++ from barangayan_private.household_attendance_receipts r
++ where r.household_profile_id=(select auth.uid()) and exists(
++  select 1 from public.profiles p join auth.users u on u.id=p.id where p.id=(select auth.uid())
++  and p.role='resident' and p.deleted_at is null and u.deleted_at is null and not coalesce(u.is_anonymous,false)
++  and (u.banned_until is null or u.banned_until<=now()));
++revoke all on public.household_attendance_receipt_exports from public,anon,authenticated,service_role;
++grant select on public.household_attendance_receipt_exports to authenticated;
++
++-- This migration is the coordinated server cutover boundary. Preserve legacy
++-- history and endpoint signatures, but reject direct, queued and RPC arrivals.
++create function barangayan_private.reject_legacy_attendance() returns trigger
++language plpgsql security invoker set search_path='' as $$
++begin
++ if current_user in ('anon','authenticated','service_role') then
++  raise exception 'Ask barangay staff to scan your Family QR and confirm who is present. Update the app if needed.' using errcode='42501';
++ end if;
++ return new;
++end $$;
++create trigger reject_legacy_attendance before insert or update on public.evacuation_center_checkins
++ for each row execute function barangayan_private.reject_legacy_attendance();
++create or replace function public.check_in_to_evacuation_center(p_center_id uuid)
++returns table(check_in_id uuid,evacuation_center_id uuid,evacuation_center_name text,barangay_id uuid,
++ checked_in_at timestamptz,already_checked_in boolean)
++language plpgsql security invoker set search_path='' as $$
++begin
++ raise exception 'Ask barangay staff to scan your Family QR and confirm who is present. Update the app if needed.' using errcode='42501';
++end $$;
++
++-- Explicit grants, including private wrappers. Internal helpers are never RPCs.
++do $$
++declare signature text;
++begin
++ foreach signature in array array[
++ 'barangayan_private.serialize_attendance_identity()',
++ 'barangayan_private.initialize_attendance_household()',
++ 'barangayan_private.attendance_actor(text)',
++ 'barangayan_private.read_household_attendance(uuid,uuid)',
++ 'barangayan_private.guard_attendance_lifecycle()',
++ 'barangayan_private.erase_household_attendance(uuid)',
++ 'barangayan_private.reject_legacy_attendance()',
++ 'barangayan_private.guard_household_archive()',
++ 'public.sync_household_members_from_jsonb()'] loop
++  execute 'revoke all on function '||signature||' from public,anon,authenticated,service_role';
++ end loop;
++ foreach signature in array array[
++ 'barangayan_private.attendance_can_read(uuid,uuid)',
++ 'barangayan_private.mutate_attendance_household_member(uuid,text,jsonb,timestamptz)',
++ 'barangayan_private.get_my_household_attendance()',
++ 'barangayan_private.lookup_household_for_attendance(text)',
++ 'barangayan_private.check_in_household_members(uuid,uuid,jsonb,uuid)',
++ 'barangayan_private.check_out_household_attendance(uuid[],uuid)',
++ 'public.get_my_household_attendance()',
++ 'public.lookup_household_for_attendance(text)',
++ 'public.check_in_household_members(uuid,uuid,jsonb,uuid)',
++ 'public.check_out_household_attendance(uuid[],uuid)'] loop
++  execute 'revoke all on function '||signature||' from public,anon,authenticated,service_role';
++  execute 'grant execute on function '||signature||' to authenticated';
++ end loop;
++end $$;
++
++-- Preserve the current request/payment corrections; replace only household routing.
++CREATE OR REPLACE FUNCTION public.admin_mutate_record(p_screen text, p_id uuid, p_operation text, p_patch jsonb, p_expected timestamp with time zone)
++ RETURNS jsonb
++ LANGUAGE plpgsql
++ SET search_path TO ''
++AS $function$
++declare table_name text; allowed text[]; assignment text; current_record jsonb; actor public.profiles;
++ affected integer; profile_patch jsonb; official_patch jsonb; linked_request uuid; payment_result jsonb;
++begin
++ if p_screen='households' then
++  return barangayan_private.mutate_attendance_household_member(p_id,p_operation,p_patch,p_expected);
++ end if;
++ select * into actor from public.profiles where id=(select auth.uid()) and role='admin' and deleted_at is null;
++ if actor.id is null then raise exception 'Active administrator required' using errcode='42501'; end if;
++ case p_screen
++ when 'requests' then table_name:='service_requests'; allowed:=array['reference_number','resident_id','document_type_id','created_at','status','requester_notes','payment_status','payment_method'];
++ when 'transactions' then table_name:='payments'; allowed:=array['amount_centavos','method','status','paymongo_source_id','created_at','collected_by','request_reference','linked_resident_id','linked_document_type_id'];
++ when 'residents' then table_name:='profiles'; allowed:=array['first_name','last_name','middle_name','suffix','sex','email','mobile_number','birth_date','house_no','street','city','employment_status','occupation'];
++ when 'incidents' then table_name:='incidents'; allowed:=array['title','description','address','specific_area_details','status','category_id','reporter_id','location','confirmation_count','created_at'];
++ when 'health' then table_name:='medical_drives'; allowed:=array['title','type','drive_date','location','time_start','time_end','eligible_criteria','stock_label','stock_unit','stock_total','stock_remaining','is_active'];
++ when 'applicants' then table_name:='drive_registrations'; allowed:=array['age','is_pwd','comorbidities','prior_dose_date','status'];
++
++ when 'staff' then table_name:='barangay_officials'; allowed:=array['full_name','mobile_number','home_address','official_role','date_hired','is_active'];
++ else raise exception 'Invalid screen' using errcode='22023'; end case;
++ if p_operation not in ('save','archive','restore','delete') then raise exception 'Invalid action' using errcode='22023'; end if;
++ execute format('select to_jsonb(b) from public.%I b where id=$1 for update',table_name) into current_record using p_id;
++ if current_record is null or not exists(
++  select 1 from public.profiles where id=actor.id and deleted_at is null) then
++  raise exception 'Record unavailable' using errcode='42501';
++ end if;
++ -- The record projections check the same active administrator and tenant,
++ -- including parent-based tenant membership for household/applicant rows.
++ execute format('select count(*) from public.admin_%I_records where id=$1 and tenant_id=$2',p_screen) into affected using p_id,actor.barangay_id;
++ if affected<>1 then raise exception 'Record unavailable' using errcode='42501'; end if;
++ if p_screen='residents' and current_record->>'role'='admin' and p_operation<>'save' then
++   raise exception 'Manage admin account removal through Staff' using errcode='42501';
++  end if;
++  if p_screen='staff' and (current_record->>'profile_id')::uuid=actor.id then raise exception 'You cannot change your own staff record' using errcode='42501'; end if;
++ if p_expected is null or (current_record->>'updated_at')::timestamptz is distinct from p_expected then
++  raise exception 'Record changed. Reload details.' using errcode='40001'; end if;
++ if p_operation='archive' and current_record->>'deleted_at' is not null or p_operation='restore' and current_record->>'deleted_at' is null then
++  raise exception 'Archive state changed. Reload details.' using errcode='40001'; end if;
++
++ if p_operation='save' then
++  if p_screen='requests' and current_record->>'contract_version'='2' then
++   return barangayan_private.admin_edit_request_details(p_id,p_patch,p_expected);
++  end if;
++  if jsonb_typeof(p_patch)<>'object' or p_patch='{}'::jsonb or exists(select 1 from jsonb_object_keys(p_patch) k where not(k=any(allowed))) then
++   raise exception 'Invalid editable fields' using errcode='22023'; end if;
++  if p_screen='requests' and current_record->>'contract_version'='2' and p_patch-array['payment_method','payment_status']<>'{}'::jsonb then raise exception 'Use request review' using errcode='42501'; end if;
++   if p_screen='requests' and p_patch ?| array['payment_method','payment_status'] then
++    payment_result := barangayan_private.admin_edit_request_payment(p_id,
++     (select jsonb_object_agg(key,value) from jsonb_each(p_patch) where key in ('payment_method','payment_status')),p_expected);
++    p_patch := p_patch-array['payment_method','payment_status'];
++    if p_patch='{}'::jsonb then return payment_result; end if;
++   end if;
++  if p_screen='transactions' and current_record->>'status'<>'pending' and p_patch?'amount_centavos' then raise exception 'Paid amounts are immutable' using errcode='42501'; end if;
++  if exists(select 1 from jsonb_each(p_patch) e where e.key in ('name','title','first_name','last_name','full_name','location','eligible_criteria','stock_label','stock_unit') and coalesce(trim(e.value#>>'{}'),'')='') then
++   raise exception 'Required fields cannot be empty' using errcode='22023'; end if;
++  -- Validate references in the caller's tenant before any write. Domain triggers
++  -- continue to protect versioned request snapshots and settled payment amounts.
++  if p_screen='incidents' then
++   if p_patch->>'category_id' is not null and not exists(select 1 from public.incident_categories where id=(p_patch->>'category_id')::uuid and barangay_id=actor.barangay_id) then
++    raise exception 'Category unavailable' using errcode='42501'; end if;
++   if p_patch->>'reporter_id' is not null and not exists(select 1 from public.profiles where id=(p_patch->>'reporter_id')::uuid and barangay_id=actor.barangay_id and role='resident' and deleted_at is null) then
++    raise exception 'Reporter unavailable' using errcode='42501'; end if;
++   if p_patch?'confirmation_count' and (jsonb_typeof(p_patch->'confirmation_count')<>'number' or (p_patch->>'confirmation_count')::numeric<0 or (p_patch->>'confirmation_count')::numeric<>trunc((p_patch->>'confirmation_count')::numeric)) then
++    raise exception 'Invalid confirmation count' using errcode='22023'; end if;
++   if p_patch?'location' and p_patch->'location'<>'null'::jsonb and
++    (jsonb_typeof(p_patch->'location')<>'object' or jsonb_typeof(p_patch->'location'->'lat') is distinct from 'number' or jsonb_typeof(p_patch->'location'->'lng') is distinct from 'number'
++     or abs((p_patch->'location'->>'lat')::numeric)>90 or abs((p_patch->'location'->>'lng')::numeric)>180) then
++    raise exception 'Invalid coordinates' using errcode='22023'; end if;
++  end if;
++  if p_screen='requests' then
++   if p_patch?'resident_id' and not exists(select 1 from public.profiles where id=(p_patch->>'resident_id')::uuid and barangay_id=actor.barangay_id and role in ('resident','admin') and deleted_at is null) then
++    raise exception 'Resident unavailable' using errcode='42501'; end if;
++   if p_patch?'document_type_id' and not exists(select 1 from public.document_types where id=(p_patch->>'document_type_id')::uuid and barangay_id=actor.barangay_id and deleted_at is null) then
++    raise exception 'Document unavailable' using errcode='42501'; end if;
++  end if;
++  if p_screen='transactions' then
++   linked_request:=(current_record->>'service_request_id')::uuid;
++   if p_patch?'request_reference' then
++    select id into linked_request from public.service_requests
++    where reference_number=ltrim(btrim(p_patch->>'request_reference'),'#') and barangay_id=actor.barangay_id and deleted_at is null for update;
++    if linked_request is null then raise exception 'Request reference not found' using errcode='22023'; end if;
++    p_patch:=p_patch-'request_reference'||jsonb_build_object('service_request_id',linked_request);
++   end if;
++   if p_patch->>'collected_by' is not null and not exists(select 1 from public.profiles where id=(p_patch->>'collected_by')::uuid and barangay_id=actor.barangay_id and role='admin' and deleted_at is null) then
++    raise exception 'Collector unavailable' using errcode='42501'; end if;
++   if p_patch ?| array['linked_resident_id','linked_document_type_id'] then
++    if p_patch?'linked_resident_id' and not exists(select 1 from public.profiles where id=(p_patch->>'linked_resident_id')::uuid and barangay_id=actor.barangay_id and role in ('resident','admin') and deleted_at is null) then
++     raise exception 'Resident unavailable' using errcode='42501'; end if;
++    if p_patch?'linked_document_type_id' and not exists(select 1 from public.document_types where id=(p_patch->>'linked_document_type_id')::uuid and barangay_id=actor.barangay_id and deleted_at is null) then
++     raise exception 'Document unavailable' using errcode='42501'; end if;
++    update public.service_requests set
++     resident_id=case when p_patch?'linked_resident_id' then (p_patch->>'linked_resident_id')::uuid else resident_id end,
++     document_type_id=case when p_patch?'linked_document_type_id' then (p_patch->>'linked_document_type_id')::uuid else document_type_id end
++     where id=linked_request and barangay_id=actor.barangay_id;
++    get diagnostics affected=row_count;
++    if affected<>1 then raise exception 'Linked request unavailable' using errcode='42501'; end if;
++    p_patch:=p_patch-array['linked_resident_id','linked_document_type_id'];
++   end if;
++   if p_patch->>'status'='paid' and current_record->>'status'<>'paid' then
++    p_patch:=p_patch||jsonb_build_object('paid_at',now());
++   end if;
++  end if;
++
++   official_patch:=p_patch;
++   if p_screen='staff' then
++    select coalesce(jsonb_object_agg(key,value),'{}'::jsonb) into profile_patch from jsonb_each(p_patch) where key in ('full_name','mobile_number','home_address');
++    official_patch:=p_patch-array['full_name','mobile_number','home_address'];
++    if profile_patch<>'{}'::jsonb then
++     select string_agg(format('%I = v.%I',key,key),',') into assignment from jsonb_object_keys(profile_patch) key;
++     execute format('update public.profiles b set %s from jsonb_populate_record(null::public.profiles,$1) v where b.id=$2',assignment)
++      using profile_patch,(current_record->>'profile_id')::uuid;
++     get diagnostics affected=row_count;
++     if affected<>1 then raise exception 'Staff profile update denied' using errcode='42501'; end if;
++    end if;
++   end if;
++   if official_patch<>'{}'::jsonb then
++    select string_agg(format('%I = v.%I',key,key),',') into assignment from jsonb_object_keys(official_patch) key;
++    execute format('update public.%I b set %s from jsonb_populate_record(null::public.%I,$1) v where b.id=$2',table_name,assignment,table_name) using official_patch,p_id;
++   else
++    -- Profile-only staff edits still advance the roster version for concurrency.
++    execute format('update public.%I set updated_at=now() where id=$1',table_name) using p_id;
++   end if;
++   get diagnostics affected=row_count;
++ elsif p_operation='delete' then
++
++  execute format('delete from public.%I where id=$1',table_name) using p_id;
++  get diagnostics affected=row_count;
++
++ else
++  execute format('update public.%I set deleted_at=$1 where id=$2',table_name)
++   using case when p_operation='archive' then now() else null::timestamptz end,p_id;
++  get diagnostics affected=row_count;
++
++ end if;
++ if affected<>1 then raise exception 'No record changed. Check your access.' using errcode='42501'; end if;
++ return jsonb_build_object('id',p_id);
++end $function$;
++
++-- CREATE OR REPLACE retains prior owners. A schema restored by supabase_admin
++-- can contain postgres-owned entrypoints: grant only those verified trusted
++-- owners the internal helpers, without granting client roles another write path.
++do $$
++declare target record; owner_name text;
++begin
++ for target in select p.proowner,'barangayan_private.attendance_actor(text)' helper
++  from pg_proc p where p.oid in (
++   'public.admin_add_household_member(uuid,text,text,text)'::regprocedure,
++   'public.admin_update_household_member(uuid,uuid,text,text,text)'::regprocedure,
++   'public.admin_remove_household_member(uuid,uuid)'::regprocedure)
++  union select p.proowner,'barangayan_private.erase_household_attendance(uuid)'
++  from pg_proc p where p.oid in ('public.request_own_account_deletion()'::regprocedure,
++   'public.erase_own_account_records()'::regprocedure)
++ loop
++  owner_name:=pg_get_userbyid(target.proowner);
++  if owner_name in ('anon','authenticated','service_role') then
++   raise exception 'Untrusted lifecycle function owner: %',owner_name;
++  end if;
++  execute format('grant execute on function %s to %I',target.helper,owner_name);
++ end loop;
++end $$;
++
++notify pgrst,'reload schema';
++commit;
+--- snapshot/supabase/tests/household_attendance.test.sql
++++ candidate/supabase/tests/household_attendance.test.sql
+@@ -0,0 +1,223 @@
++-- Phase 1, synthetic accounts only; every write rolls back.
++begin;
++select no_plan();
++insert into public.barangays(id,name) values
++ ('afa10000-0000-4000-8000-000000000001','Attendance A'),('afa10000-0000-4000-8000-000000000002','Attendance B');
++insert into auth.users(id,email)
++ select ('dfa10000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,'attendance-'||n||'@test.local' from generate_series(1,6) n;
++insert into public.profiles(id,barangay_id,role,full_name)
++ select ('dfa10000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,
++ ('afa10000-0000-4000-8000-'||case when n in (3,6) then '000000000002' else '000000000001' end)::uuid,
++ case when n<=3 then 'admin' else 'resident' end,'Attendance Person '||n from generate_series(1,6) n;
++insert into public.evacuation_centers(id,barangay_id,name,position,is_active) values
++ ('efa10000-0000-4000-8000-000000000001','afa10000-0000-4000-8000-000000000001','Center A','{"lat":1,"lng":1}',true),
++ ('efa10000-0000-4000-8000-000000000002','afa10000-0000-4000-8000-000000000001','Center B','{"lat":1,"lng":1}',true),
++ ('efa10000-0000-4000-8000-000000000003','afa10000-0000-4000-8000-000000000002','Foreign Center','{"lat":1,"lng":1}',true);
++update public.profiles set household_members='[
++ {"id":"cfa10000-0000-4000-8000-000000000001","name":"One","relation":"child"},
++ {"id":"cfa10000-0000-4000-8000-000000000002","name":"Two","relation":"child"},
++ {"id":"cfa10000-0000-4000-8000-000000000003","name":"Three","relation":"child"}]'
++ where id='dfa10000-0000-4000-8000-000000000004';
++create temp table attendance_results(name text primary key,result jsonb);
++grant all on attendance_results to authenticated;
++
++select ok(not has_table_privilege('authenticated','public.household_attendance','insert'),'No direct attendance insert');
++select ok(not has_table_privilege('authenticated','public.household_members','update'),'No direct compatibility write');
++select ok(not has_table_privilege('authenticated','barangayan_private.household_attendance_receipts','select'),'Receipts are private');
++select ok(not has_function_privilege('anon','public.lookup_household_for_attendance(text)','execute'),'Anonymous lookup revoked');
++select ok(not has_function_privilege('service_role','public.check_in_household_members(uuid,uuid,jsonb,uuid)','execute'),'No service-role mutation shortcut');
++select ok(not prosecdef,'Public mutation is invoker') from pg_proc where oid='public.check_in_household_members(uuid,uuid,jsonb,uuid)'::regprocedure;
++set local role anon;
++select throws_ok($$select public.get_my_household_attendance()$$,'42501',null,'A08 anonymous read denied');
++select throws_ok($$select public.check_out_household_attendance(array['dfa10000-0000-4000-8000-000000000004'::uuid],gen_random_uuid())$$,
++ '42501',null,'A08 anonymous write denied');
++reset role;
++
++set local role authenticated;
++select set_config('request.jwt.claim.sub','',true);
++select throws_ok($$select public.get_my_household_attendance()$$,'42501','authentication_required','A08 missing authenticated subject denied');
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000005',true);
++select is(jsonb_array_length(public.get_my_household_attendance()->'people'),1,'A01 holder-only household has one person');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"}]',gen_random_uuid())$$,
++ '42501','attendance_forbidden','A08 resident cannot confirm attendance');
++select throws_ok($$update public.household_members set is_checked_in=true where profile_id=auth.uid()$$,'42501',null,'A09 legacy blanket write denied');
++select throws_ok($$insert into public.evacuation_center_checkins(evacuation_center_id,user_id,barangay_id) values
++ ('efa10000-0000-4000-8000-000000000001',auth.uid(),'afa10000-0000-4000-8000-000000000001')$$,
++ '42501',null,'A09 direct/queued legacy center scan denied');
++select throws_ok($$select public.check_in_to_evacuation_center('efa10000-0000-4000-8000-000000000001')$$,
++ '42501',null,'A09 legacy scan RPC denied');
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000001',true);
++select throws_ok($$select public.lookup_household_for_attendance('https://example.com')$$,'22023','invalid_household_qr','URL is data, never a lookup');
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","version":null,"profileId":"dfa10000-0000-4000-8000-000000000005"}')$$,'22023','invalid_household_qr','Null version rejected');
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","version":1.0,"profileId":"dfa10000-0000-4000-8000-000000000005"}')$$,'22023','invalid_household_qr','Non-string version rejected');
++select throws_ok($$select public.lookup_household_for_attendance(repeat(' ',2049))$$,'22023','invalid_household_qr','Raw byte bound precedes trim');
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","profileId":"dfa10000-0000-4000-8000-000000000005","barangay_id":"forged"}')$$,'22023','invalid_household_qr','Authority-bearing extra keys rejected');
++select is(jsonb_array_length(public.lookup_household_for_attendance('{"type":"household","profileId":"dfa10000-0000-4000-8000-000000000005"}')->'people'),1,'Legacy QR accepted through authorization');
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","version":"1.0","profileId":"dfa10000-0000-4000-8000-000000000006"}')$$,'42501','household_unavailable','A08 cross-barangay lookup denied');
++
++insert into attendance_results values('holder',public.check_in_household_members(
++ 'dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"}]','bfa10000-0000-4000-8000-000000000001'));
++select is((select result->'stays'->0->>'outcome' from attendance_results where name='holder'),'created','A01 holder arrival created');
++select is(public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"},{"kind":"holder"}]','bfa10000-0000-4000-8000-000000000001'),
++ (select result from attendance_results where name='holder'),'A03/A05 duplicate normalized retry returns exact receipt');
++select is(public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"}]',gen_random_uuid())->'stays'->0->>'checked_in_at',
++ (select result->'stays'->0->>'checked_in_at' from attendance_results where name='holder'),'A03 a new request preserves original arrival');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000002','[{"kind":"holder"}]',gen_random_uuid())$$,
++ 'PT409','attendance_active_elsewhere','A04 conflict at another center');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000002','[{"kind":"holder"}]','bfa10000-0000-4000-8000-000000000001')$$,
++ 'PT409','attendance_request_conflict','A07 changed input under same key rejected');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000004','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"},{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000099"}]',gen_random_uuid())$$,
++ 'PT409','household_roster_changed','A07 mixed invalid batch rejected');
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000004'),0,'A07 invalid batch leaves no partial stays');
++reset role;
++select is((select count(*)::int from barangayan_private.household_attendance_receipts where household_profile_id='dfa10000-0000-4000-8000-000000000004'),0,'A07 invalid batch leaves no orphan receipt');
++set local role authenticated;
++insert into attendance_results values('partial',public.check_in_household_members(
++ 'dfa10000-0000-4000-8000-000000000004','efa10000-0000-4000-8000-000000000001',
++ '[{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000001"},{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000002"}]',gen_random_uuid()));
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000004'),2,'A02 exactly two of four participants recorded');
++select is((select count(*)::int from public.household_members where profile_id='dfa10000-0000-4000-8000-000000000004' and is_checked_in),2,'A02 compatibility projection matches selected people');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001',
++ '[{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000001"}]',gen_random_uuid())$$,
++ 'PT409','household_roster_changed','A08 member from a real different household denied');
++reset role;
++select throws_ok($$insert into public.household_attendance(household_profile_id,barangay_id,evacuation_center_id,checked_in_by)
++ values('dfa10000-0000-4000-8000-000000000005','afa10000-0000-4000-8000-000000000001','efa10000-0000-4000-8000-000000000001','dfa10000-0000-4000-8000-000000000001')$$,
++ '23505',null,'A03 unique active holder constraint is the final guard');
++select throws_ok($$insert into public.household_attendance(household_profile_id,household_member_id,barangay_id,evacuation_center_id,checked_in_by)
++ values('dfa10000-0000-4000-8000-000000000004','cfa10000-0000-4000-8000-000000000001','afa10000-0000-4000-8000-000000000001','efa10000-0000-4000-8000-000000000002','dfa10000-0000-4000-8000-000000000001')$$,
++ '23505',null,'A03 unique active member constraint covers every center');
++select throws_ok($$insert into public.household_attendance(household_profile_id,household_member_id,barangay_id,evacuation_center_id,checked_in_by,checked_out_at,checked_out_by)
++ values('dfa10000-0000-4000-8000-000000000005','cfa10000-0000-4000-8000-000000000001','afa10000-0000-4000-8000-000000000001','efa10000-0000-4000-8000-000000000001','dfa10000-0000-4000-8000-000000000001',clock_timestamp()+interval '1 second','dfa10000-0000-4000-8000-000000000001')$$,
++ '23503',null,'A08 composite foreign key prevents mismatched member ownership');
++select throws_ok($$update public.household_attendance set checked_out_at=clock_timestamp() where household_profile_id='dfa10000-0000-4000-8000-000000000004'$$,
++ '23514',null,'A13 departure requires an actor and timestamp together');
++select throws_ok($$update public.household_attendance set checked_out_at=checked_in_at-interval '1 second',checked_out_by=checked_in_by where household_profile_id='dfa10000-0000-4000-8000-000000000004'$$,
++ '23514',null,'A13 departure cannot precede arrival');
++set local role authenticated;
++select throws_ok($$select public.admin_mutate_record('households','cfa10000-0000-4000-8000-000000000001','save','{"is_checked_in":false}',
++ (select updated_at from public.household_members where id='cfa10000-0000-4000-8000-000000000001'))$$,'22023','Invalid editable fields','A09 generic boolean edit denied');
++select throws_ok($$select public.admin_remove_household_member('dfa10000-0000-4000-8000-000000000004','cfa10000-0000-4000-8000-000000000001')$$,
++ 'PT409','attendance_lifecycle_conflict','A10 active member cannot be removed');
++select throws_ok($$select public.admin_mutate_record('households','cfa10000-0000-4000-8000-000000000001','archive','{}',
++ (select updated_at from public.household_members where id='cfa10000-0000-4000-8000-000000000001'))$$,
++ 'PT409','attendance_lifecycle_conflict','A10 current-version archive of active member rejected');
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000004','efa10000-0000-4000-8000-000000000001','[]',gen_random_uuid())$$,
++ '22023','invalid_attendance_selection','A07 empty arrival rejected');
++select throws_ok($$select public.check_out_household_attendance(array[]::uuid[],gen_random_uuid())$$,
++ '22023','invalid_attendance_selection','A07 empty checkout rejected');
++select throws_ok($$select public.check_out_household_attendance(array[null]::uuid[],gen_random_uuid())$$,
++ '22023','invalid_attendance_selection','A07 null checkout reference rejected');
++select throws_ok($$select public.check_out_household_attendance(array[['dfa10000-0000-4000-8000-000000000004'::uuid]],gen_random_uuid())$$,
++ '22023','invalid_attendance_selection','A07 multidimensional checkout rejected at boundary');
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000004',true);
++select is(jsonb_array_length(public.get_my_household_attendance()->'people'),4,'A02 resident sees holder and all three members');
++select throws_ok($$select public.save_resident_household_if_unchanged('[]','[]')$$,'PT409','resident_household_changed','A12 stale roster editor rejected');
++select lives_ok($$select public.save_resident_household_if_unchanged(
++ jsonb_set((select household_members from public.profiles where id=auth.uid()),'{0,name}','"Renamed"'),
++ (select household_members from public.profiles where id=auth.uid()))$$,'A10 rename preserves stable member identity');
++select is((select count(*)::int from public.household_attendance),2,'A08 resident reads only own household');
++select is((select count(*)::int from public.household_attendance_receipt_exports),1,'A13 export projection includes own receipt metadata');
++select ok((select id is not null from public.household_attendance_receipt_exports limit 1),'A13 exported receipt has an opaque unique pagination identity');
++reset role;
++select throws_ok($$update public.profiles set barangay_id='afa10000-0000-4000-8000-000000000002' where id='dfa10000-0000-4000-8000-000000000004'$$,
++ 'PT409','attendance_lifecycle_conflict','A11 active household cannot move barangay');
++select throws_ok($$update public.profiles set deleted_at=now() where id='dfa10000-0000-4000-8000-000000000004'$$,
++ 'PT409','attendance_lifecycle_conflict','A11 active household cannot archive');
++select throws_ok($$update public.evacuation_centers set deleted_at=now() where id='efa10000-0000-4000-8000-000000000001'$$,
++ 'PT409','attendance_lifecycle_conflict','A11 active center cannot archive');
++select throws_ok($$update public.evacuation_centers set barangay_id='afa10000-0000-4000-8000-000000000002' where id='efa10000-0000-4000-8000-000000000001'$$,
++ 'PT409','attendance_lifecycle_conflict','A11 active center cannot move barangay');
++update public.evacuation_centers set is_active=false where id='efa10000-0000-4000-8000-000000000001';
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000001',true);
++insert into attendance_results values('departure',public.check_out_household_attendance(
++ array[(select (result->'stays'->0->>'attendance_id')::uuid from attendance_results where name='holder')],
++ 'bfa10000-0000-4000-8000-000000000002'));
++select is((select result->'stays'->0->>'outcome' from attendance_results where name='departure'),'closed','A11 inactive center permits departure');
++select is(public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"}]','bfa10000-0000-4000-8000-000000000001'),
++ (select result from attendance_results where name='holder'),'A05 delayed arrival retry returns original receipt after departure');
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000005' and checked_out_at is null),0,'A05 delayed arrival cannot reopen stay');
++insert into attendance_results values('holder-later',public.check_in_household_members(
++ 'dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000002','[{"kind":"holder"}]',gen_random_uuid()));
++select is(public.check_out_household_attendance(array[(select (result->'stays'->0->>'attendance_id')::uuid from attendance_results where name='holder')],
++ 'bfa10000-0000-4000-8000-000000000002'),(select result from attendance_results where name='departure'),'A06 checkout retry returns exact receipt');
++select is(public.check_out_household_attendance(array[(select (result->'stays'->0->>'attendance_id')::uuid from attendance_results where name='holder')],gen_random_uuid())->'stays'->0->>'outcome',
++ 'already_closed','A06 stale departure remains bound to original stay');
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000005' and checked_out_at is null),1,'A06 later visit stays open');
++select throws_ok($$select public.check_out_household_attendance(array[
++ (select (result->'stays'->0->>'attendance_id')::uuid from attendance_results where name='holder-later'),
++ (select (result->'stays'->0->>'attendance_id')::uuid from attendance_results where name='partial')],gen_random_uuid())$$,
++ '42501','attendance_forbidden','A07 mixed-household checkout is atomic and denied');
++select lives_ok($$select public.check_out_household_attendance((select array_agg((s->>'attendance_id')::uuid) from attendance_results,
++ jsonb_array_elements(result->'stays') s where name='partial'),gen_random_uuid())$$,'A02 selected family departs atomically');
++select lives_ok($$select public.admin_remove_household_member('dfa10000-0000-4000-8000-000000000004','cfa10000-0000-4000-8000-000000000001')$$,'A10 removal after departure succeeds');
++select is((select count(*)::int from public.household_members where id='cfa10000-0000-4000-8000-000000000001' and deleted_at is not null),1,'A10 referenced removed member archived');
++select is((select count(*)::int from public.household_attendance where household_member_id='cfa10000-0000-4000-8000-000000000001'),1,'A10 removed member history retained');
++select lives_ok($$select public.admin_mutate_record('households','cfa10000-0000-4000-8000-000000000001','restore','{}',
++ (select updated_at from public.household_members where id='cfa10000-0000-4000-8000-000000000001'))$$,'A10 restore retains historical member ID');
++select is((select count(*)::int from public.household_attendance where household_member_id='cfa10000-0000-4000-8000-000000000001'),1,'A10 restore preserves history');
++reset role;
++update public.profiles set role='resident' where id='dfa10000-0000-4000-8000-000000000001';
++set local role authenticated;
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000005','efa10000-0000-4000-8000-000000000001','[{"kind":"holder"}]','bfa10000-0000-4000-8000-000000000001')$$,
++ '42501','attendance_forbidden','A05 role removal denies original receipt');
++reset role;
++select set_config('request.jwt.claim.sub','',true);
++update public.profiles set role='admin' where id='dfa10000-0000-4000-8000-000000000001';
++update auth.users set banned_until=now()+interval '1 day' where id='dfa10000-0000-4000-8000-000000000001';
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000001',true);
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","profileId":"dfa10000-0000-4000-8000-000000000005"}')$$,
++ '42501','attendance_forbidden','A08 banned actor rejected despite JWT');
++reset role;
++update auth.users set banned_until=null where id='dfa10000-0000-4000-8000-000000000001';
++update public.profiles set barangay_id='afa10000-0000-4000-8000-000000000002' where id='dfa10000-0000-4000-8000-000000000004';
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000003',true);
++select is((select count(*)::int from public.household_attendance),0,'A08 new barangay staff cannot read former tenant history');
++select ok(not exists(select 1 from jsonb_array_elements(public.lookup_household_for_attendance(
++ '{"type":"household","profileId":"dfa10000-0000-4000-8000-000000000004"}')->'people') p
++ where p->'latest_departure'<>'null'::jsonb),'A08 lookup filters historical tenant');
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000004',true);
++select is((select count(*)::int from public.household_attendance),2,'A08 resident retains previous-barangay history');
++
++reset role;
++update public.profiles set barangay_id='afa10000-0000-4000-8000-000000000002' where id='dfa10000-0000-4000-8000-000000000001';
++update public.evacuation_centers set barangay_id='afa10000-0000-4000-8000-000000000002' where id='efa10000-0000-4000-8000-000000000001';
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000001',true);
++select throws_ok($$select public.check_in_household_members('dfa10000-0000-4000-8000-000000000004','efa10000-0000-4000-8000-000000000001',
++ '[{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000001"},{"kind":"member","member_id":"cfa10000-0000-4000-8000-000000000002"}]',
++ (select (result->>'request_id')::uuid from attendance_results where name='partial'))$$,
++ '42501','attendance_forbidden','A05 moved actor/household/center cannot replay former tenant receipt');
++select set_config('request.jwt.claims',jsonb_build_object('sub',auth.uid(),'role','authenticated','amr',jsonb_build_array(
++ jsonb_build_object('method','password','timestamp',extract(epoch from now())::bigint)))::text,true);
++select lives_ok($$select public.request_own_account_deletion()$$,'A13 staff actor can be de-identified');
++reset role;
++select is((select count(*)::int from public.household_attendance where checked_in_by='dfa10000-0000-4000-8000-000000000001'),4,'A13 other households retain stays referencing the erased actor');
++select is((select count(*)::int from barangayan_private.household_attendance_receipts where actor_profile_id='dfa10000-0000-4000-8000-000000000001'),0,'A13 erased actor receipts removed');
++select ok(exists(select 1 from public.profiles where id='dfa10000-0000-4000-8000-000000000001' and deleted_at is not null),'A13 actor profile retained for non-null foreign keys');
++set local role authenticated;
++select throws_ok($$select public.lookup_household_for_attendance('{"type":"household","profileId":"dfa10000-0000-4000-8000-000000000004"}')$$,
++ '42501','attendance_forbidden','A08 erased actor is denied despite retained JWT subject');
++reset role;
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000004',true);
++
++-- Both deletion contracts remove owned stays/receipts before JSON reconciliation.
++select set_config('request.jwt.claims',jsonb_build_object('sub',auth.uid(),'role','authenticated','amr',jsonb_build_array(
++ jsonb_build_object('method','password','timestamp',extract(epoch from now())::bigint)))::text,true);
++select is(public.erase_own_account_records(),'profile_erased','A13 v2 erasure completes with historical member references');
++reset role;
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000004'),0,'A13 erasure removes own history');
++select is((select count(*)::int from barangayan_private.household_attendance_receipts where household_profile_id='dfa10000-0000-4000-8000-000000000004'),0,'A13 erasure removes household receipts');
++set local role authenticated;
++select set_config('request.jwt.claim.sub','dfa10000-0000-4000-8000-000000000005',true);
++select set_config('request.jwt.claims',jsonb_build_object('sub',auth.uid(),'role','authenticated','amr',jsonb_build_array(
++ jsonb_build_object('method','password','timestamp',extract(epoch from now())::bigint)))::text,true);
++select lives_ok($$select public.request_own_account_deletion()$$,'A13 v1 erasure handles an active holder stay');
++reset role;
++select is((select count(*)::int from public.household_attendance where household_profile_id='dfa10000-0000-4000-8000-000000000005'),0,'A13 v1 removes active and closed own stays');
++select * from finish();
++rollback;
+--- snapshot/supabase/tests/household_attendance_concurrency.mjs
++++ candidate/supabase/tests/household_attendance_concurrency.mjs
+@@ -0,0 +1,178 @@
++// Real independent PostgreSQL sessions. Refuses shared/default database names.
++// Run only after the migrations and rollback-only household_attendance.test.sql.
++import assert from 'node:assert/strict';
++import { execFileSync, spawn } from 'node:child_process';
++import { randomUUID } from 'node:crypto';
++
++const database = process.env.ATTENDANCE_TEST_DB;
++assert.ok(database && /^family_attendance_[a-z0-9_]+$/.test(database), 'ATTENDANCE_TEST_DB must name a disposable family_attendance_* database.');
++const container = process.env.ATTENDANCE_DB_CONTAINER ?? 'supabase_db_barangayan';
++const owner = process.env.ATTENDANCE_DB_OWNER ?? 'postgres';
++assert.ok(['postgres', 'supabase_admin'].includes(owner), 'Use the verified local migration owner for fixture administration.');
++const args = ['exec', '-i', container, 'psql', '-U', owner, '-d', database, '-X', '-At', '-v', 'ON_ERROR_STOP=1'];
++const run = (sql) => execFileSync('docker', args, { input: sql, encoding: 'utf8', timeout: 15000 }).trim();
++const id = (kind, n) => `dfa20000-${kind}-4000-8000-${String(n).padStart(12, '0')}`;
++const tenant = id('0001', 1), otherTenant = id('0001', 2);
++const admin = id('0002', 1), secondAdmin = id('0002', 2);
++const rows = Array.from({ length: 22 }, (_, n) => ({
++  household: id('0003', n + 1), center: id('0004', n + 1), member: id('0005', n + 1),
++}));
++const roster = (fixture) => JSON.stringify([{ id: fixture.member, name: 'Race member', relation: 'child' }]);
++const participant = (fixture, member = false) => JSON.stringify(member ? [{ kind: 'member', member_id: fixture.member }] : [{ kind: 'holder' }]);
++const arrival = (fixture, request = randomUUID(), member = false, center = fixture.center) =>
++  `select public.check_in_household_members('${fixture.household}','${center}','${participant(fixture, member)}','${request}');`;
++const resultJson = (text) => JSON.parse(text.split('\n').findLast((line) => line.startsWith('{') && line.includes('"stays"')) ?? 'null');
++
++function session(name, uid, statement, hold = false) {
++  const child = spawn('docker', args, { stdio: ['pipe', 'pipe', 'pipe'] });
++  let out = '', err = '', signal;
++  const ready = new Promise((resolve) => { signal = resolve; });
++  const deadline = setTimeout(() => child.kill(), 20000);
++  const result = new Promise((resolve) => {
++    child.stdout.on('data', (chunk) => { out += chunk; if (out.includes('ATTENDANCE_READY')) signal(true); });
++    child.stderr.on('data', (chunk) => { err += chunk; });
++    child.on('error', (error) => { err += error.message; signal(false); });
++    child.on('close', (code) => { clearTimeout(deadline); signal(false); resolve({ ok: code === 0, out, err }); });
++  });
++  child.stdin.on('error', () => { /* psql exits immediately on an expected SQL failure. */ });
++  child.stdin.write(`begin; set local statement_timeout='12s'; set application_name='attendance-${name}';
++    ${uid ? `set local role authenticated; select set_config('request.jwt.claim.sub','${uid}',true);` : ''}
++    ${statement}
++    select 'ATTENDANCE_READY';
++    ${hold ? '' : 'commit;'}\n`);
++  if (!hold) child.stdin.end();
++  return { ready, result, output: () => out, release: () => child.stdin.end('commit;\n') };
++}
++
++async function blocked(name) {
++  for (let attempt = 0; attempt < 30; attempt += 1) {
++    if (run(`select count(*) from pg_stat_activity where datname=current_database() and application_name='attendance-${name}' and wait_event_type='Lock'`) === '1') return;
++    await new Promise((resolve) => setTimeout(resolve, 70));
++  }
++  throw new Error(`${name} did not reach an observed database lock wait`);
++}
++
++const results = [];
++async function race(name, firstUid, firstStatement, secondUid, secondStatement, expectedError) {
++  const first = session(`${name}-first`, firstUid, firstStatement, true);
++  if (!await first.ready) throw new Error(`${name}: first operation failed: ${(await first.result).err}`);
++  const second = session(`${name}-second`, secondUid, secondStatement);
++  try { await blocked(`${name}-second`); } finally { first.release(); }
++  const [a, b] = await Promise.all([first.result, second.result]);
++  assert.ok(a.ok, `${name}: ${a.err}`);
++  if (expectedError) assert.ok(!b.ok && b.err.includes(expectedError), `${name}: expected ${expectedError}, got ${b.err}`);
++  else assert.ok(b.ok, `${name}: ${b.err}`);
++  results.push({ name, pass: true, observedLockWait: true });
++  console.log(`PASS ${name}: observed independent connection waiting on a database lock`);
++  return [resultJson(a.out), resultJson(b.out)];
++}
++
++function setup() {
++  assert.equal(run(`select count(*) from public.barangays where id='${tenant}'`), '0', 'Fixture prefix already exists; use a fresh disposable database.');
++  run(`insert into public.barangays(id,name) values ('${tenant}','Attendance concurrency A'),('${otherTenant}','Attendance concurrency B');
++    insert into auth.users(id,email) select v,v::text||'@attendance.test.local' from unnest(array[
++      ${[admin, secondAdmin, ...rows.map((r) => r.household)].map((v) => `'${v}'::uuid`).join(',')}]) v;
++    insert into public.profiles(id,barangay_id,role,full_name) values
++      ('${admin}','${tenant}','admin','Attendance administrator'),('${secondAdmin}','${tenant}','admin','Attendance second administrator');
++    ${rows.map((r) => `insert into public.profiles(id,barangay_id,role,full_name,household_members) values
++      ('${r.household}','${tenant}','resident','Attendance concurrency household','${roster(r)}');
++      insert into public.evacuation_centers(id,barangay_id,name,position,is_active) values
++      ('${r.center}','${tenant}','Attendance concurrency center','{"lat":1,"lng":1}',true);`).join('\n')}`);
++}
++function cleanup() {
++  const households = rows.map((r) => `'${r.household}'::uuid`).join(',');
++  run(`delete from barangayan_private.household_attendance_receipts where household_profile_id in (${households});
++    delete from public.household_attendance where household_profile_id in (${households});
++    delete from public.household_members where profile_id in (${households});
++    delete from public.evacuation_centers where id in (${rows.map((r) => `'${r.center}'::uuid`).join(',')});
++    delete from public.profiles where id in (${households},'${admin}','${secondAdmin}');
++    delete from auth.users where id in (${households},'${admin}','${secondAdmin}');
++    delete from public.barangays where id in ('${tenant}','${otherTenant}');`);
++}
++
++let initialized = false;
++try {
++  setup(); initialized = true;
++  const [first, repeated] = await race('same-center', admin, arrival(rows[0]), secondAdmin, arrival(rows[0]));
++  assert.equal(first.stays[0].attendance_id, repeated.stays[0].attendance_id);
++  assert.equal(first.stays[0].checked_in_at, repeated.stays[0].checked_in_at);
++  assert.equal(repeated.stays[0].outcome, 'already_active');
++  await race('different-centers', admin, arrival(rows[1]), secondAdmin,
++    arrival(rows[1], randomUUID(), false, rows[2].center), 'attendance_active_elsewhere');
++  const sameKey = randomUUID();
++  const [original, replay] = await race('same-request', admin, arrival(rows[2], sameKey), admin, arrival(rows[2], sameKey));
++  assert.deepEqual(original, replay);
++  await race('arrival-before-removal', admin, arrival(rows[3], randomUUID(), true), rows[3].household,
++    `select public.save_resident_household_if_unchanged('[]','${roster(rows[3])}');`, 'attendance_lifecycle_conflict');
++  await race('removal-before-arrival', rows[4].household,
++    `select public.save_resident_household_if_unchanged('[]','${roster(rows[4])}');`, admin,
++    arrival(rows[4], randomUUID(), true), 'household_roster_changed');
++  for (const [offset, field, value] of [[5, 'deleted_at', 'clock_timestamp()'], [7, 'barangay_id', `'${otherTenant}'`]]) {
++    await race(`arrival-before-center-${field}`, admin, arrival(rows[offset]), null,
++      `update public.evacuation_centers set ${field}=${value} where id='${rows[offset].center}';`, 'attendance_lifecycle_conflict');
++    await race(`center-${field}-before-arrival`, null,
++      `update public.evacuation_centers set ${field}=${value} where id='${rows[offset + 1].center}';`, admin,
++      arrival(rows[offset + 1]), 'attendance_center_unavailable');
++  }
++  await race('arrival-before-household-move', admin, arrival(rows[9]), null,
++    `update public.profiles set barangay_id='${otherTenant}' where id='${rows[9].household}';`, 'attendance_lifecycle_conflict');
++  await race('household-move-before-arrival', null,
++    `update public.profiles set barangay_id='${otherTenant}' where id='${rows[10].household}';`, admin,
++    arrival(rows[10]), 'household_unavailable');
++  const revokeRequest = randomUUID();
++  await race('arrival-before-role-revocation', secondAdmin, arrival(rows[11], revokeRequest), null,
++    `update public.profiles set role='resident' where id='${secondAdmin}';`);
++  const denied = await session('revoked-replay', secondAdmin, arrival(rows[11], revokeRequest)).result;
++  assert.ok(!denied.ok && denied.err.includes('attendance_forbidden'));
++  run(`update public.profiles set role='admin' where id='${secondAdmin}';`);
++  await race('role-revocation-before-arrival', null,
++    `update public.profiles set role='resident' where id='${secondAdmin}';`, secondAdmin,
++    arrival(rows[12]), 'attendance_forbidden');
++  run(`update public.profiles set role='admin' where id='${secondAdmin}';`);
++  await race('arrival-before-auth-ban', secondAdmin, arrival(rows[13]), null,
++    `update auth.users set banned_until=now()+interval '1 day' where id='${secondAdmin}';`);
++  run(`update auth.users set banned_until=null where id='${secondAdmin}';`);
++  await race('auth-ban-before-arrival', null,
++    `update auth.users set banned_until=now()+interval '1 day' where id='${secondAdmin}';`, secondAdmin,
++    arrival(rows[14]), 'attendance_forbidden');
++  run(`update auth.users set banned_until=null where id='${secondAdmin}';`);
++  await race('arrival-before-member-archive', admin, arrival(rows[15], randomUUID(), true), secondAdmin,
++    `select public.admin_mutate_record('households','${rows[15].member}','archive','{}',
++      (select updated_at from public.household_members where id='${rows[15].member}'));`, 'Record changed. Reload details.');
++  await race('member-archive-before-arrival', secondAdmin,
++    `select public.admin_mutate_record('households','${rows[16].member}','archive','{}',
++      (select updated_at from public.household_members where id='${rows[16].member}'));`, admin,
++    arrival(rows[16], randomUUID(), true), 'household_roster_changed');
++
++  const timeoutKey = randomUUID();
++  const holder = session('timeout-holder', null, `select 1 from public.profiles where id='${rows[17].household}' for update;`, true);
++  assert.equal(await holder.ready, true);
++  const started = Date.now();
++  const timedOut = await session('timeout-contender', admin, arrival(rows[17], timeoutKey)).result;
++  holder.release(); await holder.result;
++  assert.ok(!timedOut.ok && /lock timeout/.test(timedOut.err), timedOut.err);
++  assert.ok(Date.now() - started >= 4500 && Date.now() - started < 12000, 'Lock wait is bounded by five seconds.');
++  const reconciled = await session('timeout-retry', admin, arrival(rows[17], timeoutKey)).result;
++  assert.ok(reconciled.ok, reconciled.err);
++  assert.equal(run(`select count(*) from barangayan_private.household_attendance_receipts where actor_profile_id='${admin}' and request_id='${timeoutKey}'`), '1');
++  results.push({ name: 'bounded-timeout-explicit-retry', pass: true });
++  const sharedMember = id('0005', 99);
++  await race('cross-household-member-id', rows[18].household,
++    `select public.save_resident_household_if_unchanged('[{"id":"${sharedMember}","name":"First owner","relation":"child"}]','${roster(rows[18])}');`,
++    rows[19].household,
++    `select public.save_resident_household_if_unchanged('[{"id":"${sharedMember}","name":"Forged owner","relation":"child"}]','${roster(rows[19])}');`,
++    'household_roster_changed');
++  assert.equal(run(`select profile_id||'|'||name from public.household_members where id='${sharedMember}'`), `${rows[18].household}|First owner`);
++  const erase = `select set_config('request.jwt.claims',jsonb_build_object('sub',auth.uid(),'role','authenticated','amr',jsonb_build_array(
++    jsonb_build_object('method','password','timestamp',extract(epoch from now())::bigint)))::text,true);
++    select public.request_own_account_deletion();`;
++  await race('arrival-before-household-erasure', admin, arrival(rows[20]), rows[20].household, erase);
++  assert.equal(run(`select count(*) from public.household_attendance where household_profile_id='${rows[20].household}'`), '0');
++  await race('household-erasure-before-arrival', rows[21].household, erase, admin, arrival(rows[21]), 'household_unavailable');
++  assert.equal(run(`select count(*) from (select household_profile_id,household_member_id,count(*) from public.household_attendance
++    where household_profile_id in (${rows.map((r) => `'${r.household}'::uuid`).join(',')}) and checked_out_at is null
++    group by household_profile_id,household_member_id having count(*)>1) duplicates`), '0');
++  console.log(JSON.stringify({ database, results, passed: results.length }, null, 2));
++} finally {
++  if (initialized) cleanup();
++}
+--- snapshot/supabase/tests/resident_ios_tenant_write_guards.test.sql
++++ candidate/supabase/tests/resident_ios_tenant_write_guards.test.sql
+@@ -43,9 +43,9 @@
+ select throws_ok(
+   $$ insert into public.evacuation_center_checkins (evacuation_center_id, user_id, barangay_id) values ('e2000000-0000-0000-0000-000000000003', 'b1000000-0000-0000-0000-00000000000a', 'a1000000-0000-0000-0000-000000000001') $$,
+   'P0012', null, 'Resident cannot check into an inactive center');
+-select lives_ok(
++select throws_ok(
+   $$ insert into public.evacuation_center_checkins (evacuation_center_id, user_id, barangay_id) values ('e2000000-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-00000000000a', 'a1000000-0000-0000-0000-000000000001') $$,
+-  'Resident can check into an active own-barangay center');
++  '42501', null, 'Resident legacy self-check-in is blocked after staff attendance cutover');
+ 
+ reset role;
+ set local role authenticated;

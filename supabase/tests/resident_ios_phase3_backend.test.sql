@@ -3,7 +3,7 @@
 -- included, lives in one transaction that is rolled back.
 --
 -- Covers: incident create/update/confirm/withdraw, announcement read state, push token
--- ownership, evacuation check-in receipt, direct request-insert bypass, resident-callable
+-- ownership, legacy evacuation check-in denial, direct request-insert bypass, resident-callable
 -- surface (anon and administrator-only operations) and deleted/inactive principals.
 begin;
 select plan(86);
@@ -267,29 +267,29 @@ select is((select count(*)::int from public.push_tokens where expo_push_token = 
 select is((select user_id from public.push_tokens where expo_push_token = 'ExponentPushToken[p3-shared-device]'), 'b3000000-0000-0000-0000-0000000000a2'::uuid,
   'The most recent registrant owns the token');
 
--- ===== 9. Evacuation check-in receipt =====
+-- ===== 9. Legacy evacuation check-in after staff attendance cutover =====
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"b3000000-0000-0000-0000-00000000000a","role":"authenticated"}';
 set local request.jwt.claim.sub = 'b3000000-0000-0000-0000-00000000000a';
-select is((select (public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1')).already_checked_in), false,
-  'Check-in returns a first-time receipt');
-select is((select (public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1')).already_checked_in), true,
-  'A repeated check-in returns the existing receipt');
+select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1') $$,
+  '42501', null, 'Legacy resident check-in requires staff confirmation');
+select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1') $$,
+  '42501', null, 'A repeated legacy check-in cannot bypass staff confirmation');
 select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c2') $$,
-  'P0011', null, 'Check-in rejects another barangay center');
+  '42501', null, 'Legacy check-in rejects another barangay center');
 select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c3') $$,
-  'P0012', null, 'Check-in rejects an inactive center');
+  '42501', null, 'Legacy check-in rejects an inactive center');
 select throws_ok($$ select public.check_in_to_evacuation_center(gen_random_uuid()) $$,
-  'P0012', null, 'Check-in rejects an unknown center');
+  '42501', null, 'Legacy check-in rejects an unknown center');
 reset role;
-select is((select count(*)::int from public.evacuation_center_checkins where user_id = 'b3000000-0000-0000-0000-00000000000a'), 1,
-  'Exactly one check-in row exists after the repeated and rejected attempts');
+select is((select count(*)::int from public.evacuation_center_checkins where user_id = 'b3000000-0000-0000-0000-00000000000a'), 0,
+  'Legacy check-in attempts leave no new rows after cutover');
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"b3000000-0000-0000-0000-00000000000c","role":"authenticated"}';
 set local request.jwt.claim.sub = 'b3000000-0000-0000-0000-00000000000c';
 select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1') $$,
-  'P0010', null, 'An administrator cannot use the resident check-in');
+  '42501', null, 'An administrator cannot use the resident check-in');
 
 -- ===== 10. Deleted account =====
 reset role;
@@ -302,7 +302,7 @@ select throws_ok($$ select public.confirm_incident('a3300000-0000-0000-0000-0000
 select throws_ok($$ select public.upsert_push_token('ExponentPushToken[p3-deleted]', 'ios') $$,
   null, null, 'A deleted account cannot register a push token');
 select throws_ok($$ select public.check_in_to_evacuation_center('e3000000-0000-0000-0000-0000000000c1') $$,
-  'P0010', null, 'A deleted account cannot check in');
+  '42501', null, 'A deleted account cannot check in');
 
 -- ===== 11. Anonymous execution surface =====
 reset role;
@@ -325,8 +325,8 @@ select is((select count(*)::int from pg_proc p where p.pronamespace = 'public'::
   'Security-definer trigger functions are not executable through the API roles');
 select is((select count(*)::int from pg_proc p where p.pronamespace = 'public'::regnamespace and p.prosecdef
   and has_function_privilege('anon', p.oid, 'execute')
-  and p.proname not in ('current_barangay_id','current_role','get_routing_conditions_snapshot')), 0,
-  'The only anonymous-executable security-definer routines are the policy helpers and the public routing snapshot');
+  and p.proname not in ('current_barangay_id','current_role','get_routing_conditions_snapshot','release_push_token')), 0,
+  'The only anonymous-executable security-definer routines are the policy helpers, the public routing snapshot and the token release (migration 0135: a signed-out device removes its own push token by possessing it)');
 
 reset role;
 select * from finish();

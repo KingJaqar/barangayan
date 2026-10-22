@@ -30,7 +30,7 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
     return (
       <AuthGate
         title="Log In to Use QR Check-In"
-        description="QR check-in registers your presence at an evacuation center, so it needs a real account. Log in or create one to scan or show your QR code."
+        description="Log in to show your Family QR to barangay staff. Staff confirm who is present at an evacuation center."
         next="/emergency/scan"
       />
     );
@@ -43,6 +43,7 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
   return (
     <div className={styles.content}>
       <EmergencyPageHeader title="QR Check-In Guide" />
+      <p className={styles.sectionDescription}>Show your Family QR to barangay staff and confirm who is present. Scanning a center code does not record attendance.</p>
 
       {isInitialLoading ? (
         <div aria-busy className="flex flex-col gap-3">

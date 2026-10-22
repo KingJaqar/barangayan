@@ -1,4 +1,4 @@
-import { ANNOUNCEMENT_CATEGORIES, DRIVE_TYPE_CONFIG, DRIVE_TYPES, driveRegistrationSchema, residentDriveRegistrationResultSchema, type Database } from '@barangayan/shared';
+import { ANNOUNCEMENT_CATEGORIES, FAQ_CATEGORIES, type FaqCategory, type SiteContentSection, DRIVE_TYPE_CONFIG, DRIVE_TYPES, driveRegistrationSchema, residentDriveRegistrationResultSchema, type Database } from '@barangayan/shared';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { checkWrite, containsPattern, parseCount, parseMaybeRow, parseRow, parseRows, quoteFilterValue } from './boundary';
@@ -7,13 +7,14 @@ import { readAll, type PageRead } from './pagination';
 import { filterClauses, type RequestFilter } from './request-filters';
 import type { AnnouncementFilter, IncidentStatus } from './report-filters';
 import {
-  ACTIVITY_COLUMNS, activityRow, ANNOUNCEMENT_DETAIL_COLUMNS, ANNOUNCEMENT_LIST_COLUMNS, ANNOUNCEMENT_READS_COLUMN, announcementDetailRow, announcementListRow, announcementUnreadRow, BARANGAY_COLUMNS, BARANGAY_PROFILE_COLUMNS, barangayProfileRow, barangayRow,
-  CENTER_COLUMNS, centerRow, checkInReceiptRow, DOCUMENT_COLUMNS, documentRow, DRIVE_COLUMNS, driveRegistrationRow, driveRow,
+  ABOUT_US_COLUMNS, aboutUsRow, ACTIVITY_COLUMNS, activityRow, ANNOUNCEMENT_DETAIL_COLUMNS, ANNOUNCEMENT_LIST_COLUMNS, ANNOUNCEMENT_READS_COLUMN, announcementDetailRow, announcementListRow, announcementUnreadRow, BARANGAY_COLUMNS, BARANGAY_PROFILE_COLUMNS, barangayProfileRow, barangayRow,
+  CENTER_COLUMNS, centerRow, DEVELOPER_COLUMNS, developerRow, DOCUMENT_COLUMNS, documentRow, DRIVE_COLUMNS, driveRegistrationRow, driveRow,
   confirmationRow, EMERGENCY_INFORMATION_COLUMNS, emergencyInformationRow, EMERGENCY_QR_COLUMNS, emergencyQrContentRow, FAQ_COLUMNS, faqRow, ID_SUBMISSION_COLUMNS, idSubmissionRow, INCIDENT_CATEGORY_COLUMNS, incidentCategoryRow, INCIDENT_DETAIL_COLUMNS, incidentDetailRow,
   INCIDENT_LIST_COLUMNS, INCIDENT_MAP_COLUMNS, incidentIdRow, incidentListRow, incidentMapRow, REQUEST_DETAIL_COLUMNS, REQUEST_LIST_COLUMNS, WASTE_ZONE_COLUMNS, wasteZoneRow,
   OWN_CHECKIN_COLUMNS, ownCheckInRow, PAID_RECEIPT_COLUMNS, paidReceiptRow, PAYMENT_ATTEMPT_COLUMNS, paymentAttemptRow, paymentStatusRow, QR_ATTEMPT_COLUMNS, qrAttemptRow,
   REQUEST_ATTACHMENT_COLUMNS, REQUEST_PAYMENT_STATE_COLUMNS, requestAttachmentRow, requestDetailRow, requestListRow, requestPaymentStateRow, requestStatusRow, SITE_CONTENT_COLUMNS, siteContentRow, slaTrackingRow,
   DRIVE_REGISTRATION_RECONCILE_COLUMNS, REGISTRATION_COLUMNS, REGISTRATION_SUMMARY_COLUMNS, registrationRow, registrationSummaryRow,
+  INBOX_COLUMNS, inboxIdRow, inboxRow, notificationPreferencesRow, savedPreferencesRow,
 } from './schemas';
 
 export const uuid = z.string().uuid();
@@ -151,24 +152,17 @@ function driveRegistrationFailure(result: { error: unknown; status?: number }): 
   return toDataError(result.error, { status: result.status, write: true });
 }
 
+/** One inbox entry as stored; its `kind` and `destination` are validated by `features/notifications`. */
+export type InboxItem = z.infer<typeof inboxRow>;
+/** The saved phone-alert choices: the global switch and the per-kind switches (a missing kind is on). */
+export type SavedPreferences = z.infer<typeof savedPreferencesRow>;
+/** A new push token's platform; the app is iPhone-only. */
+const PUSH_DEVICE_TYPE = 'ios';
+
 /** The server's confirmation of one evacuation-center check-in; `repeated` is a retry answered with the earlier check-in. */
 export type CheckInReceipt = { checkInId: string; centerId: string; centerName: string | null; checkedInAt: string; repeated: boolean };
 
-/**
- * The exceptions of `check_in_to_evacuation_center` (migration 0121). Each maps to a stable code with resident copy
- * in `lib/errors.ts`; a missing session is a session failure, and anything else is classified as a write.
- */
-function checkInFailure(result: { error: unknown; status?: number }): DataError {
-  const error = result.error && typeof result.error === 'object' ? result.error as { code?: unknown; message?: unknown } : {};
-  const code = typeof error.code === 'string' ? error.code : '';
-  const message = typeof error.message === 'string' ? error.message : '';
-  if (message.includes('authentication_required')) return new DataError('session', undefined, result.status, 'authentication_required');
-  if (code === 'P0010') return new DataError('authorization', undefined, result.status, 'checkin_not_resident');
-  if (code === 'P0011') return new DataError('authorization', undefined, result.status, 'checkin_wrong_barangay');
-  if (code === 'P0012') return new DataError('not-found', undefined, result.status, 'checkin_center_unavailable');
-  return toDataError(result.error, { status: result.status, write: true });
-}
-/** A lost reply is reconciled against stored rows no older than this before the attempt began. */
+/** Health-drive registration reconciliation includes a small server-clock allowance. */
 const RECONCILE_SLACK_MS = 60_000;
 
 /** Result of a bulk read marking: how many of the snapshot were written before any failure. */
@@ -613,43 +607,94 @@ export function residentApi(client: SupabaseClient<Database>, barangayId: string
     emergencyQrContent: (signal: AbortSignal) => readAll(async ({ from, to }, pageSignal) =>
       parseRows(emergencyQrContentRow, await client.from('emergency_qr_content').select(EMERGENCY_QR_COLUMNS).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).order('sort_order').order('id').range(from, to).abortSignal(pageSignal), pageSignal), signal),
 
-    /**
-     * B14 online, resident-only check-in. Only the server's receipt counts as attendance. A lost reply is reconciled with a
-     * read of the resident's own stored check-ins for that center and is otherwise reported as unconfirmed; the server answers a
-     * repeat within ten minutes with the first check-in, so trying again never records twice.
-     */
+    /** Legacy scanner compatibility: staff confirmation replaces resident self check-in. */
     async checkInToCenter(input: unknown): Promise<CheckInReceipt> {
-      const centerId = routeId(input);
-      const resident = owner();
-      const startedAt = Date.now();
-      const result = await client.rpc('check_in_to_evacuation_center', { p_center_id: centerId });
-      if (!result.error) {
-        const [row] = parseRows(checkInReceiptRow, result);
-        // A receipt for another center or barangay is a contract failure, never shown as this check-in.
-        if (!row || row.evacuation_center_id !== centerId || row.barangay_id !== barangayId) throw new DataError('schema', 'The server response did not match the expected format.');
-        return { checkInId: row.check_in_id, centerId: row.evacuation_center_id, centerName: row.evacuation_center_name, checkedInAt: row.checked_in_at, repeated: row.already_checked_in };
-      }
-      const failure = checkInFailure(result);
-      if (failure.kind === 'unknown-commit') {
-        const since = new Date(startedAt - RECONCILE_SLACK_MS).toISOString();
-        const stored = await client.from('evacuation_center_checkins').select(OWN_CHECKIN_COLUMNS).eq('user_id', resident).eq('barangay_id', barangayId).eq('evacuation_center_id', centerId).gte('checked_in_at', since).order('checked_in_at', { ascending: false }).limit(1);
-        if (!stored.error) {
-          const [row] = parseRows(ownCheckInRow, stored);
-          if (row) return { checkInId: row.id, centerId: row.evacuation_center_id, centerName: row.evacuation_centers?.name ?? null, checkedInAt: row.checked_in_at, repeated: false };
-        }
-      }
-      throw failure;
+      routeId(input);
+      owner();
+      throw new DataError('authorization', undefined, undefined, 'staff_attendance_required');
     },
     /** The resident's own newest stored check-ins (own rows, by row-level security and the explicit owner filter). */
     async recentCheckIns(signal: AbortSignal) {
       return parseRows(ownCheckInRow, await client.from('evacuation_center_checkins').select(OWN_CHECKIN_COLUMNS).eq('user_id', owner()).eq('barangay_id', barangayId).order('checked_in_at', { ascending: false }).limit(5).abortSignal(signal), signal);
     },
 
-    /** B21 resident information; emergency sections are shown by the emergency hub instead. */
-    information: (): PageRead<z.infer<typeof siteContentRow>> => async ({ from, to }, signal) =>
-      parseRows(siteContentRow, await client.from('site_content').select(SITE_CONTENT_COLUMNS).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).not('section', 'ilike', '%emergency%').order('sort_order').order('id').range(from, to).abortSignal(signal), signal),
-    faq: (): PageRead<z.infer<typeof faqRow>> => async ({ from, to }, signal) =>
-      parseRows(faqRow, await client.from('faq_articles').select(FAQ_COLUMNS).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).order('sort_order').order('id').range(from, to).abortSignal(signal), signal),
+    /** B18 the resident's own inbox, newest first. Rows are the resident's by row-level security and by the explicit owner filter. */
+    inbox: (unreadOnly = false): PageRead<InboxItem> => async ({ from, to }, signal) => {
+      let query = client.from('notification_inbox').select(INBOX_COLUMNS).eq('recipient_id', owner());
+      if (unreadOnly) query = query.is('read_at', null);
+      return parseRows(inboxRow, await query.order('created_at', { ascending: false }).order('id').range(from, to).abortSignal(signal), signal);
+    },
+    /** One own inbox entry; null when it was purged or is not this account's (both read as absent). */
+    inboxItem(input: unknown, signal: AbortSignal) {
+      return detail(input, async (id) => parseMaybeRow(inboxRow, await client.from('notification_inbox').select(INBOX_COLUMNS).eq('id', id).eq('recipient_id', owner()).abortSignal(signal).maybeSingle(), signal));
+    },
+    /** How many inbox entries are unread. A missing count is a contract failure, never zero. */
+    async inboxUnreadCount(signal: AbortSignal) {
+      return parseCount(await client.from('notification_inbox').select('id', { count: 'exact', head: true }).eq('recipient_id', owner()).is('read_at', null).abortSignal(signal), signal);
+    },
+    /** Marks one inbox entry read or unread (idempotent). An entry that is gone or not this account's reports not-found. */
+    async setInboxRead(id: unknown, read: boolean) {
+      const result = await client.from('notification_inbox').update({ read_at: read ? new Date().toISOString() : null }).eq('id', routeId(id)).eq('recipient_id', owner()).select('id');
+      checkWrite(result);
+      if (!Array.isArray(result.data) || result.data.length === 0) throw new DataError('not-found');
+    },
+    /** The ids of every unread inbox entry at one instant (the bulk-marking snapshot). */
+    async unreadInboxIds(signal: AbortSignal) {
+      const resident = owner();
+      const rows = await readAll(async ({ from, to }, pageSignal) =>
+        parseRows(inboxIdRow, await client.from('notification_inbox').select('id').eq('recipient_id', resident).is('read_at', null).order('created_at', { ascending: false }).order('id').range(from, to).abortSignal(pageSignal), pageSignal), signal, SNAPSHOT_MAX_ROWS);
+      return rows.map((row) => row.id);
+    },
+    /** Marks a snapshot of inbox entries read; an entry that changed meanwhile is skipped, not forced. */
+    async markInboxRead(ids: readonly string[]): Promise<BulkResult> {
+      const resident = owner();
+      const unique = [...new Set(ids.map((id) => routeId(id)))];
+      const stamp = new Date().toISOString();
+      return writeInChunks(unique, async (chunk) => {
+        const result = await client.from('notification_inbox').update({ read_at: stamp }).in('id', chunk).eq('recipient_id', resident).is('read_at', null).select('id');
+        checkWrite(result);
+        return Array.isArray(result.data) ? result.data.length : 0;
+      });
+    },
+    /** The saved per-kind switches. No row yet means the resident never changed one, so every kind is on. */
+    async notificationKinds(signal: AbortSignal) {
+      const row = parseMaybeRow(notificationPreferencesRow, await client.from('notification_preferences').select('kinds').eq('user_id', owner()).abortSignal(signal).maybeSingle(), signal);
+      return row?.kinds ?? {};
+    },
+    /** Saves phone-alert choices; the answer is the stored state, which the screen shows instead of what it asked for. */
+    async saveNotificationPreferences(change: { pushEnabled?: boolean; kinds?: Record<string, boolean> }): Promise<SavedPreferences> {
+      const result = await client.rpc('set_notification_preferences', { p_push_enabled: change.pushEnabled ?? null, p_kinds: change.kinds ?? null });
+      checkWrite(result);
+      const [row] = parseRows(savedPreferencesRow, result);
+      if (!row) throw new DataError('schema', 'The server response did not match the expected format.');
+      return row;
+    },
+    /** Registers (or refreshes) this device's token for the signed-in account; the server moves a token away from any other account. */
+    async registerPushToken(token: string) {
+      checkWrite(await client.rpc('upsert_push_token', { p_expo_push_token: token, p_device_type: PUSH_DEVICE_TYPE }));
+    },
+    /** Removes this device's token. Needs no session (the server accepts it from whoever holds the token) and is idempotent: a token that is already gone is a success. */
+    async releasePushToken(token: string) {
+      checkWrite(await client.rpc('release_push_token', { p_expo_push_token: token }));
+    },
+
+    /** B21 the barangay's published Terms of Service or Privacy Policy, or null when none is published. */
+    async siteContent(section: SiteContentSection, signal: AbortSignal) {
+      return parseMaybeRow(siteContentRow, await client.from('site_content').select(SITE_CONTENT_COLUMNS).eq('barangay_id', barangayId).eq('section', section).eq('is_active', true).is('deleted_at', null).abortSignal(signal).maybeSingle(), signal);
+    },
+    /** B21 About Us and its development team, or null About when the barangay has not published one. A team that cannot be read fails the whole read. */
+    async aboutUs(signal: AbortSignal) {
+      const about = parseMaybeRow(aboutUsRow, await client.from('about_us').select(ABOUT_US_COLUMNS).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).abortSignal(signal).maybeSingle(), signal);
+      if (!about) return null;
+      const team = parseRows(developerRow, await client.from('developer_profiles').select(DEVELOPER_COLUMNS).eq('about_us_id', about.id).eq('barangay_id', barangayId).is('deleted_at', null).order('sort_order').order('id').abortSignal(signal), signal);
+      return { about, team };
+    },
+    /** B21 help articles, optionally one category (filtered on the server so paging and counts stay right). */
+    faq: (category?: FaqCategory): PageRead<z.infer<typeof faqRow>> => async ({ from, to }, signal) => {
+      let query = client.from('faq_articles').select(FAQ_COLUMNS).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null);
+      if (category) query = query.eq('category', z.enum(FAQ_CATEGORIES).parse(category));
+      return parseRows(faqRow, await query.order('sort_order').order('id').range(from, to).abortSignal(signal), signal);
+    },
     faqArticle(input: unknown, signal: AbortSignal) {
       return detail(input, async (id) => parseMaybeRow(faqRow, await client.from('faq_articles').select(FAQ_COLUMNS).eq('id', id).eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).abortSignal(signal).maybeSingle(), signal));
     },

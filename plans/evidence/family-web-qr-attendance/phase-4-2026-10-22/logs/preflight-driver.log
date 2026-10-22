@@ -1,0 +1,48 @@
+[
+  {
+    "case": "enabled",
+    "result": "pass"
+  },
+  {
+    "case": "paused",
+    "result": "pass",
+    "expected_failure": "paused or authenticated execute is missing",
+    "rolled_back": true
+  },
+  {
+    "case": "rls",
+    "result": "pass",
+    "expected_failure": "RLS must both be enabled",
+    "rolled_back": true
+  },
+  {
+    "case": "direct-write",
+    "result": "pass",
+    "expected_failure": "Unexpected direct attendance/receipt privilege",
+    "rolled_back": true
+  },
+  {
+    "case": "column-write",
+    "result": "pass",
+    "expected_failure": "Unexpected direct attendance/receipt privilege",
+    "rolled_back": true
+  },
+  {
+    "case": "receipt-column-read",
+    "result": "pass",
+    "expected_failure": "Unexpected direct attendance/receipt privilege",
+    "rolled_back": true
+  },
+  {
+    "case": "guard",
+    "result": "pass",
+    "expected_failure": "Missing or disabled trigger",
+    "rolled_back": true
+  },
+  {
+    "case": "export-view",
+    "result": "pass",
+    "expected_failure": "Receipt export view must enforce",
+    "rolled_back": true
+  }
+]

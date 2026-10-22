@@ -17,6 +17,7 @@ describe.each(['light', 'dark'] as const)('resident %s contrast', (mode) => {
     const theme = getResidentTheme(mode, accent);
     expect(theme.accent).toBe(accent);
     expect(contrast(theme.onAccent, theme.accent)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(theme.onCallFill, theme.callFill)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(theme.onAccentPressed, theme.accentPressed)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(theme.onDangerFill, theme.dangerFill)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(theme.onDangerFill, theme.dangerFillPressed)).toBeGreaterThanOrEqual(4.5);

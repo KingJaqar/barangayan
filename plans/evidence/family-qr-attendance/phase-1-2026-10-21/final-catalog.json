@@ -1,0 +1,531 @@
+{
+  "stays": 0,
+  "grants": [
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "service_role",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipts",
+      "is_grantable": "YES",
+      "table_schema": "barangayan_private",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "supabase_admin",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "YES",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "postgres",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "supabase_admin",
+      "table_name": "household_attendance_receipt_exports",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "family_attendance_rehearsal_20261021_v5",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    }
+  ],
+  "indexes": [
+    "CREATE UNIQUE INDEX household_attendance_pkey ON public.household_attendance USING btree (id)",
+    "CREATE UNIQUE INDEX household_attendance_active_holder ON public.household_attendance USING btree (household_profile_id) WHERE ((household_member_id IS NULL) AND (checked_out_at IS NULL))",
+    "CREATE UNIQUE INDEX household_attendance_active_member ON public.household_attendance USING btree (household_member_id) WHERE ((household_member_id IS NOT NULL) AND (checked_out_at IS NULL))",
+    "CREATE INDEX household_attendance_history ON public.household_attendance USING btree (household_profile_id, household_member_id, checked_in_at DESC, id DESC)",
+    "CREATE INDEX household_attendance_departures ON public.household_attendance USING btree (household_profile_id, household_member_id, checked_out_at DESC, id DESC) WHERE (checked_out_at IS NOT NULL)",
+    "CREATE INDEX household_attendance_center_active ON public.household_attendance USING btree (barangay_id, evacuation_center_id) WHERE (checked_out_at IS NULL)",
+    "CREATE INDEX household_attendance_center_history ON public.household_attendance USING btree (evacuation_center_id)",
+    "CREATE INDEX household_attendance_arrival_actor ON public.household_attendance USING btree (checked_in_by)",
+    "CREATE INDEX household_attendance_departure_actor ON public.household_attendance USING btree (checked_out_by)",
+    "CREATE UNIQUE INDEX household_attendance_receipts_pkey ON barangayan_private.household_attendance_receipts USING btree (actor_profile_id, request_id)",
+    "CREATE UNIQUE INDEX household_attendance_receipts_id_key ON barangayan_private.household_attendance_receipts USING btree (id)",
+    "CREATE INDEX household_attendance_receipts_household ON barangayan_private.household_attendance_receipts USING btree (household_profile_id, created_at, request_id)"
+  ],
+  "database": "family_attendance_rehearsal_20261021_v5",
+  "receipts": 0,
+  "functions": [
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "public",
+      "definer": false,
+      "signature": "check_out_household_attendance(uuid[],uuid)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.get_my_household_attendance()"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "public",
+      "definer": false,
+      "signature": "lookup_household_for_attendance(text)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "public",
+      "definer": false,
+      "signature": "check_in_household_members(uuid,uuid,jsonb,uuid)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.lookup_household_for_attendance(text)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.check_in_household_members(uuid,uuid,jsonb,uuid)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.check_out_household_attendance(uuid[],uuid)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin",
+        "authenticated=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "public",
+      "definer": false,
+      "signature": "get_my_household_attendance()"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.attendance_actor(text)"
+    },
+    {
+      "acl": [
+        "supabase_admin=X/supabase_admin",
+        "postgres=X/supabase_admin"
+      ],
+      "owner": "supabase_admin",
+      "schema": "barangayan_private",
+      "definer": true,
+      "signature": "barangayan_private.erase_household_attendance(uuid)"
+    }
+  ],
+  "relations": [
+    {
+      "rls": true,
+      "name": "household_attendance",
+      "schema": "public",
+      "options": null
+    },
+    {
+      "rls": true,
+      "name": "household_attendance_receipts",
+      "schema": "barangayan_private",
+      "options": null
+    },
+    {
+      "rls": false,
+      "name": "household_attendance_receipt_exports",
+      "schema": "public",
+      "options": [
+        "security_barrier=true"
+      ]
+    }
+  ],
+  "server_version": "17.6",
+  "generated_contract_matches": true
+}

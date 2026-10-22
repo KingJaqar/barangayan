@@ -1,0 +1,91 @@
+{
+  "command": [
+    "node",
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-web/src/hooks/use-scoped-read.ts,apps/resident-web/src/lib/household-feedback.ts,apps/resident-web/src/lib/auth/get-optional-user.ts,apps/resident-web/src/components/shared/auth-gate.tsx,apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx,apps/resident-web/src/components/emergency/qr-upload-fallback.tsx,apps/resident-web/src/components/emergency/qr-show-dialog.tsx,apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx,apps/resident-web/src/lib/supabase/client.ts,apps/resident-web/src/lib/supabase/server.ts,apps/resident-web/src/lib/auth/sign-out.ts",
+    "--style",
+    "xml",
+    "--parsable-style",
+    "--no-git-sort-by-changes",
+    "--ignore",
+    "**/.env*,**/*secret*,**/*credentials*,**/node_modules/**,**/.git/**,**/tmp/**,**/repomix-output.xml",
+    "-o",
+    "C:\\Users\\User\\barangayan\\tmp\\family-web-phase0-20261021\\web-context.xml"
+  ],
+  "exit": 0,
+  "packet_sha256": "7BEFF409B62A1091332116E974390CFD42656A83E144CD513436E5F5321CD915",
+  "selectors": [
+    "apps/resident-web/src/hooks/use-scoped-read.ts",
+    "apps/resident-web/src/lib/household-feedback.ts",
+    "apps/resident-web/src/lib/auth/get-optional-user.ts",
+    "apps/resident-web/src/components/shared/auth-gate.tsx",
+    "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+    "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+    "apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+    "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "apps/resident-web/src/lib/supabase/client.ts",
+    "apps/resident-web/src/lib/supabase/server.ts",
+    "apps/resident-web/src/lib/auth/sign-out.ts"
+  ],
+  "actual": [
+    "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+    "apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+    "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+    "apps/resident-web/src/components/shared/auth-gate.tsx",
+    "apps/resident-web/src/hooks/use-scoped-read.ts",
+    "apps/resident-web/src/lib/auth/get-optional-user.ts",
+    "apps/resident-web/src/lib/auth/sign-out.ts",
+    "apps/resident-web/src/lib/supabase/client.ts",
+    "apps/resident-web/src/lib/supabase/server.ts",
+    "apps/resident-web/src/lib/household-feedback.ts"
+  ],
+  "omissions": [],
+  "sources": [
+    {
+      "path": "apps/resident-web/src/hooks/use-scoped-read.ts",
+      "sha256": "DEDB0DAB5B41FDAF70BA08286B204B01C09CA952DB3BB21D0C9F51841CC5D65C"
+    },
+    {
+      "path": "apps/resident-web/src/lib/household-feedback.ts",
+      "sha256": "A3EC46B0026EA294E5836F6BD3C3840FD5C9D4AA01F0A119D66CA676B01BF49B"
+    },
+    {
+      "path": "apps/resident-web/src/lib/auth/get-optional-user.ts",
+      "sha256": "8F9C4B344BF838CEB3E6552C0970A919D7FA96C993D5179733F14405C7C6C3D8"
+    },
+    {
+      "path": "apps/resident-web/src/components/shared/auth-gate.tsx",
+      "sha256": "6AEFF79B06E331844DD50931BEAFB66A4AAE22DBC03E104B493408A87272CB30"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "sha256": "1060514B2BA4092ED6C9234F5A362D7FBB7EA34537DCE830D74108CC7A242D4C"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "sha256": "5BA886D74F1C6B64DE28033222BE38EF5CF0D1D7B2187EACA19ED4E53EE46174"
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+      "sha256": "8EC4F21C7337DE56ED10CD81127957C7AC06A9CB4C0EC537E8E669635E7A1A1A"
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "sha256": "F3EAE5A00DEDCACD4497BFCDF5577BFE4BE328D2E35D0A2B24A9474868BE1951"
+    },
+    {
+      "path": "apps/resident-web/src/lib/supabase/client.ts",
+      "sha256": "0754139EDCADFB1D2500C8D2278CC27B3F91B6451E5F2210A1613F86AE26E37A"
+    },
+    {
+      "path": "apps/resident-web/src/lib/supabase/server.ts",
+      "sha256": "B8DC7BC09B8C5C4836E37CCFA89E8FB7C064E3C4758F3050E1BF807208507576"
+    },
+    {
+      "path": "apps/resident-web/src/lib/auth/sign-out.ts",
+      "sha256": "66CA77C50AB6FCF46E5484C86EC391D221E5B751CFE0FFA3C58205D225FC34A5"
+    }
+  ]
+}

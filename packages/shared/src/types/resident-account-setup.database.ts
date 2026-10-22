@@ -26,6 +26,15 @@ export type ResidentAccountSetupFunctions = {
     Args: { p_members: Json; p_expected: Json };
     Returns: Json;
   };
+  // Migration 0135 (resident iOS Phase 17): own push preferences and release of an own push token.
+  set_notification_preferences: {
+    Args: { p_push_enabled?: boolean | null; p_kinds?: Json | null };
+    Returns: { push_enabled: boolean; kinds: Json }[];
+  };
+  release_push_token: {
+    Args: { p_expo_push_token: string };
+    Returns: undefined;
+  };
   // Migration 0121 (resident iOS Phase 3): online, resident-only evacuation check-in that returns the authoritative receipt.
   check_in_to_evacuation_center: {
     Args: { p_center_id: string };

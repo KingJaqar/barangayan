@@ -20,9 +20,9 @@ export default async function Page({ searchParams }: {
   const [results, options] = await Promise.all([loadTable('households', params, supabase),
     pilotOptions(supabase, 'profiles', profile.barangay_id, 'resident')]);
   return <div className="mx-auto min-w-0 max-w-6xl">
-    <AdminPageHeader title="Households & Residents" description="Manage household members and evacuation check-in status." />
+    <AdminPageHeader title="Households & Residents" description="Manage household members and confirm evacuation arrivals and departures." />
     <HouseholdsTable result={results.table} summary={results.summary} requestedState={parseTableState('households', params)}
-      barangayId={profile.barangay_id}
+      actorId={user.id} barangayId={profile.barangay_id}
       residents={options.status === 'success' ? options.value : []} optionsError={options.status === 'error' ? options.message : null} />
   </div>;
 }

@@ -5,31 +5,27 @@ import { useEffect, useRef, useState } from 'react';
 
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Spinner } from '@/components/ui/loading';
-import { useQrCheckins } from '@/hooks/use-qr-checkins';
 import { beginAttempt, notify } from '@/lib/notify';
-import { completeCheckIn, parseCenterQr } from '@/lib/qr-checkin';
+import { explainStaffCheckIn, parseCenterQr } from '@/lib/qr-checkin';
 import styles from './emergency.module.css';
 
-type Stage = 'reading' | 'checking-in';
+type Stage = 'reading';
 
 /**
  * New, desktop-only fallback for residents without (or unwilling to grant) a working
  * camera — decodes a QR code from an uploaded photo via html5-qrcode's scanFile(), same
- * validation/check-in path as the live scanner (qr-scanner-dialog.tsx, shared through
- * lib/qr-checkin.ts). No mobile equivalent — a genuinely new component per the plan's
- * file tree.
+ * validation and staff-confirmation guidance as the live scanner.
  *
  * Feedback plan RW-LT-05: one image at a time (a synchronous guard covers repeated
- * activation), real stage labels (reading the image, then recording the check-in), every
+ * activation), an image-reading state, every
  * failure ends in one explanatory notification, and the file input is reset so the same
  * photo can be chosen again after a failure.
  */
-export function QrUploadFallback({ userId, barangayId, userBarangayId }: { userId: string | null; barangayId: string | null; userBarangayId: string | null }) {
+export function QrUploadFallback({ userBarangayId }: { userId: string | null; barangayId: string | null; userBarangayId: string | null }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const busyRef = useRef(false);
   const mountedRef = useRef(true);
   const [stage, setStage] = useState<Stage | null>(null);
-  const { checkIn, updateHouseholdStatus, lastCheckInFailure } = useQrCheckins(userId, barangayId);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -79,14 +75,7 @@ export function QrUploadFallback({ userId, barangayId, userBarangayId }: { userI
         return;
       }
 
-      if (mountedRef.current) setStage('checking-in');
-      await completeCheckIn({
-        centerId: parsed.centerId,
-        attempt,
-        checkIn,
-        updateHouseholdStatus,
-        lastCheckInFailure,
-      });
+      if (mountedRef.current) explainStaffCheckIn(attempt);
     } catch {
       notify.error("Couldn't read that image.", { id: attempt, description: 'Please try another photo.' });
     } finally {
@@ -111,11 +100,11 @@ export function QrUploadFallback({ userId, barangayId, userBarangayId }: { userI
         <span className="inline-grid">
           <span className={busy ? 'invisible col-start-1 row-start-1' : 'col-start-1 row-start-1'}>Upload QR Image</span>
           <span aria-hidden={!busy} className={busy ? 'col-start-1 row-start-1' : 'invisible col-start-1 row-start-1'}>
-            {stage === 'checking-in' ? 'Checking in…' : 'Reading image…'}
+            Reading image…
           </span>
         </span>
       </button>
-      <LoadingStatus active={busy} label={stage === 'checking-in' ? 'Recording your check-in…' : 'Reading the QR image…'} />
+      <LoadingStatus active={busy} label="Reading the QR image…" />
       <input
         ref={inputRef}
         type="file"

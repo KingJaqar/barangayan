@@ -1,6 +1,8 @@
 import { FamilyContent } from '@/components/emergency/family-content';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 
+export const dynamic = 'force-dynamic';
+
 /** Household member management [C-009, C-038, C-044] — one of two entry points sharing
  * useFamilyMembers (the other is Phase 7's profile editor, not yet built).
  *
@@ -12,5 +14,6 @@ import { getOptionalUser } from '@/lib/auth/get-optional-user';
 export default async function EmergencyFamilyPage() {
   const { user, profile } = await getOptionalUser();
 
-  return <FamilyContent profileId={user?.id ?? null} residentName={profile?.full_name ?? null} />;
+  return <FamilyContent profileId={user?.id ?? null} residentName={profile?.full_name ?? null}
+    accountUnavailable={!!user && profile?.role !== 'resident'} />;
 }

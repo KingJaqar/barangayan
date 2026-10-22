@@ -1,156 +1,68 @@
-import { useEffect, useState } from 'react';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AppState, View } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Linking from 'expo-linking';
-
 import { Ionicons } from '@expo/vector-icons';
+import { ScanFamilySheet } from '@/components/drrm/scan-family-sheet';
+import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
-import { Colors, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-interface QrPermissionModalProps {
-  visible: boolean;
-  onClose: () => void;
-  onGranted: () => void;
-}
-
-export function QrPermissionModal({ visible, onClose, onGranted }: QrPermissionModalProps) {
-  const theme = useTheme();
+export function QrPermissionModal({ visible, onClose, onGranted }: {
+  visible: boolean; onClose: () => void; onGranted: () => void;
+}) {
+  const { resident } = useTheme();
   const [canAskAgain, setCanAskAgain] = useState(true);
-  const [status, setStatus] = useState<'undetermined' | 'denied' | 'granted'>('undetermined');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const generation = useRef(0);
+  const pending = useRef(false);
+  const grantedRef = useRef(onGranted);
+  useEffect(() => { grantedRef.current = onGranted; }, [onGranted]);
 
   useEffect(() => {
-    if (visible) {
-      Camera.getCameraPermissionsAsync().then((result) => {
-        setStatus(result.status === 'granted' ? 'granted' : (result.status as 'denied' | 'undetermined'));
-        setCanAskAgain(result.canAskAgain ?? false);
-      });
+    const ticket = ++generation.current;
+    if (!visible) return;
+    setError(null);
+    async function read() {
+      try {
+        const result = await Camera.getCameraPermissionsAsync();
+        if (generation.current !== ticket) return;
+        setCanAskAgain(result.canAskAgain);
+        if (result.granted) { generation.current += 1; grantedRef.current(); }
+      } catch { if (generation.current === ticket) setError('Could not check camera permission. Try again.'); }
     }
+    void read();
+    const foreground = AppState.addEventListener('change', state => { if (state === 'active' && !pending.current) void read(); });
+    return () => { generation.current += 1; foreground.remove(); };
   }, [visible]);
 
-  async function handleGrantAccess() {
-    const result = await Camera.requestCameraPermissionsAsync();
-    if (result.status === 'granted') {
-      onGranted();
-    } else {
-      setCanAskAgain(result.canAskAgain ?? false);
-      setStatus(result.status as 'denied' | 'undetermined');
-    }
+  async function grant() {
+    if (pending.current) return;
+    const ticket = generation.current;
+    pending.current = true;
+    setBusy(true);
+    setError(null);
+    try {
+      if (!canAskAgain) { await Linking.openSettings(); return; }
+      const result = await Camera.requestCameraPermissionsAsync();
+      if (generation.current !== ticket) return;
+      setCanAskAgain(result.canAskAgain);
+      if (result.granted) { generation.current += 1; grantedRef.current(); }
+      else setError('Camera access was denied. You can grant access or open Settings to try again.');
+    } catch { if (generation.current === ticket) setError('Could not open camera permissions. Please try again.'); }
+    finally { pending.current = false; setBusy(false); }
   }
-
-  function handleOpenSettings() {
-    Linking.openSettings();
-  }
-
-  const isPermanentlyDenied = status !== 'granted' && !canAskAgain;
-
-  return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable style={[styles.container, { backgroundColor: theme.background }]} onPress={() => {}}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="camera-outline" size={48} color={theme.primary} />
-          </View>
-          <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
-            Camera Access Needed
-          </ThemedText>
-          <ThemedText themeColor="textSecondary" style={styles.body}>
-            Barangayan needs camera access to scan evacuation center QR codes for check-in.
-          </ThemedText>
-
-          <View style={styles.buttonRow}>
-            {isPermanentlyDenied ? (
-              <Pressable
-                style={[styles.primaryButton, { backgroundColor: theme.primary }]}
-                onPress={handleOpenSettings}>
-                <ThemedText style={[styles.primaryButtonText, { color: theme.onPrimary }]}>
-                  Open Settings
-                </ThemedText>
-              </Pressable>
-            ) : (
-              <Pressable
-                style={[styles.primaryButton, { backgroundColor: theme.primary }]}
-                onPress={handleGrantAccess}>
-                <ThemedText style={[styles.primaryButtonText, { color: theme.onPrimary }]}>
-                  Grant Access
-                </ThemedText>
-              </Pressable>
-            )}
-            <Pressable
-              style={[styles.secondaryButton, { borderColor: theme.primary }]}
-              onPress={onClose}>
-              <ThemedText style={[styles.secondaryButtonText, { color: theme.primary }]}>
-                Cancel
-              </ThemedText>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Pressable>
-    </Modal>
-  );
+  function close() { generation.current += 1; onClose(); }
+  return <ScanFamilySheet visible={visible} title="Camera Access Needed" picker onClose={close}>
+    <View style={{ gap: 16, alignItems: 'center' }}>
+      <Ionicons name="camera-outline" size={40} color={resident.accentText} />
+      <ThemedText style={{ color: resident.muted, textAlign: 'center', fontSize: 14, lineHeight: 20 }}>Barangayan needs camera access to scan evacuation center QR codes for check-in.</ThemedText>
+      {error ? <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>{error}</ThemedText> : null}
+      <View style={{ alignSelf: 'stretch', gap: 12 }}>
+        <PrimaryButton presentation="resident" label={canAskAgain ? 'Grant Access' : 'Open Settings'} loading={busy} onPress={grant} />
+        <PrimaryButton presentation="resident" variant="secondary" label="Cancel" onPress={close} />
+      </View>
+    </View>
+  </ScanFamilySheet>;
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: Spacing.four,
-  },
-  container: {
-    borderRadius: 24,
-    paddingHorizontal: Spacing.five,
-    paddingTop: Spacing.five,
-    paddingBottom: Spacing.six,
-    alignItems: 'center',
-    gap: Spacing.four,
-    width: '100%',
-    maxWidth: 340,
-  },
-  iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.light.primary + '15',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  body: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  buttonRow: {
-    flexDirection: 'column',
-    gap: Spacing.two,
-    width: '100%',
-    marginTop: Spacing.two,
-  },
-  primaryButton: {
-    height: 52,
-    borderRadius: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  secondaryButton: {
-    height: 52,
-    borderRadius: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-});

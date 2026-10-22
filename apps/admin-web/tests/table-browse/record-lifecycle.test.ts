@@ -15,9 +15,13 @@ describe('record detail edit boundaries', () => {
     const row = { id: 'payment', status: 'pending', service_requests: { reference_number: 'REQ-1', resident_id: 'resident', document_type_id: 'document' } };
     expect(recordDraft('transactions', row)).toMatchObject({ request_reference: 'REQ-1', linked_resident_id: 'resident', linked_document_type_id: 'document' });
     expect(fieldValue({ id: 'staff', profiles: { full_name: 'Current Staff' } }, RECORD_CONFIG.staff.fields[0])).toBe('Current Staff');
-    for (const [name, keys] of Object.entries({ requests: ['reference_number', 'resident_id', 'document_type_id', 'created_at'], transactions: ['request_reference', 'linked_resident_id', 'linked_document_type_id', 'collected_by', 'created_at'], incidents: ['category_id', 'reporter_id', 'location', 'confirmation_count', 'created_at'], households: ['is_checked_in'] })) {
+    for (const [name, keys] of Object.entries({ requests: ['reference_number', 'resident_id', 'document_type_id', 'created_at'], transactions: ['request_reference', 'linked_resident_id', 'linked_document_type_id', 'collected_by', 'created_at'], incidents: ['category_id', 'reporter_id', 'location', 'confirmation_count', 'created_at'], households: ['name', 'relation', 'role'] })) {
       expect(RECORD_CONFIG[name as keyof typeof RECORD_CONFIG].fields.map(field => field.key)).toEqual(expect.arrayContaining(keys));
     }
+  });
+  it('routes attendance through its dedicated workflow', () => {
+    expect(RECORD_CONFIG.households.fields.map(field => field.key)).not.toContain('is_checked_in');
+    expect(() => validateRecordPatch('households', { id: 'member' }, { is_checked_in: true })).toThrow('cannot be edited');
   });
   it('validates coordinates, lookup identities and submitted timestamps', () => {
     expect(validateRecordPatch('incidents', { id: 'incident' }, { location: '14.7, 121.1' })).toEqual({ location: { lat: 14.7, lng: 121.1 } });
@@ -42,11 +46,34 @@ describe('record detail edit boundaries', () => {
       expect(() => validateRecordPatch(name, { id: 'fixture' }, { barangay_id: 'foreign' })).toThrow('cannot be edited');
     }
   });
+  it('supports the controlled versioned request editor', () => {
+    const request = { id: 'fixture', contract_version: 2, status: 'submitted', sla_state: 'pre_processing' };
+    expect(editableFields('requests', request).map(field => field.key)).toEqual([
+      'reference_number', 'status', 'requester_notes', 'payment_method', 'payment_status', 'created_at', 'status_change_reason',
+    ]);
+    const patch = { reference_number: 'REQ-UPDATED', requester_notes: 'Corrected note', created_at: '2026-10-01T08:00:00Z',
+      status: 'in_progress', payment_method: 'pickup', payment_status: 'pending' };
+    expect(validateRecordPatch('requests', request, patch)).toEqual(patch);
+  });
+  it('requires a cancellation reason and rejects unavailable versioned request transitions', () => {
+    const request = { id: 'fixture', contract_version: 2, status: 'submitted', sla_state: 'pre_processing' };
+    for (const status_change_reason of [undefined, '', '   ']) {
+      const patch = status_change_reason === undefined ? { status: 'cancelled' } : { status: 'cancelled', status_change_reason };
+      expect(() => validateRecordPatch('requests', request, patch)).toThrow('reason for cancelling');
+    }
+    expect(validateRecordPatch('requests', request, { status: 'cancelled', status_change_reason: ' Duplicate request ' }))
+      .toEqual({ status: 'cancelled', status_change_reason: 'Duplicate request' });
+    expect(() => validateRecordPatch('requests', request, { status: 'completed' })).toThrow('Select a valid status.');
+  });
   it('keeps versioned request snapshots and collected payment amounts protected', () => {
     const request = { id: 'fixture', contract_version: 2 };
-    expect(editableFields('requests', request).map(field => field.key)).toEqual(['payment_method', 'payment_status']);
-    expect(() => validateRecordPatch('requests', request, { requester_notes: 'changed' })).toThrow();
-    expect(() => validateRecordPatch('transactions', { id: 'fixture', status: 'paid' }, { amount_centavos: 100 })).toThrow();
+    for (const patch of [
+      { resident_id: 'b1150000-0000-0000-0000-000000000002' },
+      { document_type_id: 'c1150000-0000-0000-0000-000000000001' },
+      { submission_payload: {} }, { approved_id_submission_id: null }, { target_minutes_snapshot: 60 },
+      { timing_model: 'legacy_hours' }, { pricing_mode_snapshot: 'fixed' },
+    ]) expect(() => validateRecordPatch('requests', request, patch)).toThrow('cannot be edited');
+    expect(() => validateRecordPatch('transactions', { id: 'fixture', status: 'paid' }, { amount_centavos: 100 })).toThrow('cannot be edited');
   });
   it.each([1, 2])('supports both request payment editors for contract %s', contract_version => {
     const request = { id: 'fixture', contract_version, payment_method: 'qrph', payment_status: 'failed' };

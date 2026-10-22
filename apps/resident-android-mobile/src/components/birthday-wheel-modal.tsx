@@ -3,6 +3,8 @@ import { Modal, Pressable, ScrollView, StyleSheet, View, type NativeScrollEvent,
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecoveryButton } from '@/components/password-recovery-screen';
+import { PrimaryButton } from '@/components/primary-button';
+import { SettingsSheet } from '@/components/settings-sheet';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -14,23 +16,28 @@ const WHEEL_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
 const WHEEL_PADDING = ROW_HEIGHT * Math.floor(VISIBLE_ROWS / 2);
 type WheelItem = { value: number; label: string };
 
-export function BirthdayWheelModal({ visible, value, onClose, onConfirm }: {
+export function BirthdayWheelModal({ visible, value, onClose, onConfirm, presentation = 'default' }: {
   visible: boolean;
   value: string;
   onClose: () => void;
   onConfirm: (value: string) => void;
+  presentation?: 'default' | 'resident';
 }) {
+  if (presentation === 'resident') return <BirthdayWheelContent value={value} visible={visible} presentation="resident" onClose={onClose} onConfirm={onConfirm} />;
   // A fresh draft on each opening; scrolling and Cancel never change the form.
   return <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-    {visible ? <BirthdayWheelContent key={value} value={value} onClose={onClose} onConfirm={onConfirm} /> : null}
+    {visible ? <BirthdayWheelContent key={value} visible={visible} value={value} onClose={onClose} onConfirm={onConfirm} /> : null}
   </Modal>;
 }
 
-function BirthdayWheelContent({ value, onClose, onConfirm }: Omit<Parameters<typeof BirthdayWheelModal>[0], 'visible'>) {
+function BirthdayWheelContent({ value, onClose, onConfirm, presentation = 'default', visible = true }: Parameters<typeof BirthdayWheelModal>[0]) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const today = useMemo(() => new Date(), []);
   const [draft, setDraft] = useState(() => birthdayParts(value, today));
+  useEffect(() => {
+    if (presentation === 'resident' && visible) setDraft(birthdayParts(value, today));
+  }, [presentation, visible, value, today]);
   const minimumYear = useMemo(() => Math.min(1900, birthdayParts(value, today).year), [value, today]);
   const years = useMemo(() => Array.from({ length: today.getFullYear() - minimumYear + 1 }, (_, index) => ({ value: minimumYear + index, label: String(minimumYear + index) })), [minimumYear, today]);
   const maximumMonth = draft.year === today.getFullYear() ? today.getMonth() + 1 : 12;
@@ -41,6 +48,17 @@ function BirthdayWheelContent({ value, onClose, onConfirm }: Omit<Parameters<typ
     setDraft(previous => limitBirthday({ ...previous, [part]: next }, today));
   }
 
+  const wheels = <View style={styles.wheels}>
+    <View pointerEvents="none" style={[styles.selectedRow, { borderColor: presentation === 'resident' ? theme.resident.border : theme.backgroundSelected }]} />
+    <WheelColumn label="Month" items={months} value={draft.month} onChange={next => update('month', next)} wide />
+    <WheelColumn label="Day" items={days} value={draft.day} onChange={next => update('day', next)} />
+    <WheelColumn label="Year" items={years} value={draft.year} onChange={next => update('year', next)} />
+  </View>;
+  if (presentation === 'resident') return <SettingsSheet visible={visible} title="Date of birth" onClose={onClose} footer={<>
+    <PrimaryButton presentation="resident" label="Use date" onPress={() => onConfirm(birthdayIso(draft))} />
+    <PrimaryButton presentation="resident" variant="secondary" label="Not shown on ID" onPress={() => onConfirm('')} />
+  </>}>{wheels}</SettingsSheet>;
+
   return <View style={styles.overlay}>
     <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Cancel birthday selection" onPress={onClose} />
     <View style={[styles.sheet, { backgroundColor: theme.background, paddingBottom: Math.max(insets.bottom, Spacing.three) }]} accessibilityViewIsModal>
@@ -49,12 +67,7 @@ function BirthdayWheelContent({ value, onClose, onConfirm }: Omit<Parameters<typ
         <ThemedText accessibilityRole="header" type="smallBold">Date of birth</ThemedText>
         <View style={styles.headerSpacer} />
       </View>
-      <View style={styles.wheels}>
-        <View pointerEvents="none" style={[styles.selectedRow, { borderColor: theme.backgroundSelected }]} />
-        <WheelColumn label="Month" items={months} value={draft.month} onChange={next => update('month', next)} wide />
-        <WheelColumn label="Day" items={days} value={draft.day} onChange={next => update('day', next)} />
-        <WheelColumn label="Year" items={years} value={draft.year} onChange={next => update('year', next)} />
-      </View>
+      {wheels}
       <RecoveryButton label="Use date" onPress={() => onConfirm(birthdayIso(draft))} />
       <Pressable accessibilityRole="button" accessibilityLabel="Date of birth not shown on ID" onPress={() => onConfirm('')} style={styles.clear}><ThemedText themeColor="textSecondary" type="small">Not shown on ID</ThemedText></Pressable>
     </View>

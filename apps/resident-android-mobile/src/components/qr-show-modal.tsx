@@ -1,540 +1,131 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Modal, Platform, Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { captureRef } from 'react-native-view-shot';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-  Easing as ReanimatedEasing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Platform, Pressable, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { captureRef, releaseCapture } from 'react-native-view-shot';
+import { Ionicons } from '@expo/vector-icons';
+import QRCode from 'react-native-qrcode-svg';
+import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
+import { ScanFamilySheet } from '@/components/drrm/scan-family-sheet';
+import { DrrmSourceState } from '@/components/drrm/presentation';
+import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
-import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
-import { Ionicons } from '@expo/vector-icons';
-import QRCode from 'react-native-qrcode-svg';
 
-// expo-media-library's native module isn't built into Expo Go — merely *importing* it
-// there throws synchronously while the module evaluates, before any try/catch around the
-// call site gets a chance to run (same trap expo-notifications has in
-// lib/push-notifications.ts). Check this first and never import the module at all inside
-// Expo Go, rather than trying to catch our way out of it.
 const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
-interface QrShowModalProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-// How far below the viewport the sheet starts / exits to.
-// 800 is safely off-screen on any phone.
-const SHEET_OFFSET = 800;
-
-export function QrShowModal({ visible, onClose }: QrShowModalProps) {
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
-  const { height: windowHeight, width: windowWidth, fontScale } = useWindowDimensions();
-  const qrFrameSize = Math.min(260, windowWidth - 32);
+export function QrShowModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  const { resident } = useTheme();
+  const { width, fontScale } = useWindowDimensions();
   const { profile } = useProfile();
   const barangayId = profile?.barangay_id ?? null;
-  const { centers, isLoading: centersLoading } = useEvacuationCenters({ barangayId });
-  const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
-  const [showCenterPicker, setShowCenterPicker] = useState(false);
-  const [downloading, setDownloading] = useState(false);
-  const qrFrameRef = useRef<View>(null);
+  const { centers, isLoading, error, refetch } = useEvacuationCenters({ barangayId });
+  const available = useMemo(() => centers.filter(center => center.barangay_id === barangayId), [centers, barangayId]);
+  const sorted = useMemo(() => [...available].sort((a, b) => a.name.localeCompare(b.name)), [available]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [picking, setPicking] = useState(false);
+  const [busy, setBusy] = useState<'share' | 'save' | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const lock = useRef(false);
+  const generation = useRef(0);
+  const qrRef = useRef<View>(null);
+  const selected = available.find(center => center.id === selectedId) ?? available[0] ?? null;
+  const centerId = selected?.id;
+  const centerName = selected?.name;
+  const qrSize = Math.max(80, Math.min(184, width - 80));
+  const qrValue = useMemo(() => {
+    const parsed = evacuationCenterQrPayloadSchema.safeParse(centerId ? {
+      type: 'EVACUATION_CENTER_CHECKIN', version: '1.0', center_id: centerId,
+      center_name: centerName, barangay_id: barangayId, generated_at: new Date().toISOString(),
+    } : null);
+    return parsed.success ? JSON.stringify(parsed.data) : '';
+  }, [centerId, centerName, barangayId]);
 
-  // ── Animation ──────────────────────────────────────────────────────────────
-  // Keep a local "modal open" flag so we can play the exit animation before
-  // handing control back to the parent.
-  const [localVisible, setLocalVisible] = useState(false);
-
-  const sheetY = useSharedValue(SHEET_OFFSET);
-  const backdropAlpha = useSharedValue(0);
-
-  const sheetStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: sheetY.value }],
-  }));
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: backdropAlpha.value,
-  }));
-
-  // Open: spring up, fade backdrop in.
+  useEffect(() => { setSelectedId(null); setPicking(false); }, [barangayId]);
   useEffect(() => {
-    if (visible) {
-      setLocalVisible(true);
-      sheetY.value = SHEET_OFFSET; // ensure starting below screen
-      backdropAlpha.value = 0;
-      sheetY.value = withSpring(0, {
-        damping: 22,
-        stiffness: 200,
-        mass: 0.85,
-        overshootClamping: false,
-      });
-      backdropAlpha.value = withTiming(1, { duration: 260 });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+    generation.current += 1;
+    if (!visible) setPicking(false);
+    if (visible) { setFeedback(null); setActionError(null); }
+    return () => { generation.current += 1; };
+  }, [visible, profile?.id]);
 
-  // Dismiss: ease the sheet down, then signal the parent.
-  const handleClose = useCallback(() => {
-    sheetY.value = withTiming(SHEET_OFFSET, {
-      duration: 320,
-      easing: ReanimatedEasing.in(ReanimatedEasing.cubic),
-    }, (finished) => {
-      if (finished) runOnJS(setLocalVisible)(false);
-      // Delay onClose by one frame so the native modal can unmount cleanly.
-      if (finished) runOnJS(onClose)();
-    });
-    backdropAlpha.value = withTiming(0, { duration: 260 });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onClose]);
-  // ── End Animation ──────────────────────────────────────────────────────────
-
-  const selectedCenter = centers.find((c) => c.id === selectedCenterId) ?? null;
-
-  useEffect(() => {
-    if (visible && centers.length > 0 && !selectedCenterId) {
-      setSelectedCenterId(centers[0].id);
-    }
-  }, [visible, centers, selectedCenterId]);
-
-  useEffect(() => {
-    if (!visible) {
-      setShowCenterPicker(false);
-    }
-  }, [visible]);
-
-  const qrPayload = selectedCenter
-    ? {
-      type: 'EVACUATION_CENTER_CHECKIN',
-      version: '1.0',
-      center_id: selectedCenter.id,
-      center_name: selectedCenter.name,
-      barangay_id: barangayId ?? '',
-      generated_at: new Date().toISOString(),
-    }
-    : null;
-
-  const parsedPayload = qrPayload ? evacuationCenterQrPayloadSchema.safeParse(qrPayload) : null;
-  const qrValue = parsedPayload?.success ? JSON.stringify(parsedPayload.data) : '';
-
-  const handleShare = useCallback(async () => {
-    if (!qrValue) return;
+  async function share() {
+    if (lock.current || !qrValue) return;
+    lock.current = true; setBusy('share'); setFeedback(null); setActionError(null);
+    const ticket = generation.current;
     try {
-      await Share.share({
-        message: `Evacuation Center Check-in QR\n\n${qrValue}`,
-        title: 'Evacuation Center QR Code',
-      });
-    } catch {
-      // Share cancelled
-    }
-  }, [qrValue]);
+      await Share.share({ message: `Evacuation Center Check-in QR\n\n${qrValue}`, title: 'Evacuation Center QR Code' });
+    } catch { if (generation.current === ticket) setActionError('Could not share the QR code. Please try again.'); }
+    finally { lock.current = false; setBusy(null); }
+  }
 
-  const handleDownloadQr = useCallback(async () => {
-    if (!qrFrameRef.current || downloading || !selectedCenter) return;
-    if (Platform.OS === 'web') {
-      Alert.alert('Not Supported', 'Downloading QR codes is not supported on web.');
-      return;
-    }
-    if (isExpoGo) {
-      Alert.alert(
-        'Development Build Required',
-        'Saving QR codes to your photo gallery requires a development build. In Expo Go, use Share instead.'
-      );
-      return;
-    }
-    setDownloading(true);
+  async function download() {
+    if (lock.current || !qrValue || !qrRef.current) return;
+    setFeedback(null); setActionError(null);
+    if (Platform.OS === 'web') { setActionError('Saving QR codes to a gallery is not supported on web. Use Share instead.'); return; }
+    if (isExpoGo) { setActionError('Saving QR codes requires a development build. In Expo Go, use Share instead.'); return; }
+    lock.current = true; setBusy('save');
+    const ticket = generation.current;
+    let capturedUri: string | null = null;
     try {
-      const expoMediaLibrary = await import('expo-media-library');
-      const { Asset, Album, requestPermissionsAsync } = expoMediaLibrary;
-      const { status } = await requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Required', 'Please grant media library access to download the QR code.');
-        setDownloading(false);
-        return;
-      }
-
-      const uri = await captureRef(qrFrameRef, {
-        format: 'png',
-        quality: 1,
-      });
-
-      const asset = await Asset.create(uri);
+      // Do not import this native module in Expo Go: module evaluation itself can throw.
+      const { Asset, Album, requestPermissionsAsync } = await import('expo-media-library');
+      const permission = await requestPermissionsAsync();
+      if (generation.current !== ticket) return;
+      if (permission.status !== 'granted') { setActionError('Photo access was denied. Grant media access in Settings and try again.'); return; }
+      capturedUri = await captureRef(qrRef, { format: 'png', quality: 1 });
+      if (generation.current !== ticket) return;
+      const asset = await Asset.create(capturedUri);
       await Album.create('Barangayan QR Codes', [asset]);
+      if (generation.current === ticket) setFeedback('QR code saved to your photo gallery.');
+    } catch { if (generation.current === ticket) setActionError('Failed to save the QR code. Please try again.'); }
+    finally { if (capturedUri) releaseCapture(capturedUri); lock.current = false; setBusy(null); }
+  }
 
-      Alert.alert('Success', 'QR code saved to your photo gallery.');
-    } catch {
-      Alert.alert('Error', 'Failed to download QR code. Please try again.');
-    } finally {
-      setDownloading(false);
-    }
-  }, [downloading, selectedCenter]);
+  const sourceState = error ? <DrrmSourceState message={available.length ? 'Unable to refresh centers. Showing available information.' : 'Unable to load evacuation centers.'} retry={refetch} />
+    : isLoading && !available.length ? <DrrmSourceState loading message="Loading centers…" />
+    : !available.length ? <DrrmSourceState message="No evacuation centers available." /> : null;
 
-  const handleSelectCenter = useCallback((centerId: string) => {
-    setSelectedCenterId(centerId);
-    setShowCenterPicker(false);
-  }, []);
-
-  return (
-    <Modal visible={localVisible} transparent animationType="none" onRequestClose={handleClose}>
-      {/* Animated dim backdrop */}
-      <Animated.View style={[StyleSheet.absoluteFill, styles.overlayDim, backdropStyle]} pointerEvents="none" />
-
-      <Pressable style={[styles.overlay, { paddingTop: insets.top + Spacing.three }]} onPress={handleClose}>
-        {/* Animated sheet */}
-        <Animated.View style={[styles.sheet, sheetStyle]}>
-          <Pressable style={[styles.container, {
-            backgroundColor: theme.background,
-            maxHeight: windowHeight - insets.top - Spacing.three,
-          }]} onPress={() => { }}>
-            <View style={styles.handle} />
-            <View style={styles.header}>
-              <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
-                Show QR Code
-              </ThemedText>
-              <Pressable onPress={handleClose} style={styles.closeButton} hitSlop={Spacing.one}
-                accessibilityRole="button" accessibilityLabel="Close QR code">
-                <Ionicons name="close" size={24} color={theme.textSecondary} />
-              </Pressable>
-            </View>
-
-            {/* Keep the close control outside the scrolling sheet body. */}
-            <ScrollView style={styles.sheetScroll} contentContainerStyle={[styles.sheetContent, {
-              paddingBottom: Math.max(insets.bottom, 16),
-            }]} showsVerticalScrollIndicator={false}>
-              <Pressable
-                style={[styles.centerPicker, { borderColor: theme.backgroundSelected }]}
-                onPress={() => setShowCenterPicker(true)}>
-                <View style={styles.centerPickerContent}>
-                  <Ionicons name="location-outline" size={20} color={theme.primary} />
-                  <ThemedText style={[styles.centerPickerText, { color: theme.text }]}>
-                    {selectedCenter ? selectedCenter.name : 'Select Evacuation Center'}
-                  </ThemedText>
-                  <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
-                </View>
-              </Pressable>
-
-              {selectedCenter && (
-                <View style={styles.centerInfo}>
-                  <Ionicons name="map-outline" size={16} color={theme.textSecondary} />
-                  <ThemedText themeColor="textSecondary" style={styles.centerAddress}>
-                    {selectedCenter.address ?? 'No address provided'}
-                  </ThemedText>
-                </View>
-              )}
-
-              <View ref={qrFrameRef} collapsable={false} style={[styles.qrFrame, {
-                borderColor: theme.backgroundSelected, width: qrFrameSize, height: qrFrameSize,
-              }]}>
-                {centersLoading ? (
-                  <ThemedText themeColor="textSecondary">Loading centers...</ThemedText>
-                ) : !selectedCenter ? (
-                  <ThemedText themeColor="textSecondary">Select a center to generate QR</ThemedText>
-                ) : !qrValue ? (
-                  <ThemedText themeColor="textSecondary">Unable to generate QR code</ThemedText>
-                ) : (
-                  <QRCode value={qrValue} size={qrFrameSize - 40} backgroundColor="#FFFFFF" color="#000000" />
-                )}
-              </View>
-
-              <ThemedText themeColor="textSecondary" style={styles.helperText}>
-                Show this screen to center staff so they can scan it at the desk.
-              </ThemedText>
-
-              <View style={[styles.actionRow, (windowWidth < 360 || fontScale > 1.2) && styles.actionColumn]}>
-                <Pressable
-                  style={[styles.shareButton, { backgroundColor: theme.primary }]}
-                  onPress={handleShare}
-                  accessibilityRole="button"
-                  disabled={!qrValue}>
-                  <Ionicons name="share-outline" size={18} color={theme.onPrimary} />
-                  <ThemedText style={[styles.shareButtonText, { color: theme.onPrimary }]}>
-                    Share QR Code
-                  </ThemedText>
-                </Pressable>
-
-                <Pressable
-                  style={[styles.downloadButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
-                  onPress={handleDownloadQr}
-                  accessibilityRole="button"
-                  disabled={!qrValue || downloading}>
-                  <Ionicons
-                    name={downloading ? 'reload' : 'download-outline'}
-                    size={18}
-                    color={theme.primary}
-                  />
-                  <ThemedText style={[styles.downloadButtonText, { color: theme.primary }]}>
-                    {downloading ? 'Saving...' : 'Download QR'}
-                  </ThemedText>
-                </Pressable>
-              </View>
-            </ScrollView>
-          </Pressable>
-        </Animated.View>
+  return <>
+    <ScanFamilySheet visible={visible} title="Show QR Code" onClose={onClose} busy={!!busy} slide>
+      {sourceState}
+      <Pressable disabled={!available.length || !!busy} onPress={() => setPicking(true)} accessibilityRole="button" accessibilityLabel="Select Evacuation Center" style={[styles.select, { borderColor: resident.border }]}>
+        <Ionicons name="location-outline" size={20} color={resident.accentText} />
+        <ThemedText style={[styles.selectName, { color: resident.text }]}>{selected?.name ?? 'Select Evacuation Center'}</ThemedText>
+        <Ionicons name="chevron-down" size={20} color={resident.muted} />
       </Pressable>
-
-      <Modal visible={showCenterPicker} transparent animationType="fade" onRequestClose={() => setShowCenterPicker(false)}>
-        <Pressable style={styles.pickerOverlay} onPress={() => setShowCenterPicker(false)}>
-          <Pressable style={[styles.pickerContainer, { backgroundColor: theme.background }]} onPress={() => { }}>
-            <View style={styles.pickerHeader}>
-              <ThemedText type="smallBold" style={[styles.pickerTitle, { color: theme.text }]}>
-                Select Evacuation Center
-              </ThemedText>
-              <Pressable onPress={() => setShowCenterPicker(false)} hitSlop={Spacing.two}>
-                <Ionicons name="close" size={22} color={theme.textSecondary} />
-              </Pressable>
-            </View>
-            <ScrollView style={styles.pickerList}>
-              {centersLoading ? (
-                <ThemedText themeColor="textSecondary" style={styles.pickerEmpty}>
-                  Loading centers...
-                </ThemedText>
-              ) : centers.length === 0 ? (
-                <ThemedText themeColor="textSecondary" style={styles.pickerEmpty}>
-                  No evacuation centers found.
-                </ThemedText>
-              ) : (
-                centers.map((center) => (
-                  <Pressable
-                    key={center.id}
-                    style={[
-                      styles.pickerItem,
-                      { backgroundColor: center.id === selectedCenterId ? theme.primary + '15' : 'transparent' },
-                    ]}
-                    onPress={() => handleSelectCenter(center.id)}>
-                    <View style={styles.pickerItemContent}>
-                      <Ionicons
-                        name="location-outline"
-                        size={20}
-                        color={center.id === selectedCenterId ? theme.primary : theme.textSecondary}
-                      />
-                      <View style={styles.pickerItemText}>
-                        <ThemedText style={[styles.pickerItemName, { color: theme.text }]}>
-                          {center.name}
-                        </ThemedText>
-                        {center.address ? (
-                          <ThemedText themeColor="textSecondary" style={styles.pickerItemAddress}>
-                            {center.address}
-                          </ThemedText>
-                        ) : null}
-                      </View>
-                    </View>
-                    {center.id === selectedCenterId && (
-                      <Ionicons name="checkmark" size={20} color={theme.primary} />
-                    )}
-                  </Pressable>
-                ))
-              )}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
-    </Modal>
-  );
+      {selected ? <View style={styles.address}><Ionicons name="map-outline" size={14} color={resident.muted} /><ThemedText style={{ flex: 1, fontSize: 12.5, lineHeight: 18, color: resident.muted }}>{selected.address || 'No address provided'}</ThemedText></View> : null}
+      <View ref={qrRef} collapsable={false} style={[styles.qr, { borderColor: resident.border, backgroundColor: resident.mediaForeground }]}>
+        {qrValue ? <QRCode value={qrValue} size={qrSize} backgroundColor={resident.mediaForeground} color={resident.mediaBackdrop} />
+          : <ThemedText style={{ color: resident.mediaBackdrop }}>{selected ? 'Unable to generate QR code' : 'Select a center to generate QR'}</ThemedText>}
+      </View>
+      <ThemedText style={[styles.helper, { color: resident.muted }]}>Show this screen to center staff so they can scan it at the desk.</ThemedText>
+      {actionError ? <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>{actionError}</ThemedText> : null}
+      {feedback ? <ThemedText accessibilityLiveRegion="polite" style={{ color: resident.success }}>{feedback}</ThemedText> : null}
+      <View style={[styles.actions, (width < 360 || fontScale > 1.2) && styles.column]}>
+        <View style={styles.action}><PrimaryButton presentation="resident" compact label="Share QR Code" disabled={!qrValue || !!busy} loading={busy === 'share'} onPress={share} leadingIcon={<Ionicons name="share-outline" size={18} color={resident.onAccent} />} /></View>
+        <View style={styles.action}><PrimaryButton presentation="resident" compact variant="secondaryAccent" label="Download QR" disabled={!qrValue || !!busy} loading={busy === 'save'} onPress={download} leadingIcon={<Ionicons name="download-outline" size={18} color={resident.accentText} />} /></View>
+      </View>
+    </ScanFamilySheet>
+    <ScanFamilySheet visible={visible && picking} title="Select Evacuation Center" picker onClose={() => setPicking(false)}>
+      {sourceState}
+      {sorted.map(center => <Pressable key={center.id} accessibilityRole="radio" accessibilityLabel={center.name} accessibilityState={{ selected: selected?.id === center.id }}
+        onPress={() => { setSelectedId(center.id); setPicking(false); setFeedback(null); setActionError(null); }}
+        style={[styles.item, { backgroundColor: selected?.id === center.id ? resident.accentSoft : resident.card }]}>
+        <Ionicons name="location-outline" size={20} color={selected?.id === center.id ? resident.accentText : resident.muted} />
+        <View style={styles.itemCopy}><ThemedText style={{ fontSize: 14.5, lineHeight: 20, fontWeight: '700', color: resident.text }}>{center.name}</ThemedText>
+          {center.address ? <ThemedText style={{ fontSize: 12.5, lineHeight: 18, color: resident.muted }}>{center.address}</ThemedText> : null}</View>
+        {selected?.id === center.id ? <Ionicons name="checkmark" size={20} color={resident.accentText} /> : null}
+      </Pressable>)}
+    </ScanFamilySheet>
+  </>;
 }
-
 const styles = StyleSheet.create({
-  overlayDim: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    flexShrink: 1,
-  },
-  sheetScroll: {
-    flexGrow: 0,
-    flexShrink: 1,
-  },
-  sheetContent: {
-    gap: 12,
-  },
-  container: {
-    flexShrink: 1,
-    overflow: 'hidden',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    gap: 8,
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#D1D5DB',
-    alignSelf: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    flex: 1,
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: '700',
-  },
-  closeButton: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  centerPicker: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    minHeight: 48,
-  },
-  centerPickerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  centerPickerText: {
-    flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '600',
-  },
-  centerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.one,
-    marginTop: -4,
-  },
-  centerAddress: {
-    flex: 1,
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  qrFrame: {
-    borderRadius: 16,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    alignSelf: 'center',
-  },
-  helperText: {
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-  actionRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionColumn: {
-    flexDirection: 'column',
-  },
-  shareButton: {
-    flexGrow: 1,
-    flexBasis: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    minHeight: 48,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  shareButtonText: {
-    flexShrink: 1,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '700',
-  },
-  downloadButton: {
-    flexGrow: 1,
-    flexBasis: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    minHeight: 48,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  downloadButtonText: {
-    flexShrink: 1,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '700',
-  },
-  pickerOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  pickerContainer: {
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 16,
-    width: '100%',
-    maxWidth: 600,
-    maxHeight: '80%',
-  },
-  pickerHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.three,
-  },
-  pickerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  pickerList: {
-    maxHeight: 400,
-  },
-  pickerEmpty: {
-    textAlign: 'center',
-    paddingVertical: 24,
-  },
-  pickerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    marginBottom: Spacing.one,
-  },
-  pickerItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    flex: 1,
-  },
-  pickerItemText: {
-    flex: 1,
-  },
-  pickerItemName: {
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  pickerItemAddress: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 2,
-  },
+  select: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, minHeight: 44 },
+  selectName: { flex: 1, minWidth: 0, fontSize: 15, lineHeight: 21, fontWeight: '700' }, address: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: -2 },
+  qr: { alignSelf: 'center', padding: 16, borderRadius: 16, borderWidth: 1 }, helper: { alignSelf: 'center', maxWidth: 280, fontSize: 13, lineHeight: 20, textAlign: 'center' },
+  actions: { flexDirection: 'row', gap: 12 }, column: { flexDirection: 'column' }, action: { flex: 1 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, paddingVertical: 12, borderRadius: 12 }, itemCopy: { flex: 1, minWidth: 0, gap: 2 },
 });

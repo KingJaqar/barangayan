@@ -1,0 +1,43 @@
+{
+  "checks": [
+    "Zero/30 roster boundary in actual Family UI; disabled Add at 30 and forced disabled click sends no write and direct 31st API payload is rejected; zero restored via canonical expected snapshot"
+  ],
+  "consoleErrors": [],
+  "calls": [
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000003",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    }
+  ],
+  "browser": "",
+  "limitations": [
+    "Synthetic Auth on loopback with actual components and real PostgREST/PostgreSQL; physical camera and deployed login/navigation remain manual."
+  ],
+  "pass": true
+}

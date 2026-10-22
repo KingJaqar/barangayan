@@ -1,184 +1,200 @@
 'use client';
 
-import { useCallback, useMemo, useRef } from 'react';
-
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { attendanceRequest, type HouseholdAttendance, type Json } from '@barangayan/shared';
 import { useScopedRead } from '@/hooks/use-scoped-read';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { readHouseholdRoster, readHouseholdAttendance, residentHouseholdProfile, type HouseholdMember } from '@/lib/household';
 
-export type HouseholdMember = {
-  id: string;
-  name: string;
-  relation: string;
-  role?: string;
-};
+export type { HouseholdMember } from '@/lib/household';
+export type HouseholdWriteFailure = 'rejected' | 'unconfirmed' | 'busy' | 'conflict' | 'active' | 'invalid' | 'session';
+type Snapshot = { raw: Json; members: HouseholdMember[]; attendance: HouseholdAttendance | null; attendanceError: boolean };
 
-/**
- * Why the latest write did not succeed (see `lastWriteFailure`):
- * - `rejected`: the service answered with an error, so the roster was not changed.
- * - `unconfirmed`: no answer arrived (connection lost/aborted/thrown), so the write may or
- *   may not have been applied. Callers must say so and never retry automatically.
- * - `busy`: another write from this hook was still in flight; nothing was sent.
- */
-export type HouseholdWriteFailure = 'rejected' | 'unconfirmed' | 'busy';
+/** Both roster editors share validated reads, raw CAS snapshots and session cleanup.
+ * Attendance is a separate authority, optionally loaded in one bounded set request. */
+export function useFamilyMembers(profileId: string | null, includeAttendance = false) {
+  const [privateHidden, setPrivateHidden] = useState(false);
+  const [epoch, setEpoch] = useState(0);
+  const [writeMessage, setWriteMessage] = useState<string | null>(null);
+  const [reconciling, setReconciling] = useState(false);
+  const lifetime = useRef<AbortController | null>(null);
+  const writing = useRef(false);
+  const pendingRead = useRef<Promise<Snapshot> | null>(null);
+  const latest = useRef<Snapshot | null>(null);
+  const failure = useRef<HouseholdWriteFailure | null>(null);
+  const pendingAdd = useRef<HouseholdMember | null>(null);
+  const draftBase = useRef<Snapshot | null>(null);
+  const rebaseDraft = useRef(false);
 
-type UseFamilyMembersResult = {
-  members: HouseholdMember[];
-  isLoading: boolean;
-  isInitialLoading: boolean;
-  isRefreshing: boolean;
-  isReady: boolean;
-  /** The current profile's latest *read* failure (write failures use `lastWriteFailure`). */
-  error: string | null;
-  errorAnnounced: boolean;
-  refetch: (contentName?: string) => void;
-  addMember: (member: { name: string; relation: string; role?: string }) => Promise<HouseholdMember | null>;
-  updateMember: (id: string, updates: Partial<Omit<HouseholdMember, 'id'>>) => Promise<HouseholdMember | null>;
-  removeMember: (id: string) => Promise<boolean>;
-  /** Failure kind of the most recent write, or null if it succeeded. Read it right after
-   * awaiting a mutation that returned null/false. */
-  lastWriteFailure: () => HouseholdWriteFailure | null;
-};
+  useEffect(() => {
+    const life = new AbortController(); lifetime.current = life;
+    latest.current = null; pendingRead.current = null; pendingAdd.current = null; draftBase.current = null;
+    writing.current = false;
+    const clear = () => {
+      life.abort(); lifetime.current?.abort(); latest.current = null; pendingAdd.current = null;
+      draftBase.current = null; setPrivateHidden(true);
+    };
+    const { data: { subscription } } = createSupabaseBrowserClient().auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || (session && session.user.id !== profileId)) clear();
+    });
+    const restore = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      // A restored page starts empty and revalidates before revealing private data.
+      lifetime.current = new AbortController(); pendingRead.current = null;
+      setPrivateHidden(false); setEpoch(value => value + 1);
+    };
+    window.addEventListener('pagehide', clear); window.addEventListener('pageshow', restore);
+    void Promise.resolve().then(() => {
+      if (!life.signal.aborted) { setPrivateHidden(false); setEpoch(value => value + 1); }
+    });
+    return () => {
+      life.abort(); lifetime.current?.abort(); subscription.unsubscribe(); latest.current = null;
+      setPrivateHidden(true);
+      window.removeEventListener('pagehide', clear); window.removeEventListener('pageshow', restore);
+    };
+  }, [profileId]);
 
-/** RFC-4122 v4 UUID — the household_members table's `id` column is a real `uuid`, and
- * the DB trigger that mirrors this jsonb column into that table (0067) casts `::uuid`.
- * A non-UUID client id makes that cast throw and fails the whole profiles UPDATE. */
-function genId(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
-/**
- * The single, canonical CRUD path for a resident's household roster — reused by both
- * the Emergency > Family tab (this phase) and, later, Phase 7's profile editor (see the
- * plan's CC-003 and its Phase 2/7 hooks tables).
- *
- * Deliberately writes to `profiles.household_members` (jsonb), NOT the `household_members`
- * table directly, even though the plan's file-tree prose describes this as "the CRUD hook
- * over household_members". Verified from migrations 0052/0067: the sync trigger only runs
- * `profiles.household_members` -> `household_members` (one-way, on `profiles` UPDATE) —
- * there is no reverse trigger. Writing straight to the table (as mobile's now-dead
- * use-family-members.ts hook does) would silently desync the jsonb roster from the table
- * every time a resident edited it here. Mobile's actually-shipped Family tab
- * (family-content.tsx) already avoids this by using use-profile-household-members.ts's
- * jsonb-based approach instead — this hook follows that proven path, so
- * `household_members` (canonical for admin tooling and check-in state, e.g.
- * `is_checked_in` — see use-qr-checkins.ts) stays correctly synced via the existing
- * trigger. A future Phase 5 read-only applicant picker should read this same jsonb
- * column (or this hook) rather than reintroducing a second, divergent source.
- *
- * Feedback plan RW-LT-05: the read is scoped by profile with newest-request-wins and a
- * failed read keeps any loaded roster instead of replacing it with an empty list. The
- * mutation return contracts are unchanged (member | null / boolean, where null/false
- * means the write did not succeed); `lastWriteFailure()` additionally says whether it was
- * rejected or could not be confirmed. Writes are serialised: the roster is rewritten as a
- * whole array, so an overlapping write would silently drop the other one's change.
- */
-export function useFamilyMembers(profileId: string | null): UseFamilyMembersResult {
-  const read = useScopedRead<HouseholdMember[]>(profileId ?? '', async () => {
-    if (!profileId) return { data: [], error: null };
-    const supabase = createSupabaseBrowserClient();
-    const { data, error } = await supabase.from('profiles').select('household_members').eq('id', profileId).single();
-    if (error) return { data: null, error };
-    const raw = data?.household_members;
-    const normalized: HouseholdMember[] = Array.isArray(raw)
-      ? (raw as Record<string, unknown>[]).map((m) => ({
-          id: String(m.id ?? genId()),
-          name: String(m.name ?? 'Unknown'),
-          relation: String(m.relation ?? ''),
-          role: m.role ? String(m.role) : undefined,
-        }))
-      : [];
-    return { data: normalized, error: null };
-  });
-  const { data, setData } = read;
-  const members = useMemo(() => data ?? [], [data]);
-
-  const writingRef = useRef(false);
-  const failureRef = useRef<HouseholdWriteFailure | null>(null);
-
-  const persistMembers = useCallback(
-    async (next: HouseholdMember[]): Promise<boolean> => {
-      if (!profileId) {
-        failureRef.current = 'rejected';
-        return false;
+  const load = useCallback(async (): Promise<Snapshot> => {
+    const life = lifetime.current;
+    if (!profileId || !life || life.signal.aborted) throw new Error('Sign in again to load your household.');
+    if (pendingRead.current) return pendingRead.current;
+    const task = attendanceRequest(life.signal, async signal => {
+      const profile = await residentHouseholdProfile(profileId, signal);
+      const roster = readHouseholdRoster(profile.household_members);
+      let attendance = latest.current?.attendance ?? null;
+      let attendanceError = false;
+      if (includeAttendance) {
+        try {
+          const result = await createSupabaseBrowserClient().rpc('get_my_household_attendance').retry(false).abortSignal(signal);
+          if (result.error) throw new Error('Attendance unavailable.');
+          attendance = readHouseholdAttendance(result.data, profileId);
+        } catch { attendanceError = true; }
       }
-      if (writingRef.current) {
-        failureRef.current = 'busy';
-        return false;
+      if (signal.aborted || life.signal.aborted) throw new Error('Request ended.');
+      const snapshot = { ...roster, attendance, attendanceError };
+      latest.current = snapshot; setReconciling(false);
+      if (rebaseDraft.current) { draftBase.current = snapshot; rebaseDraft.current = false; }
+      return snapshot;
+    });
+    pendingRead.current = task;
+    try { return await task; }
+    catch (cause) {
+      if (!life.signal.aborted && cause instanceof Error && cause.message === 'resident_identity_required') {
+        life.abort(); latest.current = null; pendingAdd.current = null; setPrivateHidden(true);
       }
-      writingRef.current = true;
-      failureRef.current = null;
-      try {
-        const supabase = createSupabaseBrowserClient();
-        const payload = next.map((m) => ({ id: m.id, name: m.name, relation: m.relation, ...(m.role ? { role: m.role } : {}) }));
-        const { error, status } = await supabase.from('profiles').update({ household_members: payload }).eq('id', profileId);
-        if (error) {
-          // Status 0 means no HTTP answer arrived (postgrest-js reports a failed/aborted
-          // fetch that way), so the write may have been applied.
-          failureRef.current = status === 0 ? 'unconfirmed' : 'rejected';
-          return false;
-        }
-        setData(next);
-        return true;
-      } catch {
-        failureRef.current = 'unconfirmed';
-        return false;
-      } finally {
-        writingRef.current = false;
+      throw new Error('Could not load your household. Check your connection and account, then try again.');
+    } finally { if (pendingRead.current === task) pendingRead.current = null; }
+  }, [profileId, includeAttendance]);
+
+  const read = useScopedRead<Snapshot>(`${profileId ?? ''}:${epoch}:${privateHidden}`, () =>
+    load().then(data => ({ data, error: null })));
+  const { refetch: refreshRead, setData } = read;
+  const refetch = useCallback((contentName?: string) => {
+    if (!writing.current && !privateHidden) refreshRead(contentName);
+  }, [privateHidden, refreshRead]);
+
+  useEffect(() => {
+    let left = false;
+    const blur = () => { left = true; };
+    const focus = () => {
+      if (left && document.visibilityState === 'visible') { left = false; refetch(); }
+    };
+    const visibility = () => { if (document.visibilityState === 'hidden') left = true; else focus(); };
+    window.addEventListener('blur', blur); window.addEventListener('focus', focus);
+    document.addEventListener('visibilitychange', visibility);
+    return () => {
+      window.removeEventListener('blur', blur); window.removeEventListener('focus', focus);
+      document.removeEventListener('visibilitychange', visibility);
+    };
+  }, [refetch]);
+
+  const data = !privateHidden ? read.data : null;
+  const canEdit = !!data && !read.error && !read.isRefreshing && !reconciling;
+  const persist = useCallback(async (next: HouseholdMember[]): Promise<Snapshot | null> => {
+    failure.current = null;
+    const life = lifetime.current;
+    if (writing.current) { failure.current = 'busy'; return null; }
+    if (!profileId || !life || life.signal.aborted || privateHidden) { failure.current = 'session'; return null; }
+    if (!canEdit || !data) { failure.current = 'invalid'; return null; }
+    try { readHouseholdRoster(next); } catch { failure.current = 'invalid'; return null; }
+    const expectedSnapshot = (draftBase.current ?? data).raw;
+    writing.current = true; setWriteMessage(null);
+    let reconcile = false;
+    try {
+      const result = await attendanceRequest(life.signal, async signal => {
+        await residentHouseholdProfile(profileId, signal);
+        return createSupabaseBrowserClient().rpc('save_resident_household_if_unchanged', {
+          p_members: next, p_expected: expectedSnapshot,
+        }).retry(false).abortSignal(signal);
+      });
+      if (life.signal.aborted) { failure.current = 'session'; return null; }
+      if (result.error) {
+        const message = result.error.message;
+        failure.current = message === 'resident_household_changed' || message === 'household_roster_changed' ? 'conflict'
+          : message === 'attendance_lifecycle_conflict' ? 'active'
+          : ['22023', '42501', 'PT409'].includes(result.error.code) ? 'rejected' : 'unconfirmed';
+        reconcile = failure.current === 'conflict' || failure.current === 'unconfirmed';
+        rebaseDraft.current = reconcile;
+        setWriteMessage(failure.current === 'conflict'
+          ? 'The family list changed. Your draft is kept. Review the refreshed list before choosing Save again.'
+          : failure.current === 'active' ? 'Ask staff to check this person out before removing them.'
+          : failure.current === 'unconfirmed' ? 'The change may have saved. Check the refreshed list before trying again.'
+          : 'Could not save the family list. Check the details and try again.');
+        return null;
       }
-    },
-    [profileId, setData],
-  );
+      if (result.data === null) throw new Error('Unconfirmed roster response.');
+      const roster = readHouseholdRoster(result.data);
+      const expected = readHouseholdRoster(next).members;
+      if (roster.members.length !== expected.length || expected.some(member => !roster.members.some(saved => saved.id === member.id
+        && saved.name === member.name && saved.relation === member.relation && saved.role === member.role)))
+        throw new Error('Unconfirmed roster response.');
+      const snapshot = { ...data, ...roster };
+      latest.current = snapshot; draftBase.current = null; setData(snapshot); return snapshot;
+    } catch (cause) {
+      if (cause instanceof Error && cause.message === 'resident_identity_required') {
+        life.abort(); latest.current = null; pendingAdd.current = null; setPrivateHidden(true);
+      }
+      failure.current = life.signal.aborted ? 'session' : 'unconfirmed';
+      if (!life.signal.aborted) {
+        reconcile = true;
+        rebaseDraft.current = true;
+        setWriteMessage(cause instanceof Error && cause.message === 'resident_identity_required'
+          ? 'Your account is unavailable. Sign in again.' : 'The change may have saved. Check the refreshed list before trying again.');
+      }
+      return null;
+    } finally {
+      writing.current = false;
+      if (!life.signal.aborted && reconcile) { setReconciling(true); refreshRead(); }
+    }
+  }, [canEdit, data, privateHidden, profileId, setData, refreshRead]);
 
-  const addMember = useCallback(
-    async (input: { name: string; relation: string; role?: string }): Promise<HouseholdMember | null> => {
-      if (!profileId) return null;
-      const newMember: HouseholdMember = {
-        id: genId(),
-        name: input.name.trim(),
-        relation: input.relation.trim(),
-        ...(input.role?.trim() ? { role: input.role.trim() } : {}),
-      };
-      const ok = await persistMembers([...members, newMember]);
-      return ok ? newMember : null;
-    },
-    [members, persistMembers, profileId],
-  );
-
-  const updateMember = useCallback(
-    async (id: string, updates: Partial<Omit<HouseholdMember, 'id'>>): Promise<HouseholdMember | null> => {
-      const next = members.map((m) => (m.id === id ? { ...m, ...updates } : m));
-      const updated = next.find((m) => m.id === id) ?? null;
-      const ok = await persistMembers(next);
-      return ok ? updated : null;
-    },
-    [members, persistMembers],
-  );
-
-  const removeMember = useCallback(
-    async (id: string): Promise<boolean> => {
-      return persistMembers(members.filter((m) => m.id !== id));
-    },
-    [members, persistMembers],
-  );
-
-  const lastWriteFailure = useCallback(() => failureRef.current, []);
-
-  return {
-    members,
-    isLoading: read.isLoading,
-    isInitialLoading: read.isInitialLoading,
-    isRefreshing: read.isRefreshing,
-    isReady: read.isReady,
-    error: read.error,
-    errorAnnounced: read.errorAnnounced,
-    refetch: read.refetch,
-    addMember,
-    updateMember,
-    removeMember,
-    lastWriteFailure,
+  const members = data?.members ?? [];
+  const addMember = async (input: { name: string; relation: string; role?: string }): Promise<HouseholdMember | null> => {
+    if (writing.current) { failure.current = 'busy'; return null; }
+    const fields = { name: input.name.trim(), relation: input.relation.trim(), role: input.role?.trim() || undefined };
+    const old = pendingAdd.current;
+    const member = old && old.name === fields.name && old.relation === fields.relation && old.role === fields.role
+      ? old : { id: crypto.randomUUID(), ...fields };
+    pendingAdd.current = member;
+    const existing = members.find(value => value.id === member.id);
+    if (existing && canEdit) { pendingAdd.current = null; return existing; }
+    const saved = await persist([...members, member]);
+    if (saved) pendingAdd.current = null;
+    return saved?.members.find(value => value.id === member.id) ?? null;
   };
+  const updateMember = async (id: string, updates: Partial<Omit<HouseholdMember, 'id'>>) => {
+    if (!members.some(member => member.id === id)) { failure.current = 'conflict'; return null; }
+    const saved = await persist(members.map(member => member.id === id ? { ...member, ...updates } : member));
+    return saved?.members.find(member => member.id === id) ?? null;
+  };
+  const removeMember = async (id: string) => {
+    if (!members.some(member => member.id === id)) { failure.current = 'conflict'; return false; }
+    return (await persist(members.filter(member => member.id !== id))) !== null;
+  };
+  return { members, attendance: data?.attendance ?? null, attendanceError: data?.attendanceError ?? false,
+    isLoading: read.isLoading, isInitialLoading: !privateHidden && read.isInitialLoading,
+    isRefreshing: read.isRefreshing, isReady: !!data, error: read.error, errorAnnounced: read.errorAnnounced,
+    privateHidden, canEdit, writeMessage, sessionVersion: epoch,
+    beginEdit: () => { draftBase.current = data; setWriteMessage(null); }, refetch, addMember, updateMember, removeMember,
+    lastWriteFailure: () => failure.current };
 }

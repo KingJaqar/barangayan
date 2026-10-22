@@ -1,0 +1,16 @@
+[
+  {
+    "verification": {
+      "new_rpc_collisions": [],
+      "archive_guard_trigger": 0,
+      "archive_guard_function": null,
+      "staff_profile_references": [
+        {
+          "table": "barangay_officials",
+          "constraint": "barangay_officials_profile_id_fkey",
+          "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+        }
+      ]
+    }
+  }
+]

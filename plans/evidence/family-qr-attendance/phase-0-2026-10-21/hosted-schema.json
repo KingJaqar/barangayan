@@ -1,0 +1,563 @@
+{
+  "grants": [
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_center_checkins",
+      "privilege": "TRIGGER"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_center_checkins",
+      "privilege": "TRIGGER"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "anon",
+      "table": "evacuation_centers",
+      "privilege": "TRIGGER"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "authenticated",
+      "table": "evacuation_centers",
+      "privilege": "TRIGGER"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "anon",
+      "table": "household_members",
+      "privilege": "TRIGGER"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "INSERT"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "SELECT"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "UPDATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "DELETE"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "TRUNCATE"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "REFERENCES"
+    },
+    {
+      "role": "authenticated",
+      "table": "household_members",
+      "privilege": "TRIGGER"
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "SELECT",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "evacuation_center_checkins",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins read barangay checkins",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "evacuation_center_checkins",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents insert own checkins",
+      "schemaname": "public",
+      "with_check": "((user_id = auth.uid()) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((user_id = auth.uid()) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "evacuation_center_checkins",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents read own checkins",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "evacuation_centers",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins manage evacuation centers",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((deleted_at IS NULL) AND (is_active = true))",
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tablename": "evacuation_centers",
+      "permissive": "PERMISSIVE",
+      "policyname": "public read active evacuation centers",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = current_barangay_id()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins manage barangay household members",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = current_barangay_id()))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins read barangay household",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(profile_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents manage own household",
+      "schemaname": "public",
+      "with_check": "(profile_id = auth.uid())"
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((barangay_id = ( SELECT barangayan_private.active_admin_barangay_id() AS active_admin_barangay_id)) AND (role = 'resident'::text) AND (id <> ( SELECT auth.uid() AS uid)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "active admins delete resident profiles",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((role = 'resident'::text) AND (barangay_id = ( SELECT barangayan_private.active_admin_barangay_id() AS active_admin_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "active admins read archived residents",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins can create resident profiles in their barangay",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (role = 'admin'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins can read admin profiles in their barangay",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (role = 'resident'::text) AND (deleted_at IS NULL))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins can read residents in their barangay",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> auth.uid()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins can update admin profiles in their barangay",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "admins can update resident profiles in their barangay",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents can create their own profile",
+      "schemaname": "public",
+      "with_check": "(auth.uid() = id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(auth.uid() = id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents can read their own profile",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(auth.uid() = id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "residents can update their own profile",
+      "schemaname": "public",
+      "with_check": "(auth.uid() = id)"
+    }
+  ],
+  "postgres": "17.6",
+  "receipts": null,
+  "attendance": null,
+  "constraints": [
+    {
+      "name": "profiles_approved_id_submission_fkey",
+      "table": "profiles",
+      "definition": "FOREIGN KEY (approved_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)"
+    },
+    {
+      "name": "profiles_barangay_id_fkey",
+      "table": "profiles",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)"
+    },
+    {
+      "name": "profiles_current_id_submission_fkey",
+      "table": "profiles",
+      "definition": "FOREIGN KEY (current_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)"
+    },
+    {
+      "name": "profiles_custom_accent_colors_check",
+      "table": "profiles",
+      "definition": "CHECK (((array_length(custom_accent_colors, 1) IS NULL) OR (array_length(custom_accent_colors, 1) <= 10)))"
+    },
+    {
+      "name": "profiles_email_verification_status_check",
+      "table": "profiles",
+      "definition": "CHECK ((email_verification_status = ANY (ARRAY['unavailable'::text, 'unverified'::text, 'pending'::text, 'verified'::text])))"
+    },
+    {
+      "name": "profiles_employment_status_check",
+      "table": "profiles",
+      "definition": "CHECK ((employment_status = ANY (ARRAY['employed'::text, 'unemployed'::text, 'student'::text, 'self_employed'::text, 'retired'::text])))"
+    },
+    {
+      "name": "profiles_font_preference_check",
+      "table": "profiles",
+      "definition": "CHECK ((font_preference = ANY (ARRAY['system'::text, 'inter'::text, 'arial'::text, 'helvetica'::text, 'segoe-ui'::text, 'verdana'::text, 'tahoma'::text, 'trebuchet-ms'::text, 'georgia'::text, 'times-new-roman'::text, 'garamond'::text, 'courier-new'::text])))"
+    },
+    {
+      "name": "profiles_id_fkey",
+      "table": "profiles",
+      "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "profiles_id_verification_status_check",
+      "table": "profiles",
+      "definition": "CHECK ((id_verification_status = ANY (ARRAY['pending'::text, 'verified'::text, 'verification_failed'::text])))"
+    },
+    {
+      "name": "profiles_pkey",
+      "table": "profiles",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "profiles_role_check",
+      "table": "profiles",
+      "definition": "CHECK ((role = ANY (ARRAY['resident'::text, 'admin'::text])))"
+    },
+    {
+      "name": "profiles_sex_check",
+      "table": "profiles",
+      "definition": "CHECK ((sex = ANY (ARRAY['male'::text, 'female'::text])))"
+    },
+    {
+      "name": "profiles_theme_preference_check",
+      "table": "profiles",
+      "definition": "CHECK ((theme_preference = ANY (ARRAY['light'::text, 'dark'::text, 'system'::text])))"
+    },
+    {
+      "name": "evacuation_centers_availability_check",
+      "table": "evacuation_centers",
+      "definition": "CHECK ((availability = ANY (ARRAY['available'::text, 'unknown'::text, 'unavailable'::text])))"
+    },
+    {
+      "name": "evacuation_centers_barangay_id_fkey",
+      "table": "evacuation_centers",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "evacuation_centers_entrance_position_check",
+      "table": "evacuation_centers",
+      "definition": "CHECK (((entrance_position IS NULL) OR ((jsonb_typeof(entrance_position) = 'object'::text) AND (jsonb_typeof((entrance_position -> 'lat'::text)) = 'number'::text) AND (jsonb_typeof((entrance_position -> 'lng'::text)) = 'number'::text) AND\nCASE\n    WHEN ((jsonb_typeof((entrance_position -> 'lat'::text)) = 'number'::text) AND (jsonb_typeof((entrance_position -> 'lng'::text)) = 'number'::text)) THEN (((((entrance_position ->> 'lat'::text))::double precision >= ('-90'::integer)::double precision) AND (((entrance_position ->> 'lat'::text))::double precision <= (90)::double precision)) AND ((((entrance_position ->> 'lng'::text))::double precision >= ('-180'::integer)::double precision) AND (((entrance_position ->> 'lng'::text))::double precision <= (180)::double precision)))\n    ELSE false\nEND)))"
+    },
+    {
+      "name": "evacuation_centers_pkey",
+      "table": "evacuation_centers",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "evacuation_center_checkins_barangay_id_fkey",
+      "table": "evacuation_center_checkins",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "evacuation_center_checkins_evacuation_center_id_fkey",
+      "table": "evacuation_center_checkins",
+      "definition": "FOREIGN KEY (evacuation_center_id) REFERENCES evacuation_centers(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "evacuation_center_checkins_evacuation_center_id_user_id_che_key",
+      "table": "evacuation_center_checkins",
+      "definition": "UNIQUE (evacuation_center_id, user_id, checked_in_at)"
+    },
+    {
+      "name": "evacuation_center_checkins_pkey",
+      "table": "evacuation_center_checkins",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "evacuation_center_checkins_user_id_fkey",
+      "table": "evacuation_center_checkins",
+      "definition": "FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "household_members_checked_in_center_id_fkey",
+      "table": "household_members",
+      "definition": "FOREIGN KEY (checked_in_center_id) REFERENCES evacuation_centers(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "household_members_pkey",
+      "table": "household_members",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "household_members_profile_id_fkey",
+      "table": "household_members",
+      "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+    }
+  ]
+}

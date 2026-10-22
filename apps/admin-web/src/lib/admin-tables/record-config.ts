@@ -64,7 +64,6 @@ export const RECORD_CONFIG: Record<TableName, { label: string; path: string; ent
   households: { label: 'Households & Residents', path: '/households-residents', entity: 'household', fields: [
     text('name', 'Name', true), select('relation', 'Relation', ['spouse', 'child', 'parent', 'sibling', 'grandparent', 'grandchild', 'other']),
     select('role', 'Member role', ['member', 'head', 'spouse', 'child', 'parent', 'sibling', 'grandparent', 'grandchild', 'other']),
-    { key: 'is_checked_in', label: 'Checked in', type: 'boolean' },
   ] },
   staff: { label: 'Staff Members', path: '/staff', entity: 'staff', fields: [
     { ...text('full_name', 'Full name', true), source: 'profile' }, { ...text('mobile_number', 'Mobile number'), source: 'profile' },

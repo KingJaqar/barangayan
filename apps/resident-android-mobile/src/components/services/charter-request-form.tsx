@@ -21,6 +21,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
@@ -39,6 +40,7 @@ import { getMobileFontFamily } from '@/constants/fonts';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { supabase } from '@/lib/supabase';
 import { pickSupportingFile, type SupportingFile } from '@/lib/supporting-upload';
 
@@ -53,6 +55,7 @@ function Field({
   error,
   disabled,
   onLayout,
+  large = false,
 }: {
   label: string;
   value: string;
@@ -63,14 +66,16 @@ function Field({
   error?: string;
   disabled?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
+  large?: boolean;
 }) {
   const theme = useTheme();
   const { fontId } = useFontPreference();
   return (
     <View style={styles.field} onLayout={onLayout}>
-      <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
+      <ThemedText type="smallBold" style={styles.cardTitle}>{label}{required ? <ThemedText style={{ color: theme.resident.danger }}> *</ThemedText> : null}</ThemedText>
       <TextField
         presentation="resident"
+        appearance="requestForm"
         accessibilityLabel={label}
         value={value}
         onChangeText={onChange}
@@ -79,7 +84,7 @@ function Field({
         multiline={!numeric}
         editable={!disabled}
         error={error}
-        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.resident.danger, borderWidth: 1.5 } : undefined]}
+        style={[styles.input, large && styles.notesInput, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.resident.danger, borderWidth: 1.5 } : undefined]}
       />
     </View>
   );
@@ -92,6 +97,7 @@ function Toggle({
   error,
   disabled,
   onLayout,
+  joined = false,
 }: {
   label: string;
   value: boolean;
@@ -100,12 +106,13 @@ function Toggle({
   error?: string;
   disabled?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
+  joined?: boolean;
 }) {
   const theme = useTheme();
   return (
-    <View onLayout={onLayout}>
-    <View style={[styles.toggle, { borderColor: error ? theme.accentRed : theme.backgroundSelected }, error ? styles.invalid : undefined]}>
-      <ThemedText style={{ flex: 1 }}>{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
+    <View onLayout={onLayout} style={[styles.toggleSection, joined && styles.joinedToggle, { borderColor: error ? theme.resident.danger : theme.resident.border }]}>
+    <View style={styles.toggle}>
+      <ThemedText style={[styles.toggleLabel, { flex: 1 }]}>{label}{required ? <ThemedText style={{ color: theme.resident.danger }}> *</ThemedText> : null}</ThemedText>
       <Switch
         accessibilityLabel={label}
         value={value}
@@ -114,7 +121,7 @@ function Toggle({
         disabled={disabled}
       />
     </View>
-    {error ? <ThemedText type="small" themeColor="accentRed">{error}</ThemedText> : null}
+    {error ? <ThemedText type="small" style={[styles.body, { color: theme.resident.danger }]}>{error}</ThemedText> : null}
     </View>
   );
 }
@@ -122,6 +129,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   const catalog = catalogContract(doc)!;
   const router = useRouter();
   const theme = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
   const { profile, refetch, isLoading } = useProfile();
   const [purpose, setPurpose] = useState('');
   const [purposeOpen, setPurposeOpen] = useState(false);
@@ -136,6 +144,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   const [appearance, setAppearance] = useState(false);
   const [files, setFiles] = useState<Partial<Record<Requirement, SupportingFile & { id: string }>>>({});
   const [images, setImages] = useState<string[]>([]);
+  const [idPanelHeight, setIdPanelHeight] = useState(0);
   const [approved, setApproved] = useState<Tables<'id_submissions'> | null>(null);
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ message: string } | null>(null);
@@ -245,7 +254,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
       if (!validation.success) {
         const errors = serviceRequestFieldErrors(validation.error);
         const first = Object.keys(errors)[0] as ServiceRequestField | undefined;
-        if (first) scroll.current?.scrollTo({ y: Math.max(0, (positions.current[first] ?? 0) - 24), animated: true });
+        if (first) scroll.current?.scrollTo({ y: Math.max(0, (positions.current[first] ?? 0) - 24), animated: !reducedMotion });
         reportError(residentServiceError(validation.error, phase));
         return;
       }
@@ -272,22 +281,24 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
     }
   }
   const upload = (code: Requirement, label: string, required: boolean) => (
-    <View onLayout={(event) => locate(code as ServiceRequestField, event)} style={[styles.card, { borderColor: fieldErrors[code as ServiceRequestField] ? theme.accentRed : theme.backgroundSelected }]} key={code}>
+    <View onLayout={(event) => locate(code as ServiceRequestField, event)} style={[styles.panel, { backgroundColor: theme.resident.card, borderColor: fieldErrors[code as ServiceRequestField] ? theme.resident.danger : theme.resident.border }]} key={code}>
       <View style={styles.cardTitleRow}>
-        <Ionicons name="cloud-upload-outline" size={22} color={theme.resident.accentText} />
+        <View style={[styles.uploadIcon, { backgroundColor: theme.resident.accentSoft }]}>
+          <Ionicons name="cloud-upload-outline" size={20} color={theme.resident.accentText} />
+        </View>
         <View style={{ flex: 1 }}>
-          <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
+          <ThemedText type="smallBold" style={styles.cardTitle}>{label}{required ? <ThemedText style={{ color: theme.resident.danger }}> *</ThemedText> : null}</ThemedText>
+          <ThemedText type="small" style={styles.meta} themeColor="textSecondary">
             {required ? 'Required' : 'Optional'} · JPG, PNG, WEBP or PDF · up to 5 MB
           </ThemedText>
         </View>
       </View>
       {files[code] ? (
         <>
-          <ThemedText type="small" numberOfLines={1}>
+          <ThemedText type="small" style={styles.body}>
             {files[code]!.name}
           </ThemedText>
-          <PrimaryButton presentation="resident"
+          <PrimaryButton presentation="resident" appearance="requestForm"
             label={`Remove ${label}`}
             variant="secondary"
             disabled={submitting}
@@ -301,17 +312,17 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           />
         </>
       ) : null}
-      <PrimaryButton presentation="resident"
+      <PrimaryButton presentation="resident" appearance="requestForm"
         label={`Choose ${label}`}
         variant="secondary"
         disabled={submitting}
         onPress={() => void pick(code)}
       />
-      {fieldErrors[code as ServiceRequestField] ? <ThemedText type="small" themeColor="accentRed">{fieldErrors[code as ServiceRequestField]}</ThemedText> : null}
+      {fieldErrors[code as ServiceRequestField] ? <ThemedText type="small" style={[styles.body, { color: theme.resident.danger }]}>{fieldErrors[code as ServiceRequestField]}</ThemedText> : null}
     </View>
   );
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
       <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
       <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -319,82 +330,94 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
             <ThemedText type="subtitle" style={styles.heroTitle}>
               {doc.name}
             </ThemedText>
-            <View style={[styles.priceChip, { backgroundColor: theme.backgroundElement }]}>
+            <View style={styles.heroMeta}>
+            <View style={[styles.priceChip, { backgroundColor: theme.resident.surface }]}>
               <Ionicons name="cash-outline" size={15} color={theme.resident.accentText} />
-              <ThemedText type="smallBold" style={{ flexShrink: 1 }}>
+              <ThemedText type="smallBold" style={styles.priceLabel}>
                 {servicePriceLabel(doc)}
               </ThemedText>
             </View>
+            <ThemedText type="small" style={styles.requiredHint} themeColor="textSecondary">Fields marked <ThemedText style={{ color: theme.resident.danger }}>*</ThemedText> are required.</ThemedText>
+            </View>
           </View>
-          <ThemedText type="small" themeColor="textSecondary">Fields marked * are required.</ThemedText>
-          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
-            <View style={styles.cardTitleRow}>
-              <Ionicons name="person-circle-outline" size={24} color={theme.resident.accentText} />
-              <ThemedText type="heading" style={styles.cardTitle}>
+          <Card variant="resident" style={styles.panel}>
+            <View style={[styles.cardTitleRow, styles.residentTitleRow]}>
+              <Ionicons name="person-circle-outline" size={20} color={theme.resident.accentText} />
+              <ThemedText type="heading" style={[styles.cardTitle, styles.residentTitle]}>
                 Resident Details
               </ThemedText>
-              <View style={styles.inlineAction}>
-                <PrimaryButton presentation="resident" label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
-              </View>
+              <Pressable accessibilityRole="button" accessibilityLabel="Edit in Profile" onPress={() => router.push('/settings/profile')}
+                style={({ pressed }) => [styles.inlineAction, { backgroundColor: pressed ? theme.resident.accentSoft : 'transparent' }]}>
+                <ThemedText style={[styles.editLabel, { color: theme.resident.accentText }]}>Edit in Profile</ThemedText>
+              </Pressable>
             </View>
-            <ThemedText type="small">
+            <ThemedText type="small" style={[styles.body, styles.residentLine]}>
               {profile?.full_name ?? 'Loading resident details…'} ·{' '}
               {profile?.mobile_number ?? 'No mobile number on file'}
             </ThemedText>
           </Card>
-          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
+          <Card variant="resident" style={[styles.panel, { minHeight: idPanelHeight }]} onLayout={(event) => {
+            const height = event.nativeEvent.layout.height;
+            setIdPanelHeight(previous => height > previous ? height : previous);
+          }}>
             <View style={styles.cardTitleRow}>
-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
+              <Image
+                source={idVerificationState(profile) === 'verified'
+                  ? require('../../../assets/images/valid-id-verified.png')
+                  : require('../../../assets/images/valid-id-unverified.png')}
+                contentFit="contain"
+                accessibilityLabel={idVerificationState(profile) === 'verified' ? 'Valid ID verified' : 'Valid ID unverified'}
+                style={styles.idStatusIcon}
+              />
               <ThemedText type="heading" style={styles.cardTitle}>
                 Approved profile ID
               </ThemedText>
             </View>
-            <ThemedText type="small" themeColor="textSecondary">
+            <ThemedText type="small" style={styles.meta} themeColor="textSecondary">
               {verificationError ?? (isLoading ? 'Checking verification…' : idVerificationMessages[idVerificationState(profile)])}
             </ThemedText>
+            <View style={styles.idDetails}>
             {approved && approved.id === approvedId ? (
-              <>
-                <ThemedText type="small">
-                  {profile?.full_name} · {profile?.mobile_number}
-                </ThemedText>
-                <ThemedText type="small">
-                  {approved.id_type} · version {approved.version}
-                </ThemedText>
-                <View style={{ flexDirection: 'row', gap: 8 }}>
+              <View style={styles.idSummary}>
+                <View style={styles.idPreviews}>
                   {images.map((uri, index) => (
                     <Image
                       key={uri}
                       source={{ uri }}
                       accessibilityLabel={`Approved ID ${index === 0 ? 'front' : 'back'}`}
                       contentFit="contain"
-                      style={{ flex: 1, height: 96, borderRadius: 12 }}
+                      style={[styles.idImage, { backgroundColor: theme.resident.surface, borderColor: theme.resident.border }]}
                     />
                   ))}
                 </View>
-              </>
+                <View style={styles.idText}>
+                  <ThemedText type="smallBold" style={styles.idName}>{profile?.full_name} · {profile?.mobile_number}</ThemedText>
+                  <ThemedText type="small" style={styles.idType} themeColor="textSecondary">{approved.id_type} · version {approved.version}</ThemedText>
+                </View>
+              </View>
             ) : (
-              <PrimaryButton presentation="resident" label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
+              <PrimaryButton presentation="resident" appearance="requestForm" label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
             )}
-            <PrimaryButton presentation="resident" label="Refresh verification" variant="secondary" onPress={refetch} />
+            </View>
+            <PrimaryButton presentation="resident" appearance="requestForm" leadingIcon={<Ionicons name="refresh-outline" size={18} color={theme.resident.text} />} label={isLoading ? 'Refreshing verification…' : 'Refresh verification'} disabled={isLoading || submitting} variant="secondary" onPress={refetch} />
           </Card>
           <View onLayout={(event) => locate('purposeCode', event)} style={styles.field}>
           <ThemedText type="heading" style={styles.cardTitle}>
-            Purpose of request<ThemedText themeColor="accentRed"> *</ThemedText>
+            Purpose of request<ThemedText style={{ color: theme.resident.danger }}> *</ThemedText>
           </ThemedText>
-          <View style={fieldErrors.purposeCode ? [styles.invalid, { borderColor: theme.accentRed }] : undefined}>
-          <PrimaryButton presentation="resident"
-            label={option?.label ?? 'Choose a purpose'}
-            variant="secondary"
+          <Pressable accessibilityRole="button" accessibilityLabel={option?.label ?? 'Choose a purpose'} accessibilityHint="Choose a purpose of request" accessibilityState={{ expanded: purposeOpen, disabled: submitting }}
             onPress={() => setPurposeOpen(true)}
             disabled={submitting}
-          />
-          </View>
-          {fieldErrors.purposeCode ? <ThemedText type="small" themeColor="accentRed">{fieldErrors.purposeCode}</ThemedText> : null}
+            style={({ pressed }) => [styles.purposeControl, { backgroundColor: pressed ? theme.resident.pressed : theme.resident.surface, borderColor: fieldErrors.purposeCode ? theme.resident.danger : theme.resident.border }]}>
+            <ThemedText style={[styles.purposeLabel, { color: option ? theme.resident.text : theme.resident.muted, fontWeight: option ? '600' : '400' }]}>{option?.label ?? 'Choose a purpose'}</ThemedText>
+            <Ionicons name="chevron-down" size={20} color={theme.resident.muted} accessible={false} />
+          </Pressable>
+          {fieldErrors.purposeCode ? <ThemedText type="small" style={[styles.body, { color: theme.resident.danger }]}>{fieldErrors.purposeCode}</ThemedText> : null}
           </View>
           {option?.requiresExplanation ? (
             <>
               <Field label="Explain your purpose" value={explanation} onChange={setExplanation} required error={fieldErrors.purposeExplanation} onLayout={(event) => locate('purposeExplanation', event)} disabled={submitting} />
-              <ThemedText type="small" themeColor="textSecondary">
+              <ThemedText type="small" style={styles.body} themeColor="textSecondary">
                 {explanation.trim().length}/1000 characters
               </ThemedText>
             </>
@@ -408,7 +431,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           ) : null}
           {['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind) ? (
             <>
-              <ThemedText type="small" themeColor="textSecondary">
+              <ThemedText type="small" style={styles.body} themeColor="textSecondary">
                 HOA certification may support or establish residency. The document fee is ₱100.00.
               </ThemedText>
               {upload('hoa', 'HOA certification', catalog.requirementRules.hoaRequired)}
@@ -436,7 +459,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
               <Field label="Record/document reference" value={reference} onChange={setReference} required error={fieldErrors.recordReference} onLayout={(event) => locate('recordReference', event)} disabled={submitting} />
               <Field label="Number of copies" value={copies} onChange={setCopies} numeric required error={fieldErrors.copies} onLayout={(event) => locate('copies', event)} disabled={submitting} />
               <Field label="Total pages across all copies" value={totalPages} onChange={setTotalPages} numeric required error={fieldErrors.totalPages} onLayout={(event) => locate('totalPages', event)} disabled={submitting} />
-              <ThemedText type="small" themeColor="textSecondary">
+              <ThemedText type="small" style={styles.body} themeColor="textSecondary">
                 Fee: ₱10.00 × total pages across all copies.
               </ThemedText>
             </>
@@ -444,6 +467,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           {catalog.requirementRules.personalAppearance ? (
             <Toggle
               label="I understand personal appearance at the Barangay Hall is required"
+              joined={!renter && ['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind)}
               value={appearance}
               onChange={setAppearance}
               required
@@ -452,19 +476,19 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
               disabled={submitting}
             />
           ) : null}
-          <Field label="Additional notes (optional)" value={notes} onChange={setNotes} disabled={submitting} />
+          <Field label="Additional notes (optional)" value={notes} onChange={setNotes} disabled={submitting} large />
         </ScrollView>
-        <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected }]}>
+        <View style={[styles.footer, { backgroundColor: theme.resident.card, borderTopColor: theme.resident.border }]}>
           <View style={styles.footerPrice}>
-            <ThemedText type="small" themeColor="textSecondary">
+            <ThemedText type="small" style={styles.meta} themeColor="textSecondary">
               Fee
             </ThemedText>
-            <ThemedText type="smallBold" numberOfLines={2}>
+            <ThemedText type="smallBold" style={servicePriceLabel(doc).length > 22 ? styles.longFee : styles.feeValue}>
               {servicePriceLabel(doc)}
             </ThemedText>
           </View>
           <View style={styles.footerAction}>
-            <PrimaryButton presentation="resident"
+            <PrimaryButton presentation="resident" appearance="requestForm"
               label="Submit request"
               loading={submitting}
               disabled={!approvedId || approved?.id !== approvedId || submitting}
@@ -490,43 +514,66 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   );
 }
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: 16, paddingTop: 16, gap: 12, paddingBottom: 24 },
-  hero: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 },
-  heroTitle: { flexGrow: 1, flexShrink: 1, fontSize: 22, lineHeight: 28, fontWeight: '700', letterSpacing: -0.4 },
+  content: { padding: 20, gap: 20 },
+  hero: { gap: 10 },
+  heroTitle: { fontSize: 21, lineHeight: 26, fontWeight: '800', letterSpacing: -0.5 },
+  heroMeta: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 12, rowGap: 8 },
+  requiredHint: { flexShrink: 1, fontSize: 12.5, lineHeight: 18, fontWeight: '400' },
+  priceLabel: { flexShrink: 1, fontSize: 13, lineHeight: 18 },
   priceChip: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: 6,
     maxWidth: '100%',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
   },
-  field: { gap: 4 },
-  input: { minHeight: 44 },
-  invalid: { borderWidth: 1.5, borderRadius: 12, padding: 4 },
-  card: { padding: 12, borderWidth: 1, borderRadius: 12, gap: 8 },
-  cardTitleRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 },
-  cardTitle: { flexShrink: 1, fontSize: 16, lineHeight: 22 },
-  inlineAction: { marginLeft: 'auto', minWidth: 112 },
+  field: { gap: 8 },
+  input: { minHeight: 48, fontSize: 15, lineHeight: 22.5, paddingHorizontal: 16, paddingVertical: 12, textAlignVertical: 'top' },
+  notesInput: { minHeight: 94 },
+  panel: { padding: 16, borderWidth: 1, borderRadius: 16, gap: 12, boxShadow: '0 2px 10px rgba(0,0,0,0.05)' },
+  idDetails: { minHeight: 72 },
+  idStatusIcon: { width: 36, height: 36, borderRadius: 6, flexShrink: 0 },
+  idSummary: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  idPreviews: { width: 108, gap: 8 },
+  idImage: { width: 108, height: 72, borderRadius: 8, borderWidth: 1 },
+  idText: { flex: 1, minWidth: 0, gap: 2 },
+  idName: { fontSize: 13.5, lineHeight: 20, fontWeight: '600' },
+  idType: { fontSize: 13.5, lineHeight: 20, fontWeight: '400' },
+  uploadIcon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  cardTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  residentTitleRow: { flexWrap: 'nowrap' },
+  residentTitle: { flex: 1 },
+  cardTitle: { flexShrink: 1, fontSize: 15, lineHeight: 20 },
+  body: { fontSize: 14, lineHeight: 20, fontWeight: '400' },
+  meta: { fontSize: 13, lineHeight: 18, fontWeight: '400' },
+  residentLine: { paddingLeft: 30 },
+  inlineAction: { marginLeft: 'auto', minHeight: 44, marginVertical: -12, flexShrink: 1, justifyContent: 'center', borderRadius: 8 },
+  editLabel: { fontSize: 13, lineHeight: 20, fontWeight: '700' },
+  purposeControl: { minHeight: 48, borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  purposeLabel: { flex: 1, fontSize: 15, lineHeight: 22 },
+  toggleSection: { borderTopWidth: 1, borderBottomWidth: 1 },
+  joinedToggle: { marginTop: -20, borderTopWidth: 0 },
+  toggleLabel: { fontSize: 15, lineHeight: 21, fontWeight: '600' },
   toggle: {
     minHeight: 56,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 8,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 14,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   footerPrice: { flex: 1 },
-  footerAction: { flex: 1.1 },
+  footerAction: { flexShrink: 1, minWidth: 132, maxWidth: '65%' },
+  feeValue: { fontSize: 17, lineHeight: 24, fontWeight: '800' },
+  longFee: { fontSize: 12.5, lineHeight: 16, fontWeight: '800' },
 });

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo, useState, useEffect, type ComponentProps } from 'react';
+import { useMemo, useState, useEffect, useRef, type ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -27,20 +27,69 @@ export interface SegmentedControlProps<Key extends string> {
   activeKey: Key;
   onChange: (key: Key) => void;
   activeColor?: 'primary' | 'accentRed';
-  variant?: 'filled' | 'outline';
+  variant?: 'filled' | 'outline' | 'underline';
   presentation?: 'default' | 'resident';
+  appearance?: 'default' | 'purpose';
+  sizing?: 'equal' | 'content';
+  compact?: boolean;
 }
 
-export function SegmentedControl<Key extends string>({
+export function SegmentedControl<Key extends string>(props: SegmentedControlProps<Key>) {
+  return props.variant === 'underline' ? <UnderlineSegments {...props} /> : <PillSegments {...props} />;
+}
+
+function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, sizing = 'equal' }: SegmentedControlProps<Key>) {
+  const theme = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const [layouts, setLayouts] = useState<Record<string, { x: number; width: number }>>({});
+  const active = layouts[activeKey];
+  const valid = segments.some(segment => segment.key === activeKey);
+  const initialized = useRef(false);
+  const x = useSharedValue(0);
+  const width = useSharedValue(0);
+  const targetX = active?.x;
+  const targetWidth = active?.width;
+  useEffect(() => {
+    if (!valid || targetX === undefined || targetWidth === undefined) return;
+    const immediate = reducedMotion || !initialized.current;
+    initialized.current = true;
+    const timing = { duration: 200, easing: Easing.bezier(0.23, 1, 0.32, 1) };
+    x.value = immediate ? targetX : withTiming(targetX, timing);
+    width.value = immediate ? targetWidth : withTiming(targetWidth, timing);
+    return () => { cancelAnimation(x); cancelAnimation(width); };
+  }, [valid, targetX, targetWidth, reducedMotion, x, width]);
+  const indicator = useAnimatedStyle(() => ({ width: width.value, transform: [{ translateX: x.value }] }));
+  return <View accessibilityRole="tablist" style={[styles.underlineContainer, { borderBottomColor: theme.resident.border }]}>
+    {segments.map(segment => {
+      const selected = segment.key === activeKey;
+      return <Pressable key={segment.key} accessibilityRole="tab" accessibilityLabel={segment.label}
+        accessibilityState={{ selected }} onPress={() => onChange(segment.key)}
+        onLayout={event => {
+          const { x: nextX, width: nextWidth } = event.nativeEvent.layout;
+          setLayouts(current => current[segment.key]?.x === nextX && current[segment.key]?.width === nextWidth
+            ? current : { ...current, [segment.key]: { x: nextX, width: nextWidth } });
+        }}
+        style={[styles.underlineTab, sizing === 'equal' ? styles.equalTab : styles.contentTab]}>
+        <ThemedText type="smallBold" style={[styles.underlineLabel, { color: selected ? theme.resident.text : theme.resident.muted }]}>{segment.label}</ThemedText>
+      </Pressable>;
+    })}
+    {valid && active ? <Animated.View style={[styles.underline, { pointerEvents: 'none', backgroundColor: theme.resident.accentText }, indicator]} /> : null}
+  </View>;
+}
+
+function PillSegments<Key extends string>({
   segments,
   activeKey,
   onChange,
   activeColor = 'primary',
   variant = 'filled',
   presentation = 'default',
+  appearance = 'default',
+  compact = false,
 }: SegmentedControlProps<Key>) {
   const theme = useTheme();
   const resident = presentation === 'resident';
+  const purpose = resident && appearance === 'purpose';
   const reducedMotion = useResidentReducedMotion(resident);
   const accent = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
   const residentAccent = resident ? (activeColor === 'accentRed' ? theme.resident.danger : theme.resident.accent) : accent;
@@ -64,7 +113,7 @@ export function SegmentedControl<Key extends string>({
     );
   }, [containerWidth, segments.length]);
 
-  const activeTextStyle = resident ? { color: variant === 'filled' ? residentOnAccent : residentAccentText } : variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
+  const activeTextStyle = resident ? { color: purpose ? theme.resident.text : variant === 'filled' ? residentOnAccent : residentAccentText } : variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
 
   useEffect(() => {
     if (segmentWidth > 0 && (!resident || activeIndex >= 0)) {
@@ -90,12 +139,14 @@ export function SegmentedControl<Key extends string>({
   return (
     <ThemedView
       type="backgroundElement"
-      style={[styles.container, resident && { backgroundColor: theme.resident.surface }]}
+      style={[styles.container, resident && { backgroundColor: purpose ? theme.resident.accentSoft : theme.resident.surface }, compact && styles.compactContainer, purpose && styles.purposeContainer]}
       onLayout={(e) => { const next = e.nativeEvent.layout.width; setContainerWidth((current) => current === next ? current : next); }}>
       {segmentWidth > 0 && (!resident || activeIndex >= 0) && (
         <Animated.View
           style={[
             styles.pill,
+            compact && styles.compactPill,
+            purpose && styles.purposePill,
             {
               left: Spacing.half,
               width: segmentWidth,
@@ -116,7 +167,7 @@ export function SegmentedControl<Key extends string>({
             accessibilityRole="tab"
             accessibilityLabel={segment.label}
             accessibilityState={{ selected: isActive }}>
-            <View style={styles.segment}>
+            <View style={[styles.segment, compact && styles.compactSegment]}>
               {segment.icon ? (
                 <Ionicons
                   name={segment.icon}
@@ -131,7 +182,7 @@ export function SegmentedControl<Key extends string>({
                   numberOfLines={resident ? undefined : 1}
                   adjustsFontSizeToFit={!resident}
                   minimumFontScale={0.65}
-                  style={[styles.label, resident && { color: theme.resident.muted }, isActive ? activeTextStyle : undefined]}>
+                  style={[styles.label, compact && styles.compactLabel, resident && { color: theme.resident.muted }, purpose && { color: theme.resident.accentText, fontWeight: '700' }, isActive ? activeTextStyle : undefined]}>
                   {segment.label}
                 </ThemedText>
               )}
@@ -144,6 +195,18 @@ export function SegmentedControl<Key extends string>({
 }
 
 const styles = StyleSheet.create({
+  purposeContainer: { borderRadius: 12 },
+  purposePill: { borderRadius: 12 },
+  compactContainer: { borderRadius: 12, paddingVertical: 0 },
+  compactPill: { borderRadius: 10 },
+  compactSegment: { paddingVertical: 4 },
+  compactLabel: { fontSize: 13, lineHeight: 18, fontWeight: '600' },
+  underlineContainer: { flexDirection: 'row', position: 'relative', borderBottomWidth: 1 },
+  underlineTab: { minWidth: 0, minHeight: 48, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
+  equalTab: { flex: 1 },
+  contentTab: { paddingHorizontal: 8 },
+  underlineLabel: { fontSize: 15, lineHeight: 22, textAlign: 'center' },
+  underline: { position: 'absolute', left: 0, bottom: -1, height: 3, borderTopLeftRadius: 2, borderTopRightRadius: 2 },
   container: {
     flexDirection: 'row',
     borderRadius: Spacing.four,

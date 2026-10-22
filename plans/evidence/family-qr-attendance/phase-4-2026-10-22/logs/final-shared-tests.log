@@ -1,0 +1,15 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run src/schemas/household-attendance.test.ts src/schemas/household-attendance-responses.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 14ms
+ ✓ src/schemas/household-attendance.test.ts (25 tests) 31ms
+
+ Test Files  2 passed (2)
+      Tests  44 passed (44)
+   Start at  10:18:03
+   Duration  2.00s (transform 196ms, setup 0ms, collect 391ms, tests 45ms, environment 1ms, prepare 710ms)
+

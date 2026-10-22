@@ -67,7 +67,7 @@ Phase 17/18 builds the worker: list candidates, delete through the Storage API i
 
 | ID | Decision | Recommendation |
 |---|---|---|
-| PR-14 | Approve the retention/deletion matrix in section 3. | Approve the proposed default; it keeps lawful accounting records and removes identity material. |
+| PR-14 | Approve the retention/deletion matrix in section 3. | Approve the proposed default; it keeps lawful accounting records and removes identity material. **Approved as written 2026-10-21 (OD-16); implemented by migration `0136` (Phase 18), not deployed.** |
 | PR-07 | Name the sender operator and on-call owner for the outbox worker. | Same named owner until delegated (OD-01); required before Phase 17 can exit. |
 | PR-13 | Which incident events may appear in a push preview. | Generic text only; no title, address or reporter data. |
 | P03-T07-1 | Inbox retention (90 days after read) and outbox terminal retention (30 days). | Accept. |

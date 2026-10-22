@@ -6,13 +6,15 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DocumentsList } from '@/components/services/documents-list';
 import { LogsList } from '@/components/services/logs-list';
 import { RequestsList } from '@/components/services/requests-list';
+import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
 import { ThemedText } from '@/components/themed-text';
+import { SegmentedControl } from '@/components/segmented-control';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -46,38 +48,41 @@ export default function ServicesScreen() {
       : 'documents';
 
   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+  const [verificationCollapsed, setVerificationCollapsed] = useState(false);
+
+  const verifiedChip = session && !error && idVerificationState(profile) === 'verified' ? (
+    <Pressable accessibilityRole="button" accessibilityLabel={verificationCollapsed ? 'Show ID verification status' : 'Collapse ID verification status'}
+      accessibilityState={{ expanded: !verificationCollapsed }} onPress={() => setVerificationCollapsed(value => !value)} style={styles.verificationToggle}>
+      {verificationCollapsed ? <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessibilityLabel="Valid ID verified" /> : (
+        <View style={[styles.verifiedChip, { backgroundColor: theme.resident.accentSoft }]}>
+          <ThemedText type="smallBold" style={[styles.verifiedLabel, { color: theme.resident.accentText }]}>
+            {isLoading ? 'Checking ID verification…' : 'Valid ID Verified'}
+          </ThemedText>
+          <Ionicons name="close" size={16} color={theme.resident.accentText} accessible={false} />
+        </View>
+      )}
+    </Pressable>
+  ) : null;
 
   const statusBlock = (
     <>
       <ProfileCompletionBanner />
-      {/* Keep an already-verified profile's compact status while focus refreshes it.
-          Expanding it into the verification card on every tab visit moves the list
-          down and back up. Pending text is informational; action guards still use
-          the profile's loading/error state. */}
-      {session && !error && idVerificationState(profile) === 'verified' ? (
-        <View style={[styles.verifiedChip, { backgroundColor: `${theme.primary}1A` }]}>
-          <Ionicons name="shield-checkmark" size={18} color={theme.primary} />
-          <ThemedText type="smallBold" style={{ color: theme.primary }}>
-            {isLoading ? 'Checking ID verification…' : 'Valid ID Verified'}
-          </ThemedText>
-        </View>
-      ) : null}
       {session && (error || idVerificationState(profile) !== 'verified') ? (
         <View
           style={[
             styles.verifyCard,
-            { backgroundColor: theme.background, borderColor: theme.backgroundSelected, shadowColor: theme.text },
+            { backgroundColor: theme.resident.card, borderColor: theme.resident.border },
           ]}>
           <View style={styles.verifyHeader}>
-            <View style={[styles.verifyIcon, { backgroundColor: `${theme.primary}1F` }]}>
-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.primary} />
+            <View style={[styles.verifyIcon, { backgroundColor: theme.resident.accentSoft }]}>
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
             </View>
             <ThemedText accessibilityRole="alert" style={styles.verifyText}>
               {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
             </ThemedText>
           </View>
-          <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/valid-id')} />
-          {error ? <PrimaryButton label="Retry verification check" variant="secondary" onPress={refetch} /> : null}
+          <PrimaryButton label="Verify Now" presentation="resident" onPress={() => router.push('/settings/valid-id')} />
+          {error ? <PrimaryButton label="Retry verification check" presentation="resident" variant="secondary" onPress={refetch} /> : null}
         </View>
       ) : null}
     </>
@@ -85,69 +90,27 @@ export default function ServicesScreen() {
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
         <View style={styles.controls}>
-          <View style={[styles.tabs, { borderBottomColor: theme.backgroundSelected }]}>
-            {(session ? TABS : TABS.slice(0, 1)).map((tab) => {
-              const isActive = tab.key === segment;
-              return (
-                <Pressable
-                  key={tab.key}
-                  onPress={() => setSegment(tab.key)}
-                  accessibilityRole="tab"
-                  accessibilityLabel={tab.label}
-                  accessibilityState={{ selected: isActive }}
-                  style={[styles.tab, session ? styles.tabFlex : styles.tabGuest]}>
-                  <ThemedText
-                    type="smallBold"
-                    style={[
-                      styles.tabLabel,
-                      { color: isActive ? theme.text : theme.textSecondary },
-                    ]}>
-                    {tab.label}
-                  </ThemedText>
-                  <View
-                    style={[
-                      styles.tabIndicator,
-                      { backgroundColor: isActive ? theme.primary : 'transparent' },
-                    ]}
-                  />
-                </Pressable>
-              );
-            })}
-          </View>
+          <SegmentedControl segments={session ? TABS : TABS.slice(0, 1)} activeKey={segment} onChange={setSegment}
+            variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
         </View>
 
         {session && segment === 'requests' ? (
           // RequestsList owns its scroller so its filter chips can stay pinned while the
           // list scrolls; the banner/verification block scrolls away above them.
-          <RequestsList header={statusBlock} contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomTabInset + 120 }]} />
+          <RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} />
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomTabInset + 120 }]}>
+            contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
             {statusBlock}
-            {!session || segment === 'documents' ? <DocumentsList /> : null}
+            {!session || segment === 'documents' ? <DocumentsList verification={verifiedChip} /> : null}
             {session && segment === 'logs' && <LogsList />}
           </ScrollView>
         )}
 
-      {session && segment === 'requests' ? (
-        <Pressable
-          onPress={() => setSegment('documents')}
-          style={({ pressed }) => [
-            styles.fab,
-            { backgroundColor: theme.primary, bottom: bottomTabInset + 28 },
-            pressed && styles.fabPressed,
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel="Start a new document request">
-          <Ionicons name="add" size={22} color={theme.onPrimary} />
-          <ThemedText type="smallBold" style={{ color: theme.onPrimary }}>
-            New request
-          </ThemedText>
-        </Pressable>
-      ) : null}
+      <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
       </View>
     </SafeAreaView>
   );
@@ -163,60 +126,32 @@ const styles = StyleSheet.create({
   },
   controls: {
     paddingHorizontal: 20,
-    paddingTop: Spacing.three,
-    gap: Spacing.three,
-  },
-  tabs: {
-    flexDirection: 'row',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  tab: {
-    minHeight: 48,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  tabFlex: {
-    flex: 1,
-  },
-  tabGuest: {
-    paddingHorizontal: Spacing.three,
-  },
-  tabLabel: {
-    fontSize: 15,
-    paddingBottom: Spacing.two,
-  },
-  tabIndicator: {
-    height: 3,
-    alignSelf: 'stretch',
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
   },
   scrollContent: {
-    paddingTop: Spacing.three,
-    paddingBottom: 120,
+    paddingTop: 20,
+  },
+  documentsScrollContent: {
+    paddingTop: 6,
   },
   verifiedChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
+    gap: 4,
     alignSelf: 'flex-start',
-    marginHorizontal: 20,
-    marginBottom: Spacing.two,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: 20,
   },
+  verifiedIcon: { width: 44, height: 44 },
+  verifiedLabel: { fontSize: 12, lineHeight: 16 },
+  verificationToggle: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', alignSelf: 'flex-start' },
   verifyCard: {
     marginHorizontal: 20,
     marginBottom: Spacing.three,
     padding: Spacing.three,
     gap: Spacing.three,
-    borderRadius: 20,
-    borderWidth: StyleSheet.hairlineWidth,
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   verifyHeader: {
     flexDirection: 'row',
@@ -234,25 +169,5 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     lineHeight: 21,
-  },
-  fab: {
-    position: 'absolute',
-    right: 20,
-    flexDirection: 'row',
-    gap: Spacing.two,
-    height: 56,
-    paddingHorizontal: 20,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.22,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
-  },
-  fabPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.96 }],
   },
 });

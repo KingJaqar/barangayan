@@ -1,0 +1,173 @@
+{
+  "version": "1.18.1",
+  "packet_sha256": "bb30e395d64985f3eb0174b19ec30171c2ff5c7600b1da0268950532b9675583",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "f60b04ee317783be9c7793960deb26921a3429b046f5659ed7064e62b1d3d672"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "sha256": "14b5e589122a6f8022af04c7a93a2ee66c43c569c6bd4ab8dcefe15cf36991eb"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "sha256": "0a3f3bd192a0ff4629816d11bb360e2a7ba26b74f98948099877d4f5e72363e2"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "sha256": "a814e6d614bd4641358c76060067323663103f4f23a6d37f668ad9e4c9593780"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "sha256": "6dc32483ce1509ab188db082e671773d230a16e484dcd7f4013c9808c63bef3f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+      "sha256": "ef8534cef9c9c824fe11c27b158c6eec7f0668c507015b06947478205a28c44d"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "sha256": "67f5f0c85def82df251f5374eda4d6392b8452d2b4442be1d87a68f02083d270"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "sha256": "bd969bf75165beb72e7bb949ff29aa18b8eafc509fa51067c6ca4a11670c2949"
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "sha256": "25ae9521711f65bce2043f4ec2482b1fc420c9c029156462bd4ea164e24c3ace"
+    },
+    {
+      "path": "packages/shared/src/types/household-attendance.database.ts",
+      "sha256": "efbffaa3008213bbe0a37965abcad40bc7f7f5e4a3f1cb999373a075d8a65b60"
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "sha256": "0fb386afec26e4f399d804b1708fcba514b5f20612b3dd3aeee3a065aab63982"
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+      "sha256": "1c00fa129c875f40f813484cb601980f7e026c4e814267b972558ed0026bf541"
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "sha256": "fd855b54f39b53f30131e734294da1ac5e1f189d39082e83c158c875742166a6"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+      "start": 1,
+      "end": 35,
+      "characters": 2481
+    },
+    {
+      "path": "packages/shared/src/schemas/household-attendance.ts",
+      "start": 1,
+      "end": 126,
+      "characters": 7158
+    },
+    {
+      "path": "packages/shared/src/types/household-attendance.database.ts",
+      "start": 1,
+      "end": 126,
+      "characters": 3494
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "start": 1,
+      "end": 77,
+      "characters": 5649
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "start": 1,
+      "end": 16,
+      "characters": 951
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "start": 1,
+      "end": 154,
+      "characters": 5826
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+      "start": 1,
+      "end": 126,
+      "characters": 3721
+    },
+    {
+      "path": "apps/resident-web/src/lib/qr-checkin.ts",
+      "start": 1,
+      "end": 71,
+      "characters": 3245
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "start": 1,
+      "end": 9,
+      "characters": 674
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11
+    },
+    {
+      "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+      "start": 1,
+      "end": 118,
+      "characters": 6716
+    },
+    {
+      "path": "CLAUDE.md",
+      "start": 1,
+      "end": 1,
+      "characters": 11
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "start": 1,
+      "end": 165,
+      "characters": 10081
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "start": 1,
+      "end": 76,
+      "characters": 1942
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+      "start": 1,
+      "end": 100,
+      "characters": 3976
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "start": 1,
+      "end": 74,
+      "characters": 7252
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-22",
+  "candidate_source_hashes_verified": 16,
+  "non_owned_tracked_diffs_changed": [],
+  "plan_changes": "Only Phase 3 checklist/progress plus Phase 3 status row",
+  "original_user_tsconfig_preserved": true,
+  "admin_deadline_move_byte_identical_after_newline_normalization": true,
+  "initial_xml_chunks": 12,
+  "closure_xml_chunks": 7,
+  "all_required_read_ranges_recorded": true,
+  "main_browser_groups": 20,
+  "boundary_and_visual_groups": 2,
+  "notification_scenarios": 49,
+  "sql_assertions": 135,
+  "focused_tests": 65,
+  "new_dependencies": 0,
+  "links_valid": true,
+  "temporary_api": "Stopped; database and existing services preserved",
+  "phase_status": "Partially complete: external manual gates pending"
+}

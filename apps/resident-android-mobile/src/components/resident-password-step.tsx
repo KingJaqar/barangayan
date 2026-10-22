@@ -22,6 +22,8 @@ export function ResidentPasswordStep({ required, draft, onDraftChange, onSaved, 
   const { session, logout, setPasswordRecovery } = useAuth();
   const router = useRouter();
   const theme = useTheme();
+  const resident = variant === 'settings';
+  const presentation = resident ? 'resident' : 'default';
   const owner = useRef(new SetupOwner());
   const { password, confirmPassword, uncertain } = draft;
   const setPassword = (value: string) => onDraftChange({ ...draft, password: value });
@@ -78,26 +80,27 @@ export function ResidentPasswordStep({ required, draft, onDraftChange, onSaved, 
       setError(cause instanceof SetupTimeout || (cause instanceof Error && !('code' in cause) && !transportFailure) ? cause.message : safe.message);
     } finally { write.close(); if (owns()) setLoading(false); }
   }
-  return <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }} edges={['top', 'left', 'right']}>
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      <AuthHeader title={variant === 'settings' ? 'Set Password' : 'Create Password'} onBack={onBack} />
-      <ScrollView contentContainerStyle={{ padding: 24, gap: 16 }} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title">Create your password</ThemedText>
-        <ThemedText themeColor="textSecondary">{variant === 'settings' ? 'Google confirmed it is you. Add a password to also sign in with your email; you can keep using Google.' : required ? 'Finish setting up your account so you can sign in with your email and password.' : 'You can add a password to also sign in with your email, or keep using Google.'}</ThemedText>
-        <FormSection icon="lock-closed-outline" title="Account Security">
-          <TextField label="Password" accessibilityLabel="Password" required value={password} editable={!loading} onChangeText={setPassword} secureTextEntry={!visible} autoCapitalize="none" autoComplete="new-password" error={errors.password} passwordVisibility={{ visible, onToggle: () => setVisible(value => !value) }} />
+  const securityFields = <>
+          <TextField presentation={presentation} label="Password" accessibilityLabel="Password" required value={password} editable={!loading} onChangeText={setPassword} secureTextEntry={!visible} autoCapitalize="none" autoComplete="new-password" error={errors.password} passwordVisibility={{ visible, onToggle: () => setVisible(value => !value) }} />
           <ThemedText type="small" themeColor="textSecondary">Use 8+ characters with at least one uppercase letter, one number, and one special character.</ThemedText>
-          <TextField label="Confirm Password" accessibilityLabel="Confirm Password" required value={confirmPassword} editable={!loading} onChangeText={setConfirmPassword} secureTextEntry={!confirmVisible} autoCapitalize="none" autoComplete="new-password" error={errors.confirmPassword} passwordVisibility={{ visible: confirmVisible, onToggle: () => setConfirmVisible(value => !value) }} />
-          {!!password && !!confirmPassword && <ThemedText accessibilityLiveRegion="polite" themeColor={password === confirmPassword ? 'accentGreen' : 'accentRed'}>{password === confirmPassword ? 'Passwords match' : "Passwords don't match"}</ThemedText>}
-        </FormSection>
-        {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed">{error}</ThemedText>}
-        <PrimaryButton label={uncertain ? 'Check whether this password was saved' : variant === 'settings' ? 'Set password' : required ? 'Create account' : 'Finish account setup'} loading={loading} onPress={() => { void save(uncertain); }} />
-        {!required && !uncertain && <PrimaryButton label={variant === 'settings' ? 'Cancel' : 'Skip for now'} variant="secondary" disabled={loading} onPress={onSkip} />}
-        {error && <PrimaryButton label="Recover password" variant="secondary" disabled={loading} onPress={() => {
+          <TextField presentation={presentation} label="Confirm Password" accessibilityLabel="Confirm Password" required value={confirmPassword} editable={!loading} onChangeText={setConfirmPassword} secureTextEntry={!confirmVisible} autoCapitalize="none" autoComplete="new-password" error={errors.confirmPassword} passwordVisibility={{ visible: confirmVisible, onToggle: () => setConfirmVisible(value => !value) }} />
+          {!!password && !!confirmPassword && <ThemedText accessibilityLiveRegion="polite" themeColor={password === confirmPassword ? 'accentGreen' : 'accentRed'} style={resident ? { color: password === confirmPassword ? theme.resident.success : theme.resident.danger } : undefined}>{password === confirmPassword ? 'Passwords match' : "Passwords don't match"}</ThemedText>}
+</>;
+  return <SafeAreaView style={{ flex: 1, backgroundColor: resident ? theme.resident.card : theme.primary }} edges={resident ? ['left', 'right', 'bottom'] : ['top', 'left', 'right']}>
+    <View style={{ flex: 1, backgroundColor: resident ? theme.resident.card : theme.background }}>
+      <AuthHeader presentation={presentation} title={variant === 'settings' ? 'Set Password' : 'Create Password'} onBack={onBack} />
+      <ScrollView contentContainerStyle={{ padding: resident ? 20 : 24, gap: resident ? 20 : 16 }} keyboardShouldPersistTaps="handled">
+        <ThemedText type="title" style={resident ? { fontSize: 22, lineHeight: 28 } : undefined}>Create your password</ThemedText>
+        <ThemedText themeColor="textSecondary">{variant === 'settings' ? 'Google confirmed it is you. Add a password to also sign in with your email; you can keep using Google.' : required ? 'Finish setting up your account so you can sign in with your email and password.' : 'You can add a password to also sign in with your email, or keep using Google.'}</ThemedText>
+        {resident ? <View style={{ gap: 20 }}>{securityFields}</View> : <FormSection icon="lock-closed-outline" title="Account Security">{securityFields}</FormSection>}
+        {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed" style={resident ? { color: theme.resident.danger } : undefined}>{error}</ThemedText>}
+        <PrimaryButton presentation={presentation} label={uncertain ? 'Check whether this password was saved' : variant === 'settings' ? 'Set password' : required ? 'Create account' : 'Finish account setup'} loading={loading} onPress={() => { void save(uncertain); }} />
+        {!required && !uncertain && <PrimaryButton presentation={presentation} label={variant === 'settings' ? 'Cancel' : 'Skip for now'} variant="secondary" disabled={loading} onPress={onSkip} />}
+        {error && <PrimaryButton presentation={presentation} label="Recover password" variant="secondary" disabled={loading} onPress={() => {
           if (authSetupRequests.busy) { setError('Please wait for the earlier request to finish before starting recovery.'); return; }
           onDraftChange({ password: '', confirmPassword: '', uncertain: false }); setPasswordRecovery(true); router.replace('/(auth)/forgot-password');
         }} />}
-        {variant === 'setup' && <PrimaryButton label="Sign out" variant="secondary" disabled={loading} onPress={() => { if (authSetupRequests.busy) setError('The earlier request is still finishing. Please wait before signing out.'); else void logout(); }} />}
+        {variant === 'setup' && <PrimaryButton presentation={presentation} label="Sign out" variant="secondary" disabled={loading} onPress={() => { if (authSetupRequests.busy) setError('The earlier request is still finishing. Please wait before signing out.'); else void logout(); }} />}
       </ScrollView>
     </View>
   </SafeAreaView>;

@@ -1,0 +1,84 @@
+{
+  "generator": "Repomix 1.18.1",
+  "security": "enabled; exit 0; see log",
+  "packet_sha256": "f8244d5a06d4379fc004447cd42dceed53a45193cd8085cd39a5705de3570153",
+  "sources": [
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "sha256": "c01fdde5b3a0650f9f32d78fcad8bcf4e5b820858ef199fbe0fc1515b25ce7a2",
+      "source_equivalent": true
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "sha256": "6073e2d9a8e70d9a0ff5f5dd378e25f5b7e3d58dd1f31c9539b4bb316bfb87b7",
+      "source_equivalent": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "sha256": "f98bfbaecf7adc52355434aad36ef70ac41f7aae0f4357014ec2b8f0a165fc28",
+      "source_equivalent": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "sha256": "e3469de0693d800f996a5f212cbf58d9e08f1fb5c1cb62442e58eaa171e68d9e",
+      "source_equivalent": true
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "sha256": "ca079426319f77c8c94e8b45a91ab893d04d8dfdf0ded6dee7fe10a8768ab1ba",
+      "source_equivalent": true
+    }
+  ],
+  "chunks": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/attendance-dialog.tsx",
+      "start": 1,
+      "end": 121,
+      "characters": 10040
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/family-qr-camera.tsx",
+      "start": 1,
+      "end": 59,
+      "characters": 3100
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-household-attendance.ts",
+      "start": 1,
+      "end": 139,
+      "characters": 8482
+    },
+    {
+      "path": "apps/admin-web/src/lib/household-attendance.ts",
+      "start": 1,
+      "end": 84,
+      "characters": 5470
+    },
+    {
+      "path": "supabase/migrations/20261021125435_admin_household_attendance_projection.sql",
+      "start": 1,
+      "end": 64,
+      "characters": 3786
+    }
+  ],
+  "omissions": [],
+  "status": "review candidate; revalidate before final evidence",
+  "reader": {
+    "complete_chunks": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "chunk_limits": "each <=11500 chars and <=150 lines",
+    "findings": [
+      "Actor rechecked before each operation; read/mutation bounded by abort+15s local race; no automatic write retry.",
+      "Roster changes revise displayed list and invalidate captured review. New QR failure clears prior household.",
+      "Current receipt separate from authoritative refresh; frozen requests preserve UUID after uncertain outcome.",
+      "Camera starts only by user action; decoded/cancelled locks and late-start cleanup; native hardware behavior pending.",
+      "Projection uses security_invoker tenant-filtered active stays and holder-aware summary; archive/member IDs retained."
+    ],
+    "encoding_note": "First chunk0 print failed cp1252 before body; reread completely with python -X utf8. No omitted continuation."
+  }
+}

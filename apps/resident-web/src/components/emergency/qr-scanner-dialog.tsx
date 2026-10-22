@@ -6,9 +6,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/loading';
-import { useQrCheckins } from '@/hooks/use-qr-checkins';
 import { beginAttempt, notify } from '@/lib/notify';
-import { completeCheckIn, parseCenterQr } from '@/lib/qr-checkin';
+import { explainStaffCheckIn, parseCenterQr } from '@/lib/qr-checkin';
 import styles from './emergency.module.css';
 
 type ScanState = 'starting' | 'scanning' | 'unavailable' | 'processing';
@@ -59,10 +58,8 @@ function cameraProblem(thrown: unknown): CameraProblem {
  *
  * Feedback plan RW-LT-05: the QR reader loads inside the guarded start so a failed chunk
  * ends in guidance instead of an endless "starting" spinner; a camera that finishes
- * starting after the dialog closed is stopped; repeated decodes of the same code run one
- * check-in; each scan yields one terminal notification (see lib/qr-checkin.ts), and a
- * result that arrives after the dialog was closed still notifies but never touches the
- * closed dialog.
+ * starting after the dialog closed is stopped. A valid center scan explains staff
+ * confirmation and closes the scanner. Resident scans never write attendance.
  */
 export function QrScannerDialog({ open, onClose, userId, barangayId, userBarangayId }: { open: boolean; onClose: () => void; userId: string | null; barangayId: string | null; userBarangayId: string | null }) {
   const elementId = useId().replace(/[:]/g, '');
@@ -71,12 +68,10 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
   const [state, setState] = useState<ScanState>('starting');
   const [problem, setProblem] = useState<CameraProblem>('unknown');
   const [startAttempt, setStartAttempt] = useState(0);
-  const { checkIn, updateHouseholdStatus, lastCheckInFailure } = useQrCheckins(userId, barangayId);
-  // The effect below is intentionally keyed on open/attempt only, so it reads the latest
-  // callbacks through a ref.
-  const latest = useRef({ checkIn, updateHouseholdStatus, lastCheckInFailure, onClose, userBarangayId });
+  // Callback updates do not restart the camera; account changes do.
+  const latest = useRef({ onClose, userBarangayId });
   useEffect(() => {
-    latest.current = { checkIn, updateHouseholdStatus, lastCheckInFailure, onClose, userBarangayId };
+    latest.current = { onClose, userBarangayId };
   });
 
   useEffect(() => {
@@ -101,10 +96,9 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
       }
     }
 
-    async function handleDecoded(raw: string) {
+    function handleDecoded(raw: string) {
       if (cancelled || processing || !scanner) return;
-      // One check-in per decode burst: the reader can report the same frame again before
-      // pause() takes effect.
+      // The reader can report the same frame again before pause() takes effect.
       processing = true;
       setState('processing');
       try {
@@ -121,18 +115,8 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
         return;
       }
 
-      const outcome = await completeCheckIn({
-        centerId: parsed.centerId,
-        attempt,
-        checkIn: latest.current.checkIn,
-        updateHouseholdStatus: latest.current.updateHouseholdStatus,
-        lastCheckInFailure: latest.current.lastCheckInFailure,
-      });
-      // The notification above already reported the result. The dialog only updates
-      // itself while it is still the one the scan came from.
-      if (cancelled) return;
-      if (outcome === 'recorded' || outcome === 'partial') latest.current.onClose();
-      else resumeScanning();
+      explainStaffCheckIn(attempt);
+      if (!cancelled) latest.current.onClose();
     }
 
     async function start() {
@@ -176,7 +160,7 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
         active.stop().catch(() => {});
       }
     };
-  }, [open, elementId, startAttempt]);
+  }, [open, elementId, startAttempt, userId, barangayId]);
 
   // Escape closes (the overlay is a full-screen modal surface); focus starts on Close.
   useEffect(() => {

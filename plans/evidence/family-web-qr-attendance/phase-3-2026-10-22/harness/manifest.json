@@ -1,0 +1,42 @@
+[
+  {
+    "original": "tmp/family-web-phase3-20261022/browser.mjs",
+    "audit_copy": "harness/browser.mjs",
+    "sha256": "87e90bed730105e8ac9d3da88fc29d6a3dd1f5008d26655effb559621b306d83"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/browser-client.ts",
+    "audit_copy": "harness/browser-client.ts",
+    "sha256": "1cb5d6a7995357a1145280d5f7b01858271caf5bbbfcba8fcf32138df8bea609"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/browser-fixture.tsx",
+    "audit_copy": "harness/browser-fixture.tsx",
+    "sha256": "8b3deac1e01b9e1b8222033b1da9137c9315987f88e8baf201fd5ac4923dea89"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/browser-db.py",
+    "audit_copy": "harness/browser-db.py",
+    "sha256": "f450582ed7da5a496452e297f2b45a1dc07514dea1718d8e750efc8c82ba0c27"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/boundary.mjs",
+    "audit_copy": "harness/boundary.mjs",
+    "sha256": "8c7b27384a1472b56231a5a26b86e446ad674f2ceef744b030ad743f0d2fd30a"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/visual.mjs",
+    "audit_copy": "harness/visual.mjs",
+    "sha256": "f25ffadca72dcce9e8eb7c7843a4baa0dab56c4d86732a1f6537347dd3655c88"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/reset.sql",
+    "audit_copy": "harness/reset.sql",
+    "sha256": "d2e16d5f6aa8280ba39df6d2065be1e9e8a7f1edd05346d2f7f358c2051b8782"
+  },
+  {
+    "original": "tmp/family-web-phase3-20261022/sql-checks.py",
+    "audit_copy": "harness/sql-checks.py",
+    "sha256": "414d63f7beaa8fda6ffd4643553cce3930beb74dc94124f95aa3c76b296639d1"
+  }
+]

@@ -1,0 +1,2 @@
+Missing release configuration: IOS_BUNDLE_IDENTIFIER, IOS_URL_SCHEME, EAS_PROJECT_ID, EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_BARANGAY_ID, EXPO_PUBLIC_ENVIRONMENT
+Release gates remain closed: householdEditing, privateIdUploads, mapProviders, publicIncidents, completeExport, accountDeletion, remotePush

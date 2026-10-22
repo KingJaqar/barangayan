@@ -1,0 +1,8 @@
+{"chunk": 0, "path": "supabase/runbooks/family-attendance/pause.sql", "start": 1, "end": 11, "characters": 553, "next": null}
+{"chunk": 1, "path": "supabase/runbooks/family-attendance/resume.sql", "start": 1, "end": 11, "characters": 521, "next": null}
+{"chunk": 5, "path": "apps/admin-web/AGENTS.md", "start": 1, "end": 9, "characters": 674, "next": null}
+{"chunk": 6, "path": "apps/resident-web/AGENTS.md", "start": 1, "end": 9, "characters": 674, "next": null}
+{"chunk": 7, "path": "CLAUDE.md", "start": 1, "end": 1, "characters": 11, "next": null}
+{"chunk": 2, "path": "supabase/tests/household_attendance_concurrency.mjs", "start": 1, "end": 164, "characters": 11880, "next": 165}
+{"chunk": 3, "path": "supabase/tests/household_attendance_concurrency.mjs", "start": 165, "end": 178, "characters": 1278, "next": null}
+{"chunk": 4, "path": "supabase/tests/household_attendance_recovery.mjs", "start": 1, "end": 94, "characters": 7407, "next": null}

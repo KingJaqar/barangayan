@@ -1,0 +1,15 @@
+page.evaluate: NotFoundException: No MultiFormat Readers were able to detect the code.
+    at MultiFormatReader2.decodeInternal (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:22733:19)
+    at MultiFormatReader2.decode (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:22643:25)
+    at ZXingHtml5QrcodeDecoder2.decode (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:25872:33)
+    at C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:25862:25
+    at new Promise (<anonymous>)
+    at ZXingHtml5QrcodeDecoder2.decodeAsync (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:25860:14)
+    at Html5QrcodeShim2.<anonymous> (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:26255:46)
+    at step (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:26198:19)
+    at Object.next (C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:26150:16)
+    at C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-bundle.js:26137:69
+    at C:\Users\User\barangayan\tmp\family-attendance-phase4-20261022\decode-native.cjs:16:29 {
+  log: [],
+  name: 'Error'
+}

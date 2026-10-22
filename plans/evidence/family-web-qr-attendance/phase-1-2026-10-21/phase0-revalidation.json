@@ -1,0 +1,206 @@
+[
+  {
+    "path": "AGENTS.md",
+    "expected": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "state": "unchanged"
+  },
+  {
+    "path": "CLAUDE.md",
+    "expected": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+    "actual": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "expected": "EC1B6E023814AE1A510B02EA62229E5EB035D75E39E3335D5EA7F5CE5654D567",
+    "actual": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/CLAUDE.md",
+    "expected": "D631D88045F74623D568ADFB4783B72E3D1B732330D749BC6C72E6648D4581D3",
+    "actual": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/AGENTS.md",
+    "expected": "63F2C50380ED6303237CCE215CE27AF1D620D094C215E28D1B1538A3C070E3BB",
+    "actual": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/CLAUDE.md",
+    "expected": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49",
+    "actual": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "state": "unchanged"
+  },
+  {
+    "path": "plans/Resident_Android_Family_QR_Attendance_Implementation_Plan_2026_10_21.md",
+    "expected": "EEF56761546FAEFFBC483B617D17DB24195EC9C8DB394C7D2C128B4347396FF2",
+    "actual": "79cc96b438142c1d197b5d065f98a56ee6d20eec4bb1d75187e6ccbf9a8eb72f",
+    "state": "changed"
+  },
+  {
+    "path": "plans/Family_QR_Attendance_Context_Index.md",
+    "expected": "FAD03A24BB260F454A3492F770CC37AFDD6E7B4228535EE55913CCB5BD56904A",
+    "actual": "1249343da42dcefe61df1c500c0029211520acdc0b71484d54648f4f8f1afe7d",
+    "state": "changed"
+  },
+  {
+    "path": "supabase/migrations/0045_evacuation_center_checkins.sql",
+    "expected": "8C7227A915051F90B4A05863A41E80434690FB1460646A828C55D72534D1202C",
+    "actual": "8c7227a915051f90b4a05863a41e80434690fb1460646a828c55d72534d1202c",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0046_household_members.sql",
+    "expected": "21E7EEDF8AF78811301ADDB43D8030CED9B673BE759691B6C664841D47B63F00",
+    "actual": "21e7eedf8af78811301addb43d8030ced9b673be759691b6c664841d47b63f00",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0123_resident_household_conditional_save.sql",
+    "expected": "0FB386AFEC26E4F399D804B1708FCBA514B5F20612B3DD3AEEE3A065AAB63982",
+    "actual": "0fb386afec26e4f399d804b1708fcba514b5f20612b3dd3aeee3a065aab63982",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/migrations/0136_account_deletion_state.sql",
+    "expected": "88A5012543E07C04E37A27FAEE5959ECFC0F23DD8024F7C682C5883DC9ED172B",
+    "actual": "88a5012543e07c04e37a27faee5959ecfc0f23dd8024f7c682c5883dc9ed172b",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/functions/generate-household-qr/index.ts",
+    "expected": "5DC380091FFD9030845BD3B1FB4357A6AAACD8B8B1965F377749B3715C48B7A5",
+    "actual": "5dc380091ffd9030845bd3b1fb4357a6aaacd8b8b1965f377749b3715c48b7a5",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/functions/delete-my-account/delete-v2.ts",
+    "expected": "E8E978E7608308BDAF3F8B4A2E5D1EDC9CDB1F0153C1C411115F704C2AC2431B",
+    "actual": "e8e978e7608308bdaf3f8b4a2e5d1edc9cdb1f0153c1c411115f704c2ac2431b",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/src/schemas/household.ts",
+    "expected": "649EE31B82FC0D2791EA352A59C3BFC5EEF0A711979B04782852596296C0A224",
+    "actual": "649ee31b82fc0d2791ea352a59c3bfc5eef0a711979b04782852596296c0a224",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/src/schemas/emergency-qr.ts",
+    "expected": "B8D7D5CC0BAA3080839CFD896FCB1CAC90FD87F3D26874C1E87492431B8C47C8",
+    "actual": "b8d7d5cc0baa3080839cfd896fcb1cac90fd87f3d26874c1e87492431b8c47c8",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/drrm/household-code.tsx",
+    "expected": "14B5E589122A6F8022AF04C7A93A2EE66C43C569C6BD4AB8DCEFE15CF36991EB",
+    "actual": "14b5e589122a6f8022af04c7a93a2ee66c43c569c6bd4ab8dcefe15cf36991eb",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+    "expected": "6DC32483CE1509AB188DB082E671773D230A16E484DCD7F4013C9808C63BEF3F",
+    "actual": "6dc32483ce1509ab188db082e671773d230a16e484dcd7f4013c9808c63bef3f",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+    "expected": "EF8534CEF9C9C824FE11C27B158C6EEC7F0668C507015B06947478205A28C44D",
+    "actual": "ef8534cef9c9c824fe11c27b158c6eec7f0668c507015b06947478205a28c44d",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+    "expected": "1C00FA129C875F40F813484CB601980F7E026C4E814267B972558ED0026BF541",
+    "actual": "1c00fa129c875f40f813484cb601980f7e026c4e814267b972558ed0026bf541",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+    "expected": "E2E2AD6713450AD5FDB3A1C8E858DC84E94C5BA3C8FAA6CD02DB40D4CEA1A163",
+    "actual": "e2e2ad6713450ad5fdb3a1c8e858dc84e94c5ba3c8faa6cd02db40d4cea1a163",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/qr/payloads.ts",
+    "expected": "8187D1DC65E946FAFF08EDB0CAB2A61F1E4E7E5705B362EAF3AD267A1A9D64E8",
+    "actual": "8187d1dc65e946faff08edb0cab2a61f1e4e7e5705b362eaf3ad267a1a9d64e8",
+    "state": "unchanged"
+  },
+  {
+    "path": "package.json",
+    "expected": "F05EA72034CDA86E5063E3E1DAE73B26BC1F97840E656B3417B9CEAAD814F343",
+    "actual": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "expected": "37F814F883736F55D36252A62689F4257DC47A6775315329D9F411917E35CF7B",
+    "actual": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/package.json",
+    "expected": "A8F875B0407E66840706FCD4EDEDB79547CDBA8E9CC016CD130353D30EB1A944",
+    "actual": "a8f875b0407e66840706fcd4ededb79547cdba8e9cc016cd130353d30eb1a944",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "expected": "778D52C0834502F5BD0C6B00AE0044ECD57E86941197C667211004DFFDAE270E",
+    "actual": "778d52c0834502f5bd0c6b00ae0044ecd57e86941197c667211004dffdae270e",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-web/package.json",
+    "expected": "460B994A5A185AC6497154A5113DA3D57A3758F8BB3054D61613D6C25784315E",
+    "actual": "460b994a5a185ac6497154a5113da3d57a3758f8bb3054d61613d6c25784315e",
+    "state": "unchanged"
+  },
+  {
+    "path": "packages/shared/package.json",
+    "expected": "001625A5CD8D59380A32E2C392E7E3153EDDDB409FC4D744AC3EA39E0A600AEE",
+    "actual": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+    "expected": "F60B04EE317783BE9C7793960DEB26921A3429B046F5659ED7064E62B1D3D672",
+    "actual": "f60b04ee317783be9c7793960deb26921a3429b046f5659ed7064e62b1d3d672",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+    "expected": "0A3F3BD192A0FF4629816D11BB360E2A7BA26B74F98948099877D4F5E72363E2",
+    "actual": "0a3f3bd192a0ff4629816d11bb360e2a7ba26b74f98948099877d4f5e72363e2",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+    "expected": "D23EE623B915B9217F55662841B17EC39DD93122EDC0EDC271EA05DF784FD553",
+    "actual": "d23ee623b915b9217f55662841b17ec39dd93122edc0edc271ea05df784fd553",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+    "expected": "945CE4A31164933C7D626BC6C9777A9FDDBF72326D2D5149AE23B9B5E846F87C",
+    "actual": "945ce4a31164933c7d626bc6c9777a9fddbf72326d2d5149ae23b9b5e846f87c",
+    "state": "unchanged"
+  },
+  {
+    "path": "apps/resident-ios-mobile/src/features/profile/household.ts",
+    "expected": "6A366E2C7FFE588E0D4AADB7BFDEDA0E338F75140AB6C6A72FB11D04ADC6CA46",
+    "actual": "6a366e2c7ffe588e0d4aadb7bfdeda0e338f75140ab6c6a72fb11d04adc6ca46",
+    "state": "unchanged"
+  },
+  {
+    "path": "supabase/tests/resident_household_conditional.test.sql",
+    "expected": "DCC4FD2707809D0977ADD745AE3DF7D299AE0356DC3324465E32E2394B0AA6DF",
+    "actual": "dcc4fd2707809d0977add745ae3df7d299ae0356dc3324465e32e2394b0aa6df",
+    "state": "unchanged"
+  }
+]

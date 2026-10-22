@@ -185,7 +185,7 @@
 .qrDialog .secondaryButton { min-width: 0; padding-inline: 12px; }
 .qrFrame { display: flex; width: min(256px, 100%); aspect-ratio: 1; align-items: center; justify-content: center; margin-inline: auto; border: 1px solid var(--border); border-radius: 18px; padding: 12px; background: var(--card); }
 .qrFrame canvas { width: 100% !important; max-width: 220px; height: auto !important; }
-.qrFrame img { max-width: 100%; max-height: 100%; }
+
 .choice { min-height: 36px; border: 1px solid var(--border); border-radius: 999px; padding: 7px 12px; background: var(--card); color: var(--em-muted); font-size: 12px; font-weight: 600; transition: color 180ms, background 180ms; }
 .choice:hover { background: var(--em-tint); }
 .choice[aria-pressed='true'] { border-color: var(--primary); background: var(--primary); color: var(--primary-foreground); }

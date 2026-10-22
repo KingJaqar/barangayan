@@ -1,0 +1,27 @@
+{
+  "database": "family_attendance_web4_20261022",
+  "result": "pass",
+  "reference": "tmp\\attendance-0139-recovery-20261022\\reference-schema.sql",
+  "reference_sha256": "2ca41de2e00ab341a49e76c6d50b0cc5dd1ec5cbc3b9235854b48874976c728a",
+  "migrations": [
+    {
+      "path": "supabase/migrations/0139_remote_schema.sql",
+      "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2"
+    },
+    {
+      "path": "supabase/migrations/0140_restore_household_attendance.sql",
+      "sha256": "461adb6e94c870850303dbe4e110671691e05949d4acd872ef126eb2149d8d44"
+    },
+    {
+      "path": "supabase/migrations/0141_attendance_receipt_export_access.sql",
+      "sha256": "ccfb76c6078f1e31bcc6eb6d0e134b1ddfbaa853e68632e9b4539f7b73eed1e2"
+    }
+  ],
+  "preserved": {
+    "stays": 0,
+    "legacy": 1,
+    "members": 1,
+    "profiles": 2,
+    "receipts": 0
+  }
+}

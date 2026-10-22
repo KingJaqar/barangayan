@@ -1,0 +1,188 @@
+{
+  "triggers": [
+    {
+      "name": "guard_evacuation_checkin_tenant",
+      "table": "evacuation_center_checkins",
+      "definition": "CREATE TRIGGER guard_evacuation_checkin_tenant BEFORE INSERT OR UPDATE OF evacuation_center_id, user_id, barangay_id ON public.evacuation_center_checkins FOR EACH ROW EXECUTE FUNCTION guard_evacuation_checkin_tenant()"
+    },
+    {
+      "name": "record_evacuation_center_routing",
+      "table": "evacuation_centers",
+      "definition": "CREATE TRIGGER record_evacuation_center_routing AFTER INSERT OR DELETE OR UPDATE ON public.evacuation_centers FOR EACH ROW EXECUTE FUNCTION barangayan_private.record_evacuation_center_routing()"
+    },
+    {
+      "name": "stamp_evacuation_center_routing",
+      "table": "evacuation_centers",
+      "definition": "CREATE TRIGGER stamp_evacuation_center_routing BEFORE INSERT OR UPDATE ON public.evacuation_centers FOR EACH ROW EXECUTE FUNCTION barangayan_private.stamp_evacuation_center_routing()"
+    },
+    {
+      "name": "household_members_updated_at",
+      "table": "household_members",
+      "definition": "CREATE TRIGGER household_members_updated_at BEFORE UPDATE ON public.household_members FOR EACH ROW EXECUTE FUNCTION handle_household_member_updated_at()"
+    },
+    {
+      "name": "a_guard_profile_foundations",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER a_guard_profile_foundations BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.guard_profile_foundations()"
+    },
+    {
+      "name": "a_require_id_operations",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER a_require_id_operations BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.require_id_operations()"
+    },
+    {
+      "name": "b_enforce_profile_locality",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER b_enforce_profile_locality BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.enforce_profile_locality()"
+    },
+    {
+      "name": "compose_profiles_display_fields",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER compose_profiles_display_fields BEFORE INSERT OR UPDATE OF first_name, last_name, middle_name, suffix, house_no, street, city ON public.profiles FOR EACH ROW EXECUTE FUNCTION compose_profile_display_fields()"
+    },
+    {
+      "name": "guard_verification_fields",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER guard_verification_fields BEFORE UPDATE ON public.profiles FOR EACH ROW WHEN ((((current_setting('request.jwt.claims'::text, true))::json ->> 'role'::text) = 'authenticated'::text)) EXECUTE FUNCTION prevent_verification_field_update()"
+    },
+    {
+      "name": "reset_changed_profile_email_verification",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER reset_changed_profile_email_verification BEFORE UPDATE OF email ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.reset_changed_profile_email_verification()"
+    },
+    {
+      "name": "set_profiles_updated_at",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER set_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "name": "sync_household_members_from_jsonb",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER sync_household_members_from_jsonb BEFORE UPDATE OF household_members ON public.profiles FOR EACH ROW WHEN ((old.household_members IS DISTINCT FROM new.household_members)) EXECUTE FUNCTION sync_household_members_from_jsonb()"
+    },
+    {
+      "name": "trg_guard_id_verification_status",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER trg_guard_id_verification_status BEFORE UPDATE OF id_verification_status ON public.profiles FOR EACH ROW EXECUTE FUNCTION guard_id_verification_status()"
+    },
+    {
+      "name": "trg_guard_role_escalation",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER trg_guard_role_escalation BEFORE UPDATE OF role ON public.profiles FOR EACH ROW EXECUTE FUNCTION guard_role_escalation()"
+    },
+    {
+      "name": "trg_sync_barangay_official",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER trg_sync_barangay_official AFTER INSERT OR UPDATE OF role, deleted_at, barangay_id ON public.profiles FOR EACH ROW EXECUTE FUNCTION sync_barangay_official()"
+    },
+    {
+      "name": "z_clear_id_repair_on_publication",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER z_clear_id_repair_on_publication BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.clear_id_repair_on_publication()"
+    },
+    {
+      "name": "z_guard_profile_locations",
+      "table": "profiles",
+      "definition": "CREATE TRIGGER z_guard_profile_locations BEFORE INSERT OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION barangayan_private.guard_profile_locations()"
+    }
+  ],
+  "functions": [
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "name": "active_admin_barangay_id",
+      "result": "uuid",
+      "schema": "barangayan_private",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION barangayan_private.active_admin_barangay_id()\n RETURNS uuid\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\n select a.barangay_id from public.profiles a where a.id=(select auth.uid())\n and (select auth.uid()) is not null and a.role='admin' and a.deleted_at is null\n$function$\n"
+    },
+    {
+      "acl": [
+        "=X/postgres",
+        "postgres=X/postgres",
+        "anon=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "name": "current_barangay_id",
+      "result": "uuid",
+      "schema": "public",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.current_barangay_id()\n RETURNS uuid\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n  select barangay_id from public.profiles where id = auth.uid();\n$function$\n"
+    },
+    {
+      "acl": [
+        "=X/postgres",
+        "postgres=X/postgres",
+        "anon=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "name": "current_role",
+      "result": "text",
+      "schema": "public",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.\"current_role\"()\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n  select role from public.profiles where id = auth.uid();\n$function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "name": "erase_own_account_records",
+      "result": "text",
+      "schema": "public",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.erase_own_account_records()\n RETURNS text\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare\n  v_user uuid := (select auth.uid());\n  v_state text;\nbegin\n  if v_user is null then raise exception 'Not authenticated' using errcode = 'P0001'; end if;\n  select state into v_state from public.account_deletion_requests where user_id = v_user;\n  if v_state = 'completed' then return v_state; end if;\n  if exists (select 1 from public.profiles where id = v_user and deleted_at is null) then\n    if not barangayan_private.has_recent_authentication() then\n      raise exception 'fresh_authentication_required' using errcode = '42501';\n    end if;\n  elsif v_state is null then\n    raise exception 'Profile not found or already deleted' using errcode = 'P0002';\n  end if;\n\n  insert into public.account_deletion_requests (user_id, state) values (v_user, 'requested')\n  on conflict (user_id) do update set attempts = public.account_deletion_requests.attempts + 1, updated_at = now();\n\n  perform set_config('barangayan.profile_location_operation', v_user::text, true);\n  update public.profiles set\n    full_name = 'Deleted Resident', first_name = null, middle_name = null, last_name = null, suffix = null,\n    mobile_number = null, home_address = null, house_no = null, street = null, email = null, avatar_url = null,\n    birth_date = null, sex = null, employment_status = null, occupation = null,\n    id_photo_urls = '{}', id_type = null, id_verification_status = null,\n    current_id_submission_id = null, approved_id_submission_id = null,\n    household_members = '[]'::jsonb,\n    registration_location = null, registration_home_location = null, verified_location = null, verified_location_address = null,\n    location_verified = null, location_verified_at = null,\n    push_notifications_enabled = false, custom_accent_colors = '{}',\n    deleted_at = coalesce(deleted_at, now())\n  where id = v_user;\n  perform set_config('barangayan.profile_location_operation', '', true);\n\n  perform set_config('barangayan.foundation_operation', 'admin_record_correction', true);\n  update public.service_requests set\n    requester_notes = null, purpose_explanation = null, id_document_path = null,\n    supporting_details = case when contract_version = 2 then '{}'::jsonb else null end\n  where resident_id = v_user;\n  perform set_config('barangayan.foundation_operation', '', true);\n  update public.incidents set reporter_id = null, photo_urls = '{}' where reporter_id = v_user;\n\n  delete from public.household_members where profile_id = v_user;\n  delete from public.request_attachments where resident_id = v_user;\n  update public.id_submissions set id_type = 'erased', front_path = 'erased/' || id::text || '/front', back_path = 'erased/' || id::text || '/back', confirmed_details = null\n  where resident_id = v_user;\n  delete from public.id_submissions s where s.resident_id = v_user\n    and not exists (select 1 from public.service_requests r where r.approved_id_submission_id = s.id);\n  delete from public.drive_registrations where user_id = v_user;\n  delete from public.evacuation_center_checkins where user_id = v_user;\n  delete from public.push_tokens where user_id = v_user;\n  delete from public.announcement_reads where resident_id = v_user;\n  delete from public.notification_preferences where user_id = v_user;\n  delete from barangayan_private.notification_events where recipient_id = v_user;\n\n  update public.account_deletion_requests\n  set state = case when barangayan_private.deletion_state_rank(state) < 2 then 'profile_erased' else state end, last_error = null, updated_at = now()\n  where user_id = v_user\n  returning state into v_state;\n  return v_state;\nend $function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "name": "request_own_account_deletion",
+      "result": "void",
+      "schema": "public",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.request_own_account_deletion()\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare v_user_id uuid:=(select auth.uid());\nbegin\n if v_user_id is null then raise exception 'Not authenticated' using errcode='P0001'; end if;\n if not exists(select 1 from public.profiles where id=v_user_id and deleted_at is null) then\n  raise exception 'Profile not found or already deleted' using errcode='P0002';\n end if;\n if not barangayan_private.has_recent_authentication() then\n  raise exception 'fresh_authentication_required' using errcode='42501';\n end if;\n update public.profiles set\n  full_name='Deleted Resident',mobile_number=null,home_address=null,email=null,avatar_url=null,\n  id_photo_urls='{}',id_type=null,id_verification_status=null,household_members='[]'::jsonb,deleted_at=now()\n where id=v_user_id and deleted_at is null;\n if not found then raise exception 'Profile not found or already deleted' using errcode='P0002'; end if;\nend $function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "name": "save_resident_household_if_unchanged",
+      "result": "jsonb",
+      "schema": "public",
+      "arguments": "p_members jsonb, p_expected jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.save_resident_household_if_unchanged(p_members jsonb, p_expected jsonb)\n RETURNS jsonb\n LANGUAGE sql\n SET search_path TO ''\nAS $function$\r\n select barangayan_private.save_resident_household_if_unchanged(p_members,p_expected)\r\n$function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "name": "save_resident_household_if_unchanged",
+      "result": "jsonb",
+      "schema": "barangayan_private",
+      "arguments": "p_members jsonb, p_expected jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION barangayan_private.save_resident_household_if_unchanged(p_members jsonb, p_expected jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare\r\n v_uid uuid:=(select auth.uid());\r\n p public.profiles;\r\n v_item jsonb;\r\n v_id text;\r\n v_name text;\r\n v_relation text;\r\n v_role text;\r\n v_normalized jsonb:='[]'::jsonb;\r\n v_current jsonb;\r\n -- ECMAScript trim/\\s characters, matching the profile completion validator.\r\n ws text:=E' \\t\\n\\r\\f'||chr(11)||chr(160)||chr(5760)||chr(8192)||chr(8193)||chr(8194)||chr(8195)\r\n  ||chr(8196)||chr(8197)||chr(8198)||chr(8199)||chr(8200)||chr(8201)||chr(8202)\r\n  ||chr(8232)||chr(8233)||chr(8239)||chr(8287)||chr(12288)||chr(65279);\r\nbegin\r\n if v_uid is null or not exists(select 1 from auth.users u where u.id=v_uid\r\n  and not coalesce(u.is_anonymous,false) and u.deleted_at is null\r\n  and (u.banned_until is null or u.banned_until<=now())) then\r\n  raise exception 'resident_identity_required' using errcode='42501';\r\n end if;\r\n if jsonb_typeof(p_members) is distinct from 'array' or jsonb_array_length(p_members)>30 then\r\n  raise exception 'invalid_household_members' using errcode='22023';\r\n end if;\r\n if p_expected is not null and jsonb_typeof(p_expected) not in ('array','null') then\r\n  raise exception 'invalid_household_snapshot' using errcode='22023';\r\n end if;\r\n\r\n for v_item in select value from jsonb_array_elements(p_members) loop\r\n  if jsonb_typeof(v_item) is distinct from 'object'\r\n     or jsonb_typeof(v_item->'id') is distinct from 'string'\r\n     or jsonb_typeof(v_item->'name') is distinct from 'string'\r\n     or jsonb_typeof(v_item->'relation') is distinct from 'string'\r\n     or (v_item ? 'role' and jsonb_typeof(v_item->'role') not in ('string','null')) then\r\n   raise exception 'invalid_household_member' using errcode='22023';\r\n  end if;\r\n  v_id:=v_item->>'id';\r\n  if v_id !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then\r\n   raise exception 'invalid_household_member_id' using errcode='22023';\r\n  end if;\r\n  v_name:=btrim(v_item->>'name',ws);\r\n  v_relation:=btrim(v_item->>'relation',ws);\r\n  v_role:=nullif(btrim(coalesce(v_item->>'role',''),ws),'');\r\n  if char_length(v_name) not between 1 and 200 or char_length(v_relation) not between 1 and 100\r\n     or (v_role is not null and char_length(v_role)>50) then\r\n   raise exception 'invalid_household_member' using errcode='22023';\r\n  end if;\r\n  v_normalized:=v_normalized||jsonb_build_array(jsonb_strip_nulls(jsonb_build_object(\r\n   'id',lower(v_id),'name',v_name,'relation',v_relation,'role',v_role)));\r\n end loop;\r\n if (select count(distinct m->>'id') from jsonb_array_elements(v_normalized) m)<>jsonb_array_length(v_normalized) then\r\n  raise exception 'duplicate_household_member_id' using errcode='22023';\r\n end if;\r\n\r\n perform pg_advisory_xact_lock(hashtextextended(v_uid::text,1));\r\n select * into p from public.profiles where id=v_uid for update;\r\n if not found or p.role<>'resident' or p.deleted_at is not null then\r\n  raise exception 'forbidden' using errcode='42501';\r\n end if;\r\n v_current:=coalesce(p.household_members,'[]'::jsonb);\r\n if v_current is distinct from coalesce(nullif(p_expected,'null'::jsonb),'[]'::jsonb) then\r\n  raise exception 'resident_household_changed' using errcode='PT409';\r\n end if;\r\n\r\n -- The mirror trigger reconciles canonical rows, preserves attendance for retained\r\n -- IDs and rejects an ID owned by another household (all within this transaction).\r\n update public.profiles set household_members=v_normalized where id=v_uid;\r\n select household_members into v_current from public.profiles where id=v_uid;\r\n return v_current;\r\nend $function$\n"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "name": "sync_household_members_from_jsonb",
+      "result": "trigger",
+      "schema": "public",
+      "arguments": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.sync_household_members_from_jsonb()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare member jsonb; member_id uuid; retained uuid[] := '{}';\r\nbegin\r\n for member in select * from jsonb_array_elements(coalesce(new.household_members,'[]'::jsonb)) loop\r\n  begin member_id := coalesce((member->>'id')::uuid,gen_random_uuid());\r\n  exception when invalid_text_representation then member_id := gen_random_uuid(); end;\r\n  retained := array_append(retained,member_id);\r\n  if exists(select 1 from public.household_members h where h.id=member_id and h.profile_id<>new.id) then\r\n   raise exception 'Household member belongs to another profile' using errcode='42501';\r\n  end if;\r\n  insert into public.household_members(id,profile_id,name,relation,role)\r\n  values(member_id,new.id,member->>'name',member->>'relation',coalesce(nullif(member->>'role',''),'member'))\r\n  on conflict(id) do update set name=excluded.name,relation=excluded.relation,role=excluded.role;\r\n end loop;\r\n delete from public.household_members where profile_id=new.id and deleted_at is null and not(id=any(retained));\r\n return new;\r\nend $function$\n"
+    }
+  ],
+  "deletion_state_table": "account_deletion_requests"
+}

@@ -1,0 +1,321 @@
+{
+  "date": "2026-10-22T02:22:41.245Z",
+  "browser": "155.0.8059.85",
+  "checks": [
+    "Actual Android Family/hooks load four people through real resident-role Supabase RPC/REST; local QR has canonical household identity",
+    "Idle dialog has stable request count; no background traffic or read/update loop",
+    "Holder + three members loaded, none preselected, empty confirmation disabled",
+    "Staff confirms exactly two of four; actual Android Family refresh shows two arrivals and two unchanged people",
+    "Committed but unavailable response retains frozen exact request/payload; explicit retry retrieves receipt; failed refresh labels last-known data",
+    "Staff exact-stay checkout appears in actual Android Family with preserved arrival/departure Manila timestamps",
+    "Partial family arrival/departure uses actual authenticated-role RPCs; unselected member remains unchanged",
+    "Desktop/light and narrow/dark accent/font layouts, 200% CSS zoom, native dialog keyboard containment",
+    "Holder-only household supported; coalesced return-to-focus read invalidates stale review without a write",
+    "Denied/unavailable camera leaves useful directory fallback; scanner can close",
+    "Actual html5-qrcode decodes QRCodeCanvas synthetic video stream; one secured lookup, camera tracks released",
+    "Camera permission resolving after close releases late native tracks and ignores decode callbacks",
+    "Wrong QR type clears previous selectable household and receipt; cannot confirm old family",
+    "Malformed lookup response does not overwrite verified private data; edits disabled until refresh",
+    "Double confirmation sends one write; checkout succeeds with no active arrival center and recorded center inactive",
+    "Sign-out closes and clears private dialog; no automatic write replay",
+    "Switching synthetic accounts closes private dialog and disregards old-account state"
+  ],
+  "consoleErrors": [],
+  "limitations": [
+    "Actual AttendanceDialog/hook/Supabase REST builders and real PostgREST/PostgreSQL RPCs under authenticated roles. Synthetic local Auth user endpoint; not a deployed login/session test.",
+    "Camera denial/startup tested; real staff camera decoding a displayed resident QR remains manual.",
+    "Resident Family/components/hooks use the actual local database through the SDK; React Native Web/native APIs and qrcode.react QR renderer are adapters. This is not an installed native release or a real Auth login/physical camera test."
+  ],
+  "calls": [
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=id%2Cbarangay_id%2Cfull_name%2Clast_name%2Chousehold_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000002\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/rpc/check_in_household_members",
+      "method": "POST",
+      "body": {
+        "p_profile_id": "dfb21000-0000-4000-8000-000000000002",
+        "p_center_id": "efb21000-0000-4000-8000-000000000001",
+        "p_participants": [
+          {
+            "kind": "holder"
+          },
+          {
+            "kind": "member",
+            "member_id": "cfb21000-0000-4000-8000-000000000001"
+          }
+        ],
+        "p_request_id": "cb5b2a75-add4-4a93-a98d-cabaf2f81e9b"
+      }
+    },
+    {
+      "path": "/rest/v1/rpc/check_in_household_members",
+      "method": "POST",
+      "body": {
+        "p_profile_id": "dfb21000-0000-4000-8000-000000000002",
+        "p_center_id": "efb21000-0000-4000-8000-000000000001",
+        "p_participants": [
+          {
+            "kind": "holder"
+          },
+          {
+            "kind": "member",
+            "member_id": "cfb21000-0000-4000-8000-000000000001"
+          }
+        ],
+        "p_request_id": "cb5b2a75-add4-4a93-a98d-cabaf2f81e9b"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000002\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000002\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/rpc/check_out_household_attendance",
+      "method": "POST",
+      "body": {
+        "p_attendance_ids": [
+          "30a57fd4-171f-47a7-bc37-db8d0b914482",
+          "83350b60-b86d-4dd1-9bfb-269901b2c74e"
+        ],
+        "p_request_id": "c82c0a2e-1fc9-47a3-bfca-e02d3258e427"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000002\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/profiles?select=household_members&id=eq.dfb21000-0000-4000-8000-000000000002",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/get_my_household_attendance",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/rpc/check_in_household_members",
+      "method": "POST",
+      "body": {
+        "p_profile_id": "dfb21000-0000-4000-8000-000000000003",
+        "p_center_id": "efb21000-0000-4000-8000-000000000001",
+        "p_participants": [
+          {
+            "kind": "holder"
+          }
+        ],
+        "p_request_id": "43e8bfc9-82e4-4082-a54f-65dc88ac9b2e"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?barangay_id=eq.afb21000-0000-4000-8000-000000000001",
+      "method": "PATCH",
+      "body": {
+        "is_active": false
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/rpc/check_out_household_attendance",
+      "method": "POST",
+      "body": {
+        "p_attendance_ids": [
+          "4acf12f1-73ef-4407-b21d-690369fd4f67"
+        ],
+        "p_request_id": "3da46192-3f9d-4023-ac02-8e8810778f36"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    },
+    {
+      "path": "/rest/v1/rpc/lookup_household_for_attendance",
+      "method": "POST",
+      "body": {
+        "p_qr_payload": "{\"type\":\"household\",\"version\":\"1.0\",\"profileId\":\"dfb21000-0000-4000-8000-000000000003\"}"
+      }
+    },
+    {
+      "path": "/rest/v1/evacuation_centers?select=id%2Cname&barangay_id=eq.afb21000-0000-4000-8000-000000000001&is_active=eq.true&deleted_at=is.null&order=name.asc%2Cid.asc&offset=0&limit=500",
+      "method": "GET",
+      "body": null
+    }
+  ],
+  "theme": {
+    "background": "rgb(52, 52, 52)",
+    "color": "rgb(237, 237, 237)",
+    "font": "Georgia, serif"
+  },
+  "result": "pass"
+}

@@ -1,0 +1,1 @@
+apps/admin-web/src/app/(admin)/profile/profile-workspace.tsx(118,40): error TS2532: Object is possibly 'undefined'.

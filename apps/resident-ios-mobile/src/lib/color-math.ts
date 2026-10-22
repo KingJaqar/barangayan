@@ -59,6 +59,11 @@ export function contrastRatio(a: string, b: string): number {
   return (light + 0.05) / (dark + 0.05);
 }
 
+/** White or black, whichever reads better as a mark drawn directly on the solid `#RRGGBB` background. */
+export function readableForeground(background: string): '#FFFFFF' | '#000000' {
+  return contrastRatio(background, '#FFFFFF') >= contrastRatio(background, '#000000') ? '#FFFFFF' : '#000000';
+}
+
 /** Linear sRGB-channel blend: `amount` 0 returns `from`, 1 returns `to`. */
 export function mixColors(from: string, to: string, amount: number): string {
   const a = toRgb(from);

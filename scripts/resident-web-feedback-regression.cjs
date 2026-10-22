@@ -2769,7 +2769,7 @@ const OSRM = (distance) => ({ routes: [{ distance, duration: distance / 1.2, geo
 const png1x1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j1ioAAAAASUVORK5CYII=', 'base64');
 
 async function rwlt05Unit() {
-  const out = path.join(evidence, 'rw-lt-05');
+  const out = process.env.TEST_ARTIFACTS_DIR ?? path.join(evidence, 'rw-lt-05');
   fs.mkdirSync(out, { recursive: true });
   const ts = require(path.join(root, 'node_modules/typescript'));
   const load = (file, requireMap) => {
@@ -2804,24 +2804,12 @@ async function rwlt05Unit() {
     check('other barangay → different barangay', /different barangay/.test(qr.parseCenterQr(payload({ barangay_id: '5e0d0000-0000-4000-8000-0000000000ff' }), BRGY).title));
     check('guest (null barangay) never matches', qr.parseCenterQr(payload(), null).ok === false);
   });
-  const run = async ({ row, failure, household }) => {
-    toasts.length = 0;
-    const outcome = await qr.completeCheckIn({
-      centerId: CENTER, attempt: 'attempt:qr:1',
-      checkIn: async () => row, updateHouseholdStatus: async () => household, lastCheckInFailure: () => failure,
-    });
-    return { outcome, toasts: toasts.map((t) => `${t.kind}:${t.title}`), ids: toasts.map((t) => t.id) };
-  };
-  await test('checkin-single-terminal-outcome', async (check) => {
-    const ok = await run({ row: { id: 'r' }, failure: null, household: true });
-    check('both succeed → one success', ok.outcome === 'recorded' && ok.toasts.length === 1 && ok.toasts[0].startsWith('success:'), ok);
-    const partial = await run({ row: { id: 'r' }, failure: null, household: false });
-    check('check-in saved, household failed → one warning and no success', partial.outcome === 'partial' && partial.toasts.length === 1 && partial.toasts[0].startsWith('warning:Check-in recorded'), partial);
-    const rejected = await run({ row: null, failure: 'rejected', household: true });
-    check('rejected check-in → one error', rejected.outcome === 'failed' && rejected.toasts.length === 1 && rejected.toasts[0].startsWith('error:'), rejected);
-    const lost = await run({ row: null, failure: 'unconfirmed', household: true });
-    check('lost response → one unconfirmed warning (not a definite failure)', lost.outcome === 'unconfirmed' && lost.toasts.length === 1 && /^warning:We couldn't confirm/.test(lost.toasts[0]), lost);
-    check('every terminal toast carries the attempt id', [ok, partial, rejected, lost].every((r) => r.ids.every((i) => i === 'attempt:qr:1')));
+  await test('staff-confirmation-cutover', async (check) => {
+    qr.explainStaffCheckIn('attempt:qr:1');
+    check('one warning explains staff confirmation, never a false success', toasts.length === 1 && toasts[0].kind === 'warning' && /staff/.test(toasts[0].title) && /did not record attendance/.test(toasts[0].description), toasts);
+    check('guidance retains attempt notification identity', toasts[0]?.id === 'attempt:qr:1');
+    check('blanket-write hook retired', !fs.existsSync(path.join(app, 'src/hooks/use-qr-checkins.ts')));
+    check('old completion path retired', !('completeCheckIn' in qr));
   });
   await test('household-feedback-wording', async (check) => {
     const hf = load('lib/household-feedback.ts', { '@/lib/notify': { notify }, '@/hooks/use-family-members': {} });
@@ -2843,7 +2831,7 @@ async function rwlt05Unit() {
     check('household handlers in the profile editor no longer toast success unconditionally', !/await updateMember\([^)]*\);\s*toast\.success/.test(read('app/(resident)/settings/profile/profile-form.tsx')));
     check('FamilyMemberDialog callbacks return Promise<boolean>', /onSave: \(member: [^)]*\) => Promise<boolean>/.test(read('components/emergency/family-member-dialog.tsx')) && /onDelete\?: \(id: string\) => Promise<boolean>/.test(read('components/emergency/family-member-dialog.tsx')));
     check('dialog does not notify or import Sonner/notify', !/sonner|notify/.test(read('components/emergency/family-member-dialog.tsx').replace(/\/\*\*[\s\S]*?\*\//, '')));
-    check('no checkIn payload change: insert columns unchanged', /insert\(\{ evacuation_center_id: evacuationCenterId, user_id: userId, barangay_id: barangayId \}\)/.test(read('hooks/use-qr-checkins.ts')));
+    check('resident QR helper contains no attendance writes', !/\.insert\(|\.update\(|updateHouseholdStatus/.test(read('lib/qr-checkin.ts')));
   });
   const summary = Object.fromEntries(['pass', 'fail'].map((k) => [k, results.filter((r) => r.status === k).length]));
   fs.writeFileSync(path.join(out, 'unit-results.json'), JSON.stringify({ phase: 'RW-LT-05', ranAt: new Date().toISOString(), modules: ['lib/qr-checkin.ts', 'lib/household-feedback.ts'], summary, results }, null, 2));
@@ -2859,7 +2847,7 @@ async function rwlt05(runName = 'verify') {
   const fx = JSON.parse(fs.readFileSync(path.join(tools, 'fixtures.json'), 'utf8'));
   const { chromium } = require(PLAYWRIGHT);
   const QRCode = require(path.join(root, 'node_modules/qrcode'));
-  const report = { run: runName, phase: 'RW-LT-05', base: BASE, startedAt: new Date().toISOString(), environment: { build: DIST_DIR, browser: 'Chrome (Playwright channel chrome, headless); camera scenarios use Chrome\'s fake capture device', api: API_URL, realtime: 'local Realtime unavailable; Realtime events use the in-browser protocol 2.0.0 stand-in (mockRealtime)', providers: 'Edge Function (household QR PNG) and the OSRM routing service are fulfilled in the browser; household and check-in writes use the real local database with synthetic rows that the run restores/removes' }, scenarios: [] };
+  const report = { run: runName, phase: 'RW-LT-05', base: BASE, startedAt: new Date().toISOString(), environment: { build: DIST_DIR, browser: 'Chrome (Playwright channel chrome, headless); camera scenarios use Chrome\'s fake capture device', api: API_URL, realtime: 'local Realtime unavailable; Realtime events use the in-browser protocol 2.0.0 stand-in (mockRealtime)', providers: 'Edge Function (household QR PNG) and the OSRM routing service are fulfilled in the browser; household writes use the real local database with synthetic rows; resident QR scans must send zero attendance writes' }, scenarios: [] };
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
   const cameraBrowser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
   const shot = (page, name) => page.screenshot({ path: path.join(out, 'screens', `${name}.png`) });
@@ -3113,62 +3101,19 @@ async function rwlt05(runName = 'verify') {
     await page.goto(`${BASE}/emergency/scan`, { waitUntil: 'networkidle' });
     const good = await qrPng();
     const insertPost = (page_) => rest(page_, 'evacuation_center_checkins', (route) => route.continue(), { methods: ['POST'] });
-    // a) real success
-    let before = checkinCount();
-    let posts = await insertPost(page);
-    await upload(page, good);
-    await page.getByRole('button', { name: /Reading image|Checking in/ }).waitFor().catch(() => {});
-    await waitForToast(page, /Your presence has been registered/);
-    obs.success = { posts: posts.count, rows: checkinCount() - before, toasts: (await liveToasts(page)).map((t) => t.text), state: await domState(page) };
-    check('valid center QR: one real check-in, one success toast, controls restored', obs.success.posts === 1 && obs.success.rows === 1 && obs.success.toasts.length === 1, obs.success);
-    posts.off(); resetHousehold();
-    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
-    // b) partial: household update fails
-    before = checkinCount();
+    const before = checkinCount();
+    const posts = await insertPost(page);
     const hh = await rest(page, 'household_members', shape.fail(500), { methods: ['PATCH'] });
-    posts = await insertPost(page);
     await upload(page, good);
-    await waitForToast(page, /Check-in recorded/);
-    await pause(700);
-    obs.partial = { toasts: (await liveToasts(page)).map((t) => `${t.type}:${t.text}`), rows: checkinCount() - before, patches: hh.count };
-    check('partial success: exactly one warning, no success toast; the check-in row exists', obs.partial.toasts.length === 1 && /^warning:/.test(obs.partial.toasts[0]) && obs.partial.rows === 1, obs.partial);
-    await shot(page, 'qr-partial-warning-1440');
-    hh.off(); posts.off(); resetHousehold();
-    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
-    // c) rejected insert
-    posts = await insertPost(page);
-    posts.off();
-    posts = await rest(page, 'evacuation_center_checkins', shape.fail(500), { methods: ['POST'] });
-    await upload(page, good);
-    await waitForToast(page, /Couldn't record your check-in/);
-    await pause(500);
-    obs.rejected = { posts: posts.count, toasts: (await liveToasts(page)).map((t) => t.text), rows: checkinCount() };
-    check('rejected insert: one error, one request, no row, control usable', obs.rejected.posts === 1 && obs.rejected.toasts.length === 1 && obs.rejected.rows === 0 && await page.getByRole('button', { name: 'Upload QR Image' }).isEnabled(), obs.rejected);
-    posts.off();
-    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
-    // d) lost response
-    posts = await rest(page, 'evacuation_center_checkins', shape.abort(), { methods: ['POST'] });
-    await upload(page, good);
-    await waitForToast(page, /couldn't confirm your check-in/);
-    await pause(1200);
-    obs.lost = { posts: posts.count, toasts: (await liveToasts(page)).map((t) => `${t.type}:${t.text}`) };
-    check('lost response: one unconfirmed warning, no automatic second request', obs.lost.posts === 1 && obs.lost.toasts.length === 1 && /^warning:/.test(obs.lost.toasts[0]), obs.lost);
-    posts.off();
-    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
-    // e) repeated activation while slow
-    posts = await rest(page, 'evacuation_center_checkins', async (route) => { await pause(1000); return shape.fail(500)(route); }, { methods: ['POST'] });
-    await upload(page, good);
-    await upload(page, good);
-    await page.waitForTimeout(150);
-    obs.repeated = { button: await page.getByRole('button', { name: /Checking in|Reading image/ }).evaluate((b) => ({ disabled: b.disabled, busy: b.getAttribute('aria-busy'), text: b.innerText.trim() })).catch(() => null) };
-    await waitForToast(page, /Couldn't record your check-in/);
+    await waitForToast(page, /Ask barangay staff to confirm/);
     await pause(600);
-    obs.repeated.posts = posts.count; obs.repeated.toasts = (await liveToasts(page)).length;
-    check('repeated image selection while pending: one request, one toast; busy + disabled immediately', obs.repeated.posts === 1 && obs.repeated.toasts === 1 && obs.repeated.button?.disabled && obs.repeated.button?.busy === 'true', obs.repeated);
-    posts.off();
-    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
-    // f) invalid inputs: no request, one error each
-    posts = await insertPost(page);
+    obs.guidance = { posts: posts.count, patches: hh.count, rows: checkinCount() - before, toasts: (await liveToasts(page)).map(t => `${t.type}:${t.text}`) };
+    check('valid center QR: one staff-guidance warning and zero attendance/projection writes', obs.guidance.posts === 0 && obs.guidance.patches === 0 && obs.guidance.rows === 0 && obs.guidance.toasts.length === 1 && /^warning:/.test(obs.guidance.toasts[0]), obs.guidance);
+    check('upload control is restored after decoding', await page.getByRole('button', { name: 'Upload QR Image' }).isEnabled());
+    await shot(page, 'qr-staff-guidance-1440');
+    hh.off();
+    await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach(b => b.click())); await pause(500);
+    // Malformed and foreign codes remain read-only and produce one clear rejection.
     const cases = [
       ['unreadable image', png1x1, /No QR code found in that image/],
       ['other barangay', await qrPng({ barangay_id: '5e0d0000-0000-4000-8000-0000000000ff' }), /belongs to a different barangay/],
@@ -3186,7 +3131,7 @@ async function rwlt05(runName = 'verify') {
       await page.evaluate(() => document.querySelectorAll('[data-sonner-toast] [data-close-button]').forEach((b) => b.click())); await pause(500);
     }
     posts.off();
-    check('no check-in rows were created by the invalid and failed attempts', checkinCount() === 0);
+    check('no legacy check-in rows were created by resident scans', checkinCount() === before);
   }, { account: 'populated' });
 
   // ---- 5. Camera scanner lifecycle and guidance

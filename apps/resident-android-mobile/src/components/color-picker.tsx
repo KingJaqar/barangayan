@@ -1,13 +1,13 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { PanResponder, StyleSheet, View, type GestureResponderEvent } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { Spacing } from '@/constants/theme';
 import { hexToHsv, hsvToHex, type HSV } from '@/lib/color-utils';
 
-const SV_SIZE = 220;
-const HUE_HEIGHT = 24;
-const THUMB_SIZE = 22;
+const SV_SIZE = 260;
+const HUE_HEIGHT = 28;
+const THUMB_SIZE = 24;
 
 const HUE_STOPS = [
   { offset: '0%', color: '#FF0000' },
@@ -39,6 +39,13 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
   // render, which triggers React's 'setState while rendering' warning.
   const hsvRef = useRef(hsv);
   hsvRef.current = hsv;
+
+  useEffect(() => {
+    if (hsvToHex(hsvRef.current).toLowerCase() === value.toLowerCase()) return;
+    const next = hexToHsv(value);
+    hsvRef.current = next;
+    setHsv(next);
+  }, [value]);
 
   function commit(next: HSV) {
     hsvRef.current = next;
@@ -84,11 +91,14 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
   const hueColor = hsvToHex({ h: hsv.h, s: 1, v: 1 });
   const thumbX = clamp(hsv.s * SV_SIZE, 0, SV_SIZE) - THUMB_SIZE / 2;
   const thumbY = clamp((1 - hsv.v) * SV_SIZE, 0, SV_SIZE) - THUMB_SIZE / 2;
-  const hueThumbX = clamp((hsv.h / 360) * SV_SIZE, 0, SV_SIZE) - THUMB_SIZE / 2.5;
+  const hueThumbX = clamp((hsv.h / 360) * SV_SIZE, 0, SV_SIZE) - 16;
 
   return (
     <View style={styles.container}>
-      <View style={styles.svBox} {...svResponder.panHandlers}>
+      <View style={styles.svBox} {...svResponder.panHandlers} accessible accessibilityRole="adjustable" accessibilityLabel="Shade"
+        accessibilityValue={{ min: 0, max: 100, now: Math.round(hsv.v * 100), text: `Saturation ${Math.round(hsv.s * 100)}%, brightness ${Math.round(hsv.v * 100)}%` }}
+        accessibilityActions={[{ name: 'increment', label: 'Brighter' }, { name: 'decrement', label: 'Darker' }]}
+        onAccessibilityAction={event => commit({ ...hsvRef.current, v: clamp(hsvRef.current.v + (event.nativeEvent.actionName === 'increment' ? 0.05 : -0.05), 0, 1) })}>
         <Svg width={SV_SIZE} height={SV_SIZE}>
           <Defs>
             <LinearGradient id="saturation" x1="0" y1="0" x2="1" y2="0">
@@ -112,7 +122,10 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
         />
       </View>
 
-      <View style={styles.hueBox} {...hueResponder.panHandlers}>
+      <View style={styles.hueBox} {...hueResponder.panHandlers} accessible accessibilityRole="adjustable" accessibilityLabel="Hue"
+        accessibilityValue={{ min: 0, max: 360, now: Math.round(hsv.h) }}
+        accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+        onAccessibilityAction={event => commit({ ...hsvRef.current, h: (hsvRef.current.h + (event.nativeEvent.actionName === 'increment' ? 4 : -4) + 360) % 360 })}>
         <Svg width={SV_SIZE} height={HUE_HEIGHT}>
           <Defs>
             <LinearGradient id="hue" x1="0" y1="0" x2="1" y2="0">
@@ -163,9 +176,9 @@ const styles = StyleSheet.create({
   },
   hueThumb: {
     position: 'absolute',
-    width: HUE_HEIGHT / 1.2,
-    height: HUE_HEIGHT / 1.2,
-    borderRadius: HUE_HEIGHT / 2,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     borderWidth: 3,
     borderColor: '#ffffff',
     shadowColor: '#000',

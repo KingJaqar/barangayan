@@ -1,7 +1,7 @@
 'use server';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Json } from '@barangayan/shared';
+import { householdAttendanceErrorMessage, type Json } from '@barangayan/shared';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { RECORD_CONFIG, editableFields, fieldValue, recordLabel, validateRecordPatch, type RecordData } from '@/lib/admin-tables/record-config';
 import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
@@ -54,6 +54,8 @@ export async function mutateAdminRecord(name: TableName, id: string, operation: 
     const patch = operation === 'save' ? validateRecordPatch(name, row, input) : {};
     const result = await db.rpc('admin_mutate_record', { p_screen: name, p_id: id, p_operation: operation, p_patch: patch as Json, p_expected: expected });
     if (result.error) {
+      if (name === 'households' && result.error.message.startsWith('attendance_'))
+        throw new Error(householdAttendanceErrorMessage(result.error, 'mutation'));
       if (result.error.code === '23503') throw new Error('This record has related records. Resolve those records before deleting it.');
       if (result.error.code === '40001') throw new Error('This record changed. Reload the details before trying again.');
       if (result.error.code === '23505') throw new Error('A record with these values already exists.');

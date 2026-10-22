@@ -1,22 +1,20 @@
-import { servicePriceLabel } from '@barangayan/shared';
-import { serviceProcessingLabel, type Tables } from '@barangayan/shared';
+import { servicePriceLabel, serviceProcessingLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { ServiceListLink, ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
+import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
-import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
 
 /** Real document_types catalog for the resident's own barangay (RLS-scoped). */
-export function DocumentsList() {
+export function DocumentsList({ verification }: { verification?: ReactNode }) {
   const theme = useTheme();
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -73,105 +71,54 @@ export function DocumentsList() {
   }
 
   return (
-    <View style={styles.list}>
+    <View style={[serviceListStyles.list, styles.list]}>
       <View style={styles.sectionHeader}>
-        <ThemedText type="heading">Available documents</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          {documents.length} {documents.length === 1 ? 'service' : 'services'} from your barangay
-        </ThemedText>
+        <ThemedText type="heading" style={[serviceListStyles.heading, styles.heading]}>Available Documents</ThemedText>
+        {verification ? <View style={styles.headingMeta}>{verification}</View> : null}
       </View>
 
-      {documents.map((doc) => (
-        <Link key={doc.id} href={`/services/${doc.id}`} asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={doc.name}
-            style={({ pressed }) => pressed && styles.pressed}>
-            <ThemedView
-              style={[
-                styles.card,
-                { borderColor: theme.backgroundSelected, shadowColor: theme.text },
-              ]}>
-              <View style={[styles.iconTile, { backgroundColor: `${theme.primary}1F` }]}>
-                <Ionicons name={getDocumentIcon(doc.name)} size={26} color={theme.primary} />
-              </View>
+      <ServicesPanel>
+        {documents.map((doc, index) => (
+          <ServiceListLink key={doc.id} href={`/services/${doc.id}`} label={doc.name} divider={index > 0} style={styles.documentRow}>
+            <View style={[serviceListStyles.icon, styles.documentIcon, { backgroundColor: theme.resident.accent, borderColor: theme.resident.controlBorder, borderWidth: theme.resident.accentNeedsOutline ? 1 : 0 }]}>
+              <DocumentIcon name={getDocumentIcon(doc.name)} size={20} color={theme.resident.onAccent} accessible={false} />
+            </View>
 
-              <View style={styles.cardInfo}>
-                <ThemedText type="smallBold" style={styles.cardTitle} numberOfLines={2}>
-                  {doc.name}
+            <View style={serviceListStyles.info}>
+              <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={[serviceListStyles.title, styles.documentTitle]}>
+                {doc.name}
+              </ThemedText>
+              <View style={styles.metaRow}>
+                <Ionicons name="time-outline" size={14} color={theme.resident.muted} accessible={false} />
+                <ThemedText type="small" themeColor="textSecondary" style={styles.metaText}>
+                  {serviceProcessingLabel(doc)}
                 </ThemedText>
-                <View style={styles.metaRow}>
-                  <Ionicons name="time-outline" size={14} color={theme.textSecondary} />
-                  <ThemedText type="small" themeColor="textSecondary" style={styles.metaText}>
-                    {serviceProcessingLabel(doc)}
-                  </ThemedText>
-                </View>
-                <View style={styles.metaRow}>
-                  <Ionicons name="pricetag-outline" size={14} color={theme.primary} />
-                  <ThemedText type="smallBold" style={[styles.metaText, { color: theme.primary }]}>
-                    {servicePriceLabel(doc)}
-                  </ThemedText>
-                </View>
               </View>
+              <View style={styles.metaRow}>
+                <Ionicons name="pricetag-outline" size={14} color={theme.resident.accentText} accessible={false} />
+                <ThemedText type="smallBold" style={[styles.metaText, { color: theme.resident.accentText }]}>
+                  {servicePriceLabel(doc)}
+                </ThemedText>
+              </View>
+            </View>
 
-              <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
-            </ThemedView>
-          </Pressable>
-        </Link>
-      ))}
+            <Ionicons name="chevron-forward" size={16} color={theme.resident.muted} style={styles.documentChevron} accessible={false} />
+          </ServiceListLink>
+        ))}
+      </ServicesPanel>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
-    paddingHorizontal: 20,
-    paddingTop: Spacing.two,
-    gap: Spacing.three,
-  },
-  sectionHeader: {
-    gap: Spacing.half,
-    marginBottom: Spacing.one,
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-    padding: Spacing.three,
-    borderRadius: 20,
-    borderWidth: StyleSheet.hairlineWidth,
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-  pressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.99 }],
-  },
-  iconTile: {
-    flexShrink: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardInfo: {
-    flex: 1,
-    minWidth: 0,
-    gap: Spacing.one,
-  },
-  cardTitle: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  metaText: {
-    flex: 1,
-  },
+  list: { gap: 2 },
+  sectionHeader: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', columnGap: 4 },
+  heading: { textAlign: 'center', fontSize: 22, lineHeight: 28, letterSpacing: -0.4, flexShrink: 1 },
+  headingMeta: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  documentRow: { paddingHorizontal: 12, paddingVertical: 10, gap: 10, minHeight: 72 },
+  documentIcon: { width: 36, height: 36, borderRadius: 10 },
+  documentTitle: { fontSize: 14, lineHeight: 18 },
+  documentChevron: { alignSelf: 'center', flexShrink: 0 },
+  metaRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginTop: 3 },
+  metaText: { flex: 1, fontSize: 12.5, lineHeight: 16 },
 });

@@ -1,0 +1,96 @@
+--- verified-before/supabase/migrations/20261021111056_household_attendance.sql
++++ supabase/migrations/20261021111056_household_attendance.sql
+@@ -31,6 +31,7 @@
+ create index household_attendance_departure_actor on public.household_attendance(checked_out_by);
+ 
+ create table barangayan_private.household_attendance_receipts (
++ id uuid not null unique default gen_random_uuid(),
+  actor_profile_id uuid not null references public.profiles(id),
+  request_id uuid not null,
+  household_profile_id uuid not null references public.profiles(id),
+@@ -243,7 +244,9 @@
+    'center_id',stay.evacuation_center_id,'checked_in_at',stay.checked_in_at,'checked_out_at',stay.checked_out_at,'outcome',outcome));
+  end loop;
+  result:=jsonb_build_object('request_id',p_request_id,'operation','check_in','household_profile_id',p_profile_id,'stays',results);
+- insert into barangayan_private.household_attendance_receipts values(actor.id,p_request_id,p_profile_id,'check_in',fingerprint,result,clock_timestamp());
++ insert into barangayan_private.household_attendance_receipts
++ (actor_profile_id,request_id,household_profile_id,operation,input_fingerprint,result,created_at)
++ values(actor.id,p_request_id,p_profile_id,'check_in',fingerprint,result,clock_timestamp());
+  return result;
+ end $$;
+ 
+@@ -301,7 +304,9 @@
+    'center_id',stay.evacuation_center_id,'checked_in_at',stay.checked_in_at,'checked_out_at',stay.checked_out_at,'outcome',outcome));
+  end loop;
+  result:=jsonb_build_object('request_id',p_request_id,'operation','check_out','household_profile_id',household_id,'stays',results);
+- insert into barangayan_private.household_attendance_receipts values(actor.id,p_request_id,household_id,'check_out',fingerprint,result,clock_timestamp());
++ insert into barangayan_private.household_attendance_receipts
++ (actor_profile_id,request_id,household_profile_id,operation,input_fingerprint,result,created_at)
++ values(actor.id,p_request_id,household_id,'check_out',fingerprint,result,clock_timestamp());
+  return result;
+ end $$;
+ 
+@@ -530,7 +535,7 @@
+ -- A security-barrier export projection exposes only caller-owned metadata,
+ -- never staff identity, the fingerprint, or the private receipt result.
+ create view public.household_attendance_receipt_exports with (security_barrier=true) as
+- select r.household_profile_id,r.request_id,r.operation,r.created_at
++ select r.id,r.household_profile_id,r.request_id,r.operation,r.created_at
+  from barangayan_private.household_attendance_receipts r
+  where r.household_profile_id=(select auth.uid()) and exists(
+   select 1 from public.profiles p join auth.users u on u.id=p.id where p.id=(select auth.uid())
+--- verified-before/packages/shared/src/types/household-attendance.database.ts
++++ packages/shared/src/types/household-attendance.database.ts
+@@ -86,6 +86,7 @@
+ export type HouseholdAttendanceViews = {
+   household_attendance_receipt_exports: {
+     Row: {
++      id: string | null;
+       household_profile_id: string | null;
+       request_id: string | null;
+       operation: string | null;
+--- verified-before/supabase/tests/household_attendance.test.sql
++++ supabase/tests/household_attendance.test.sql
+@@ -118,6 +118,7 @@
+  (select household_members from public.profiles where id=auth.uid()))$$,'A10 rename preserves stable member identity');
+ select is((select count(*)::int from public.household_attendance),2,'A08 resident reads only own household');
+ select is((select count(*)::int from public.household_attendance_receipt_exports),1,'A13 export projection includes own receipt metadata');
++select ok((select id is not null from public.household_attendance_receipt_exports limit 1),'A13 exported receipt has an opaque unique pagination identity');
+ reset role;
+ select throws_ok($$update public.profiles set barangay_id='afa10000-0000-4000-8000-000000000002' where id='dfa10000-0000-4000-8000-000000000004'$$,
+  'PT409','attendance_lifecycle_conflict','A11 active household cannot move barangay');
+--- verified-before/supabase/functions/export-my-data/export-v2.ts
++++ supabase/functions/export-my-data/export-v2.ts
+@@ -54,13 +54,13 @@
+     label: 'Household attendance', order: ['checked_in_at', 'id'],
+     select: 'id,household_profile_id,household_member_id,barangay_id,evacuation_center_id,checked_in_at,checked_out_at' },
+   { name: 'household_attendance_receipts', kind: 'list', table: 'household_attendance_receipt_exports', ownerColumn: 'household_profile_id',
+-    label: 'Household attendance confirmations', order: ['created_at', 'request_id'],
+-    select: 'household_profile_id,request_id,operation,created_at' },
++    label: 'Household attendance confirmations', order: ['created_at', 'id'],
++    select: 'id,household_profile_id,request_id,operation,created_at' },
+ ];
+ 
+ /**
+- * Required sections of contract v2. Staff identities, token and device secrets, storage paths, provider internals, idempotency keys and
+- * other residents' data are never selected.
++ * Required sections of contract v2. Staff identities, token and device secrets, storage paths, provider internals,
++ * receipt fingerprints and other residents' data are never selected.
+  */
+ export const REQUIRED_SECTIONS: readonly SectionSpec[] = [
+   { name: 'profile', kind: 'single', table: 'profiles', select: PROFILE_COLUMNS, ownerColumn: 'id', label: 'Profile' },
+--- verified-before/apps/resident-ios-mobile/tests/export-function.test.ts
++++ apps/resident-ios-mobile/tests/export-function.test.ts
+@@ -135,9 +135,10 @@
+ 
+ describe('household attendance exports', () => {
+   const stays = Array.from({ length: 7 }, (_, n) => ({ id: id(n), household_profile_id: USER, checked_in_at: stamp(1) }));
+-  const receipts = Array.from({ length: 7 }, (_, n) => ({ request_id: id(n), household_profile_id: USER, created_at: stamp(1) }));
++  // Different staff can reuse a request UUID, even at the same timestamp.
++  const receipts = Array.from({ length: 7 }, (_, n) => ({ id: id(n), request_id: id(1), household_profile_id: USER, created_at: stamp(1) }));
+   const tables = { profiles: [{ id: USER }], household_attendance: stays,
+-    household_attendance_receipt_exports: [...receipts, { request_id: id(90), household_profile_id: id(90), created_at: stamp(1) }] };
++    household_attendance_receipt_exports: [...receipts, { id: id(90), request_id: id(1), household_profile_id: id(90), created_at: stamp(1) }] };
+ 
+   it('paginates both new sections, including timestamp ties, for v1 and v2', async () => {
+     const legacy = await readHouseholdAttendanceExport(reader(tables), USER, { pageSize: 3, maxPages: 5 });

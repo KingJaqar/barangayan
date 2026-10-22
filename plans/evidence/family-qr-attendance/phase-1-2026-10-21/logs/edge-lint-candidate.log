@@ -1,0 +1,6 @@
+
+C:\Users\User\barangayan\supabase\functions\export-my-data\index.ts
+  9:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+✖ 1 problem (1 error, 0 warnings)
+

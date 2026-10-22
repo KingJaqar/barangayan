@@ -1,5 +1,4 @@
-import { requestFeeLabel } from '@barangayan/shared';
-import { formatCentavosAsPHP, formatDateTime, requestFee, type Tables } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatDateTime, requestFee, requestFeeLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
@@ -9,9 +8,9 @@ import { GuestPrompt } from '@/components/guest-prompt';
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
+import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
-import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
@@ -79,15 +78,8 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
   }
 
   return (
-    <View style={styles.list}>
-      <View style={styles.sectionHeader}>
-        <ThemedText type="heading">Recent activity</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          Latest updates on your requests
-        </ThemedText>
-      </View>
-
-      <ThemedView style={[styles.group, { borderColor: theme.backgroundSelected }]}>
+    <View style={serviceListStyles.list}>
+      <ServicesPanel>
         {requests.map((request, index) => {
           const payment = request.payments.find(row => ['paid', 'pending'].includes(row.status)) ?? request.payments[0];
           const amount = requestFee(request, request.document_types?.fee_centavos ?? 0, payment?.document_fee_centavos ?? payment?.amount_centavos);
@@ -95,96 +87,47 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
             <View
               key={request.id}
               style={[
-                styles.row,
+                serviceListStyles.row,
+                styles.logRow,
                 index > 0 && {
-                  borderTopWidth: StyleSheet.hairlineWidth,
-                  borderTopColor: theme.backgroundSelected,
+                  borderTopWidth: 1,
+                  borderTopColor: theme.resident.border,
                 },
               ]}>
-              <View style={[styles.iconTile, { backgroundColor: `${theme.primary}1F` }]}>
-                <Ionicons name={getDocumentIcon(request.document_types?.name ?? '')} size={24} color={theme.primary} />
+              <View style={[serviceListStyles.icon, styles.logIcon, { backgroundColor: theme.resident.accent, borderColor: theme.resident.controlBorder, borderWidth: theme.resident.accentNeedsOutline ? 1 : 0 }]}>
+                <DocumentIcon name={getDocumentIcon(request.document_types?.name ?? '')} size={20} color={theme.resident.onAccent} accessible={false} />
               </View>
-              <View style={styles.cardInfo}>
-                <ThemedText type="smallBold" style={styles.cardTitle} numberOfLines={2}>
+              <View style={serviceListStyles.info}>
+                <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={[serviceListStyles.title, styles.logTitle]}>
                   {request.document_types?.name ?? 'Document Request'}
                 </ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
+                <ThemedText type="small" themeColor="textSecondary" style={serviceListStyles.meta}>
                   {formatDateTime(request.updated_at)}
                 </ThemedText>
                 <View style={styles.badgeRow}>
-                  <StatusBadge status={request.status} />
-                  {amount === 0 ? (
-                    <View style={[styles.pricePill, styles.pricePillFree, { borderColor: theme.textSecondary }]}>
-                      <ThemedText type="small" themeColor="textSecondary">
-                        Free
-                      </ThemedText>
-                    </View>
-                  ) : (
-                    <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
-                      <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                        {amount === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(amount)}
-                      </ThemedText>
-                    </View>
-                  )}
+                  <StatusBadge status={request.status} presentation="resident" />
+                  <View style={[styles.pricePill, { backgroundColor: theme.resident.accentSoft }]}>
+                    <Ionicons name="pricetag-outline" size={14} color={theme.resident.accentText} accessible={false} />
+                    <ThemedText type="smallBold" style={[styles.priceText, { color: theme.resident.accentText }]}>
+                      {amount === 0 ? 'Free' : amount === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(amount)}
+                    </ThemedText>
+                  </View>
                 </View>
               </View>
             </View>
           );
         })}
-      </ThemedView>
+      </ServicesPanel>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
-    paddingHorizontal: 20,
-    paddingTop: Spacing.two,
-    gap: Spacing.three,
-  },
-  sectionHeader: {
-    gap: Spacing.half,
-  },
-  group: {
-    borderRadius: 20,
-    borderWidth: StyleSheet.hairlineWidth,
-    overflow: 'hidden',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.three,
-    padding: Spacing.three,
-  },
-  iconTile: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardInfo: {
-    flex: 1,
-    minWidth: 0,
-    gap: Spacing.half,
-  },
-  cardTitle: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: Spacing.two,
-    marginTop: Spacing.one,
-  },
-  pricePill: {
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.half,
-    borderRadius: Spacing.four,
-  },
-  pricePillFree: {
-    borderWidth: 1,
-  },
+  list: { paddingHorizontal: 20 },
+  logRow: { gap: 10, paddingHorizontal: 12, paddingVertical: 10, minHeight: 72 },
+  logIcon: { width: 36, height: 36, borderRadius: 10 },
+  logTitle: { fontSize: 14, lineHeight: 18 },
+  badgeRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 4 },
+  pricePill: { flexDirection: 'row', alignItems: 'center', maxWidth: '100%', gap: 5, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 100 },
+  priceText: { fontSize: 12, lineHeight: 16, flexShrink: 1 },
 });

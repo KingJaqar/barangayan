@@ -8,7 +8,7 @@ const cards = {
   residents: [['total', 'Total'], ['verified', 'Email Verified'], ['unverified', 'Unverified'],
     ['withId', 'With ID'], ['withoutId', 'Without ID'], ['idPending', 'ID Pending'],
     ['idVerified', 'ID Verified'], ['idFailed', 'ID Failed'], ['householdMembers', 'Household members']],
-  households: [['total', 'Total Members'], ['checked_in', 'Checked In'], ['not_checked_in', 'Not Checked In'],
+  households: [['total', 'Total People'], ['holders', 'Account Holders'], ['checked_in', 'Checked In'], ['not_checked_in', 'No Active Stay'],
     ['spouse', 'Spouse'], ['child', 'Child'], ['parent', 'Parent'], ['other', 'Other']],
   staff: [['total', 'Total Employees'], ['admin', 'Admins'], ['staff', 'Staff']],
 } as const satisfies Record<string, SummaryCardConfig>;
