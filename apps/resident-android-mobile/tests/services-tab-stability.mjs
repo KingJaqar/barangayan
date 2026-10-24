@@ -16,10 +16,10 @@ fs.mkdirSync(out, { recursive: true });
 // Render the real Services screen and shared verification rules. Only data hooks,
 // navigation and the document feeds are fixtures; layout uses React Native Web.
 const mocks = {
-  'expo-router': `export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=()=>{};`,
+  'expo-router': `import React from 'react';export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>React.useEffect(fn,[fn]);`,
   '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
-  '@/hooks/use-profile': `export const useProfile=()=>window.profileState;`,
+  '@/hooks/use-profile': `export const useProfile=()=>({...window.profileState,refetch:()=>{window.profileRefetches=(window.profileRefetches??0)+1;window.profileState.refetch()}});`,
   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
   'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
@@ -57,6 +57,7 @@ try {
   const documents = page.getByTestId('document-list');
   await page.getByText('Valid ID Verified', { exact: true }).waitFor();
   const before = await documents.boundingBox();
+  assert.equal(await page.evaluate(() => window.profileRefetches ?? 0), 0, 'Services uses the provider-owned profile on focus');
 
   for (let visit = 0; visit < 3; visit++) {
     await page.evaluate(() => { window.profileState = { ...window.profileState, isLoading: true }; window.renderServices(); });
@@ -70,13 +71,16 @@ try {
   }
 
   // Real changes and failures must still replace the compact status with guidance.
+  assert.equal(await page.evaluate(() => window.profileRefetches ?? 0), 0);
   await page.evaluate(() => { window.profileState = { ...window.profileState, error: 'Could not refresh your profile.' }; window.renderServices(); });
   await page.getByText('Could not refresh your profile.', { exact: true }).waitFor();
   await page.getByText('Retry verification check', { exact: true }).waitFor({ state: 'attached' });
+  await page.getByRole('button', { name: 'Retry verification check', exact: true }).click();
+  assert.equal(await page.evaluate(() => window.profileRefetches), 1, 'Explicit retry still refreshes verification');
   assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
   await page.evaluate(() => { window.profileState = { ...window.profileState, error: null, profile: { ...window.profileState.profile, id_verification_status: 'pending' } }; window.renderServices(); });
   await page.getByText('Your ID is awaiting verification. Requests are available after approval.', { exact: true }).waitFor();
   await page.getByText('Verify Now', { exact: true }).waitFor({ state: 'attached' });
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ passed: ['Three background refreshes keep the document list at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
+  console.log(JSON.stringify({ passed: ['Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
 } finally { await browser.close(); }

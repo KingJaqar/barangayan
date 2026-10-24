@@ -1,7 +1,6 @@
-import { normalizeSearchQuery } from './resident-search';
+import { isSearchableQuery as valid, normalizeSearchQuery } from './resident-search';
 
-export const SEARCH_HISTORY_LIMIT = 20;
-const valid = (value: string) => /[\p{L}\p{N}]/u.test(value);
+export const SEARCH_HISTORY_LIMIT = 10;
 const identity = (value: string) => value.toLowerCase();
 
 export function cleanHistory(values: unknown): string[] {
@@ -28,7 +27,12 @@ export function createSearchHistoryStore(storage: HistoryStorage) {
       let parsed: unknown = [];
       try { parsed = raw ? JSON.parse(raw) : []; } catch { /* Discard corrupt history. */ }
       const history = cleanHistory(parsed);
-      if (!edit) return history;
+      if (!edit) {
+        // Trim saves from older limits or corrupt data. The cleaned list stays usable if
+        // this write fails, and the next edit persists it again.
+        if (raw !== null && raw !== JSON.stringify(history)) await storage.setItem(key, JSON.stringify(history)).catch(() => {});
+        return history;
+      }
       const next = cleanHistory(edit(history));
       await storage.setItem(key, JSON.stringify(next));
       return next;

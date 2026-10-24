@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
-import { useProfile } from '@/hooks/use-profile';
+import { useProfileData } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 import { registerPushToken, unregisterPushToken } from '@/lib/push-notifications';
 
@@ -23,7 +23,7 @@ const NotificationPreferencesContext = createContext<NotificationPreferencesCont
  */
 export function NotificationPreferencesProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
 
   const [pushEnabled, setPushEnabledState] = useState(false);
 

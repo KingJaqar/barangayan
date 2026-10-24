@@ -1,0 +1,17 @@
+{
+  "changed": [
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+    "plans/Resident_Android_Bottom_Tab_Navigation_Performance_Investigation_and_Fix_Plan_2026_10_22.md"
+  ],
+  "additions": [
+    {
+      "path": "apps/resident-android-mobile/tests/map-state-bridge.mjs",
+      "sha256": "176012a350f448772ce2d43496eb7e932c49eb0baf3b2b7ad7e1e62ba0fe44cb"
+    }
+  ],
+  "unexpected": [],
+  "planOnlyPhase2": true,
+  "packetCurrent": true,
+  "stagedUnchanged": true
+}

@@ -8,7 +8,7 @@ import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, wi
 import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { helpCategory } from '@/components/settings/help-category';
-import { ContentState } from '@/components/settings/managed-content';
+import { ContentState, SettingsContentTransition } from '@/components/settings/managed-content';
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
@@ -59,7 +59,7 @@ export default function HelpCenterScreen() {
       {isLoading ? <ContentState loading title="Loading help articles…" /> : error ?
         <ContentState title="Unable to load help articles" message="Check your connection and try again." onRetry={refetch} /> : <>
           <ThemedText accessibilityLiveRegion="polite" style={[styles.count, { color: resident.muted }]}>{filtered.length} {filtered.length === 1 ? 'article' : 'articles'}</ThemedText>
-          {filtered.length ? <View style={[styles.panel, { borderColor: resident.border }]}>
+          {filtered.length ? <SettingsContentTransition contentKey={category}><View style={[styles.panel, { borderColor: resident.border }]}>
             {filtered.map((article, index) => {
               const meta = helpCategory(article.category, resident);
               return <Pressable key={article.id} accessibilityRole="button" accessibilityLabel={`Read article: ${article.question}`}
@@ -71,23 +71,23 @@ export default function HelpCenterScreen() {
                   <ThemedText numberOfLines={2} style={[styles.question, { color: resident.text }]}>{article.question}</ThemedText>
                   <ThemedText numberOfLines={2} style={[styles.answer, { color: resident.muted }]}>{article.answer}</ThemedText>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color={resident.muted} style={{ marginTop: 10 }} accessible={false} />
+                <Ionicons name="chevron-forward" size={18} color={resident.muted} style={{ alignSelf: 'center' }} accessible={false} />
               </Pressable>;
             })}
-          </View> : <ContentState title="Nothing here yet" message={category === 'all' ? 'No articles available yet.' : 'No articles in this category.'} />}
+          </View></SettingsContentTransition> : <ContentState title="Nothing here yet" message={category === 'all' ? 'No articles available yet.' : 'No articles in this category.'} />}
         </>}
     </ScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
-  filters: { paddingVertical: 8, borderBottomWidth: 1 },
+  filters: { paddingVertical: 4, borderBottomWidth: 1 },
   chips: { flexDirection: 'row', gap: 6, paddingHorizontal: 16 },
   chip: { minHeight: 44, borderRadius: 24, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 6 },
-  content: { paddingHorizontal: 16, paddingTop: 12 },
-  count: { fontSize: 13, lineHeight: 19, marginBottom: 8, paddingHorizontal: 4 },
+  content: { paddingHorizontal: 16, paddingTop: 8 },
+  count: { fontSize: 13, lineHeight: 19, marginBottom: 6, paddingHorizontal: 4 },
   panel: { borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
-  row: { paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  icon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  row: { paddingHorizontal: 10, paddingVertical: 10, flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+  icon: { width: 32, height: 32, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   text: { flex: 1, minWidth: 0, gap: 2 },
   category: { fontSize: 12.5, lineHeight: 18, fontWeight: '700' },
   question: { fontSize: 15, lineHeight: 20, fontWeight: '700' },

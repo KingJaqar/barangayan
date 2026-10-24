@@ -7,6 +7,7 @@ import { ResidentSearchProvider } from '@/hooks/use-resident-search';
 import { useAuth } from '@/hooks/use-auth';
 import { FloatingTabLayoutProvider } from '@/hooks/use-floating-tab-layout';
 import { useTheme } from '@/hooks/use-theme';
+import { EmergencyMapHeaderProvider } from '@/hooks/use-emergency-map-header';
 
 export default function AppLayout() {
   const { session } = useAuth();
@@ -15,7 +16,9 @@ export default function AppLayout() {
     <ResidentSearchProvider key={session?.user.id ?? 'guest'}>
       <FloatingTabLayoutProvider>
         <StatusBar style={theme.resident.onAccent === '#000000' ? 'dark' : 'light'} />
-        <View style={{ flex: 1 }}><ResidentHeader /><AppTabs /></View>
+        <EmergencyMapHeaderProvider>
+          <View style={{ flex: 1 }}><ResidentHeader /><AppTabs /></View>
+        </EmergencyMapHeaderProvider>
       </FloatingTabLayoutProvider>
     </ResidentSearchProvider>
   </UnreadCountsProvider>;

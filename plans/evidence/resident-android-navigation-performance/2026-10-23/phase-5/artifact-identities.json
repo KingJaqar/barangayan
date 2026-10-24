@@ -1,0 +1,151 @@
+{
+  "files": [
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/baseline.json",
+      "sha256": "978ec77f78b64ecba196dbc73058df48861a42660234a2b141410d71bec1da35"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/closure-manifest.json",
+      "sha256": "4029220d43f5cd45fc2719f3514d9fef8052b5f3b8d332bd12e65995a8487801"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/comparison.md",
+      "sha256": "04497418621f648c070539d52b7825553eb8385b33c69f1640c44a9646dfc294"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/context-index.md",
+      "sha256": "9a55a7e093d5e12b0c8d07cfe0702049ad456569c2cc0349dfd45c5765c8f369"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/final-manifest.json",
+      "sha256": "d524e3de13bf36b908296e4af59ae76118e69f67dd34441dcbc6aa7c5f35ae62"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/app-unit.log",
+      "sha256": "3427b0b4c5ae29ee1148d58f097f8b72642870973e5b493f2dac7f38c5c69018"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/baseline-export-sandbox-failed.log",
+      "sha256": "dacc70c2b49c0ef61c8830de7dce1d8e6ecda24a2a313bb9a47a566832fc75e2"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/baseline-lint.log",
+      "sha256": "9b3268238f1b1fd523feeb25990ea5f433d35ea1c2bc0f8a63b3db9fa2db2a72"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/baseline-permitted-export.log",
+      "sha256": "d2a7fa575e933eaf2578f73f833f29a5d747886f00910c23f3141f4e84c3f249"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/baseline-typecheck.log",
+      "sha256": "d534238730eeab8cbea2c3b4f2ea87e2dc47c5cc0333ef0ad1b8a430d3422ab9"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/candidate-export.log",
+      "sha256": "97c74c845f66e7ca277ab2f3aa7af5ff8a79ed855b9aa7860a1d5a99a699ffb2"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/drrm-centers-ui.log",
+      "sha256": "b3e836e3c21058375e6df917a0827c823e3ad783ff9c92dde5cf86eca83bf65b"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/final-static-lint.log",
+      "sha256": "9b3268238f1b1fd523feeb25990ea5f433d35ea1c2bc0f8a63b3db9fa2db2a72"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/final-static-typecheck.log",
+      "sha256": "d534238730eeab8cbea2c3b4f2ea87e2dc47c5cc0333ef0ad1b8a430d3422ab9"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/health-presentation-ui.log",
+      "sha256": "dc4d0a98cd0662e1573976b42ef0c5bc4a9073126b2d4a2317e17ce5701a3415"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/hidden-work-ownership.log",
+      "sha256": "26c010d35820ee3103559de20b3f8adf84bb5c841d2945cfe01bac19dfae7882"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/map-state-bridge.log",
+      "sha256": "9f66187087752f08e4a798b3c7080d155155e13e9c8523ef2344bbbfc1fafce4"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/maps-presentation-ui.log",
+      "sha256": "5c58b7037cb5aa3132c49ee002c73e68d5da4d40209114e71b9992201cab66d0"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/navigation-final-review.log",
+      "sha256": "f014b0a751745085281d85819262d25efd8b6672ac04f4a6211c1e4d4a5a1f5b"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/refresh-ownership.log",
+      "sha256": "64f41f110f8b4677c5179e8f6a31ac4981a28b5dd56a924348f60738c3fd394f"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/reports-announcements-ui.log",
+      "sha256": "db87c20d6c1dcf80b56792dc936cc9daac3a83aef4e59752ae2d01a14c4cf96c"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/request-tracking-navigation.log",
+      "sha256": "f014b0a751745085281d85819262d25efd8b6672ac04f4a6211c1e4d4a5a1f5b"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/resident-shell-lifecycle.log",
+      "sha256": "2fb6fe4e718a9ee9299d3a1f76f9d7b8fc5d69a6821bb56c0361aea78e240317"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/root-navigation-isolation.log",
+      "sha256": "703f638d8b8217af8cf158b74408359961a169627cb8444c0908a8c69c97defc"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/routing-unit.log",
+      "sha256": "abbf9d1d0480d945891d4ce4c61be8545237e992f30513c8811b34df8bb3e807"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/services-lists-ui.log",
+      "sha256": "60fa08cf7c4661cd1cff61086e2c870b8516112f6d97c2888bb2b36010b987d6"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/services-tab-stability.log",
+      "sha256": "723d4d1585bf0e1585cfbd710891cafb7b4478e57aa1931fc34315ce07f71b33"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/logs/tracking-payment-ui.log",
+      "sha256": "bf32b9804442a5f77b3f2fffd052346cc667cec921519a8e3f2ff4039377b14f"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/native-capture-recovered.json",
+      "sha256": "665674f52b5940e9bbe573828d7c538e74d02ef50f93ed985a2f5896440181b1"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/native-diagnostic-summary.json",
+      "sha256": "0b10d282ecaed3a8b7fb8fea10a80344ff0484b521e2f9f2c2fbe029b8b5c984"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/native-identity.json",
+      "sha256": "1320045dab35506c82a129427a77d1426a521fbde67d448b6afac8cad949c7be"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/native-services.json",
+      "sha256": "1880a929d401feb2ad079a870e87dbdd2cbcfb33faf48d89a4715c9250b88e27"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/packet-manifest.json",
+      "sha256": "058e87b72f49688ccf29c17df1cf0bef6277fc5f0f07d40105ff06056003ee3f"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/reports-supplement-manifest.json",
+      "sha256": "136e6f4b5b9ade3b10246cd7cad43eceb06537fc39d8d22006136ead1305ff33"
+    },
+    {
+      "path": "plans/evidence/resident-android-navigation-performance/2026-10-23/phase-5/verification.json",
+      "sha256": "0b2e716e7b688cb961301fbc9758c83d72269ceaf649cb5432e2d9d322813a15"
+    }
+  ],
+  "retainedWorkingCopyBaseline": "tmp/resident-nav-phase5-20261023/before",
+  "retainedGitPatches": [
+    "tmp/resident-nav-phase5-20261023/tracked.patch",
+    "tmp/resident-nav-phase5-20261023/staged.patch"
+  ],
+  "retainedHistory": "plans/evidence/resident-android-navigation-performance/2026-10-22/mumu-continuation/completion.md",
+  "unexpectedDrift": []
+}

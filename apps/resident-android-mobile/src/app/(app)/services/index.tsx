@@ -4,8 +4,8 @@ import { idVerificationMessages, idVerificationState } from '@barangayan/shared'
 import { useProfile } from '@/hooks/use-profile';
 import { PrimaryButton } from '@/components/primary-button';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -37,7 +37,6 @@ export default function ServicesScreen() {
   const { session } = useAuth();
   const router = useRouter();
   const { profile, refetch, isLoading, error } = useProfile();
-  useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const theme = useTheme();
   const bottomTabInset = useFloatingTabInset();
 

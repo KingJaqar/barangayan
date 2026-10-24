@@ -22,6 +22,7 @@ const bundle = await build({
     builder.onLoad({ filter: /.*/, namespace: 'preview' }, args => ({ contents: args.path === 'navigation'
       ? 'export const useRouter = () => ({ refresh() {} });'
       : args.path === 'audit' ? 'export async function logAdminAction() {}'
+      : process.env.CONTENT_PREVIEW_WRITES === 'mock' ? fs.readFileSync(path.join(import.meta.dirname, 'edit-adapter.js'), 'utf8')
       : 'export function createSupabaseBrowserClient() { return { channel() { return { on() { return this; }, subscribe() { return this; } }; }, removeChannel() {}, from() { throw new Error("Preview writes are disabled."); }, rpc() { throw new Error("Preview writes are disabled."); } }; }' }));
   } }],
 });
@@ -34,4 +35,4 @@ const server = http.createServer((req, res) => {
   else if (req.url === '/preview.css') { res.setHeader('content-type', 'text/css'); res.end(css + '\n' + modules); }
   else { res.setHeader('content-type', 'text/html'); res.end('<!doctype html><html lang="en"><head><title>Admin content UI preview</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/preview.css"></head><body><div id="root"></div><script src="/preview.js"></script></body></html>'); }
 });
-server.listen(4178, '127.0.0.1', () => console.log('UI preview: http://127.0.0.1:4178'));
+server.listen(Number(process.env.CONTENT_PREVIEW_PORT ?? 4178), '127.0.0.1', () => console.log(`UI preview: http://127.0.0.1:${server.address().port}`));

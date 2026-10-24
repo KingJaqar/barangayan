@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
+import { useRefreshResource } from '@/hooks/use-refresh-resource';
 import { supabase } from '@/lib/supabase';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
@@ -59,38 +60,29 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
 
-  const [activeReportsCount, setActiveReportsCount] = useState(0);
-  const [resolvedUnreadCount, setResolvedUnreadCount] = useState(0);
   const [announcementsUnreadCount, setAnnouncementsUnreadCount] = useState(0);
   // Announcement ids not yet marked read by this resident — kept around so
   // markAnnouncementsRead() knows exactly which ids to upsert without a second round-trip.
   const [unreadAnnouncementIds, setUnreadAnnouncementIds] = useState<string[]>([]);
-  const [incidentCountsError, setIncidentCountsError] = useState(false);
   const [announcementCountsError, setAnnouncementCountsError] = useState(false);
 
-  const refetchIncidentCounts = useCallback(() => {
-    setIncidentCountsError(false);
-    if (!userId) {
-      setActiveReportsCount(0);
-      setResolvedUnreadCount(0);
-      return;
+  const loadIncidentCounts = useCallback(async (signal: AbortSignal) => {
+    if (!userId) return { active: 0, resolved: 0 };
+    const [active, resolved] = await Promise.all([
+      supabase.from('incidents').select('id', { count: 'exact', head: true })
+        .eq('reporter_id', userId).is('deleted_at', null).in('status', ['open', 'in_progress']).abortSignal(signal),
+      supabase.from('incidents').select('id', { count: 'exact', head: true })
+        .eq('reporter_id', userId).is('deleted_at', null).eq('status', 'resolved').is('resolved_read_at', null).abortSignal(signal),
+    ]);
+    if (active.error || resolved.error || active.count === null || resolved.count === null) {
+      throw new Error('Could not refresh report counts.');
     }
-    supabase
-      .from('incidents')
-      .select('status, resolved_read_at')
-      .is('deleted_at', null)
-      .eq('reporter_id', userId)
-      .then(({ data, error }) => {
-        if (error) { setIncidentCountsError(true); return; }
-        const rows = data ?? [];
-        setActiveReportsCount(
-          rows.filter((r) => r.status === 'open' || r.status === 'in_progress').length,
-        );
-        setResolvedUnreadCount(
-          rows.filter((r) => r.status === 'resolved' && !r.resolved_read_at).length,
-        );
-      }, () => setIncidentCountsError(true));
+    return { active: active.count, resolved: resolved.count };
   }, [userId]);
+  const incidentCounts = useRefreshResource(userId ?? 'guest', loadIncidentCounts, 'Could not refresh report counts.');
+  const refetchIncidentCounts = incidentCounts.invalidate;
+  const activeReportsCount = incidentCounts.data?.active ?? 0;
+  const resolvedUnreadCount = incidentCounts.data?.resolved ?? 0;
 
   const refetchAnnouncementCounts = useCallback(() => {
     setAnnouncementCountsError(false);
@@ -242,7 +234,7 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   return (
     <UnreadCountsContext.Provider
       value={{
-        readStateError: incidentCountsError || announcementCountsError,
+        readStateError: !!incidentCounts.error || announcementCountsError,
         retryReadState: () => { refetchIncidentCounts(); refetchAnnouncementCounts(); },
         activeReportsCount,
         resolvedUnreadCount,

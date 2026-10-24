@@ -19,23 +19,17 @@ export function useAboutUs(barangayId: string | null): {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Guests have no barangay: read unscoped and let RLS decide (anon policies from 0059,
+  // incomplete-account browsing from 0103), as resident-web does. Oldest row keeps it deterministic.
   const doFetch = useCallback(() => {
-    if (!barangayId) {
-      setAbout(null);
-      setDevelopers([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
-    supabase
-      .from('about_us')
-      .select('*')
-      .eq('barangay_id', barangayId)
-      .eq('is_active', true)
-      .is('deleted_at', null)
+    let query = supabase.from('about_us').select('*').eq('is_active', true).is('deleted_at', null);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+    query
+      .order('created_at', { ascending: true })
+      .limit(1)
       .maybeSingle()
       .then(async ({ data: aboutRow, error: aboutErr }) => {
         if (aboutErr) {

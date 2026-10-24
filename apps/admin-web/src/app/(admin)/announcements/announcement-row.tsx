@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
+
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import styles from '@/components/admin/content-workspace.module.css';
@@ -151,85 +154,86 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
 
   const meta = ANNOUNCEMENT_CATEGORY_META[announcement.category as keyof typeof ANNOUNCEMENT_CATEGORY_META];
 
-  if (isEditing) {
-    return (
+  return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit announcement" context={announcement.title}
+      description="Update the content, category, and optional image shown to residents." busy={submitting} onClose={() => setIsEditing(false)}>
       <form
         onSubmit={handleSave}
-        className={styles.rowEdit}>
-        <div className="grid grid-cols-4 gap-3">
-          <label className="col-span-4 text-sm sm:col-span-2">
-            <span className={labelClass}>Title</span>
-            <input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} required />
-          </label>
+        className={editStyles.form} aria-busy={submitting}>
+        <div className={editStyles.fields} data-edit-scroll>
+        <fieldset disabled={submitting}>
+          <div className={editStyles.grid}>
+            <label className={editStyles.full}>
+              <span className={labelClass}>Title</span>
+              <input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} required />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Category</span>
-            <AdminSelect kind="announcement" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
-              {ANNOUNCEMENT_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {ANNOUNCEMENT_CATEGORY_META[cat].label}
-                </option>
-              ))}
-            </AdminSelect>
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Category</span>
+              <AdminSelect kind="announcement" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+                {ANNOUNCEMENT_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {ANNOUNCEMENT_CATEGORY_META[cat].label}
+                  </option>
+                ))}
+              </AdminSelect>
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Image URL (optional)</span>
-            <input
-              className={inputClass}
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://…"
-              type="url"
-            />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Image URL (optional)</span>
+              <input
+                className={inputClass}
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://…"
+                type="url"
+              />
+            </label>
 
-          <label className="col-span-4 text-sm">
-            <span className={labelClass}>Body</span>
-            <textarea
-              className={inputClass}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              rows={2}
-              required
-            />
-          </label>
+            <label className={editStyles.full}>
+              <span className={labelClass}>Body</span>
+              <textarea
+                className={inputClass}
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                rows={3}
+                required
+              />
+            </label>
 
-          <label className="col-span-4 text-sm">
-            <span className={labelClass}>Detailed Description (optional)</span>
-            <textarea
-              className={inputClass}
-              value={detailedDescription}
-              onChange={(e) => setDetailedDescription(e.target.value)}
-              rows={4}
-              placeholder="Full write-up shown when a resident taps the announcement for more detail…"
-            />
-          </label>
+            <label className={editStyles.full}>
+              <span className={labelClass}>Detailed Description (optional)</span>
+              <textarea
+                className={inputClass}
+                value={detailedDescription}
+                onChange={(e) => setDetailedDescription(e.target.value)}
+                rows={4}
+                placeholder="Full write-up shown when a resident taps the announcement for more detail…"
+              />
+            </label>
 
-          {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+            {error ? <p role="alert" className={`${editStyles.full} ${editStyles.error}`}>{error}</p> : null}
 
-          <div className="col-span-4 flex items-center gap-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-              aria-busy={submitting}>
-              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              disabled={submitting}
-              className="rounded-full bg-zinc-200 px-5 py-1.5 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-              Cancel
-            </button>
           </div>
+        </fieldset>
+        </div>
+        <div className={editStyles.actions}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            disabled={submitting}>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            aria-busy={submitting}>
+            <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          </button>
         </div>
       </form>
-    );
-  }
-
-  return (
+    </ContentEditDialog>
     <div className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -254,11 +258,12 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
         <p className="line-clamp-2">{announcement.body}</p>
       </div>
       <div className={`${styles.rowActions} mt-4`}>
-        <button type="button" onClick={startEdit} aria-label={`Edit ${announcement.title}`}
+        <button type="button" onClick={startEdit} aria-haspopup="dialog" aria-label={`Edit ${announcement.title}`}
           className={styles.primaryAction}>Edit announcement</button>
         <ConfirmButton label="Archive" ariaLabel={`Archive ${announcement.title}`}
           confirmLabel="Archive?" onConfirm={archive} className={styles.dangerAction} />
       </div>
     </div>
+    </>
   );
 }

@@ -1,0 +1,136 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { RefreshResource } from './refresh-resource';
+
+function deferred<T>() {
+  let resolve: (value: T) => void = () => { throw new Error('Deferred not initialized'); };
+  let reject: (error: Error) => void = () => { throw new Error('Deferred not initialized'); };
+  const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; });
+  return { promise, resolve, reject };
+}
+afterEach(() => { vi.useRealTimers(); });
+describe('account/filter refresh ownership', () => {
+  it('joins same-key reads and retains loaded and empty content during refresh', async () => {
+    const first = deferred<string[]>();
+    const load = vi.fn(() => first.promise);
+    const resource = new RefreshResource('A/date/all', load, 'Retry');
+    const one = resource.refresh();
+    expect(resource.refresh()).toBe(one);
+    await Promise.resolve();
+    expect(load).toHaveBeenCalledTimes(1);
+    first.resolve([]);
+    await one;
+    const next = deferred<string[]>();
+    load.mockReturnValue(next.promise);
+    const two = resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: [], fetching: true, error: null });
+    next.resolve(['new']);
+    await two;
+    expect(resource.getSnapshot().data).toEqual(['new']);
+  });
+  it('coalesces mutation/event invalidations and never publishes the pre-write reply', async () => {
+    const before = deferred<string>();
+    const after = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(before.promise).mockReturnValueOnce(after.promise);
+    const resource = new RefreshResource<string>('A', load, 'Retry');
+    const published: (string | undefined)[] = [];
+    resource.subscribe(() => published.push(resource.getSnapshot().data));
+    const read = resource.refresh();
+    await Promise.resolve();
+    expect(resource.invalidate()).toBe(read);
+    expect(resource.invalidate()).toBe(read);
+    before.resolve('obsolete');
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(published).not.toContain('obsolete');
+    expect(resource.getSnapshot().fetching).toBe(true);
+    after.resolve('current');
+    await read;
+    expect(resource.getSnapshot().data).toBe('current');
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+  it('ignores old filter/account success and error returned after B, and cancels transport', async () => {
+    const old = deferred<string>();
+    let signal: AbortSignal | undefined;
+    const a = new RefreshResource('A/filter1', async abort => { signal = abort; return old.promise; }, 'Old failure');
+    const b = new RefreshResource('B/filter2', async () => 'B', 'B failure');
+    const pending = a.refresh();
+    await Promise.resolve();
+    a.cancel();
+    await b.refresh();
+    expect(signal?.aborted).toBe(true);
+    old.reject(new Error('late A failure'));
+    await pending;
+    expect(a.getSnapshot()).toEqual({ data: undefined, fetching: false, error: null });
+    expect(b.getSnapshot()).toEqual({ data: 'B', fetching: false, error: null });
+  });
+  it('a stale failure cannot clear a newer read’s loading/error state', async () => {
+    const old = deferred<string>();
+    const latest = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(old.promise).mockReturnValueOnce(latest.promise);
+    const resource = new RefreshResource('A', load, 'Retry');
+    const pending = resource.refresh();
+    await Promise.resolve();
+    void resource.invalidate();
+    old.reject(new Error('Old failure'));
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(resource.getSnapshot()).toEqual({ data: undefined, fetching: true, error: null });
+    latest.resolve('latest');
+    await pending;
+    expect(resource.getSnapshot().error).toBeNull();
+  });
+  it('shows recoverable errors without losing warm data, and explicit retry works', async () => {
+    const load = vi.fn().mockResolvedValueOnce(['warm']).mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(['fresh']);
+    const resource = new RefreshResource('A', load, 'Reconnect and retry');
+    await resource.refresh();
+    await resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: ['warm'], fetching: false, error: 'Reconnect and retry' });
+    await resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: ['fresh'], fetching: false, error: null });
+  });
+  it('bounds hung reads and clears deadlines/listeners on unmount, including ignored aborts', async () => {
+    vi.useFakeTimers();
+    const load = vi.fn(() => new Promise<string>(() => {}));
+    const resource = new RefreshResource('A', load, 'Retry');
+    const pending = resource.refresh();
+    await Promise.resolve();
+    await vi.advanceTimersByTimeAsync(30_000);
+    await pending;
+    expect(resource.getSnapshot()).toEqual({ data: undefined, fetching: false, error: 'Retry' });
+    const again = resource.refresh();
+    await Promise.resolve();
+    resource.cancel();
+    await again;
+    expect(vi.getTimerCount()).toBe(0);
+    await resource.invalidate();
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+  it('supports effect cleanup/re-setup without an old request ending the new request', async () => {
+    const old = deferred<string>();
+    const fresh = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(old.promise).mockReturnValueOnce(fresh.promise);
+    const resource = new RefreshResource('A', load, 'Retry');
+    const one = resource.refresh();
+    await Promise.resolve();
+    resource.cancel();
+    resource.activate();
+    const two = resource.refresh();
+    old.resolve('old');
+    await one;
+    expect(resource.getSnapshot().fetching).toBe(true);
+    fresh.resolve('fresh');
+    await two;
+    expect(resource.getSnapshot().data).toBe('fresh');
+  });
+  it('retains equal data identity through reconciliation and releases subscriptions', async () => {
+    const resource = new RefreshResource('A', async () => ({ name: 'same' }), 'Retry', (prior, next) => prior?.name === next.name ? prior : next);
+    const listener = vi.fn();
+    const unsubscribe = resource.subscribe(listener);
+    await resource.refresh();
+    const first = resource.getSnapshot().data;
+    await resource.refresh();
+    expect(resource.getSnapshot().data).toBe(first);
+    unsubscribe();
+    const calls = listener.mock.calls.length;
+    await resource.refresh();
+    expect(listener).toHaveBeenCalledTimes(calls);
+  });
+});

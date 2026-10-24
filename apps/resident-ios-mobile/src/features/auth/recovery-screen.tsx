@@ -42,7 +42,12 @@ export default function RecoveryScreen() {
   async function run(action: () => Promise<void>) {
     if (busy) return;
     setBusy(true); setMessage('');
-    try { await action(); } catch (failure) { setMessage(recoveryErrorMessage(failure)); } finally { setBusy(false); }
+    try { await action(); } catch (failure) {
+      if (step === 'password' && !flow.current.isVerified) {
+        setPassword(''); setConfirmPassword(''); setStep('email');
+      }
+      setMessage(recoveryErrorMessage(failure));
+    } finally { setBusy(false); }
   }
   const account = signedInAtStart ? session?.user : null;
 

@@ -99,7 +99,7 @@ export default function RegisterScreen() {
   return <Screen>
     <AuthenticatedRedirect />
     <Body heading>{step === 'email' ? 'Verify your email' : 'Enter your code'}</Body>
-    <Body tone="secondary">{step === 'email' ? 'We will email you a six-digit code to get started.' : `Enter the six-digit code we sent to ${email}. It expires in 1 hour.`}</Body>
+    <Body tone="secondary">{step === 'email' ? 'We will email you a six-digit code to get started.' : `Enter the six-digit code we sent to ${email}. If it has expired, request a new code.`}</Body>
     <Card>
       {step === 'email'
         ? <Field label="Email address" required value={email} onChangeText={(value) => { setEmail(value); setError(''); }} keyboardType="email-address" textContentType="emailAddress" autoComplete="email" autoCapitalize="none" editable={!disabled} />

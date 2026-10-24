@@ -1,0 +1,661 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/hooks/use-profile.ts, apps/resident-android-mobile/src/hooks/use-medical-drives.ts, apps/resident-android-mobile/src/hooks/use-refresh-resource.ts, apps/resident-android-mobile/src/lib/refresh-resource.ts, apps/resident-android-mobile/src/lib/refresh-resource.test.ts, apps/resident-android-mobile/src/app/(app)/health/index.tsx, apps/resident-android-mobile/src/app/(app)/services/index.tsx, apps/resident-android-mobile/src/app/(app)/settings/index.tsx, apps/resident-android-mobile/src/hooks/use-font-preference.tsx, apps/resident-android-mobile/src/hooks/use-theme-preference.tsx, apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx, apps/resident-android-mobile/tests/health-presentation-ui.mjs, apps/resident-android-mobile/tests/services-tab-stability.mjs, apps/resident-android-mobile/tests/settings-profile-ui.mjs, apps/resident-android-mobile/tests/refresh-ownership.mjs
+- Files matching these patterns are excluded: **/.env*, **/node_modules/**, **/repomix-output.xml, **/*.mp4, **/*.png, **/*.jpg, **/secrets/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            index.tsx
+          services/
+            index.tsx
+          settings/
+            index.tsx
+      hooks/
+        use-font-preference.tsx
+        use-medical-drives.ts
+        use-notification-preferences.tsx
+        use-profile.ts
+        use-refresh-resource.ts
+        use-theme-preference.tsx
+      lib/
+        refresh-resource.test.ts
+        refresh-resource.ts
+    tests/
+      health-presentation-ui.mjs
+      refresh-ownership.mjs
+      services-tab-stability.mjs
+      settings-profile-ui.mjs
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/hooks/use-refresh-resource.ts">
+import { useEffect, useMemo, useSyncExternalStore } from 'react';
+import { RefreshResource } from '@/lib/refresh-resource';
+⋮----
+/** The key includes every private owner and query filter. Changing it creates
+ * empty visible state immediately; cleanup cancels the obsolete transport. */
+export function useRefreshResource<T>(
+  key: string,
+  load: (signal: AbortSignal) => Promise<T>,
+  message: string,
+  reconcile?: (previous: T | undefined, next: T) => T,
+)
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/refresh-resource.test.ts">
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { RefreshResource } from './refresh-resource';
+⋮----
+function deferred<T>()
+⋮----
+let resolve: (value: T) => void = () =>
+let reject: (error: Error) => void = () =>
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/refresh-resource.ts">
+export interface RefreshSnapshot<T> {
+  data: T | undefined;
+  fetching: boolean;
+  error: string | null;
+}
+⋮----
+/** One read owner per account/filter. Ordinary reads join; invalidations queue
+ * one follow-up and prevent a pre-invalidation reply from being published. */
+export class RefreshResource<T>
+⋮----
+constructor(
+⋮----
+private publish(snapshot: RefreshSnapshot<T>)
+⋮----
+// Install ownership before invoking transport, including synchronous callers.
+⋮----
+const abort = ()
+⋮----
+removeAbortListener = ()
+</file>
+
+<file path="apps/resident-android-mobile/tests/refresh-ownership.mjs">
+// Real providers/hooks and shared registration schema; deferred transport and
+// native lifecycle are controlled boundaries, not native performance evidence.
+⋮----
+plugins: [
+⋮----
+const profileRow = id => (
+const waitRead = async (table, filter, value) =>
+const reply = (index, data, error = null) => page.evaluate((
+const settleHealth = () => page.evaluate(() =>
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-font-preference.tsx">
+import { isValidFontId } from '@barangayan/shared';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+⋮----
+import { DEFAULT_FONT_ID } from '@/constants/fonts';
+import { useAuth } from '@/hooks/use-auth';
+import { useProfileData } from '@/hooks/use-profile';
+import { supabase } from '@/lib/supabase';
+⋮----
+interface FontPreferenceContextValue {
+  fontId: string;
+  setFontId: (id: string) => void;
+}
+⋮----
+/**
+ * Real, persisted font-style preference — same shape as ThemePreferenceProvider
+ * (use-theme-preference.tsx), writing/reading `profiles.font_preference` (0075 migration,
+ * shared with the web admin's Theme page). Guests get local-only state for the session.
+ */
+export function FontPreferenceProvider(
+⋮----
+// Same "only overwrite on the initial load per session" reasoning as
+// ThemePreferenceProvider — avoids a background refetch clobbering a change made seconds
+// ago.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function setFontId(id: string)
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx">
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+⋮----
+import { useAuth } from '@/hooks/use-auth';
+import { useProfileData } from '@/hooks/use-profile';
+import { supabase } from '@/lib/supabase';
+import { registerPushToken, unregisterPushToken } from '@/lib/push-notifications';
+⋮----
+interface NotificationPreferencesContextValue {
+  pushEnabled: boolean;
+  setPushEnabled: (value: boolean) => void;
+}
+⋮----
+/**
+ * Persisted push-notification opt-in, following the exact ThemePreferenceProvider pattern:
+ * loads once per session from the profile, mirrors it in local state for instant UI
+ * response, and fire-and-forgets writes back to Supabase. Guests (no session) always get
+ * `false` and setPushEnabled is a no-op — there's no profile row to persist to.
+ */
+export function NotificationPreferencesProvider(
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function setPushEnabled(value: boolean)
+⋮----
+// Same lazy-thenable gotcha as ThemePreferenceProvider — must .then()/await to
+// actually send the request.
+⋮----
+export function useNotificationPreferences()
+</file>
+
+<file path="apps/resident-android-mobile/tests/health-presentation-ui.mjs">
+// Actual Health routes, medical hook, schemas, theme and motion. Only data/native APIs are synthetic.
+⋮----
+setup(b)
+⋮----
+const button = (n) => page.getByRole('button',
+const render = (patch =
+⋮----
+// Replace fixture registrations with complete authoritative records.
+</file>
+
+<file path="apps/resident-android-mobile/tests/settings-profile-ui.mjs">
+// Actual Settings/Profile and preference providers; native APIs and remote records are synthetic.
+⋮----
+const root=createRoot(document.getElementById('root'));let generation=0;window.renderFixture=()=>root.render(<ThemePreferenceProvider key=
+⋮----
+const button=name=>page.getByRole('button',
+const settle=async()
+const go=async screen=>
+⋮----
+// Reference presentation, using the real preference providers and local editors.
+</file>
+
+<file path="apps/resident-android-mobile/tests/services-tab-stability.mjs">
+// Render the real Services screen and shared verification rules. Only data hooks,
+// navigation and the document feeds are fixtures; layout uses React Native Web.
+⋮----
+plugins: [
+⋮----
+// Real changes and failures must still replace the compact status with guidance.
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-medical-drives.ts">
+import { DRIVE_TYPE_CONFIG, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type ResidentDriveRegistrationResult, type DriveType } from '@barangayan/shared';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+⋮----
+import { AppState } from 'react-native';
+import { useProfileData } from '@/hooks/use-profile';
+import { useRefreshResource } from '@/hooks/use-refresh-resource';
+import { useAuth } from '@/hooks/use-auth';
+import { supabase } from '@/lib/supabase';
+⋮----
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+⋮----
+export interface MedicalDrive {
+  id: string;
+  barangay_id: string;
+  title: string;
+  type: DriveType;
+  drive_date: string;   // YYYY-MM-DD
+  time_start: string;   // HH:MM:SS
+  time_end: string;     // HH:MM:SS
+  location: string;
+  eligible_criteria: string;
+  stock_label: string;  // "Remaining Stock" | "Remaining Slots" | …
+  stock_unit: string;   // "doses" | "slots" | …
+  stock_total: number;
+  stock_remaining: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+⋮----
+drive_date: string;   // YYYY-MM-DD
+time_start: string;   // HH:MM:SS
+time_end: string;     // HH:MM:SS
+⋮----
+stock_label: string;  // "Remaining Stock" | "Remaining Slots" | …
+stock_unit: string;   // "doses" | "slots" | …
+⋮----
+export interface DriveRegistration {
+  id: string;
+  drive_id: string;
+  user_id: string;
+  applicant_number: string;
+  age: number;
+  is_pwd: boolean;
+  comorbidities: string[];
+  prior_dose_date: string | null;
+  status: string; // drive_registration_status
+  created_at: string;
+  updated_at: string;
+  // Joined from medical_drives when fetching "My Registrations"
+  drive?: MedicalDrive | null;
+}
+⋮----
+status: string; // drive_registration_status
+⋮----
+// Joined from medical_drives when fetching "My Registrations"
+⋮----
+export type RegisterForDriveResult = ResidentDriveRegistrationResult;
+⋮----
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
+export function useMedicalDrives({ selectedDate, typeFilter, calendarMonth, monthViewActive }: {
+  selectedDate: string;
+  typeFilter: DriveType | 'all';
+  calendarMonth: { year: number; month: number };
+  monthViewActive: boolean;
+})
+⋮----
+const pad = (value: number)
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-profile.ts">
+import { type Tables } from '@barangayan/shared';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { AppState } from 'react-native';
+import { useAuth } from '@/hooks/use-auth';
+import { useRefreshResource } from '@/hooks/use-refresh-resource';
+import { safeReadRetryDelay } from '@/lib/setup-refresh';
+import { supabase } from '@/lib/supabase';
+⋮----
+export type Profile = Tables<'profiles'> & {
+  barangays: (Pick<Tables<'barangays'>, 'name' | 'boundary'> & {
+    barangay_localities: Pick<Tables<'barangay_localities'>, 'display_name' | 'city' | 'province'> | null;
+  }) | null;
+};
+const cacheKey = (id: string) => `resident_profile_v2:$
+⋮----
+export async function clearProfileCache(userId?: string)
+⋮----
+interface ProfileRead { profile: Profile | null; serialized: string; error: string | null; }
+interface ProfileData { profile: Profile | null; refetch: () => void; }
+interface ProfileStatus { isLoading: boolean; isInitialLoading: boolean; isRefreshing: boolean; error: string | null; }
+⋮----
+function unverified(profile: Profile): Profile
+function retainProfile(previous: ProfileRead | undefined, next: ProfileRead): ProfileRead
+function retryWait(delay: number, signal: AbortSignal)
+⋮----
+const abort = () =>
+⋮----
+export function ProfileProvider(
+⋮----
+// Serialize writes/removals so a late cache write cannot resurrect a signed-out account.
+⋮----
+} catch { /* Offline demographic cache is optional and never grants approval. */ }
+⋮----
+// Initial subscription joins the mount read; reconnection catches missed changes.
+⋮----
+// Keep legacy isLoading checks fail-closed throughout verification refreshes.
+⋮----
+export function useProfileData()
+export function useProfile()
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-theme-preference.tsx">
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+⋮----
+import { useAuth } from '@/hooks/use-auth';
+import { useProfileData } from '@/hooks/use-profile';
+import { supabase } from '@/lib/supabase';
+⋮----
+export type ThemePreference = 'light' | 'dark' | 'system';
+⋮----
+// Legacy "system" preferences use light; dark mode requires an explicit choice.
+function explicitTheme(value: unknown): 'light' | 'dark'
+⋮----
+function saveDeviceTheme(value: 'light' | 'dark')
+⋮----
+/** How many custom (non-swatch) colors a resident can save at once. Matches the
+ * `custom_accent_colors` column's array-length check in the 0075 migration and the web
+ * admin's accent-controller.tsx MAX_CUSTOM_COLORS — keep all three in sync if this changes. */
+⋮----
+export function isValidHexColor(value: string): boolean
+⋮----
+function normalizeCustomList(colors: string[]): string[]
+⋮----
+interface ThemePreferenceContextValue {
+  themePreference: ThemePreference;
+  /** Only an explicit dark preference enables dark mode. */
+  scheme: 'light' | 'dark';
+  accentColor: string;
+  setThemePreference: (value: ThemePreference) => void;
+  setAccentColor: (value: string) => void;
+  /** Up to MAX_CUSTOM_COLORS resident-saved swatches, most recently saved first. */
+  customColors: string[];
+  /** Adds `color` to the front of the saved list and persists it. No-ops (returns false)
+   * if the color is invalid, already saved, or the list is already at MAX_CUSTOM_COLORS. */
+  addCustomColor: (color: string) => boolean;
+  removeCustomColor: (color: string) => void;
+}
+⋮----
+/** Only an explicit dark preference enables dark mode. */
+⋮----
+/** Up to MAX_CUSTOM_COLORS resident-saved swatches, most recently saved first. */
+⋮----
+/** Adds `color` to the front of the saved list and persists it. No-ops (returns false)
+   * if the color is invalid, already saved, or the list is already at MAX_CUSTOM_COLORS. */
+⋮----
+/**
+ * Real, persisted App Theme (Light/Dark + accent color) for logged-in users — settings
+ * live on their profiles row and apply app-wide (every useTheme() call), not just within
+ * the Settings screen. The last explicit theme is also stored on this device so it
+ * survives logout and restart. Account accent colors still reset on logout.
+ */
+export function ThemePreferenceProvider(
+⋮----
+// A slow storage read must not replace a loaded profile or a new choice.
+⋮----
+// Load from the profile once it's available — only overwrites local state on the
+// initial load per session, so a change made seconds ago isn't clobbered by a
+// background refetch of stale data.
+⋮----
+// Keep the resident's last theme on the welcome screen after logout.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+function setThemePreference(value: ThemePreference)
+⋮----
+// Supabase's query builder is a lazy thenable — the fetch is only actually
+// constructed and sent once .then()/await runs (see PostgrestBuilder.then()).
+// Calling the builder without awaiting/then-ing it is a silent no-op: no request,
+// no error, nothing. Caught this exact bug via a real browser click-through, not
+// by type-checking or a curl-simulated equivalent.
+⋮----
+function setAccentColor(value: string)
+⋮----
+function persistCustomColors(next: string[])
+⋮----
+function addCustomColor(color: string): boolean
+⋮----
+function removeCustomColor(color: string)
+⋮----
+export function useThemePreference()
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/services/index.tsx">
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
+import { useProfile } from '@/hooks/use-profile';
+import { PrimaryButton } from '@/components/primary-button';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+⋮----
+import { DocumentsList } from '@/components/services/documents-list';
+import { LogsList } from '@/components/services/logs-list';
+import { RequestsList } from '@/components/services/requests-list';
+import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
+import { ThemedText } from '@/components/themed-text';
+import { SegmentedControl } from '@/components/segmented-control';
+import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
+⋮----
+type ServicesSegment = 'documents' | 'requests' | 'logs';
+⋮----
+// Documents/Requests/Logs — confirmed against the design file. Guests only ever see
+// Documents (real, guest-readable data per the 0005 migration's anon RLS policy) —
+// Requests/Logs require a real identity, so the control that would reach them isn't
+// rendered at all for a guest, rather than being reachable-but-gated.
+⋮----
+
+⋮----
+// RequestsList owns its scroller so its filter chips can stay pinned while the
+// list scrolls; the banner/verification block scrolls away above them.
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/health/index.tsx">
+import { DRIVE_TYPES, DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FilterChips } from '@/components/filter-chips';
+import {
+  HealthDriveSummary,
+  HealthFact,
+  HealthPanel,
+  HealthSheet,
+  HealthStatus,
+  healthDate,
+  healthTime,
+  healthTypeColor,
+} from '@/components/health/health-presentation';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProgressBar } from '@/components/progress-bar';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import {
+  type DriveRegistration,
+  type DriveType,
+  type MedicalDrive,
+  useMedicalDrives,
+} from '@/hooks/use-medical-drives';
+import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+⋮----
+type StatusFilter = (typeof STATUSES)[number];
+type HealthSegment = 'active-drives' | 'my-registrations';
+type Month = { year: number; month: number };
+const pad2 = (n: number)
+function parseLocalDate(iso: string)
+function localToday()
+⋮----
+onPress=
+⋮----
+onSelect(year, i + 1);
+onClose();
+⋮----
+// One native opacity animation for the grid; no per-day work or animated layout.
+⋮----
+accessibilityLabel=
+⋮----
+// Keep the last content through exit while reading current server status on refresh.
+⋮----
+setLastDetail(reg);
+setDetailId(reg.id);
+⋮----
+
+⋮----
+const handleMonthChange = (delta: 1 | -1)
+const handleDateSelect = (date: string) =>
+const handleRegister = (drive: MedicalDrive) =>
+⋮----
+style=
+⋮----
+onRegister=
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/settings/index.tsx">
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { Ionicons } from '@expo/vector-icons';
+import { idVerificationState } from '@barangayan/shared';
+import Constants from 'expo-constants';
+import { Href, Link, useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Alert, Animated as NativeAnimated, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+⋮----
+import { Avatar } from '@/components/avatar';
+import { Card } from '@/components/card';
+import { CustomAccentColorModal } from '@/components/custom-accent-color-modal';
+import { DeleteAccountModal } from '@/components/delete-account-modal';
+import { Divider } from '@/components/divider';
+import { LoadingOverlay } from '@/components/loading-overlay';
+import { PrimaryButton } from '@/components/primary-button';
+import { PreferenceToggle } from '@/components/preference-toggle';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { SettingsIcon } from '@/components/settings-icon';
+import { ThemedText } from '@/components/themed-text';
+import { ACCENT_COLORS, Spacing } from '@/constants/theme';
+import { getResidentTheme } from '@/constants/resident-theme';
+import { getMobileFontFamily, MOBILE_FONT_OPTIONS } from '@/constants/fonts';
+import { FunctionsHttpError } from '@supabase/supabase-js';
+⋮----
+import { useAuth } from '@/hooks/use-auth';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useNotificationPreferences } from '@/hooks/use-notification-preferences';
+import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
+import { MAX_CUSTOM_COLORS, useThemePreference } from '@/hooks/use-theme-preference';
+import { clearGoogleReauthentication, googleReauthentication, startGoogleAuth } from '@/lib/google-auth';
+import { accountSettingsRows, deletionConfirmation } from '@/lib/sensitive-auth';
+import { supabase } from '@/lib/supabase';
+⋮----
+// supabase.functions.invoke() surfaces a non-2xx response as a generic
+// FunctionsHttpError ("Edge Function returned a non-2xx status code") — the
+// actual `{ error: "..." }` body our edge functions send (e.g. export's
+// rate-limit message, delete's failure reasons) only lives on error.context,
+// the raw Response. Unwrap it so Alert.alert shows the real message instead
+// of a useless generic one.
+async function toEdgeFunctionError(error: unknown): Promise<Error>
+⋮----
+// Response wasn't JSON (or already consumed) — fall through to the generic error.
+⋮----
+// SMS stays local-state only — no backend requested, out of scope per the plan.
+⋮----
+async function handleLogout()
+⋮----
+// Auth removes the signed-in stack and opens Log In after logout.
+⋮----
+// ── Data Privacy Act: Download My Data ───────────────────────────────────
+// Asks for a format *before* calling the edge function — the export is
+// rate-limited (see export-my-data/index.ts), so the format picker itself
+// must not spend a call; only the actually-chosen export does.
+function handleDownloadData()
+⋮----
+async function runDataExport(format: 'json' | 'pdf')
+⋮----
+// Legacy filesystem API throughout this function, not the new File/Paths
+// one: in Expo Go, Paths.cache resolves to an experience-isolated
+// directory that Expo Go's bundled Android FileProvider config doesn't
+// recognize, so sharing a URI under it fails with "Not allowed to read
+// file under given URL". FileSystem.cacheDirectory (legacy) is the one
+// directory Expo Go's sharing has reliably supported for years.
+⋮----
+// printToFileAsync is native Android code — it writes straight into
+// the OS-level cache dir, bypassing expo-file-system entirely, so its
+// output isn't under the scoped directory above either. Copying it
+// there first is the same fix as the JSON case, one layer down: get
+// the file into the one place Expo Go's FileProvider will actually
+// let expo-sharing read from.
+⋮----
+// ── Data Privacy Act: Delete My Account ──────────────────────────────────
+// Two gates before this irreversible action runs: a plain confirm dialog,
+// then a password re-entry modal (a session left open on a shared/lost
+// device shouldn't be enough on its own to permanently delete an account).
+function handleDeleteAccount()
+⋮----
+// The confirmation step depends on the server-maintained password state: an
+// existing (or unknown legacy) password is re-entered; a passwordless Google
+// resident confirms with fresh same-account Google authentication instead.
+⋮----
+// ── Passwordless Google deletion ─────────────────────────────────────────
+// Results are rendered from state (inline notice / modal), not Alert: an Alert
+// raised while Android is returning from the browser can be silently dropped.
+async function confirmDeleteWithGoogle()
+⋮----
+// Runs after the in-app return and after a callback that routed back to Settings.
+// Still requires an explicit final tap; cancelling consumes the confirmation.
+⋮----
+// Only the focused Settings screen may show the final dialog.
+⋮----
+function cancelGoogleDeletion()
+⋮----
+async function deleteAfterGoogle()
+⋮----
+// Recheck at the moment of the irreversible request, not when the dialog opened.
+⋮----
+async function confirmDeleteAccount(password: string)
+⋮----
+// Re-authenticate first — mirrors change-password.tsx's rationale: the
+// delete-my-account function only checks that the caller holds *a*
+// valid session, not that the person holding it is the account owner
+// right now.
+⋮----
+<AccentSwatch key=
+⋮----
+selected=
+⋮----
+<Pressable key=
+⋮----
+// While the password modal is open it shows its own inline spinner
+// (see DeleteAccountModal) — the full-screen overlay only takes over
+// once that modal has closed and the final logout() is in flight, so
+// the two loading indicators never stack.
+⋮----
+onSave=
+⋮----
+onPressIn=
+⋮----
+/** Secondary row text; a warning adds an icon and color, never color alone. */
+⋮----
+const theme = useTheme();
+</file>
+
+</files>

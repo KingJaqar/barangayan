@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-22T23:53:28.414Z",
+  "results": [
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "moduleId": 2304,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "cf6da2557fd2a31cf49e46def677385aa195925f250b9ab863246f4e49dc938f",
+      "currentFactorySha256": "cf6da2557fd2a31cf49e46def677385aa195925f250b9ab863246f4e49dc938f",
+      "sourceMatches": true,
+      "sourceSha256": "436d8921715a9c4ac49ed1d41c3ea098a6ee8299f13f46680b843b639b604202"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-incidents.ts",
+      "moduleId": 2418,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "cb2a7f8433f6e3059849f73481505f02daa7ffa9c842cca1bda4a3684ec3b24e",
+      "currentFactorySha256": "cb2a7f8433f6e3059849f73481505f02daa7ffa9c842cca1bda4a3684ec3b24e",
+      "sourceMatches": true,
+      "sourceSha256": "1172b520e3c032de6e14a88f7d81ba76d99f1937014647818591185ca8ff3865"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts",
+      "moduleId": 2288,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "3a9fbea6070e65eb4dc0b7391c9131eeb6a728b5b12dc9c17c39e1b427dfb02c",
+      "currentFactorySha256": "3a9fbea6070e65eb4dc0b7391c9131eeb6a728b5b12dc9c17c39e1b427dfb02c",
+      "sourceMatches": true,
+      "sourceSha256": "91a3e26167e27716f8086c9e9ca189ae52f6e3f1c399b1b5d1630a6480932fb8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "moduleId": 2416,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "db7be46f0ab7026bc531ab88aa998099b9d54a08173e5c57efd4d3fd41e29c7f",
+      "currentFactorySha256": "db7be46f0ab7026bc531ab88aa998099b9d54a08173e5c57efd4d3fd41e29c7f",
+      "sourceMatches": true,
+      "sourceSha256": "e133463efa31f1bf04bbf31f2387ec436d42a39858cfa14bc3c1e5ce5bf057c5"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "moduleId": 2296,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "11626d83e1cb9903e8ab26314ffc63c33dc86a30c6b494468c88ec86e6289bf9",
+      "currentFactorySha256": "11626d83e1cb9903e8ab26314ffc63c33dc86a30c6b494468c88ec86e6289bf9",
+      "sourceMatches": true,
+      "sourceSha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/map-presentation.ts",
+      "moduleId": 2306,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "d1b635ef91a72059858a67ade5efdf75d40c2bae0ba495b5a5161fb6aa4d62f3",
+      "currentFactorySha256": "d1b635ef91a72059858a67ade5efdf75d40c2bae0ba495b5a5161fb6aa4d62f3",
+      "sourceMatches": true,
+      "sourceSha256": "ad0753a29cbd8e0fafc63ef440f94de481bcba7f86576b6ed82f287aacaea64d"
+    }
+  ],
+  "passed": true
+}

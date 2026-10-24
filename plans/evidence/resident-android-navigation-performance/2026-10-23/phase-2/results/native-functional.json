@@ -1,0 +1,15 @@
+{
+  "results": [
+    "Evacuation",
+    "Reset map to barangay boundary",
+    "Zoom in",
+    "Zoom out",
+    "Center map on your location",
+    "Incidents",
+    "Reset map to barangay boundary"
+  ],
+  "presses": 3,
+  "loads": 0,
+  "dropped": 0,
+  "issues": []
+}

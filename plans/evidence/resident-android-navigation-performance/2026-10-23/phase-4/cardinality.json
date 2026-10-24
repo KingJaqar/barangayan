@@ -1,0 +1,40 @@
+{
+  "source": "Read-only Supabase aggregates in this session; no personal response bodies retained. Base-row sizes exclude unchanged joins.",
+  "project": "Barangayan",
+  "tables": {
+    "incidents": {
+      "total": 20,
+      "owners": 7,
+      "maxResidentHistory": 7,
+      "meanBytes": 779,
+      "meanProjectedBytes": 427,
+      "maxBytes": 1019
+    },
+    "service_requests": {
+      "total": 84,
+      "owners": 16,
+      "maxResidentHistory": 25,
+      "meanBytes": 1567,
+      "meanRequestsProjectedBytes": 225,
+      "meanActivityProjectedBytes": 246,
+      "maxBytes": 2395
+    },
+    "drive_registrations": {
+      "total": 11,
+      "owners": 7,
+      "maxResidentHistory": 3,
+      "meanBytes": 397,
+      "maxBytes": 434
+    },
+    "medical_drives": {
+      "activeNonDeletedRows": 13,
+      "meanBytes": 620,
+      "maxBytes": 671
+    },
+    "document_types": {
+      "activeRows": 5,
+      "meanBytes": 2037,
+      "maxBytes": 2443
+    }
+  }
+}

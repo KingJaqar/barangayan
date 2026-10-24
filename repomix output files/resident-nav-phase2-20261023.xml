@@ -1,0 +1,879 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/src/components/map-view.tsx, apps/resident-android-mobile/src/lib/map-presentation.ts, apps/resident-android-mobile/src/hooks/use-incidents.ts, apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts, apps/resident-android-mobile/src/app/(app)/maps/index.tsx, apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx, packages/shared/src/types/map-bridge.ts, apps/resident-android-mobile/tests/maps-presentation-ui.mjs, apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+- Files matching these patterns are excluded: **/.env*, **/node_modules/**, **/repomix-output.xml, **/*.mp4, **/*.png, **/*.jpg
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          maps/
+            index.tsx
+      components/
+        evacuation-centers-panel.tsx
+        map-view.tsx
+      hooks/
+        use-evacuation-centers.ts
+        use-incidents.ts
+      lib/
+        map-presentation.ts
+    tests/
+      drrm-centers-ui.mjs
+      maps-presentation-ui.mjs
+    app.json
+    package.json
+packages/
+  shared/
+    src/
+      types/
+        map-bridge.ts
+AGENTS.md
+CLAUDE.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/hooks/use-incidents.ts">
+import type { MapMarker, Tables } from '@barangayan/shared';
+import { useCallback, useEffect, useState } from 'react';
+⋮----
+import { supabase } from '@/lib/supabase';
+import { uniqueChannelName } from '@/lib/realtime-channel';
+⋮----
+export type IncidentRow = Tables<'incidents'>;
+⋮----
+/**
+ * Fetches community-reported incidents for the resident's barangay and maps them to
+ * MapMarker[] for direct consumption by the Leaflet WebView bridge.
+ *
+ * Subscribes to Realtime so newly submitted incidents appear on the map without a
+ * manual refresh — mirrors the pattern used by use-announcements.ts.
+ *
+ * Filtering is server-side (categoryIds and searchQuery are sent as PostgREST params)
+ * so the payload stays small even when a barangay has many incidents.
+ */
+export function useIncidents(options: {
+  barangayId: string | null;
+  /** IDs of the active filter pills — empty array means "show all". */
+  categoryIds?: string[];
+  /** Free-text search applied to incident title (case-insensitive prefix match). */
+  searchQuery?: string;
+  status?: 'open' | 'in_progress' | 'resolved';
+}):
+⋮----
+/** IDs of the active filter pills — empty array means "show all". */
+⋮----
+/** Free-text search applied to incident title (case-insensitive prefix match). */
+⋮----
+// Live updates: re-fetch whenever any incident in this barangay changes.
+// The client-side query already applies filters, so re-fetching is safe.
+⋮----
+// Derive MapMarker[] from incident rows so the MapView component needs no
+// knowledge of the incidents table shape.
+⋮----
+// Guard: location must be a valid { lat, lng } object before we put it on the map.
+⋮----
+// kind = category_id so the map can colour-code by category; falls back to 'incident'
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/map-presentation.ts">
+import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage } from '@barangayan/shared';
+⋮----
+/** Android-local presentation commands; the shared routing/picker protocol stays intact. */
+export interface MapPresentation {
+  selectedMarkerId: string | null;
+  padding: { top: number; bottom: number };
+  attributionBottom: number;
+  reducedMotion: boolean;
+  surface: string;
+  text: string;
+  border: string;
+  fontFamily: string;
+}
+⋮----
+export type LocalMapInboundMessage = MapBridgeInboundMessage
+  | { type: 'SET_PRESENTATION'; payload: MapPresentation | null }
+  | { type: 'ZOOM'; payload: { delta: 1 | -1 } }
+  | { type: 'FIT_BOUNDARY' }
+  | { type: 'FLY_TO'; payload: LatLng & { zoom: number } };
+⋮----
+type LocalMapOutboundMessage = MapBridgeOutboundMessage | { type: 'BACKGROUND_TAPPED' };
+⋮----
+function record(value: unknown): value is Record<string, unknown>
+⋮----
+export function isMapPosition(value: unknown): value is LatLng
+⋮----
+/** Native messages are an input boundary, including malformed or obsolete WebView events. */
+export function readMapMessage(data: string): LocalMapOutboundMessage | null
+</file>
+
+<file path="apps/resident-android-mobile/tests/drrm-centers-ui.mjs">
+// Real Centers, shell, native wrapper and bundled Leaflet. Location/routing/native
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+// Shared values notify subscribers; timings are recorded, not native frame measurements.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Let the last 500ms Leaflet flight finish before replacing the browser clock.
+⋮----
+const transitionCount=()
+</file>
+
+<file path="apps/resident-android-mobile/tests/maps-presentation-ui.mjs">
+// Real Maps + data hooks + native wrapper + bundled Leaflet. Browser/native/transport
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Regression harness uses the actual wrapper, including legacy default presentation.
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts">
+import type { LatLng, MapMarker, Tables } from '@barangayan/shared';
+import { haversineDistanceMeters, sortByDistanceFrom } from '@barangayan/shared';
+import { useCallback, useEffect, useState } from 'react';
+⋮----
+import AsyncStorage from '@react-native-async-storage/async-storage';
+⋮----
+import { supabase } from '@/lib/supabase';
+import { getCachedData, setCachedData } from '@/lib/emergency-cache';
+⋮----
+export type EvacuationCenterRow = Tables<'evacuation_centers'>;
+⋮----
+/** EvacuationCenterRow with an optional distance (metres) from the user's location. */
+export type EvacuationCenterWithDistance = EvacuationCenterRow & {
+  distanceMeters?: number;
+  /** Estimated walking time in minutes (assumes ~1.2 m/s walking pace). */
+  estimatedMinutes?: number;
+  /** Parsed from the `position` JSON column for convenience. */
+  position: LatLng;
+};
+⋮----
+/** Estimated walking time in minutes (assumes ~1.2 m/s walking pace). */
+⋮----
+/** Parsed from the `position` JSON column for convenience. */
+⋮----
+/**
+ * Last successfully fetched centers, kept without the emergency cache's 30-minute expiry so the
+ * Centers screen and offline routes still list them after a long time offline (DRRM routing
+ * plan R6). Public data; it survives sign-out like the routing store.
+ */
+⋮----
+async function readDurableCenters(): Promise<EvacuationCenterRow[] | null>
+⋮----
+function writeDurableCenters(rows: EvacuationCenterRow[])
+⋮----
+// Storage full or unavailable: the 30-minute cache and the next fetch still apply.
+⋮----
+/**
+ * Fetches active evacuation centers for the barangay. No Realtime subscription —
+ * admins update centers infrequently and a stale list for one session is acceptable.
+ *
+ * If `userPosition` is provided the returned `centers` array is sorted nearest-first
+ * using the existing haversine utility from @barangayan/shared.
+ */
+export function useEvacuationCenters(options: {
+  barangayId: string | null;
+  userPosition?: LatLng | null;
+}):
+⋮----
+async function init()
+⋮----
+// Parse each center's `position` JSON column into a typed LatLng, filter out
+// any malformed rows, then optionally sort by distance from the user.
+</file>
+
+<file path="apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useFocusEffect, useIsFocused } from 'expo-router';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+⋮----
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useAmpid1Boundary } from '@/hooks/use-ampid1-boundary';
+import { EvacuationCenterCard } from '@/components/evacuation-center-card';
+import { CenterDetailCard } from '@/components/center-detail-card';
+import { LocationStatusCard } from '@/components/location-status-card';
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from '@/components/map-view';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { SegmentedControl } from '@/components/segmented-control';
+import { OfflineRouteCard } from '@/components/offline-route-card';
+import { RoadMarkCard } from '@/components/road-mark-card';
+import { useResidentRoute } from '@/hooks/use-resident-route';
+import { useOfflineRouting } from '@/hooks/use-offline-routing';
+import { nearestEdge } from '@/lib/offline-routing';
+import type { LatLng, LocationAction, MapLngLat, MapMarker } from '@barangayan/shared';
+import type { AttachmentCandidate, RoutingEdge } from '@barangayan/shared/src/lib/evacuation-routing';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { PrimaryButton } from '@/components/primary-button';
+import { Spacing } from '@/constants/theme';
+⋮----
+export function CentersContent({
+  theme,
+  centers: fetchedCenters,
+  isLoading,
+  error,
+  refetch,
+  view,
+  onViewChange,
+  nearestFirst,
+  onNearestToggle,
+  userPosition,
+  location,
+  onFitAll,
+  resident = false,
+}: {
+  theme: ReturnType<typeof useTheme>;
+  centers: ReturnType<typeof useEvacuationCenters>['centers'];
+  isLoading: boolean;
+  error: string | null;
+refetch: ()
+⋮----
+const collapseSearch = () =>
+⋮----
+// Retain the outgoing list until the first map is ready, avoiding an empty frame.
+⋮----
+const complete = () =>
+⋮----
+// Walking routes are computed on this phone from the installed routing pack, verified
+// closures and the resident's own blocked roads (DRRM routing plan R6), so they work
+// offline. A route that cannot be computed is explained in words and never drawn as a
+// straight line (invariant 7).
+⋮----
+// Online tiles only when the internet is known to be reachable; offline, the pack's vector
+// roads are the basemap and no tile requests are made.
+⋮----
+// A street chosen from the attachment chooser belongs to one origin revision and graph.
+⋮----
+// Only the route to the selected center is drawn; the automatic run exists to rank the list, and
+// a result still on screen for a previous selection is never shown for the new one.
+⋮----
+const handleChooseSegment = (candidate: AttachmentCandidate) =>
+⋮----
+// Walking distance replaces the straight-line estimate once a route result ranks the centers.
+// A center the result cannot reach shows no distance rather than a misleading straight line.
+⋮----
+// Layout/theme changes update clearance without replaying camera movement.
+⋮----
+// Ages shown in the status card are refreshed once a minute.
+⋮----
+// Marking a road as blocked on this phone (local avoidance).
+⋮----
+const closeMarking = () =>
+const handleMapTap = (position: LatLng) =>
+const handleConfirmMark = () =>
+const handleRemoveMark = (recordId: string) =>
+⋮----
+const selectCenter = (center: ReturnType<typeof useEvacuationCenters>['centers'][number]) =>
+const handleMarkerTap = (id: string) =>
+const dismissCenter = ()
+const handleShowAll = () =>
+const handleResetMap = () =>
+// "Locate me" updates the shared controller (marker + routing origin), not just the
+// viewport. The map follows the result of an explicit request only.
+⋮----
+const handleLocateMe = () =>
+⋮----
+const handleLocationAction = (action: LocationAction) =>
+⋮----
+// Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+⋮----
+if (marking) closeMarking();
+else if (resident)
+⋮----
+
+⋮----
+<TextInput ref=
+</file>
+
+<file path="apps/resident-android-mobile/package.json">
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint"
+  },
+  "private": true
+}
+</file>
+
+<file path="AGENTS.md">
+
+</file>
+
+<file path="apps/resident-android-mobile/app.json">
+{
+  "expo": {
+    "name": "barangayan",
+    "slug": "barangayan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo/barangayan-logo-1024.png",
+    "scheme": "barangayan",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/logo/barangayan-logo-1024.png",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in."
+      }
+    },
+    "android": {
+      "package": "com.barangayan.resident",
+      "versionCode": 5,
+      "icon": "./assets/logo/barangayan-logo-1024.png",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/logo/barangayan-logo-1024.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0F6E5B",
+          "image": "./assets/logo/barangayan-logo-1024.png",
+          "imageWidth": 76,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3ff53b52-c50e-4bdb-811a-ccd94cd74f54"
+      }
+    },
+    "owner": "alex123superman"
+  }
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/maps/index.tsx">
+import type { LatLng } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
+⋮----
+import { useFocusEffect } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import { MapView, type MapViewHandle } from '@/components/map-view';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useIncidentCategories } from '@/hooks/use-incident-categories';
+import { useIncidents } from '@/hooks/use-incidents';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { isMapPosition } from '@/lib/map-presentation';
+⋮----
+type MapTab = 'incidents' | 'evacuation';
+type PermissionStatus = Location.LocationPermissionResponse['status'];
+⋮----
+export default function MapsScreen()
+⋮----
+// Leave room for the reveal button and map attribution beneath the controls.
+⋮----
+const owns = ()
+⋮----
+// Preserve automatic acquisition for granted permission and foreground permission rechecks.
+⋮----
+async function check(initial: boolean)
+⋮----
+function clearSelection()
+⋮----
+}} onBackgroundTap=
+⋮----
+}} onMapError=
+⋮----
+onPress=
+</file>
+
+<file path="apps/resident-android-mobile/src/components/map-view.tsx">
+/**
+ * MapView — React Native WebView wrapping a self-contained Leaflet map page.
+ *
+ * Architecture:
+ *   - The WebView loads an inline HTML string (no file server needed).
+ *   - Leaflet JS + CSS are inlined from the app bundle (leaflet-assets.ts), so the page
+ *     makes no script/style CDN requests (DRRM routing plan R6). Online OpenStreetMap tiles
+ *     are optional (`showTiles`); the Centers map draws the routing pack's vector roads
+ *     instead when offline.
+ *   - Communication uses the typed bridge from @barangayan/shared/types/map-bridge:
+ *       RN → WebView: injectJavaScript(JSON.stringify(MapBridgeInboundMessage))
+ *       WebView → RN: window.ReactNativeWebView.postMessage(JSON.stringify(MapBridgeOutboundMessage))
+ *   - On web (Expo Web), react-native-webview is unavailable — a styled placeholder
+ *     is rendered instead.
+ */
+⋮----
+import type { LatLng, MapBridgeInboundMessage, MapLngLat, MapMarker } from '@barangayan/shared';
+import { isPointInPolygon } from '@barangayan/shared';
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import type { ViewStyle } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import type NativeWebView from 'react-native-webview';
+import { mountDiagnosticOwner, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from '@/lib/navigation-diagnostics';
+⋮----
+import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from '@/components/leaflet-assets';
+import { isMapPosition, readMapMessage, type LocalMapInboundMessage, type MapPresentation } from '@/lib/map-presentation';
+⋮----
+export interface MapViewHandle {
+  fitAll: () => void;
+  fitBoundary: () => void;
+  flyTo: (position: FocusPosition) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+}
+⋮----
+/**
+ * Fallback focus when no barangay boundary is loaded yet (e.g. a guest with no profile,
+ * or before the boundary fetch resolves) — the bounding-box center of Barangay Ampid I,
+ * San Mateo, Rizal, this pilot's only onboarded barangay. This is a UI default, not
+ * app logic keyed to a hardcoded barangay id (AGENTS.md §0) — once boundary data loads
+ * for any barangay, SET_BOUNDARY overrides this immediately.
+ */
+⋮----
+/**
+ * Exported so screens can offer a "reset to Ampid I" action (e.g. a "Maps" button
+ * that recenters on this pilot barangay) without duplicating the coordinates.
+ */
+⋮----
+// react-native-webview is not available on Expo Web — dynamic import guards the
+// native-only require so the web bundle never fails to parse this module.
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+⋮----
+// ── Leaflet inline HTML ──────────────────────────────────────────────────────
+// Self-contained page: inlines the bundled Leaflet, exposes a postMessage listener for
+// MapBridgeInboundMessage commands, and sends MapBridgeOutboundMessage back via
+// window.ReactNativeWebView.postMessage.
+//
+// Marker colour is determined by `kind`: a category id resolves to the colour in the
+// CATEGORY_COLORS map (populated by SET_MARKERS payloads), otherwise the default teal.
+⋮----
+// ── Props ────────────────────────────────────────────────────────────────────
+⋮----
+export interface FocusPosition {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
+⋮----
+export interface MapUserLocation {
+  position: LatLng;
+  accuracyMeters: number | null;
+  pending: boolean;
+}
+⋮----
+export interface MapViewProps {
+  /** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+  presentation?: MapPresentation;
+  /** Presentation dismissal only; never called for picker, marker or routing taps. */
+  onBackgroundTap?: () => void;
+  markers: MapMarker[];
+  center?: LatLng;
+  /** Center + zoom to fly the map to a specific position. */
+  focusPosition?: FocusPosition;
+  /** Map from marker `kind` to hex colour — used for custom icon colours. */
+  kindColors?: Record<string, string>;
+  /**
+   * A barangay's boundary geometry — rendered as a red outline and used to fit the
+   * map's view. Takes priority over `center`/marker-based fitting while set.
+   */
+  boundary?: Polygon | MultiPolygon | null;
+  /** Changing this value forces the map to re-fit to the current boundary. */
+  boundaryRefitKey?: number;
+  /**
+   * Incident Reports' "pin your location" mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+  picker?: { enabled: boolean; position: LatLng | null };
+  /** Registration is advisory; Settings keeps the default hard constraint. */
+  constrainPicker?: boolean;
+  /** Fires with the pin's new position once it passes the `boundary` check (if any). */
+  onPickerMoved?: (position: LatLng) => void;
+  /** Fires when a tap/drag landed outside `boundary` and was rejected. */
+  onPickerRejected?: (attemptedPosition: LatLng) => void;
+  /** The resident's location marker and accuracy circle; `pending` = awaiting confirmation. */
+  userLocation?: MapUserLocation | null;
+  onMarkerTap?: (markerId: string) => void;
+  onMapReady?: () => void;
+  onMapError?: () => void;
+  /** Overrides the default 158px top clearance of Leaflet's zoom (+/-) control. */
+  zoomControlTop?: number;
+  /** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+  showTiles?: boolean;
+  /** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+  packMap?: FeatureCollection<Geometry, { layer: string; kind: string | null; walkable: boolean | null }> | null;
+  /** Verified closures, the resident's blocked segments and the segment being marked ([lng, lat] lines). */
+  roadMarks?: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } | null;
+  /** Route polyline, fitted into view when it changes; null clears it. */
+  route?: LatLng[] | null;
+  /** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+  routePadding?: { top: number; bottom: number };
+  /** While set, plain taps are reported here instead of placing the picker pin. */
+  onMapTap?: ((position: LatLng) => void) | null;
+  style?: ViewStyle;
+}
+⋮----
+/** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+⋮----
+/** Presentation dismissal only; never called for picker, marker or routing taps. */
+⋮----
+/** Center + zoom to fly the map to a specific position. */
+⋮----
+/** Map from marker `kind` to hex colour — used for custom icon colours. */
+⋮----
+/**
+   * A barangay's boundary geometry — rendered as a red outline and used to fit the
+   * map's view. Takes priority over `center`/marker-based fitting while set.
+   */
+⋮----
+/** Changing this value forces the map to re-fit to the current boundary. */
+⋮----
+/**
+   * Incident Reports' "pin your location" mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+⋮----
+/** Registration is advisory; Settings keeps the default hard constraint. */
+⋮----
+/** Fires with the pin's new position once it passes the `boundary` check (if any). */
+⋮----
+/** Fires when a tap/drag landed outside `boundary` and was rejected. */
+⋮----
+/** The resident's location marker and accuracy circle; `pending` = awaiting confirmation. */
+⋮----
+/** Overrides the default 158px top clearance of Leaflet's zoom (+/-) control. */
+⋮----
+/** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+⋮----
+/** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+⋮----
+/** Verified closures, the resident's blocked segments and the segment being marked ([lng, lat] lines). */
+⋮----
+/** Route polyline, fitted into view when it changes; null clears it. */
+⋮----
+/** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+⋮----
+/** While set, plain taps are reported here instead of placing the picker pin. */
+⋮----
+function userLocationMessage(location: MapUserLocation | null | undefined): MapBridgeInboundMessage
+⋮----
+// ── Component ────────────────────────────────────────────────────────────────
+⋮----
+// Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
+⋮----
+// Last picker position that passed the boundary check — what an out-of-boundary
+// tap/drag snaps back to. Seeded from `picker.position` so the very first fix
+// (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
+⋮----
+function sendMessage(msg: LocalMapInboundMessage)
+⋮----
+// Push new markers whenever the prop changes (after the map is ready).
+⋮----
+// Re-center whenever the user's location changes.
+⋮----
+// Fly to a specific position + zoom when focusPosition changes.
+⋮----
+// Draw/update the boundary outline whenever it changes.
+⋮----
+// Toggle picker mode / move the pin whenever the prop changes. A position supplied
+// this way (as opposed to a user tap/drag) is trusted as-is — it's what
+// lastAcceptedPickerPosRef snaps back to on a rejected move.
+⋮----
+// Depending on the primitive fields (not `picker` itself) avoids re-sending on every
+// render when a caller passes an inline object literal, e.g. `picker={{ enabled, position }}`.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Keyed on primitives so an inline object from the caller doesn't resend every render.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Incoming messages from the WebView.
+function handleMessage(event:
+⋮----
+// A map that becomes ready after a fix arrived still receives the latest location.
+⋮----
+// Reject: snap the pin back to the last position that was inside the boundary.
+⋮----
+// ── Web fallback ─────────────────────────────────────────────────────────
+⋮----
+// ── Native render ────────────────────────────────────────────────────────
+⋮----
+// Lets Leaflet's own pan/pinch-zoom gestures inside the WebView win the touch
+// responder over an ancestor ScrollView (e.g. the incident detail screen's Location
+// card) instead of the outer list "stealing" the drag as a page-scroll — without
+// this, dragging the map on Android feels stuck/jumpy whenever MapView is nested
+// inside a scrollable parent. No effect when there's no scrollable ancestor (the
+// Maps tab, the full-screen location picker).
+</file>
+
+<file path="packages/shared/src/types/map-bridge.ts">
+/**
+ * Typed message contract for the mobile app's Leaflet-in-WebView bridge
+ * (react-native-webview <-> the locally bundled Leaflet HTML page).
+ *
+ * Both the RN side (posting into the WebView / handling onMessage) and the bundled
+ * HTML page's JS must import and validate against these types instead of matching
+ * against raw strings — see the plan's "Pre-Development Technical Risk Mitigations".
+ */
+⋮----
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
+⋮----
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+⋮----
+/** GeoJSON order ([lng, lat], WGS84), as stored in routing packs. */
+export type MapLngLat = readonly [number, number];
+⋮----
+/** Messages sent FROM React Native INTO the WebView (via injectedJavaScript / postMessage). */
+export type MapBridgeInboundMessage =
+  | { type: 'SET_CENTER'; payload: LatLng }
+  | { type: 'SET_VIEW'; payload: LatLng & { zoom: number } }
+  | { type: 'SET_MARKERS'; payload: { markers: MapMarker[]; kindColors?: Record<string, string> } }
+  /** Draws (or clears, if geometry is null) a barangay's boundary outline and fits the map to it. */
+  | { type: 'SET_BOUNDARY'; payload: { geometry: Polygon | MultiPolygon | null } }
+  /** Fits the map to show all current markers regardless of any previously set boundary. */
+  | { type: 'FIT_ALL' }
+  /**
+   * Draws the route and fits the map to it. `padding` (CSS px) is the map area covered by
+   * floating controls at the top and bottom, so the route is framed in the visible part.
+   */
+  | { type: 'DRAW_ROUTE'; payload: { points: LatLng[]; padding?: { top: number; bottom: number } } }
+  | { type: 'CLEAR_ROUTE' }
+  /**
+   * Draws (or clears, if null) the resident's location marker and accuracy circle.
+   * `pending` marks a fix awaiting confirmation, which is not yet the routing origin.
+   */
+  | { type: 'SET_USER_LOCATION'; payload: { position: LatLng; accuracyMeters: number | null; pending: boolean } | null }
+  /**
+   * Toggles the location-picker pin (Incident Reports "pin your location" flow — see
+   * location-picker-modal.tsx). When `enabled`, a tap anywhere on the map (or a drag of
+   * the existing pin) places/moves a draggable marker at that spot and reports it back
+   * via PICKER_MOVED. `position` sets/moves the marker without user interaction (e.g. the
+   * initial GPS fix, or RN snapping the pin back after a rejected out-of-boundary move).
+   * `position: null` removes the marker entirely.
+   */
+  | { type: 'SET_PICKER'; payload: { enabled: boolean; position: LatLng | null } }
+  /**
+   * Vector roads and water from the installed routing pack (DRRM routing R6): the offline
+   * basemap, drawn from the pack instead of a tile server. null removes it.
+   */
+  | { type: 'SET_PACK_BASEMAP'; payload: { map: FeatureCollection<Geometry, { layer: string; kind: string | null; walkable: boolean | null }> | null } }
+  /** Adds or removes the online OpenStreetMap tile layer. */
+  | { type: 'SET_TILES'; payload: { enabled: boolean } }
+  /** Verified closures, the resident's own blocked segments and the segment being marked. */
+  | { type: 'SET_ROAD_MARKS'; payload: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } }
+  /** While enabled, a plain map tap is reported as MAP_TAPPED (marking a blocked segment). */
+  | { type: 'SET_TAP_MODE'; payload: { enabled: boolean } };
+⋮----
+/** Draws (or clears, if geometry is null) a barangay's boundary outline and fits the map to it. */
+⋮----
+/** Fits the map to show all current markers regardless of any previously set boundary. */
+⋮----
+/**
+   * Draws the route and fits the map to it. `padding` (CSS px) is the map area covered by
+   * floating controls at the top and bottom, so the route is framed in the visible part.
+   */
+⋮----
+/**
+   * Draws (or clears, if null) the resident's location marker and accuracy circle.
+   * `pending` marks a fix awaiting confirmation, which is not yet the routing origin.
+   */
+⋮----
+/**
+   * Toggles the location-picker pin (Incident Reports "pin your location" flow — see
+   * location-picker-modal.tsx). When `enabled`, a tap anywhere on the map (or a drag of
+   * the existing pin) places/moves a draggable marker at that spot and reports it back
+   * via PICKER_MOVED. `position` sets/moves the marker without user interaction (e.g. the
+   * initial GPS fix, or RN snapping the pin back after a rejected out-of-boundary move).
+   * `position: null` removes the marker entirely.
+   */
+⋮----
+/**
+   * Vector roads and water from the installed routing pack (DRRM routing R6): the offline
+   * basemap, drawn from the pack instead of a tile server. null removes it.
+   */
+⋮----
+/** Adds or removes the online OpenStreetMap tile layer. */
+⋮----
+/** Verified closures, the resident's own blocked segments and the segment being marked. */
+⋮----
+/** While enabled, a plain map tap is reported as MAP_TAPPED (marking a blocked segment). */
+⋮----
+/** Messages sent FROM the WebView's Leaflet page BACK to React Native. */
+export type MapBridgeOutboundMessage =
+  | { type: 'MAP_READY' }
+  | { type: 'MAP_ERROR' }
+  | { type: 'MARKER_TAPPED'; payload: { markerId: string } }
+  | { type: 'MAP_MOVED'; payload: { center: LatLng; zoom: number } }
+  /** The picker pin was placed (tap) or moved (drag) — see SET_PICKER above. */
+  | { type: 'PICKER_MOVED'; payload: LatLng }
+  /** A plain tap while SET_TAP_MODE is enabled. */
+  | { type: 'MAP_TAPPED'; payload: LatLng };
+⋮----
+/** The picker pin was placed (tap) or moved (drag) — see SET_PICKER above. */
+⋮----
+/** A plain tap while SET_TAP_MODE is enabled. */
+⋮----
+export interface MapMarker {
+  id: string;
+  position: LatLng;
+  /** e.g. an incident category id or 'evacuation-center' — drives clustering/icon choice. */
+  kind: string;
+  label?: string;
+}
+⋮----
+/** e.g. an incident category id or 'evacuation-center' — drives clustering/icon choice. */
+</file>
+
+</files>

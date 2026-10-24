@@ -1,0 +1,12 @@
+{
+  "stage": "candidate",
+  "at": "2026-10-22T23:55:17.059Z",
+  "counts": {
+    "SET_PRESENTATION": 5
+  },
+  "loads": 0,
+  "ready": 0,
+  "presses": 6,
+  "dropped": 0,
+  "issues": []
+}

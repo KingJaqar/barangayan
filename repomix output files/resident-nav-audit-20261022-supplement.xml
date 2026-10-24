@@ -1,0 +1,1697 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/map-view.tsx, apps/resident-android-mobile/src/components/services/documents-list.tsx, apps/resident-android-mobile/src/components/services/requests-list.tsx, apps/resident-android-mobile/src/components/services/logs-list.tsx, apps/resident-android-mobile/src/components/services/services-list-states.tsx, apps/resident-android-mobile/src/components/themed-text.tsx, apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts, apps/resident-android-mobile/src/lib/setup-refresh.ts, apps/resident-android-mobile/src/lib/offline-routing.ts, packages/shared/src/lib/id-evidence.ts, packages/shared/src/lib/haversine.ts, packages/shared/src/lib/evacuation-routing.ts
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, **/.env*, **/repomix-output*, repomix output files/**, tmp/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      components/
+        services/
+          documents-list.tsx
+          logs-list.tsx
+          requests-list.tsx
+          services-list-states.tsx
+        map-view.tsx
+        themed-text.tsx
+      hooks/
+        use-resident-reduced-motion.ts
+      lib/
+        offline-routing.ts
+        setup-refresh.ts
+packages/
+  shared/
+    src/
+      lib/
+        evacuation-routing.ts
+        haversine.ts
+        id-evidence.ts</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts">import { useEffect, useState } from &apos;react&apos;;
+import { AccessibilityInfo } from &apos;react-native&apos;;
+⋮----
+/** Legacy consumers do not subscribe. Until queried, prefer the static accessible state. */
+export function useResidentReducedMotion(enabled: boolean)
+⋮----
+// Failure to read an optional motion preference must never enable geometric motion.</file><file path="apps/resident-android-mobile/src/lib/offline-routing.ts">/**
+ * Durable offline routing store (DRRM weather-routing plan, phase R6).
+ *
+ * Keeps the active and previous routing packs, the latest compatible conditions snapshot and
+ * the resident&apos;s local avoidance marks in document storage, independent of the 30-minute
+ * emergency cache. A new pack is staged and verified before a journaled pointer switch, so a
+ * crash at any step recovers deterministically. Storage is injected, so this module stays
+ * free of native code and runs under vitest.
+ */
+import { routingConditionsSnapshotSchema, type RoutingConditionsSnapshot } from &apos;@barangayan/shared&apos;;
+import {
+  ROUTING_CONFIG_VERSION,
+  distanceToPolylineMeters,
+  mapEdgesAcrossGraphs,
+  prepareRoutingGraph,
+  type CompiledRoutingConditions,
+  type PreparedRoutingGraph,
+  type RoutingCenter,
+  type RoutingEdge,
+  type RoutingGraph,
+  type RoutingPackManifest,
+  type RoutingPackResource,
+} from &apos;@barangayan/shared/src/lib/evacuation-routing&apos;;
+import {
+  ROUTE_SERVICE_LIMITS,
+  parseRouteConditionsSnapshot,
+  selectRouteConditions,
+  type RouteSnapshotRejection,
+} from &apos;@barangayan/shared/src/lib/evacuation-route-service&apos;;
+import type { FeatureCollection, Geometry } from &apos;geojson&apos;;
+⋮----
+/** The only routing area (plan: Barangay Ampid I). */
+⋮----
+/**
+ * Paths are relative to the area&apos;s storage root and &apos;/&apos;-separated. `writeText` replaces a
+ * file atomically: the complete text is written to `&lt;path&gt;.tmp` before it replaces `&lt;path&gt;`,
+ * and `readText` falls back to that temporary file when the replacement was interrupted.
+ */
+export interface RoutingStorage {
+  readText(path: string): Promise&lt;string | null&gt;;
+  writeText(path: string, text: string): Promise&lt;void&gt;;
+  removeFile(path: string): Promise&lt;void&gt;;
+  removeDirectory(path: string): Promise&lt;void&gt;;
+  /** Moves a directory, replacing any existing destination. */
+  moveDirectory(from: string, to: string): Promise&lt;void&gt;;
+  /** Moves a file, replacing any existing destination. */
+  moveFile(from: string, to: string): Promise&lt;void&gt;;
+  /** Entry names in a directory; empty when it does not exist. */
+  list(directory: string): Promise&lt;string[]&gt;;
+  /** Lowercase hex SHA-256 of the text&apos;s UTF-8 bytes. */
+  sha256(text: string): Promise&lt;string&gt;;
+}
+⋮----
+readText(path: string): Promise&lt;string | null&gt;;
+writeText(path: string, text: string): Promise&lt;void&gt;;
+removeFile(path: string): Promise&lt;void&gt;;
+removeDirectory(path: string): Promise&lt;void&gt;;
+/** Moves a directory, replacing any existing destination. */
+moveDirectory(from: string, to: string): Promise&lt;void&gt;;
+/** Moves a file, replacing any existing destination. */
+moveFile(from: string, to: string): Promise&lt;void&gt;;
+/** Entry names in a directory; empty when it does not exist. */
+list(directory: string): Promise&lt;string[]&gt;;
+/** Lowercase hex SHA-256 of the text&apos;s UTF-8 bytes. */
+sha256(text: string): Promise&lt;string&gt;;
+⋮----
+// ---------------------------------------------------------------------------------------
+// Pack verification
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface PackFiles {
+  manifest: string;
+  graph: string;
+  map: string;
+}
+⋮----
+export interface PackMapProperties {
+  layer: &apos;road&apos; | &apos;water&apos; | &apos;boundary&apos; | &apos;coverage&apos;;
+  kind: string | null;
+  name: string | null;
+  walkable: boolean | null;
+}
+⋮----
+/** Vector roads, water and outlines of the pack (R3 `map.json`): the offline basemap. */
+export type PackMap = FeatureCollection&lt;Geometry, PackMapProperties&gt;;
+⋮----
+export interface LoadedPack {
+  manifest: RoutingPackManifest;
+  graph: PreparedRoutingGraph;
+  map: PackMap;
+}
+⋮----
+export type PackRejection =
+  | &apos;missing&apos;
+  | &apos;manifest_invalid&apos;
+  | &apos;area_mismatch&apos;
+  | &apos;config_incompatible&apos;
+  | &apos;resource_mismatch&apos;
+  | &apos;graph_invalid&apos;
+  | &apos;map_invalid&apos;;
+⋮----
+function isRecord(value: unknown): value is Record&lt;string, unknown&gt;
+⋮----
+function parseJson(text: string): unknown
+⋮----
+/** Byte length of the text encoded as UTF-8 (lone surrogates count as U+FFFD, like TextEncoder). */
+export function utf8ByteLength(text: string): number
+⋮----
+function parseResource(value: unknown): RoutingPackResource | null
+⋮----
+export function parsePackManifest(text: string): RoutingPackManifest | null
+⋮----
+function isPackMap(value: unknown): value is PackMap
+⋮----
+/**
+ * Verifies exact resource bytes (length and SHA-256 from the manifest), schema, the area and
+ * routing config this build runs, and the graph itself (plan section 4). Hashes detect
+ * corruption; the trusted origin is the app bundle.
+ */
+export async function verifyPack(
+  files: PackFiles,
+  sha256: (text: string) =&gt; Promise&lt;string&gt;,
+  areaId: string,
+): Promise&lt;
+⋮----
+// The bytes match the builder&apos;s output, so the shape is the builder&apos;s RoutingGraph;
+// prepareRoutingGraph re-validates topology and coordinates.
+⋮----
+// ---------------------------------------------------------------------------------------
+// Conditions (latest compatible snapshot)
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface StoredConditions {
+  schemaVersion: 1;
+  /** When this device last received the snapshot; separate from its publication time. */
+  storedAt: string;
+  snapshot: RoutingConditionsSnapshot;
+}
+⋮----
+/** When this device last received the snapshot; separate from its publication time. */
+⋮----
+export function parseStoredConditions(text: string | null): StoredConditions | null
+⋮----
+export type ConditionsRejection = &apos;invalid&apos; | &apos;other_area&apos; | &apos;other_graph&apos; | &apos;older&apos;;
+⋮----
+/**
+ * Accepts a get_routing_conditions_snapshot response for `graphVersion`. A malformed response
+ * never replaces stored conditions (failed ingestion never publishes an empty replacement), and
+ * an older revision never overwrites a newer one (invariant 5).
+ */
+export function acceptConditions(
+  stored: StoredConditions | null,
+  raw: unknown,
+  areaId: string,
+  graphVersion: string,
+  now: Date,
+):
+⋮----
+// ---------------------------------------------------------------------------------------
+// Local avoidance (plan section 4)
+// ---------------------------------------------------------------------------------------
+⋮----
+/** A resident&apos;s own blocked segment: both directions, this phone only, never a verified closure. */
+export interface LocalAvoidanceRecord {
+  id: string;
+  areaId: string;
+  /** Graph the edges belong to. */
+  graphVersion: string;
+  /** Copies of the blocked graph edges (source references and geometry) so the mark can be remapped onto any later graph. */
+  edges: RoutingEdge[];
+  name: string | null;
+  createdAt: string;
+}
+⋮----
+/** Graph the edges belong to. */
+⋮----
+/** Copies of the blocked graph edges (source references and geometry) so the mark can be remapped onto any later graph. */
+⋮----
+interface AvoidanceFile {
+  schemaVersion: 1;
+  records: LocalAvoidanceRecord[];
+}
+⋮----
+function isRoutingEdge(value: unknown): value is RoutingEdge
+⋮----
+function isAvoidanceRecord(value: unknown): value is LocalAvoidanceRecord
+⋮----
+/** null when the file exists but cannot be read as a whole (it is then preserved, never overwritten). */
+export function parseAvoidance(text: string | null): LocalAvoidanceRecord[] | null
+⋮----
+export function serializeAvoidance(records: readonly LocalAvoidanceRecord[]): string
+⋮----
+/** All marked edge ids, so they fit one connected route request as well (R5 limit). */
+export function avoidedEdgeIds(records: readonly LocalAvoidanceRecord[]): string[]
+⋮----
+function graphView(graph: PreparedRoutingGraph): RoutingGraph
+⋮----
+/**
+ * Maps every mark onto `graph` by its stored source references and geometry. A mark whose
+ * segments are not fully covered stays unchanged and is reported, never dropped (plan section 4).
+ */
+export function remapAvoidance(
+  records: readonly LocalAvoidanceRecord[],
+  graph: PreparedRoutingGraph,
+):
+⋮----
+// ---------------------------------------------------------------------------------------
+// Routing inputs from the store
+// ---------------------------------------------------------------------------------------
+⋮----
+export type LocalConditionsProblem = &apos;no_conditions&apos; | RouteSnapshotRejection;
+⋮----
+/**
+ * Compiles the stored snapshot for the active graph (closure-only, stage 1). Refuses a snapshot
+ * for another graph, a graph the area has not activated, or an unmapped verified closure.
+ */
+export function localRoutingInputs(
+  graph: PreparedRoutingGraph,
+  stored: RoutingConditionsSnapshot | null,
+):
+⋮----
+// ---------------------------------------------------------------------------------------
+// Store state, journal and recovery
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface PackPointer {
+  graphVersion: string;
+  /** e.g. `packs/ampid-1@2026-10-12_fc7101b6227d` */
+  dir: string;
+}
+⋮----
+/** e.g. `packs/ampid-1@2026-10-12_fc7101b6227d` */
+⋮----
+export interface StoreJournal {
+  candidate: PackPointer;
+  /** staging: files may be partial; staged: verified copy in place; committed: pointer switched. */
+  phase: &apos;staging&apos; | &apos;staged&apos; | &apos;committed&apos;;
+}
+⋮----
+/** staging: files may be partial; staged: verified copy in place; committed: pointer switched. */
+⋮----
+export interface RoutingStoreState {
+  schemaVersion: 1;
+  areaId: string;
+  active: PackPointer | null;
+  previous: PackPointer | null;
+  journal: StoreJournal | null;
+}
+⋮----
+export function packDirectoryName(graphVersion: string): string
+⋮----
+function pointerFor(graphVersion: string, root: &apos;packs&apos; | &apos;staging&apos;): PackPointer
+⋮----
+function isPointer(value: unknown): value is PackPointer
+⋮----
+export function emptyState(areaId: string): RoutingStoreState
+⋮----
+export function parseState(text: string | null, areaId: string): RoutingStoreState | null
+⋮----
+async function writeState(storage: RoutingStorage, state: RoutingStoreState): Promise&lt;void&gt;
+⋮----
+async function promote(storage: RoutingStorage, next: string, target: string): Promise&lt;void&gt;
+⋮----
+async function prunePacks(storage: RoutingStorage, state: RoutingStoreState): Promise&lt;void&gt;
+⋮----
+/**
+ * Finishes or undoes an interrupted activation (plan section 4: recover deterministically).
+ * Before the pointer switch is durable the active pack stays and everything the candidate
+ * staged is discarded; after it, the files that belong to the switch are promoted.
+ */
+export async function recoverStore(storage: RoutingStorage, areaId: string): Promise&lt;RoutingStoreState&gt;
+⋮----
+export async function readPackFiles(storage: RoutingStorage, dir: string): Promise&lt;PackFiles | null&gt;
+⋮----
+export async function loadPackAt(
+  storage: RoutingStorage,
+  pointer: PackPointer,
+  areaId: string,
+): Promise&lt;
+⋮----
+export type ActivationDeferral = &apos;conditions_unavailable&apos; | RouteSnapshotRejection | &apos;avoidance_unresolved&apos;;
+⋮----
+export type ActivationResult =
+  | {
+      status: &apos;activated&apos;;
+      state: RoutingStoreState;
+      pack: LoadedPack;
+      avoidance: LocalAvoidanceRecord[];
+      /** Marks that could not be mapped onto the new graph (only when nothing was active before). */
+      unresolvedAvoidanceIds: string[];
+      conditions: StoredConditions | null;
+    }
+  | { status: &apos;deferred&apos;; reason: ActivationDeferral; unresolvedAvoidanceIds: string[] }
+  | { status: &apos;rejected&apos;; reason: PackRejection };
+⋮----
+/** Marks that could not be mapped onto the new graph (only when nothing was active before). */
+⋮----
+export interface ActivationInput {
+  storage: RoutingStorage;
+  areaId: string;
+  state: RoutingStoreState;
+  candidate: PackFiles;
+  /** The verified active pack; null on first install or when no installed pack is usable. */
+  current: LoadedPack | null;
+  avoidance: readonly LocalAvoidanceRecord[];
+  conditions: StoredConditions | null;
+  /** get_routing_conditions_snapshot for the candidate graph; rejects when unavailable. */
+  fetchConditions: (graphVersion: string) =&gt; Promise&lt;unknown&gt;;
+  now: () =&gt; Date;
+}
+⋮----
+/** The verified active pack; null on first install or when no installed pack is usable. */
+⋮----
+/** get_routing_conditions_snapshot for the candidate graph; rejects when unavailable. */
+⋮----
+/**
+ * Stages, verifies and activates a candidate pack. While a pack is active, activation needs
+ * mappings for every known verified closure (a snapshot of the candidate graph that the area
+ * has activated, with every closure mapped) and every local avoidance mark; otherwise it is
+ * deferred and the current pack stays active (plan section 4).
+ */
+export async function activatePack(input: ActivationInput): Promise&lt;ActivationResult&gt;
+⋮----
+// Verify what actually reached storage, not what was meant to be written.
+⋮----
+// ---------------------------------------------------------------------------------------
+// Opening the store on app start
+// ---------------------------------------------------------------------------------------
+⋮----
+export type PackRepair = &apos;none&apos; | &apos;installed&apos; | &apos;reinstalled&apos; | &apos;rolled_back&apos;;
+⋮----
+export interface OpenedStore {
+  state: RoutingStoreState;
+  /** null only when neither the installed packs nor the bundled pack verify. */
+  pack: LoadedPack | null;
+  packProblem: PackRejection | null;
+  repair: PackRepair;
+  avoidance: LocalAvoidanceRecord[];
+  /** Marks that do not map onto the active graph; they stay stored and block routing until reviewed. */
+  unresolvedAvoidanceIds: string[];
+  /** The avoidance file existed but could not be read; it was set aside, not deleted. */
+  avoidanceUnreadable: boolean;
+  conditions: StoredConditions | null;
+}
+⋮----
+/** null only when neither the installed packs nor the bundled pack verify. */
+⋮----
+/** Marks that do not map onto the active graph; they stay stored and block routing until reviewed. */
+⋮----
+/** The avoidance file existed but could not be read; it was set aside, not deleted. */
+⋮----
+export interface OpenStoreInput {
+  storage: RoutingStorage;
+  areaId: string;
+  /** The pack shipped in the app bundle: the trusted source for first install and repair. */
+  bundled: () =&gt; PackFiles;
+  now: () =&gt; Date;
+}
+⋮----
+/** The pack shipped in the app bundle: the trusted source for first install and repair. */
+⋮----
+/**
+ * Recovers any interrupted activation, then loads the active pack. A corrupt active pack is
+ * reinstalled from the bundle when the bundle carries the same graph, otherwise the previous
+ * pack is restored; restrictions and avoidance marks are kept either way (plan section 4).
+ */
+export async function openStore(input: OpenStoreInput): Promise&lt;OpenedStore&gt;
+⋮----
+// ---------------------------------------------------------------------------------------
+// Marking a segment
+// ---------------------------------------------------------------------------------------
+⋮----
+/** Taps further than this from every segment select nothing. */
+⋮----
+/** The segment nearest to a map tap, within SEGMENT_PICK_RADIUS_METERS. */
+export function nearestEdge(graph: PreparedRoutingGraph, point:
+⋮----
+export type AddAvoidanceResult =
+  | { ok: true; records: LocalAvoidanceRecord[] }
+  | { ok: false; reason: &apos;unknown_segment&apos; | &apos;already_marked&apos; | &apos;limit_reached&apos; };
+⋮----
+export function addAvoidance(
+  records: readonly LocalAvoidanceRecord[],
+  graph: PreparedRoutingGraph,
+  edgeId: string,
+  id: string,
+  now: Date,
+): AddAvoidanceResult</file><file path="apps/resident-android-mobile/src/lib/setup-refresh.ts">import type { ResidentSetupFailure, ResidentSetupLoad } from &apos;@barangayan/shared&apos;;
+⋮----
+export type OwnedSetup = { uid: string; value: ResidentSetupLoad } | null;
+⋮----
+/** A refresh over this user&apos;s earlier server-confirmed status keeps it while
+ * reloading, so a transient loading state cannot unmount Settings. */
+export function isBackgroundRefresh(previous: OwnedSetup, uid: string)
+⋮----
+/** A failed background read keeps the confirmed status and reports a retryable
+ * refresh error. Deleted/forbidden or expired sessions never keep earlier access. */
+export function refreshFailureOutcome(background: boolean, failure: ResidentSetupFailure):
+  { type: &apos;keep_status&apos;; message: string } | { type: &apos;replace_with_error&apos; } {
+if (background &amp;&amp; failure.kind !== &apos;forbidden&apos; &amp;&amp; failure.kind !== &apos;session_expired&apos;) return
+⋮----
+/** Bounded backoff for safe account reads such as the profile. Production can reject the
+ * first request of a just-issued session (observed HTTP 401 right after a Google exchange),
+ * so a read retries twice before reporting a refresh error. */
+⋮----
+export function safeReadRetryDelay(attempt: number): number | null</file><file path="packages/shared/src/lib/haversine.ts">import type { LatLng } from &apos;../types/map-bridge&apos;;
+⋮----
+function toRadians(degrees: number): number
+⋮----
+/**
+ * Great-circle distance between two points, in meters.
+ * Algorithm: Haversine Formula (AGENTS.md §3 — Module 4 evacuation routing).
+ *
+ * Used both as the nearest-neighbor pre-filter before an OSRM road-routing call, and as
+ * the offline fallback (straight-line distance sort) if the OSRM call times out.
+ */
+export function haversineDistanceMeters(a: LatLng, b: LatLng): number
+⋮----
+/** Sorts candidates by straight-line distance from `origin`, nearest first. */
+export function sortByDistanceFrom&lt;T extends { position: LatLng }&gt;(
+  origin: LatLng,
+  candidates: T[],
+): (T &amp;</file><file path="apps/resident-android-mobile/src/components/services/services-list-states.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Shared empty/error/loading presentation for the Documents, Requests and Logs tabs.
+ * Purely visual — callers keep owning their own data, retry and copy. */
+⋮----
+export function ServicesEmptyState({
+  icon,
+  title,
+  message,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  message?: string;
+})
+⋮----
+
+⋮----
+export function ServicesErrorState({
+  message,
+  retryLabel,
+  onRetry,
+}: {
+  message: string;
+  retryLabel: string;
+onRetry: ()
+⋮----
+/** Static grouped placeholders keep loading legible without a decorative loop. */</file><file path="apps/resident-android-mobile/src/components/themed-text.tsx">import { Platform, StyleSheet, Text, type TextProps } from &apos;react-native&apos;;
+⋮----
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { Fonts, ThemeColor } from &apos;@/constants/theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ThemedTextProps = TextProps &amp; {
+  type?: &apos;default&apos; | &apos;title&apos; | &apos;small&apos; | &apos;smallBold&apos; | &apos;subtitle&apos; | &apos;link&apos; | &apos;linkPrimary&apos; | &apos;code&apos; | &apos;heading&apos; | &apos;body&apos; | &apos;residentHeader&apos;;
+  themeColor?: ThemeColor;
+};
+⋮----
+export function ThemedText(
+⋮----
+// &apos;code&apos; keeps the fixed monospace face regardless of the App Theme font pick — it&apos;s
+// meant to look like code, not prose.</file><file path="packages/shared/src/lib/evacuation-routing.ts">/**
+ * Pure evacuation-routing core (DRRM weather-routing plan, phase R2).
+ *
+ * Implements the two algorithms of the RRL (Piamonte, Curada &amp; Zaragoza 2026, &quot;Project
+ * Bantay&quot;, DOI 10.2991/978-94-6239-638-8_33): multi-source BFS flood propagation over a
+ * 4-connected elevation grid (Algorithm 1) and min-heap Dijkstra that returns at the first
+ * extracted shelter (Algorithm 2), with the edge weight w(e) = d(e)·(1 + α·f(e) + β·t(e)).
+ * The plan&apos;s deviations (D1–D11, section 3.7) are marked where they apply.
+ *
+ * Deliberately import-free (R0 bundling decision): Edge Functions import this file by
+ * relative path with its `.ts` extension, and Android runs the same file for offline
+ * routing. Keep it to erasable TypeScript syntax and plain code-unit string comparison (no
+ * `localeCompare`), so Node, Deno and Hermes break ties identically.
+ */
+⋮----
+// ---------------------------------------------------------------------------------------
+// Versioned configuration (plan 3.2): profile values live here, not in code branches.
+// ---------------------------------------------------------------------------------------
+⋮----
+export type RoutingProfileId = &apos;ampid-fine&apos; | &apos;rrl-reference&apos;;
+⋮----
+export interface RoutingProfile {
+  id: RoutingProfileId;
+  /** Flood-grid cell edge. The RRL uses ≈500 m; production uses 50 m (D10). */
+  cellSizeMeters: number;
+  /** Flood-risk coefficient α (RRL §2.5). */
+  alpha: number;
+  /** Traffic coefficient β (RRL §2.5). */
+  beta: number;
+  /** Upper bound of t(e). Illegible in the RRL text; [0, 1] is assumed until the PDF check (plan 3.1). */
+  trafficMax: number;
+  /** A station applies to an edge within this distance of the segment geometry (RRL §2.5). */
+  sensorRadiusMeters: number;
+  /** Duration only, never optimization cost (plan 3.5). */
+  walkingSpeedMps: number;
+  stairsSpeedMps: number;
+  /** Origins further than this from every eligible segment are not attached (plan section 2). */
+  attachRadiusMeters: number;
+}
+⋮----
+/** Flood-grid cell edge. The RRL uses ≈500 m; production uses 50 m (D10). */
+⋮----
+/** Flood-risk coefficient α (RRL §2.5). */
+⋮----
+/** Traffic coefficient β (RRL §2.5). */
+⋮----
+/** Upper bound of t(e). Illegible in the RRL text; [0, 1] is assumed until the PDF check (plan 3.1). */
+⋮----
+/** A station applies to an edge within this distance of the segment geometry (RRL §2.5). */
+⋮----
+/** Duration only, never optimization cost (plan 3.5). */
+⋮----
+/** Origins further than this from every eligible segment are not attached (plan section 2). */
+⋮----
+// ---------------------------------------------------------------------------------------
+// Geometry helpers. Coordinates are GeoJSON order ([lng, lat], WGS84) everywhere.
+// ---------------------------------------------------------------------------------------
+⋮----
+export type LngLat = readonly [number, number];
+⋮----
+export interface RoutingPoint {
+  lat: number;
+  lng: number;
+}
+⋮----
+/** Two points closer than this are the same place (endpoint matching, snapping onto a node). */
+⋮----
+interface XY {
+  x: number;
+  y: number;
+}
+⋮----
+/**
+ * cos(degrees) by Taylor series in plain IEEE arithmetic (error &lt; 1e-15 for |degrees| ≤ 90).
+ * Engines may differ in the last bit of `Math.cos` (measured in R2: Node 24 vs Supabase
+ * edge-runtime 1.76.2), which would let one snapshot attach an origin differently on the
+ * server and on Android. `+`, `*`, `/` and `Math.sqrt` are exactly rounded everywhere.
+ */
+function cosDegrees(degrees: number): number
+⋮----
+/** Local equirectangular projection in meters; accurate to well under 1 % at barangay scale. */
+function toXY(lng: number, lat: number, refLat: number): XY
+⋮----
+function fromXY(p: XY, refLat: number): RoutingPoint
+⋮----
+function distanceXY(a: XY, b: XY): number
+⋮----
+function isValidLngLat(lng: number, lat: number): boolean
+⋮----
+function compareIds(a: string, b: string): number
+⋮----
+interface PolylineProjection {
+  /** Nearest point on the polyline. */
+  point: XY;
+  distance: number;
+  /** Index of the segment holding the nearest point. */
+  segment: number;
+  /** Share of the polyline&apos;s projected length before the nearest point, 0..1. */
+  share: number;
+}
+⋮----
+/** Nearest point on the polyline. */
+⋮----
+/** Index of the segment holding the nearest point. */
+⋮----
+/** Share of the polyline&apos;s projected length before the nearest point, 0..1. */
+⋮----
+function projectOntoPolyline(p: XY, line: readonly XY[]): PolylineProjection
+⋮----
+function polylineLengthXY(line: readonly XY[]): number
+⋮----
+function orientation(a: XY, b: XY, c: XY): number
+⋮----
+function withinBox(a: XY, b: XY, c: XY): boolean
+⋮----
+function segmentsIntersect(p1: XY, p2: XY, q1: XY, q2: XY): boolean
+⋮----
+/** Even-odd ray casting over GeoJSON polygon rings (outer ring plus holes). */
+function insideRings(lng: number, lat: number, rings: ReadonlyArray&lt;readonly LngLat[]&gt;): boolean
+⋮----
+/** The router&apos;s coverage test: inside GeoJSON polygon rings (even-odd, so holes are outside). */
+export function isInsideCoverage(point: RoutingPoint, rings: ReadonlyArray&lt;readonly LngLat[]&gt;): boolean
+⋮----
+/** Shortest distance in meters from `point` to a [lng, lat] polyline. */
+export function distanceToPolylineMeters(point: RoutingPoint, geometry: readonly LngLat[]): number
+⋮----
+// ---------------------------------------------------------------------------------------
+// Pedestrian graph (built offline per pack; plan section 2) and validation.
+// ---------------------------------------------------------------------------------------
+⋮----
+/** Pedestrian direction rules only; vehicle one-way tags do not bind walkers. */
+export type PedestrianAccess = &apos;both&apos; | &apos;forward&apos; | &apos;backward&apos; | &apos;none&apos;;
+⋮----
+export interface RoutingNode {
+  id: string;
+  lat: number;
+  lng: number;
+}
+⋮----
+export interface RoutingEdge {
+  id: string;
+  /** Node at geometry[0]. */
+  from: string;
+  /** Node at the last geometry point. */
+  to: string;
+  /** [lng, lat] points from `from` to `to`. */
+  geometry: readonly LngLat[];
+  lengthMeters: number;
+  name: string | null;
+  pedestrianAccess: PedestrianAccess;
+  stairs: boolean;
+  bridge: boolean;
+  /** Stable source reference (OSM way and segment) used to remap restrictions across packs. */
+  sourceRef: string;
+}
+⋮----
+/** Node at geometry[0]. */
+⋮----
+/** Node at the last geometry point. */
+⋮----
+/** [lng, lat] points from `from` to `to`. */
+⋮----
+/** Stable source reference (OSM way and segment) used to remap restrictions across packs. */
+⋮----
+/** Water or a wall: an origin is never attached across one (plan section 2). */
+export interface RoutingBarrier {
+  id: string;
+  geometry: readonly LngLat[];
+}
+⋮----
+export interface StationEdgeApplicability {
+  stationId: string;
+  /** Edges whose geometry lies within the profile&apos;s sensor radius of the station (RRL §2.5). */
+  edgeIds: readonly string[];
+}
+⋮----
+/** Edges whose geometry lies within the profile&apos;s sensor radius of the station (RRL §2.5). */
+⋮----
+export interface RoutingGraph {
+  version: string;
+  /** Covered area (Ampid I boundary plus margin) as GeoJSON Polygon rings. */
+  coverage: ReadonlyArray&lt;readonly LngLat[]&gt;;
+  nodes: readonly RoutingNode[];
+  edges: readonly RoutingEdge[];
+  barriers: readonly RoutingBarrier[];
+  stationEdges: readonly StationEdgeApplicability[];
+}
+⋮----
+/** Covered area (Ampid I boundary plus margin) as GeoJSON Polygon rings. */
+⋮----
+/** One file of a routing pack. Hashes detect corruption; a trusted origin is still required (plan section 4). */
+export interface RoutingPackResource {
+  path: string;
+  bytes: number;
+  sha256: string;
+  /** Devices download `device` resources; flood grids stay on the server (plan section 2). */
+  audience: &apos;device&apos; | &apos;server&apos;;
+}
+⋮----
+/** Devices download `device` resources; flood grids stay on the server (plan section 2). */
+⋮----
+export interface RoutingPackManifest {
+  schemaVersion: 1;
+  areaId: string;
+  graphVersion: string;
+  configVersion: string;
+  /** OSM database time of the source extract; null when the extract does not state it. */
+  osmBaseTimestamp: string | null;
+  boundarySha256: string;
+  coverageMarginMeters: number;
+  /** ODbL attribution the map must display. */
+  attribution: string;
+  /** Station-to-edge tables stay empty until verified station positions exist (plan 3.8 stage 2). */
+  stations: &apos;unavailable&apos; | &apos;verified&apos;;
+  /** No licensed DEM yet: every flood-grid elevation is unknown (plan 3.2, R8). */
+  terrain: &apos;unavailable&apos;;
+  resources: RoutingPackResource[];
+}
+⋮----
+/** OSM database time of the source extract; null when the extract does not state it. */
+⋮----
+/** ODbL attribution the map must display. */
+⋮----
+/** Station-to-edge tables stay empty until verified station positions exist (plan 3.8 stage 2). */
+⋮----
+/** No licensed DEM yet: every flood-grid elevation is unknown (plan 3.2, R8). */
+⋮----
+export type GraphIssueCode =
+  | &apos;invalid_version&apos;
+  | &apos;empty_graph&apos;
+  | &apos;invalid_node&apos;
+  | &apos;duplicate_node&apos;
+  | &apos;duplicate_edge&apos;
+  | &apos;unknown_node&apos;
+  | &apos;self_loop&apos;
+  | &apos;invalid_access&apos;
+  | &apos;invalid_length&apos;
+  | &apos;invalid_geometry&apos;
+  | &apos;endpoint_mismatch&apos;
+  | &apos;length_mismatch&apos;
+  | &apos;invalid_source_ref&apos;
+  | &apos;invalid_coverage&apos;
+  | &apos;invalid_barrier&apos;
+  | &apos;invalid_station_edges&apos;;
+⋮----
+export interface GraphIssue {
+  code: GraphIssueCode;
+  /** Id of the offending node, edge, barrier or station; &apos;&apos; for graph-level issues. */
+  ref: string;
+}
+⋮----
+/** Id of the offending node, edge, barrier or station; &apos;&apos; for graph-level issues. */
+⋮----
+/** A validated graph in canonical (id-sorted) order, so results never depend on input order. */
+export interface PreparedRoutingGraph {
+  readonly version: string;
+  readonly nodes: readonly RoutingNode[];
+  readonly edges: readonly RoutingEdge[];
+  readonly nodeIndex: ReadonlyMap&lt;string, number&gt;;
+  readonly edgeIndex: ReadonlyMap&lt;string, number&gt;;
+  readonly edgeFrom: Int32Array;
+  readonly edgeTo: Int32Array;
+  /** Edge indices touching each node, ascending. */
+  readonly adjacency: ReadonlyArray&lt;readonly number[]&gt;;
+  readonly coverage: ReadonlyArray&lt;readonly LngLat[]&gt;;
+  readonly barriers: readonly RoutingBarrier[];
+  readonly stationEdges: ReadonlyMap&lt;string, readonly number[]&gt;;
+}
+⋮----
+/** Edge indices touching each node, ascending. */
+⋮----
+/** Declared lengths may differ from projected geometry by this share (plus 1 m) before rejection. */
+⋮----
+function validLine(geometry: readonly LngLat[], minPoints: number): boolean
+⋮----
+/** Validates a pack graph; rejects incomplete topology and non-finite coordinates (plan section 2). */
+export function prepareRoutingGraph(graph: RoutingGraph):
+⋮----
+// Catches swapped [lat, lng] order as well as dangling geometry.
+⋮----
+/**
+ * Edges whose geometry lies within the profile&apos;s sensor radius of a station (RRL §2.5:
+ * distance to the segment geometry, not to its endpoints). Pack builders store the result as
+ * `RoutingGraph.stationEdges`.
+ */
+export function stationApplicableEdgeIds(edges: readonly RoutingEdge[], station: RoutingPoint, profile: RoutingProfile): string[]
+⋮----
+// ---------------------------------------------------------------------------------------
+// Conditions: closures, exclusions, sensor risk f(e) and traffic t(e) (plan 3.5).
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface StationReading {
+  stationId: string;
+  /** Accepted water level in the threshold datum; null when missing, stale or rejected (unknown, never dry). */
+  levelMeters: number | null;
+  alertMeters: number;
+  alarmMeters: number;
+  criticalMeters: number;
+  /** Observation time (ms since epoch), kept separate from publication time. */
+  observedAt: number;
+}
+⋮----
+/** Accepted water level in the threshold datum; null when missing, stale or rejected (unknown, never dry). */
+⋮----
+/** Observation time (ms since epoch), kept separate from publication time. */
+⋮----
+export interface CompiledRoutingConditions {
+  graphVersion: string;
+  /** Monotonic routing-area revision of the published snapshot. */
+  revision: number;
+  /** DRRM-verified closures: hard blocks in both directions. */
+  closedEdgeIds: readonly string[];
+  /** Accepted model exclusions (BFS stage 4). Empty until activation (plan 3.8). */
+  modelExcludedEdgeIds: readonly string[];
+  /** Accepted station readings (stage 2). Empty until station data is verified. */
+  stationReadings: readonly StationReading[];
+  /** t(e) from a verified feed; edges not listed use t = 0 (plan 3.5). */
+  traffic: ReadonlyArray&lt;{ edgeId: string; value: number }&gt;;
+}
+⋮----
+/** Monotonic routing-area revision of the published snapshot. */
+⋮----
+/** DRRM-verified closures: hard blocks in both directions. */
+⋮----
+/** Accepted model exclusions (BFS stage 4). Empty until activation (plan 3.8). */
+⋮----
+/** Accepted station readings (stage 2). Empty until station data is verified. */
+⋮----
+/** t(e) from a verified feed; edges not listed use t = 0 (plan 3.5). */
+⋮----
+export type StationLevel = &apos;alert&apos; | &apos;alarm&apos; | &apos;critical&apos;;
+⋮----
+/**
+ * RRL §2.5 risk term for one station: ((w − w_alert) / (w_critical − w_alert))², with the ratio
+ * clamped to [0, 1] first (D4). Returns null when the reading is unknown or its thresholds
+ * are not ordered alert ≤ alarm ≤ critical with alert &lt; critical.
+ */
+export function stationRiskFactor(reading: StationReading): number | null
+⋮----
+/** Display class only (RRL §6.1); never an extra BFS seed. */
+export function stationLevel(reading: StationReading): StationLevel | null
+⋮----
+/** RRL §2.5: w(e) = d(e)·(1 + α·f(e) + β·t(e)). */
+export function rrlEdgeWeight(lengthMeters: number, risk: number, traffic: number, profile: RoutingProfile): number
+⋮----
+export type RouteWarning =
+  | { code: &apos;station_level&apos;; stationId: string; level: StationLevel; observedAt: number }
+  | { code: &apos;station_unknown&apos;; stationId: string }
+  | { code: &apos;unknown_center_availability&apos;; centerId: string };
+⋮----
+/** Everything the search reads, captured once so later input changes cannot leak in (plan 3.5). */
+interface FrozenConditions {
+  /** 1 = hard-blocked in both directions (verified closure, local avoidance, model exclusion). */
+  blocked: Uint8Array;
+  risk: Float64Array;
+  traffic: Float64Array;
+  weight: Float64Array;
+  length: Float64Array;
+  seconds: Float64Array;
+  warnings: RouteWarning[];
+}
+⋮----
+/** 1 = hard-blocked in both directions (verified closure, local avoidance, model exclusion). */
+⋮----
+function conditionIssues(graph: PreparedRoutingGraph, conditions: CompiledRoutingConditions, profile: RoutingProfile): string[]
+⋮----
+function unmappedRestrictions(graph: PreparedRoutingGraph, conditions: CompiledRoutingConditions, avoidEdgeIds: readonly string[]): string[]
+⋮----
+function freezeConditions(
+  graph: PreparedRoutingGraph,
+  conditions: CompiledRoutingConditions,
+  avoidEdgeIds: readonly string[],
+  profile: RoutingProfile,
+): FrozenConditions
+⋮----
+// Precedence (plan 3.5): pedestrian rules (direction checks in the search) → verified
+// closures → local avoidance → accepted model exclusions all hard-block; risk only penalizes.
+⋮----
+// D9: a critical station penalizes (f = 1) but does not remove edges; only BFS-flooded
+// edges (model exclusions) are infinite-weight.
+⋮----
+function canTraverse(edge: RoutingEdge, forward: boolean): boolean
+⋮----
+// ---------------------------------------------------------------------------------------
+// Origin attachment (plan section 2): temporary split of an eligible segment within 50 m.
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface AttachmentCandidate {
+  edgeId: string;
+  name: string | null;
+  /** Where the origin meets the segment. */
+  point: RoutingPoint;
+  /** Unverified connector from the GPS marker; never drawn as part of the route. */
+  distanceMeters: number;
+}
+⋮----
+/** Where the origin meets the segment. */
+⋮----
+/** Unverified connector from the GPS marker; never drawn as part of the route. */
+⋮----
+interface Attachment extends AttachmentCandidate {
+  edge: number;
+  segment: number;
+  share: number;
+  xy: XY;
+  /** Graph node when the attachment point is within SAME_POINT_METERS of an edge end, else -1. */
+  endNode: number;
+  /** Hard-blocked segments count as nearby roads but are never attached to. */
+  blocked: boolean;
+}
+⋮----
+/** Graph node when the attachment point is within SAME_POINT_METERS of an edge end, else -1. */
+⋮----
+/** Hard-blocked segments count as nearby roads but are never attached to. */
+⋮----
+function attachmentCandidates(graph: PreparedRoutingGraph, frozen: FrozenConditions, origin: RoutingPoint, profile: RoutingProfile): Attachment[]
+⋮----
+// Never snap through water or a barrier.
+⋮----
+/**
+ * True when another street lies within the fix&apos;s accuracy radius: GPS accuracy is comparable
+ * to street spacing here, so the resident chooses instead of the app guessing (plan section 2).
+ * A segment of the same named street, one meeting the nearest candidate at the same point (an
+ * intersection), or one whose nearest point is an end of the nearest segment, is not a second
+ * street.
+ */
+function isAmbiguous(graph: PreparedRoutingGraph, candidates: readonly Attachment[], accuracyMeters: number | null, profile: RoutingProfile): boolean
+⋮----
+/** Nearest candidate per street, for the chooser. */
+function chooserCandidates(candidates: readonly Attachment[]): AttachmentCandidate[]
+⋮----
+/** A search source: a graph node reached from the attachment point along part of one edge. */
+interface Seed {
+  node: number;
+  /** Attached edge, or -1 when the origin meets the graph exactly at `node`. */
+  edge: number;
+  /** Share of the attached edge between the attachment point and `node`. */
+  share: number;
+  /** [lng, lat] points from the attachment point to `node`. */
+  geometry: LngLat[];
+}
+⋮----
+/** Attached edge, or -1 when the origin meets the graph exactly at `node`. */
+⋮----
+/** Share of the attached edge between the attachment point and `node`. */
+⋮----
+/** [lng, lat] points from the attachment point to `node`. */
+⋮----
+function seedsFor(graph: PreparedRoutingGraph, attachment: Attachment): Seed[]
+⋮----
+// ---------------------------------------------------------------------------------------
+// Dijkstra (RRL Algorithm 2 with the heap fix, D1) as a resumable generator: it yields every
+// SEARCH_YIELD_EVERY extractions so callers can cooperate with the JS thread and cancel.
+// ---------------------------------------------------------------------------------------
+⋮----
+/** Binary min-heap on (cost, node); equal costs pop the lower canonical node index first. */
+class MinHeap
+⋮----
+get size(): number
+⋮----
+private less(i: number, j: number): boolean
+⋮----
+private swap(i: number, j: number): void
+⋮----
+push(cost: number, node: number): void
+⋮----
+/** Caller checks `size` first. */
+pop():
+⋮----
+interface SearchTree {
+  cost: Float64Array;
+  /** Edge used to reach each node; -1 for seeds and unreached nodes. */
+  prevEdge: Int32Array;
+  /** Seed that starts the path to each node (valid where `cost` is finite). */
+  seedOf: Int32Array;
+  extracted: Uint8Array;
+}
+⋮----
+/** Edge used to reach each node; -1 for seeds and unreached nodes. */
+⋮----
+/** Seed that starts the path to each node (valid where `cost` is finite). */
+⋮----
+if (tree.extracted[u] === 1 || cost &gt; tree.cost[u]) continue; // stale entry
+⋮----
+// First extracted shelter = minimum cost (RRL Algorithm 2).
+⋮----
+heap.push(c, v); // D1: the RRL pseudocode omits this push.
+⋮----
+// ---------------------------------------------------------------------------------------
+// Route assembly: reconstruction, metrics and written itinerary.
+// ---------------------------------------------------------------------------------------
+⋮----
+export type ItineraryKind = &apos;path&apos; | &apos;bridge&apos; | &apos;stairs&apos;;
+⋮----
+export interface ItineraryStep {
+  /** Street name; null for an unnamed path. */
+  name: string | null;
+  kind: ItineraryKind;
+  distanceMeters: number;
+  durationSeconds: number;
+  edgeIds: string[];
+}
+⋮----
+/** Street name; null for an unnamed path. */
+⋮----
+export interface RoutePath {
+  centerId: string;
+  /** Traversed edges in order; the first may be traversed partially from the attachment point. */
+  edgeIds: string[];
+  /** [lng, lat] from the attachment point to the center entrance. */
+  geometry: LngLat[];
+  distanceMeters: number;
+  /** distance / walking speed (stairs slower); shown separately from the optimization cost. */
+  durationSeconds: number;
+  /** RRL weighted cost Σ w(e). */
+  cost: number;
+  itinerary: ItineraryStep[];
+}
+⋮----
+/** Traversed edges in order; the first may be traversed partially from the attachment point. */
+⋮----
+/** [lng, lat] from the attachment point to the center entrance. */
+⋮----
+/** distance / walking speed (stairs slower); shown separately from the optimization cost. */
+⋮----
+/** RRL weighted cost Σ w(e). */
+⋮----
+function itineraryKind(edge: RoutingEdge): ItineraryKind
+⋮----
+function buildPath(graph: PreparedRoutingGraph, frozen: FrozenConditions, seeds: readonly Seed[], tree: SearchTree, target: number, centerId: string): RoutePath
+⋮----
+// ---------------------------------------------------------------------------------------
+// Evacuation planning: request, result and drivers.
+// ---------------------------------------------------------------------------------------
+⋮----
+export type CenterAvailability = &apos;available&apos; | &apos;unknown&apos; | &apos;unavailable&apos;;
+⋮----
+export interface RoutingCenter {
+  id: string;
+  name: string;
+  /** Reviewed entrance node in this graph; null (or a node not in the graph) = unroutable. */
+  entranceNodeId: string | null;
+  /** Separate from `active`; occupancy alone never promises capacity. */
+  availability: CenterAvailability;
+  /** False for deactivated or deleted (tombstoned) centers. */
+  active: boolean;
+}
+⋮----
+/** Reviewed entrance node in this graph; null (or a node not in the graph) = unroutable. */
+⋮----
+/** Separate from `active`; occupancy alone never promises capacity. */
+⋮----
+/** False for deactivated or deleted (tombstoned) centers. */
+⋮----
+export interface RouteRequest {
+  origin: { lat: number; lng: number; accuracyMeters: number | null; revision: number };
+  /** Segment the resident picked from the attachment chooser; null to attach automatically. */
+  originEdgeId: string | null;
+  /** null = automatic: the nearest confirmed-available center by route cost. */
+  centerId: string | null;
+  /** Local avoidance marks: blocked in both directions, never a verified closure. */
+  avoidEdgeIds: readonly string[];
+}
+⋮----
+/** Segment the resident picked from the attachment chooser; null to attach automatically. */
+⋮----
+/** null = automatic: the nearest confirmed-available center by route cost. */
+⋮----
+/** Local avoidance marks: blocked in both directions, never a verified closure. */
+⋮----
+export interface RouteProvenance {
+  graphVersion: string;
+  conditionsRevision: number;
+  profileId: RoutingProfileId;
+  configVersion: string;
+  originRevision: number;
+}
+⋮----
+export type CenterExclusion = &apos;inactive&apos; | &apos;unavailable&apos; | &apos;no_entrance&apos;;
+⋮----
+export interface CenterRouteSummary {
+  centerId: string;
+  availability: CenterAvailability;
+  excluded: CenterExclusion | null;
+  /** null when excluded or no safe path reaches it. */
+  distanceMeters: number | null;
+  durationSeconds: number | null;
+  cost: number | null;
+}
+⋮----
+/** null when excluded or no safe path reaches it. */
+⋮----
+/** Why the recommended route is longer than the shortest safe one. */
+export type RouteAvoidance = &apos;sensor_risk&apos; | &apos;traffic&apos;;
+⋮----
+export type RouteResult =
+  | {
+      status: &apos;ok&apos;;
+      provenance: RouteProvenance;
+      attachment: AttachmentCandidate;
+      /** Destination tier: confirmed-available centers first, unknown-availability only as a fallback. */
+      centerTier: &apos;available&apos; | &apos;unknown&apos;;
+      /** Minimum RRL weight. */
+      best: RoutePath;
+      /** Minimum distance over the same safe edges; null when it is the best route or no shorter. */
+      shortest: RoutePath | null;
+      shortestAvoids: RouteAvoidance[];
+      /** One-to-many walking distances, reachable centers first by route cost. */
+      centers: CenterRouteSummary[];
+      warnings: RouteWarning[];
+    }
+  | {
+      status: &apos;no_route_within_coverage&apos;;
+      provenance: RouteProvenance;
+      /** null when every nearby segment is blocked. */
+      attachment: AttachmentCandidate | null;
+      centers: CenterRouteSummary[];
+      warnings: RouteWarning[];
+    }
+  | { status: &apos;attachment_ambiguous&apos;; provenance: RouteProvenance; candidates: AttachmentCandidate[]; warnings: RouteWarning[] }
+  | { status: &apos;invalid_conditions&apos;; provenance: RouteProvenance; issues: string[]; warnings: RouteWarning[] }
+  | { status: &apos;restrictions_unmapped&apos;; provenance: RouteProvenance; unmappedEdgeIds: string[]; warnings: RouteWarning[] }
+  | {
+      status: &apos;invalid_origin&apos; | &apos;outside_coverage&apos; | &apos;no_nearby_path&apos; | &apos;center_unavailable&apos; | &apos;cancelled&apos;;
+      provenance: RouteProvenance;
+      warnings: RouteWarning[];
+    };
+⋮----
+/** Destination tier: confirmed-available centers first, unknown-availability only as a fallback. */
+⋮----
+/** Minimum RRL weight. */
+⋮----
+/** Minimum distance over the same safe edges; null when it is the best route or no shorter. */
+⋮----
+/** One-to-many walking distances, reachable centers first by route cost. */
+⋮----
+/** null when every nearby segment is blocked. */
+⋮----
+export interface PlanRouteInput {
+  graph: PreparedRoutingGraph;
+  conditions: CompiledRoutingConditions;
+  centers: readonly RoutingCenter[];
+  request: RouteRequest;
+  profile: RoutingProfile;
+}
+⋮----
+/** Structurally satisfied by `AbortSignal`. */
+export interface CancellationToken {
+  readonly aborted: boolean;
+}
+⋮----
+function provenanceOf(input: PlanRouteInput): RouteProvenance
+⋮----
+function centerExclusion(graph: PreparedRoutingGraph, center: RoutingCenter): CenterExclusion | null
+⋮----
+/** Node → center id; centers sharing an entrance resolve to the lowest id. */
+function targetMap(graph: PreparedRoutingGraph, centers: readonly RoutingCenter[]): Map&lt;number, string&gt;
+⋮----
+function unreachedSummary(center: RoutingCenter, excluded: CenterExclusion | null): CenterRouteSummary
+⋮----
+function samePath(a: RoutePath, b: RoutePath): boolean
+⋮----
+// A restriction the graph cannot represent must never be silently dropped (invariant 6).
+⋮----
+// One-to-many run for the Centers list (no early exit).
+⋮----
+// Best route: confirmed-available centers first; unknown availability only if none is reachable.
+⋮----
+// Never a straight-line fallback (invariant 7).
+⋮----
+/** Plans a route synchronously; `cancel` is checked between search chunks. */
+export function planEvacuationRoute(input: PlanRouteInput, cancel?: CancellationToken): RouteResult
+⋮----
+/**
+ * Plans a route, awaiting `yieldControl` between search chunks so the JS thread stays
+ * responsive (Hermes, plan section 4) and `cancel` takes effect promptly.
+ */
+export async function planEvacuationRouteAsync(
+  input: PlanRouteInput,
+  options: { cancel?: CancellationToken; yieldControl: () =&gt; Promise&lt;void&gt; },
+): Promise&lt;RouteResult&gt;
+⋮----
+// ---------------------------------------------------------------------------------------
+// BFS flood propagation (RRL Algorithm 1, plan 3.3). Server-side only; output is extent only.
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface FloodGrid {
+  cellSizeMeters: number;
+  cols: number;
+  rows: number;
+  /** South-west corner of cell 0; row 0 is the southernmost row, cells are row-major. */
+  originLat: number;
+  originLng: number;
+  /** DEM elevation per cell in the gauge datum; null where terrain is missing (unknown, not dry). */
+  elevations: ReadonlyArray&lt;number | null&gt;;
+}
+⋮----
+/** South-west corner of cell 0; row 0 is the southernmost row, cells are row-major. */
+⋮----
+/** DEM elevation per cell in the gauge datum; null where terrain is missing (unknown, not dry). */
+⋮----
+export interface FloodStation {
+  stationId: string;
+  lat: number;
+  lng: number;
+  /** Datum-verified water-surface elevation; null when unknown. */
+  levelMeters: number | null;
+  criticalMeters: number;
+}
+⋮----
+/** Datum-verified water-surface elevation; null when unknown. */
+⋮----
+export type FloodStationIgnoredReason = &apos;invalid_position&apos; | &apos;outside_grid&apos; | &apos;reading_unknown&apos; | &apos;below_critical&apos;;
+⋮----
+export interface FloodBfsResult {
+  /** Reached cells, ascending. Extent only: queue depth is never a time estimate. */
+  floodedCells: number[];
+  /** Cells next to the flood front whose terrain is missing, ascending. */
+  unknownCells: number[];
+  /** Seeds in processing order (descending surface, then station id). */
+  seeds: { stationId: string; cell: number; surfaceMeters: number }[];
+  ignored: { stationId: string; reason: FloodStationIgnoredReason }[];
+}
+⋮----
+/** Reached cells, ascending. Extent only: queue depth is never a time estimate. */
+⋮----
+/** Cells next to the flood front whose terrain is missing, ascending. */
+⋮----
+/** Seeds in processing order (descending surface, then station id). */
+⋮----
+function floodGridIssues(grid: FloodGrid, stations: readonly FloodStation[], profile: RoutingProfile): string[]
+⋮----
+/** Cell containing a point, or -1 outside the grid. */
+export function floodGridCellAt(grid: FloodGrid, point: RoutingPoint): number
+⋮----
+/**
+ * Every grid cell a polyline touches (grid-line DDA over each segment), ascending and
+ * unique, in the same frame as `floodGridCellAt`. A line passing exactly through a cell
+ * corner counts all four cells, and `outside` is true when any part leaves the grid. Used to
+ * decide whether an edge&apos;s full geometry crosses a flooded cell (plan 3.4).
+ */
+export function floodGridCellsOnPolyline(grid: FloodGrid, geometry: readonly LngLat[]):
+⋮----
+const visit = (col: number, row: number): void =&gt;
+⋮----
+/**
+ * Multi-source FIFO BFS over 4-connected cells. Seeds are cells holding stations at or above
+ * Critical. Seeds run in descending surface order with one shared `visited` set (D2), so the
+ * result is the union of per-seed fills regardless of input order. `can_flood(n, s)` is
+ * `elevation(n) ≤ s` (D3, pending DRRM confirmation). Seed cells are marked flooded: the
+ * gauge itself reports water there.
+ */
+export function runFloodBfs(
+  grid: FloodGrid,
+  stations: readonly FloodStation[],
+  profile: RoutingProfile,
+):
+⋮----
+// ---------------------------------------------------------------------------------------
+// Stable segment mappings across graph versions (restrictions must survive updates, plan 4).
+// Used by the pack builder (R3) and by Android pack activation (R6).
+// ---------------------------------------------------------------------------------------
+⋮----
+export interface EdgeMapping {
+  edgeId: string;
+  /** same: identical id and geometry; remapped: successors cover the old segment; unresolved: needs review. */
+  status: &apos;same&apos; | &apos;remapped&apos; | &apos;unresolved&apos;;
+  successorIds: string[];
+}
+⋮----
+/** same: identical id and geometry; remapped: successors cover the old segment; unresolved: needs review. */
+⋮----
+function wayOf(edge: RoutingEdge): string
+⋮----
+/** Same-place tolerance when mapping edges across graph versions. */
+⋮----
+function within(points: readonly LngLat[], line: readonly LngLat[], tolerance: number): boolean
+⋮----
+/**
+ * Maps every edge of `previous` onto `next`. Successors are edges of the same OSM way that lie
+ * on the old segment (it was split) or contain it (a junction was removed). A segment whose
+ * successors do not cover it is unresolved, so a restriction on it keeps the previous graph
+ * active instead of being dropped (plan section 4).
+ */
+export function mapEdgesAcrossGraphs(previous: RoutingGraph, next: RoutingGraph): EdgeMapping[]</file><file path="packages/shared/src/lib/id-evidence.ts">import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { Database } from &apos;../types/database&apos;;
+import { serviceFoundationOperations } from &apos;./service-foundations&apos;;
+import type { IdConfirmedDetails } from &apos;../schemas/service-foundations&apos;;
+⋮----
+/** React Native Blob omits arrayBuffer(); its native FileReader supplies it. */
+async function readEvidenceBytes(blob: Blob): Promise&lt;Uint8Array&gt;
+⋮----
+type IdEvidenceInput = {
+  submissionId: string; idType: string; frontPath: string; backPath?: string; confirmedDetails?: IdConfirmedDetails;
+};
+type PublishedIdEvidence = { submissionId: string; frontPath: string; backPath?: string };
+⋮----
+// Existing two-sided callers retain a guaranteed backPath in their result.
+export function publishIdEvidence(client: SupabaseClient&lt;Database&gt;, input: IdEvidenceInput &amp;
+export function publishIdEvidence(client: SupabaseClient&lt;Database&gt;, input: IdEvidenceInput): Promise&lt;PublishedIdEvidence&gt;;
+/** Copies the selected evidence into a new immutable submission. The stable ID
+ * makes interrupted upload/publication retries safe, including type-only changes. */
+export async function publishIdEvidence(client: SupabaseClient&lt;Database&gt;, input: IdEvidenceInput): Promise&lt;PublishedIdEvidence&gt;
+⋮----
+async function copySide(source: string, side: &apos;front&apos; | &apos;back&apos;)
+⋮----
+// A lost upload response may leave the target present. Accept only identical
+// bytes; never overwrite the immutable target to recover from a conflict.
+⋮----
+/** Generations reject replies begun before account changes or newer refreshes. */
+export class AccountRequestScope
+⋮----
+setOwner(owner: string | null)
+begin(owner: string)
+accepts(ticket:
+clear()</file><file path="apps/resident-android-mobile/src/components/services/documents-list.tsx">import { servicePriceLabel, serviceProcessingLabel, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from &apos;@/components/services/services-list-states&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ServiceListLink, ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type DocumentType = Tables&lt;&apos;document_types&apos;&gt;;
+⋮----
+/** Real document_types catalog for the resident&apos;s own barangay (RLS-scoped). */
+export function DocumentsList(
+⋮----
+// Each mount gets its own unique channel name so that fast re-mounts (e.g. via
+// router.replace(&apos;/services&apos;) from the COD confirmation screen) never try to add
+// postgres_changes listeners to a channel that a previous instance already
+// subscribed — Supabase throws &quot;cannot add callbacks after subscribe()&quot; in that case.
+// useState lazy initialiser so Date.now() runs once at mount, not on re-renders.
+// Value is stable (no setter used) — same role as useRef but avoids the purity lint.
+⋮----
+function load()
+⋮----
+// Realtime: an admin editing/deactivating a document type on the web dashboard
+// should show up here without a manual pull-to-refresh — same pattern as
+// requests-list.tsx&apos;s existing subscription.
+⋮----
+&lt;DocumentIcon name=
+⋮----</file><file path="apps/resident-android-mobile/src/components/services/logs-list.tsx">import { formatCentavosAsPHP, formatDateTime, requestFee, requestFeeLabel, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useCallback, useState } from &apos;react&apos;;
+import { useFocusEffect } from &apos;expo-router&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from &apos;@/components/services/services-list-states&apos;;
+import { StatusBadge } from &apos;@/components/status-badge&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type ServiceRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;fee_centavos&apos;&gt; | null;
+  payments: Pick&lt;Tables&lt;&apos;payments&apos;&gt;, &apos;document_fee_centavos&apos; | &apos;amount_centavos&apos; | &apos;status&apos;&gt;[];
+};
+⋮----
+/**
+ * Derived from service_requests, ordered by last activity — there&apos;s no dedicated
+ * payments/activity-log table yet (deferred, see the plan&apos;s &quot;Required backend slice&quot;).
+ * Once payments/appointments land this becomes a real union of event types.
+ */
+⋮----
+&lt;DocumentIcon name=
+⋮----</file><file path="apps/resident-android-mobile/src/components/services/requests-list.tsx">import { AgencySlaStatus } from &apos;./agency-sla-status&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import {
+  estimateLabel,
+  getResidentRequestStatus,
+  progressFraction,
+  RESIDENT_STATUS_LABEL,
+  type ResidentRequestStatus,
+  type Tables,
+} from &apos;@barangayan/shared&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+⋮----
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ServiceListLink, ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from &apos;@/components/services/services-list-states&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type ServiceRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;processing_target_hours&apos;&gt; | null;
+};
+⋮----
+interface RequestStatusConfig {
+  icon: keyof typeof Ionicons.glyphMap;
+  color: string;
+  background: string;
+}
+⋮----
+type Filter = &apos;all&apos; | &apos;active&apos; | &apos;pickup&apos; | &apos;history&apos;;
+type ActiveSubFilter = &apos;all&apos; | &apos;pending_payment&apos; | &apos;paid&apos; | &apos;processing&apos;;
+⋮----
+function RequestFilterChip(
+⋮----
+// Preserve the existing status predicates, including ready_for_pickup and both terminal states.
+⋮----
+/** Scrollable filters with compact underline tabs for the active status row. */
+⋮----
+if (compact) return &lt;ScrollView horizontal showsHorizontalScrollIndicator=
+⋮----
+/** Actionable profile guidance scrolls away, leaving the filter chips pinned. */
+⋮----
+// Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
+// already-subscribed channel when this list is mounted twice (or remounted before the
+// async removeChannel() finishes), and .on() then throws.
+⋮----
+// The sub-filter row only makes sense inside &quot;Active&quot; — reset it whenever the resident
+// navigates to a different top-level filter, so it doesn&apos;t silently stay narrowed the
+// next time they come back to &quot;Active&quot;.
+function handleFilterChange(next: Filter)
+⋮----
+function load()
+⋮----
+function matchesActiveSubFilter(r: ServiceRequest, sub: ActiveSubFilter): boolean
+⋮----
+// Keyed one-for-one with ResidentRequestStatus (not the raw service_requests.status
+// enum) — a &apos;submitted&apos; request always resolves to either pending_payment or paid
+// before it gets here, so there&apos;s no separate &apos;submitted&apos;/&apos;in_progress&apos; entry.
+function statusConfig(status: ResidentRequestStatus): RequestStatusConfig
+⋮----
+// Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
+⋮----
+{/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
+⋮----
+name=
+⋮----
+fraction=</file><file path="apps/resident-android-mobile/src/components/map-view.tsx">/**
+ * MapView — React Native WebView wrapping a self-contained Leaflet map page.
+ *
+ * Architecture:
+ *   - The WebView loads an inline HTML string (no file server needed).
+ *   - Leaflet JS + CSS are inlined from the app bundle (leaflet-assets.ts), so the page
+ *     makes no script/style CDN requests (DRRM routing plan R6). Online OpenStreetMap tiles
+ *     are optional (`showTiles`); the Centers map draws the routing pack&apos;s vector roads
+ *     instead when offline.
+ *   - Communication uses the typed bridge from @barangayan/shared/types/map-bridge:
+ *       RN → WebView: injectJavaScript(JSON.stringify(MapBridgeInboundMessage))
+ *       WebView → RN: window.ReactNativeWebView.postMessage(JSON.stringify(MapBridgeOutboundMessage))
+ *   - On web (Expo Web), react-native-webview is unavailable — a styled placeholder
+ *     is rendered instead.
+ */
+⋮----
+import type { LatLng, MapBridgeInboundMessage, MapLngLat, MapMarker } from &apos;@barangayan/shared&apos;;
+import { isPointInPolygon } from &apos;@barangayan/shared&apos;;
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { forwardRef, useEffect, useImperativeHandle, useRef } from &apos;react&apos;;
+import type { ViewStyle } from &apos;react-native&apos;;
+import { Platform, StyleSheet, Text, View } from &apos;react-native&apos;;
+import type NativeWebView from &apos;react-native-webview&apos;;
+⋮----
+import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from &apos;@/components/leaflet-assets&apos;;
+import { isMapPosition, readMapMessage, type LocalMapInboundMessage, type MapPresentation } from &apos;@/lib/map-presentation&apos;;
+⋮----
+export interface MapViewHandle {
+  fitAll: () =&gt; void;
+  fitBoundary: () =&gt; void;
+  flyTo: (position: FocusPosition) =&gt; void;
+  zoomIn: () =&gt; void;
+  zoomOut: () =&gt; void;
+}
+⋮----
+/**
+ * Fallback focus when no barangay boundary is loaded yet (e.g. a guest with no profile,
+ * or before the boundary fetch resolves) — the bounding-box center of Barangay Ampid I,
+ * San Mateo, Rizal, this pilot&apos;s only onboarded barangay. This is a UI default, not
+ * app logic keyed to a hardcoded barangay id (AGENTS.md §0) — once boundary data loads
+ * for any barangay, SET_BOUNDARY overrides this immediately.
+ */
+⋮----
+/**
+ * Exported so screens can offer a &quot;reset to Ampid I&quot; action (e.g. a &quot;Maps&quot; button
+ * that recenters on this pilot barangay) without duplicating the coordinates.
+ */
+⋮----
+// react-native-webview is not available on Expo Web — dynamic import guards the
+// native-only require so the web bundle never fails to parse this module.
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+⋮----
+// ── Leaflet inline HTML ──────────────────────────────────────────────────────
+// Self-contained page: inlines the bundled Leaflet, exposes a postMessage listener for
+// MapBridgeInboundMessage commands, and sends MapBridgeOutboundMessage back via
+// window.ReactNativeWebView.postMessage.
+//
+// Marker colour is determined by `kind`: a category id resolves to the colour in the
+// CATEGORY_COLORS map (populated by SET_MARKERS payloads), otherwise the default teal.
+⋮----
+// ── Props ────────────────────────────────────────────────────────────────────
+⋮----
+export interface FocusPosition {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
+⋮----
+export interface MapUserLocation {
+  position: LatLng;
+  accuracyMeters: number | null;
+  pending: boolean;
+}
+⋮----
+export interface MapViewProps {
+  /** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+  presentation?: MapPresentation;
+  /** Presentation dismissal only; never called for picker, marker or routing taps. */
+  onBackgroundTap?: () =&gt; void;
+  markers: MapMarker[];
+  center?: LatLng;
+  /** Center + zoom to fly the map to a specific position. */
+  focusPosition?: FocusPosition;
+  /** Map from marker `kind` to hex colour — used for custom icon colours. */
+  kindColors?: Record&lt;string, string&gt;;
+  /**
+   * A barangay&apos;s boundary geometry — rendered as a red outline and used to fit the
+   * map&apos;s view. Takes priority over `center`/marker-based fitting while set.
+   */
+  boundary?: Polygon | MultiPolygon | null;
+  /** Changing this value forces the map to re-fit to the current boundary. */
+  boundaryRefitKey?: number;
+  /**
+   * Incident Reports&apos; &quot;pin your location&quot; mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+  picker?: { enabled: boolean; position: LatLng | null };
+  /** Registration is advisory; Settings keeps the default hard constraint. */
+  constrainPicker?: boolean;
+  /** Fires with the pin&apos;s new position once it passes the `boundary` check (if any). */
+  onPickerMoved?: (position: LatLng) =&gt; void;
+  /** Fires when a tap/drag landed outside `boundary` and was rejected. */
+  onPickerRejected?: (attemptedPosition: LatLng) =&gt; void;
+  /** The resident&apos;s location marker and accuracy circle; `pending` = awaiting confirmation. */
+  userLocation?: MapUserLocation | null;
+  onMarkerTap?: (markerId: string) =&gt; void;
+  onMapReady?: () =&gt; void;
+  onMapError?: () =&gt; void;
+  /** Overrides the default 158px top clearance of Leaflet&apos;s zoom (+/-) control. */
+  zoomControlTop?: number;
+  /** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+  showTiles?: boolean;
+  /** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+  packMap?: FeatureCollection&lt;Geometry, { layer: string; kind: string | null; walkable: boolean | null }&gt; | null;
+  /** Verified closures, the resident&apos;s blocked segments and the segment being marked ([lng, lat] lines). */
+  roadMarks?: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } | null;
+  /** Route polyline, fitted into view when it changes; null clears it. */
+  route?: LatLng[] | null;
+  /** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+  routePadding?: { top: number; bottom: number };
+  /** While set, plain taps are reported here instead of placing the picker pin. */
+  onMapTap?: ((position: LatLng) =&gt; void) | null;
+  style?: ViewStyle;
+}
+⋮----
+/** Opt-in chrome and selection for resident Maps. Other callers retain their presentation. */
+⋮----
+/** Presentation dismissal only; never called for picker, marker or routing taps. */
+⋮----
+/** Center + zoom to fly the map to a specific position. */
+⋮----
+/** Map from marker `kind` to hex colour — used for custom icon colours. */
+⋮----
+/**
+   * A barangay&apos;s boundary geometry — rendered as a red outline and used to fit the
+   * map&apos;s view. Takes priority over `center`/marker-based fitting while set.
+   */
+⋮----
+/** Changing this value forces the map to re-fit to the current boundary. */
+⋮----
+/**
+   * Incident Reports&apos; &quot;pin your location&quot; mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+⋮----
+/** Registration is advisory; Settings keeps the default hard constraint. */
+⋮----
+/** Fires with the pin&apos;s new position once it passes the `boundary` check (if any). */
+⋮----
+/** Fires when a tap/drag landed outside `boundary` and was rejected. */
+⋮----
+/** The resident&apos;s location marker and accuracy circle; `pending` = awaiting confirmation. */
+⋮----
+/** Overrides the default 158px top clearance of Leaflet&apos;s zoom (+/-) control. */
+⋮----
+/** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+⋮----
+/** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+⋮----
+/** Verified closures, the resident&apos;s blocked segments and the segment being marked ([lng, lat] lines). */
+⋮----
+/** Route polyline, fitted into view when it changes; null clears it. */
+⋮----
+/** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+⋮----
+/** While set, plain taps are reported here instead of placing the picker pin. */
+⋮----
+function userLocationMessage(location: MapUserLocation | null | undefined): MapBridgeInboundMessage
+⋮----
+// ── Component ────────────────────────────────────────────────────────────────
+⋮----
+// Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
+⋮----
+// Last picker position that passed the boundary check — what an out-of-boundary
+// tap/drag snaps back to. Seeded from `picker.position` so the very first fix
+// (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
+⋮----
+function sendMessage(msg: LocalMapInboundMessage)
+⋮----
+// Push new markers whenever the prop changes (after the map is ready).
+⋮----
+// Re-center whenever the user&apos;s location changes.
+⋮----
+// Fly to a specific position + zoom when focusPosition changes.
+⋮----
+// Draw/update the boundary outline whenever it changes.
+⋮----
+// Toggle picker mode / move the pin whenever the prop changes. A position supplied
+// this way (as opposed to a user tap/drag) is trusted as-is — it&apos;s what
+// lastAcceptedPickerPosRef snaps back to on a rejected move.
+⋮----
+// Depending on the primitive fields (not `picker` itself) avoids re-sending on every
+// render when a caller passes an inline object literal, e.g. `picker={{ enabled, position }}`.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Keyed on primitives so an inline object from the caller doesn&apos;t resend every render.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// Incoming messages from the WebView.
+function handleMessage(event:
+⋮----
+// A map that becomes ready after a fix arrived still receives the latest location.
+⋮----
+// Reject: snap the pin back to the last position that was inside the boundary.
+⋮----
+// ── Web fallback ─────────────────────────────────────────────────────────
+⋮----
+// ── Native render ────────────────────────────────────────────────────────
+⋮----
+// Lets Leaflet&apos;s own pan/pinch-zoom gestures inside the WebView win the touch
+// responder over an ancestor ScrollView (e.g. the incident detail screen&apos;s Location
+// card) instead of the outer list &quot;stealing&quot; the drag as a page-scroll — without
+// this, dragging the map on Android feels stuck/jumpy whenever MapView is nested
+// inside a scrollable parent. No effect when there&apos;s no scrollable ancestor (the
+// Maps tab, the full-screen location picker).</file></files></repomix>

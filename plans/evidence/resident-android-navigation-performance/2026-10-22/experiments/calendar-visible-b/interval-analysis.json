@@ -1,0 +1,261 @@
+{
+  "label": "Development emulator handler-to-JS observations, not native tap-to-frame or release acceptance",
+  "dropped": 0,
+  "totals": {
+    "start": 1,
+    "commit": 116,
+    "press": 10,
+    "listeners-end": 10,
+    "dispatch-end": 10,
+    "selected": 10,
+    "blur": 10,
+    "focus": 10,
+    "request-start": 5,
+    "request-end": 5,
+    "stop": 1
+  },
+  "owners": {
+    "home": 1,
+    "health": 1,
+    "services": 1,
+    "drrm": 1
+  },
+  "pairs": {
+    "reports->services": {
+      "listenersMs": {
+        "n": 1,
+        "median": 0.14535799622535706,
+        "p95": 0.14535799622535706,
+        "max": 0.14535799622535706
+      },
+      "dispatchMs": {
+        "n": 1,
+        "median": 0.8890089988708496,
+        "p95": 0.8890089988708496,
+        "max": 0.8890089988708496
+      },
+      "firstReactCommitMs": {
+        "n": 1,
+        "median": 84.4679249972105,
+        "p95": 84.4679249972105,
+        "max": 84.4679249972105
+      },
+      "selectedMs": {
+        "n": 1,
+        "median": 100.33399099856615,
+        "p95": 100.33399099856615,
+        "max": 100.33399099856615
+      }
+    },
+    "services->drrm": {
+      "listenersMs": {
+        "n": 5,
+        "median": 0.0577549934387207,
+        "p95": 0.0705219954252243,
+        "max": 0.0705219954252243
+      },
+      "dispatchMs": {
+        "n": 5,
+        "median": 0.6276509985327721,
+        "p95": 0.6694689989089966,
+        "max": 0.6694689989089966
+      },
+      "firstReactCommitMs": {
+        "n": 5,
+        "median": 87.92715599387884,
+        "p95": 395.19086399674416,
+        "max": 395.19086399674416
+      },
+      "selectedMs": {
+        "n": 5,
+        "median": 109.49424999952316,
+        "p95": 436.5603049993515,
+        "max": 436.5603049993515
+      }
+    },
+    "drrm->services": {
+      "listenersMs": {
+        "n": 4,
+        "median": 0.22057149931788445,
+        "p95": 0.365788996219635,
+        "max": 0.365788996219635
+      },
+      "dispatchMs": {
+        "n": 4,
+        "median": 0.6625605002045631,
+        "p95": 1.4161799997091293,
+        "max": 1.4161799997091293
+      },
+      "firstReactCommitMs": {
+        "n": 4,
+        "median": 115.9501735009253,
+        "p95": 144.94284699857235,
+        "max": 144.94284699857235
+      },
+      "selectedMs": {
+        "n": 4,
+        "median": 136.60264100134373,
+        "p95": 165.2408689931035,
+        "max": 165.2408689931035
+      }
+    }
+  },
+  "slow": [
+    {
+      "id": 2,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.050673000514507294,
+      "dispatchMs": 0.27553100138902664,
+      "selectedMs": 436.5603049993515,
+      "focusMs": 440.12664300203323,
+      "firstReactCommitMs": 395.19086399674416,
+      "commits": 8,
+      "renderDurationMs": 279.80977212637663,
+      "mapSends": 0,
+      "requests": 0
+    }
+  ],
+  "rows": [
+    {
+      "id": 1,
+      "from": "reports",
+      "to": "services",
+      "listenersMs": 0.14535799622535706,
+      "dispatchMs": 0.8890089988708496,
+      "selectedMs": 100.33399099856615,
+      "focusMs": 105.32585899531841,
+      "firstReactCommitMs": 84.4679249972105,
+      "commits": 12,
+      "renderDurationMs": 463.41223602741957,
+      "mapSends": 0,
+      "requests": 1
+    },
+    {
+      "id": 2,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.050673000514507294,
+      "dispatchMs": 0.27553100138902664,
+      "selectedMs": 436.5603049993515,
+      "focusMs": 440.12664300203323,
+      "firstReactCommitMs": 395.19086399674416,
+      "commits": 8,
+      "renderDurationMs": 279.80977212637663,
+      "mapSends": 0,
+      "requests": 0
+    },
+    {
+      "id": 3,
+      "from": "drrm",
+      "to": "services",
+      "listenersMs": 0.365788996219635,
+      "dispatchMs": 1.4161799997091293,
+      "selectedMs": 103.16787599772215,
+      "focusMs": 106.68476700037718,
+      "firstReactCommitMs": 84.41008900105953,
+      "commits": 8,
+      "renderDurationMs": 252.03763399273157,
+      "mapSends": 0,
+      "requests": 1
+    },
+    {
+      "id": 4,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.0577549934387207,
+      "dispatchMs": 0.6694689989089966,
+      "selectedMs": 112.54013399779797,
+      "focusMs": 116.49767999351025,
+      "firstReactCommitMs": 93.0775830000639,
+      "commits": 16,
+      "renderDurationMs": 513.9771559089422,
+      "mapSends": 0,
+      "requests": 0
+    },
+    {
+      "id": 5,
+      "from": "drrm",
+      "to": "services",
+      "listenersMs": 0.3226279988884926,
+      "dispatchMs": 0.766243003308773,
+      "selectedMs": 129.82319800555706,
+      "focusMs": 133.44157700240612,
+      "firstReactCommitMs": 108.37989300489426,
+      "commits": 8,
+      "renderDurationMs": 246.5472427904606,
+      "mapSends": 0,
+      "requests": 1
+    },
+    {
+      "id": 6,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.05646100640296936,
+      "dispatchMs": 0.5736780017614365,
+      "selectedMs": 98.29204700142145,
+      "focusMs": 102.66784400492907,
+      "firstReactCommitMs": 78.20050300657749,
+      "commits": 16,
+      "renderDurationMs": 480.0907082557678,
+      "mapSends": 0,
+      "requests": 0
+    },
+    {
+      "id": 7,
+      "from": "drrm",
+      "to": "services",
+      "listenersMs": 0.10693999379873276,
+      "dispatchMs": 0.5588779971003532,
+      "selectedMs": 143.3820839971304,
+      "focusMs": 147.0824469998479,
+      "firstReactCommitMs": 123.52045399695635,
+      "commits": 8,
+      "renderDurationMs": 285.6315416097641,
+      "mapSends": 0,
+      "requests": 1
+    },
+    {
+      "id": 8,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.0705219954252243,
+      "dispatchMs": 0.6276509985327721,
+      "selectedMs": 109.49424999952316,
+      "focusMs": 113.84171799570322,
+      "firstReactCommitMs": 87.92715599387884,
+      "commits": 16,
+      "renderDurationMs": 590.0633230134845,
+      "mapSends": 0,
+      "requests": 0
+    },
+    {
+      "id": 9,
+      "from": "drrm",
+      "to": "services",
+      "listenersMs": 0.1185149997472763,
+      "dispatchMs": 0.5327039957046509,
+      "selectedMs": 165.2408689931035,
+      "focusMs": 169.05429699271917,
+      "firstReactCommitMs": 144.94284699857235,
+      "commits": 8,
+      "renderDurationMs": 246.3531128540635,
+      "mapSends": 0,
+      "requests": 1
+    },
+    {
+      "id": 10,
+      "from": "services",
+      "to": "drrm",
+      "listenersMs": 0.05901000648736954,
+      "dispatchMs": 0.6648479998111725,
+      "selectedMs": 99.06505200266838,
+      "focusMs": 103.15199100226164,
+      "firstReactCommitMs": 80.44227200001478,
+      "commits": 12,
+      "renderDurationMs": 282.01879623532295,
+      "mapSends": 0,
+      "requests": 0
+    }
+  ]
+}

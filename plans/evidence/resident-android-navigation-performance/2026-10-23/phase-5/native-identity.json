@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-23T03:50:31.537Z",
+  "results": [
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "moduleId": 753,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "494a7995d389301a99d320e093ef7564fa9f113262580a3fd9ff6127bd851eaa",
+      "currentFactorySha256": "494a7995d389301a99d320e093ef7564fa9f113262580a3fd9ff6127bd851eaa",
+      "sourceMatches": true,
+      "sourceSha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "moduleId": 2724,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "cb6007f0218b984606a28a15031fa943bad283d3a1ee3ec260d9995095e38a43",
+      "currentFactorySha256": "cb6007f0218b984606a28a15031fa943bad283d3a1ee3ec260d9995095e38a43",
+      "sourceMatches": true,
+      "sourceSha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "moduleId": 1910,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "7c416c444ff88ea8e7863a9cbdff6bb9d8924a4aeb54ebfb383d75601ebee664",
+      "currentFactorySha256": "7c416c444ff88ea8e7863a9cbdff6bb9d8924a4aeb54ebfb383d75601ebee664",
+      "sourceMatches": true,
+      "sourceSha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "moduleId": 2384,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "e7bc72477e0835de0cef180907337ea1ab84dea07f95ab41d69a81639a8abddd",
+      "currentFactorySha256": "e7bc72477e0835de0cef180907337ea1ab84dea07f95ab41d69a81639a8abddd",
+      "sourceMatches": true,
+      "sourceSha256": "2e480b182d48c9b2f167c305af6fd417a174cb8372585af3875e500263a4f2ac"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "moduleId": 2304,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "cf6da2557fd2a31cf49e46def677385aa195925f250b9ab863246f4e49dc938f",
+      "currentFactorySha256": "cf6da2557fd2a31cf49e46def677385aa195925f250b9ab863246f4e49dc938f",
+      "sourceMatches": true,
+      "sourceSha256": "436d8921715a9c4ac49ed1d41c3ea098a6ee8299f13f46680b843b639b604202"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "moduleId": 2405,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "5deff6db1e886425ab8a448a504332a00dd57bec88a7bf93f762be199eb97fd8",
+      "currentFactorySha256": "5deff6db1e886425ab8a448a504332a00dd57bec88a7bf93f762be199eb97fd8",
+      "sourceMatches": true,
+      "sourceSha256": "62f059ae81041f5ba1156d46ef7034eaa37d86dce047fbaa4a35f160e3246f16"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-local-route.ts",
+      "moduleId": 2319,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "9f99bd750ead31808e04d63839a7bd0c6187ca5bcf4070dbe72e77b998923e7c",
+      "currentFactorySha256": "9f99bd750ead31808e04d63839a7bd0c6187ca5bcf4070dbe72e77b998923e7c",
+      "sourceMatches": true,
+      "sourceSha256": "1eccfd061f623417d19e248607d604dd0c259192ab924b5f3a887235e354a56b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+      "moduleId": 2318,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "4af7a5509171690b0dce024221096ddc33fe7bd7c69c03eed1380b8d45445ab8",
+      "currentFactorySha256": "4af7a5509171690b0dce024221096ddc33fe7bd7c69c03eed1380b8d45445ab8",
+      "sourceMatches": true,
+      "sourceSha256": "794e2cc2027ea47a0b827578d4f14bbc416c4964343e7fc95c3ed3356c54232a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "moduleId": 2033,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "0f03bf8ad2963152c5ea41162ac4de7cb56741c289554f52b1cc0309837f9b31",
+      "currentFactorySha256": "0f03bf8ad2963152c5ea41162ac4de7cb56741c289554f52b1cc0309837f9b31",
+      "sourceMatches": true,
+      "sourceSha256": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/history-resource.ts",
+      "moduleId": 2730,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "9857533f93e7f26f4752be4278ef7f6149ef3a94a7cdc2e5c1c5bc4840bf98a1",
+      "currentFactorySha256": "9857533f93e7f26f4752be4278ef7f6149ef3a94a7cdc2e5c1c5bc4840bf98a1",
+      "sourceMatches": true,
+      "sourceSha256": "b33b2bb7623232b33976e64b47d8ffd63bb23d3b38fcefcb9d12fda6fa39308e"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-my-incidents.ts",
+      "moduleId": 2430,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "9c72f444cb5d55089cb7ee61ce64a9aaa314f27b28e9a038dc79f4583907d4ed",
+      "currentFactorySha256": "9c72f444cb5d55089cb7ee61ce64a9aaa314f27b28e9a038dc79f4583907d4ed",
+      "sourceMatches": true,
+      "sourceSha256": "f00b58fe0eecb111999ba91cd6c26e5bc599017b65876afa9e083e6e097ecbb8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "moduleId": 2449,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "132af4f62c289586e6d1477be4798704a65987a385da0169f57b66ee365ce9ca",
+      "currentFactorySha256": "132af4f62c289586e6d1477be4798704a65987a385da0169f57b66ee365ce9ca",
+      "sourceMatches": true,
+      "sourceSha256": "1b2db422ec87ee4c4280e57cb5bb32bb3e5054230e9cf0bdd2d2c737ab0da40a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "moduleId": 2447,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "a0f3c6db2d83c09171d2ef88ac49a6ea85e5752867e05df86905449fd341ed15",
+      "currentFactorySha256": "a0f3c6db2d83c09171d2ef88ac49a6ea85e5752867e05df86905449fd341ed15",
+      "sourceMatches": true,
+      "sourceSha256": "f54331e53bf25b68e602569d375e3857dcd89c0541784e17004d60aac114d052"
+    }
+  ],
+  "passed": true
+}

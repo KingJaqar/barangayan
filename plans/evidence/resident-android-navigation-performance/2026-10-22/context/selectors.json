@@ -1,0 +1,31 @@
+{
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "AGENTS.md,CLAUDE.md,apps/resident-android-mobile/package.json,apps/resident-android-mobile/app.json,apps/resident-android-mobile/metro.config.js,apps/resident-android-mobile/src/components/app-tabs.tsx,apps/resident-android-mobile/src/app/_layout.tsx,apps/resident-android-mobile/src/app/(app)/_layout.tsx,apps/resident-android-mobile/src/components/map-view.tsx,apps/resident-android-mobile/src/components/services/agency-sla-status.tsx,apps/resident-android-mobile/src/components/services/requests-list.tsx,apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx,apps/resident-android-mobile/src/hooks/use-profile.ts,apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs,apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml,**/*.mp4,**/*.png,**/*.jpg",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase0-20261022.xml"
+  ],
+  "files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/app.json",
+    "apps/resident-android-mobile/metro.config.js",
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/app/_layout.tsx",
+    "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+    "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+    "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+    "apps/resident-android-mobile/src/hooks/use-profile.ts",
+    "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+    "apps/resident-android-mobile/tests/services-tab-stability.mjs"
+  ]
+}

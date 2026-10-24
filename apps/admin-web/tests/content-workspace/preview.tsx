@@ -39,12 +39,12 @@ const entries = [
   { ...base, id: 'entry-3', title: 'Earthquake safety', body: 'Drop, cover, and hold on until the shaking stops.', category: 'guidelines', content: [], is_active: false },
 ] as unknown as Tables<'emergency_information'>[];
 const zones = [
-  { ...base, id: 'zone-1', name: 'Purok 1 — Town center', description: 'Main road and surrounding streets', trash_score: 0 },
-  { ...base, id: 'zone-2', name: 'Purok 2 — Riverside', description: 'Riverside households and market area', trash_score: 2.5, is_active: false },
+  { ...base, id: '00000000-0000-4000-8000-000000000001', name: 'Purok 1 — Town center', description: 'Main road and surrounding streets', trash_score: 0 },
+  { ...base, id: '00000000-0000-4000-8000-000000000002', name: 'Purok 2 — Riverside', description: 'Riverside households and market area', trash_score: 2.5, is_active: false },
 ] as unknown as Tables<'waste_zones'>[];
 const schedules = [
-  { ...base, id: 'schedule-1', zone_id: 'zone-1', waste_type: 'biodegradable', day_of_week: 1, start_time: '08:00', end_time: '10:00', notes: 'Place bins outside before collection.' },
-  { ...base, id: 'schedule-2', zone_id: 'zone-2', waste_type: 'recyclable', day_of_week: 4, start_time: '09:00', end_time: '11:00', notes: '', is_active: false },
+  { ...base, id: 'schedule-1', zone_id: '00000000-0000-4000-8000-000000000001', waste_type: 'biodegradable', day_of_week: 1, start_time: '08:00', end_time: '10:00', notes: 'Place bins outside before collection.' },
+  { ...base, id: 'schedule-2', zone_id: '00000000-0000-4000-8000-000000000002', waste_type: 'recyclable', day_of_week: 4, start_time: '09:00', end_time: '11:00', notes: '', is_active: false },
 ] as unknown as Tables<'waste_collection_schedules'>[];
 const articles = [
   { ...base, id: 'faq-1', question: 'How do I request a barangay clearance?', answer: 'Open Services, choose Barangay Clearance, and complete the request form with your supporting documents.', category: 'services' },
@@ -72,7 +72,7 @@ function App() {
     'Waste Management': { title: 'Waste Management', description: 'Manage collection zones, recurring pickup schedules, and monitor illegal dumping reports.', forms: [
       { label: 'Create new zone', title: 'New collection zone', description: 'Name the collection area and describe its boundaries or landmarks.', content: <ZoneForm barangayId="preview" /> },
       { label: 'Create new schedule', title: 'New collection schedule', description: 'Choose a zone, waste type, and recurring collection window.', content: <ScheduleForm barangayId="preview" zones={zoneList.filter(z => z.is_active)} /> },
-    ], content: <><WasteCatalog zones={zoneList} schedules={scheduleList} schedulesByZone={{ 'zone-1': [schedules[0]], 'zone-2': [schedules[1]] }} zoneNameById={{ 'zone-1': zones[0].name, 'zone-2': zones[1].name }} /><ContentSection title="Illegal dumping reports" description="Prioritized by recent reports and community confirmations · 0 reports"><TrashIncidentTable rows={[]} categoryNames={{}} highPriorityThreshold={5} /></ContentSection></> },
+    ], content: <><WasteCatalog zones={zoneList} schedules={scheduleList} schedulesByZone={{ '00000000-0000-4000-8000-000000000001': [schedules[0]], '00000000-0000-4000-8000-000000000002': [schedules[1]] }} zoneNameById={{ '00000000-0000-4000-8000-000000000001': zones[0].name, '00000000-0000-4000-8000-000000000002': zones[1].name }} /><ContentSection title="Illegal dumping reports" description="Prioritized by recent reports and community confirmations · 0 reports"><TrashIncidentTable rows={[]} categoryNames={{}} highPriorityThreshold={5} /></ContentSection></> },
     Hub: { title: 'Emergency Hub', description: 'Manage emergency guidelines and hotlines pushed to residents.', forms: [{ label: 'Create new entry', title: 'New emergency entry', description: 'Add guidelines or hotlines and configure how they appear to residents.', content: <EmergencyForm barangayId="preview" /> }], content: <EmergencyCatalog items={empty ? [] : entries} /> },
     'FAQ Content': { title: 'FAQ Content', description: 'Manage Help Center articles visible to residents in your barangay.', forms: [{ label: 'Create new article', title: 'New FAQ article', description: 'Write a helpful question and answer, then set its category and visibility.', content: <FaqForm barangayId="preview" /> }], content: <FaqList articles={empty ? [] : articles} /> },
     'Evacuation Centers': { title: 'Evacuation Centers', description: 'Create and manage barangay evacuation centers visible to residents.', forms: [{ label: 'Create new center', title: 'New evacuation center', description: 'Add the center’s location, capacity, facilities, and contact details.', content: <EvacuationCenterForm barangayId="preview" /> }], content: <EvacuationCenterCatalog centers={empty ? [] : centers} /> },

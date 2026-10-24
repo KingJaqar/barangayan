@@ -1,10 +1,11 @@
 import { formatCentavosAsPHP, formatDateTime, requestFee, requestFeeLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
+import { PrimaryButton } from '@/components/primary-button';
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
@@ -12,10 +13,13 @@ import { ServicesPanel, serviceListStyles } from '@/components/services/services
 import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
 import { useAuth } from '@/hooks/use-auth';
+import { useHistoryPages } from '@/hooks/use-history-pages';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
+import { HISTORY_PAGE_SIZE, historyBefore } from '@/lib/history-resource';
 
-type ServiceRequest = Tables<'service_requests'> & {
+type ServiceRequest = Pick<Tables<'service_requests'>,
+  'id' | 'status' | 'updated_at' | 'contract_version' | 'fee_assessment_state' | 'assessed_amount_centavos' | 'legacy_fee_centavos'> & {
   document_types: Pick<Tables<'document_types'>, 'name' | 'fee_centavos'> | null;
   payments: Pick<Tables<'payments'>, 'document_fee_centavos' | 'amount_centavos' | 'status'>[];
 };
@@ -26,33 +30,26 @@ type ServiceRequest = Tables<'service_requests'> & {
  * Once payments/appointments land this becomes a real union of event types.
  */
 export function LogsList() {
-  const [retry, setRetry] = useState(0);
-  return <LogsListContent key={retry} onRetry={() => setRetry(value => value + 1)} />;
-}
-function LogsListContent({ onRetry }: { onRetry: () => void }) {
   const { session } = useAuth();
   const theme = useTheme();
-  const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
-  const [loadedOwner, setLoadedOwner] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const userId = session?.user.id;
-
-  useFocusEffect(useCallback(() => {
-    if (!userId) return;
-    let active = true;
-    supabase
+  const load = useCallback(async (signal: AbortSignal, after: ServiceRequest | undefined, count: boolean) => {
+    if (!userId) return { rows: [], total: 0 };
+    let query = supabase
       .from('service_requests')
-      .select('*, document_types(name, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
+      .select('id, status, updated_at, contract_version, fee_assessment_state, assessed_amount_centavos, legacy_fee_centavos, document_types(name, fee_centavos), payments(document_fee_centavos, amount_centavos, status)', count ? { count: 'exact' } : undefined)
       .eq('resident_id', userId)
       .order('updated_at', { ascending: false })
-      .then(({ data, error: queryError }) => {
-        if (!active) return;
-        setLoadedOwner(userId);
-        setError(queryError ? 'Could not load activity. Reconnect and retry.' : null);
-        setRequests(queryError ? null : data);
-      });
-    return () => { active = false; };
-  }, [userId]));
+      .order('id', { ascending: false }).limit(HISTORY_PAGE_SIZE).abortSignal(signal);
+    if (after) query = query.or(historyBefore('updated_at', after.updated_at, after.id));
+    const { data, error, count: total } = await query;
+    if (error) throw error;
+    return { rows: data ?? [], total };
+  }, [userId]);
+  const history = useHistoryPages(userId ?? 'guest', load, 'Could not load activity. Reconnect and retry.');
+  const { refresh } = history;
+  const requests = history.data?.rows ?? [];
+  useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
 
   if (!session) {
     return (
@@ -61,19 +58,22 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
       </View>
     );
   }
-  if (loadedOwner === userId && error) {
-    return <ServicesErrorState message={error} retryLabel="Retry activity" onRetry={onRetry} />;
+  if (!history.data && history.error) {
+    return <ServicesErrorState message={history.error} retryLabel="Retry activity" onRetry={refresh} />;
   }
-  if (requests === null || loadedOwner !== userId) {
+  if (history.loading) {
     return <ServicesListSkeleton />;
   }
   if (requests.length === 0) {
     return (
-      <ServicesEmptyState
-        icon="time-outline"
-        title="No activity yet"
-        message="Updates on your document requests will be listed here."
-      />
+      <View>
+        <ServicesEmptyState
+          icon="time-outline"
+          title="No activity yet"
+          message="Updates on your document requests will be listed here."
+        />
+        {history.error ? <ServicesErrorState message={history.error} retryLabel="Retry activity" onRetry={refresh} /> : null}
+      </View>
     );
   }
 
@@ -118,6 +118,9 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
           );
         })}
       </ServicesPanel>
+      {history.error ? <ServicesErrorState message={history.error} retryLabel="Retry activity" onRetry={refresh} /> : null}
+      {history.data?.hasMore ? <PrimaryButton presentation="resident" variant="secondary" label="Load older activity"
+        accessibilityLabel="Load older activity" loading={history.fetching} onPress={history.loadMore} /> : null}
     </View>
   );
 }

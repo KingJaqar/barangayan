@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
+
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import styles from '@/components/admin/content-workspace.module.css';
@@ -183,60 +186,63 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
   const typeConfig = WASTE_TYPE_CONFIG[schedule.waste_type as keyof typeof WASTE_TYPE_CONFIG];
   const dayName = DAY_NAMES[schedule.day_of_week] ?? 'Unknown';
 
-  if (isEditing) {
-    return (
-      <form onSubmit={handleSave} className={styles.rowEdit}>
-        <div className="grid grid-cols-4 gap-3">
-          <label className="text-sm">
-            <span className={labelClass}>Waste Type</span>
-            <AdminSelect kind="waste" className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
-              {WASTE_TYPES.map((t) => (
-                <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
-              ))}
-            </AdminSelect>
-          </label>
+  return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit collection schedule" context={`${zoneName} · ${dayName}`}
+      description="Set the waste type, collection day, and pickup window for this zone." busy={submitting} onClose={() => setIsEditing(false)}>
+      <form onSubmit={handleSave} className={editStyles.form} aria-busy={submitting}>
+        <div className={editStyles.fields} data-edit-scroll>
+        <fieldset disabled={submitting}>
+          <div className={editStyles.grid}>
+            <label className="text-sm">
+              <span className={labelClass}>Waste Type</span>
+              <AdminSelect kind="waste" className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
+                {WASTE_TYPES.map((t) => (
+                  <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
+                ))}
+              </AdminSelect>
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Day</span>
-            <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
-              {DAY_NAMES.map((d, i) => (
-                <option key={d} value={i}>{d}</option>
-              ))}
-            </AdminSelect>
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Day</span>
+              <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
+                {DAY_NAMES.map((d, i) => (
+                  <option key={d} value={i}>{d}</option>
+                ))}
+              </AdminSelect>
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Start Time</span>
-            <input type="time" className={inputClass} value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Start Time</span>
+              <input type="time" className={inputClass} value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>End Time</span>
-            <input type="time" className={inputClass} value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>End Time</span>
+              <input type="time" className={inputClass} value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+            </label>
 
-          <label className="col-span-4 text-sm">
-            <span className={labelClass}>Notes</span>
-            <input className={inputClass} value={notes} onChange={(e) => setNotes(e.target.value)} />
-          </label>
+            <label className={editStyles.full}>
+              <span className={labelClass}>Notes</span>
+              <input className={inputClass} value={notes} onChange={(e) => setNotes(e.target.value)} />
+            </label>
 
-          {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+            {error ? <p role="alert" className={`${editStyles.full} ${editStyles.error}`}>{error}</p> : null}
 
-          <div className="col-span-4 flex items-center gap-2">
-            <button type="submit" disabled={submitting} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-            aria-busy={submitting}>
-              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
-            </button>
-            <button type="button" onClick={() => setIsEditing(false)} disabled={submitting} className="rounded-full bg-zinc-200 px-5 py-1.5 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-              Cancel
-            </button>
           </div>
+        </fieldset>
+        </div>
+        <div className={editStyles.actions}>
+          <button type="button" onClick={() => setIsEditing(false)} disabled={submitting} >
+            Cancel
+          </button>
+          <button type="submit" disabled={submitting}
+          aria-busy={submitting}>
+            <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          </button>
         </div>
       </form>
-    );
-  }
-
-  return (
+    </ContentEditDialog>
     <div className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -260,10 +266,11 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
           <button onClick={toggleActive} className={`rounded-full px-3 py-1 text-xs font-semibold ${schedule.is_active ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-[var(--accent)]/15 text-[var(--accent)]'}`}>
             {schedule.is_active ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={startEdit} title="Edit" className={styles.primaryAction}>Edit</button>
+          <button onClick={startEdit} aria-haspopup="dialog" title="Edit" className={styles.primaryAction}>Edit</button>
           <ConfirmButton label="Archive" confirmLabel="Archive schedule?" onConfirm={archive} title="Archive Schedule" className={styles.dangerAction} />
         </div>
       </div>
     </div>
+    </>
   );
 }

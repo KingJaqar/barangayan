@@ -1,6 +1,7 @@
 'use client';
 
 import styles from '@/components/admin/content-workspace.module.css';
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
 
 import { Archive, Pencil } from 'lucide-react';
 
@@ -46,6 +47,7 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
   const router = useRouter();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [channelName] = useState(() => `admin-emergency-info-${Math.random().toString(36).slice(2)}`);
 
   useEffect(() => {
@@ -91,24 +93,14 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
     }
   }
 
-  if (isEditing) {
-    return (
-      <div className={styles.rowEdit}>
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">Edit</h3>
-          <button
-            type="button"
-            onClick={() => setIsEditing(false)}
-            className="rounded-full bg-zinc-200 px-3 py-1 text-xs font-semibold disabled:opacity-50 dark:bg-zinc-700">
-            Cancel
-          </button>
-        </div>
-        <EmergencyForm barangayId={item.barangay_id} item={item} />
-      </div>
-    );
-  }
-
   return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit Hub entry" context={item.title} busy={saving}
+      description="Update guidelines or hotlines, appearance, and publication details."
+      onClose={() => setIsEditing(false)}>
+      <EmergencyForm barangayId={item.barangay_id} item={item} inDialog onBusyChange={setSaving}
+        onSaved={() => setIsEditing(false)} onCancel={() => setIsEditing(false)} />
+    </ContentEditDialog>
     <div className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -134,6 +126,7 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
         <div className={styles.rowActions}>
           <button
             onClick={() => setIsEditing(true)}
+            aria-haspopup="dialog"
             title="Edit"
             aria-label={`Edit ${item.title}`}
             className={styles.primaryAction}>
@@ -156,5 +149,6 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
         </p>
       </div>
     </div>
+    </>
   );
 }

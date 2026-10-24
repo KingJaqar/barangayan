@@ -1,0 +1,63 @@
+{
+  "phase": 0,
+  "status": "Partially complete",
+  "date": "2026-10-22",
+  "timezone": "Asia/Manila",
+  "checks": {
+    "typecheck": "pass",
+    "lint": "pass",
+    "unit": {
+      "baseline": 279,
+      "final": 286,
+      "passed": true
+    },
+    "androidExport": "pass baseline/final; not installed release",
+    "shell": "pass",
+    "services": "pass",
+    "maps": "pass after fixed introduced missing-dev-global regression",
+    "drrm": "pass",
+    "tracking": "pass"
+  },
+  "native": {
+    "validatedPresses": 120,
+    "directedPairs": 30,
+    "circuits": 10,
+    "dropped": 0,
+    "fullInputFrameAcceptance": "pending manual verification",
+    "finalNativeSmoke": "runner did not complete",
+    "captureStopped": true
+  },
+  "preExistingWarnings": [
+    "RN Web shadow props deprecation",
+    "RN Web pointerEvents prop deprecation",
+    "NO_COLOR/FORCE_COLOR build environment",
+    "Hermes global-variable compiler diagnostics"
+  ],
+  "newDependencies": [],
+  "limitations": [
+    "native APK source revision unknown",
+    "no physical device",
+    "no synchronized T0/T5",
+    "specific function causality pending",
+    "populated native SLA ownership pending"
+  ],
+  "concurrentWork": {
+    "files": [
+      {
+        "path": "apps/resident-android-mobile/src/components/center-detail-card.tsx",
+        "sha256": "63aa596fdcac63bcf62bd7372f33b746824551d5fe1ebcab3eb7dbdfaa013894"
+      },
+      {
+        "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+        "sha256": "55f825802ff9d2da91eada4b9dfb68cc75536253b945166709bd51a1eab0db9a"
+      },
+      {
+        "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+        "sha256": "9f8c881e06a16bcafcba4c8a6c3192b94fe884cd9e99dea52bfd63117b05dda2"
+      }
+    ],
+    "ownership": "user/concurrent; untouched",
+    "verification": "typecheck, lint and DRRM UI rerun once and passed; native/build results remain bound to earlier states"
+  },
+  "planOutsidePhase0Unchanged": true
+}

@@ -1,0 +1,111 @@
+{
+  "packet": "repomix output files/resident-nav-phase2-20261023.xml",
+  "sha256": "72c00edbc679677bfb60de6695bc12f894e1bdd4e9527272632d3c11ea261fe4",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-incidents.ts",
+      "chars": 1737,
+      "sha256": "1172b520e3c032de6e14a88f7d81ba76d99f1937014647818591185ca8ff3865",
+      "priorIdentity": "1172b520e3c032de6e14a88f7d81ba76d99f1937014647818591185ca8ff3865"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/map-presentation.ts",
+      "chars": 1131,
+      "sha256": "ad0753a29cbd8e0fafc63ef440f94de481bcba7f86576b6ed82f287aacaea64d",
+      "priorIdentity": "ad0753a29cbd8e0fafc63ef440f94de481bcba7f86576b6ed82f287aacaea64d"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "chars": 469,
+      "sha256": "c4d7e05ad24cf9b91de59e81ab624cf28a551d0e344ca67e0762ef7ae9ba6ee7",
+      "priorIdentity": "c4d7e05ad24cf9b91de59e81ab624cf28a551d0e344ca67e0762ef7ae9ba6ee7"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "chars": 351,
+      "sha256": "e758c984e30cc4034fca09c55a7ec8085d5615773f699e80bc946a97711bad96",
+      "priorIdentity": "e758c984e30cc4034fca09c55a7ec8085d5615773f699e80bc946a97711bad96"
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 12,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "priorIdentity": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts",
+      "chars": 2147,
+      "sha256": "91a3e26167e27716f8086c9e9ca189ae52f6e3f1c399b1b5d1630a6480932fb8",
+      "priorIdentity": "91a3e26167e27716f8086c9e9ca189ae52f6e3f1c399b1b5d1630a6480932fb8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "chars": 4968,
+      "sha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b",
+      "priorIdentity": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2059,
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b",
+      "priorIdentity": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 2,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "priorIdentity": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "chars": 1296,
+      "sha256": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3",
+      "priorIdentity": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "chars": 2105,
+      "sha256": "e133463efa31f1bf04bbf31f2387ec436d42a39858cfa14bc3c1e5ce5bf057c5",
+      "priorIdentity": "e133463efa31f1bf04bbf31f2387ec436d42a39858cfa14bc3c1e5ce5bf057c5"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "chars": 11195,
+      "sha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371",
+      "priorIdentity": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371"
+    },
+    {
+      "path": "packages/shared/src/types/map-bridge.ts",
+      "chars": 6011,
+      "sha256": "a5d3c03ff2a40b0b574c093fb00bd288abd029f46dbfe3d316fdbe932397e2f3",
+      "priorIdentity": "a5d3c03ff2a40b0b574c093fb00bd288abd029f46dbfe3d316fdbe932397e2f3"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "reader-1.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-2.txt",
+      "start": 11000,
+      "end": 22000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-3.txt",
+      "start": 22000,
+      "end": 33000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-4.txt",
+      "start": 33000,
+      "end": 34920,
+      "chars": 1920
+    }
+  ]
+}

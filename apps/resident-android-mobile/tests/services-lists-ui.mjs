@@ -26,7 +26,7 @@ const mocks = {
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
   './agency-sla-status': `import React from 'react';import {Text} from 'react-native';export const AgencySlaStatus=({requestId})=><Text>Agency processing clock: {requestId}</Text>;`,
-  '@/lib/supabase': `export const supabase={from(table){let kind=table==='document_types'?'catalog':'requests';const query={select(columns){if(columns.includes('payments('))kind='logs';return query;},eq(){return query;},order(){return query;},then(done){window.fixture.queries.push(kind);return Promise.resolve().then(()=>done({data:window.fixture.fail[kind]?null:structuredClone(kind==='catalog'?window.fixture.documents:window.fixture.requests),error:window.fixture.fail[kind]?{}:null}));}};return query;},channel(name){const channel={name,on(event,filter,callback){channel.callback=callback;return channel;},subscribe(){window.fixture.channels.set(name,channel);return channel;}};return channel;},removeChannel(channel){window.fixture.channels.delete(channel.name);}};`,
+  '@/lib/supabase': String.raw`export const supabase={from(table){let kind=table==='document_types'?'catalog':'requests',filters=[],orders=[],take=Infinity,options={};const query={select(columns,o={}){options=o;if(columns.includes('payments('))kind='logs';return query;},eq(k,v){filters.push(r=>r[k]===v);return query;},in(k,v){filters.push(r=>v.includes(r[k]));return query;},not(k,op,v){const values=v.slice(1,-1).split(',');filters.push(r=>!values.includes(r[k]));return query;},or(expression){const m=expression.match(/^(created_at|updated_at)\.lt\.([^,]+),and\([^,]+,id\.lt\.([^)]+)\)$/);if(!m)throw Error('Invalid cursor');filters.push(r=>r[m[1]]<m[2]||r[m[1]]===m[2]&&r.id<m[3]);return query;},limit(n){take=n;return query;},abortSignal(){return query;},order(k,o={}){orders.push([k,o]);return query;},then(done,fail){window.fixture.queries.push(kind);let data=structuredClone(kind==='catalog'?window.fixture.documents:window.fixture.requests).filter(r=>filters.every(f=>f(r)));const count=data.length;data.sort((a,b)=>{for(const [k,o]of orders){if(a[k]!==b[k])return (a[k]<b[k]?-1:1)*(o.ascending===false?-1:1)}return 0});return Promise.resolve({data:window.fixture.fail[kind]?null:data.slice(0,take),count:options.count?count:null,error:window.fixture.fail[kind]?{}:null}).then(done,fail);}};return query;},channel(name){const f=window.fixture;f.topics??=new Set();if(name.startsWith("my-service-requests-")&&f.topics.has(name))throw Error("Request channel reused during async removal");f.topics.add(name);const channel={name,on(event,filter,callback){channel.callback=callback;return channel;},subscribe(){window.fixture.channels.set(name,channel);return channel;}};return channel;},removeChannel(channel){window.fixture.channels.delete(channel.name);return new Promise(resolve=>setTimeout(()=>{window.fixture.topics.delete(channel.name);resolve()},40));}};`,
   'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View,createAnimatedComponent:component=>component};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const interpolateColor=(value,input,output)=>output[value>=.5?1:0];export const Easing={bezier:()=>undefined};`,
   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size,style})=><View style={[{width:size,height:size,flexShrink:0},style]}/>;`,
   'expo-image': `export {Image} from 'react-native';`,
@@ -38,8 +38,8 @@ await build({
   stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';
     const profile={id:'synthetic-resident',id_verification_status:'verified',approved_id_submission_id:'synthetic-id',current_id_submission_id:'synthetic-id',id_repair_required:false};
     const documents=[{id:'fixed',name:'Certificate of Indigency',service_kind:'indigency',contract_version:2,processing_target_minutes:15,fee_centavos:10000},{id:'business',name:'Issuance of Barangay Clearance for Business Establishments',service_kind:'business',contract_version:2,processing_target_minutes:15,fee_centavos:0},{id:'pages',name:'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)',service_kind:'certified_true_copy',contract_version:2,processing_target_minutes:15,fee_centavos:1000},{id:'free',name:'Free legacy service',contract_version:1,processing_target_hours:24,fee_centavos:0}];
-    const statuses=[['submitted','unpaid'],['submitted','paid'],['submitted','waived'],['in_progress','paid'],['ready_for_pickup','paid'],['completed','paid'],['cancelled','unpaid']];
-    const requests=statuses.map(([status,payment_status],index)=>({id:'request-'+index,status,payment_status,reference_number:'SYNTHETIC-'+index,created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-19T00:00:00Z',document_types:{name:'Service '+index,processing_target_hours:24,fee_centavos:10000},timing_model:index===6?'legacy':'agency_minutes_v1',contract_version:2,fee_assessment_state:index===0?'page_count_required':'assessed',assessed_amount_centavos:index===0?null:index===2?0:10000,payments:index===1?[{status:'paid',document_fee_centavos:7500,amount_centavos:7500}]:[]}));
+    documents.forEach(doc=>{doc.is_active=true});const statuses=[['submitted','unpaid'],['submitted','paid'],['submitted','waived'],['in_progress','paid'],['ready_for_pickup','paid'],['completed','paid'],['cancelled','unpaid']];
+    const requests=statuses.map(([status,payment_status],index)=>({id:'request-'+index,resident_id:'synthetic-resident',status,payment_status,reference_number:'SYNTHETIC-'+index,created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-19T00:00:00Z',document_types:{name:'Service '+index,processing_target_hours:24,fee_centavos:10000},timing_model:index===6?'legacy':'agency_minutes_v1',contract_version:2,fee_assessment_state:index===0?'page_count_required':'assessed',assessed_amount_centavos:index===0?null:index===2?0:10000,payments:index===1?[{status:'paid',document_fee_centavos:7500,amount_centavos:7500}]:[]}));
     window.fixture={session:{user:{id:'synthetic-resident'}},profileState:{profile,isLoading:false,error:null,refetch:()=>{window.fixture.retries++;}},mode:'light',accent:'#0F6E5B',fontId:'system',documents,requests,fail:{},channels:new Map(),queries:[],routes:[],retries:0};
     const root=createRoot(document.getElementById('root'));let generation=0;window.renderServices=()=>root.render(<Services key={generation}/>);window.resetServices=()=>{generation++;window.renderServices();};window.refreshLists=()=>{for(const channel of window.fixture.channels.values())channel.callback();};window.renderServices();`, resolveDir: app, loader: 'tsx' },
   outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
@@ -199,6 +199,36 @@ try {
   await page.evaluate(() => { window.fixture.documents=[];window.refreshLists(); });
   await page.getByText('No documents available yet', { exact: true }).waitFor();
   passed.push('Guest has only Documents, with public catalog error/retry/empty and channel cleanup');
+
+  await page.evaluate(() => {
+    window.fixture.session={user:{id:'synthetic-resident'}};
+    window.fixture.requests=Array.from({length:63},(_,i)=>({id:'00000000-0000-4000-8000-'+String(63-i).padStart(12,'0'),resident_id:'synthetic-resident',status:i%2?'completed':'submitted',payment_status:i%3?'paid':'waived',reference_number:'LARGE-'+i,created_at:'2026-10-23T00:00:00.123456+00:00',updated_at:'2026-10-23T00:00:00.123456+00:00',document_types:{name:'Large service '+i,fee_centavos:10000,processing_target_hours:24},timing_model:'legacy',contract_version:2,fee_assessment_state:'assessed',assessed_amount_centavos:10000,payments:[]}));
+    window.resetServices();
+  });
+  await tab('Requests').click();
+  const largeRows=()=>page.getByRole('button',{name:/^Large service /});
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===25);
+  await page.getByRole('button',{name:'Load older requests',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===50);
+  await page.getByRole('button',{name:'Load older requests',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===63);
+  assert.equal(await page.getByRole('button',{name:'Load older requests',exact:true}).count(),0);
+  assert.equal(new Set(await largeRows().allTextContents()).size,63);
+  await tab('History').click();
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===25);
+  await page.getByRole('button',{name:'Load older requests',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===31);
+  await tab('Logs').click();
+  await page.getByRole('button',{name:'Load older activity',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Load older activity',exact:true}).click();
+  await page.getByText('Large service 49',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'Load older activity',exact:true}).click();
+  await page.getByText('Large service 62',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Load older activity',exact:true}).count(),0);
+  await page.evaluate(()=>{window.fixture.session={user:{id:'different-resident'}};window.renderServices()});
+  await page.getByText('No activity yet',{exact:true}).waitFor();
+  assert.equal(await page.getByText('Large service 62',{exact:true}).count(),0);
+  passed.push('63-row tied-date request/activity pages, complete 31-row History filter, no duplicates and account replacement clears private rows');
 
   assert.deepEqual(errors, []);
   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ passed, errors, adapters: ['Synthetic Supabase/session/profile data', 'React Native Web layout', 'Immediate reduced-motion Reanimated adapter', 'SLA child stub; actual SLA covered by shared contracts'] }, null, 2));

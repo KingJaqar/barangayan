@@ -4,6 +4,7 @@ import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { ContentFormActions } from '@/components/admin/content-create-panel';
 import styles from '@/components/admin/content-forms.module.css';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
 
 import { catalogContract, charterSections, serviceDocumentTypeSchema, serviceDocumentTypeValues, type ServiceCatalogContract, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
@@ -30,8 +31,9 @@ function initialCatalog(row?: DocumentType): ServiceCatalogContract {
   };
 }
 
-export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCancel }: {
+export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCancel, inDialog = false, onBusyChange }: {
   barangayId: string; documentType?: DocumentType; onSaved?: () => void; onCancel?: () => void;
+  inDialog?: boolean; onBusyChange?: (busy: boolean) => void;
 }) {
   const router = useRouter();
 
@@ -50,7 +52,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
     if (inFlight.current) return;
     setError('');
     const parsed = serviceDocumentTypeSchema.safeParse({ name, description,
-      feeCentavos: draft.pricingMode === 'fixed' ? Math.round(Number(fee) * 100) : 0, catalog: draft });
+      feeCentavos: draft.pricingMode === 'assessment' ? 0 : Math.round(Number(fee) * 100), catalog: draft });
     if (!parsed.success) {
       const issue = parsed.error.issues[0];
       const field = issue?.path.at(-1);
@@ -64,7 +66,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       toast.error('Check the highlighted service details.', { id: toastAttempt });
       return;
     }
-    inFlight.current = true; setBusy(true);
+    inFlight.current = true; setBusy(true); onBusyChange?.(true);
     try {
       const values = serviceDocumentTypeValues(parsed.data);
       const client = createSupabaseBrowserClient();
@@ -96,24 +98,25 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
     } catch (failure) {
       toast.warning("We couldn't confirm the service save. Refresh before trying again.", { id: toastAttempt });
       setError(failure instanceof Error ? failure.message : String((failure as { message?: string }).message ?? failure));
-    } finally { inFlight.current = false; setBusy(false); }
+    } finally { inFlight.current = false; setBusy(false); onBusyChange?.(false); }
   }
 
   const residency = ['indigency', 'first_time_job_seeker'].includes(draft.serviceKind);
-  return <form onSubmit={save} className={`${styles.form} space-y-6`} aria-busy={busy}>
+  return <form onSubmit={save} className={inDialog ? editStyles.form : `${styles.form} space-y-6`} aria-busy={busy}>
+    <div className={inDialog ? editStyles.fields : undefined} data-edit-scroll={inDialog || undefined}>
     <fieldset disabled={busy} className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-sm">Name<input className={control} required maxLength={200} value={name} onChange={e => setName(e.target.value)} /></label>
         <label className="text-sm">Description<textarea className={control} maxLength={2000} value={description} onChange={e => setDescription(e.target.value)} /></label>
       </div>
-      {row && row.contract_version === 1 ? <p className="text-sm text-zinc-500">Complete the charter for future requests. Existing requests keep their recorded fees and previous timing model.</p> : null}
+      {row && row.contract_version === 1 ? <p className={`text-sm ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Complete the charter for future requests. Existing requests keep their recorded fees and previous timing model.</p> : null}
       <label className="block text-sm">Service workflow
         <AdminSelect kind="workflow" className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
           onValueChange={nextValue => setDraft({ ...draft, serviceKind: nextValue as ServiceCatalogContract['serviceKind'],
             pricingMode: nextValue === 'business' ? 'assessment' : nextValue === 'certified_true_copy' ? 'per_page' : 'fixed', requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: draft.requirementRules.personalAppearance } })}>
           {kinds.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
         </AdminSelect>
-        <span className="mt-1 block text-xs text-zinc-500">Determines the resident form and compatible supporting rules. Existing charter workflows remain fixed.</span>
+        <span className={`mt-1 block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Determines the resident form and compatible supporting rules. Existing charter workflows remain fixed.</span>
       </label>
       <fieldset className="space-y-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
         <legend className="px-1 font-semibold">Citizen’s Charter</legend>
@@ -123,17 +126,17 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
               required={key !== 'personResponsible'} maxLength={key === 'classification' || key === 'transactionType' ? 200 : 10000}
               value={draft.charter[key] ?? ''}
               onChange={e => setDraft({ ...draft, charter: { ...draft.charter, [key]: key === 'personResponsible' && !e.target.value.trim() ? null : e.target.value } })} />
-            {key === 'processingTime' ? <span className="block text-xs text-zinc-500">Procedure durations from the charter; separate from the SLA target.</span> : null}
-            {key === 'feesToBePaid' ? <span className="block text-xs text-zinc-500">Published fee guidance; charging rules are configured under Pricing.</span> : null}
-            {key === 'checklistOfRequirements' ? <span className="block text-xs text-zinc-500">Requirements displayed to residents. Configure enforced attachment rules below.</span> : null}
-            {key === 'personResponsible' ? <span className="block text-xs text-zinc-500">Leave blank when the responsible person is not specified.</span> : null}
+            {key === 'processingTime' ? <span className={`block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Procedure durations from the charter; separate from the SLA target.</span> : null}
+            {key === 'feesToBePaid' ? <span className={`block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Published fee guidance; charging rules are configured under Pricing.</span> : null}
+            {key === 'checklistOfRequirements' ? <span className={`block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Requirements displayed to residents. Configure enforced attachment rules below.</span> : null}
+            {key === 'personResponsible' ? <span className={`block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Leave blank when the responsible person is not specified.</span> : null}
           </label>)}
         </div>
       </fieldset>
       <label className="block text-sm">Processing Target (minutes)
         <input className={control} type="number" min={1} max={2147483647} step={1} required value={draft.processingTargetMinutes}
           onChange={e => setDraft({ ...draft, processingTargetMinutes: Number(e.target.value) })} />
-        <span className="block text-xs text-zinc-500">Agency processing SLA for future requests; excludes recorded resident waits.</span>
+        <span className={`block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Agency processing SLA for future requests; excludes recorded resident waits.</span>
       </label>
       <fieldset className="space-y-3">
         <legend className="font-semibold">Purposes</legend>
@@ -150,26 +153,37 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       </fieldset>
       <fieldset className="space-y-2">
         <legend className="font-semibold">Supporting Requirement Rules</legend>
-        <p className="text-xs text-zinc-500">Enforced information and attachment rules; separate from the displayed charter checklist.</p>
+        <p className={`text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Enforced information and attachment rules; separate from the displayed charter checklist.</p>
         {([['dtiRequired', 'DTI attachment required', draft.serviceKind === 'business'],
           ['hoaRequired', 'HOA certification required', residency],
           ['lessorForRenter', 'Lessor endorsement for renters', residency],
           ['personalAppearance', 'Personal appearance required', true]] as const).map(([key, label, applicable]) =>
           <label key={key} className="block text-sm"><input type="checkbox" checked={draft.requirementRules[key]} disabled={!applicable}
             onChange={e => setDraft({ ...draft, requirementRules: { ...draft.requirementRules, [key]: e.target.checked } })} /> {label}
-            {!applicable ? <span className="ml-2 text-xs text-zinc-500">(Requires the corresponding service workflow)</span> : null}
+            {!applicable ? <span className={`ml-2 text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>(Requires the corresponding service workflow)</span> : null}
           </label>)}
       </fieldset>
-      {draft.serviceKind === 'general' ? <label className="block text-sm">Document fee (₱)<input className={control} type="number" min={0}
-        max={21474836.47} step="0.01" required value={fee} onChange={e => {setFee(e.target.value);setDraft({...draft,pricingMode:'fixed'});}} /></label> :
-        <p className="text-sm text-zinc-500">{draft.serviceKind === 'business'
-          ? 'See Attached Tax Code (depends on the kind of transaction). Pay at Pickup only.'
-          : draft.serviceKind === 'certified_true_copy'
-            ? '₱10.00 per page. Pay at Pickup or Pay with QR PH.'
-            : '₱100.00. Pay at Pickup or Pay with QR PH.'}</p>}
+      <fieldset className="space-y-3">
+        <legend className="font-semibold">Pricing</legend>
+        {draft.serviceKind === 'business' || draft.serviceKind === 'general' ? <label className="block text-sm">Fee type
+          <AdminSelect className={control} value={draft.pricingMode}
+            onValueChange={value => setDraft({ ...draft, pricingMode: value as ServiceCatalogContract['pricingMode'] })}>
+            <option value="fixed">Fixed document fee</option>
+            <option value="assessment">Tax-code assessment at pickup</option>
+          </AdminSelect>
+        </label> : null}
+        {draft.pricingMode !== 'assessment' ? <label className="block text-sm">
+          {draft.pricingMode === 'per_page' ? 'Fee per page (₱)' : 'Document fee (₱)'}
+          <input className={control} type="number" min={0} max={21474836.47} step="0.01" required
+            value={fee} onChange={e => setFee(e.target.value)} />
+          <span className={`mt-1 block text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Applies to future requests. Enter 0 for no payment required.</span>
+        </label> : <p className={`text-sm ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>The amount is assessed from the tax code and collected at pickup.</p>}
+        {draft.serviceKind === 'business' ? <p className={`text-xs ${inDialog ? editStyles.muted : 'text-zinc-500'}`}>Business document payments are collected at pickup.</p> : null}
+      </fieldset>
+    {error ? <p role="alert" className={inDialog ? editStyles.error : "text-sm text-red-600"}>{error}</p> : null}
     </fieldset>
-    {error ? <p role="alert" className="text-sm text-red-600">{error}</p> : null}
-    <ContentFormActions busy={busy} onCancel={onCancel}>
+    </div>
+    <ContentFormActions busy={busy} onCancel={onCancel} cancelFirst={inDialog} className={inDialog ? editStyles.actions : undefined}>
       <button type="submit" disabled={busy || !barangayId} className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
         <LoadingButtonContent pending={busy} pendingLabel={row ? 'Saving…' : 'Creating…'}>{row ? 'Save service' : 'Create service'}</LoadingButtonContent>
       </button>

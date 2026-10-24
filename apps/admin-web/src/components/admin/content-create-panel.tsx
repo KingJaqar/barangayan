@@ -121,14 +121,16 @@ export function ContentSideSheet({ id, form, open, onClose, className }: {
   </dialog>;
 }
 
-export function ContentFormActions({ busy, children, onCancel }: {
-  busy: boolean; children: ReactNode; onCancel?: () => void;
+export function ContentFormActions({ busy, children, onCancel, className, cancelFirst = false }: {
+  busy: boolean; children: ReactNode; onCancel?: () => void; className?: string; cancelFirst?: boolean;
 }) {
   const hide = useContext(HideFormContext);
-  return <div className={styles.actions}>
+  const cancel = onCancel || hide ? <button type="button" disabled={busy} className={styles.secondaryButton}
+    onClick={onCancel ?? hide ?? undefined}><X size={16} aria-hidden="true" />{onCancel ? 'Cancel' : 'Close'}</button> : null;
+  return <div className={`${styles.actions} ${className ?? ''}`}>
+    {cancelFirst ? cancel : null}
     {children}
-    {onCancel || hide ? <button type="button" disabled={busy} className={styles.secondaryButton}
-      onClick={onCancel ?? hide ?? undefined}><X size={16} aria-hidden="true" />{onCancel ? 'Cancel' : 'Close'}</button> : null}
+    {cancelFirst ? null : cancel}
     {hide ? <span className={styles.draftHint}>Your entries stay here when you close this sheet.</span> : null}
   </div>;
 }

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import type { FilterChip } from '@/components/filter-chips';
 import { IncidentCard } from '@/components/reports/incident-card';
+import { PrimaryButton } from '@/components/primary-button';
 import { ReportSourceState } from '@/components/reports/report-presentation';
 import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
 import { INCIDENT_STATUSES, INCIDENT_STATUS_META, type IncidentStatus } from '@/constants/incident-status';
@@ -22,14 +23,19 @@ export function MyIncidentsFeed({ status, activeFilter = 'all', emptyLabel = 'Yo
 }) {
   const { resident } = useTheme();
   const bottom = useFloatingTabInset();
-  const { incidents, isLoading, error, refetch } = useMyIncidents({ status: status ?? (activeFilter !== 'all' ? activeFilter : undefined) });
+  const { incidents, hasMore, isLoading, fetching, error, refetch, loadMore } = useMyIncidents({ status: status ?? (activeFilter !== 'all' ? activeFilter : undefined) });
   const empty = activeFilter === 'all' ? emptyLabel : `No ${INCIDENT_STATUS_META[activeFilter].label.toLowerCase()} incident reports.`;
   return <View style={{ flex: 1 }}>
-    {isLoading ? <ReportSourceState message="Loading your reports…" /> : error ?
+    {isLoading ? <ReportSourceState message="Loading your reports…" /> : error && incidents.length === 0 ?
       <ReportSourceState message="Your reports could not be loaded. Please try again." retry={refetch} /> :
       <FlatList data={incidents} keyExtractor={item => item.id} showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: bottom + 96 }}
         ListEmptyComponent={<ReportSourceState message={empty} />}
+        ListFooterComponent={<View style={{ gap: 12, paddingTop: 12 }}>
+          {error ? <ReportSourceState message={error} retry={refetch} /> : null}
+          {hasMore ? <PrimaryButton presentation="resident" variant="secondary" label="Load older reports"
+            accessibilityLabel="Load older reports" loading={fetching} onPress={loadMore} /> : null}
+        </View>}
         renderItem={({ item, index }) => <View style={{
           borderColor: resident.border, borderLeftWidth: 1, borderRightWidth: 1,
           borderTopWidth: 1, borderBottomWidth: index === incidents.length - 1 ? 1 : 0,

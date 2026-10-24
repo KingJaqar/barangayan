@@ -13,6 +13,8 @@ interface ScrollableChevronRowProps {
   label?: string;
   /** Home shelves snap by the measured first card plus their gap. */
   snapToItems?: boolean;
+  /** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
+  reveal?: { x: number; width: number };
 }
 
 /**
@@ -26,11 +28,20 @@ export function ScrollableChevronRow(props: ScrollableChevronRowProps) {
   return props.label ? <InteractiveChevronRow {...props} label={props.label} /> : <PassiveChevronRow {...props} />;
 }
 
-function InteractiveChevronRow({ children, contentContainerStyle, label, snapToItems = false }: ScrollableChevronRowProps & { label: string }) {
+function InteractiveChevronRow({ children, contentContainerStyle, label, snapToItems = false, reveal }: ScrollableChevronRowProps & { label: string }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const scroll = useRef<ScrollView>(null);
-  const metrics = useRef({ offset: 0, width: 0, content: 0, first: 0 });
+  const metrics = useRef({ offset: 0, width: 0, content: 0, first: 0, firstX: 0 });
+  useEffect(() => {
+    if (!reveal) return;
+    const { offset, width, content, firstX } = metrics.current;
+    // Leave room for the 44 dp edge chevrons so the revealed range is never drawn under one.
+    const start = firstX + reveal.x - 44;
+    const end = firstX + reveal.x + reveal.width + 44;
+    const target = start < offset ? start : end > offset + width ? end - width : offset;
+    if (target !== offset) scroll.current?.scrollTo({ x: Math.max(0, Math.min(Math.max(0, content - width), target)), animated: !reducedMotion });
+  }, [reveal, reducedMotion]);
   const [edges, setEdges] = useState({ left: false, right: false });
   const [itemWidth, setItemWidth] = useState(0);
   const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
@@ -54,6 +65,7 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
       {Children.map(children, (child, index) => <View onLayout={index === 0 ? event => {
         const width = event.nativeEvent.layout.width;
         metrics.current.first = width;
+        metrics.current.firstX = event.nativeEvent.layout.x;
         if (snapToItems) setItemWidth(previous => previous === width ? previous : width);
       } : undefined}>{child}</View>)}
     </ScrollView>

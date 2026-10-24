@@ -1,0 +1,148 @@
+{
+  "startTime": 37577527938,
+  "endTime": 37694840712,
+  "samples": 11399,
+  "limit": "Sample hit counts only. Some Hermes profiles reuse a previous stop as startTime or report zero; duration weighting / cross-clock interval attribution rejected.",
+  "topSelf": [
+    {
+      "frame": "[root] [root]:0",
+      "hits": 10760
+    },
+    {
+      "frame": "[Native] datePrototypeToLocaleStringHelper [native]:0",
+      "hits": 193
+    },
+    {
+      "frame": "[Host Function] createTask [host]:0",
+      "hits": 179
+    },
+    {
+      "frame": "[GC Young Gen] [suspended]:0",
+      "hits": 23
+    },
+    {
+      "frame": "addObjectDiffToProperties http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:20164",
+      "hits": 14
+    },
+    {
+      "frame": "propagateParentContextChanges http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:20687",
+      "hits": 11
+    },
+    {
+      "frame": "structuredCloneInternal http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:29703",
+      "hits": 8
+    },
+    {
+      "frame": "[Host Function] completeRoot [host]:0",
+      "hits": 6
+    },
+    {
+      "frame": "runWithFiberInDEV http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:19366",
+      "hits": 5
+    },
+    {
+      "frame": "[Host Function] run [host]:0",
+      "hits": 5
+    },
+    {
+      "frame": "createWorkInProgress http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:26342",
+      "hits": 5
+    },
+    {
+      "frame": "hasValidKey http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10889",
+      "hits": 5
+    },
+    {
+      "frame": "[Native] ErrorConstructor [native]:0",
+      "hits": 5
+    },
+    {
+      "frame": "[Host Function] unstable_now [host]:0",
+      "hits": 5
+    },
+    {
+      "frame": "updateVirtualChildrenRecursively http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:46532",
+      "hits": 5
+    },
+    {
+      "frame": "ReactElement http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10912",
+      "hits": 4
+    },
+    {
+      "frame": "[Host Function] reportMeasure [host]:0",
+      "hits": 4
+    },
+    {
+      "frame": " http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:11020",
+      "hits": 4
+    },
+    {
+      "frame": "diffProperties http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:17295",
+      "hits": 4
+    },
+    {
+      "frame": "bubbleProperties http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:23842",
+      "hits": 4
+    },
+    {
+      "frame": "[Native] hermesBuiltinCopyDataProperties [native]:0",
+      "hits": 4
+    },
+    {
+      "frame": "[Native] objectDefineProperty [native]:0",
+      "hits": 4
+    },
+    {
+      "frame": "jsxDEVImpl http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10956",
+      "hits": 3
+    },
+    {
+      "frame": "commitMutationEffectsOnFiber http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:24582",
+      "hits": 3
+    },
+    {
+      "frame": "[Native] objectFreeze [native]:0",
+      "hits": 3
+    },
+    {
+      "frame": "View http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:59065",
+      "hits": 3
+    },
+    {
+      "frame": "startProfilerTimer http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:20829",
+      "hits": 3
+    },
+    {
+      "frame": "[Native] objectKeys [native]:0",
+      "hits": 2
+    },
+    {
+      "frame": "measure http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:29414",
+      "hits": 2
+    },
+    {
+      "frame": "stopProfilerTimerIfRunningAndRecordDuration http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:20833",
+      "hits": 2
+    },
+    {
+      "frame": "luminance http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:262922",
+      "hits": 2
+    },
+    {
+      "frame": "Pressable http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:60486",
+      "hits": 2
+    },
+    {
+      "frame": "TextImpl http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:61864",
+      "hits": 2
+    },
+    {
+      "frame": "useAnimatedStyle http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:209236",
+      "hits": 2
+    },
+    {
+      "frame": "beginWork http://192.168.254.131:8081/node_modules/expo-router/entry.bundle//&platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:23606",
+      "hits": 2
+    }
+  ]
+}

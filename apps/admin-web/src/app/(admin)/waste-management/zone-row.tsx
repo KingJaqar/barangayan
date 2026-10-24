@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
+
 import styles from '@/components/admin/content-workspace.module.css';
 
 import { Trash2 } from 'lucide-react';
@@ -151,37 +154,40 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
     } finally { setSubmitting(false); }
   }
 
-  if (isEditing) {
-    return (
-      <form onSubmit={handleSave} className={styles.rowEdit}>
-        <div className="grid grid-cols-4 gap-3">
-          <label className="col-span-4 text-sm sm:col-span-1">
-            <span className={labelClass}>Zone Name</span>
-            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
-          </label>
+  return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit collection zone" context={zone.name}
+      description="Update the zone name and description. Assigned schedules stay linked to this zone." busy={submitting} onClose={() => setIsEditing(false)}>
+      <form onSubmit={handleSave} className={editStyles.form} aria-busy={submitting}>
+        <div className={editStyles.fields} data-edit-scroll>
+        <fieldset disabled={submitting}>
+          <div className={editStyles.grid}>
+            <label className="text-sm">
+              <span className={labelClass}>Zone Name</span>
+              <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+            </label>
 
-          <label className="col-span-4 text-sm sm:col-span-3">
-            <span className={labelClass}>Description</span>
-            <input className={inputClass} value={description} onChange={(e) => setDescription(e.target.value)} />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Description</span>
+              <input className={inputClass} value={description} onChange={(e) => setDescription(e.target.value)} />
+            </label>
 
-          {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+            {error ? <p role="alert" className={`${editStyles.full} ${editStyles.error}`}>{error}</p> : null}
 
-          <div className="col-span-4 flex items-center gap-2">
-            <button type="submit" disabled={submitting} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-            aria-busy={submitting}>
-              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
-            </button>
-            <button type="button" onClick={() => setIsEditing(false)} disabled={submitting} className="rounded-full bg-zinc-200 px-5 py-1.5 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-              Cancel
-            </button>
           </div>
+        </fieldset>
+        </div>
+        <div className={editStyles.actions}>
+          <button type="button" onClick={() => setIsEditing(false)} disabled={submitting} >
+            Cancel
+          </button>
+          <button type="submit" disabled={submitting}
+          aria-busy={submitting}>
+            <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          </button>
         </div>
       </form>
-    );
-  }
-
-  return (
+    </ContentEditDialog>
     <div className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -208,10 +214,11 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
           <button onClick={toggleActive} className={`rounded-full px-3 py-1 text-xs font-semibold ${zone.is_active ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-[var(--accent)]/15 text-[var(--accent)]'}`}>
             {zone.is_active ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={startEdit} title="Edit" className={styles.primaryAction}>Edit</button>
+          <button onClick={startEdit} aria-haspopup="dialog" title="Edit" className={styles.primaryAction}>Edit</button>
           <ConfirmButton label="Archive" confirmLabel="Archive zone?" onConfirm={archive} title="Archive Zone" className={styles.dangerAction} />
         </div>
       </div>
     </div>
+    </>
   );
 }

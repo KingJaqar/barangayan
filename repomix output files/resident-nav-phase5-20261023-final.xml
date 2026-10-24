@@ -1,0 +1,270 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/package.json, apps/resident-android-mobile/tests/refresh-ownership.mjs, apps/resident-android-mobile/tests/hidden-work-ownership.mjs, apps/resident-android-mobile/tests/map-state-bridge.mjs, apps/resident-android-mobile/tests/request-tracking-navigation.mjs, apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs, apps/resident-android-mobile/tests/reports-announcements-ui.mjs, apps/resident-android-mobile/tests/navigation-regressions.mjs, apps/resident-android-mobile/tests/navigation-regressions.md
+- Files matching these patterns are excluded: **/.env*, **/node_modules/**, **/repomix-output.xml, **/*.mp4, **/*.png, **/*.jpg, **/repomix output files/**, **/tmp/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    tests/
+      hidden-work-ownership.mjs
+      map-state-bridge.mjs
+      navigation-regressions.md
+      navigation-regressions.mjs
+      refresh-ownership.mjs
+      reports-announcements-ui.mjs
+      request-tracking-navigation.mjs
+      resident-shell-lifecycle.mjs
+    package.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/tests/hidden-work-ownership.mjs">
+// Actual card, foreground/clock stores, route hooks and clearance provider. Only
+// navigation/native events, transport and the solver boundary are controlled here.
+⋮----
+plugins: [
+⋮----
+window.setInterval = (fn, ms, ...args) =>
+window.clearInterval = id =>
+window.appState = state =>
+⋮----
+const patch = async values =>
+const counts = () => page.evaluate(() => (
+⋮----
+// A completed route for the same inputs may stay visible until a failed recomputation settles.
+</file>
+
+<file path="apps/resident-android-mobile/tests/map-state-bridge.mjs">
+// Real MapView and React effects; synthetic native transport. Leaflet interactions
+// are covered separately by maps-presentation-ui and drrm-centers-ui.
+⋮----
+await build(
+⋮----
+const render = (p, remount = false) => page.evaluate((
+const message = type => page.evaluate(type => window.fixture.native.onMessage(
+const counts = ()
+⋮----
+// Each field that affects a drawn marker must invalidate the retained payload.
+⋮----
+// Stateful payload changes still cross the bridge, including removals/empty data.
+⋮----
+// Commands must remain repeatable, even when all state payloads are equal.
+⋮----
+// Tile failure does not make a ready offline map stop accepting updates.
+⋮----
+// A retained WebView must replay the current owner, including a signed-out
+// empty scope, after a document failure. Old private geometry must not return.
+</file>
+
+<file path="apps/resident-android-mobile/tests/navigation-regressions.md">
+# Resident navigation regression gate
+
+Run from the repository root:
+
+```powershell
+npm run test:navigation --workspace=@barangayan/mobile
+```
+
+The command runs the app unit suite, shared routing/client/SLA tests, and thirteen focused hook, component, map and installed-Router fixtures. Every suite has its own log and artifact directory; `results.json` records outcomes. A failed suite makes the command fail after independent suites finish. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` for an installed supported browser; Windows uses existing Brave when available, otherwise Playwright's installed Chromium. `TEST_ARTIFACTS_DIR` selects the output folder; the default is a new temporary directory. No package download or remote test-data creation is performed.
+
+Coverage includes same-owner refresh reuse; obsolete read cancellation; account replacement/sign-out with pending private reads and late subscription callbacks; loaded/empty/error/retry presentation; ten minutes of virtual visible/hidden polling; map equivalent-state suppression and current-scope replay after reload; all thirty directed tab pairs with installed history reducers; nested Services/Health/Reports/Settings Back; rapid/prevented tab presses; theme/font, keyboard, Search draft and lifecycle cleanup. Browser/native/transport boundaries are controlled. The virtual clock is not a native memory or performance benchmark. Authentication admission remains covered by real guarded application code and separate fixtures; reducer tests do not exercise it.
+
+Run Expo lint, TypeScript and an Android production export separately. Keep baseline and candidate output, source hashes, dependency lock, build configuration and installed APK identities. Compare diagnostics against the baseline; never waive a new failure because an unrelated existing failure remains.
+
+Native acceptance remains the gate in plan sections 8–9:
+
+1. Use paired baseline/candidate release APKs from identified working sources on the same physical reference Android device and authorized account datasets. Record OS, refresh rate, thermal/network conditions and data cardinalities. Warm all six tabs; separate the no-Maps, visited-Maps and active-DRRM-route cases.
+2. First run ten circuits and a separate rapid-tap check. Final normal-network acceptance requires at least thirty warm samples for each of thirty directed pairs across at least three runs. Capture synchronized native input and first correct/usable presented frames; handler timestamps, React commits and runner waits cannot substitute. Report each pair's median/p95/max and inspect every ≥1,000ms outlier. Acknowledgement p95≤100ms; correct destination median≤150ms/p95≤300ms; cached content p95≤300ms; no app-caused ≥100ms presentation gaps.
+3. Verify selected state/header/content; nested Back; retained segment/scroll/map selection; successful authorized mutations and live badges/notifications; account switch/sign-out; slow/offline/error/reconnect; current boundary/location/closures/avoidance/route and controls; permission changes; background/foreground; Search/keyboard, reduced motion, appearance and accessibility focus. Record actual runtime/console diagnostics. Data-changing operations require the owner's authorization and representative accounts; fixtures are supporting evidence only.
+4. During a real ten-minute warm loop, record requests, channels, timers, mounts, WebView loads/messages and retained memory after warm-up/collection. Require bounded ownership, zero tab-only redundant full marker/boundary sends, and no continuing retained-memory growth within the measured device budget.
+5. Keep adverse-network and rapid-input results separate. Mark missing physical/release/frame/resource evidence pending; a development emulator run or a JavaScript export cannot close those criteria.
+</file>
+
+<file path="apps/resident-android-mobile/tests/navigation-regressions.mjs">
+
+</file>
+
+<file path="apps/resident-android-mobile/tests/refresh-ownership.mjs">
+// Real providers/hooks and shared registration schema; deferred transport and
+// native lifecycle are controlled boundaries, not native performance evidence.
+⋮----
+plugins: [
+⋮----
+const profileRow = id => (
+const waitRead = async (table, filter, value) =>
+const reply = (index, data, error = null) => page.evaluate((
+const settleHealth = () => page.evaluate(() =>
+⋮----
+// Sign out while both private owners are still reading. Retired subscription
+// callbacks can arrive after cleanup, and transport may ignore AbortSignal.
+</file>
+
+<file path="apps/resident-android-mobile/tests/reports-announcements-ui.mjs">
+// Real components, data hooks and unread provider; synthetic transport/native adapters only.
+// This fixture does not qualify Android map, URI permissions, native gestures or frame timing.
+⋮----
+function source(p)
+⋮----
+await build(
+⋮----
+async function render(values,remount=true)
+⋮----
+// Keyboard activation avoids a pointer gesture while the virtual list scrolls.
+// Wait for the real cursor read before asserting the offscreen page's rendering.
+⋮----
+// The second page is outside the current FlatList window until the resident scrolls.
+</file>
+
+<file path="apps/resident-android-mobile/tests/request-tracking-navigation.mjs">
+// Use the reducers shipped with this app's Expo Router, including tab history and
+// unhandled Back bubbling. This checks navigation state, without a native renderer.
+⋮----
+const options = routeNames => (
+const stackOptions = tab => options([...fs.readFileSync(path.join(appRoutes, tab, '_layout.tsx'), 'utf8')
+.matchAll(/<Stack\.Screen\s+name="([^"]+)"/g)].map(match
+⋮----
+function navigationFixture(tabNames = ['home', 'services'])
+⋮----
+const focused = ()
+const setStack = (tab, child) =>
+⋮----
+function selectTab(tab)
+function openScreen(tab, routeName, params)
+⋮----
+// First navigation into an unvisited tab initializes its stack at the target.
+⋮----
+function open(href)
+function back()
+return
+⋮----
+export function verifyTabNavigation()
+⋮----
+// Called by the Home UI test with the URL captured from the actual summary CTA.
+export function verifyRequestTrackingNavigation(homeHref)
+⋮----
+nav.back(); // Header Back and Android Back dispatch the same GO_BACK action.
+⋮----
+// Prove the fixture reproduces the reported stale state with the old Home URL.
+</file>
+
+<file path="apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs">
+// Real shell/header/inset components; navigation, account and native animation are
+// local fixtures. This verifies React lifecycle, not native routing or motion timing.
+⋮----
+plugins: [
+</file>
+
+<file path="apps/resident-android-mobile/package.json">
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+</file>
+
+</files>

@@ -1,0 +1,84 @@
+{
+  "drift": [
+    "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+    "apps/resident-android-mobile/src/hooks/use-font-preference.tsx",
+    "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+    "apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx",
+    "apps/resident-android-mobile/src/hooks/use-profile.ts",
+    "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+    "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+    "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "apps/resident-android-mobile/tests/settings-profile-ui.mjs"
+  ],
+  "added": [
+    "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+    "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+    "apps/resident-android-mobile/src/hooks/use-refresh-resource.ts",
+    "apps/resident-android-mobile/tests/refresh-ownership.mjs"
+  ],
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "sha256": "b3497ae844de18ff4632fd1e4d3c9dfc17a41e5ffb201e42b4a92dc1763bf6c9"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "d13e8d778afa2d7b6f9fc1508465c5bbcd35f3e4659e3b635e47bf6ed9b8592a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "sha256": "1d7df0efdca645b86bf4362dae6003a02c1edfad9f36c407082f66de11629d93"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-font-preference.tsx",
+      "sha256": "5ba6b66155efc50dc63c083cfea3c21fb010e02b27ad5375083288ec7719190e"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "sha256": "2e480b182d48c9b2f167c305af6fd417a174cb8372585af3875e500263a4f2ac"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx",
+      "sha256": "1d00f4c76cb1d403a9fdcb783b9ecb1bdeb158c916248c97d9467d6fcbafe82f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "sha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "sha256": "f40ae534024505c0b0b8b03a6f23cd61a2a7b694e9473e064066bf1c1048993d"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+      "sha256": "3429746530ff3b3a9d958d6588a7bfaab81ceb48f9d76845577f60d6cc3283c8"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "sha256": "1b461af13a03801a3f4333ec06a688a2035033a2beb37009c376ab0449591be9"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "sha256": "6d89ecbd258e44c49bc77c981d38c306f970362b4f0d4d30b79144a399d3fa9a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "sha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+      "sha256": "91549507f06dc0df82c2f33165e23f11f7bf2952354685bf1b7560d873e14313"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-refresh-resource.ts",
+      "sha256": "ff078aba0716f7850c54819fe2a1fc072bee6ce142475b98367b431886ac800e"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "sha256": "ba6ff108d8253c3fd027af73305fd0d6d3bac80312b8a4c01cc4f976b50c167c"
+    }
+  ],
+  "patchSha256": "97e5ebe7094981dbea0aa9e5e25cbef83e880b1b37469082f11e644ae4782bc3"
+}

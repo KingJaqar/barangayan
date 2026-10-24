@@ -191,7 +191,7 @@ export function RequestPaymentJourney({
           pickupOnly={pickupOnly}
           onMethodChosen={(method) => setStep(method)}
         />
-        {request.billable_pages ? <p className="mt-4 text-sm">{request.billable_pages} pages × ₱10.00 per page</p> : null}
+        {request.billable_pages ? <p className="mt-4 text-sm">{request.billable_pages} pages · {request.fee_basis}</p> : null}
         {track}
       </>
     );

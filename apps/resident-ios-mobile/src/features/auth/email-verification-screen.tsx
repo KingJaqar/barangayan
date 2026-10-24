@@ -27,12 +27,12 @@ function EmailVerification() {
       }} />}
     </Card></Screen>;
   }
-  return <Form key={`${owner}:${profile.email ?? ''}`} owner={owner} email={session.user.email ?? ''} profileEmail={profile.email ?? ''}
-    verified={profile.email_verification_status === 'verified'} onVerified={() => { void refreshProfile().catch(() => undefined); }} />;
+  return <Form key={`${owner}:${session.user.email ?? ''}:${profile.email ?? ''}`} owner={owner} email={session.user.email ?? ''} profileEmail={profile.email ?? ''}
+    verified={profile.email_verification_status === 'verified'} onVerified={refreshProfile} />;
 }
 
 type Tone = 'primary' | 'danger';
-function Form({ owner, email, profileEmail, verified, onVerified }: { owner: string; email: string; profileEmail: string; verified: boolean; onVerified: () => void }) {
+function Form({ owner, email, profileEmail, verified: savedVerified, onVerified }: { owner: string; email: string; profileEmail: string; verified: boolean; onVerified: () => Promise<void> }) {
   const { client } = useResident();
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
@@ -40,16 +40,30 @@ function Form({ owner, email, profileEmail, verified, onVerified }: { owner: str
   const [busy, setBusy] = useState(false);
   const [deadline, setDeadline] = useState(0);
   const [now, setNow] = useState(() => Date.now());
+  const [accepted, setAccepted] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const active = useRef(true);
   const running = useRef(false);
   const remaining = Math.max(0, Math.ceil((deadline - now) / 1000));
   // The profile address must match the sign-in address the code is sent to.
   const matches = !!email && email.trim().toLowerCase() === profileEmail.trim().toLowerCase();
+  const verified = matches && (savedVerified || accepted);
   useEffect(() => {
     active.current = true;
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => { active.current = false; clearInterval(timer); };
   }, []);
+
+  async function reloadStatus() {
+    try { await onVerified(); if (active.current) {
+      setRefreshFailed(false);
+      setMessage({ text: 'Your email is verified.', tone: 'primary' });
+    } }
+    catch { if (active.current) {
+      setRefreshFailed(true);
+      setMessage({ text: 'The code was accepted, but your saved status could not be refreshed. Check again when connected.', tone: 'danger' });
+    } }
+  }
 
   async function submit(action: 'send' | 'verify') {
     if (running.current || !matches || verified || (action === 'send' && remaining > 0)) return;
@@ -59,7 +73,7 @@ function Form({ owner, email, profileEmail, verified, onVerified }: { owner: str
     try {
       const state = await residentEmailVerification(client, owner, action, code);
       if (!active.current) return;
-      if (state === 'verified') { setCode(''); setMessage({ text: 'Your email is verified.', tone: 'primary' }); onVerified(); }
+      if (state === 'verified') { setCode(''); setAccepted(true); setMessage({ text: 'Your email is verified.', tone: 'primary' }); await reloadStatus(); }
       else { setPending(true); setMessage({ text: 'A six-digit code was sent to your sign-in email.', tone: 'primary' }); }
     } catch (failure) {
       if (active.current) setMessage({ text: failure instanceof Error ? failure.message : 'Unable to verify your email. Please try again.', tone: 'danger' });
@@ -80,6 +94,7 @@ function Form({ owner, email, profileEmail, verified, onVerified }: { owner: str
     </Card>
     {!matches && <Notice message="Save your sign-in email in your profile before verifying it." />}
     {message && <Notice tone={message.tone} message={message.text} />}
+    {refreshFailed && <Action label="Check saved verification status" secondary disabled={busy} onPress={() => { void reloadStatus(); }} />}
     {verified && <Body tone="secondary" role="footnote">If you change your email in your profile, you will need to verify the new address.</Body>}
     {matches && !verified && <Card>
       {pending && <>

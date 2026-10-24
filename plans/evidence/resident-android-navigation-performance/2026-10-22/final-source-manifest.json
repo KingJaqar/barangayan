@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-10-22T14:12:37.035Z",
+  "owned": [
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx"
+  ],
+  "added": [
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.test.ts",
+    "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx"
+  ],
+  "changedBaselineFiles": [
+    "plans/Resident_Android_Bottom_Tab_Navigation_Performance_Investigation_and_Fix_Plan_2026_10_22.md",
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/components/center-detail-card.tsx",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+  ],
+  "unownedDrift": [
+    "apps/resident-android-mobile/src/components/center-detail-card.tsx",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+  ],
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "sha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "sha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+      "sha256": "5943eddb56bc0524201280f434e5cd0b186a2e1913cc8ddecf19e9c2bae12a43"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.test.ts",
+      "sha256": "6307518dc9c2fb17bf6abbe50e2019048d9adbaeebad0899b2537e6c78a24022"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx",
+      "sha256": "00870babc6ac1215e5121dae560ada743b602a9c509c53dab8661a881bf3ab5f"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "result": {
+    "signedIn": true,
+    "status": 200,
+    "rows": 0,
+    "error": null
+  },
+  "queryIdentity": "Unchanged pre-edit projection/filter/order; bounded read only"
+}

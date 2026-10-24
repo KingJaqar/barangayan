@@ -21,6 +21,23 @@ import type { MedicalDrive } from '@/hooks/use-medical-drives';
 import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
 import { useTheme } from '@/hooks/use-theme';
 
+/** Presentation tones follow the current palette, including custom accents and dark mode. */
+export function healthTypeColor(type: string, resident: ReturnType<typeof useTheme>['resident']) {
+  switch (type) {
+    case 'vaccination':
+    case 'emergency_kit': return resident.info;
+    case 'maternal_care':
+    case 'optical': return resident.rose;
+    case 'blood_drive':
+    case 'minor_surgical': return resident.danger;
+    case 'dental':
+    case 'screening': return resident.warning;
+    case 'medicine':
+    case 'consultation': return resident.accentText;
+    default: return resident.muted;
+  }
+}
+
 export function healthDate(iso: string, full = false) {
   const [year, month, day] = iso.split('-').map(Number);
   return new Date(year, month - 1, day, 12).toLocaleDateString(
@@ -93,7 +110,7 @@ export function HealthDriveSummary({
           {drive.title}
         </ThemedText>
         <View style={[styles.category, { backgroundColor: resident.surface }]}>
-          <View style={[styles.dot, { backgroundColor: category.color }]} />
+          <View style={[styles.dot, { backgroundColor: healthTypeColor(drive.type, resident) }]} />
           <ThemedText style={styles.categoryText}>{category.label}</ThemedText>
         </View>
       </View>
@@ -245,7 +262,7 @@ export function HealthSheet({
 
 const styles = StyleSheet.create({
   panel: { borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
-  drive: { padding: 16, gap: 6 },
+  drive: { padding: 12, gap: 6 },
   titleRow: { flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 },
   driveTitle: { flexGrow: 1, flexBasis: 160, fontSize: 15, lineHeight: 20, fontWeight: '700' },
   category: {

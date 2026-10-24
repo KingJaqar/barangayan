@@ -1,0 +1,89 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/health/index.tsx
+- Files matching these patterns are excluded: **/node_modules/**, .expo/**, ios/**, android/**, dist/**, **/*.png, **/*.svg, **/.env*, **/repomix-output*, repomix output files/**, tmp/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            index.tsx</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/health/index.tsx">import { DRIVE_TYPES, DRIVE_TYPE_CONFIG } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { FilterChips } from &apos;@/components/filter-chips&apos;;
+import {
+  HealthDriveSummary,
+  HealthFact,
+  HealthPanel,
+  HealthSheet,
+  HealthStatus,
+  healthDate,
+  healthTime,
+  healthTypeColor,
+} from &apos;@/components/health/health-presentation&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import {
+  type DriveRegistration,
+  type DriveType,
+  type MedicalDrive,
+  useMedicalDrives,
+} from &apos;@/hooks/use-medical-drives&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+type StatusFilter = (typeof STATUSES)[number];
+type HealthSegment = &apos;active-drives&apos; | &apos;my-registrations&apos;;
+type Month = { year: number; month: number };
+const pad2 = (n: number)
+function parseLocalDate(iso: string)
+function localToday()
+⋮----
+onPress=
+⋮----
+onSelect(year, i + 1);
+onClose();
+⋮----
+// One native opacity animation for the grid; no per-day work or animated layout.
+⋮----
+accessibilityLabel=
+⋮----
+// Keep the last content through exit while reading current server status on refresh.
+⋮----
+setLastDetail(reg);
+setDetailId(reg.id);
+⋮----
+
+⋮----
+const handleMonthChange = (delta: 1 | -1)
+const handleDateSelect = (date: string) =&gt;
+const handleRegister = (drive: MedicalDrive) =&gt;
+⋮----
+onRegister=</file></files></repomix>

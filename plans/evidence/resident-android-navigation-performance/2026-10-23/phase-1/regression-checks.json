@@ -1,0 +1,62 @@
+[
+  {
+    "name": "home",
+    "code": 1,
+    "durationMs": 1306,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/home-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-home.log"
+  },
+  {
+    "name": "settings",
+    "code": 1,
+    "durationMs": 1389,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/settings-profile-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-settings.log"
+  },
+  {
+    "name": "shell",
+    "code": 0,
+    "durationMs": 7219,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-shell.log"
+  },
+  {
+    "name": "documents",
+    "code": 0,
+    "durationMs": 8932,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/document-forms-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-documents.log"
+  },
+  {
+    "name": "tracking",
+    "code": 0,
+    "durationMs": 11479,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/tracking-payment-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-tracking.log"
+  },
+  {
+    "name": "maps",
+    "code": 0,
+    "durationMs": 27196,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\regression-maps.log"
+  }
+]

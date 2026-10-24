@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-22T14:52:57.339Z",
+  "currentSources": [
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08",
+      "stillMatchesRuntimeIdentity": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+      "sha256": "5943eddb56bc0524201280f434e5cd0b186a2e1913cc8ddecf19e9c2bae12a43",
+      "stillMatchesRuntimeIdentity": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx",
+      "sha256": "00870babc6ac1215e5121dae560ada743b602a9c509c53dab8661a881bf3ab5f",
+      "stillMatchesRuntimeIdentity": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "sha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371",
+      "stillMatchesRuntimeIdentity": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "sha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4",
+      "stillMatchesRuntimeIdentity": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b",
+      "stillMatchesRuntimeIdentity": true
+    }
+  ],
+  "ownedFiles": [
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.test.ts",
+    "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx"
+  ],
+  "ownedAppSourcesChangedDuringContinuation": [],
+  "allDrift": [
+    "plans/Resident_Android_Bottom_Tab_Navigation_Performance_Investigation_and_Fix_Plan_2026_10_22.md",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+  ],
+  "diffCheckExitCode": 0,
+  "review": "Original owned patch previously reviewed in full; unchanged six diagnostic files verified by SHA; current plan/evidence reviewed. No new application diff in continuation. Concurrent panel/test source preserved."
+}

@@ -15,12 +15,13 @@ const options = routeNames => ({ routeNames, routeParamList: {}, routeGetIdList:
 const stackOptions = tab => options([...fs.readFileSync(path.join(appRoutes, tab, '_layout.tsx'), 'utf8')
   .matchAll(/<Stack\.Screen\s+name="([^"]+)"/g)].map(match => match[1]));
 
-function navigationFixture() {
+function navigationFixture(tabNames = ['home', 'services']) {
   const tabs = TabRouter({ initialRouteName: 'home', backBehavior: 'history' });
-  const tabOptions = options(['home', 'services']);
+  const tabOptions = options(tabNames);
   let state = tabs.getInitialState(tabOptions);
   const stack = StackRouter({});
-  const stacks = { home: stackOptions('home'), services: stackOptions('services') };
+  const stacks = Object.fromEntries(tabNames.filter(tab => fs.existsSync(path.join(appRoutes, tab, '_layout.tsx')))
+    .map(tab => [tab, stackOptions(tab)]));
   const focused = () => state.routes[state.index];
   const setStack = (tab, child) => {
     state = { ...state, routes: state.routes.map(route => route.name === tab ? { ...route, state: child } : route) };
@@ -29,28 +30,65 @@ function navigationFixture() {
 
   function selectTab(tab) {
     state = tabs.getStateForAction(state, CommonActions.navigate(tab), tabOptions);
-    if (!focused().state) setStack(tab, stack.getInitialState(stacks[tab]));
+    if (!focused().state && stacks[tab]) setStack(tab, stack.getInitialState(stacks[tab]));
   }
-  function open(href) {
-    const [, tab, , requestId] = href.split('/');
-    const routeName = 'requests/[requestId]';
-    assert.ok(fs.existsSync(path.join(appRoutes, tab, `${routeName}.tsx`)), 'Tracking URL must resolve to an app route');
-    assert.ok(stacks[tab].routeNames.includes(routeName), 'Tracking screen must be registered in its owning stack');
+  function openScreen(tab, routeName, params) {
+    assert.ok(fs.existsSync(path.join(appRoutes, tab, `${routeName}.tsx`)), 'Nested screen must resolve to an app route');
+    assert.ok(stacks[tab].routeNames.includes(routeName), 'Nested screen must be registered in its owning stack');
     // First navigation into an unvisited tab initializes its stack at the target.
     const child = state.routes.find(route => route.name === tab).state;
     const next = child
-      ? stack.getStateForAction(child, StackActions.push(routeName, { requestId }), stacks[tab])
-      : stack.getRehydratedState({ routes: [{ name: routeName, params: { requestId } }] }, stacks[tab]);
+      ? stack.getStateForAction(child, StackActions.push(routeName, params), stacks[tab])
+      : stack.getRehydratedState({ routes: [{ name: routeName, params }] }, stacks[tab]);
     state = tabs.getStateForAction(state, CommonActions.navigate(tab), tabOptions);
     setStack(tab, next);
   }
+  function open(href) {
+    const [, tab, , requestId] = href.split('/');
+    openScreen(tab, 'requests/[requestId]', { requestId });
+  }
   function back() {
     const tab = focused().name;
-    const next = stack.getStateForAction(focused().state, CommonActions.goBack(), stacks[tab]);
+    const next = focused().state && stack.getStateForAction(focused().state, CommonActions.goBack(), stacks[tab]);
     if (next) setStack(tab, next);
     else state = tabs.getStateForAction(state, CommonActions.goBack(), tabOptions) ?? state;
   }
-  return { open, back, selectTab, focused, state: () => state };
+  return { open, openScreen, back, selectTab, focused, state: () => state };
+}
+
+function verifyTabNavigation() {
+  const source = fs.readFileSync(path.resolve(import.meta.dirname, '../src/components/app-tabs.tsx'), 'utf8');
+  const primary = [...source.slice(source.indexOf('const TABS ='), source.indexOf('] as const;'))
+    .matchAll(/name: '([^']+)'/g)].map(match => match[1]);
+  assert.equal(primary.length, 6);
+  assert.match(source, /backBehavior="history"/);
+  const nav = navigationFixture([...primary, 'settings']);
+  let pairs = 0;
+  for (const from of primary) for (const to of primary) {
+    if (from === to) continue;
+    nav.selectTab(from);
+    const retained = nav.focused().state;
+    nav.selectTab(to);
+    assert.equal(nav.focused().name, to);
+    assert.equal(nav.state().routes.find(route => route.name === from).state, retained);
+    nav.back();
+    assert.equal(nav.focused().name, from, 'Root Back returns to the preceding tab');
+    pairs++;
+  }
+  for (const [tab, screen] of [['services', 'requests/[requestId]'], ['health', 'register'], ['reports', '[incidentId]'], ['settings', 'profile']]) {
+    nav.selectTab(tab);
+    const root = nav.focused().state;
+    nav.openScreen(tab, screen, {});
+    const nested = nav.focused().state;
+    nav.selectTab('home');
+    nav.selectTab(tab);
+    assert.equal(nav.focused().state, nested, 'Nested screen survives a normal tab change');
+    nav.back();
+    assert.deepEqual(nav.focused().state.routes, root.routes, 'Nested Back pops inside its own stack');
+    nav.back();
+    assert.equal(nav.focused().name, 'home', 'Next Back bubbles to tab history');
+  }
+  return [`${pairs} directed pairs preserve retained stacks and root Back history`, 'Services, Health, Reports and Settings nested screens retain and pop independently (installed reducers; native renderer and auth guards not simulated)'];
 }
 
 // Called by the Home UI test with the URL captured from the actual summary CTA.
@@ -104,5 +142,5 @@ export function verifyRequestTrackingNavigation(homeHref) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  console.log(JSON.stringify({ passed: verifyRequestTrackingNavigation('/home/requests/request-0') }));
+  console.log(JSON.stringify({ passed: [...verifyRequestTrackingNavigation('/home/requests/request-0'), ...verifyTabNavigation()] }));
 }

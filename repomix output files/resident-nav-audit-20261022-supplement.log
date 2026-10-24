@@ -1,0 +1,123 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{08f56325-bdce-4b3e-8e4d-98b3235f2613}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Processing files...
+
+[K[1A
+[K[?25l⠙ Running security check... (12/12) packages/shared/src/lib/id-evidence.ts
+
+[K[1A
+[K[?25l⠹ Running security check... (12/12) packages/shared/src/lib/id-evidence.ts
+
+[K[1A
+[K[?25l⠸ Processing file... (1/12) apps/resident-android-mobile/src/components/services/documents-list.tsx
+
+[K[1A
+[K[?25l⠼ Processing file... (7/12) apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts
+
+[K[1A
+[K[?25l⠴ Processing file... (12/12) packages/shared/src/lib/id-evidence.ts
+
+[K[1A
+[K[?25l⠦ Processing file... (12/12) packages/shared/src/lib/id-evidence.ts
+
+[K[1A
+[K[?25l⠧ Processing file... (12/12) packages/shared/src/lib/id-evidence.ts
+
+[K[1A
+[K[?25l⠇ Writing output file...
+
+[K[1A
+[K[?25l⠏ Calculating metrics... (12/12) apps/resident-android-mobile/src/components/map-view.tsx
+
+[K[1A
+[K[?25l✔ Packing completed successfully!
+[?25h
+📈 Top 5 Files by Token Count:
+──────────────────────────────
+1.  packages/shared/src/lib/evacuation-routing.ts (7,608 tokens, 31,799 chars, 41.3%)
+2.  apps/resident-android-mobile/src/lib/offline-routing.ts (3,363 tokens, 15,271 chars, 18.2%)
+3.  apps/resident-android-mobile/src/components/map-view.tsx (2,616 tokens, 11,064 chars, 14.2%)
+4.  apps/resident-android-mobile/src/components/services/requests-list.tsx (782 tokens, 3,413 chars, 4.2%)
+5.  apps/resident-android-mobile/src/components/services/documents-list.tsx (380 tokens, 1,690 chars, 2.1%)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+
+📊 Pack Summary:
+────────────────
+  Total Files: 12 files
+ Total Tokens: 18,435 tokens
+  Total Chars: 77,700 chars
+       Output: repomix output files\resident-nav-audit-20261022-supplement.xml
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com

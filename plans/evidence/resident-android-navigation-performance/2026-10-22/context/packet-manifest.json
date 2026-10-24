@@ -1,0 +1,123 @@
+{
+  "packet": "repomix output files/resident-nav-phase0-20261022.xml",
+  "sha256": "e4282bf2378ccc77b61c6e77b5c249207f17a61acec20b9a01660f5169c1b5a9",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+      "chars": 5483,
+      "sha256": "5b69580e60501b90726c748884d63c84386a28b03475ad701f33b95f33b4d5d0",
+      "baseline": "5b69580e60501b90726c748884d63c84386a28b03475ad701f33b95f33b4d5d0"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "chars": 189,
+      "sha256": "a6ab9b7989ad79069ef05d2abfe53908e74d8c78ed5df0ed7576ddb3f2d275da",
+      "baseline": "a6ab9b7989ad79069ef05d2abfe53908e74d8c78ed5df0ed7576ddb3f2d275da"
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 12,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "baseline": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "chars": 714,
+      "sha256": "2b6e5f048316ee8c1f12913efef7f1d0d8cf031fcfb21c789ad9e14bc2bf309c",
+      "baseline": "2b6e5f048316ee8c1f12913efef7f1d0d8cf031fcfb21c789ad9e14bc2bf309c"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "chars": 270,
+      "sha256": "4d6ac69e07d82115223386ae0c05fd284f7abf764617aebaa02c7e9497bde5b9",
+      "baseline": "4d6ac69e07d82115223386ae0c05fd284f7abf764617aebaa02c7e9497bde5b9"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "chars": 615,
+      "sha256": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+      "baseline": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "chars": 1393,
+      "sha256": "875f72a9dba7b97558ce87eb38540677d8614161bdab1a870f825bf716ad148e",
+      "baseline": "875f72a9dba7b97558ce87eb38540677d8614161bdab1a870f825bf716ad148e"
+    },
+    {
+      "path": "apps/resident-android-mobile/metro.config.js",
+      "chars": 1346,
+      "sha256": "a115031592d874d6f6cab841343647c74720debe71e9071f3d3aa49c8cfd3d68",
+      "baseline": "a115031592d874d6f6cab841343647c74720debe71e9071f3d3aa49c8cfd3d68"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "chars": 5136,
+      "sha256": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6",
+      "baseline": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "chars": 1488,
+      "sha256": "850d5dbecf59855622c87d85f60fb82d27c3e3a6b5c0f64fe9db95a6ddc5992e",
+      "baseline": "850d5dbecf59855622c87d85f60fb82d27c3e3a6b5c0f64fe9db95a6ddc5992e"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2059,
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b",
+      "baseline": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 2,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "baseline": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "chars": 1296,
+      "sha256": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3",
+      "baseline": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "chars": 3415,
+      "sha256": "76685e42299058852e567b4388451fa2e18fed56f94c19cd9f77d909d05078a8",
+      "baseline": "76685e42299058852e567b4388451fa2e18fed56f94c19cd9f77d909d05078a8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "chars": 11066,
+      "sha256": "ef66c60b7bf0e102de30cb29c00ace58288c94dd9762eec640c6a8f0ede2a125",
+      "baseline": "ef66c60b7bf0e102de30cb29c00ace58288c94dd9762eec640c6a8f0ede2a125"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "reader-01.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-02.txt",
+      "start": 11000,
+      "end": 22000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-03.txt",
+      "start": 22000,
+      "end": 33000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-04.txt",
+      "start": 33000,
+      "end": 36249,
+      "chars": 3249
+    }
+  ]
+}

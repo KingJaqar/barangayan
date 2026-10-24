@@ -1,0 +1,83 @@
+{
+  "selected": [
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+    "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+    "apps/resident-android-mobile/tests/map-state-bridge.mjs",
+    "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+    "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+    "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+    "apps/resident-android-mobile/tests/navigation-regressions.mjs",
+    "apps/resident-android-mobile/tests/navigation-regressions.md"
+  ],
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-android-mobile/package.json,apps/resident-android-mobile/tests/refresh-ownership.mjs,apps/resident-android-mobile/tests/hidden-work-ownership.mjs,apps/resident-android-mobile/tests/map-state-bridge.mjs,apps/resident-android-mobile/tests/request-tracking-navigation.mjs,apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs,apps/resident-android-mobile/tests/reports-announcements-ui.mjs,apps/resident-android-mobile/tests/navigation-regressions.mjs,apps/resident-android-mobile/tests/navigation-regressions.md",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml,**/*.mp4,**/*.png,**/*.jpg,**/repomix output files/**,**/tmp/**",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase5-20261023-final.xml"
+  ],
+  "packet": "repomix output files/resident-nav-phase5-20261023-final.xml",
+  "sha256": "a61903ea4582118de328b5a1febd74d286571919b681f0de144ce0ddf3cef8ea",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+      "chars": 469,
+      "sha256": "d7a6cd3f1ec2d6c2dba62b35660331e49b18c087b3f293b6160fa02db1f885b5"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/map-state-bridge.mjs",
+      "chars": 832,
+      "sha256": "415d3d77877918120303a4f0189a775ea5121420014c88549ebaffa06332fc2a"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/navigation-regressions.md",
+      "chars": 3811,
+      "sha256": "ebf68fc8c3c92106ac201d98c55c73ef646a761dae764feaaea8ebb2829f8b8e"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/navigation-regressions.mjs",
+      "chars": 2,
+      "sha256": "20ba1f7561c4d71f2e361eb85119ec14052e251128d82981e9adfcc7bd36db24"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "chars": 528,
+      "sha256": "f0e48e950a2cb88c2214c3e31099d97c3ddd76f90a426173f7efe59a0ca34136"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "chars": 544,
+      "sha256": "c101b4dbcd3e5ada731aa37c63d3634821afb1e0c20c471ea51894ac720e906f"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+      "chars": 1061,
+      "sha256": "e3ac292893e8faf1090e34f9ef7dd854afcd54d9ab3a93e0cefd4fef4db05397"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "chars": 189,
+      "sha256": "218a7704d04bd9834cb11fbf3cd9e4c777b5f4a222f6282428a7ad9c7a960161"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2123,
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "final-reader-1.txt",
+      "start": 0,
+      "end": 10762,
+      "chars": 10762
+    }
+  ]
+}

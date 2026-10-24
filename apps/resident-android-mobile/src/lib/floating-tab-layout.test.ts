@@ -1,14 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useFloatingTabInset as readFloatingTabInset } from '../hooks/use-floating-tab-inset';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { floatingTabInset } from './floating-tab-inset';
 
-const screen = vi.hoisted(() => ({ pathname: '/home', bottom: 0, barHeight: 72, keyboardVisible: false, mapNavHidden: false }));
-
-vi.mock('../hooks/use-floating-tab-layout', () => ({ useFloatingTabLayout: () => screen }));
-
-vi.mock('expo-router', () => ({ usePathname: () => screen.pathname }));
-vi.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: () => ({ top: 24, right: 0, bottom: screen.bottom, left: 0 }),
-}));
+const screen = { pathname: '/home', bottom: 0, barHeight: 72, keyboardVisible: false, mapNavHidden: false };
+const readFloatingTabInset = (ignoreMapHide = false) => floatingTabInset(screen, ignoreMapHide);
 
 describe('floating tab screen clearance', () => {
   beforeEach(() => {
@@ -19,15 +13,15 @@ describe('floating tab screen clearance', () => {
     screen.mapNavHidden = false;
   });
 
-  it('removes temporary map clearance only on the two DRRM aliases and retains the measured reveal target', () => {
+  it('removes temporary map clearance on Maps and the DRRM aliases and retains the measured reveal target', () => {
     const visible = readFloatingTabInset();
     screen.mapNavHidden = true;
-    for (const pathname of ['/drrm', '/home/emergency-info']) {
+    for (const pathname of ['/maps', '/drrm', '/home/emergency-info']) {
       screen.pathname = pathname;
       expect(readFloatingTabInset()).toBe(0);
       expect(readFloatingTabInset(true)).toBe(visible);
     }
-    screen.pathname = '/maps';
+    screen.pathname = '/home';
     expect(readFloatingTabInset()).toBe(visible);
     screen.pathname = '/emergency-centers';
     expect(readFloatingTabInset(true)).toBe(0);

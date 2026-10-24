@@ -432,7 +432,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           {['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind) ? (
             <>
               <ThemedText type="small" style={styles.body} themeColor="textSecondary">
-                HOA certification may support or establish residency. The document fee is ₱100.00.
+                HOA certification may support or establish residency. Document fee: {servicePriceLabel(doc)}.
               </ThemedText>
               {upload('hoa', 'HOA certification', catalog.requirementRules.hoaRequired)}
               <Toggle
@@ -460,7 +460,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
               <Field label="Number of copies" value={copies} onChange={setCopies} numeric required error={fieldErrors.copies} onLayout={(event) => locate('copies', event)} disabled={submitting} />
               <Field label="Total pages across all copies" value={totalPages} onChange={setTotalPages} numeric required error={fieldErrors.totalPages} onLayout={(event) => locate('totalPages', event)} disabled={submitting} />
               <ThemedText type="small" style={styles.body} themeColor="textSecondary">
-                Fee: ₱10.00 × total pages across all copies.
+                Fee: {servicePriceLabel(doc)} across all copies.
               </ThemedText>
             </>
           ) : null}

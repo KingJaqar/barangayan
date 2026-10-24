@@ -5,12 +5,12 @@ import { StyleSheet, Pressable, View } from 'react-native';
 
 import { ReadAction, ReportStatusBadge, reportStyles, useReportTone } from '@/components/reports/report-presentation';
 import { ThemedText } from '@/components/themed-text';
-import type { MyIncidentRow } from '@/hooks/use-my-incidents';
+import type { MyIncidentSummary } from '@/hooks/use-my-incidents';
 import { useTheme } from '@/hooks/use-theme';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
 // Virtualized rows stay opaque; entrance animations must never hide recycled rows.
-export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
+export function IncidentCard({ incident }: { incident: MyIncidentSummary }) {
   const { resident } = useTheme();
   const { markIncidentRead, markIncidentUnread } = useUnreadCounts();
   const category = incident.incident_categories;

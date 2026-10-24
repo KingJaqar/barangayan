@@ -1,0 +1,68 @@
+{
+  "result": {
+    "signedIn": true,
+    "results": [
+      {
+        "pair": 0,
+        "variant": "full",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 220.61010199971497,
+        "serializationMs": 0.20817500026896596,
+        "serializedChars": 5057,
+        "boundaryChars": 3369
+      },
+      {
+        "pair": 0,
+        "variant": "without-boundary",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 171.6069000000134,
+        "serializationMs": 0.03092100005596876,
+        "serializedChars": 1676,
+        "boundaryChars": null
+      },
+      {
+        "pair": 1,
+        "variant": "without-boundary",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 183.72303299978375,
+        "serializationMs": 0.031291999854147434,
+        "serializedChars": 1676,
+        "boundaryChars": null
+      },
+      {
+        "pair": 1,
+        "variant": "full",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 139.6090100002475,
+        "serializationMs": 0.2246889998205006,
+        "serializedChars": 5057,
+        "boundaryChars": 3369
+      },
+      {
+        "pair": 2,
+        "variant": "full",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 151.40640700003132,
+        "serializationMs": 0.28806900000199676,
+        "serializedChars": 5057,
+        "boundaryChars": 3369
+      },
+      {
+        "pair": 2,
+        "variant": "without-boundary",
+        "status": 200,
+        "errorCode": null,
+        "requestMs": 155.50398800009862,
+        "serializationMs": 0.05421400023624301,
+        "serializedChars": 1676,
+        "boundaryChars": null
+      }
+    ]
+  },
+  "limits": "Three alternating read-only pairs on MuMu/current account; serialized character counts, not wire bytes; no production projection/cache contract changed; not a navigation speedup benchmark"
+}

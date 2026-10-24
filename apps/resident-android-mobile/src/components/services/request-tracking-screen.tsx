@@ -9,16 +9,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
 import { Card } from '@/components/card';
-import { Divider } from '@/components/divider';
 import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
 import { ActionSuccessModal } from '@/components/services/action-success-modal';
+import { TrackingReveal } from '@/components/services/tracking-reveal';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
 import { Spacing } from '@/constants/theme';
 import { useCountdown } from '@/hooks/use-countdown';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
@@ -76,6 +77,7 @@ export default function RequestTrackingScreen() {
   const router = useRouter();
   const theme = useTheme();
   const [loadError, setLoadError] = useState<string | null>(null);
+  const reducedMotion = useResidentReducedMotion(true);
   const [retry, setRetry] = useState(0);
   const [request, setRequest] = useState<ServiceRequest | null | undefined>(undefined);
   // The most recent pending QR PH payment attempt on this request, if any — drives the
@@ -330,17 +332,18 @@ export default function RequestTrackingScreen() {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
-      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <View style={[styles.root, { backgroundColor: theme.resident.surface }]}>
         <ServiceScreenHeader title="Request Tracking" />
 
         <ScrollView
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}>
+          <TrackingReveal reducedMotion={reducedMotion} style={styles.sections}>
           <View style={styles.hero}>
-            <View style={[styles.heroIcon, { backgroundColor: theme.resident.accent }]}><DocumentIcon name={getDocumentIcon(request.document_types?.name ?? 'Document Request')} size={22} color={theme.resident.onAccent} accessible={false} /></View>
+            <View style={[styles.heroIcon, { backgroundColor: theme.resident.accentSoft }]}><DocumentIcon name={getDocumentIcon(request.document_types?.name ?? 'Document Request')} size={22} color={theme.resident.accentText} accessible={false} /></View>
             <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
               <ThemedText accessibilityRole="header" style={styles.heroTitle}>{request.document_types?.name ?? 'Document Request'}</ThemedText>
-              <ThemedText style={{ fontSize: 13, lineHeight: 18, color: theme.resident.muted }}>Ref #{request.reference_number}</ThemedText>
+              <ThemedText selectable style={{ fontSize: 12, lineHeight: 18, color: theme.resident.muted }}>Ref #{request.reference_number}</ThemedText>
             </View>
           </View>
 
@@ -360,52 +363,49 @@ export default function RequestTrackingScreen() {
                       {Math.round(fraction * 100)}%
                     </ThemedText>
                   </View>
-                  <ProgressBar fraction={fraction} color={progressColor} />
+                  <ProgressBar fraction={fraction} color={progressColor} presentation="resident" />
                 </Card>
           ) : null}
 
         <View>
           <Card variant="resident" style={styles.paymentCard}>
-          <View style={styles.cardHeader}>
+          <View style={[styles.cardHeader, { borderColor: theme.resident.border }]}>
             <Ionicons name="wallet-outline" size={18} color={theme.resident.accentText} />
             <ThemedText type="small" style={styles.sectionLabel}>
               Payment
             </ThemedText>
-          </View>
-          <Divider />
-          <View style={styles.paymentRow}>
-            <View style={styles.paymentMethodCell}>
-              <Ionicons name={paymentMethodIcon} size={16} color={theme.textSecondary} />
-<ThemedText type="small" style={{ flexShrink: 1, fontWeight: '600' }}>{paymentMethodLabel}</ThemedText>
-            </View>
             <View style={[styles.paymentStatusPill, { backgroundColor: isCancelled || isRefunded ? theme.resident.dangerSoft : isPaid || noPaymentRequired ? theme.resident.accentSoft : theme.resident.surface }]}>
-              <ThemedText type="small" style={{ color: paymentStatusColor }}>
-                {paymentStatusLabel}
-              </ThemedText>
+              <ThemedText style={[styles.pillText, { color: paymentStatusColor }]}>{paymentStatusLabel}</ThemedText>
             </View>
           </View>
-          <View style={[styles.paymentAmountRow, { borderTopWidth: 1, borderColor: theme.resident.border }]}>
-            <ThemedText type="small" themeColor="textSecondary">Total Amount Due</ThemedText>
-            <ThemedText type="smallBold">
+          <View style={styles.paymentSummary}>
+            <ThemedText style={[styles.amountLabel, { color: theme.resident.muted }]}>Total Amount Due</ThemedText>
+            <ThemedText style={styles.paymentAmount}>
               {isWaived ? 'Fee waived' : totalDue === null ? requestFeeLabel(request, null) : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
             </ThemedText>
           </View>
+          <View style={styles.paymentRow}>
+            <View style={styles.paymentMethodCell}>
+              <Ionicons name={paymentMethodIcon} size={16} color={theme.textSecondary} />
+              <ThemedText style={{ flexShrink: 1, fontWeight: '600', fontSize: 13, lineHeight: 19 }}>{paymentMethodLabel}</ThemedText>
+            </View>
+          </View>
           {showPickupMessage ? (
-            <ThemedText type="small" themeColor="textSecondary">
+            <ThemedText style={[styles.pickupMessage, { color: theme.resident.muted }]}>
               Pay when collecting your document.
             </ThemedText>
           ) : null}
           {showChoosePaymentMethod || showQrPayNow || showCancelSlot ? (
             <View style={styles.buttonSlot}>
               {showChoosePaymentMethod ? (
-                <PrimaryButton presentation="resident"
+                <PrimaryButton presentation="resident" compact
                   label="Choose payment method"
                   onPress={() => router.push(`/services/payment/${requestId}`)}
                 />
               ) : null}
               {showQrPayNow ? (
                 <View key={hasActivePendingPayment ? 'continue' : 'pay-now'}>
-                  <PrimaryButton presentation="resident"
+                  <PrimaryButton presentation="resident" compact
                     // Same QR/countdown is resumed, not regenerated — see
                     // create-payment-source's resume check — so this reads as "continue"
                     // rather than "pay now" once a payment attempt is already in flight.
@@ -424,14 +424,14 @@ export default function RequestTrackingScreen() {
               {showCancelSlot ? (
                 <View key={showQrPayNow && hasActivePendingPayment ? 'cancel-payment' : 'cancel-request'}>
                   {showQrPayNow && hasActivePendingPayment ? (
-                    <PrimaryButton presentation="resident"
+                    <PrimaryButton presentation="resident" compact
                       label="Cancel Payment"
                       variant="destructive"
                       loading={cancellingPayment}
                       onPress={handleCancelPendingPayment}
                     />
                   ) : (
-                    <PrimaryButton presentation="resident"
+                    <PrimaryButton presentation="resident" compact
                       label="Cancel Request"
                       variant="destructive"
                       loading={cancellingRequest}
@@ -446,13 +446,15 @@ export default function RequestTrackingScreen() {
         </View>
 
         <ThemedView type="backgroundElement" style={[styles.timeline, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, borderWidth: 1 }]}>
-          <ThemedText type="small" style={styles.sectionLabel}>
-            Status history
-          </ThemedText>
+          <View style={styles.timelineHeading}>
+            <ThemedText accessibilityRole="header" style={styles.sectionLabel}>Status history</ThemedText>
+            {!isCancelled ? <ThemedText style={[styles.stageCount, { color: theme.resident.muted }]}>{Math.max(0, currentStepIndex + 1)} of {STEP_ORDER.length}</ThemedText> : null}
+          </View>
 
+          <View>
           {STEP_ORDER.map((step, index) => {
             const entry = history.find((h) => h.status === step);
-            const isDone = index <= currentStepIndex && !isCancelled;
+            const isDone = Boolean(entry) || (index <= currentStepIndex && !isCancelled);
             const isCurrent = step === request.status;
             const isLast = index === STEP_ORDER.length - 1;
 
@@ -462,12 +464,12 @@ export default function RequestTrackingScreen() {
                   <View
                     style={[
                       styles.stepDot,
-                      { backgroundColor: isDone ? theme.resident.accent : theme.resident.card },
+                      { backgroundColor: isDone ? theme.resident.accent : theme.resident.surface },
                       !isDone && { borderWidth: 2, borderColor: theme.resident.border },
                     ]}>
                     {isDone ? (
-                      <Ionicons name={STEP_ICON[step]} size={16} color={theme.resident.onAccent} />
-                    ) : null}
+                      <Ionicons name={STEP_ICON[step]} size={13} color={theme.resident.onAccent} accessible={false} />
+                    ) : <ThemedText style={[styles.stepNumber, { color: theme.resident.muted }]}>{index + 1}</ThemedText>}
                   </View>
                   {!isLast ? (
                     <View
@@ -478,22 +480,23 @@ export default function RequestTrackingScreen() {
                     />
                   ) : null}
                 </View>
-                <View style={styles.stepBody}>
+                <View style={[styles.stepBody, isLast && styles.lastStepBody]}>
+                  <View style={styles.stepTitleRow}>
                   <ThemedText
-                    type={isCurrent ? 'smallBold' : 'small'}
-                    themeColor={isDone ? undefined : 'textSecondary'}
-                    style={isCurrent ? { color: theme.resident.accentText } : undefined}>
+                    style={[styles.stepTitle, { color: isCurrent ? theme.resident.accentText : isDone ? theme.resident.text : theme.resident.muted }]}>
                     {STEP_LABEL[step]}
                   </ThemedText>
+                  {isCurrent ? <ThemedText style={[styles.currentPill, { color: theme.resident.accentText, backgroundColor: theme.resident.accentSoft }]}>{step === 'completed' ? 'Done' : 'Current'}</ThemedText> : null}
+                  </View>
                   {entry ? (
                     <>
-                      <ThemedText type="small" themeColor="textSecondary">
+                      <ThemedText style={[styles.stepMeta, { color: theme.resident.muted }]}>
                         {formatDateTime(entry.at)}
                       </ThemedText>
                       {entry.note ? (
                         <View>
                           <View style={[styles.noteChip, { backgroundColor: theme.resident.surface }]}>
-                            <ThemedText type="small" themeColor="textSecondary">
+                            <ThemedText style={[styles.stepMeta, { color: theme.resident.muted }]}>
                               {entry.note}
                             </ThemedText>
                           </View>
@@ -501,7 +504,7 @@ export default function RequestTrackingScreen() {
                       ) : null}
                     </>
                   ) : (
-                    <ThemedText type="small" themeColor="textSecondary">
+                    <ThemedText style={[styles.stepMeta, { color: theme.resident.muted }]}>
                       Pending
                     </ThemedText>
                   )}
@@ -509,14 +512,15 @@ export default function RequestTrackingScreen() {
               </View>
             );
           })}
+          </View>
 
           {isCancelled ? (
             <View>
-              <ThemedText type="small" style={[styles.cancelledNote, { color: theme.resident.danger }]}>
+              <ThemedText type="small" style={[styles.cancelledNote, { color: theme.resident.danger, backgroundColor: theme.resident.dangerSoft }]}>
                 This request was cancelled.
                 {(() => {
                   const cancelEntry = history.find((h) => h.status === 'cancelled');
-                  return cancelEntry?.note ? ` ${cancelEntry.note}` : '';
+                  return cancelEntry ? ` ${formatDateTime(cancelEntry.at)}${cancelEntry.note ? ` · ${cancelEntry.note}` : ''}` : '';
                 })()}
               </ThemedText>
             </View>
@@ -524,17 +528,22 @@ export default function RequestTrackingScreen() {
         </ThemedView>
 
         <View accessibilityLabel="Request details" style={[styles.details, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+          <View style={[styles.detailsHeader, { borderColor: theme.resident.border }]}>
+            <Ionicons name="document-text-outline" size={18} color={theme.resident.accentText} accessible={false} />
+            <ThemedText accessibilityRole="header" style={styles.sectionLabel}>Request details</ThemedText>
+          </View>
           {[
             ['Submitted', formatDateTime(request.created_at)],
             ...(request.purpose_label ? [['Purpose', request.purpose_label]] : []),
             ...(request.purpose_explanation ? [['Purpose explanation', request.purpose_explanation]] : []),
             ...submittedDetailLines(request.supporting_details),
             ...(request.requester_notes ? [['Additional notes', request.requester_notes]] : []),
-          ].map(([label, value]) => <View key={label} style={[styles.detailRow, { borderColor: theme.resident.border }]}>
-            <ThemedText style={{ fontSize: 12.5, lineHeight: 18, color: theme.resident.muted }}>{label}</ThemedText>
-            <ThemedText style={{ fontSize: 15, lineHeight: 22, fontWeight: '600' }}>{value}</ThemedText>
+          ].map(([label, value], index) => <View key={`${label}:${index}`} style={[styles.detailRow, { borderColor: theme.resident.border }]}>
+            <ThemedText style={[styles.detailLabel, { color: theme.resident.muted }]}>{label}</ThemedText>
+            <ThemedText selectable style={styles.detailValue}>{value}</ThemedText>
           </View>)}
         </View>
+        </TrackingReveal>
       </ScrollView>
       </View>
 
@@ -554,21 +563,25 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
   content: {
-    padding: 20,
-    gap: 16,
-  },
-
-  hero: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
-  heroIcon: { width: 48, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  heroTitle: { fontSize: 19, lineHeight: 24, fontWeight: '800' },
-  details: { boxShadow: '0 2px 10px rgba(0,0,0,0.05)', borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
-  detailRow: { paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 1, gap: 2 },
-  sectionLabel: {
-    fontSize: 15, lineHeight: 21, fontWeight: '700',
-  },
-
-  progressCard: { boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
     padding: 16,
+    paddingBottom: 24,
+  },
+  sections: { gap: 12 },
+
+  hero: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 2 },
+  heroIcon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  heroTitle: { fontSize: 18, lineHeight: 23, fontWeight: '800' },
+  details: { borderWidth: 1, borderRadius: 18, overflow: 'hidden' },
+  detailsHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingVertical: 12 },
+  detailRow: { paddingHorizontal: 14, paddingVertical: 10, borderTopWidth: StyleSheet.hairlineWidth, flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  detailLabel: { fontSize: 12, lineHeight: 18, width: 88 },
+  detailValue: { fontSize: 13, lineHeight: 19, fontWeight: '600', flex: 1, minWidth: 160 },
+  sectionLabel: {
+    fontSize: 14, lineHeight: 20, fontWeight: '700', flex: 1,
+  },
+
+  progressCard: {
+    padding: 14,
     gap: Spacing.two,
   },
   progressHeaderRow: {
@@ -580,60 +593,75 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Spacing.half,
   },
-  timeline: { boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-    padding: 16,
-    borderRadius: 16,
-    gap: Spacing.two,
+  timeline: {
+    padding: 14,
+    borderRadius: 18,
+    gap: 14,
   },
+  timelineHeading: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  stageCount: { fontSize: 11, lineHeight: 16, fontWeight: '600' },
   step: {
     flexDirection: 'row',
-    gap: 14,
+    gap: 10,
   },
   stepIndicator: {
     alignItems: 'center',
   },
   stepDot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepLine: {
     width: 2,
     flex: 1,
-    minHeight: Spacing.four,
+    minHeight: 22,
+    marginVertical: 3,
   },
   stepBody: {
     flex: 1,
-    gap: Spacing.half,
-    paddingBottom: 20,
+    minWidth: 0,
+    gap: 2,
+    paddingBottom: 14,
   },
+  lastStepBody: { paddingBottom: 0 },
+  stepTitleRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center', minHeight: 26 },
+  stepTitle: { fontSize: 13, lineHeight: 19, fontWeight: '700', flexShrink: 1 },
+  stepNumber: { fontSize: 11, lineHeight: 16, fontWeight: '600' },
+  stepMeta: { fontSize: 12, lineHeight: 17 },
+  currentPill: { fontSize: 10, lineHeight: 15, fontWeight: '700', paddingHorizontal: 7, paddingVertical: 1, borderRadius: 6 },
   noteChip: {
     alignSelf: 'flex-start',
-    paddingHorizontal: Spacing.two,
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    borderRadius: Spacing.four,
+    borderRadius: 6,
     marginTop: 2,
   },
   cancelledNote: {
-    marginTop: Spacing.one,
+    padding: 10, borderRadius: 10, fontSize: 12, lineHeight: 18,
   },
-  paymentCard: { boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-    gap: 0,
-  },
+  paymentCard: { gap: 0, borderRadius: 18 },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
-    padding: 16,
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  paymentSummary: { paddingHorizontal: 14, paddingTop: 12, gap: 8, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' },
+  amountLabel: { fontSize: 12, lineHeight: 18 },
+  paymentAmount: { fontSize: 23, lineHeight: 30, fontWeight: '800', flexShrink: 1 },
+  pillText: { fontSize: 11, lineHeight: 16, fontWeight: '600' },
+  pickupMessage: { fontSize: 12, lineHeight: 18, paddingHorizontal: 14, paddingBottom: 2 },
   paymentRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 12, gap: 12,
+    paddingHorizontal: 14,
+    paddingTop: 8, paddingBottom: 10, gap: 10,
   },
   paymentMethodCell: {
     flexDirection: 'row',
@@ -645,17 +673,10 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: Spacing.four,
   },
-  paymentAmountRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 12,
-    flexWrap: 'wrap', gap: 8,
-  },
   buttonSlot: {
-    margin: Spacing.three,
-    marginTop: Spacing.two,
-    gap: Spacing.two,
+    margin: 14,
+    marginTop: 10,
+    gap: 8,
   },
 
   /* Loading skeleton */

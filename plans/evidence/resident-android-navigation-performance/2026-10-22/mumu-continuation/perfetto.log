@@ -1,0 +1,2 @@
+[811.910] perfetto_cmd.cc:792     Connected to the Perfetto traced service, TTL: 45s
+[857.280] perfetto_cmd.cc:916     Wrote 11051678 bytes into /data/misc/perfetto-traces/resident-nav-current.perfetto-trace

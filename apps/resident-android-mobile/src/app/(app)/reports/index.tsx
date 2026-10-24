@@ -31,8 +31,8 @@ export default function ReportsScreen() {
     {!session ? <GuestAuthCallout tabName="Incident Reports" message="You need to log in before you can submit an incident report or track your reports." showRegister={false} /> : <>
       {readStateError ? <ReportSourceState message="Read status could not be refreshed." retry={retryReadState} retryLabel="Retry read status" /> : null}
       <View style={styles.headingRow}>
-        <ThemedText accessibilityRole="header" style={[reportStyles.heading, { color: resident.text }]}>{heading}</ThemedText>
-        {segment === 'resolved' ? <ReadAction label="Mark all as read" action={markResolvedRead} disabled={resolvedUnreadCount === 0} /> : null}
+        <ThemedText accessibilityRole="header" numberOfLines={1} adjustsFontSizeToFit style={[reportStyles.heading, styles.heading, segment === 'resolved' && styles.resolvedHeading, { color: resident.text }]}>{heading}</ThemedText>
+        {segment === 'resolved' ? <ReadAction inline label="Mark all as read" action={markResolvedRead} disabled={resolvedUnreadCount === 0} /> : null}
       </View>
       {segment === 'incident-reports' ? <View><FilterChips chips={chips} active={incidentFilter} onSelect={setIncidentFilter} /></View> : null}
       <MyIncidentsFeed status={segment === 'active' ? ACTIVE_STATUSES : segment === 'resolved' ? 'resolved' : undefined}
@@ -43,5 +43,7 @@ export default function ReportsScreen() {
 }
 const styles = StyleSheet.create({
   root: { flex: 1 }, tabs: { paddingHorizontal: 20 },
-  headingRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8, gap: 8 },
+  headingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8, gap: 8 },
+  heading: { flex: 1, minWidth: 0, includeFontPadding: false, textAlignVertical: 'center' },
+  resolvedHeading: { fontSize: 18, lineHeight: 24 },
 });

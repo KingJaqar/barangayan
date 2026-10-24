@@ -1,0 +1,128 @@
+{
+  "packet": "repomix output files/resident-nav-phase5-20261023.xml",
+  "sha256": "77c7b6bf9dce0128f3c78f478a1e172c04aef5261a5b2bc08c70d405b9daaa63",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/history-resource.ts",
+      "chars": 987,
+      "sha256": "b33b2bb7623232b33976e64b47d8ffd63bb23d3b38fcefcb9d12fda6fa39308e"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "chars": 509,
+      "sha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+      "chars": 469,
+      "sha256": "4b90edd59babe496e95245cad8729b2fcc25cf06a2d3270ba63c1f57fc1fcd56"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/map-state-bridge.mjs",
+      "chars": 670,
+      "sha256": "176012a350f448772ce2d43496eb7e932c49eb0baf3b2b7ad7e1e62ba0fe44cb"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "chars": 367,
+      "sha256": "ba6ff108d8253c3fd027af73305fd0d6d3bac80312b8a4c01cc4f976b50c167c"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/root-navigation-isolation.mjs",
+      "chars": 140,
+      "sha256": "c3067be5464cdf5e5c417d9485639e578dd7f86e877fed9bb7c0c8ba06db311a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-local-route.ts",
+      "chars": 2040,
+      "sha256": "1eccfd061f623417d19e248607d604dd0c259192ab924b5f3a887235e354a56b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+      "chars": 3397,
+      "sha256": "794e2cc2027ea47a0b827578d4f14bbc416c4964343e7fc95c3ed3356c54232a"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+      "chars": 942,
+      "sha256": "2aa4f6685e4217d8417b2230f4ffa67bfe576dfae80f5c442c771951e78fc547"
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "chars": 47,
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2"
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 12,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "chars": 1247,
+      "sha256": "62f059ae81041f5ba1156d46ef7034eaa37d86dce047fbaa4a35f160e3246f16"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "chars": 364,
+      "sha256": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "chars": 2540,
+      "sha256": "2e480b182d48c9b2f167c305af6fd417a174cb8372585af3875e500263a4f2ac"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "chars": 1820,
+      "sha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "chars": 2084,
+      "sha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2059,
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 2,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "chars": 11632,
+      "sha256": "436d8921715a9c4ac49ed1d41c3ea098a6ee8299f13f46680b843b639b604202"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "reader-1.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-2.txt",
+      "start": 11000,
+      "end": 22000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-3.txt",
+      "start": 22000,
+      "end": 33000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-4.txt",
+      "start": 33000,
+      "end": 33645,
+      "chars": 645
+    }
+  ]
+}

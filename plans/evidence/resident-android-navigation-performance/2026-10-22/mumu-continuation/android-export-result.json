@@ -1,0 +1,6 @@
+{
+  "exitCode": 0,
+  "durationMs": 116029,
+  "command": "expo export --platform android --output-dir tmp/resident-nav-mumu-20261022/android-export",
+  "scope": "Current JavaScript production bundle; not an installed release APK"
+}

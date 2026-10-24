@@ -1,0 +1,290 @@
+{
+  "at": "2026-10-23T03:32:28.766Z",
+  "phaseStatus": "Partially complete",
+  "baseline": [
+    {
+      "name": "services",
+      "code": 0,
+      "durationMs": 7301,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/services-tab-stability.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-services.log"
+    },
+    {
+      "name": "unit",
+      "code": 0,
+      "durationMs": 9983,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-unit.log"
+    },
+    {
+      "name": "tracking",
+      "code": 0,
+      "durationMs": 11427,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/tracking-payment-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-tracking.log"
+    },
+    {
+      "name": "lint",
+      "code": 0,
+      "durationMs": 16719,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+        "lint"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-lint.log"
+    },
+    {
+      "name": "health",
+      "code": 0,
+      "durationMs": 21633,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/health-presentation-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-health.log"
+    },
+    {
+      "name": "typecheck",
+      "code": 2,
+      "durationMs": 43976,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\baseline-typecheck.log"
+    }
+  ],
+  "final": [
+    {
+      "name": "shell",
+      "code": 0,
+      "durationMs": 8391,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\reviewed-shell.log"
+    },
+    {
+      "name": "services",
+      "code": 0,
+      "durationMs": 8462,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/services-tab-stability.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\reviewed-services.log"
+    },
+    {
+      "name": "tracking",
+      "code": 0,
+      "durationMs": 11564,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/tracking-payment-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\reviewed-tracking.log"
+    },
+    {
+      "name": "unit",
+      "code": 0,
+      "durationMs": 11928,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\reviewed-unit.log"
+    },
+    {
+      "name": "health",
+      "code": 0,
+      "durationMs": 21747,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/health-presentation-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\reviewed-health.log"
+    },
+    {
+      "name": "lint",
+      "code": 0,
+      "durationMs": 16363,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+        "lint"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\final-lint.log"
+    },
+    {
+      "name": "lists",
+      "code": 0,
+      "durationMs": 7612,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/services-lists-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\final-channel-lists.log"
+    },
+    {
+      "name": "reports",
+      "code": 0,
+      "durationMs": 11110,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/reports-announcements-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\qualified-reports-reports.log"
+    },
+    {
+      "name": "typecheck",
+      "code": 2,
+      "durationMs": 40848,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\final-typecheck.log"
+    },
+    {
+      "name": "navigation",
+      "code": 0,
+      "durationMs": 181,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/request-tracking-navigation.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\integration-navigation.log"
+    },
+    {
+      "name": "ownership",
+      "code": 0,
+      "durationMs": 6598,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/hidden-work-ownership.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase4-20261023\\logs\\integration-ownership.log"
+    }
+  ],
+  "typecheck": {
+    "baseline": [
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 9,
+        "column": 5,
+        "code": "TS2859"
+      },
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 9,
+        "column": 5,
+        "code": "TS2859"
+      },
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 12,
+        "column": 7,
+        "code": "TS2859"
+      }
+    ],
+    "final": [
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 9,
+        "column": 5,
+        "code": "TS2859"
+      },
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 9,
+        "column": 5,
+        "code": "TS2859"
+      },
+      {
+        "file": "src/components/external-link.tsx",
+        "line": 12,
+        "column": 7,
+        "code": "TS2859"
+      }
+    ]
+  },
+  "androidExport": {
+    "initialBaseline": {
+      "code": 1
+    },
+    "transitionalNotBaseline": {
+      "code": 0
+    },
+    "candidate": {
+      "code": 0
+    },
+    "final": {
+      "code": 0
+    }
+  },
+  "api": {
+    "method": "Read-only installed 2.112.1 client, configured public/anonymous identity, synthetic owner UUID; no private rows requested/returned. Verifies exposed projection, relation, filter, cursor and count syntax only; authenticated RLS/account journeys remain separate.",
+    "results": [
+      {
+        "name": "reports",
+        "status": 200,
+        "count": 0,
+        "rows": 0,
+        "errorCode": null
+      },
+      {
+        "name": "requests",
+        "status": 200,
+        "count": 0,
+        "rows": 0,
+        "errorCode": null
+      },
+      {
+        "name": "activity",
+        "status": 200,
+        "count": 0,
+        "rows": 0,
+        "errorCode": null
+      },
+      {
+        "name": "active-count",
+        "status": 200,
+        "count": 0,
+        "rows": 0,
+        "errorCode": null
+      },
+      {
+        "name": "resolved-count",
+        "status": 200,
+        "count": 0,
+        "rows": 0,
+        "errorCode": null
+      }
+    ]
+  },
+  "native": {
+    "error": "Tab missing: services",
+    "qualification": "Unavailable/rejected native smoke, not a passing gate"
+  },
+  "contextDrift": [],
+  "limits": [
+    "Physical reference release large-history navigation targets pending",
+    "Synthetic/browser/Node/API syntax evidence cannot replace authenticated native large-account timing",
+    "No remote writes or commits authorized/performed"
+  ]
+}

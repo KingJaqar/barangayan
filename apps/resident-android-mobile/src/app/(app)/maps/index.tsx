@@ -4,8 +4,9 @@ import * as Location from 'expo-location';
 import { useFocusEffect } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, AppState, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { MapView, type MapViewHandle } from '@/components/map-view';
 import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
 import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
@@ -14,6 +15,7 @@ import { ThemedText } from '@/components/themed-text';
 import { getMobileFontFamily } from '@/constants/fonts';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { useIncidentCategories } from '@/hooks/use-incident-categories';
 import { useIncidents } from '@/hooks/use-incidents';
@@ -31,6 +33,8 @@ export default function MapsScreen() {
   const { fontId } = useFontPreference();
   const fontFamily = getMobileFontFamily(fontId);
   const bottomTabInset = useFloatingTabInset();
+  const fullTabInset = useFloatingTabInset(true);
+  const { mapNavHidden, setMapNavHidden, mapNavProgress } = useFloatingTabLayout();
   const reducedMotion = useResidentReducedMotion(true);
   const { profile } = useProfile();
   const barangayId = profile?.barangay_id ?? null;
@@ -62,7 +66,13 @@ export default function MapsScreen() {
   const [mapHeight, setMapHeight] = useState(0);
   const [topHeight, setTopHeight] = useState(0);
   const [overlayHeight, setOverlayHeight] = useState(48);
-  const overlayBottom = bottomTabInset + 24;
+  // Leave room for the reveal button and map attribution beneath the controls.
+  const navHiddenBottom = 84;
+  const navVisibleBottom = Math.max(navHiddenBottom, fullTabInset + 24);
+  const overlayBottom = mapNavHidden ? navHiddenBottom : navVisibleBottom;
+  const revealTravel = Math.max(0, fullTabInset - 14);
+  const overlayMotion = useAnimatedStyle(() => ({ transform: [{ translateY: (navVisibleBottom - navHiddenBottom) * (mapNavProgress?.value ?? 0) }] }));
+  const revealMotion = useAnimatedStyle(() => ({ transform: [{ translateY: revealTravel * (mapNavProgress?.value ?? 0) }] }));
 
   const updatePermission = useCallback((status: PermissionStatus) => {
     if (permission.current === 'granted' && status !== 'granted') setTooltipDismissed(false);
@@ -110,13 +120,15 @@ export default function MapsScreen() {
 
   useEffect(() => { alive.current = true; return () => { alive.current = false; locationRequest.current += 1; cancelLocation.current?.(); }; }, []);
   useFocusEffect(useCallback(() => {
+    setMapNavHidden(true);
     focusedRef.current = true; setFocused(true);
     return () => {
+      setMapNavHidden(false);
       focusedRef.current = false; setFocused(false);
       locationRequest.current += 1; locationBusy.current = false; setLocatingMe(false);
       cancelLocation.current?.(); cancelLocation.current = null;
     };
-  }, []));
+  }, [setMapNavHidden]));
   // Preserve automatic acquisition for granted permission and foreground permission rechecks.
   useEffect(() => {
     if (!focused) return;
@@ -135,6 +147,7 @@ export default function MapsScreen() {
     const subscription = AppState.addEventListener('change', state => {
       if (state === 'active') void check(false);
       else {
+        setMapNavHidden(false);
         if (!requestingPermission.current) {
           locationRequest.current += 1; locationBusy.current = false; setLocatingMe(false);
           cancelLocation.current?.(); cancelLocation.current = null;
@@ -143,13 +156,14 @@ export default function MapsScreen() {
       }
     });
     return () => { active = false; subscription.remove(); };
-  }, [focused, updatePermission, acquireLocation]);
+  }, [focused, updatePermission, acquireLocation, setMapNavHidden]);
   const tooltipVisible = focused && locationPermission !== null && locationPermission !== 'granted' && !tooltipDismissed;
   useEffect(() => {
     if (!tooltipVisible) return;
-    tooltipOpacity.setValue(1);
+    tooltipOpacity.setValue(reducedMotion ? 1 : 0);
+    Animated.timing(tooltipOpacity, { toValue: 1, duration: reducedMotion ? 0 : 180, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
     const timer = setTimeout(() => {
-      Animated.timing(tooltipOpacity, { toValue: 0, duration: reducedMotion ? 100 : 500, useNativeDriver: true })
+      Animated.timing(tooltipOpacity, { toValue: 0, duration: reducedMotion ? 0 : 160, easing: Easing.out(Easing.cubic), useNativeDriver: true })
         .start(({ finished }) => { if (finished) setTooltipDismissed(true); });
     }, 10_000);
     return () => { clearTimeout(timer); tooltipOpacity.stopAnimation(); };
@@ -185,7 +199,7 @@ export default function MapsScreen() {
   const presentation = useMemo(() => ({
     selectedMarkerId: selected?.id ?? null, reducedMotion,
     padding: { top: topHeight + 24, bottom: overlayBottom + overlayHeight + 24 },
-    attributionBottom: bottomTabInset + 4, surface: resident.card, text: resident.text,
+    attributionBottom: Math.max(bottomTabInset + 4, 56), surface: resident.card, text: resident.text,
     border: resident.border, fontFamily: fontFamily ?? 'sans-serif',
   }), [selected?.id, reducedMotion, topHeight, overlayBottom, overlayHeight, bottomTabInset, resident.card, resident.text, resident.border, fontFamily]);
   function clearSelection() { setSelectedId(null); }
@@ -209,19 +223,22 @@ export default function MapsScreen() {
     </View>
   </View>;
   return <SafeAreaView edges={['left', 'right']} style={[styles.screen, { backgroundColor: resident.card }]}>
-    <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" onChange={tab => { setActiveTab(tab); clearSelection(); }} />
+    <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" compact onChange={tab => { setActiveTab(tab); clearSelection(); }} />
     <View style={styles.mapArea} onLayout={event => { const height = event.nativeEvent.layout.height; setMapHeight(current => current === height ? current : height); }}>
+      <View style={StyleSheet.absoluteFill} onTouchStart={() => setMapNavHidden(true)}>
       <MapView key={mapAttempt} ref={map} markers={markers} kindColors={kindColors} boundary={boundary}
         presentation={presentation} userLocation={userLocation ? { position: userLocation, accuracyMeters: accuracy, pending: false } : null}
         onMarkerTap={id => {
+          setMapNavHidden(true);
           const marker = markers.find(item => item.id === id);
           if (!marker || !isMapPosition(marker.position)) return;
           setSelectedId(id); map.current?.flyTo({ ...marker.position, zoom: 17 });
-        }} onBackgroundTap={clearSelection} onMapReady={() => {
+        }} onBackgroundTap={() => { setMapNavHidden(true); clearSelection(); }} onMapReady={() => {
           setMapError(false);
           const target = selected?.position ?? userLocation;
           if (target) map.current?.flyTo({ ...target, zoom: 17 });
         }} onMapError={() => setMapError(true)} style={StyleSheet.absoluteFill} />
+      </View>
       <ScrollView keyboardShouldPersistTaps="handled" style={[styles.top, mapHeight > 0 && { maxHeight: Math.max(48, mapHeight - overlayBottom - 112) }]}
         contentContainerStyle={styles.topContent} onLayout={event => { const height = event.nativeEvent.layout.height; setTopHeight(current => current === height ? current : height); }}>
         <View style={[styles.search, { backgroundColor: resident.card, borderColor: resident.border }]}>
@@ -248,57 +265,87 @@ export default function MapsScreen() {
               </Pressable>;
             })}
           </ScrollableChevronRow> : null}
-        {categoriesError && activeTab === 'incidents' ? <MapNotice message={categoriesError} action="Retry categories" onPress={retryCategories} /> : null}
-        {tooltipVisible ? <Animated.View style={[styles.notice, { backgroundColor: resident.warningSoft, borderColor: resident.border, opacity: tooltipOpacity }]}>
+        <MapNotice message={activeTab === 'incidents' ? categoriesError : null} action="Retry categories" onPress={retryCategories} reducedMotion={reducedMotion} />
+        {tooltipVisible ? <Animated.View style={[styles.notice, { backgroundColor: resident.warningSoft, borderColor: resident.border, opacity: tooltipOpacity,
+          transform: reducedMotion ? [] : [{ translateY: tooltipOpacity.interpolate({ inputRange: [0, 1], outputRange: [4, 0] }) }] }]}>
           <ThemedText style={[styles.noticeTitle, { color: resident.warning }]}>Location Permission Required</ThemedText>
           <ThemedText style={[styles.noticeText, { color: resident.text }]}>Allow location access to show your position and nearby incidents.</ThemedText>
           <View style={styles.noticeActions}>
             <Pressable accessibilityRole="button" accessibilityState={{ busy: locatingMe, disabled: locatingMe }} disabled={locatingMe}
-              onPress={() => void acquireLocation(true)} style={styles.noticeAction}><ThemedText style={{ color: resident.accentText }}>Set Location</ThemedText></Pressable>
-            <Pressable accessibilityRole="button" onPress={() => setTooltipDismissed(true)} style={styles.noticeAction}><ThemedText style={{ color: resident.muted }}>Setup Later</ThemedText></Pressable>
+              onPress={() => void acquireLocation(true)} style={styles.noticeAction}><ThemedText style={[styles.noticeActionText, { color: resident.accentText }]}>Set Location</ThemedText></Pressable>
+            <Pressable accessibilityRole="button" onPress={() => setTooltipDismissed(true)} style={styles.noticeAction}><ThemedText style={[styles.noticeActionText, { color: resident.muted }]}>Setup Later</ThemedText></Pressable>
           </View>
         </Animated.View> : null}
-        {locationError ? <MapNotice message={locationError} action="Dismiss location message" onPress={() => setLocationError(null)} /> : null}
-        {mapError ? <MapNotice message="Map or map tiles could not load. Check your connection and retry." action="Retry map" onPress={() => { setMapError(false); setMapAttempt(value => value + 1); }} /> : null}
-        {error ? <MapNotice message={error} action="Retry locations" onPress={refetch} /> : null}
+        <MapNotice message={locationError} action="Dismiss location message" dismissible onPress={() => setLocationError(null)} reducedMotion={reducedMotion} />
+        <MapNotice message={mapError ? 'Map or map tiles could not load. Check your connection and retry.' : null} action="Retry map" onPress={() => { setMapError(false); setMapAttempt(value => value + 1); }} reducedMotion={reducedMotion} />
+        <MapNotice message={error} action="Retry locations" onPress={refetch} reducedMotion={reducedMotion} />
         {activeTab === 'evacuation' && isOffline && markers.length > 0 ? <ThemedText style={[styles.offline, { color: resident.warning, backgroundColor: resident.warningSoft }]}>Showing saved evacuation centers</ThemedText> : null}
       </ScrollView>
       {loading ? <View pointerEvents="none" style={styles.loading}><ActivityIndicator accessibilityLabel="Loading locations" size="large" color={resident.accentText} /></View> : null}
-      <View style={[styles.bottom, { bottom: overlayBottom }]} onLayout={event => { const height = event.nativeEvent.layout.height; setOverlayHeight(current => current === height ? current : height); }}>
-        <MapSelectionOverlay place={place} controls={controls} reducedMotion={reducedMotion} onClose={clearSelection}
+      <Reanimated.View style={[styles.bottom, { bottom: navVisibleBottom }, overlayMotion]} onLayout={event => { const height = event.nativeEvent.layout.height; setOverlayHeight(current => current === height ? current : height); }}>
+        <MapSelectionOverlay place={place} controls={controls} reducedMotion={reducedMotion} compact onClose={clearSelection}
           maxHeight={Math.max(76, mapHeight - topHeight - overlayBottom - 32)} />
         {!loading && !error && !place && markers.length === 0 ? <ThemedText style={[styles.empty, { color: resident.muted, backgroundColor: resident.card }]}>
           {activeTab === 'incidents' ? 'No incidents reported in this area' : 'No evacuation centers found'}
         </ThemedText> : null}
-      </View>
+      </Reanimated.View>
+      <Reanimated.View style={[styles.reveal, { bottom: 10 + revealTravel }, revealMotion]}>
+        <Pressable accessibilityRole="button" accessibilityLabel={mapNavHidden ? 'Show bottom tabs' : 'Hide bottom tabs'}
+          onPress={() => setMapNavHidden(!mapNavHidden)} style={[styles.revealButton, { backgroundColor: resident.card, borderColor: resident.border }]}>
+          <Ionicons name={mapNavHidden ? 'chevron-up' : 'chevron-down'} size={20} color={resident.text} accessible={false} />
+        </Pressable>
+      </Reanimated.View>
     </View>
   </SafeAreaView>;
 }
 
-function MapNotice({ message, action, onPress }: { message: string; action: string; onPress: () => void }) {
+function MapNotice({ message, action, onPress, dismissible = false, reducedMotion }: {
+  message: string | null; action: string; onPress: () => void; dismissible?: boolean; reducedMotion: boolean;
+}) {
   const { resident } = useTheme();
-  return <View style={[styles.notice, { backgroundColor: resident.card, borderColor: resident.border }]}>
-    <ThemedText accessibilityLiveRegion="polite" style={[styles.noticeText, { color: resident.danger }]}>{message}</ThemedText>
-    <Pressable accessibilityRole="button" accessibilityLabel={action} onPress={onPress} style={styles.noticeAction}>
-      <ThemedText style={{ color: resident.accentText, fontWeight: '700' }}>{action}</ThemedText>
+  const [shown, setShown] = useState(message);
+  const progress = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    let active = true;
+    if (message) setShown(message);
+    const animation = Animated.timing(progress, { toValue: message ? 1 : 0, duration: reducedMotion ? 0 : message ? 180 : 120,
+      easing: Easing.out(Easing.cubic), useNativeDriver: true });
+    animation.start(({ finished }) => { if (active && finished && !message) setShown(null); });
+    return () => { active = false; animation.stop(); };
+  }, [message, reducedMotion, progress]);
+  const content = message ?? shown;
+  if (!content) return null;
+  return <Animated.View pointerEvents={message ? 'auto' : 'none'} accessibilityElementsHidden={!message} importantForAccessibility={message ? 'auto' : 'no-hide-descendants'}
+    style={[styles.notice, styles.noticeRow, { backgroundColor: resident.card, borderColor: resident.border, opacity: progress,
+      transform: reducedMotion ? [] : [{ translateY: progress.interpolate({ inputRange: [0, 1], outputRange: [4, 0] }) }] }]}>
+    <ThemedText accessibilityLiveRegion="polite" style={[styles.noticeText, styles.noticeCopy, { color: resident.danger }]}>{content}</ThemedText>
+    <Pressable accessibilityRole="button" accessibilityLabel={action} onPress={onPress}
+      style={({ pressed }) => [styles.noticeAction, dismissible ? styles.dismissNotice : styles.retryNotice, { backgroundColor: pressed ? resident.pressed : resident.card }]}>
+      {dismissible ? <Ionicons name="close" size={18} color={resident.accentText} accessible={false} />
+        : <ThemedText style={[styles.noticeActionText, { color: resident.accentText }]}>{action}</ThemedText>}
     </Pressable>
-  </View>;
+  </Animated.View>;
 }
 const styles = StyleSheet.create({
   screen: { flex: 1 }, mapArea: { flex: 1 },
-  top: { position: 'absolute', top: 12, left: 16, right: 16, flexGrow: 0 }, topContent: { gap: 10, paddingBottom: 4 },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48, paddingLeft: 16, paddingRight: 2, borderRadius: 30, borderWidth: 1, elevation: 4 },
-  searchInput: { flex: 1, minWidth: 0, fontSize: 14.5, fontWeight: '500', paddingVertical: 10 },
+  top: { position: 'absolute', top: 8, left: 12, right: 12, flexGrow: 0 }, topContent: { gap: 6, paddingBottom: 2 },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 46, paddingLeft: 12, paddingRight: 0, borderRadius: 24, borderWidth: 1, elevation: 4 },
+  searchInput: { flex: 1, minWidth: 0, fontSize: 14, fontWeight: '500', paddingVertical: 8 },
   filter: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  chips: { gap: 8, paddingVertical: 4 }, chip: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44, borderWidth: 1, borderRadius: 30, paddingHorizontal: 14, paddingVertical: 6 },
+  chips: { gap: 6, paddingVertical: 0 }, chip: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, borderWidth: 1, borderRadius: 24, paddingHorizontal: 12, paddingVertical: 4 },
   chipLabel: { fontSize: 13, fontWeight: '600' }, dot: { width: 8, height: 8, borderRadius: 4 },
-  notice: { borderRadius: 14, borderWidth: 1, padding: 12, gap: 4 }, noticeTitle: { fontSize: 14, fontWeight: '700' },
-  noticeText: { fontSize: 13, lineHeight: 19 }, noticeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  noticeAction: { minHeight: 44, justifyContent: 'center', alignSelf: 'flex-start', paddingHorizontal: 4 },
-  bottom: { position: 'absolute', left: 16, right: 16, gap: 8 },
-  controls: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12 },
-  pill: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 30, overflow: 'hidden', elevation: 4 },
-  pillButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 44, paddingHorizontal: 16, paddingVertical: 10 },
+  notice: { borderRadius: 12, borderWidth: 1, padding: 8, gap: 2 }, noticeTitle: { fontSize: 13, lineHeight: 18, fontWeight: '700' },
+  noticeRow: { flexDirection: 'row', alignItems: 'center', gap: 6 }, noticeCopy: { flex: 1, minWidth: 0 },
+  noticeText: { fontSize: 13, lineHeight: 18 }, noticeActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  noticeAction: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 8, borderRadius: 10 },
+  noticeActionText: { fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
+  dismissNotice: { width: 44, alignItems: 'center', flexShrink: 0 }, retryNotice: { maxWidth: '38%', flexShrink: 1 },
+  bottom: { position: 'absolute', left: 12, right: 12, gap: 6 },
+  reveal: { position: 'absolute', alignSelf: 'center' },
+  revealButton: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center', elevation: 4 },
+  controls: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8 },
+  pill: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 24, overflow: 'hidden', elevation: 4 },
+  pillButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 44, paddingHorizontal: 12, paddingVertical: 8 },
   controlLabel: { fontSize: 14, fontWeight: '700' }, zoom: { width: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center' },
   divider: { width: 1, alignSelf: 'stretch' }, loading: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   empty: { alignSelf: 'flex-start', fontSize: 12.5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16 }, offline: { padding: 10, borderRadius: 12, fontSize: 12.5 },

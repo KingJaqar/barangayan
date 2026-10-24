@@ -1,0 +1,12 @@
+[
+  {
+    "name": "settings",
+    "code": 0,
+    "durationMs": 36322,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/settings-profile-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\settings-fixed-settings.log"
+  }
+]

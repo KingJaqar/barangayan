@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "grouped real center rows; unknown/full occupancy; managed extra facility; existing sort semantics",
+    "selected summary collapses secondary details and map actions; Details/Controls restore content; prominent Clear route / Show all clears selection and restores controls",
+    "five touch show/hide cycles; revealing tabs dismisses an open keyboard and restores the actual tab bar",
+    "row opens same selected route/map state; shared provider hides/reveals actual bar with accessibility exclusion",
+    "actual bundled Leaflet zoom/marker/background; five M07 cycles; no routing/picker dispatch from dismissals",
+    "center search icon, 15-second idle collapse, key interaction resets deadline, query/filter survives collapse and immediate icon collapse",
+    "empty/search/error and retry stay visible without suppressing routing diagnostics",
+    "blur/list reset, focus restoration, two background cycles; offline refresh visibility follows focus",
+    "actual location-status pending/poor accuracy confirmation, rejection and denied-permission recovery actions",
+    "compact status expands all stale/closure/blocked-road/service warnings; Cancel does not enter blocking, Confirm enables existing mark/remove; street choice and no-route text",
+    "all five map actions share one row with 44px touch targets; collapsed status content is vertically centered at 320–412 widths",
+    "selected-center Details/Controls remain accessible at 320–412 widths; clear route stays pinned with details/status/actions expanded",
+    "one retained map with preserved camera and no reloads; fixed toggle position; 180ms reversible opacity crossfade; outgoing view excluded from accessibility; reduced motion switches instantly",
+    "320–412 widths/dark/extreme accent/serif/reduced mode; public shared Centers has no resident bar or reveal"
+  ],
+  "diagnostics": [
+    "\"shadow*\" style props are deprecated. Use \"boxShadow\".",
+    "props.pointerEvents is deprecated. Use style.pointerEvents"
+  ]
+}

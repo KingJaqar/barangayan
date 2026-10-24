@@ -17,7 +17,7 @@ interface ButtonContentProps extends Omit<PressableProps, 'style'> {
 type ButtonVariant = 'primary' | 'secondary' | 'destructive';
 export type PrimaryButtonProps = ButtonContentProps & (
   | { presentation?: 'default'; variant?: ButtonVariant }
-  | { presentation: 'resident'; variant?: ButtonVariant | 'destructiveFilled' | 'secondaryAccent'; compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' }
+  | { presentation: 'resident'; variant?: ButtonVariant | 'destructiveFilled' | 'secondaryAccent'; compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' | 'profile' }
 );
 
 /** The green pill button used throughout the design file (Login, Register, Verify, etc.).
@@ -64,7 +64,7 @@ function DefaultButton({ label, leadingIcon, loading, variant = 'primary', disab
   );
 }
 
-function ResidentButton({ label, leadingIcon, loading, variant = 'primary', compact = false, appearance = 'default', disabled, onPressIn, onPressOut, accessibilityState, ...props }: Omit<PrimaryButtonProps, 'presentation'> & { compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' }) {
+function ResidentButton({ label, leadingIcon, loading, variant = 'primary', compact = false, appearance = 'default', disabled, onPressIn, onPressOut, accessibilityState, ...props }: Omit<PrimaryButtonProps, 'presentation'> & { compact?: boolean; appearance?: 'default' | 'requestForm' | 'healthForm' | 'healthDrive' | 'profile' }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const scale = useSharedValue(1);
@@ -86,11 +86,11 @@ function ResidentButton({ label, leadingIcon, loading, variant = 'primary', comp
         accessibilityState={{ ...accessibilityState, disabled: isDisabled, busy: Boolean(loading) }}
         disabled={isDisabled}
         onPressIn={(event) => {
-          scale.value = reducedMotion ? 1 : withTiming(appearance === 'healthDrive' ? 0.97 : 0.98, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+          scale.value = reducedMotion ? 1 : withTiming(appearance === 'profile' ? 0.985 : appearance === 'healthDrive' ? 0.97 : 0.98, { duration: appearance === 'profile' ? 110 : 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
           onPressIn?.(event);
         }}
         onPressOut={(event) => {
-          scale.value = reducedMotion ? 1 : withTiming(1, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+          scale.value = reducedMotion ? 1 : withTiming(1, { duration: appearance === 'profile' ? 180 : 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
           onPressOut?.(event);
         }}
         style={({ pressed }) => [styles.residentButton, compact && styles.compactButton, appearance === 'requestForm' && (variant === 'secondary' ? styles.formSecondary : styles.formPrimary), {
@@ -99,7 +99,9 @@ function ResidentButton({ label, leadingIcon, loading, variant = 'primary', comp
           borderWidth: isDisabled ? 1 : filledDanger ? (resident.dangerFillNeedsOutline ? 1 : 0) : variant === 'destructive' || accentOutline ? 2 : variant === 'primary' && !resident.accentNeedsOutline ? 0 : 1,
         }, appearance === 'requestForm' && isDisabled && (variant === 'primary' ? { backgroundColor: resident.pressed, borderWidth: 0 } : { backgroundColor: resident.card, borderWidth: 1 }),
         // Reserve the border in both consent states so the pinned Health footer never shrinks.
-        appearance === 'healthForm' && { borderWidth: 1, borderColor: isDisabled || resident.accentNeedsOutline ? resident.controlBorder : 'transparent' }]}>
+        appearance === 'healthForm' && { borderWidth: 1, borderColor: isDisabled || resident.accentNeedsOutline ? resident.controlBorder : 'transparent' },
+        appearance === 'profile' && { minHeight: 52, borderRadius: 12 },
+        appearance === 'profile' && isDisabled && { backgroundColor: resident.pressed, borderWidth: 0 }]}>
         {({ pressed }) => {
           const foreground = !isDisabled && variant === 'primary' && pressed ? resident.onAccentPressed : color;
           return <>

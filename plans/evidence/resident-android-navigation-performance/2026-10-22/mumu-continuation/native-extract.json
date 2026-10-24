@@ -1,0 +1,474 @@
+{
+  "errors": [
+    {
+      "name": "trace_sorter_negative_timestamp_dropped",
+      "value": 92
+    }
+  ],
+  "clocks": [
+    {
+      "ts": 41811911201891,
+      "clock": "BOOTTIME",
+      "value": 41811911201891,
+      "snapshot": 0
+    },
+    {
+      "ts": 41811911201891,
+      "clock": "MONOTONIC",
+      "value": 41811911202106,
+      "snapshot": 0
+    },
+    {
+      "ts": 41811911240128,
+      "clock": "BOOTTIME",
+      "value": 41811911240128,
+      "snapshot": 1
+    },
+    {
+      "ts": 41811911240128,
+      "clock": "MONOTONIC",
+      "value": 41811911240291,
+      "snapshot": 1
+    }
+  ],
+  "input": [
+    {
+      "ts": 41816297820550,
+      "dur": 599,
+      "name": "publishMotionEvent(seq=35774, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41816300903082,
+      "dur": 606,
+      "name": "publishMotionEvent(seq=35776, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41819291327586,
+      "dur": 707,
+      "name": "publishMotionEvent(seq=35778, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41819294031380,
+      "dur": 658,
+      "name": "publishMotionEvent(seq=35780, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41822539753747,
+      "dur": 666,
+      "name": "publishMotionEvent(seq=35782, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41822542195309,
+      "dur": 635,
+      "name": "publishMotionEvent(seq=35784, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41825566535683,
+      "dur": 657,
+      "name": "publishMotionEvent(seq=35786, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41825569603561,
+      "dur": 601,
+      "name": "publishMotionEvent(seq=35788, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41828655758155,
+      "dur": 605,
+      "name": "publishMotionEvent(seq=35790, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41828658525612,
+      "dur": 689,
+      "name": "publishMotionEvent(seq=35792, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41831739485697,
+      "dur": 619,
+      "name": "publishMotionEvent(seq=35794, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41831742086885,
+      "dur": 692,
+      "name": "publishMotionEvent(seq=35796, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41834837476519,
+      "dur": 665,
+      "name": "publishMotionEvent(seq=35798, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41834839959457,
+      "dur": 569,
+      "name": "publishMotionEvent(seq=35800, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41837817214250,
+      "dur": 650,
+      "name": "publishMotionEvent(seq=35802, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41837819914412,
+      "dur": 576,
+      "name": "publishMotionEvent(seq=35804, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41840990998807,
+      "dur": 931,
+      "name": "publishMotionEvent(seq=35806, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41840993854933,
+      "dur": 577,
+      "name": "publishMotionEvent(seq=35808, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    },
+    {
+      "ts": 41844126232131,
+      "dur": 597,
+      "name": "publishMotionEvent(seq=35810, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=0)"
+    },
+    {
+      "ts": 41844128977465,
+      "dur": 679,
+      "name": "publishMotionEvent(seq=35812, inputChannel=7f8dc96 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (server), action=1)"
+    }
+  ],
+  "frames": [
+    {
+      "ts": 41811850522763,
+      "dur": 5856462,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41811917189481,
+      "dur": 10488177,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41816517189435,
+      "dur": 23637269,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41816583856101,
+      "dur": 8887609,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41816650522767,
+      "dur": 10514015,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41816717189433,
+      "dur": 5974837,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41819717189403,
+      "dur": 25000882,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41819783856069,
+      "dur": 9827182,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41819850522735,
+      "dur": 10512471,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41819917189401,
+      "dur": 6354092,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41820050522733,
+      "dur": 6939648,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41820117189399,
+      "dur": 3888850,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41822783856039,
+      "dur": 31411479,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41822850522705,
+      "dur": 9386282,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41822917189371,
+      "dur": 10044134,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41822983856037,
+      "dur": 5608087,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41825850522675,
+      "dur": 25910044,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41825917189341,
+      "dur": 8839764,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41825983856007,
+      "dur": 10715471,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41826050522673,
+      "dur": 8041106,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41826117189339,
+      "dur": 6021721,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41826250522671,
+      "dur": 5542520,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41826317189337,
+      "dur": 3281376,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41828917189311,
+      "dur": 21749491,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41828983855977,
+      "dur": 9950375,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41829050522643,
+      "dur": 8779762,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41829117189309,
+      "dur": 6545015,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832050522613,
+      "dur": 27470228,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832117189279,
+      "dur": 9359652,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832183855945,
+      "dur": 8551821,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832250522611,
+      "dur": 5140652,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832450522609,
+      "dur": 5457991,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41832517189275,
+      "dur": 4603952,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41835050522583,
+      "dur": 21485543,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41835117189249,
+      "dur": 8875386,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41835183855915,
+      "dur": 9611606,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41835250522581,
+      "dur": 5424165,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838117189219,
+      "dur": 25908873,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838183855885,
+      "dur": 10447704,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838250522551,
+      "dur": 9699851,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838317189217,
+      "dur": 10053808,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838383855883,
+      "dur": 5465844,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838583855881,
+      "dur": 5751320,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41838650522547,
+      "dur": 3469998,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41841317189187,
+      "dur": 24398708,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41841383855853,
+      "dur": 8941295,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41841450522519,
+      "dur": 11445044,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41841517189185,
+      "dur": 8254906,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844450522489,
+      "dur": 27053020,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844517189155,
+      "dur": 9878217,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844583855821,
+      "dur": 8668504,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844650522487,
+      "dur": 5497647,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844917189151,
+      "dur": 6458932,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41844983855817,
+      "dur": 9745643,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41845317189147,
+      "dur": 38552819,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    },
+    {
+      "ts": 41856383855703,
+      "dur": 10585417,
+      "jank": "Unknown Jank",
+      "presentType": "Unspecified Present"
+    }
+  ]
+}

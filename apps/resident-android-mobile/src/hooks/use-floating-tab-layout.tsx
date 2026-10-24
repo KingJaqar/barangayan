@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Keyboard } from 'react-native';
+import { usePathname } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { floatingTabInset } from '@/lib/floating-tab-inset';
 import { cancelAnimation, Easing, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
 import { useResidentReducedMotion } from './use-resident-reduced-motion';
 
@@ -38,7 +41,25 @@ export function FloatingTabLayoutProvider({ children }: { children: ReactNode })
       if (Number.isFinite(height) && height > 0) setHeight(current => current === height ? current : height);
     },
   }), [barHeight, keyboardVisible, mapNavHidden, mapNavProgress]);
-  return <FloatingTabLayoutContext.Provider value={value}>{children}</FloatingTabLayoutContext.Provider>;
+  return <FloatingTabLayoutContext.Provider value={value}><FloatingTabClearance>{children}</FloatingTabClearance></FloatingTabLayoutContext.Provider>;
+}
+
+const ClearanceContext = createContext(0);
+const VisibleBarClearanceContext = createContext(0);
+
+/** Only this small adapter observes the full pathname; consumers receive scalar changes. */
+function FloatingTabClearance({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const { bottom } = useSafeAreaInsets();
+  const layout = useFloatingTabLayout();
+  const inputs = { ...layout, pathname, bottom };
+  return <ClearanceContext.Provider value={floatingTabInset(inputs)}>
+    <VisibleBarClearanceContext.Provider value={floatingTabInset(inputs, true)}>{children}</VisibleBarClearanceContext.Provider>
+  </ClearanceContext.Provider>;
+}
+
+export function useFloatingTabClearance(ignoreMapHide: boolean) {
+  return useContext(ignoreMapHide ? VisibleBarClearanceContext : ClearanceContext);
 }
 
 export function useFloatingTabLayout() {

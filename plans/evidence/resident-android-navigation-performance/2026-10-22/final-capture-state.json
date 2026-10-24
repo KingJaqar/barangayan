@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "result": {
+    "result": {
+      "type": "string",
+      "value": "{\"active\":false,\"schema\":\"resident-navigation-phase0-v1\"}"
+    }
+  }
+}

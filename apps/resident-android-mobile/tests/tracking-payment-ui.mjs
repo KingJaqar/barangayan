@@ -30,14 +30,15 @@ const mocks = {
     export const AppState={currentState:'active',addEventListener(name,fn){window.fixture.appListeners.push(fn);return {remove(){window.fixture.appListeners=window.fixture.appListeners.filter(x=>x!==fn)}}}};
     export const Alert={alert:(title,message,buttons)=>{window.fixture.alerts.push({title,message});window.fixture.alertButtons=buttons??[]}};`,
   '@barangayan/shared': `export * from '${shared}/lib/format.ts';export * from '${shared}/lib/service-catalog.ts';export * from '${shared}/lib/agency-sla.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {DEFAULT_FONT_ID,FONT_OPTIONS} from '${shared}/constants/theme-fonts.ts';`,
-  'expo-router': `import {useEffect} from 'react';const router={push:v=>window.fixture.routes.push(v),replace:v=>window.fixture.routes.push(v),back:()=>window.fixture.routes.push('back')};export const useRouter=()=>router;export const useLocalSearchParams=()=>({requestId:'synthetic-request'});export const useFocusEffect=fn=>useEffect(()=>{const close=fn();window.fixture.blur=close;window.fixture.focus=fn;return close},[fn]);`,
+  'expo-router': `import {useEffect} from 'react';const router={push:v=>window.fixture.routes.push(v),replace:v=>window.fixture.routes.push(v),back:()=>window.fixture.routes.push('back')};export const useRouter=()=>router;export const useIsFocused=()=>true;export const useLocalSearchParams=()=>({requestId:'synthetic-request'});export const useFocusEffect=fn=>useEffect(()=>{const close=fn();window.fixture.blur=close;window.fixture.focus=fn;return close},[fn]);`,
+  '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'synthetic-resident'}}});`,
   '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.fontId});`,
   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reduced;`,
   '@/constants/payment': `export let PAYMENT_SETTLEMENT_READY=true;window.fixture.setSettlement=v=>PAYMENT_SETTLEMENT_READY=v;`,
   '@/lib/supabase': `export const supabase={
     from(table){const q={select(columns){q.columns=columns;return q},eq(){return q},order(){return q},limit(){return q},single(){window.fixture.queries.push(table);return Promise.resolve({data:window.fixture.queryError?null:window.fixture.request,error:window.fixture.queryError?{message:'Synthetic load failure'}:null})},maybeSingle(){return Promise.resolve({data:window.fixture.receiptError?null:table==='payments'?(q.columns?.includes('service_requests!inner')?window.fixture.receipt:window.fixture.pendingPayment):null,error:window.fixture.receiptError?{}:null})}};return q},
-    rpc(name,args){if(name==='service_request_sla_tracking')return {abortSignal:()=>Promise.resolve({data:{request:window.fixture.request,pauses:[],evaluated_at:'2026-10-19T00:15:00Z'},error:null})};window.fixture.mutations.push({name,args});const result=()=>({data:null,error:window.fixture.rpcError?{message:'Synthetic action failed'}:null});return window.fixture.hold?new Promise(resolve=>window.fixture.waiting.push(()=>resolve(result()))):Promise.resolve(result())},
+    rpc(name,args){if(name==='service_request_sla_tracking')return {abortSignal:()=>Promise.resolve({data:{request:window.fixture.request,pauses:window.fixture.slaPauses??[],evaluated_at:window.fixture.slaAt??'2026-10-19T00:15:00Z'},error:window.fixture.slaError?{}:null})};window.fixture.mutations.push({name,args});const result=()=>({data:null,error:window.fixture.rpcError?{message:'Synthetic action failed'}:null});return window.fixture.hold?new Promise(resolve=>window.fixture.waiting.push(()=>resolve(result()))):Promise.resolve(result())},
     functions:{invoke(name,args){const f=window.fixture;f.calls.push({name,args});if(name==='create-payment-source')return Promise.resolve({data:f.provider,error:null});if(name==='cancel-payment')return f.hold?new Promise(resolve=>f.waiting.push(()=>resolve({data:{status:f.cancelStatus},error:null}))):Promise.resolve({data:{status:f.cancelStatus},error:null});return Promise.resolve({data:{status:'pending'},error:null})}},
     channel(){const channel={on(event,filter,fn){window.fixture.channels.push({channel,filter,fn});return channel},subscribe(){return channel}};return channel},removeChannel(channel){window.fixture.channels=window.fixture.channels.filter(x=>x.channel!==channel);return Promise.resolve('ok')}
   };`,
@@ -127,6 +128,67 @@ try {
   await page.getByText('Total turnaround',{exact:true}).waitFor();
   assert.equal(await page.getByText(/NaN/).count(),0);
   passed.push('tracking timing panel renders all three authoritative SLA values');
+  const trackingBaseline=await page.evaluate(()=>structuredClone(window.fixture.request));
+  // The presentation keeps exact timing and request information available while
+  // avoiding second-by-second clock labels in the overview.
+  await page.evaluate(()=>Object.assign(window.fixture.request,{
+    status:'submitted',payment_status:'unpaid',payment_method:'pickup',sla_state:'pre_processing',accepted_at:null,
+    reference_number:'REQ-2026-0089',document_types:{name:'Certificate of Indigency',fee_centavos:10000,processing_target_hours:24},
+    target_minutes_snapshot:15,created_at:'2026-10-19T00:00:00Z',
+    purpose_label:'Medical assistance',purpose_explanation:'For ongoing medical treatment.',requester_notes:'Please notify me when ready.',
+    supporting_details:{isRenter:false,personalAppearanceAcknowledged:true},
+    status_history:[{status:'submitted',at:'2026-10-19T00:00:00Z',note:'Request submitted'}],
+  }));
+  await render({mode:'light',accent:'#0F6E5B',slaAt:'2026-10-22T00:09:17Z',fontId:'system'});
+  await page.getByText('Not started',{exact:true}).waitFor();
+  await page.getByText('3 days 9 min',{exact:true}).waitFor();
+  assert.equal(await page.getByText('0m 0s',{exact:true}).count(),0);
+  await page.screenshot({path:path.join(out,'tracking-light-overview.png')});
+  await page.getByRole('button',{name:'Timing details',exact:true}).click();
+  await page.getByText('3 days, 9 minutes, 17 seconds',{exact:true}).waitFor();
+  await page.getByText('Processing starts at staff acceptance and ends at readiness. Turnaround ends at release.',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'Timing details',exact:true}).click();
+  assert.equal(await page.getByText('3 days, 9 minutes, 17 seconds',{exact:true}).count(),0);
+  await page.getByText('Completed',{exact:true}).scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'tracking-light-history.png')});
+  for(const text of ['Medical assistance','For ongoing medical treatment.','Non-renter','Requirement acknowledged','Please notify me when ready.']) await page.getByText(text,{exact:true}).waitFor();
+  await page.getByRole('heading',{name:'Request details',exact:true}).scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'tracking-light-details.png')});
+  const presentationWrites=await page.evaluate(()=>window.fixture.mutations.length);
+  for(const [mode,accent,fontId] of [['light','#ffff00','system'],['dark','#ffff00','system'],['dark','#8b5cf6','georgia']]){
+    for(const width of [320,360,412]){
+      await page.setViewportSize({width,height:844});await render({mode,accent,fontId,reduced:true});
+      await page.getByText('Not started',{exact:true}).waitFor();
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+      // ScrollViews can clip overflowing descendants without growing the document.
+      const clipped=await page.evaluate(()=>[...document.querySelectorAll('[dir="auto"]')].filter(el=>{
+        const r=el.getBoundingClientRect();return r.width>0&&(r.left< -1||r.right>innerWidth+1||el.scrollWidth>el.clientWidth+1);
+      }).map(el=>el.textContent));
+      assert.deepEqual(clipped,[],`${mode}/${fontId}/${width}: no clipped text`);
+      if(width===360)await page.screenshot({path:path.join(out,`tracking-${mode}-${fontId}-360.png`)});
+    }
+  }
+  assert.equal(await page.evaluate(()=>window.fixture.mutations.length),presentationWrites);
+  await page.evaluate(()=>Object.assign(window.fixture.request,{status:'in_progress',sla_state:'paused',accepted_at:'2026-10-19T00:00:00Z'}));
+  await render({mode:'light',accent:'#0F6E5B',fontId:'system',reduced:false,slaAt:'2026-10-19T00:30:00Z',slaPauses:[{started_at:'2026-10-19T00:10:00Z',resumed_at:null,reason:'Additional proof of residency'}]});
+  await page.getByText(/Waiting for resident: Additional proof/).waitFor();
+  await page.getByText('Paused while awaiting requirements',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'Timing details',exact:true}).click();
+  await page.getByText(/^Additional proof of residency ·/).waitFor();
+  await page.screenshot({path:path.join(out,'tracking-paused-details.png')});
+  const motionCount=await page.evaluate(()=>window.fixture.motions.length);
+  await page.waitForTimeout(1200);
+  assert.equal(await page.evaluate(()=>window.fixture.motions.length),motionCount,'clock ticks must not restart entry/disclosure animations');
+  await page.evaluate(()=>Object.assign(window.fixture.request,{status:'completed',sla_state:'ready',ready_at:'2026-10-19T00:12:00Z',released_at:'2026-10-19T01:00:00Z'}));
+  await render({slaPauses:[]});await page.getByText('Processing finished at readiness',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Cancel Request',exact:true}).count(),0);
+  await page.evaluate(()=>Object.assign(window.fixture.request,{status:'cancelled',sla_state:'cancelled',ready_at:null,released_at:null,cancelled_at:'2026-10-19T00:12:00Z'}));
+  await render({});await page.getByText('Stopped at cancellation',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Cancel Request',exact:true}).count(),0);
+  await render({slaError:true});await page.getByRole('alert').filter({hasText:'Processing clock unavailable'}).waitFor();
+  await page.getByRole('button',{name:'Retry',exact:true}).waitFor();
+  passed.push('readable long durations, exact disclosure, paused/terminal/error states, all submitted details, 320–412 widths, theme/font changes, and non-restarting motion');
+  await page.evaluate(request=>{window.fixture.request=request;window.fixture.slaError=false;window.fixture.slaPauses=[]},trackingBaseline);
   await render({screen:'qr',queryError:false,reduced:false});
   await page.getByText('Waiting for payment...', {exact:true}).waitFor();
   await page.screenshot({path:path.join(out,'qr-dark.png')});

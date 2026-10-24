@@ -10,6 +10,7 @@ import { ConfirmButton } from '@/components/admin/confirm-button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { DocumentTypeForm } from './document-type-form';
 import { ContentStatus } from '@/components/admin/content-workspace';
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
 import styles from '@/components/admin/content-workspace.module.css';
 
 type DocumentType = Tables<'document_types'>;
@@ -17,6 +18,7 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
   const catalog = catalogContract(row);
   const router = useRouter();
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const inFlight = useRef(false);
@@ -39,7 +41,13 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
     } finally { inFlight.current = false; setBusy(false); }
   }
 
-  return <section className={editing ? styles.rowEdit : styles.row}>
+  return <section className={styles.row}>
+    <ContentEditDialog open={editing} title="Edit service" context={row.name} wide busy={saving}
+      description="Update service details, Citizen’s Charter, requirements, and pricing for future requests."
+      onClose={() => setEditing(false)}>
+      <DocumentTypeForm key={row.id} barangayId={row.barangay_id} documentType={row} inDialog
+        onBusyChange={setSaving} onSaved={() => setEditing(false)} onCancel={() => setEditing(false)} />
+    </ContentEditDialog>
     <div className={styles.rowHeader}>
       <h3 className={styles.rowTitle}>{row.name}</h3>
       <ContentStatus active={row.is_active} />
@@ -51,8 +59,7 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
     </p>
     <p className={`${styles.rowDescription} whitespace-pre-wrap`}>{row.description || 'No description.'}</p>
     {error ? <p role="alert" className="mb-3 text-sm text-red-600">{error}</p> : null}
-    {editing ? <DocumentTypeForm key={row.id} barangayId={row.barangay_id} documentType={row}
-      onSaved={() => setEditing(false)} onCancel={() => setEditing(false)} /> : <>
+    <>
       {catalog ? <details className={styles.details}>
         <summary className="cursor-pointer font-medium">View document details</summary>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -68,13 +75,13 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
         </dl>
       </details> : <p className="mb-3 text-sm text-zinc-500">Previous catalog format. Edit to complete its charter for future requests.</p>}
       <div className={`${styles.rowActions} mt-4`}>
-        <button type="button" disabled={busy} className={styles.primaryAction} onClick={() => {setError('');setEditing(true);}}>Edit service</button>
+        <button type="button" disabled={busy} aria-haspopup="dialog" className={styles.primaryAction} onClick={() => {setError('');setEditing(true);}}>Edit service</button>
         <button type="button" disabled={busy} className="rounded-lg border px-4 py-2 text-sm" onClick={() => change({ is_active: !row.is_active })}>
           {busy ? 'Updating…' : row.is_active ? 'Deactivate' : 'Activate'}
         </button>
         <ConfirmButton label="Archive" confirmLabel="Archive?" disabled={busy} className={styles.dangerAction}
           onConfirm={() => change({ deleted_at: new Date().toISOString() })} />
       </div>
-    </>}
+    </>
   </section>;
 }

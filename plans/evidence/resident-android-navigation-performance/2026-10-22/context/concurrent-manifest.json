@@ -1,0 +1,34 @@
+{
+  "capturedAt": "2026-10-22T14:14:18.100Z",
+  "ownership": "User/concurrent work; not modified by navigation Phase 0",
+  "packet": "repomix output files/resident-nav-phase0-20261022-concurrent.xml",
+  "packetSha256": "cc6e83cf11fc6bf9227be8770d47a78bb17c5c6d76d8b6e190720b5be3397395",
+  "identities": [
+    {
+      "path": "apps/resident-android-mobile/src/components/center-detail-card.tsx",
+      "sha256": "63aa596fdcac63bcf62bd7372f33b746824551d5fe1ebcab3eb7dbdfaa013894"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "55f825802ff9d2da91eada4b9dfb68cc75536253b945166709bd51a1eab0db9a"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "sha256": "9f8c881e06a16bcafcba4c8a6c3192b94fe884cd9e99dea52bfd63117b05dda2"
+    }
+  ],
+  "actualEntries": [
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/src/components/center-detail-card.tsx"
+  ],
+  "omissions": [],
+  "changedDuringGeneration": [],
+  "chunks": [
+    {
+      "name": "concurrent-reader-01.txt",
+      "start": 0,
+      "end": 6478
+    }
+  ]
+}

@@ -53,7 +53,7 @@ export function AnnouncementsFeed({ openId, onOpenHandled, activeFilter = 'all' 
     {readError ? <ReportSourceState message="The announcement opened, but its read status could not be saved. Use its read control to try again." /> : null}
     {error ? <ReportSourceState message={error} retry={retry} /> : loading ? <ReportSourceState message="Loading announcements…" /> :
       <FlatList data={items} keyExtractor={item => item.id}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: bottom + 24 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 2, paddingBottom: bottom + 16 }}
         ListEmptyComponent={<ReportSourceState message="No announcements in this category." />}
         renderItem={({ item, index }) => <View style={{
           borderColor: resident.border, borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1,

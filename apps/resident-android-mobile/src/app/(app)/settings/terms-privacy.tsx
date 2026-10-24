@@ -4,7 +4,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SITE_CONTENT_SECTION_META, type SiteContentSection } from '@barangayan/shared';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
-import { ContentState, ManagedMarkdown } from '@/components/settings/managed-content';
+import { ContentState, ManagedMarkdown, SettingsContentTransition } from '@/components/settings/managed-content';
 import { ThemedText } from '@/components/themed-text';
 import { useProfile } from '@/hooks/use-profile';
 import { useSiteContent } from '@/hooks/use-site-content';
@@ -26,15 +26,15 @@ export default function TermsPrivacyScreen() {
     <SegmentedControl variant="underline" segments={tabs} activeKey={section} onChange={setSection} />
     <ScrollView key={section} contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}>
       {isLoading ? <ContentState loading title="Loading policies…" /> : error ?
-        <ContentState title="Unable to load policies" message="Check your connection and try again." onRetry={refetch} /> : policy ? <View>
+        <ContentState title="Unable to load policies" message="Check your connection and try again." onRetry={refetch} /> : policy ? <SettingsContentTransition contentKey={section}>
           <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{policy.title}</ThemedText>
-          <View style={[styles.body, { borderTopColor: resident.border }]}><ManagedMarkdown>{policy.body}</ManagedMarkdown></View>
-        </View> : <ContentState title="Content Coming Soon" message={`${SITE_CONTENT_SECTION_META[section].label} content is not yet available.`} />}
+          <View style={[styles.body, { borderTopColor: resident.border }]}><ManagedMarkdown compact>{policy.body}</ManagedMarkdown></View>
+        </SettingsContentTransition> : <ContentState title="Content Coming Soon" message={`${SITE_CONTENT_SECTION_META[section].label} content is not yet available.`} />}
     </ScrollView>
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: 16, paddingTop: 16 },
-  title: { fontSize: 23, lineHeight: 29, fontWeight: '800' },
-  body: { marginTop: 12, paddingTop: 8, borderTopWidth: 1 },
+  content: { paddingHorizontal: 16, paddingTop: 12 },
+  title: { fontSize: 21, lineHeight: 27, fontWeight: '800' },
+  body: { marginTop: 8, paddingTop: 4, borderTopWidth: 1 },
 });

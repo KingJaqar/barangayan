@@ -1,0 +1,265 @@
+{
+  "qualification": "Handler → first matching destination React commit, current MuMu development build, one run. Not native input/presentation, cached usability, physical/release acceptance or causal speedup. Initial already-selected Home excluded. Pair source is last observed selected event.",
+  "durationMs": 538300.2510890029,
+  "steps": {
+    "pairs": 30,
+    "circuits": 10
+  },
+  "presses": 127,
+  "dropped": 0,
+  "perPair": [
+    {
+      "pair": "drrm → health",
+      "n": 2,
+      "medianMs": 123.25313800014555,
+      "p95Ms": 124.48129699751735,
+      "maxMs": 124.48129699751735
+    },
+    {
+      "pair": "drrm → home",
+      "n": 2,
+      "medianMs": 134.93856749869883,
+      "p95Ms": 149.20733999833465,
+      "maxMs": 149.20733999833465
+    },
+    {
+      "pair": "drrm → maps",
+      "n": 13,
+      "medianMs": 115.50235899910331,
+      "p95Ms": 267.0490699969232,
+      "maxMs": 267.0490699969232
+    },
+    {
+      "pair": "drrm → reports",
+      "n": 2,
+      "medianMs": 123.93475200049579,
+      "p95Ms": 124.67086699977517,
+      "maxMs": 124.67086699977517
+    },
+    {
+      "pair": "drrm → services",
+      "n": 2,
+      "medianMs": 113.44936499930918,
+      "p95Ms": 113.53400599956512,
+      "maxMs": 113.53400599956512
+    },
+    {
+      "pair": "health → drrm",
+      "n": 2,
+      "medianMs": 130.03285699896514,
+      "p95Ms": 136.8706069998443,
+      "maxMs": 136.8706069998443
+    },
+    {
+      "pair": "health → home",
+      "n": 3,
+      "medianMs": 120.58643199875951,
+      "p95Ms": 121.08372399955988,
+      "maxMs": 121.08372399955988
+    },
+    {
+      "pair": "health → maps",
+      "n": 2,
+      "medianMs": 102.47941150143743,
+      "p95Ms": 117.06511200219393,
+      "maxMs": 117.06511200219393
+    },
+    {
+      "pair": "health → reports",
+      "n": 12,
+      "medianMs": 120.44245699979365,
+      "p95Ms": 342.74120400100946,
+      "maxMs": 342.74120400100946
+    },
+    {
+      "pair": "health → services",
+      "n": 2,
+      "medianMs": 110.96752400137484,
+      "p95Ms": 118.4540459997952,
+      "maxMs": 118.4540459997952
+    },
+    {
+      "pair": "home → drrm",
+      "n": 2,
+      "medianMs": 127.92968099936843,
+      "p95Ms": 142.4211459979415,
+      "maxMs": 142.4211459979415
+    },
+    {
+      "pair": "home → health",
+      "n": 2,
+      "medianMs": 234.47597949951887,
+      "p95Ms": 355.4382509998977,
+      "maxMs": 355.4382509998977
+    },
+    {
+      "pair": "home → maps",
+      "n": 2,
+      "medianMs": 121.04484349861741,
+      "p95Ms": 125.79577099904418,
+      "maxMs": 125.79577099904418
+    },
+    {
+      "pair": "home → reports",
+      "n": 2,
+      "medianMs": 113.28460650146008,
+      "p95Ms": 116.15047200024128,
+      "maxMs": 116.15047200024128
+    },
+    {
+      "pair": "home → services",
+      "n": 13,
+      "medianMs": 119.60300499945879,
+      "p95Ms": 249.15864200145006,
+      "maxMs": 249.15864200145006
+    },
+    {
+      "pair": "maps → drrm",
+      "n": 2,
+      "medianMs": 110.1078180000186,
+      "p95Ms": 116.14010899886489,
+      "maxMs": 116.14010899886489
+    },
+    {
+      "pair": "maps → health",
+      "n": 13,
+      "medianMs": 123.04247800260782,
+      "p95Ms": 776.1390310004354,
+      "maxMs": 776.1390310004354
+    },
+    {
+      "pair": "maps → home",
+      "n": 2,
+      "medianMs": 115.06691950000823,
+      "p95Ms": 115.38807199895382,
+      "maxMs": 115.38807199895382
+    },
+    {
+      "pair": "maps → reports",
+      "n": 2,
+      "medianMs": 121.78236550092697,
+      "p95Ms": 130.495420999825,
+      "maxMs": 130.495420999825
+    },
+    {
+      "pair": "maps → services",
+      "n": 2,
+      "medianMs": 109.4268919993192,
+      "p95Ms": 110.34309699758887,
+      "maxMs": 110.34309699758887
+    },
+    {
+      "pair": "reports → drrm",
+      "n": 2,
+      "medianMs": 123.19731350056827,
+      "p95Ms": 130.3466770015657,
+      "maxMs": 130.3466770015657
+    },
+    {
+      "pair": "reports → health",
+      "n": 2,
+      "medianMs": 182.0958949998021,
+      "p95Ms": 255.6158909983933,
+      "maxMs": 255.6158909983933
+    },
+    {
+      "pair": "reports → home",
+      "n": 11,
+      "medianMs": 115.72645100206137,
+      "p95Ms": 207.48196300119162,
+      "maxMs": 207.48196300119162
+    },
+    {
+      "pair": "reports → maps",
+      "n": 2,
+      "medianMs": 122.60974650084972,
+      "p95Ms": 128.58713399991393,
+      "maxMs": 128.58713399991393
+    },
+    {
+      "pair": "reports → services",
+      "n": 3,
+      "medianMs": 114.2395180016756,
+      "p95Ms": 114.35309299826622,
+      "maxMs": 114.35309299826622
+    },
+    {
+      "pair": "services → drrm",
+      "n": 13,
+      "medianMs": 120.73582699894905,
+      "p95Ms": 195.32693400233984,
+      "maxMs": 195.32693400233984
+    },
+    {
+      "pair": "services → health",
+      "n": 2,
+      "medianMs": 133.82679450139403,
+      "p95Ms": 157.63817499950528,
+      "maxMs": 157.63817499950528
+    },
+    {
+      "pair": "services → home",
+      "n": 2,
+      "medianMs": 123.31678749993443,
+      "p95Ms": 138.92519899830222,
+      "maxMs": 138.92519899830222
+    },
+    {
+      "pair": "services → maps",
+      "n": 2,
+      "medianMs": 100.6529325004667,
+      "p95Ms": 109.00029000267386,
+      "maxMs": 109.00029000267386
+    },
+    {
+      "pair": "services → reports",
+      "n": 2,
+      "medianMs": 101.89649800024927,
+      "p95Ms": 105.80082300305367,
+      "maxMs": 105.80082300305367
+    }
+  ],
+  "aggregate": {
+    "n": 125,
+    "medianMs": 118.0307060033083,
+    "p95Ms": 207.48196300119162,
+    "maxMs": 776.1390310004354
+  },
+  "outliers": [],
+  "requests": 100,
+  "completedRequests": 100,
+  "requestCodes": {
+    "200": 100
+  },
+  "mapMessages": {
+    "SET_PRESENTATION": 42,
+    "SET_TILES": 1,
+    "SET_MARKERS": 1,
+    "SET_BOUNDARY": 1
+  },
+  "mapLoads": 1,
+  "mapReady": 1,
+  "owners": {
+    "home": 1,
+    "services": 1,
+    "sla-compact": 6,
+    "sla-full": 0,
+    "drrm": 1,
+    "map": 1,
+    "maps": 1,
+    "health": 1,
+    "reports": 1,
+    "other": 2
+  },
+  "issues": [
+    {
+      "kind": "warning",
+      "at": 1792727519797.797
+    }
+  ],
+  "limits": [
+    "Optional History lookup stopped original runner; recorder snapshot recovered intact with zero drops. Separate text-aware control smoke passed.",
+    "One native warning remains unclassified; console history replay is bounded.",
+    "No native heap, channel count, synchronized input/frame, adverse-network, representative routing, authenticated account switch or mutation qualification."
+  ]
+}

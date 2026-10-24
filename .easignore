@@ -51,7 +51,9 @@ example
 .next-*/
 
 # --- local-only folders hidden by .git/info/exclude or tooling ---
-.git/
+# No trailing slash: eas-cli checks `ignores('.git')`, which `.git/` doesn't match, so
+# the shallow clone's .git (~270 MB of packed history) would ship in the archive.
+.git
 .claude/
 .kilo/
 .kilocode/
@@ -73,3 +75,17 @@ plans/
 *.log
 *.docx
 *.pdf
+
+# Recordings, reference docs and repomix dumps (screen records alone is ~920 MB).
+# Keep data/: the mobile app bundles data/routing-packs.
+screen records/
+repomix output files/
+repomix-output.xml
+contexts/
+/design/
+output/
+supabase/.temp/
+*.mp4
+*.MP4
+*.mov
+*.MOV

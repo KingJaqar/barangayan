@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
+
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { ContentStatus } from '@/components/admin/content-workspace';
@@ -233,135 +236,138 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
     }
   }
 
-  if (isEditing) {
-    return (
+  return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit evacuation center" context={center.name}
+      description="Update location, occupancy, contact details, and available facilities." busy={submitting} onClose={() => setIsEditing(false)}>
       <form
         onSubmit={handleSave}
-        className={styles.rowEdit}>
-        <div className="grid grid-cols-4 gap-3">
-          <label className="col-span-4 text-sm sm:col-span-2">
-            <span className={labelClass}>Name</span>
-            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
-          </label>
+        className={editStyles.form} aria-busy={submitting}>
+        <div className={editStyles.fields} data-edit-scroll>
+        <fieldset disabled={submitting}>
+          <div className={editStyles.grid}>
+            <label className="text-sm">
+              <span className={labelClass}>Name</span>
+              <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+            </label>
 
-          <label className="col-span-4 text-sm sm:col-span-2">
-            <span className={labelClass}>Address</span>
-            <input className={inputClass} value={address} onChange={(e) => setAddress(e.target.value)} />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Address</span>
+              <input className={inputClass} value={address} onChange={(e) => setAddress(e.target.value)} />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Latitude</span>
-            <input
-              className={inputClass}
-              type="number"
-              step="0.000001"
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              required
-            />
-          </label>
+            <h3 className={editStyles.groupTitle}>Location coordinates</h3>
+            <label className="text-sm">
+              <span className={labelClass}>Latitude</span>
+              <input
+                className={inputClass}
+                type="number"
+                step="0.000001"
+                value={lat}
+                onChange={(e) => setLat(e.target.value)}
+                required
+              />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Longitude</span>
-            <input
-              className={inputClass}
-              type="number"
-              step="0.000001"
-              value={lng}
-              onChange={(e) => setLng(e.target.value)}
-              required
-            />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Longitude</span>
+              <input
+                className={inputClass}
+                type="number"
+                step="0.000001"
+                value={lng}
+                onChange={(e) => setLng(e.target.value)}
+                required
+              />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Capacity</span>
-            <input
-              className={inputClass}
-              type="number"
-              value={capacity}
-              onChange={(e) => setCapacity(e.target.value)}
-              min="0"
-            />
-          </label>
+            <h3 className={editStyles.groupTitle}>Capacity & contact</h3>
+            <label className="text-sm">
+              <span className={labelClass}>Capacity</span>
+              <input
+                className={inputClass}
+                type="number"
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
+                min="0"
+              />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Current Occupancy</span>
-            <input
-              className={inputClass}
-              type="number"
-              value={currentOccupancy}
-              onChange={(e) => setCurrentOccupancy(e.target.value)}
-              min="0"
-            />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Current Occupancy</span>
+              <input
+                className={inputClass}
+                type="number"
+                value={currentOccupancy}
+                onChange={(e) => setCurrentOccupancy(e.target.value)}
+                min="0"
+              />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Contact Number</span>
-            <input className={inputClass} value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Contact Number</span>
+              <input className={inputClass} value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
+            </label>
 
-          <label className="text-sm">
-            <span className={labelClass}>Status</span>
-            <AdminSelect kind="status"
-              className={inputClass}
-              value={isActive ? 'active' : 'inactive'}
-              onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </AdminSelect>
-          </label>
+            <label className="text-sm">
+              <span className={labelClass}>Status</span>
+              <AdminSelect kind="status"
+                className={inputClass}
+                value={isActive ? 'active' : 'inactive'}
+                onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </AdminSelect>
+            </label>
 
-          <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
-            <input
-              type="checkbox"
-              checked={verified}
-              onChange={(e) => setVerified(e.target.checked)}
-              className="rounded border-zinc-300"
-            />
-            <span className="font-medium">Verified</span>
-          </label>
+            <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
+              <input
+                type="checkbox"
+                checked={verified}
+                onChange={(e) => setVerified(e.target.checked)}
+                className="rounded border-zinc-300"
+              />
+              <span className="font-medium">Verified</span>
+            </label>
 
-          <fieldset className="col-span-4">
-            <legend className={labelClass}>Facilities</legend>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-              {EVACUATION_CENTER_FACILITIES.map((facility) => (
-                <label key={facility} className="flex items-center gap-1.5 text-xs">
-                  <input
-                    type="checkbox"
-                    checked={facilitiesState.includes(facility)}
-                    onChange={() => toggleFacility(facility)}
-                    className="rounded border-zinc-300"
-                  />
-                  {facility.replace(/_/g, ' ')}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+            <fieldset className={editStyles.full}>
+              <legend className={labelClass}>Facilities</legend>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                {EVACUATION_CENTER_FACILITIES.map((facility) => (
+                  <label key={facility} className="flex items-center gap-1.5 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={facilitiesState.includes(facility)}
+                      onChange={() => toggleFacility(facility)}
+                      className="rounded border-zinc-300"
+                    />
+                    {facility.replace(/_/g, ' ')}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-          {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+          {error ? <p role="alert" className={`${editStyles.full} ${editStyles.error}`}>{error}</p> : null}
 
-          <div className="col-span-4 flex items-center gap-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-              aria-busy={submitting}>
-              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              disabled={submitting}
-              className="rounded-full bg-zinc-200 px-5 py-1.5 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-              Cancel
-            </button>
-          </div>
+        </div>
+        </fieldset>
+        </div>
+        <div className={editStyles.actions}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            disabled={submitting}>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            aria-busy={submitting}>
+            <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          </button>
         </div>
       </form>
-    );
-  }
-
-  return (
+    </ContentEditDialog>
     <article className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -395,7 +401,7 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
           </details>
         </div>
         <div className={styles.rowActions}>
-          <button type="button" onClick={startEdit} aria-label={`Edit ${center.name}`} className={styles.primaryAction}>
+          <button type="button" onClick={startEdit} aria-haspopup="dialog" aria-label={`Edit ${center.name}`} className={styles.primaryAction}>
             <Pencil size={15} aria-hidden="true" />Edit
           </button>
           <ConfirmButton label={<><Archive size={15} aria-hidden="true" />Archive</>}
@@ -404,5 +410,6 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
         </div>
       </div>
     </article>
+    </>
   );
 }

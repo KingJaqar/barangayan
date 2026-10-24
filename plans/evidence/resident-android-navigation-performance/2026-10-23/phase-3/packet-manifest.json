@@ -1,0 +1,253 @@
+{
+  "packet": "repomix output files/resident-nav-phase3-20261023.xml",
+  "sha256": "4ce3d79964fa19bb269d1f9e7efa02bc5731def38a3a638252236c2ac948fde4",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-refresh-resource.ts",
+      "chars": 464,
+      "sha256": "ff078aba0716f7850c54819fe2a1fc072bee6ce142475b98367b431886ac800e",
+      "priorIdentity": "ff078aba0716f7850c54819fe2a1fc072bee6ce142475b98367b431886ac800e"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+      "chars": 5483,
+      "sha256": "5b69580e60501b90726c748884d63c84386a28b03475ad701f33b95f33b4d5d0",
+      "priorIdentity": "5b69580e60501b90726c748884d63c84386a28b03475ad701f33b95f33b4d5d0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "chars": 467,
+      "sha256": "acfd0afceaabcb25549194cdbcded344a0deff9c06dd96d9ff57fbc969858c4b",
+      "priorIdentity": "acfd0afceaabcb25549194cdbcded344a0deff9c06dd96d9ff57fbc969858c4b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-local-route.ts",
+      "chars": 1795,
+      "sha256": "f449512b03bbc0228df31f777f0dac1368938d0b9ab74b89202ff380c8ce227c",
+      "priorIdentity": "f449512b03bbc0228df31f777f0dac1368938d0b9ab74b89202ff380c8ce227c"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-realtime.ts",
+      "chars": 923,
+      "sha256": "762ef057ca5111957f9d515a0396492243ff2c94b95926fc966ec4144f423cdb",
+      "priorIdentity": "762ef057ca5111957f9d515a0396492243ff2c94b95926fc966ec4144f423cdb"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-offline-routing.ts",
+      "chars": 3246,
+      "sha256": "7515136dae200eb07d5bfef14767d16b4ea5b97996543fb02db11d1b66059c6a",
+      "priorIdentity": "7515136dae200eb07d5bfef14767d16b4ea5b97996543fb02db11d1b66059c6a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+      "chars": 3263,
+      "sha256": "d2298fd02b79debfe824905ee1651af2a3da8843fd9d2ea6c7d07830fc71d8e4",
+      "priorIdentity": "d2298fd02b79debfe824905ee1651af2a3da8843fd9d2ea6c7d07830fc71d8e4"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/offline-routing.test.ts",
+      "chars": 1929,
+      "sha256": "a9aa1719cf1a2de46f06170984401e8d4e1a4621e8bf25ef08e0d4c9e65ce2b8",
+      "priorIdentity": "a9aa1719cf1a2de46f06170984401e8d4e1a4621e8bf25ef08e0d4c9e65ce2b8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/offline-routing.ts",
+      "chars": 15273,
+      "sha256": "3655ff3047f4235c460f26c87d208dbd593c4c60c97b72258949a998ed5ac474",
+      "priorIdentity": "3655ff3047f4235c460f26c87d208dbd593c4c60c97b72258949a998ed5ac474"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "chars": 469,
+      "sha256": "c4d7e05ad24cf9b91de59e81ab624cf28a551d0e344ca67e0762ef7ae9ba6ee7",
+      "priorIdentity": "c4d7e05ad24cf9b91de59e81ab624cf28a551d0e344ca67e0762ef7ae9ba6ee7"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "chars": 189,
+      "sha256": "a6ab9b7989ad79069ef05d2abfe53908e74d8c78ed5df0ed7576ddb3f2d275da",
+      "priorIdentity": "a6ab9b7989ad79069ef05d2abfe53908e74d8c78ed5df0ed7576ddb3f2d275da"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+      "chars": 449,
+      "sha256": "e0f34d309b817f983b9f79829c07416617dd9dbc12a4cca45e416941c2898645",
+      "priorIdentity": "e0f34d309b817f983b9f79829c07416617dd9dbc12a4cca45e416941c2898645"
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 12,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "priorIdentity": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "chars": 843,
+      "sha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4",
+      "priorIdentity": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "chars": 472,
+      "sha256": "d5ec6085d6331ce2a9bd02cba1516f19a06309e406bd371f945e6fb74aa8d3ea",
+      "priorIdentity": "d5ec6085d6331ce2a9bd02cba1516f19a06309e406bd371f945e6fb74aa8d3ea"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+      "chars": 236,
+      "sha256": "f5dc1e60eff269e71b94b9b6a1c30b18d75d09a92910ff2fbeb221d95d186579",
+      "priorIdentity": "f5dc1e60eff269e71b94b9b6a1c30b18d75d09a92910ff2fbeb221d95d186579"
+    },
+    {
+      "path": "packages/shared/src/lib/connected-route-client.ts",
+      "chars": 2526,
+      "sha256": "f3f60b845091c0583394fedc7dd5189c0e140b2b0e7030def41f8a266991f8b8"
+    },
+    {
+      "path": "packages/shared/src/lib/evacuation-routing.ts",
+      "chars": 31801,
+      "sha256": "670dd09437c5f8025c922a27abe0bb90d202e762c40a64e619e3f50e90889071"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "chars": 615,
+      "sha256": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+      "priorIdentity": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "chars": 4968,
+      "sha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b",
+      "priorIdentity": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "chars": 1820,
+      "sha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0",
+      "priorIdentity": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "chars": 5136,
+      "sha256": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6",
+      "priorIdentity": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "chars": 2084,
+      "sha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08",
+      "priorIdentity": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "chars": 4621,
+      "sha256": "bca23cdce6d8d64af1d2d458536a23542fc2df8b82d7b3c3d70824031e3803a0",
+      "priorIdentity": "bca23cdce6d8d64af1d2d458536a23542fc2df8b82d7b3c3d70824031e3803a0"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2059,
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b",
+      "priorIdentity": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 2,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "priorIdentity": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-auth.tsx",
+      "chars": 2786,
+      "sha256": "d3813af8faa55e7e08c5526f96c9f5523cc284c47efb49017c4bede6a82c53d6",
+      "priorIdentity": "d3813af8faa55e7e08c5526f96c9f5523cc284c47efb49017c4bede6a82c53d6"
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "chars": 1296,
+      "sha256": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3",
+      "priorIdentity": "a6a8c8586fc22b912a6b0f43d4d9357d4bfd9078a2b9ba5a0bef37ae6410fed3"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "chars": 3415,
+      "sha256": "76685e42299058852e567b4388451fa2e18fed56f94c19cd9f77d909d05078a8",
+      "priorIdentity": "76685e42299058852e567b4388451fa2e18fed56f94c19cd9f77d909d05078a8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "chars": 11632,
+      "sha256": "436d8921715a9c4ac49ed1d41c3ea098a6ee8299f13f46680b843b639b604202",
+      "priorIdentity": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "reader-1.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-2.txt",
+      "start": 11000,
+      "end": 22000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-3.txt",
+      "start": 22000,
+      "end": 33000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-4.txt",
+      "start": 33000,
+      "end": 44000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-5.txt",
+      "start": 44000,
+      "end": 55000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-6.txt",
+      "start": 55000,
+      "end": 66000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-7.txt",
+      "start": 66000,
+      "end": 77000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-8.txt",
+      "start": 77000,
+      "end": 88000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-9.txt",
+      "start": 88000,
+      "end": 99000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-10.txt",
+      "start": 99000,
+      "end": 110000,
+      "chars": 11000
+    },
+    {
+      "name": "reader-11.txt",
+      "start": 110000,
+      "end": 114094,
+      "chars": 4094
+    }
+  ]
+}

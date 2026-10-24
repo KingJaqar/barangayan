@@ -1,12 +1,10 @@
 /**
- * Resident profile: compact photo summary and responsive editable details.
- * Narrow screens and larger text use stacked labels; wider screens use rows.
+ * Resident profile: stacked editable details, grouped cards and family sheets.
  * Photo uploads save immediately; profile and household edits use Save Changes.
  */
 
 import {
   EMAIL_REGEX,
-  EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
   MOBILE_NUMBER_REGEX,
   NAME_REGEX,
@@ -27,7 +25,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,13 +35,12 @@ import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
 import { PrimaryButton } from '@/components/primary-button';
 import { SettingsSheet } from '@/components/settings-sheet';
-import { ServiceScreenHeader } from '@/components/services/service-screen-header';
-import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { getMobileFontFamily } from '@/constants/fonts';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import {
   imageExtension,
   pickImageAsset,
@@ -89,10 +85,11 @@ const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
   employed: 'Employed',
   unemployed: 'Unemployed',
   student: 'Student',
-  self_employed: 'Self-Employed',
+  self_employed: 'Self-employed',
   retired: 'Retired',
 };
 const ROLES     = ['Head of Family', 'Student', 'Employed', 'Unemployed', 'Retired', 'Minor'] as const;
+const PROFILE_EMPLOYMENT_OPTIONS: readonly EmploymentStatus[] = ['student', 'employed', 'self_employed', 'unemployed', 'retired'];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -138,50 +135,15 @@ function genId(): string {
   });
 }
 
-/** YYYY-MM-DD → "August 8, 2000" */
+/** Keep the saved ISO date untouched; display the reference's numeric date. */
 function fmtDate(iso: string | null): string {
   if (!iso) return '';
-  const [y, m, d] = iso.split('-').map(Number);
-  const dt = new Date(y, m - 1, d, 12);
-  return dt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const [year, month, day] = iso.split('-');
+  return `${month}/${day}/${year}`;
 }
 
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-// Keep long labels and larger accessibility text stacked on smaller displays.
-function useCompactFields() {
-  const { width, fontScale } = useWindowDimensions();
-  return width >= 360 && fontScale <= 1.2;
-}
-
-/** Verified Resident pill badge */
-function VerifiedBadge() {
-  const theme = useTheme();
-  return (
-    <View style={[badgeStyles.pill, { backgroundColor: theme.resident.accentSoft }]}>
-      <Ionicons name="checkmark-circle" size={14} color={theme.resident.accentText} />
-      <ThemedText style={[badgeStyles.text, { color: theme.resident.accentText }]}>Verified Resident</ThemedText>
-    </View>
-  );
-}
-
-const badgeStyles = StyleSheet.create({
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 12,
-    fontWeight: '600',
-    flexShrink: 1,
-  },
-});
 
 /** Red asterisk suffix for required-field labels — matches Register's RequiredMark. */
 function RequiredMark() {
@@ -218,7 +180,7 @@ function FieldStatusRow({ error, success }: { error?: string; success?: string }
   return null;
 }
 
-/** A single field row: label / display value + edit pencil — used for Sex / Employment
+/** A stacked field with a chevron or calendar — used for Sex / Employment
  * Status / Date of Birth, which open a picker rather than edit inline. */
 function FieldRow({
   label,
@@ -238,23 +200,22 @@ function FieldRow({
   onEdit: () => void;
 }) {
   const theme = useTheme();
-  const compact = useCompactFields();
   return (
     <View style={fieldStyles.fieldWrapper}>
-      <Pressable style={fieldStyles.row} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`}>
-        <View style={[fieldStyles.body, compact && fieldStyles.compactBody]}>
-          <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compact && fieldStyles.compactLabel]}>
+      <Pressable style={({ pressed }) => [fieldStyles.row, pressed && { backgroundColor: theme.resident.surface }]} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`} accessibilityValue={{ text: value || placeholder }}>
+        <View style={fieldStyles.body}>
+          <ThemedText style={[fieldStyles.label, { color: theme.resident.muted }]}>
             {label}
             {required ? <RequiredMark /> : null}
             {success && !success.trim() && !error ? (
-              <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.resident.success} accessible={false} /></>
+              <>  <Ionicons name="checkmark-circle-outline" size={14} color={theme.resident.accentText} accessible={false} /></>
             ) : null}
           </ThemedText>
-          <ThemedText style={[fieldStyles.value, compact && fieldStyles.compactValue, !value && { color: theme.textSecondary }]}>
-            {value || placeholder}
-          </ThemedText>
+          <View style={fieldStyles.valueRow}>
+            <ThemedText style={[fieldStyles.value, { color: value ? theme.resident.text : theme.resident.muted }]}>{value || placeholder}</ThemedText>
+            <Ionicons name={label === 'Date of Birth' ? 'calendar-outline' : 'chevron-down'} size={18} color={label === 'Date of Birth' ? theme.resident.text : theme.resident.accentText} />
+          </View>
         </View>
-        <Ionicons name="create-outline" size={18} color={theme.resident.accentText} />
       </Pressable>
       <FieldStatusRow error={error} success={success} />
     </View>
@@ -262,34 +223,39 @@ function FieldRow({
 }
 
 const fieldStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 48,
-    paddingVertical: Spacing.one,
-    gap: Spacing.two,
-  },
-  body: { flex: 1, minWidth: 0, gap: 2 },
-  compactBody: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  compactLabel: { width: 108, flexShrink: 0 },
-  compactValue: { flex: 1, minWidth: 0 },
+  row: { minHeight: 77, paddingHorizontal: 16, paddingVertical: 12, justifyContent: 'center' },
+  body: { minWidth: 0, gap: 8 },
+  valueRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   label: { fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
-  value: { fontSize: 16, fontWeight: '600' },
-  fieldWrapper: { gap: 2 },
-  inlineRow: { paddingVertical: Spacing.one, gap: 2 },
-  inputBody: { gap: 2 },
+  value: { flex: 1, minWidth: 0, fontSize: 16, lineHeight: 24, fontWeight: '500' },
+  fieldWrapper: { gap: 0 },
+  inlineRow: { minHeight: 77, paddingHorizontal: 16, paddingVertical: 12, justifyContent: 'center' },
+  inputBody: { gap: 6 },
   inlineInput: {
     fontSize: 16,
-    minHeight: 44,
-    paddingVertical: 4,
+    lineHeight: 24,
+    fontWeight: '500',
+    minHeight: 28,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 4, paddingHorizontal: 16, paddingBottom: 8,
   },
   statusText: { flex: 1 },
 });
+
+function LockedField({ label, value }: { label: string; value: string }) {
+  const { resident } = useTheme();
+  return <View style={fieldStyles.row} accessible accessibilityLabel={`${label}, ${value}, read only`}>
+    <View style={fieldStyles.body}>
+      <ThemedText style={[fieldStyles.label, { color: resident.muted }]}>{label}  <Ionicons name="lock-closed-outline" size={14} color={resident.muted} accessible={false} /></ThemedText>
+      <ThemedText style={[fieldStyles.value, { flex: undefined, color: resident.muted }]}>{value}</ThemedText>
+    </View>
+  </View>;
+}
 
 /**
  * A field edited directly in the display form — no tap-to-open bottom sheet.
@@ -321,24 +287,26 @@ function InlineFieldInput({
 }) {
   const theme = useTheme();
   const { fontId } = useFontPreference();
-  const compact = useCompactFields();
+  const input = useRef<TextInput>(null);
   return (
-    <View style={fieldStyles.inlineRow}>
-      <View style={[fieldStyles.inputBody, compact && fieldStyles.compactBody]}>
-        <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compact && fieldStyles.compactLabel]}>
+    <Pressable accessible={false} onPress={() => input.current?.focus()} style={fieldStyles.inlineRow}>
+      <View style={fieldStyles.inputBody}>
+        <ThemedText style={[fieldStyles.label, { color: theme.resident.muted }]}>
           {label}
           {required ? <RequiredMark /> : null}
           {success && !success.trim() && !error ? (
-            <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.resident.success} accessible={false} /></>
+            <>  <Ionicons name="checkmark-circle-outline" size={14} color={theme.resident.accentText} accessible={false} /></>
           ) : null}
         </ThemedText>
         <TextInput
-          style={[fieldStyles.inlineInput, compact && fieldStyles.compactValue, { color: theme.text, fontFamily: getMobileFontFamily(fontId) }]}
+          ref={input}
+          style={[fieldStyles.inlineInput, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]}
           accessibilityLabel={label}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={theme.textSecondary}
+          placeholderTextColor={theme.resident.muted}
+          selectionColor={theme.resident.accentText}
           keyboardType={keyboardType ?? 'default'}
           autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
           maxLength={maxLength}
@@ -346,7 +314,7 @@ function InlineFieldInput({
         />
       </View>
       <FieldStatusRow error={error} success={success} />
-    </View>
+    </Pressable>
   );
 }
 
@@ -360,14 +328,14 @@ function MemberRow({
 }) {
   const theme = useTheme();
   return (
-    <Pressable style={memberStyles.row} onPress={onPress} accessibilityRole="button">
-      <View style={[memberStyles.avatar, { backgroundColor: theme.resident.border }]}>
-        <ThemedText themeColor="textSecondary" style={memberStyles.initials}>{getInitials(member.name)}</ThemedText>
+    <Pressable style={({ pressed }) => [memberStyles.row, pressed && { backgroundColor: theme.resident.surface }]} onPress={onPress} accessibilityRole="button" accessibilityLabel={`Edit family member ${member.name}`}>
+      <View style={[memberStyles.avatar, { backgroundColor: theme.resident.surface }]}>
+        <ThemedText style={[memberStyles.initials, { color: theme.resident.muted }]}>{getInitials(member.name)}</ThemedText>
       </View>
       <View style={memberStyles.info}>
-        <ThemedText style={memberStyles.name}>{member.name}</ThemedText>
-        <ThemedText themeColor="textSecondary" style={memberStyles.sub}>
-          {member.relation} · {member.role}
+        <ThemedText style={[memberStyles.name, { color: theme.resident.text }]}>{member.name}</ThemedText>
+        <ThemedText style={[memberStyles.sub, { color: theme.resident.muted }]}>
+          {[member.relation, member.role].filter(Boolean).join(' · ')}
         </ThemedText>
       </View>
       <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
@@ -379,8 +347,10 @@ const memberStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    gap: Spacing.three,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    minHeight: 70,
+    gap: 14,
   },
   avatar: {
     width: 40,
@@ -390,17 +360,17 @@ const memberStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   initials: { fontSize: 14, fontWeight: '700' },
-  info: { flex: 1, gap: 2 },
-  name: { fontSize: 14, fontWeight: '600' },
-  sub: { fontSize: 12 },
+  info: { flex: 1, minWidth: 0, gap: 2 },
+  name: { fontSize: 15, lineHeight: 20, fontWeight: '700' },
+  sub: { fontSize: 13, lineHeight: 18 },
 });
 
 /** Section card wrapper */
 function SectionCard({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
   const theme = useTheme();
   return <View>
-    <View style={styles.sectionHeaderRow}><ThemedText accessibilityRole="header" style={styles.sectionTitle}>{title}</ThemedText>{action}</View>
-    <View style={[cardStyles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>{children}</View>
+    <View style={styles.sectionHeaderRow}><ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: theme.resident.text }]}>{title}</ThemedText>{action}</View>
+    <View style={[cardStyles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, shadowColor: theme.resident.text }]}>{children}</View>
   </View>;
 }
 
@@ -451,9 +421,11 @@ const cardStyles = StyleSheet.create({
   card: {
     borderRadius: 16,
     borderWidth: 1,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 4,
-    gap: 0,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.035,
+    shadowRadius: 8,
+    elevation: 1,
+    overflow: 'hidden',
   },
 });
 
@@ -493,54 +465,90 @@ function MemberModal({
 
   const isEdit = !!initial;
 
-  return <SettingsSheet visible={visible} title={isEdit ? 'Edit Member' : 'Add Household Member'} onClose={onClose} footer={
+  return <SettingsSheet appearance="family" visible={visible} title={isEdit ? 'Edit Family Member' : 'Add Family Member'} onClose={onClose} footer={
     <View style={mModalStyles.actions}>
-      {initial && onDelete ? <View style={{ flex: 1 }}><PrimaryButton presentation="resident" variant="destructive" label="Remove" onPress={() => { onDelete(initial.id); onClose(); }} /></View> : null}
-      <View style={{ flex: 2 }}><PrimaryButton presentation="resident" label={isEdit ? 'Update' : 'Add Member'} disabled={!name.trim()} onPress={() => { onSave({ id: initial?.id ?? genId(), name: name.trim(), relation, role }); onClose(); }} /></View>
+      {initial && onDelete ? <View style={{ flex: 1 }}><PrimaryButton presentation="resident" appearance="profile" variant="destructive" label="Remove" accessibilityHint="Save Changes on Profile to save this removal" onPress={() => { onDelete(initial.id); onClose(); }} /></View> : null}
+      <View style={{ flex: 2 }}><PrimaryButton presentation="resident" appearance="profile" label={isEdit ? 'Update' : 'Add Member'} accessibilityHint="Save Changes on Profile to save family member changes" disabled={!name.trim()} onPress={() => { onSave({ id: initial?.id ?? genId(), name: name.trim(), relation, role }); onClose(); }} /></View>
     </View>
   }>
-    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Full Name</ThemedText>
-    <TextInput accessibilityLabel="Household member full name" style={[mModalStyles.input, { borderColor: theme.resident.controlBorder, backgroundColor: theme.resident.surface, color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} value={name} onChangeText={setName} placeholder="e.g. Juan Santos" placeholderTextColor={theme.resident.muted} returnKeyType="done" />
-    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Relation</ThemedText>
-    <OptionRow options={RELATIONS} value={relation} onChange={setRelation} />
-    <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Role</ThemedText>
-    <OptionRow options={ROLES} value={role} onChange={setRole} />
-    <ThemedText type="small" themeColor="textSecondary">Member changes are saved with Save Changes on your profile.</ThemedText>
+    <View style={mModalStyles.group}>
+      <ThemedText style={[mModalStyles.label, { color: theme.resident.muted }]}>Full Name</ThemedText>
+      <TextInput accessibilityLabel="Household member full name" style={[mModalStyles.input, { borderColor: theme.resident.border, backgroundColor: theme.resident.surface, color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} value={name} onChangeText={setName} placeholder="e.g. Maria White" placeholderTextColor={theme.resident.muted} selectionColor={theme.resident.accentText} autoCapitalize="words" returnKeyType="done" />
+    </View>
+    <View style={mModalStyles.group}>
+      <ThemedText style={[mModalStyles.label, { color: theme.resident.muted }]}>Relation</ThemedText>
+      <OptionRow label="Relation" options={RELATIONS} value={relation} onChange={setRelation} />
+    </View>
+    <View style={[mModalStyles.group, { marginBottom: 0 }]}>
+      <ThemedText style={[mModalStyles.label, { color: theme.resident.muted }]}>Role</ThemedText>
+      <OptionRow label="Role" options={ROLES} value={role} onChange={setRole} />
+    </View>
   </SettingsSheet>;
 }
 
 const mModalStyles = StyleSheet.create({
   label: { fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
-  input: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, minHeight: 48, fontSize: 16 },
-  chip: { borderRadius: 20, paddingHorizontal: 12, paddingVertical: 10, minHeight: 44, borderWidth: 1 },
-  chipText: { fontSize: 13, fontWeight: '600' },
+  group: { gap: 10, marginBottom: 18 },
+  input: { borderWidth: 1, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, minHeight: 48, fontSize: 15, lineHeight: 22 },
+  chip: { borderRadius: 24, paddingHorizontal: 16, paddingVertical: 6, minHeight: 34, justifyContent: 'center' },
+  chipText: { fontSize: 13, lineHeight: 20, fontWeight: '600' },
+  optionRail: { marginRight: -20, position: 'relative' },
+  optionContent: { gap: 8, paddingRight: 48 },
+  nextOptions: { position: 'absolute', right: 8, top: 0, width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', borderWidth: 1, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   actions: { flexDirection: 'row', gap: 12 },
 });
 
-function OptionRow({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) {
+function OptionRow({ label, options, value, onChange }: { label: string; options: readonly string[]; value: string; onChange: (v: string) => void }) {
   const theme = useTheme();
+  const reduced = useResidentReducedMotion(true);
+  const scroll = useRef<ScrollView>(null);
+  const offset = useRef(0);
+  const optionLayouts = useRef<Record<string, { x: number; width: number }>>({});
+  const [railWidth, setRailWidth] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
+  const [atEnd, setAtEnd] = useState(false);
+  useEffect(() => {
+    const selected = optionLayouts.current[value];
+    if (!selected || !railWidth || !contentWidth) return;
+    // Reopening an editor must reveal a saved choice beyond the first chips.
+    const visibleRight = offset.current + railWidth - 44;
+    if (selected.x < offset.current || selected.x + selected.width > visibleRight) {
+      scroll.current?.scrollTo({ x: Math.max(0, selected.x + selected.width - railWidth + 44), animated: false });
+    }
+  }, [value, railWidth, contentWidth]);
   return (
-    <View style={{ gap: 8, flexDirection: 'row', flexWrap: 'wrap' }}>
+    <View style={mModalStyles.optionRail} onLayout={event => setRailWidth(event.nativeEvent.layout.width)}>
+      <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={mModalStyles.optionContent}
+        onContentSizeChange={width => setContentWidth(width)} scrollEventThrottle={32}
+        onScroll={event => { offset.current = event.nativeEvent.contentOffset.x; setAtEnd(offset.current + event.nativeEvent.layoutMeasurement.width >= event.nativeEvent.contentSize.width - 4); }}>
       {options.map((opt) => (
         <Pressable
           key={opt}
-          accessibilityRole="button" accessibilityState={{ selected: value === opt }}
+          hitSlop={4}
+          onLayout={event => { const { x, width } = event.nativeEvent.layout; optionLayouts.current[opt] = { x, width }; }}
+          accessibilityRole="radio" accessibilityLabel={`${label}: ${opt}`} accessibilityState={{ checked: value === opt }}
           onPress={() => onChange(opt)}
-          style={[
+          style={({ pressed }) => [
             mModalStyles.chip,
-            { backgroundColor: theme.resident.border, borderColor: theme.resident.border },
-            value === opt && { backgroundColor: theme.resident.accent, borderColor: theme.resident.accentText },
+            { backgroundColor: value === opt ? (pressed ? theme.resident.accentPressed : theme.resident.accent) : pressed ? theme.resident.pressed : theme.resident.surface },
           ]}>
-          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: theme.resident.onAccent }]}>{opt}</ThemedText>
+          <ThemedText style={[mModalStyles.chipText, { color: value === opt ? theme.resident.onAccent : theme.resident.text }]}>{opt}</ThemedText>
         </Pressable>
       ))}
+      </ScrollView>
+      {contentWidth > railWidth && !atEnd ? <Pressable hitSlop={6} accessibilityRole="button" accessibilityLabel={`More ${label.toLowerCase()} options`} onPress={() => scroll.current?.scrollTo({ x: offset.current + railWidth * 0.7, animated: !reduced })}
+        style={({ pressed }) => [mModalStyles.nextOptions, { backgroundColor: pressed ? theme.resident.pressed : theme.resident.card, borderColor: theme.resident.border, shadowColor: theme.resident.text }]}>
+        <Ionicons name="chevron-forward" size={18} color={theme.resident.text} />
+      </Pressable> : null}
     </View>
   );
 }
 
 const idModalStyles = StyleSheet.create({
-  optionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 48, paddingVertical: 14, borderBottomWidth: 1 },
-  optionText: { fontSize: 16, flex: 1 },
+  optionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 57, paddingVertical: 14, borderBottomWidth: 1 },
+  optionText: { fontSize: 15, lineHeight: 22, flex: 1 },
+  radio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  radioDot: { width: 12, height: 12, borderRadius: 6 },
 });
 
 // ─── Choice List Modal (Sex / Employment Status) ──────────────────────────────
@@ -567,17 +575,19 @@ function ChoiceListModal<T extends string>({
 }) {
   const theme = useTheme();
   return (
-    <SettingsSheet visible={visible} title={title} onClose={onClose}>
-        {options.map((opt) => (
+    <SettingsSheet appearance="profile" visible={visible} title={title} onClose={onClose}>
+        {options.map((opt, index) => (
           <Pressable
             key={opt}
-            accessibilityRole="button" accessibilityState={{ selected: current === opt }}
+            accessibilityRole="radio" accessibilityState={{ checked: current === opt }}
             onPress={() => { onSelect(opt); onClose(); }}
-            style={[idModalStyles.optionRow, { borderBottomColor: theme.resident.border }]}>
-            <ThemedText style={[idModalStyles.optionText, current === opt && { color: theme.resident.accentText, fontWeight: '700' }]}>
+            style={({ pressed }) => [idModalStyles.optionRow, { borderBottomColor: theme.resident.border, borderBottomWidth: index === options.length - 1 ? 0 : 1, backgroundColor: pressed ? theme.resident.surface : theme.resident.card }]}>
+            <ThemedText style={[idModalStyles.optionText, { color: theme.resident.text }, current === opt && { fontWeight: '700' }]}>
               {labels[opt]}
             </ThemedText>
-            {current === opt && <Ionicons name="checkmark" size={18} color={theme.resident.accentText} />}
+            <View accessible={false} style={[idModalStyles.radio, { borderColor: current === opt ? theme.resident.accentText : theme.resident.controlBorder }]}>
+              {current === opt ? <View style={[idModalStyles.radioDot, { backgroundColor: theme.resident.accentText }]} /> : null}
+            </View>
           </Pressable>
         ))}
     </SettingsSheet>
@@ -600,7 +610,6 @@ function ProfileScreenContent() {
   const { profile, isLoading, error: profileError, refetch } = useProfile();
   const insets   = useSafeAreaInsets();
   const theme    = useTheme();
-  const compactFields = useCompactFields();
 
   // ── Personal info fields ──────────────────────────────────────────────────
   // Full Name split into structured parts (Register/Profile field-split) — the
@@ -932,13 +941,22 @@ function ProfileScreenContent() {
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
+      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
 
-      <ServiceScreenHeader title="Profile" onBack={() => router.back()} />
+      <View style={{ backgroundColor: theme.resident.accent, paddingTop: insets.top }}>
+        <View style={styles.header}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={({ pressed }) => [styles.backButton, pressed && { backgroundColor: theme.resident.accentPressed }]}>
+            <Ionicons name="chevron-back" size={24} color={theme.resident.onAccent} />
+          </Pressable>
+          <ThemedText accessibilityRole="header" style={[styles.headerTitle, { color: theme.resident.onAccent }]}>Profile</ThemedText>
+          <View style={styles.headerBalance} />
+        </View>
+      </View>
 
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: 24 }]}
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled">
         {householdMustReload ? <View style={{ gap: 8 }}>
           <ThemedText accessibilityRole="alert" style={{ color: theme.resident.danger }}>Reload Profile to review the saved family list before trying again. Reloading discards unsaved form edits.</ThemedText>
@@ -954,6 +972,7 @@ function ProfileScreenContent() {
             disabled={avatarUploading}
             accessibilityRole="button"
             accessibilityLabel="Change profile photo"
+            accessibilityHint={isVerified ? 'Verified resident' : undefined}
             hitSlop={8}>
 
             <View style={styles.avatarOuter}>
@@ -983,16 +1002,15 @@ function ProfileScreenContent() {
               <View style={[styles.cameraBadge, { backgroundColor: theme.resident.accent, borderColor: theme.resident.card }]}>
                 {avatarUploading
                   ? <ActivityIndicator size="small" color={theme.resident.onAccent} />
-                  : <Ionicons name="camera" size={13} color={theme.resident.onAccent} />}
+                  : <Ionicons name="camera-outline" size={17} color={theme.resident.onAccent} />}
               </View>
             </View>
           </Pressable>
 
           {/* ③ Name + badge */}
           <View style={styles.identityText}>
-            <ThemedText style={styles.nameText}>{liveFullName || '—'}</ThemedText>
+            <ThemedText style={[styles.nameText, { color: theme.resident.text }]}>{liveFullName || '—'}</ThemedText>
             <ThemedText style={{ fontSize: 13, lineHeight: 19, color: theme.resident.muted }}>Fields marked <RequiredMark /> are required.</ThemedText>
-            {isVerified && <View style={styles.identityBadge}><VerifiedBadge /></View>}
           </View>
         </View>
 
@@ -1109,28 +1127,19 @@ function ProfileScreenContent() {
             {...fieldStatus(street, fieldErrors.street)}
           />
           <Divider />
-          {profile?.barangays?.barangay_localities ? <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`City, ${profile?.city ?? 'Not configured'}, read only`}>
-            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>City</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.city ?? 'Not configured'}</ThemedText></View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
-          </View> : <InlineFieldInput label="City" required value={city} placeholder="Enter city/municipality" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />}
-          <Divider />
           {/* Read-only — this is profiles.barangay_id, assigned automatically at
               registration (AGENTS.md §0), not a free-text address component. */}
-          <View style={fieldStyles.row} accessible accessibilityLabel={`Barangay, ${profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? 'Not configured'}, read only`}>
-            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}>
-              <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Barangay</ThemedText>
-              <ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? '—'}</ThemedText>
-            </View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
-          </View>
+          <LockedField label="Barangay" value={profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? 'Not configured'} />
           <Divider />
-          <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`Province, ${profile?.province ?? 'Not configured'}, read only`}>
-            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Province</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.province ?? 'Not configured'}</ThemedText></View><Ionicons name="lock-closed-outline" size={16} color={theme.resident.muted} accessible={false} />
-          </View>
+          {profile?.barangays?.barangay_localities ? <LockedField label="City" value={profile?.city ?? 'Not configured'} /> : <InlineFieldInput label="City" required value={city} placeholder="Enter city/municipality" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />}
+          <Divider />
+          <LockedField label="Province" value={profile?.province ?? 'Not configured'} />
         </SectionCard>
 
         {/* ── ⑤ Household Information ──────────────────────────────────── */}
         <SectionCard title="Household Information" action={
-          <Pressable onPress={() => setMemberModal({ member: null })} accessibilityRole="button" accessibilityLabel="Add household member" style={styles.addMemberBtn}>
-            <Ionicons name="add" size={16} color={theme.resident.accentText} />
+          <Pressable onPress={() => setMemberModal({ member: null })} accessibilityRole="button" accessibilityLabel="Add household member" style={({ pressed }) => [styles.addMemberBtn, pressed && { opacity: 0.7 }]}>
+            <Ionicons name="add" size={19} color={theme.resident.accentText} />
             <ThemedText style={[styles.addLink, { color: theme.resident.accentText }]}>Add Member</ThemedText>
           </Pressable>
         }>
@@ -1151,7 +1160,7 @@ function ProfileScreenContent() {
       </ScrollView>
 
       <View style={[styles.saveBar, { backgroundColor: theme.resident.card, borderTopColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 16) }]}>
-        <PrimaryButton presentation="resident" label={saving ? 'Saving…' : 'Save Changes'} disabled={!isDirty || householdUnavailable} loading={saving} onPress={handleSave} />
+        <PrimaryButton presentation="resident" appearance="profile" label={saving ? 'Saving…' : 'Save Changes'} disabled={!isDirty || householdUnavailable} loading={saving} onPress={handleSave} />
       </View>
 
       {/* ── Centered toast ────────────────────────────────────────────────── */}
@@ -1190,7 +1199,7 @@ function ProfileScreenContent() {
 
       <ChoiceListModal
         visible={sexModal}
-        title="Select Sex"
+        title="Sex"
         options={SEXES}
         labels={SEX_LABELS}
         current={sex}
@@ -1203,8 +1212,8 @@ function ProfileScreenContent() {
 
       <ChoiceListModal
         visible={employmentModal}
-        title="Select Employment Status"
-        options={EMPLOYMENT_STATUSES}
+        title="Employment Status"
+        options={PROFILE_EMPLOYMENT_OPTIONS}
         labels={EMPLOYMENT_STATUS_LABELS}
         current={employmentStatus}
         onClose={() => setEmploymentModal(false)}
@@ -1221,20 +1230,24 @@ function ProfileScreenContent() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 }, root: { flex: 1 },
-  avatarSection: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  identityText: { flex: 1, minWidth: 0, gap: 4 }, identityBadge: { alignSelf: 'flex-start', maxWidth: '100%' },
-  avatarOuter: { width: 76, height: 76, position: 'relative' },
-  avatarCircle: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  header: { minHeight: 64, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 8 },
+  backButton: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { flex: 1, fontSize: 22, lineHeight: 28, fontWeight: '400', textAlign: 'center' },
+  headerBalance: { width: 44 },
+  avatarSection: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 0 },
+  identityText: { flex: 1, minWidth: 0, gap: 4 },
+  avatarOuter: { width: 80, height: 84, position: 'relative' },
+  avatarCircle: { width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   avatarInitials: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
   avatarImage: { width: '100%', height: '100%' },
   avatarSpinnerOverlay: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
-  cameraBadge: { position: 'absolute', bottom: 0, right: 0, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 3 },
+  cameraBadge: { position: 'absolute', bottom: 0, right: -3, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 3 },
   nameText: { fontSize: 22, lineHeight: 28, fontWeight: '800' },
-  content: { padding: 16, gap: 16 },
+  content: { padding: 20, paddingBottom: 32, gap: 24 },
   sectionTitle: { fontSize: 15, lineHeight: 21, fontWeight: '700', flexShrink: 1 },
-  sectionHeaderRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, paddingHorizontal: 4, gap: 8 },
+  sectionHeaderRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, paddingHorizontal: 4, gap: 8 },
   addLink: { fontSize: 14, fontWeight: '700' },
   addMemberBtn: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 4 },
   emptyHousehold: { fontSize: 14, paddingVertical: 16, textAlign: 'center' },
-  saveBar: { borderTopWidth: 1, paddingHorizontal: 16, paddingTop: 12 },
+  saveBar: { borderTopWidth: 1, paddingHorizontal: 20, paddingTop: 12 },
 });

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { useEffect, useRef, useState } from 'react';
 import { fetchSetupStatus } from '../../auth/setup-status';
 import { authRequests, Ownership, SetupTimeout, WriteBoundary } from '../../auth/request-gate';
+import { classifyFailure } from '../../data/outcome';
 import { Action, Body, Card, Field, Notice, Screen } from '../../components/ui';
 import { useResident } from '../../lib/runtime';
 import { EmergencyEntry } from './parts';
@@ -52,6 +53,7 @@ export function PasswordStep({ required, variant = 'setup', draft, onDraftChange
     const uid = session.user.id;
     const email = session.user.email;
     const write = new WriteBoundary();
+    let confirmed = false;
     setBusy(true);
     try {
       await authRequests.run(async () => {
@@ -81,6 +83,7 @@ export function PasswordStep({ required, variant = 'setup', draft, onDraftChange
           const { error: writeError } = await client.auth.updateUser({ password: parsed.data.password });
           if (writeError) throw writeError;
         }
+        confirmed = true;
       });
       if (!owns()) return;
       onDraftChange(emptyPasswordDraft);
@@ -90,8 +93,10 @@ export function PasswordStep({ required, variant = 'setup', draft, onDraftChange
       // A timeout or transport error can follow a committed write. Never repeat updateUser blindly:
       // the exact entered credential (or recovery) must confirm it first.
       const name = cause instanceof Error ? cause.name : '';
-      const transport = ['AbortError', 'TimeoutError', 'TypeError', 'AuthUnknownError', 'AuthRetryableFetchError'].includes(name);
-      if (write.started && (cause instanceof SetupTimeout || transport)) onDraftChange({ ...draft, uncertain: true });
+      const code = cause && typeof cause === 'object' && 'code' in cause ? cause.code : null;
+      if (write.started && !confirmed && code !== 'weak_password' && code !== 'same_password' && classifyFailure(cause, { write: true }) === 'unknown-commit') {
+        onDraftChange({ ...draft, uncertain: true });
+      }
       const safe = residentSetupFailure(cause as { code?: string; status?: number; name?: string });
       const local = cause instanceof Error && name === 'Error' && !('code' in cause);
       setError(cause instanceof SetupTimeout || local ? (cause as Error).message : safe.message);

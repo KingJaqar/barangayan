@@ -1,0 +1,9 @@
+Loading trace: 0.00 MBLoading trace: 11.05 MB[171.965]     common_flags.cc:525 Trace loaded: 11.05 MB in 0.35s (31.3 MB/s)
+
+
+Trace health issues:
+
+  Trace errors
+    trace_sorter_negative_timestamp_dropped: 92 | A negative timestamp was received by the TraceSorter and was dropped. Negative timestamps are not supported by trace processor and the presence of one is usually a sign that something went wrong while recording a trace. Common causes of this include incorrect incremental timestamps, bad clock synchronization or kernel bugs in drivers emitting timestamps. When merging multiple traces, a clock offset which moves events before the start of the trace-time clock also causes this.
+
+[171.998]            query.cc:191 Query execution time: 1 ms

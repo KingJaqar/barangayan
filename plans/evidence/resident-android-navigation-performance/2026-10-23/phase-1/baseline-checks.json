@@ -1,0 +1,65 @@
+[
+  {
+    "name": "services",
+    "code": 0,
+    "durationMs": 8493,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/services-tab-stability.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-services.log"
+  },
+  {
+    "name": "unit",
+    "code": 0,
+    "durationMs": 14949,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-unit.log"
+  },
+  {
+    "name": "health",
+    "code": 0,
+    "durationMs": 22698,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/health-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-health.log"
+  },
+  {
+    "name": "sensitive",
+    "code": 1,
+    "durationMs": 36912,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-sensitive.log"
+  },
+  {
+    "name": "typecheck",
+    "code": 0,
+    "durationMs": 42243,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-typecheck.log"
+  },
+  {
+    "name": "lint",
+    "code": 0,
+    "durationMs": 69500,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\baseline-lint.log"
+  }
+]

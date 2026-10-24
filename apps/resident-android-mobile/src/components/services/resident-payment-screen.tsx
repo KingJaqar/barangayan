@@ -164,7 +164,7 @@ export function ResidentPaymentScreen({
                   {requestFeeLabel(request, amount)}
                 </ThemedText>
               )}
-              {request.billable_pages ? <ThemedText type="small" themeColor="textSecondary">{request.billable_pages} pages × ₱10.00 per page</ThemedText> : null}
+              {request.billable_pages ? <ThemedText type="small" themeColor="textSecondary">{request.billable_pages} pages · {request.fee_basis}</ThemedText> : null}
             </View>
             {request.fee_assessment_state === 'page_count_required' && !['completed', 'cancelled'].includes(request.status) ? <View style={styles.actionGroup}>
               <ThemedText>Total pages across all copies</ThemedText>

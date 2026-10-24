@@ -1,0 +1,59 @@
+{
+  "packet": "repomix output files/resident-nav-phase0-20261022-final.xml",
+  "sha256": "08ba639fa27bc8b00c974c6faa6699595b2a5fe07167540150fe69d455a72ab4",
+  "selectors": [
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/components/map-view.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+    "apps/resident-android-mobile/src/lib/navigation-diagnostics.test.ts",
+    "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx"
+  ],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx",
+      "sourceSha256": "00870babc6ac1215e5121dae560ada743b602a9c509c53dab8661a881bf3ab5f",
+      "chars": 425
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.test.ts",
+      "sourceSha256": "6307518dc9c2fb17bf6abbe50e2019048d9adbaeebad0899b2537e6c78a24022",
+      "chars": 75
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+      "sourceSha256": "5943eddb56bc0524201280f434e5cd0b186a2e1913cc8ddecf19e9c2bae12a43",
+      "chars": 1546
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "sourceSha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4",
+      "chars": 843
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sourceSha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08",
+      "chars": 2084
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "sourceSha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371",
+      "chars": 11195
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "final-reader-01.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "final-reader-02.txt",
+      "start": 11000,
+      "end": 17052,
+      "chars": 6052
+    }
+  ]
+}

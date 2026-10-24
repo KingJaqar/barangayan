@@ -6,7 +6,7 @@ import { Animated, Easing, Pressable, ScrollView, StyleSheet, View } from 'react
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
-import { ContentState, ManagedMarkdown } from '@/components/settings/managed-content';
+import { ContentState, ManagedMarkdown, SettingsContentTransition } from '@/components/settings/managed-content';
 import { ThemedText } from '@/components/themed-text';
 import { useAboutUs } from '@/hooks/use-about-us';
 import { useProfile } from '@/hooks/use-profile';
@@ -61,7 +61,7 @@ function PurposePanel({ mission, vision }: { mission: string | null; vision: str
   return <View style={[styles.purpose, { backgroundColor: resident.accentSoft }]}>
     <SegmentedControl presentation="resident" appearance="purpose" variant="outline" segments={choices} activeKey={active.key} onChange={setSelected} />
     <Animated.View style={[styles.purposeBody, { opacity, transform: [{ translateY }] }]} accessibilityLiveRegion="polite">
-      <ManagedMarkdown>{current.text}</ManagedMarkdown>
+      <ManagedMarkdown compact>{current.text}</ManagedMarkdown>
     </Animated.View>
   </View>;
 }
@@ -88,7 +88,9 @@ function History({ text }: { text: string }) {
         </Animated.View>
       </Pressable>
     </View>
-    {open ? <ManagedMarkdown>{text}</ManagedMarkdown> : <ThemedText numberOfLines={3} style={[styles.historyPreview, { color: resident.muted }]}>{text}</ThemedText>}
+    <SettingsContentTransition contentKey={open ? 'full' : 'preview'}>
+      {open ? <ManagedMarkdown compact>{text}</ManagedMarkdown> : <ThemedText numberOfLines={3} style={[styles.historyPreview, { color: resident.muted }]}>{text}</ThemedText>}
+    </SettingsContentTransition>
   </View>;
 }
 
@@ -142,25 +144,25 @@ export default function AboutScreen() {
   </SafeAreaView>;
 }
 const styles = StyleSheet.create({
-  content: { paddingTop: 16, paddingHorizontal: 16, gap: 16 },
-  identity: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  logo: { width: 52, height: 52, borderRadius: 26 },
-  identityTitle: { flex: 1, minWidth: 0, fontSize: 22, lineHeight: 28, fontWeight: '800' },
-  version: { alignSelf: 'flex-start', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 },
+  content: { paddingTop: 12, paddingHorizontal: 16, gap: 12 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  logo: { width: 44, height: 44, borderRadius: 22 },
+  identityTitle: { flex: 1, minWidth: 0, fontSize: 20, lineHeight: 26, fontWeight: '800' },
+  version: { borderRadius: 20, paddingHorizontal: 8, paddingVertical: 3 },
   versionText: { fontSize: 12, lineHeight: 18, fontWeight: '700' },
   purpose: { borderRadius: 16, padding: 6 },
-  purposeBody: { paddingHorizontal: 10, paddingTop: 8, paddingBottom: 6 },
-  section: { gap: 10 }, sectionTitle: { fontSize: 15, lineHeight: 22, fontWeight: '700', paddingHorizontal: 4 },
+  purposeBody: { paddingHorizontal: 8, paddingTop: 4, paddingBottom: 2 },
+  section: { gap: 6 }, sectionTitle: { fontSize: 15, lineHeight: 22, fontWeight: '700', paddingHorizontal: 4 },
   historyHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' },
   historyButton: { flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 8, gap: 4, borderRadius: 20 },
   historyAction: { fontSize: 13.5, lineHeight: 20, fontWeight: '700' },
   historyPreview: { fontSize: 13.5, lineHeight: 20 },
   panel: { borderRadius: 16, borderWidth: 1, overflow: 'hidden' },
-  contact: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, paddingVertical: 10 },
+  contact: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, paddingVertical: 8 },
   contactText: { flex: 1, minWidth: 0, fontSize: 14, lineHeight: 20, fontWeight: '600' },
   team: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'stretch' },
-  developer: { width: '50%', padding: 12, gap: 4 },
-  avatar: { width: 36, height: 36, borderRadius: 18, marginBottom: 4 },
+  developer: { width: '50%', padding: 10, gap: 3 },
+  avatar: { width: 32, height: 32, borderRadius: 16, marginBottom: 2 },
   avatarFallback: { alignItems: 'center', justifyContent: 'center' },
   developerName: { fontSize: 13.5, lineHeight: 18, fontWeight: '700' },
   developerRole: { fontSize: 12, lineHeight: 16, fontWeight: '600' },

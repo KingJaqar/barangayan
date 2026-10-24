@@ -1,0 +1,254 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/lib/refresh-resource.ts, apps/resident-android-mobile/src/hooks/use-refresh-resource.ts, apps/resident-android-mobile/src/hooks/use-medical-drives.ts, apps/resident-android-mobile/src/app/(app)/health/index.tsx, apps/resident-android-mobile/tests/health-presentation-ui.mjs
+- Files matching these patterns are excluded: **/.env*, **/node_modules/**, **/repomix-output.xml, **/*.mp4, **/*.png, **/*.jpg, **/secrets/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            index.tsx
+      hooks/
+        use-medical-drives.ts
+        use-refresh-resource.ts
+      lib/
+        refresh-resource.ts
+    tests/
+      health-presentation-ui.mjs
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/hooks/use-refresh-resource.ts">
+import { useEffect, useMemo, useSyncExternalStore } from 'react';
+import { RefreshResource } from '@/lib/refresh-resource';
+⋮----
+/** The key includes every private owner and query filter. Changing it creates
+ * empty visible state immediately; cleanup cancels the obsolete transport. */
+export function useRefreshResource<T>(
+  key: string,
+  load: (signal: AbortSignal) => Promise<T>,
+  message: string,
+  reconcile?: (previous: T | undefined, next: T) => T,
+)
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/refresh-resource.ts">
+interface RefreshSnapshot<T> {
+  data: T | undefined;
+  fetching: boolean;
+  error: string | null;
+}
+⋮----
+/** One read owner per account/filter. Ordinary reads join; invalidations queue
+ * one follow-up and prevent a pre-invalidation reply from being published. */
+export class RefreshResource<T>
+⋮----
+constructor(
+⋮----
+private publish(snapshot: RefreshSnapshot<T>)
+⋮----
+// Install ownership before invoking transport, including synchronous callers.
+⋮----
+const abort = ()
+⋮----
+removeAbortListener = ()
+</file>
+
+<file path="apps/resident-android-mobile/tests/health-presentation-ui.mjs">
+// Actual Health routes, medical hook, schemas, theme and motion. Only data/native APIs are synthetic.
+⋮----
+setup(b)
+⋮----
+const button = (n) => page.getByRole('button',
+const render = (patch =
+⋮----
+// Replace fixture registrations with complete authoritative records.
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-medical-drives.ts">
+import { DRIVE_TYPE_CONFIG, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type ResidentDriveRegistrationResult, type DriveType } from '@barangayan/shared';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+⋮----
+import { AppState } from 'react-native';
+import { useProfileData } from '@/hooks/use-profile';
+import { useRefreshResource } from '@/hooks/use-refresh-resource';
+import { useAuth } from '@/hooks/use-auth';
+import { supabase } from '@/lib/supabase';
+⋮----
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+⋮----
+export interface MedicalDrive {
+  id: string;
+  barangay_id: string;
+  title: string;
+  type: DriveType;
+  drive_date: string;   // YYYY-MM-DD
+  time_start: string;   // HH:MM:SS
+  time_end: string;     // HH:MM:SS
+  location: string;
+  eligible_criteria: string;
+  stock_label: string;  // "Remaining Stock" | "Remaining Slots" | …
+  stock_unit: string;   // "doses" | "slots" | …
+  stock_total: number;
+  stock_remaining: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+⋮----
+drive_date: string;   // YYYY-MM-DD
+time_start: string;   // HH:MM:SS
+time_end: string;     // HH:MM:SS
+⋮----
+stock_label: string;  // "Remaining Stock" | "Remaining Slots" | …
+stock_unit: string;   // "doses" | "slots" | …
+⋮----
+export interface DriveRegistration {
+  id: string;
+  drive_id: string;
+  user_id: string;
+  applicant_number: string;
+  age: number;
+  is_pwd: boolean;
+  comorbidities: string[];
+  prior_dose_date: string | null;
+  status: string; // drive_registration_status
+  created_at: string;
+  updated_at: string;
+  // Joined from medical_drives when fetching "My Registrations"
+  drive?: MedicalDrive | null;
+}
+⋮----
+status: string; // drive_registration_status
+⋮----
+// Joined from medical_drives when fetching "My Registrations"
+⋮----
+export type RegisterForDriveResult = ResidentDriveRegistrationResult;
+⋮----
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
+export function useMedicalDrives({ selectedDate, typeFilter, calendarMonth, monthViewActive }: {
+  selectedDate: string;
+  typeFilter: DriveType | 'all';
+  calendarMonth: { year: number; month: number };
+  monthViewActive: boolean;
+})
+⋮----
+const pad = (value: number)
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/health/index.tsx">
+import { DRIVE_TYPES, DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FilterChips } from '@/components/filter-chips';
+import {
+  HealthDriveSummary,
+  HealthFact,
+  HealthPanel,
+  HealthSheet,
+  HealthStatus,
+  healthDate,
+  healthTime,
+  healthTypeColor,
+} from '@/components/health/health-presentation';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProgressBar } from '@/components/progress-bar';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import {
+  type DriveRegistration,
+  type DriveType,
+  type MedicalDrive,
+  useMedicalDrives,
+} from '@/hooks/use-medical-drives';
+import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+⋮----
+type StatusFilter = (typeof STATUSES)[number];
+type HealthSegment = 'active-drives' | 'my-registrations';
+type Month = { year: number; month: number };
+const pad2 = (n: number)
+function parseLocalDate(iso: string)
+function localToday()
+⋮----
+onPress=
+⋮----
+onSelect(year, i + 1);
+onClose();
+⋮----
+// One native opacity animation for the grid; no per-day work or animated layout.
+⋮----
+accessibilityLabel=
+⋮----
+// Keep the last content through exit while reading current server status on refresh.
+⋮----
+setLastDetail(reg);
+setDetailId(reg.id);
+⋮----
+
+⋮----
+const handleMonthChange = (delta: 1 | -1)
+const handleDateSelect = (date: string) =>
+const handleRegister = (drive: MedicalDrive) =>
+⋮----
+style=
+⋮----
+onRegister=
+</file>
+
+</files>

@@ -8,11 +8,13 @@ import {
   type ResidentRequestStatus,
   type Tables,
 } from '@barangayan/shared';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { GuestPrompt } from '@/components/guest-prompt';
+import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
 import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { SegmentedControl } from '@/components/segmented-control';
@@ -22,11 +24,15 @@ import { ThemedText } from '@/components/themed-text';
 import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
 import { useAuth } from '@/hooks/use-auth';
+import { useHistoryPages } from '@/hooks/use-history-pages';
 import { useTheme } from '@/hooks/use-theme';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { supabase } from '@/lib/supabase';
+import { HISTORY_PAGE_SIZE, historyBefore } from '@/lib/history-resource';
+import { uniqueChannelName } from '@/lib/realtime-channel';
 
-type ServiceRequest = Tables<'service_requests'> & {
+type ServiceRequest = Pick<Tables<'service_requests'>,
+  'id' | 'reference_number' | 'status' | 'payment_status' | 'created_at' | 'timing_model'> & {
   document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours'> | null;
 };
 
@@ -56,14 +62,6 @@ function RequestFilterChip({ label, selected, onPress }: { label: string; select
       <ThemedText type="smallBold" style={[styles.chipLabel, { color: selected ? (pressed ? resident.onAccentPressed : resident.onAccent) : resident.text }]}>{label}</ThemedText>
     </Animated.View>
   </Pressable>;
-}
-
-// Preserve the existing status predicates, including ready_for_pickup and both terminal states.
-function matchesFilter(status: string, filter: Filter): boolean {
-  if (filter === 'all') return true;
-  if (filter === 'active') return status === 'submitted' || status === 'in_progress';
-  if (filter === 'pickup') return status === 'ready_for_pickup';
-  return status === 'completed' || status === 'cancelled';
 }
 
 /** Scrollable filters with compact underline tabs for the active status row. */
@@ -98,9 +96,7 @@ export function RequestsList({
 }) {
   const { session } = useAuth();
   const theme = useTheme();
-  const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [retry, setRetry] = useState(0);
+  const userId = session?.user.id;
   const [filter, setFilter] = useState<Filter>('all');
   const [activeSubFilter, setActiveSubFilter] = useState<ActiveSubFilter>('all');
   // Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
@@ -116,48 +112,55 @@ export function RequestsList({
     if (next !== 'active') setActiveSubFilter('all');
   }
 
+  const load = useCallback(async (signal: AbortSignal, after: ServiceRequest | undefined, count: boolean) => {
+    if (!userId) return { rows: [], total: 0 };
+    let query = supabase.from('service_requests')
+      .select('id, reference_number, status, payment_status, created_at, timing_model, document_types(name, processing_target_hours)', count ? { count: 'exact' } : undefined)
+      .eq('resident_id', userId)
+      .order('created_at', { ascending: false }).order('id', { ascending: false })
+      .limit(HISTORY_PAGE_SIZE).abortSignal(signal);
+    if (filter === 'pickup') query = query.eq('status', 'ready_for_pickup');
+    if (filter === 'history') query = query.in('status', ['completed', 'cancelled']);
+    if (filter === 'active') {
+      if (activeSubFilter === 'all') query = query.in('status', ['submitted', 'in_progress']);
+      else if (activeSubFilter === 'processing') query = query.eq('status', 'in_progress');
+      else {
+        query = query.eq('status', 'submitted');
+        query = activeSubFilter === 'paid' ? query.in('payment_status', ['paid', 'waived'])
+          : query.not('payment_status', 'in', '(paid,waived)');
+      }
+    }
+    if (after) query = query.or(historyBefore('created_at', after.created_at, after.id));
+    const { data, error, count: total } = await query;
+    if (error) throw error;
+    return { rows: data ?? [], total };
+  }, [userId, filter, activeSubFilter]);
+  const history = useHistoryPages(JSON.stringify([userId, filter, activeSubFilter]), load, 'Could not load your requests. Reconnect and retry.');
+  const { refresh, invalidate } = history;
+  const filtered = history.data?.rows ?? [];
+  useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
   useEffect(() => {
-    if (!session) return;
+    if (!userId) return;
     let active = true;
+    let subscribed = false;
 
     const channel = supabase
-      .channel(`my-service-requests-${instanceId}`)
+      .channel(uniqueChannelName(`my-service-requests-${instanceId}`))
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'service_requests', filter: `resident_id=eq.${session.user.id}` },
-        () => load(),
+        { event: '*', schema: 'public', table: 'service_requests', filter: `resident_id=eq.${userId}` },
+        () => { if (active) void invalidate(); },
       )
-      .subscribe();
-
-    function load() {
-      supabase
-        .from('service_requests')
-        .select('*, document_types(name, processing_target_hours)')
-        .eq('resident_id', session!.user.id)
-        .order('created_at', { ascending: false })
-        .then(({ data, error: queryError }) => {
-          if (!active) return;
-          setRequests(queryError ? null : (data as ServiceRequest[]) ?? []);
-          setError(queryError ? 'Could not load your requests. Reconnect and retry.' : null);
-        });
-    }
-
-    load();
+      .subscribe(status => {
+        if (!active || status !== 'SUBSCRIBED') return;
+        if (subscribed) void invalidate(); else void refresh();
+        subscribed = true;
+      });
     return () => {
       active = false;
       supabase.removeChannel(channel);
     };
-  }, [session, instanceId, retry]);
-
-  function matchesActiveSubFilter(r: ServiceRequest, sub: ActiveSubFilter): boolean {
-    if (sub === 'all') return true;
-    return getResidentRequestStatus(r.status, r.payment_status) === sub;
-  }
-
-  const filtered =
-    requests
-      ?.filter((r) => matchesFilter(r.status, filter))
-      .filter((r) => (filter === 'active' ? matchesActiveSubFilter(r, activeSubFilter) : true)) ?? [];
+  }, [userId, instanceId, refresh, invalidate]);
 
   // Keyed one-for-one with ResidentRequestStatus (not the raw service_requests.status
   // enum) — a 'submitted' request always resolves to either pending_payment or paid
@@ -220,9 +223,9 @@ export function RequestsList({
         ) : null}
       </View>
 
-      {error ? (
-        <ServicesErrorState message={error} retryLabel="Retry requests" onRetry={() => setRetry(value => value + 1)} />
-      ) : requests === null ? (
+      {history.error && !history.data ? (
+        <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} />
+      ) : history.loading ? (
         <ServicesListSkeleton rows={3} />
       ) : filtered.length === 0 ? (
         <ServicesEmptyState
@@ -310,6 +313,9 @@ export function RequestsList({
           </ServicesPanel>
         </View>
       )}
+      {history.data && history.error ? <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} /> : null}
+      {history.data?.hasMore ? <View style={styles.list}><PrimaryButton presentation="resident" variant="secondary" label="Load older requests"
+        accessibilityLabel="Load older requests" loading={history.fetching} onPress={history.loadMore} /></View> : null}
     </ScrollView>
   );
 }

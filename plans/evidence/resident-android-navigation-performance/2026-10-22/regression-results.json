@@ -1,0 +1,91 @@
+{
+  "phase": 0,
+  "status": "Complete",
+  "scope": "MuMuPlayer diagnostic baseline explicitly authorized by user; no later fixes or release acceptance",
+  "checks": [
+    {
+      "name": "typecheck",
+      "exitCode": 1,
+      "durationMs": 37663,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "log": "tmp/resident-nav-mumu-20261022/logs/typecheck.log"
+    },
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "durationMs": 119526,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/expo/bin/cli",
+        "lint"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "log": "tmp/resident-nav-mumu-20261022/logs/lint.log"
+    },
+    {
+      "name": "unit",
+      "exitCode": 0,
+      "durationMs": 14414,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "log": "tmp/resident-nav-mumu-20261022/logs/unit.log"
+    },
+    {
+      "name": "drrm-ui",
+      "exitCode": 0,
+      "durationMs": 22330,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+      ],
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "log": "tmp/resident-nav-mumu-20261022/logs/drrm-ui.log"
+    }
+  ],
+  "androidExport": {
+    "exitCode": 0,
+    "durationMs": 116029,
+    "command": "expo export --platform android --output-dir tmp/resident-nav-mumu-20261022/android-export",
+    "scope": "Current JavaScript production bundle; not an installed release APK"
+  },
+  "unitTestsPassed": 286,
+  "sourceMatches": 6,
+  "liveSla": {
+    "compact": 6,
+    "full": 1,
+    "unmountCleanup": true
+  },
+  "native": {
+    "earlierPresses": 120,
+    "pairs": 30,
+    "circuits": 10,
+    "currentPairPresses": 10,
+    "sixTabSmoke": true,
+    "fullT0T5": "pending later/manual verification",
+    "negativeTimestampDrops": 92
+  },
+  "limitations": [
+    "native APK source revision unknown",
+    "TypeScript internal crash reproduces without owned changes",
+    "one unclassified full-card warning",
+    "no precise first correct presented frame or seamless background resume",
+    "no physical/release/network/account/resource acceptance"
+  ],
+  "planOutsidePhase0Unchanged": {
+    "beforePhase0": true,
+    "phase1Onward": true
+  },
+  "sourceOwnership": "No app source modified during MuMu continuation; original six diagnostic files remain the owned implementation",
+  "newDependencies": [],
+  "historicalResults": "regression-results-initial.json",
+  "completionRecord": "mumu-continuation/completion.md"
+}

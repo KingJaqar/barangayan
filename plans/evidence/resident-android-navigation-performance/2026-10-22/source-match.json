@@ -1,0 +1,41 @@
+[
+  {
+    "scriptId": "73",
+    "loadedSha256": "baa2d0e4c838cf4231884675c9e6b7419b154edf8b9fb6f6a84ec9f2830b399f",
+    "generatedBodyMatchesLoaded": true,
+    "matches": [
+      {
+        "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+        "mapSha256": "42c57ff6e72c816164981f039889a137d02c5ef975d30d83832f88cbace930a0",
+        "workingCopySha256": "42c57ff6e72c816164981f039889a137d02c5ef975d30d83832f88cbace930a0",
+        "equal": true
+      }
+    ]
+  },
+  {
+    "scriptId": "74",
+    "loadedSha256": "28fc2f9a43aa5a11e79d98b0861bba80750b16465c4d4a6e04234b7db10d6440",
+    "generatedBodyMatchesLoaded": true,
+    "matches": [
+      {
+        "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+        "mapSha256": "47914390397748f97d1c8abfc656e6e61d9a56b0f09416ba476e12984979da71",
+        "workingCopySha256": "47914390397748f97d1c8abfc656e6e61d9a56b0f09416ba476e12984979da71",
+        "equal": true
+      }
+    ]
+  },
+  {
+    "scriptId": "77",
+    "loadedSha256": "baa2d0e4c838cf4231884675c9e6b7419b154edf8b9fb6f6a84ec9f2830b399f",
+    "generatedBodyMatchesLoaded": true,
+    "matches": [
+      {
+        "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+        "mapSha256": "42c57ff6e72c816164981f039889a137d02c5ef975d30d83832f88cbace930a0",
+        "workingCopySha256": "42c57ff6e72c816164981f039889a137d02c5ef975d30d83832f88cbace930a0",
+        "equal": true
+      }
+    ]
+  }
+]

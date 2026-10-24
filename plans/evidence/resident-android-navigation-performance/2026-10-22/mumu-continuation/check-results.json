@@ -1,0 +1,49 @@
+[
+  {
+    "name": "typecheck",
+    "exitCode": 1,
+    "durationMs": 37663,
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "log": "tmp/resident-nav-mumu-20261022/logs/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "exitCode": 0,
+    "durationMs": 119526,
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "log": "tmp/resident-nav-mumu-20261022/logs/lint.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "durationMs": 14414,
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "log": "tmp/resident-nav-mumu-20261022/logs/unit.log"
+  },
+  {
+    "name": "drrm-ui",
+    "exitCode": 0,
+    "durationMs": 22330,
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+    ],
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "log": "tmp/resident-nav-mumu-20261022/logs/drrm-ui.log"
+  }
+]

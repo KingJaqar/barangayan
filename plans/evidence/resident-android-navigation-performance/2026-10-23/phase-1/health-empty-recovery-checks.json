@@ -1,0 +1,12 @@
+[
+  {
+    "name": "health",
+    "code": 0,
+    "durationMs": 21465,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/health-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\health-empty-recovery-health.log"
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "checks": [
+    {
+      "name": "services",
+      "code": 0,
+      "durationMs": 7250,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/services-tab-stability.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\empty-state-final-services.log"
+    },
+    {
+      "name": "unit",
+      "code": 0,
+      "durationMs": 16414,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\empty-state-final-unit.log"
+    },
+    {
+      "name": "lint",
+      "code": 0,
+      "durationMs": 28843,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+        "lint"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\empty-state-final-lint.log"
+    },
+    {
+      "name": "typecheck",
+      "code": 0,
+      "durationMs": 28205,
+      "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+      "args": [
+        "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\type-final-typecheck.log"
+    },
+    {
+      "name": "health",
+      "code": 0,
+      "durationMs": 21465,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/health-presentation-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\health-empty-recovery-health.log"
+    },
+    {
+      "name": "settings",
+      "code": 0,
+      "durationMs": 36322,
+      "cwd": "C:\\Users\\User\\barangayan",
+      "args": [
+        "apps/resident-android-mobile/tests/settings-profile-ui.mjs"
+      ],
+      "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\settings-fixed-settings.log"
+    }
+  ],
+  "superseded": "The earlier Health empty-state layout test failure is superseded by health-empty-recovery-checks.json after explicit calendar retry; final typecheck supersedes the earlier type-only state"
+}

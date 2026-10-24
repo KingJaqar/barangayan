@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, usePathname } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +14,9 @@ import { getMobileFontFamily } from '@/constants/fonts';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { isSearchableQuery } from '@/lib/resident-search';
 
 const TITLES: Record<string, string> = {
   '/home': 'Home',
@@ -30,14 +33,18 @@ const TITLES: Record<string, string> = {
 /** Stays mounted across navigation so the expanding search keeps its input. */
 export function ResidentHeader() {
   const pathname = usePathname();
-  const searching = pathname === '/search';
+  const enteringSearch = pathname === '/search';
+  const searching = enteringSearch || pathname === '/explore';
+  const { active: emergencyMapActive } = useEmergencyMapHeader();
+  const [mapSearch, setMapSearch] = useState(false);
   const title = TITLES[pathname];
   const theme = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const { announcementsUnreadCount } = useUnreadCounts();
   const { fontId } = useFontPreference();
   const insets = useSafeAreaInsets();
-  const { query, setQuery, rememberSearch } = useSearchDraft();
+  const { query, setQuery, submitSearch, openSearch, editSearch, backFromSearch } = useSearchDraft();
+  const searchable = isSearchableQuery(query);
   const input = useRef<TextInput>(null);
   const [width, setWidth] = useState(336);
   const [searchX, setSearchX] = useState(140);
@@ -46,14 +53,17 @@ export function ResidentHeader() {
     progress.value = reducedMotion ? (searching ? 1 : 0) : withTiming(searching ? 1 : 0, { duration: 200 });
     return () => cancelAnimation(progress);
   }, [searching, reducedMotion, progress]);
+  // A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
+  const entering = useRef(enteringSearch);
+  entering.current = enteringSearch;
   useEffect(() => {
-    if (!searching) {
+    if (!enteringSearch) {
       input.current?.blur();
       return;
     }
-    const frame = requestAnimationFrame(() => input.current?.focus());
+    const frame = requestAnimationFrame(() => { if (entering.current) input.current?.focus(); });
     return () => cancelAnimationFrame(frame);
-  }, [searching]);
+  }, [enteringSearch]);
   const fieldStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
     left: searchX + 12 + (48 - searchX - 12) * progress.value,
@@ -62,9 +72,18 @@ export function ResidentHeader() {
   const normalStyle = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
   const closeSearch = () => {
     Keyboard.dismiss();
-    if (router.canGoBack()) router.back();
-    else router.replace('/home');
+    backFromSearch();
   };
+  const resetSearchIdle = useSearchInactivity(enteringSearch && mapSearch, closeSearch);
+  useEffect(() => { if (!searching) setMapSearch(false); }, [searching]);
+  // Android Back takes the header's Back path, so leaving search also clears the submitted session.
+  const back = useRef(closeSearch);
+  back.current = closeSearch;
+  useEffect(() => {
+    if (!searching) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => { back.current(); return true; });
+    return () => subscription.remove();
+  }, [searching]);
   return <View style={{
     display: title || searching ? 'flex' : 'none',
     backgroundColor: theme.resident.accent,
@@ -87,7 +106,8 @@ export function ResidentHeader() {
           style={[styles.title, title && title.length > 14 ? styles.longTitle : undefined, { color: theme.resident.onAccent }]}>{title}</ThemedText>
         <View onLayout={event => { const next = event.nativeEvent.layout.x; setSearchX(current => current === next ? current : next); }}>
           <Pressable accessibilityRole="button" accessibilityLabel="Search"
-            onPress={() => router.navigate('/search')} style={styles.button}>
+            accessibilityState={emergencyMapActive ? { expanded: false } : undefined}
+            onPress={() => { setMapSearch(emergencyMapActive); openSearch(pathname); }} style={styles.button}>
             <Ionicons name="search" size={22} color={theme.resident.onAccent} />
           </Pressable>
         </View>
@@ -110,19 +130,29 @@ export function ResidentHeader() {
             <Ionicons name="arrow-back" size={24} color={theme.resident.onAccent} />
           </Pressable>
         ) : null}
-        <Animated.View style={[styles.field, fieldStyle]}>
+        <Animated.View style={[styles.field, fieldStyle]} onTouchStart={resetSearchIdle}>
           <View pointerEvents="none" style={[styles.fieldSurface, { backgroundColor: theme.resident.card }]} />
-          <Ionicons name="search" size={18} color={theme.resident.muted} />
+          {mapSearch ? <Pressable accessibilityRole="button" accessibilityLabel="Collapse header search" accessibilityState={{ expanded: true }} onPress={closeSearch} style={styles.button}>
+            <Ionicons name="search" size={18} color={theme.resident.muted} />
+          </Pressable> : <Ionicons name="search" size={18} color={theme.resident.muted} />}
           <TextInput
-            ref={input} value={query} onChangeText={setQuery} maxLength={120} editable={searching}
+            ref={input} value={query} onChangeText={value => { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}
+            // Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
+            onFocus={() => { if (enteringSearch) resetSearchIdle(); else editSearch(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
             accessibilityLabel="Search services, announcements and your records"
             placeholder="Search Barangayan" placeholderTextColor={theme.resident.muted}
             returnKeyType="search" autoCorrect={false}
-            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
-              onPress={() => { setQuery(''); input.current?.focus(); }} style={styles.clear}>
+              onPress={() => { if (!enteringSearch) { editSearch(''); return; } setQuery(''); input.current?.focus(); }} style={styles.clear}>
               <Ionicons name="close-circle" size={18} color={theme.resident.muted} />
+            </Pressable>
+          ) : null}
+          {enteringSearch ? (
+            <Pressable accessibilityRole="button" accessibilityLabel="Submit search" accessibilityState={{ disabled: !searchable }}
+              disabled={!searchable} onPress={() => submitSearch(query)} style={styles.submit}>
+              <ThemedText type="smallBold" style={{ color: searchable ? theme.resident.accentText : theme.resident.muted }}>Search</ThemedText>
             </Pressable>
           ) : null}
         </Animated.View>
@@ -192,4 +222,5 @@ const styles = StyleSheet.create({
   fieldSurface: { position: 'absolute', left: 0, right: 0, top: 2, bottom: 2, borderRadius: 24 },
   input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 44 },
   clear: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
+  submit: { minWidth: 44, height: 44, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' },
 });

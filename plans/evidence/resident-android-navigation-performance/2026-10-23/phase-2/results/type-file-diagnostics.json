@@ -1,0 +1,10 @@
+{
+  "checked": 296,
+  "failures": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/external-link.tsx",
+      "error": "Debug Failure. False expression: jsx should have errors when reporting errors"
+    }
+  ],
+  "errors": []
+}

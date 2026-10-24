@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-22T14:48:01.040Z",
+  "active": false,
+  "owners": {
+    "home": 1,
+    "services": 1,
+    "sla-compact": 0,
+    "sla-full": 0,
+    "drrm": 1,
+    "health": 1,
+    "reports": 1,
+    "map": 1,
+    "maps": 1
+  },
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "device": "MuMuPlayer Android 12, 127.0.0.1:16384; emulator-5554 is an alias, not a second device",
+  "nativeSourceRevision": "unknown; binary fingerprint retained",
+  "sourceDriftSinceContinuationBaseline": [
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+  ]
+}

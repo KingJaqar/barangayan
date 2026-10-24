@@ -58,10 +58,9 @@ async function toEdgeFunctionError(error: unknown): Promise<Error> {
 
 export default function SettingsScreen() {
   const { session, logout, setup, setupRefreshError, refreshCompletion } = useAuth();
-  const { profile, isLoading: profileLoading, error: profileError, refetch } = useProfile();
+  const { profile, isLoading: profileLoading, error: profileError } = useProfile();
   const idVerified = !profileLoading && !profileError && idVerificationState(profile) === 'verified';
   const idStatus = idVerified ? 'Verified' : profileLoading ? 'Checking verification…' : profileError ? 'Verification unavailable' : profile?.id_verification_status === 'pending' ? 'Pending verification' : profile?.id_verification_status === 'verification_failed' ? 'Verification failed — try again' : 'Not verified';
-  useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const rows = accountSettingsRows(setup);
   const router = useRouter();
   const theme = useTheme();

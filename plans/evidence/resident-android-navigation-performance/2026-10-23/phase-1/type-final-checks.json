@@ -1,0 +1,13 @@
+[
+  {
+    "name": "typecheck",
+    "code": 0,
+    "durationMs": 28205,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase1-20261023\\logs\\type-final-typecheck.log"
+  }
+]

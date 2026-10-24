@@ -153,43 +153,52 @@ export function ResidentProvider({ config, children, fallback }: {
       setRecoveryState(recoveryActive);
       async function validate(next: Session | null) {
         const version = ++revision.current;
-        if (next?.user.id !== validatedUser) {
-          setReady(false);
-          setProfile(null);
-        }
-        if (!next) {
-          const ended = validatedUser !== null;
-          validatedUser = null;
-          if (alive) {
-            setProfile(null); setSession(null); setReady(true);
-            // A session that disappears without the resident's own logout is reported once.
-            if (ended && !closing.current) setNotice('session-ended');
+        const owns = () => alive && version === revision.current;
+        try {
+          if (next?.user.id !== validatedUser) {
+            setReady(false);
+            setProfile(null);
           }
-          return;
+          if (!next) {
+            const ended = validatedUser !== null;
+            validatedUser = null;
+            if (ended && !closing.current) {
+              await logoutRef.current?.('session-ended');
+              return;
+            }
+            if (alive) {
+              setProfile(null); setSession(null); setReady(true);
+            }
+            return;
+          }
+          const { data: userData, error: userError } = await current.client.auth.getUser();
+          if (!owns()) return;
+          if (userError || userData.user?.id !== next.user.id) throw userError ?? new Error('Session unavailable');
+          // No profile row yet is a valid pre-setup resident; a deleted, staff or foreign-tenant row is not.
+          const { data, error: profileError } = await current.client.from('profiles').select('*').eq('id', userData.user.id).maybeSingle();
+          if (!owns()) return;
+          if (profileError) throw profileError;
+          if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) throw new AccessDenied();
+          if (validatedUser !== next.user.id) {
+            await purgeOtherAccountDrafts({ environment: config.environment, barangayId: config.barangayId, userId: next.user.id });
+            // A session that ended without this app's own logout may have left an earlier account's temporary files behind.
+            purgePrivateFiles();
+          }
+          if (!owns()) return;
+          validatedUser = next.user.id;
+          setSession(next);
+          setProfile(data);
+          setNotice(null);
+          setError(false);
+          setReady(true);
+        } catch (failure) {
+          // A denied or failed read for an earlier account cannot end a newer session.
+          if (owns()) failed(failure);
         }
-        const { data: userData, error: userError } = await current.client.auth.getUser();
-        if (userError || userData.user?.id !== next.user.id) throw userError ?? new Error('Session unavailable');
-        // No profile row yet is a valid pre-setup resident; a deleted, staff or foreign-tenant row is not.
-        const { data, error: profileError } = await current.client.from('profiles').select('*').eq('id', userData.user.id).maybeSingle();
-        if (profileError) throw profileError;
-        if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) throw new AccessDenied();
-        if (!alive || version !== revision.current) return;
-        if (validatedUser !== next.user.id) {
-          await purgeOtherAccountDrafts({ environment: config.environment, barangayId: config.barangayId, userId: next.user.id });
-          // A session that ended without this app's own logout may have left an earlier account's temporary files behind.
-          purgePrivateFiles();
-        }
-        if (!alive || version !== revision.current) return;
-        validatedUser = next.user.id;
-        setSession(next);
-        setProfile(data);
-        setNotice(null);
-        setError(false);
-        setReady(true);
       }
       function failed(failure: unknown) {
         if (!alive) return;
-        if (failure instanceof AccessDenied) { void logoutRef.current?.('access-denied'); return; }
+        if (failure instanceof AccessDenied) { void logoutRef.current?.('access-denied').catch(() => undefined); return; }
         setError(true); setReady(false);
       }
       const result = await current.client.auth.getSession();
@@ -224,6 +233,7 @@ export function ResidentProvider({ config, children, fallback }: {
   }, [config, epoch, forceClear, retry]);
 
   async function logout(reason: LogoutReason = 'logged-out') {
+    if (closing.current) return;
     const current = connection.current;
     const token = session?.access_token;
     closing.current = true;
@@ -292,6 +302,7 @@ export function ResidentProvider({ config, children, fallback }: {
       if (!session) return;
       const version = revision.current;
       const { data, error: queryError } = await activeConnection.client.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+      if (version !== revision.current || connection.current !== activeConnection) return;
       if (queryError) throw queryError;
       if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) {
         void logoutRef.current?.('access-denied');

@@ -113,6 +113,11 @@ const PUBLIC_EMERGENCY_PATH = '/emergency-centers';
 // overlay stays up until the initial session check resolves, so the app never flashes
 // signed-out content before we actually know the answer.
 function SplashGatedNavigator() {
+  return <><RootNavigator /><RestorationOverlay /></>;
+}
+
+/** Route-sensitive restoration chrome stays outside the stable navigation subtree. */
+function RestorationOverlay() {
   const { isLoading, restorationError, retryRestoration } = useAuth();
   const theme = useTheme();
   // The public emergency screen is never covered by the splash or the restoration error.
@@ -127,9 +132,6 @@ function SplashGatedNavigator() {
   return (
     <>
       <AnimatedSplashOverlay ready={!isLoading || onPublicEmergency || restorationSlow} />
-      {/* Keep the navigation tree mounted so a cold callback survives session
-          restoration. Individual screens wait for Auth before doing any work. */}
-      <RootNavigator />
       {!isLoading && restorationError && !onPublicEmergency ? <View style={{ position: 'absolute', inset: 0, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}><ThemedText accessibilityLiveRegion="polite">{restorationError}</ThemedText><PrimaryButton label="Retry session restoration" onPress={retryRestoration} /><EmergencyEntryLink /></View> : null}
     </>
   );

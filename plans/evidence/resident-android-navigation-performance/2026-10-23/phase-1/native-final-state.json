@@ -1,0 +1,11 @@
+{
+  "active": false,
+  "temporaryGlobals": [],
+  "logbox": {
+    "count": 0,
+    "levels": []
+  },
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "nativeSourceRevision": "unknown; JavaScript source matched separately",
+  "device": "MuMu Android 12, 127.0.0.1:16384; emulator-5554 aliases the same instance"
+}

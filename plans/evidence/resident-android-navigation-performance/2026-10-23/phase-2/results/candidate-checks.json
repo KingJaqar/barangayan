@@ -1,0 +1,44 @@
+[
+  {
+    "name": "unit",
+    "code": 0,
+    "durationMs": 10322,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\candidate-unit.log"
+  },
+  {
+    "name": "lint",
+    "code": 0,
+    "durationMs": 21171,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\candidate-lint.log"
+  },
+  {
+    "name": "drrm",
+    "code": 0,
+    "durationMs": 23151,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\candidate-drrm.log"
+  },
+  {
+    "name": "maps",
+    "code": 0,
+    "durationMs": 25659,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\candidate-maps.log"
+  }
+]

@@ -15,12 +15,12 @@ fs.mkdirSync(out, { recursive: true });
 // Real shell/header/inset components; navigation, account and native animation are
 // local fixtures. This verifies React lifecycle, not native routing or motion timing.
 const mocks = {
-  'expo-router': `import React from 'react';import {useFloatingTabInset} from '${root}/hooks/use-floating-tab-inset.ts';
+  'expo-router': `import React,{useEffect} from 'react';import {useFloatingTabInset} from '${root}/hooks/use-floating-tab-inset.ts';import {useEmergencyMapHeader} from '${root}/hooks/use-emergency-map-header.tsx';
     export const usePathname=()=>window.fx.path;
-    export const router={navigate:path=>window.navigate(path),replace:path=>window.navigate(path),canGoBack:()=>true,back:()=>window.navigate('/home')};
+    export const router={navigate:path=>window.navigate(path),replace:path=>window.navigate(path),canGoBack:()=>true,back:()=>window.navigate(window.fx.returnTo??'/home')};
     export const useRouter=()=>router;
     const names=['home','services','drrm','maps','health','reports','settings','announcements','search'];
-    export function Tabs({tabBar}){const inset=useFloatingTabInset();const routes=names.map(name=>({name,key:name}));const state={routes,index:names.indexOf(window.fx.path.split('/')[1])};return <><div data-testid="inset">{inset}</div>{tabBar({state,navigation:{emit:event=>{window.fx.events.push(event);return {defaultPrevented:false}},navigate:name=>window.navigate('/'+name)}})}</>}
+    export function Tabs({tabBar}){const {setActive}=useEmergencyMapHeader();const active=window.fx.isMap&&window.fx.path==='/drrm';useEffect(()=>{setActive(!!active);return()=>setActive(false)},[active,setActive]);const inset=useFloatingTabInset();const routes=names.map(name=>({name,key:name}));const state={routes,index:names.indexOf(window.fx.path.split('/')[1])};return <><div data-testid="inset">{inset}</div>{tabBar({state,navigation:{emit:event=>{window.fx.events.push(event);return {defaultPrevented:window.fx.prevent===event.target}},navigate:name=>window.navigate('/'+name)}})}</>}
     Tabs.Screen=()=>null;`,
   'react-native': `import React from 'react';import {Pressable as WebPressable,View as WebView} from 'react-native-web';export * from 'react-native-web';export const Pressable=({accessibilityState,...props})=><WebPressable {...props} aria-selected={accessibilityState?.selected}/>;export const View=({accessibilityElementsHidden,importantForAccessibility,...props})=><WebView {...props} aria-hidden={accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'||undefined}/>;export const Keyboard={isVisible:()=>window.fx.keyboard,dismiss:()=>window.keyboard(false),addListener:(event,fn)=>{const listeners=window.fx.listeners[event]??=new Set();listeners.add(fn);return {remove:()=>listeners.delete(fn)}}};`,
   'react-native-reanimated': `import {useRef} from 'react';import {View,Text} from 'react-native';export default {View,Text};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const cancelAnimation=()=>{};export const interpolateColor=(value,range,colors)=>colors[value>=0.5?1:0];export {Easing} from 'react-native-web';`,
@@ -37,7 +37,7 @@ const mocks = {
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fx.reduced;`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'fixture'}}});`,
   '@/hooks/use-unread-counts': `import {useEffect} from 'react';export const useUnreadCounts=()=>({activeReportsCount:7,resolvedUnreadCount:3,announcementsUnreadCount:2});export function UnreadCountsProvider({children}){useEffect(()=>{window.fx.unreadMounts++;return()=>window.fx.unreadUnmounts++},[]);return children}`,
-  '@/hooks/use-resident-search': `import React,{createContext,useContext,useState,useEffect} from 'react';const Context=createContext(null);export const useSearchDraft=()=>useContext(Context);export function ResidentSearchProvider({children}){const [query,setQuery]=useState('');useEffect(()=>{window.fx.searchMounts++;return()=>window.fx.searchUnmounts++},[]);return <Context.Provider value={{query,setQuery,rememberSearch:()=>{}}}>{children}</Context.Provider>}`,
+  '@/hooks/use-resident-search': `import React,{createContext,useContext,useEffect} from 'react';import {useSearchSession} from '${root}/hooks/use-search-session.ts';const Context=createContext(null);export const useSearchDraft=()=>useContext(Context);export function ResidentSearchProvider({children}){const session=useSearchSession('fixture');useEffect(()=>{window.fx.searchMounts++;return()=>window.fx.searchUnmounts++},[]);return <Context.Provider value={{...session,rememberSearch:()=>{}}}>{children}</Context.Provider>}`,
 };
 await build({
   stdin: { contents: `import React,{useState} from 'react';import{createRoot}from'react-dom/client';import AppLayout from '${root}/app/(app)/_layout.tsx';window.fx={path:'/home',mode:'light',accent:'#0F6E5B',font:'sans-serif',reduced:true,keyboard:false,listeners:{},events:[],unreadMounts:0,unreadUnmounts:0,searchMounts:0,searchUnmounts:0,focusCalls:0};const focus=HTMLInputElement.prototype.focus;HTMLInputElement.prototype.focus=function(...args){window.fx.focusCalls++;return focus.apply(this,args)};window.keyboard=visible=>{window.fx.keyboard=visible;for(const fn of window.fx.listeners[visible?'keyboardDidShow':'keyboardDidHide']??[])fn()};function App(){const[n,render]=useState(0);window.refresh=()=>render(v=>v+1);window.navigate=path=>{window.fx.path=path;window.refresh()};return <AppLayout/>}const tree=createRoot(document.getElementById('root'));window.unmount=()=>tree.unmount();tree.render(<App/>);`, resolveDir: app, loader: 'tsx' },
@@ -63,6 +63,18 @@ try {
     await page.waitForFunction(name => [...document.querySelectorAll('[role="tab"]')].some(tab => tab.getAttribute('aria-label')?.startsWith(name) && tab.getAttribute('aria-selected') === 'true'), name);
     assert.equal(await primary.getByRole('tab', { selected: true }).count(), 1);
   }
+  await page.evaluate(() => {
+    for (const label of ['Services', 'Maps', 'Health', 'Reports']) {
+      [...document.querySelectorAll('[role="tab"]')].find(tab => tab.getAttribute('aria-label')?.split(',')[0] === label).click();
+    }
+  });
+  await page.waitForFunction(() => window.fx.path === '/reports');
+  assert.equal(await primary.getByRole('tab', { selected: true }).getAttribute('aria-label'), 'Reports, 7 active reports, 3 unread resolved reports');
+  await page.evaluate(() => { window.fx.prevent = 'services'; });
+  await primary.getByRole('tab', { name: 'Services', exact: true }).click();
+  assert.equal(await page.evaluate(() => window.fx.path), '/reports', 'Prevented tab press must not change destination or selection');
+  assert.equal(await primary.getByRole('tab', { selected: true }).count(), 1);
+  await page.evaluate(() => { window.fx.prevent = null; });
   await page.getByRole('button', { name: 'Open settings', exact: true }).click();
   await page.waitForFunction(() => window.fx.path === '/settings');
   assert.equal(await primary.getByRole('tab', { selected: true }).count(), 0);
@@ -90,6 +102,17 @@ try {
   await primary.waitFor();
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   assert.equal(await input.inputValue(), 'clearance');
+  await page.clock.install();
+  await page.clock.fastForward(16_000);assert.equal(await page.evaluate(()=>window.fx.path),'/search','Other header searches retain their existing behavior');
+  await page.evaluate(()=>{window.fx.isMap=true;window.fx.returnTo='/drrm';window.navigate('/drrm')});
+  await page.getByRole('button',{name:'Search',exact:true}).click();
+  await page.getByRole('button',{name:'Collapse header search',exact:true}).waitFor();
+  await input.fill('evacuation');await page.clock.fastForward(14_000);await input.press('End');await page.clock.fastForward(14_000);
+  assert.equal(await page.evaluate(()=>window.fx.path),'/search','Header interaction restarts the 15-second timer');
+  await page.clock.fastForward(1_100);await page.getByRole('button',{name:'Search',exact:true}).waitFor();assert.equal(await page.evaluate(()=>window.fx.path),'/drrm');
+  await page.getByRole('button',{name:'Search',exact:true}).click();assert.equal(await input.inputValue(),'evacuation');
+  await page.getByRole('button',{name:'Collapse header search',exact:true}).click();await page.getByRole('button',{name:'Search',exact:true}).waitFor();
+  assert.equal(await page.evaluate(()=>window.fx.path),'/drrm','Search icon immediately closes the field and returns to map');
   for (const route of ['/services/request/clearance', '/settings/profile', '/home/emergency-info/scan']) {
     await page.evaluate(route => window.navigate(route), route);
     assert.equal(await primary.count(), 0);
@@ -103,7 +126,7 @@ try {
   await page.evaluate(() => window.unmount());
   assert.deepEqual(await page.evaluate(() => Object.values(window.fx.listeners).map(set=>set.size)), [0,0]);
   assert.deepEqual(errors, []);
-  const result = { passed: ['six navigation actions and selected states', 'Settings/Announcements have no primary selection', 'keyboard removes/restores bar and measured clearance', 'Search/detail routes have no bar or phantom inset', 'appearance changes do not refocus Search', 'Search draft survives return', 'providers remain mounted once', 'one keyboard listener pair, cleaned on unmount'], errors, nativeMotionVerified: false };
+  const result = { passed: ['six navigation actions and selected states', 'rapid accepted presses end on the last destination; prevented press preserves selection (synthetic navigation)', 'Settings/Announcements have no primary selection', 'keyboard removes/restores bar and measured clearance', 'Search/detail routes have no bar or phantom inset', 'appearance changes do not refocus Search', 'Search draft survives return', 'map header search idle collapse, interaction reset, icon collapse and query preservation; other header searches unchanged', 'providers remain mounted once', 'one keyboard listener pair, cleaned on unmount'], errors, nativeMotionVerified: false };
   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result));
 } finally { await browser.close(); }

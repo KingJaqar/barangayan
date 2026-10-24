@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, AppState, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useFocusEffect, useIsFocused } from 'expo-router';
 import { getMobileFontFamily } from '@/constants/fonts';
 import { useFontPreference } from '@/hooks/use-font-preference';
@@ -24,10 +24,15 @@ import { OfflineRouteCard } from '@/components/offline-route-card';
 import { RoadMarkCard } from '@/components/road-mark-card';
 import { useResidentRoute } from '@/hooks/use-resident-route';
 import { useOfflineRouting } from '@/hooks/use-offline-routing';
+import { useAppForeground } from '@/hooks/use-app-foreground';
 import { nearestEdge } from '@/lib/offline-routing';
 import type { LatLng, LocationAction, MapLngLat, MapMarker } from '@barangayan/shared';
 import type { AttachmentCandidate, RoutingEdge } from '@barangayan/shared/src/lib/evacuation-routing';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { PrimaryButton } from '@/components/primary-button';
+import { Spacing } from '@/constants/theme';
 
 export function CentersContent({
   theme,
@@ -60,9 +65,55 @@ export function CentersContent({
 }) {
   const boundary = useAmpid1Boundary();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchExpanded, setSearchExpanded] = useState(false);
+  const searchInput = useRef<TextInput>(null);
+  const collapseSearch = () => { searchInput.current?.blur(); setSearchExpanded(false); };
   const reducedMotion = useResidentReducedMotion(true);
   const { fontId } = useFontPreference();
   const isFocused = useIsFocused();
+  const foreground = useAppForeground();
+  const routeActive = isFocused && foreground;
+  const [mapMounted, setMapMounted] = useState(view === 'map');
+  const [listMounted, setListMounted] = useState(view === 'list');
+  if (view === 'map' && !mapMounted) setMapMounted(true);
+  if (view === 'list' && !listMounted) setListMounted(true);
+  const requestedView = useRef(view);
+  requestedView.current = view;
+  const mapReady = useRef(Platform.OS === 'web');
+  const viewProgress = useRef(new NativeAnimated.Value(view === 'map' ? 1 : 0)).current;
+  const transitionRevision = useRef(0);
+  const transitionTo = useCallback((next: 'list' | 'map') => {
+    const revision = ++transitionRevision.current;
+    viewProgress.stopAnimation();
+    // Retain the outgoing list until the first map is ready, avoiding an empty frame.
+    if (next === 'map' && !mapReady.current) return;
+    const complete = () => {
+      if (revision === transitionRevision.current && requestedView.current === 'map') setListMounted(false);
+    };
+    if (reducedMotion || !isFocused) {
+      viewProgress.setValue(next === 'map' ? 1 : 0);
+      complete();
+      return;
+    }
+    NativeAnimated.timing(viewProgress, {
+      toValue: next === 'map' ? 1 : 0,
+      duration: 180,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+      isInteraction: false,
+    }).start(({ finished }) => { if (finished) complete(); });
+  }, [viewProgress, reducedMotion, isFocused]);
+  useLayoutEffect(() => {
+    transitionTo(view);
+    return () => viewProgress.stopAnimation();
+  }, [view, transitionTo, viewProgress]);
+  const resetSearchIdle = useSearchInactivity(searchExpanded && view === 'map' && isFocused, collapseSearch);
+  const { setActive: setMapHeaderActive } = useEmergencyMapHeader();
+  useFocusEffect(useCallback(() => {
+    if (!resident || view !== 'map') return;
+    setMapHeaderActive(true);
+    return () => setMapHeaderActive(false);
+  }, [resident, view, setMapHeaderActive]));
   const fullTabInset = useFloatingTabInset(true);
   const { mapNavHidden, setMapNavHidden, mapNavProgress } = useFloatingTabLayout();
   const navVisibleBottom = resident ? Math.max(48, fullTabInset + 12) : 12;
@@ -82,6 +133,8 @@ export function CentersContent({
   const pendingFix = location.state.pending?.fix ?? null;
   const [focusCenter, setFocusCenter] = useState<LatLng | null>(null);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
+  const [selectedControlsExpanded, setSelectedControlsExpanded] = useState(false);
+  useEffect(() => setSelectedControlsExpanded(false), [selectedCenterId]);
 
   const mapRef = useRef<MapViewHandle>(null);
   useEffect(() => {
@@ -93,7 +146,7 @@ export function CentersContent({
   // closures and the resident's own blocked roads (DRRM routing plan R6), so they work
   // offline. A route that cannot be computed is explained in words and never drawn as a
   // straight line (invariant 7).
-  const routing = useOfflineRouting(isFocused);
+  const routing = useOfflineRouting(routeActive);
   const { pack, conditions, avoidance, unresolvedAvoidanceIds } = routing.state;
   const conditionsSnapshot = conditions?.snapshot ?? null;
   const netInfo = useNetInfo();
@@ -108,6 +161,7 @@ export function CentersContent({
       ? segmentChoice.edgeId
       : null;
   const { route, mode, connectedFailure, connectedPending, ranking } = useResidentRoute({
+    active: routeActive,
     pack,
     conditions,
     avoidance,
@@ -169,9 +223,10 @@ export function CentersContent({
     if (selectedCenterId !== null && selectedCenter === null) setSelectedCenterId(null);
   }, [selectedCenterId, selectedCenter]);
   const [overlayHeight, setOverlayHeight] = useState(0);
+  const [selectedActionsHeight, setSelectedActionsHeight] = useState(0);
   const [mapHeight, setMapHeight] = useState(400);
-  const [searchHeight, setSearchHeight] = useState(44);
-  const coveredTop = 12 + searchHeight + 12;
+  const [topControlsHeight, setTopControlsHeight] = useState(44);
+  const coveredTop = 12 + topControlsHeight + 12;
   const coveredBottom = navBottom + overlayHeight + 20;
   const routePadding = useMemo(() => ({ top: coveredTop, bottom: coveredBottom }), [coveredTop, coveredBottom]);
   const selectedLat = selectedCenter?.position.lat;
@@ -191,13 +246,21 @@ export function CentersContent({
   // Ages shown in the status card are refreshed once a minute.
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    if (!isFocused) return;
+    if (!routeActive) return;
+    setNow(Date.now());
     const timer = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(timer);
-  }, [isFocused]);
+  }, [routeActive]);
 
   // Marking a road as blocked on this phone (local avoidance).
   const [marking, setMarking] = useState(false);
+  const [confirmBlocking, setConfirmBlocking] = useState(false);
+  useEffect(() => {
+    if (!isFocused || view !== 'map') {
+      setConfirmBlocking(false);
+      setSearchExpanded(false);
+    }
+  }, [isFocused, view]);
   const [markCandidate, setMarkCandidate] = useState<RoutingEdge | null>(null);
   const [noRoadAtTap, setNoRoadAtTap] = useState(false);
   const [markBusy, setMarkBusy] = useState(false);
@@ -331,47 +394,57 @@ export function CentersContent({
     color: theme.resident.warning, icon: 'home-outline',
   } : null;
   const diagnosticProps = { routing: routing.state, route, mode, connectedFailure, connectedPending, now, onChooseSegment: handleChooseSegment };
-  const controls = <View style={styles.controlRow}>
-    <View style={[styles.controlPill, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+  const controls = <View style={[styles.controlRow, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
       <Pressable accessibilityRole="button" accessibilityLabel="Reset map to Ampid I" onPress={handleResetMap} style={styles.controlButton}>
-        <Ionicons name="map-outline" size={18} color={theme.resident.accentText} /><ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>Maps</ThemedText>
+        <Ionicons name="map-outline" size={18} color={theme.resident.accentText} /><ThemedText type="smallBold" style={[styles.controlLabel, { color: theme.resident.accentText }]}>Maps</ThemedText>
       </Pressable>
       <Pressable accessibilityRole="button" accessibilityLabel="Use my location" accessibilityState={{ disabled: locating, busy: locating }} disabled={locating} onPress={handleLocateMe} style={styles.controlButton}>
-        {locating ? <ActivityIndicator color={theme.resident.accentText} /> : <Ionicons name="navigate-outline" size={18} color={theme.resident.accentText} />}<ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>You</ThemedText>
+        {locating ? <ActivityIndicator size="small" color={theme.resident.accentText} /> : <Ionicons name="navigate-outline" size={18} color={theme.resident.accentText} />}<ThemedText type="smallBold" style={[styles.controlLabel, { color: theme.resident.accentText }]}>You</ThemedText>
       </Pressable>
-    </View>
-    <View style={[styles.controlPill, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+      {pack ? <Pressable accessibilityRole="button" accessibilityLabel={marking ? 'Finish road blocking' : 'Block a road you cannot pass'} accessibilityState={{ selected: marking }} onPress={() => {
+        if (marking) closeMarking();
+        else if (resident) { collapseSearch(); Keyboard.dismiss(); setConfirmBlocking(true); }
+        else setMarking(true);
+      }} style={styles.controlButton}>
+        <Ionicons name="remove-circle-outline" size={18} color={theme.resident.danger} /><ThemedText type="smallBold" style={[styles.controlLabel, { color: theme.resident.danger }]}>{marking ? 'Finish' : 'Block road'}</ThemedText>
+      </Pressable> : null}
       <Pressable accessibilityRole="button" accessibilityLabel="Zoom out" onPress={() => mapRef.current?.zoomOut()} style={styles.zoomButton}><Ionicons name="remove" size={20} color={theme.resident.text} /></Pressable>
       <Pressable accessibilityRole="button" accessibilityLabel="Zoom in" onPress={() => mapRef.current?.zoomIn()} style={styles.zoomButton}><Ionicons name="add" size={20} color={theme.resident.text} /></Pressable>
-    </View>
   </View>;
   const feedback = isLoading ? <View style={styles.feedback}><ActivityIndicator color={theme.resident.accentText} /><ThemedText type="small">Loading evacuation centers…</ThemedText></View>
     : error ? <View accessibilityLiveRegion="polite" style={[styles.feedback, { backgroundColor: theme.resident.dangerSoft }]}><ThemedText type="small" style={{ color: theme.resident.danger, flex: 1 }}>{error}</ThemedText><Pressable accessibilityRole="button" onPress={refetch} style={styles.action}><ThemedText type="smallBold" style={{ color: theme.resident.danger }}>Retry</ThemedText></Pressable></View>
     : filteredCenters.length === 0 ? <ThemedText style={styles.empty}>{searchQuery.trim() ? 'No matching centers found.' : 'No evacuation centers configured.'}</ThemedText> : null;
-  return <View style={styles.root}>
-    <View style={styles.toolbar}>
+  const centerSearch = <View onTouchStart={resetSearchIdle} style={[styles.search, searchExpanded && styles.searchExpanded, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+    <Pressable accessibilityRole="button" accessibilityLabel={searchExpanded ? 'Collapse center search' : searchQuery ? 'Expand center search, filter active' : 'Expand center search'} accessibilityState={{ expanded: searchExpanded }} onPress={() => searchExpanded ? collapseSearch() : setSearchExpanded(true)} style={styles.searchButton}>
+      <Ionicons name="search-outline" size={20} color={searchQuery ? theme.resident.accentText : theme.resident.text} />
+    </Pressable>
+    {searchExpanded ? <>
+      <TextInput ref={searchInput} autoFocus accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={resetSearchIdle} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+      {searchQuery ? <Pressable accessibilityRole="button" accessibilityLabel="Clear center search" onPress={() => { setSearchQuery(''); resetSearchIdle(); }} style={styles.action}><Ionicons name="close" size={18} color={theme.resident.text} /></Pressable> : null}
+    </> : null}
+  </View>;
+  const toolbar = <View pointerEvents="box-none" style={[styles.toolbar, styles.mapToolbar]}>
       <View style={styles.viewToggle}><SegmentedControl segments={[{ key: 'list', label: 'List' }, { key: 'map', label: 'Map' }]} activeKey={view} onChange={onViewChange} presentation="resident" compact /></View>
       <Pressable accessibilityRole="button" accessibilityLabel={nearestFirst ? 'Sorted by nearest. Change sort' : 'Default order. Change sort'} accessibilityState={{ selected: nearestFirst }} onPress={() => onNearestToggle(!nearestFirst)} style={[styles.sort, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
-        <Ionicons name="swap-vertical" size={14} color={theme.resident.accentText} /><ThemedText style={styles.sortLabel}>{nearestFirst ? 'Nearest' : 'Default order'}</ThemedText>
+        <Ionicons name="swap-vertical" size={14} color={theme.resident.accentText} /><ThemedText type="smallBold" style={styles.sortLabel}>{nearestFirst ? 'Nearest' : 'Default order'}</ThemedText>
       </Pressable>
-    </View>
-    {view === 'map' ? <View style={styles.map} onLayout={e => { const height = Math.round(e.nativeEvent.layout.height); setMapHeight(current => current === height ? current : height); }}>
+      {!searchExpanded ? <View pointerEvents={view === 'map' ? 'auto' : 'none'} accessibilityElementsHidden={view !== 'map'} importantForAccessibility={view === 'map' ? 'auto' : 'no-hide-descendants'} style={{ opacity: view === 'map' ? 1 : 0 }}>{centerSearch}</View> : null}
+    </View>;
+  return <View style={[styles.root, styles.mapRoot]}>
+    {mapMounted ? <NativeAnimated.View pointerEvents={view === 'map' ? 'auto' : 'none'} accessibilityElementsHidden={view !== 'map'} importantForAccessibility={view === 'map' ? 'auto' : 'no-hide-descendants'} style={[StyleSheet.absoluteFill, styles.map, { opacity: viewProgress }]} onLayout={e => { const height = Math.round(e.nativeEvent.layout.height); setMapHeight(current => current === height ? current : height); }}>
       <View style={StyleSheet.absoluteFill} onTouchStart={() => { if (resident) setMapNavHidden(true); }}>
-      <MapView ref={mapRef} markers={evacuationMarkers} center={AMPID_I_SAN_MATEO_CENTER} onMapReady={focusSelected} boundary={boundary}
+      <MapView ref={mapRef} markers={evacuationMarkers} center={AMPID_I_SAN_MATEO_CENTER} onMapReady={() => {
+        mapReady.current = true;
+        if (requestedView.current === 'map') { transitionTo('map'); focusSelected(); }
+      }} onMapError={() => { mapReady.current = true; transitionTo(requestedView.current); }} boundary={boundary}
         userLocation={mapUserLocation} kindColors={{ evacuation: theme.resident.warning }} style={{ flex: 1 }} onMarkerTap={handleMarkerTap}
         showTiles={showTiles} packMap={pack?.map ?? null} roadMarks={roadMarks} route={routePoints} routePadding={routePadding}
         presentation={{ selectedMarkerId: selectedCenter?.id ?? null, padding: routePadding, attributionBottom: navBottom + overlayHeight + 4,
           reducedMotion, surface: theme.resident.card, text: theme.resident.text, border: theme.resident.border, fontFamily: getMobileFontFamily(fontId) ?? 'sans-serif' }}
         onBackgroundTap={() => { if (resident) setMapNavHidden(true); dismissCenter(); }} onMapTap={marking ? handleMapTap : null} />
       </View>
-      <View style={[styles.search, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setSearchHeight(current => current === height ? current : height); }}>
-        <Ionicons name="search-outline" size={18} color={theme.resident.text} />
-        <TextInput accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={setSearchQuery} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
-        {searchQuery ? <Pressable accessibilityRole="button" accessibilityLabel="Clear center search" onPress={() => setSearchQuery('')} style={styles.action}><Ionicons name="close" size={18} color={theme.resident.text} /></Pressable> : null}
-      </View>
-      <Animated.View style={[styles.overlay, overlayMotion]}>
-        <ScrollView nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ maxHeight: Math.max(44, mapHeight - coveredTop - navBottom - 24) }} contentContainerStyle={styles.overlayContent}
-          onLayout={event => { const height = Math.ceil(event.nativeEvent.layout.height); setOverlayHeight(current => current === height ? current : height); }}>
+      <Animated.View style={[styles.overlay, overlayMotion]} onLayout={event => { const height = Math.ceil(event.nativeEvent.layout.height); setOverlayHeight(current => current === height ? current : height); }}>
+        <ScrollView nestedScrollEnabled keyboardShouldPersistTaps="handled" style={{ maxHeight: Math.max(44, mapHeight - coveredTop - navBottom - 24 - (selectedCenter ? selectedActionsHeight + Spacing.one : 0)) }} contentContainerStyle={styles.overlayContent}>
           {feedback}
           <OfflineRouteCard {...diagnosticProps} compact />
           <LocationStatusCard state={location.state} onAction={handleLocationAction} />
@@ -379,16 +452,23 @@ export function CentersContent({
           <MapSelectionOverlay place={place} controls={controls} onClose={dismissCenter} reducedMotion={reducedMotion} maxHeight={mapHeight}
             renderPlace={shown => {
               const center = centers.find(item => item.id === shown.id);
-              return center ? <CenterDetailCard name={center.name} address={center.address ?? 'No address'} distanceKm={center.distanceMeters === undefined ? undefined : center.distanceMeters / 1000} walkingTimeMins={center.estimatedMinutes} isRoadRoute={!!bestRoute && bestRoute.centerId === center.id} currentOccupancy={center.current_occupancy} capacity={center.capacity} onClose={dismissCenter} /> : null;
+              return center ? <View style={styles.overlayContent}>
+                <CenterDetailCard key={center.id} compact name={center.name} address={center.address ?? 'No address'} distanceKm={center.distanceMeters === undefined ? undefined : center.distanceMeters / 1000} walkingTimeMins={center.estimatedMinutes} isRoadRoute={!!bestRoute && bestRoute.centerId === center.id} currentOccupancy={center.current_occupancy} capacity={center.capacity} onClose={dismissCenter} />
+                {selectedControlsExpanded || marking ? controls : null}
+              </View> : null;
             }} />
-          <View style={styles.routeActions}>
-            {selectedCenter ? <Pressable accessibilityRole="button" onPress={handleShowAll} style={styles.action}><ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>Clear route / Show all</ThemedText></Pressable> : null}
-            {pack ? <Pressable accessibilityRole="button" accessibilityLabel="Block a road you cannot pass" accessibilityState={{ selected: marking }} onPress={() => marking ? closeMarking() : setMarking(true)} style={styles.action}><Ionicons name="remove-circle-outline" size={18} color={theme.resident.danger} /><ThemedText type="smallBold" style={{ color: theme.resident.danger }}>{marking ? 'Finish road blocking' : 'Block road'}</ThemedText></Pressable> : null}
-          </View>
         </ScrollView>
+        {selectedCenter ? <View style={[styles.selectedActions, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]} onLayout={event => { const height = Math.ceil(event.nativeEvent.layout.height); setSelectedActionsHeight(current => current === height ? current : height); }}>
+          <View style={styles.clearRoute}><PrimaryButton presentation="resident" compact label="Clear route / Show all" leadingIcon={<Ionicons name="map-outline" size={18} color={theme.resident.onAccent} />} onPress={handleShowAll} /></View>
+          <Pressable accessibilityRole="button" accessibilityLabel={selectedControlsExpanded ? 'Hide map controls' : 'Show map controls'} accessibilityState={{ expanded: selectedControlsExpanded }} onPress={() => setSelectedControlsExpanded(value => !value)} style={[styles.selectedControlsToggle, { backgroundColor: theme.resident.surface, borderColor: theme.resident.border }]}>
+            <Ionicons name="options-outline" size={18} color={theme.resident.accentText} />
+            <ThemedText type="small" style={{ color: theme.resident.accentText }}>Controls</ThemedText>
+          </Pressable>
+        </View> : null}
       </Animated.View>
-      {resident ? <Animated.View style={[styles.reveal, revealMotion]}><Pressable accessibilityRole="button" accessibilityLabel={mapNavHidden ? 'Show bottom tabs' : 'Hide bottom tabs'} onPress={() => setMapNavHidden(!mapNavHidden)} style={[styles.revealButton, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}><Ionicons name={mapNavHidden ? 'chevron-up' : 'chevron-down'} size={20} color={theme.resident.text} /></Pressable></Animated.View> : null}
-    </View> : <ScrollView style={{ flex: 1 }} contentContainerStyle={[styles.list, { paddingBottom: resident ? fullTabInset + 20 : 20 }]} keyboardShouldPersistTaps="handled">
+      {resident ? <Animated.View pointerEvents="box-none" style={[styles.reveal, revealMotion]}><Pressable accessibilityRole="button" accessibilityLabel={mapNavHidden ? 'Show bottom tabs' : 'Hide bottom tabs'} accessibilityState={{ expanded: !mapNavHidden }} onTouchStart={event => event.stopPropagation()} onPress={event => { event.stopPropagation(); Keyboard.dismiss(); setMapNavHidden(!mapNavHidden); }} style={[styles.revealButton, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}><Ionicons name={mapNavHidden ? 'chevron-up' : 'chevron-down'} size={20} color={theme.resident.text} /></Pressable></Animated.View> : null}
+    </NativeAnimated.View> : null}
+    {listMounted ? <NativeAnimated.ScrollView pointerEvents={view === 'list' ? 'auto' : 'none'} accessibilityElementsHidden={view !== 'list'} importantForAccessibility={view === 'list' ? 'auto' : 'no-hide-descendants'} style={[StyleSheet.absoluteFill, { backgroundColor: theme.background, opacity: viewProgress.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }]} contentContainerStyle={[styles.list, { paddingTop: coveredTop, paddingBottom: resident ? fullTabInset + 20 : 20 }]} keyboardShouldPersistTaps="handled">
       <ThemedText type="small" themeColor="textSecondary">Showing {filteredCenters.length} Locations</ThemedText>
       <LocationStatusCard state={location.state} onAction={handleLocationAction} />
       <OfflineRouteCard {...diagnosticProps} dense />
@@ -398,26 +478,52 @@ export function CentersContent({
           <EvacuationCenterCard name={center.name} address={center.address ?? ''} distanceKm={center.distanceMeters === undefined ? undefined : center.distanceMeters / 1000} estimatedMinutes={center.estimatedMinutes} currentOccupancy={center.current_occupancy} capacity={center.capacity} facilities={center.facilities} verified={center.verified} />
         </Pressable>)}
       </View>
-    </ScrollView>}
+    </NativeAnimated.ScrollView> : null}
+    <View pointerEvents="box-none" style={styles.topControls} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setTopControlsHeight(current => current === height ? current : height); }}>
+      {toolbar}
+      {view === 'map' && searchExpanded ? centerSearch : null}
+    </View>
+    <Modal visible={confirmBlocking && isFocused && view === 'map'} transparent animationType="none" onRequestClose={() => setConfirmBlocking(false)}>
+      <View style={[styles.confirmBackdrop, { backgroundColor: theme.resident.scrim }]}>
+        <View accessibilityViewIsModal style={[styles.confirmCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+          <ThemedText type="heading" accessibilityRole="header">Block a road?</ThemedText>
+          <ThemedText type="small">Continue to choose a road you cannot pass. Blocked roads will be avoided by routes on this phone.</ThemedText>
+          <View style={styles.confirmActions}>
+            <View style={styles.confirmAction}><PrimaryButton presentation="resident" label="Cancel" variant="secondary" onPress={() => setConfirmBlocking(false)} /></View>
+            <View style={styles.confirmAction}><PrimaryButton presentation="resident" label="Confirm" onPress={() => { setConfirmBlocking(false); setMarking(true); }} /></View>
+          </View>
+        </View>
+      </View>
+    </Modal>
   </View>;
 }
 const styles = StyleSheet.create({
   root: { flex: 1, minHeight: 0, marginHorizontal: -24, marginBottom: -16 },
+  mapRoot: { marginTop: -Spacing.three },
   toolbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingHorizontal: 16, paddingBottom: 6, marginTop: -8 },
   viewToggle: { flex: 1, maxWidth: 168, minWidth: 0 },
   sort: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 44, borderWidth: 1, borderRadius: 12, paddingHorizontal: 10, flexShrink: 1 },
-  sortLabel: { fontSize: 13, lineHeight: 18, fontWeight: '600', flexShrink: 1 },
+  sortLabel: { flexShrink: 1 },
   list: { paddingHorizontal: 16, gap: 8 }, group: { borderWidth: 1, borderRadius: 16, overflow: 'hidden' },
   map: { flex: 1, minHeight: 220, overflow: 'hidden' },
-  search: { position: 'absolute', left: 16, right: 16, top: 12, borderRadius: 28, borderWidth: 1, paddingLeft: 16, paddingRight: 4, minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 10, elevation: 4 },
-  input: { flex: 1, minWidth: 0, minHeight: 44, fontSize: 14, paddingVertical: 8 },
+  topControls: { position: 'absolute', top: 12, left: 16, right: 16, gap: 8, zIndex: 2 },
+  mapToolbar: { paddingHorizontal: 0, paddingBottom: 0, marginTop: 0 },
+  search: { alignSelf: 'flex-start', borderRadius: 24, borderWidth: 1, minHeight: 44, flexDirection: 'row', alignItems: 'center', elevation: 4 },
+  searchExpanded: { alignSelf: 'stretch' },
+  searchButton: { width: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
+  input: { flex: 1, minWidth: 0, minHeight: 44, paddingVertical: 8 },
   overlay: { position: 'absolute', left: 16, right: 16 }, overlayContent: { gap: 6 },
-  controlRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 },
-  controlPill: { flexDirection: 'row', borderRadius: 24, borderWidth: 1, overflow: 'hidden' },
-  controlButton: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 12 },
-  zoomButton: { width: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center' },
+  controlRow: { flexDirection: 'row', alignItems: 'stretch', borderRadius: 24, borderWidth: 1, overflow: 'hidden' },
+  controlButton: { flex: 1, minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', gap: Spacing.half, paddingHorizontal: Spacing.one, paddingVertical: Spacing.one },
+  controlLabel: { textAlign: 'center', flexShrink: 1 },
+  zoomButton: { width: 44, minHeight: 44, flexShrink: 0, justifyContent: 'center', alignItems: 'center' },
   action: { minWidth: 44, minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 8 },
-  routeActions: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  selectedActions: { flexDirection: 'row', alignItems: 'stretch', gap: Spacing.two, marginTop: Spacing.one, padding: Spacing.one, borderWidth: 1, borderRadius: 16 },
+  clearRoute: { flex: 1, minWidth: 0 },
+  selectedControlsToggle: { minWidth: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center', paddingHorizontal: Spacing.two, borderRadius: 12, borderWidth: 1 },
   feedback: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 16, padding: 12 }, empty: { padding: 12, fontSize: 13 },
-  reveal: { position: 'absolute', alignSelf: 'center' }, revealButton: { width: 48, height: 44, borderWidth: 1, borderRadius: 24, alignItems: 'center', justifyContent: 'center', elevation: 5 },
+  reveal: { position: 'absolute', alignSelf: 'center', zIndex: 3, elevation: 5 }, revealButton: { width: 48, height: 44, borderWidth: 1, borderRadius: 24, alignItems: 'center', justifyContent: 'center', elevation: 5 },
+  confirmBackdrop: { flex: 1, justifyContent: 'center', padding: 24 },
+  confirmCard: { borderRadius: 24, borderWidth: 1, padding: 24, gap: 16, maxWidth: 440, width: '100%', alignSelf: 'center' },
+  confirmActions: { flexDirection: 'row', gap: 12 }, confirmAction: { flex: 1 },
 });

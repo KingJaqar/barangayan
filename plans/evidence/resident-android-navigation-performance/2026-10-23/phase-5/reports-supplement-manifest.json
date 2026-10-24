@@ -1,0 +1,47 @@
+{
+  "selected": [
+    "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+    "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+    "apps/resident-android-mobile/src/components/primary-button.tsx"
+  ],
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-android-mobile/tests/reports-announcements-ui.mjs,apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx,apps/resident-android-mobile/src/components/primary-button.tsx",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml,**/*.mp4,**/*.png,**/*.jpg,**/repomix output files/**,**/tmp/**",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase5-20261023-reports-supplement.xml"
+  ],
+  "packet": "repomix output files/resident-nav-phase5-20261023-reports-supplement.xml",
+  "sha256": "7c543da61fbfc5520feee39f50465b2bb0f41152055f2c19b3abb4cb0bea6a50",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "chars": 376,
+      "sha256": "060159da1f321f6d8f46bba38f74bd548899a1114a812feb9bd918e4e090ad8d"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/primary-button.tsx",
+      "chars": 1590,
+      "sha256": "80a3c0bafa9d4234cccbfeeb44e3ad1e56b3691a7d557c9ca4c8ef103ab304c9"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "chars": 853,
+      "sha256": "a719b2a2c4927829434ba7ed901afcdb59b5680ebed28d81dbf13fd8d9cca627"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "reports-supplement-reader-1.txt",
+      "start": 0,
+      "end": 3266,
+      "chars": 3266
+    }
+  ]
+}

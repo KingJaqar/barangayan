@@ -1,0 +1,55 @@
+[
+  {
+    "name": "unit",
+    "code": 0,
+    "durationMs": 16255,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\baseline-unit.log"
+  },
+  {
+    "name": "maps",
+    "code": 0,
+    "durationMs": 31654,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\baseline-maps.log"
+  },
+  {
+    "name": "drrm",
+    "code": 0,
+    "durationMs": 33130,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\baseline-drrm.log"
+  },
+  {
+    "name": "lint",
+    "code": 0,
+    "durationMs": 34160,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\baseline-lint.log"
+  },
+  {
+    "name": "typecheck",
+    "code": 1,
+    "durationMs": 79069,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "args": [
+      "C:\\Users\\User\\barangayan/node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\baseline-typecheck.log"
+  }
+]

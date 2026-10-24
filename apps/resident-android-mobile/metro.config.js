@@ -33,6 +33,12 @@ config.resolver.blockList = [
   // the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
   /[\\/]\.git(?:[\\/]|$)/,
   new RegExp(`^${escapedWorkspaceRoot}[\\\\/]dist(?:[\\\\/]|$)`),
+  // Root-level scratch, test output and agent worktrees. Without Watchman the fallback
+  // watcher walks every directory under watchFolders and gives up after 240s; these
+  // held ~85k of the repo's directories (a stray Gradle cache in .expo alone ~62k).
+  new RegExp(
+    `^${escapedWorkspaceRoot}[\\\\/](?:\\.expo|\\.scratch|\\.claude|\\.kilo|\\.aider-desk|tmp|plans|output|screen records|repomix output files)(?:[\\\\/]|$)`,
+  ),
   new RegExp(`^${escapedWorkspaceRoot}[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/](?:\\.next(?:-[^\\\\/]+)?|dist)(?:[\\\\/]|$)`),
 ];
 

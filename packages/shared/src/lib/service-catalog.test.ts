@@ -86,16 +86,21 @@ describe('Unified document charter writes', () => {
   it('does not invent a confirmed charge in assessment mode', () => {
     expect(serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, pricingMode: 'assessment' } }).fee_centavos).toBe(0);
   });
-  it('uses the specified service fees regardless of the draft amount', () => {
-    for (const serviceKind of ['indigency', 'first_time_job_seeker'] as const) {
+  it('saves and displays the edited fee for every document workflow', () => {
+    for (const serviceKind of ['general', 'business', 'indigency', 'first_time_job_seeker', 'certified_true_copy'] as const) {
       const values = serviceDocumentTypeValues({ ...input, feeCentavos: 999, catalog: { ...input.catalog, serviceKind } });
-      expect(values.fee_centavos).toBe(10000);
-      expect(servicePriceLabel(values as Tables<'document_types'>)).toBe('₱100.00');
+      expect(values.fee_centavos).toBe(999);
+      expect(servicePriceLabel(values as Tables<'document_types'>)).toBe('₱9.99');
+      if (serviceKind !== 'general') expect(values.charter.feesToBePaid).toBe('₱9.99');
+      const free = serviceDocumentTypeValues({ ...input, feeCentavos: 0, catalog: { ...input.catalog, serviceKind } });
+      expect(servicePriceLabel(free as Tables<'document_types'>)).toBe('No payment required');
     }
-    const business = serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, serviceKind: 'business' } });
+    const business = serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, serviceKind: 'business', pricingMode: 'assessment' } });
     expect(servicePriceLabel(business as Tables<'document_types'>)).toBe(BUSINESS_FEE_DESCRIPTION);
     const copies = serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, serviceKind: 'certified_true_copy', pricingMode: 'per_page' } });
-    expect(servicePriceLabel(copies as Tables<'document_types'>)).toBe('₱10.00 per page');
+    expect(copies.fee_centavos).toBe(2550);
+    expect(copies.charter.feesToBePaid).toBe('₱25.50 per page');
+    expect(servicePriceLabel(copies as Tables<'document_types'>)).toBe('₱25.50 per page');
   });
   it('allows multiple ordinary services without specialized resident details', () => {
     const schema = submissionSchemaForCatalog(input.catalog);

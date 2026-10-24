@@ -1,0 +1,63 @@
+{
+  "phase": "1",
+  "status": "Complete",
+  "scope": "Refresh presentation/profile ownership; not final navigation-performance/release acceptance",
+  "at": "2026-10-22T22:52:53.236Z",
+  "criteria": [
+    {
+      "criterion": "Initial/background/failure presentation",
+      "status": "met",
+      "evidence": "Health initial loaders; in-place refresh text; explicit errors/retry and loaded-empty failure retention"
+    },
+    {
+      "criterion": "Same user/tenant/filter content retention",
+      "status": "met",
+      "evidence": "Actual Health UI preserves mounted populated rows in both feeds; native empty drives and registrations retained"
+    },
+    {
+      "criterion": "Same-key in-flight deduplication and invalidation coalescing",
+      "status": "met",
+      "evidence": "Eight deferred controller tests plus actual-provider/hook fixture; obsolete transport aborted and one latest read owns publication"
+    },
+    {
+      "criterion": "Remove redundant fresh-profile reads without generic TTL",
+      "status": "met",
+      "evidence": "Services and Settings focus reads removed; native repeated visits record zero profile reads; provider mount/live/foreground/reconnect remain"
+    },
+    {
+      "criterion": "Mutation/retry/reconnect/foreground semantics",
+      "status": "met",
+      "evidence": "Actual hook fixture and native registration retry/read completion; shared server operations and eligibility guards unchanged"
+    },
+    {
+      "criterion": "Shared status propagation and equal profile/geometry identity",
+      "status": "met",
+      "evidence": "Preference providers subscribe to data-only context; equal response causes zero data-consumer commits or cache writes; unchanged geometry reference retained"
+    },
+    {
+      "criterion": "Profile projection/cache decision measured",
+      "status": "met",
+      "evidence": "Three alternating native read-only pairs; no demonstrated request-time gain; full contract retained"
+    },
+    {
+      "criterion": "Health revisit does not blank loaded feeds",
+      "status": "met",
+      "evidence": "Actual UI/hook deferred fixtures for populated rows; native loaded empty-drive state and held real registration result"
+    },
+    {
+      "criterion": "Services avoids redundant fresh-profile requests",
+      "status": "met",
+      "evidence": "Native source-matched repeated visits, zero observed profile reads; explicit retry fixture still invokes refresh"
+    },
+    {
+      "criterion": "Late replies cannot replace newer account/filter state",
+      "status": "met",
+      "evidence": "Actual hook account/filter/month/calendar out-of-order response tests; unmount/Strict Mode lifecycle and cancel cleanup tests"
+    },
+    {
+      "criterion": "Physical/release timing, populated native account qualification and remote mutation journeys",
+      "status": "pending manual verification",
+      "evidence": "Later Phase 5; current MuMu account has zero drives/registrations; production writes not authorized"
+    }
+  ]
+}

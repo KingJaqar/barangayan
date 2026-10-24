@@ -8,7 +8,7 @@ function fixture(options: { fail?: string; rows?: number; reject?: boolean } = {
   const client = { from(table: string) {
     const call = { table, operations: [] as [string, ...unknown[]][] }; calls.push(call);
     const builder: Record<string, unknown> = {};
-    for (const method of ['select', 'is', 'or', 'filter', 'eq', 'order', 'limit', 'abortSignal']) builder[method] = (...args: unknown[]) => { call.operations.push([method, ...args]); return builder; };
+    for (const method of ['select', 'is', 'or', 'filter', 'eq', 'order', 'range', 'retry', 'abortSignal']) builder[method] = (...args: unknown[]) => { call.operations.push([method, ...args]); return builder; };
     builder.then = (resolve: (value: unknown) => void, reject: (reason: Error) => void) => options.reject ? Promise.reject(new Error('offline')).then(resolve, reject) : Promise.resolve({ error: table === options.fail ? { message: 'forbidden' } : null, data: Array.from({ length: options.rows ?? 1 }, (_, index) => ({ id: String(index), name: 'Clearance', title: 'Clearance', question: 'Clearance', reference_number: 'REF', description: 'body' })) }).then(resolve, reject);
     return builder;
   } } as unknown as SupabaseClient<Database>;
@@ -37,7 +37,8 @@ describe('resident Android search boundary', () => {
     expect(calls.map(call => call.table)).toEqual(['document_types', 'announcements', 'medical_drives', 'faq_articles']);
     for (const call of calls) {
       expect(call.operations).toContainEqual(['is', 'deleted_at', null]);
-      expect(call.operations).toContainEqual(['limit', 21]);
+      expect(call.operations).toContainEqual(['range', 0, 20]);
+      expect(call.operations).toContainEqual(['retry', false]);
       expect(call.operations).toContainEqual(['abortSignal', abort]);
       if (call.table !== 'announcements') expect(call.operations).toContainEqual(['filter', 'is_active', 'eq', true]);
     }

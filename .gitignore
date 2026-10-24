@@ -46,3 +46,6 @@ example
 /ios
 /android
 .next-*/
+
+# Local screen recordings (too large for GitHub)
+screen records/

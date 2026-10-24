@@ -15,7 +15,7 @@
     },
     "android": {
       "package": "com.barangayan.resident",
-      "versionCode": 5,
+      "versionCode": 6,
       "icon": "./assets/logo/barangayan-logo-1024.png",
       "predictiveBackGestureEnabled": false
     },

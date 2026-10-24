@@ -1,0 +1,9 @@
+{
+  "expectedPresses": 120,
+  "observedPresses": 120,
+  "fullSequenceMatches": true,
+  "directedPairs": 30,
+  "rounds": 10,
+  "dropped": 0,
+  "limitation": "Input command metadata was not exported after long CPU-profile timeout; expected sequence validated directly against observed in-app events"
+}

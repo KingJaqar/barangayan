@@ -12,8 +12,35 @@ audit logging, and data adapters are replaced for this preview; database writes
 are disabled. It does not change the application's authentication or adapters.
 
 Use the screen selector and light/dark and empty toggles to review every screen.
-Create sheets and inline editors use the production forms. Do not use this
+Create sheets and centered edit dialogs use the production forms. Do not use this
 preview to assess real data persistence.
+
+## Edit dialog regression suite
+
+```sh
+node apps/admin-web/tests/content-workspace/edit-dialog-browser.mjs
+```
+
+This starts its own preview on an available port and uses synthetic saves that
+never contact a database. The ordinary preview still disables writes by default.
+Results and screenshots are written to `tmp/content-edit-dialog-checks/`.
+
+The suite covers all six screens, including both waste zone and schedule editors:
+
+- Centering, visible actions, internal scrolling, and field availability at
+  desktop, 390px and 320px widths, and a short landscape viewport.
+- Light/dark surfaces, custom accent and font inheritance, reduced motion,
+  WCAG accessibility checks, focus containment and restoration, and dropdown
+  Escape behavior without moving the dialog out of the viewport.
+- Opening and closing produce the panel and backdrop transitions; reduced
+  motion skips them. This catches a first-frame race that could skip entry.
+- Cancel resetting edits; required validation; failed saves retaining the form;
+  disabled dismissal while saving; and successful saves closing the dialog.
+
+Chromium runs the full matrix. Firefox and WebKit receive desktop checks when
+their Playwright executables are installed; missing executables are reported as
+skipped. Authenticated routes and actual database persistence are outside this
+isolated frontend suite.
 
 ## Verified on 2026-10-13
 

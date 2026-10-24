@@ -1,0 +1,143 @@
+{
+  "windows": [
+    {
+      "name": "compact-visible",
+      "configuredObservationMs": 32000,
+      "ownersBefore": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "ownersAfter": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "counts": {
+        "sla-compact:sla-tick": 180,
+        "services:commit": 38,
+        "sla-compact:sla-poll": 12,
+        "other:request-start": 12,
+        "other:request-end": 12
+      }
+    },
+    {
+      "name": "compact-hidden-home",
+      "configuredObservationMs": 32000,
+      "ownersBefore": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "ownersAfter": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "counts": {
+        "sla-compact:sla-tick": 180,
+        "services:commit": 39,
+        "sla-compact:sla-poll": 12,
+        "other:request-start": 12,
+        "other:request-end": 12
+      }
+    },
+    {
+      "name": "compact-background",
+      "configuredObservationMs": 32000,
+      "ownersBefore": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "ownersAfter": {
+        "home": 1,
+        "services": 1,
+        "drrm": 1,
+        "map": 1,
+        "maps": 1,
+        "health": 1,
+        "reports": 1,
+        "sla-compact": 6
+      },
+      "counts": {
+        "home:commit": 1
+      }
+    },
+    {
+      "name": "full-visible-compact-retained",
+      "configuredObservationMs": 32000,
+      "ownersBefore": {
+        "home": 1,
+        "services": 1,
+        "sla-compact": 6,
+        "sla-full": 1
+      },
+      "ownersAfter": {
+        "home": 1,
+        "services": 1,
+        "sla-compact": 6,
+        "sla-full": 1
+      },
+      "counts": {
+        "sla-full:sla-tick": 31,
+        "services:commit": 75,
+        "sla-compact:sla-tick": 180,
+        "sla-compact:sla-poll": 18,
+        "other:request-start": 20,
+        "other:request-end": 20,
+        "sla-full:sla-poll": 2
+      }
+    },
+    {
+      "name": "all-sla-unmounted",
+      "configuredObservationMs": 32000,
+      "ownersBefore": {
+        "home": 1,
+        "services": 1,
+        "sla-compact": 0,
+        "sla-full": 0
+      },
+      "ownersAfter": {
+        "home": 1,
+        "services": 1,
+        "sla-compact": 0,
+        "sla-full": 0
+      },
+      "counts": {
+        "services:commit": 2
+      }
+    }
+  ],
+  "limits": [
+    "Real existing requests only; no backend writes or synthetic production data",
+    "Background return via development URL reloaded runtime; no seamless resume claim",
+    "Full-card capture recorded one warning without retained message; no full-run warning-free claim; later logbox empty",
+    "Compact/full unmount cleanup observed over a further 32 seconds; zero tick/poll events"
+  ]
+}

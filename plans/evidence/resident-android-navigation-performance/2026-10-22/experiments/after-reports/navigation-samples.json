@@ -1,0 +1,1993 @@
+{
+  "schema": "resident-navigation-phase0-v1",
+  "active": false,
+  "capacity": 8192,
+  "dropped": 0,
+  "clock": "performance.now; relative milliseconds; not synchronized to native input/presentation",
+  "startedAtMonotonicMs": 39426577.349419,
+  "counts": {
+    "start": 1,
+    "map-send": 6,
+    "commit": 180,
+    "press": 10,
+    "listeners-end": 10,
+    "dispatch-end": 10,
+    "selected": 10,
+    "blur": 10,
+    "focus": 10,
+    "request-start": 5,
+    "request-end": 5,
+    "stop": 1
+  },
+  "owners": {
+    "home": 1,
+    "health": 1,
+    "services": 1,
+    "drrm": 1,
+    "map": 1,
+    "maps": 1,
+    "reports": 1
+  },
+  "samples": [
+    {
+      "atMs": 0.0011800006031990051,
+      "kind": "start",
+      "owner": "other",
+      "navigationId": 0
+    },
+    {
+      "atMs": 20.20016600191593,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 0,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 339.5297790020704,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 0,
+      "durationMs": 28.500478088855743,
+      "phase": "update"
+    },
+    {
+      "atMs": 339.8117910027504,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 0,
+      "durationMs": 16.040824957191944,
+      "phase": "update"
+    },
+    {
+      "atMs": 340.59944300353527,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 0,
+      "durationMs": 36.144155882298946,
+      "phase": "update"
+    },
+    {
+      "atMs": 341.03893300145864,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 0,
+      "durationMs": 30.485875010490417,
+      "phase": "update"
+    },
+    {
+      "atMs": 341.26762299984694,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 0,
+      "durationMs": 142.65982900559902,
+      "phase": "update"
+    },
+    {
+      "atMs": 341.293809004128,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 0,
+      "durationMs": 1.6561160534620285,
+      "phase": "update"
+    },
+    {
+      "atMs": 354.536347001791,
+      "kind": "press",
+      "owner": "services",
+      "navigationId": 1
+    },
+    {
+      "atMs": 354.6370140016079,
+      "kind": "listeners-end",
+      "owner": "services",
+      "navigationId": 1,
+      "operationId": 1
+    },
+    {
+      "atMs": 355.509254001081,
+      "kind": "dispatch-end",
+      "owner": "services",
+      "navigationId": 1,
+      "operationId": 1
+    },
+    {
+      "atMs": 492.03100400418043,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 1,
+      "durationMs": 1.125060997903347,
+      "phase": "update"
+    },
+    {
+      "atMs": 492.1567860022187,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 1,
+      "durationMs": 1.9298710227012634,
+      "phase": "update"
+    },
+    {
+      "atMs": 492.36148799955845,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 1,
+      "durationMs": 4.1603550389409065,
+      "phase": "update"
+    },
+    {
+      "atMs": 492.44445300102234,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 1,
+      "durationMs": 1.0980550423264503,
+      "phase": "update"
+    },
+    {
+      "atMs": 492.51393800228834,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 1,
+      "durationMs": 1.0826319456100464,
+      "phase": "update"
+    },
+    {
+      "atMs": 492.5964130014181,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 1,
+      "durationMs": 1.2100079953670502,
+      "phase": "update"
+    },
+    {
+      "atMs": 511.39891700446606,
+      "kind": "selected",
+      "owner": "services",
+      "navigationId": 1
+    },
+    {
+      "atMs": 514.8923389986157,
+      "kind": "blur",
+      "owner": "drrm",
+      "navigationId": 1
+    },
+    {
+      "atMs": 514.9107370004058,
+      "kind": "focus",
+      "owner": "services",
+      "navigationId": 1
+    },
+    {
+      "atMs": 832.9604300037026,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 1,
+      "durationMs": 26.345618076622486,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 833.2880109995604,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 1,
+      "durationMs": 17.551973909139633,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 834.0042610019445,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 1,
+      "durationMs": 29.36728398501873,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 834.4209289997816,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 1,
+      "durationMs": 37.552247017621994,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 834.6488620042801,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 1,
+      "durationMs": 144.34187401086092,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 834.6737440004945,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 1,
+      "durationMs": 1.8192540407180786,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 889.5869069993496,
+      "kind": "request-start",
+      "owner": "other",
+      "navigationId": 1,
+      "operationId": 1
+    },
+    {
+      "atMs": 1015.4680620059371,
+      "kind": "press",
+      "owner": "drrm",
+      "navigationId": 2
+    },
+    {
+      "atMs": 1015.5229509994388,
+      "kind": "listeners-end",
+      "owner": "drrm",
+      "navigationId": 2,
+      "operationId": 2
+    },
+    {
+      "atMs": 1015.9681740030646,
+      "kind": "dispatch-end",
+      "owner": "drrm",
+      "navigationId": 2,
+      "operationId": 2
+    },
+    {
+      "atMs": 1205.3273370042443,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 2,
+      "durationMs": 1.0104329735040665,
+      "phase": "update"
+    },
+    {
+      "atMs": 1205.483493000269,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 2,
+      "durationMs": 1.8274559825658798,
+      "phase": "update"
+    },
+    {
+      "atMs": 1205.691073000431,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 2,
+      "durationMs": 3.7684499993920326,
+      "phase": "update"
+    },
+    {
+      "atMs": 1205.769939005375,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 2,
+      "durationMs": 59.99273703247309,
+      "phase": "update"
+    },
+    {
+      "atMs": 1205.860490001738,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 2,
+      "durationMs": 1.3509559854865074,
+      "phase": "update"
+    },
+    {
+      "atMs": 1205.932158999145,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 2,
+      "durationMs": 1.0209880471229553,
+      "phase": "update"
+    },
+    {
+      "atMs": 1226.7606800049543,
+      "kind": "selected",
+      "owner": "drrm",
+      "navigationId": 2
+    },
+    {
+      "atMs": 1229.77875700593,
+      "kind": "blur",
+      "owner": "services",
+      "navigationId": 2
+    },
+    {
+      "atMs": 1229.8080400004983,
+      "kind": "focus",
+      "owner": "drrm",
+      "navigationId": 2
+    },
+    {
+      "atMs": 1311.3216420039535,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 2,
+      "durationMs": 21.858006991446018,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1311.3571860045195,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 2,
+      "durationMs": 0.4142230153083801,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1311.4397900030017,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 2,
+      "durationMs": 2.829112008213997,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1312.0200439989567,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 2,
+      "durationMs": 29.34325496852398,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1312.0499030053616,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 2,
+      "durationMs": 0.5002869665622711,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1312.0736870020628,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 2,
+      "durationMs": 0.33345991373062134,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 1326.295313000679,
+      "kind": "request-end",
+      "owner": "other",
+      "navigationId": 2,
+      "durationMs": 436.58620100468397,
+      "code": 200,
+      "operationId": 1
+    },
+    {
+      "atMs": 1632.4147990047932,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 2,
+      "durationMs": 24.745358899235725,
+      "phase": "update"
+    },
+    {
+      "atMs": 1632.7388180047274,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 2,
+      "durationMs": 16.500300116837025,
+      "phase": "update"
+    },
+    {
+      "atMs": 1634.117375999689,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 2,
+      "durationMs": 26.42739597707987,
+      "phase": "update"
+    },
+    {
+      "atMs": 1634.8874149993062,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 2,
+      "durationMs": 37.05164807289839,
+      "phase": "update"
+    },
+    {
+      "atMs": 1635.19625300169,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 2,
+      "durationMs": 144.5347302928567,
+      "phase": "update"
+    },
+    {
+      "atMs": 1635.2253560051322,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 2,
+      "durationMs": 2.113354057073593,
+      "phase": "update"
+    },
+    {
+      "atMs": 1661.510081999004,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 2,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 1997.2044040039182,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 2,
+      "durationMs": 28.424848921597004,
+      "phase": "update"
+    },
+    {
+      "atMs": 1997.4806380048394,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 2,
+      "durationMs": 19.719699047505856,
+      "phase": "update"
+    },
+    {
+      "atMs": 1998.2617079988122,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 2,
+      "durationMs": 38.147783033549786,
+      "phase": "update"
+    },
+    {
+      "atMs": 1998.6614800021052,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 2,
+      "durationMs": 33.25193893164396,
+      "phase": "update"
+    },
+    {
+      "atMs": 1998.8903550058603,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 2,
+      "durationMs": 148.90036216378212,
+      "phase": "update"
+    },
+    {
+      "atMs": 1998.9287660047412,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 2,
+      "durationMs": 1.696935996413231,
+      "phase": "update"
+    },
+    {
+      "atMs": 2011.608591005206,
+      "kind": "press",
+      "owner": "services",
+      "navigationId": 3
+    },
+    {
+      "atMs": 2011.71915499866,
+      "kind": "listeners-end",
+      "owner": "services",
+      "navigationId": 3,
+      "operationId": 3
+    },
+    {
+      "atMs": 2012.0999480038881,
+      "kind": "dispatch-end",
+      "owner": "services",
+      "navigationId": 3,
+      "operationId": 3
+    },
+    {
+      "atMs": 2141.783652000129,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 3,
+      "durationMs": 1.0323390364646912,
+      "phase": "update"
+    },
+    {
+      "atMs": 2141.9052040055394,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 3,
+      "durationMs": 2.8503939881920815,
+      "phase": "update"
+    },
+    {
+      "atMs": 2142.0973760038614,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 3,
+      "durationMs": 3.835003986954689,
+      "phase": "update"
+    },
+    {
+      "atMs": 2142.1776330024004,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 3,
+      "durationMs": 1.0453080013394356,
+      "phase": "update"
+    },
+    {
+      "atMs": 2142.2581159994006,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 3,
+      "durationMs": 0.7782739922404289,
+      "phase": "update"
+    },
+    {
+      "atMs": 2142.327888004482,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 3,
+      "durationMs": 1.1078920289874077,
+      "phase": "update"
+    },
+    {
+      "atMs": 2160.4480080008507,
+      "kind": "selected",
+      "owner": "services",
+      "navigationId": 3
+    },
+    {
+      "atMs": 2164.692517004907,
+      "kind": "blur",
+      "owner": "drrm",
+      "navigationId": 3
+    },
+    {
+      "atMs": 2164.7088400051,
+      "kind": "focus",
+      "owner": "services",
+      "navigationId": 3
+    },
+    {
+      "atMs": 2503.1660890057683,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 3,
+      "durationMs": 28.93486812710762,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2503.5048740059137,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 3,
+      "durationMs": 17.781054876744747,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2504.2419130057096,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 3,
+      "durationMs": 32.10987586528063,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2504.7187869995832,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 3,
+      "durationMs": 48.79617493599653,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2504.9786090031266,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 3,
+      "durationMs": 144.35773698240519,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2505.0060110017657,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 3,
+      "durationMs": 7.049602046608925,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2549.4605400040746,
+      "kind": "request-start",
+      "owner": "other",
+      "navigationId": 3,
+      "operationId": 2
+    },
+    {
+      "atMs": 2681.5429080054164,
+      "kind": "press",
+      "owner": "drrm",
+      "navigationId": 4
+    },
+    {
+      "atMs": 2681.6697629988194,
+      "kind": "listeners-end",
+      "owner": "drrm",
+      "navigationId": 4,
+      "operationId": 4
+    },
+    {
+      "atMs": 2684.9663349986076,
+      "kind": "dispatch-end",
+      "owner": "drrm",
+      "navigationId": 4,
+      "operationId": 4
+    },
+    {
+      "atMs": 2790.705940000713,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 4,
+      "durationMs": 1.0672579929232597,
+      "phase": "update"
+    },
+    {
+      "atMs": 2790.8390280008316,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 4,
+      "durationMs": 1.8555180057883263,
+      "phase": "update"
+    },
+    {
+      "atMs": 2791.036401003599,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 4,
+      "durationMs": 3.5937639996409416,
+      "phase": "update"
+    },
+    {
+      "atMs": 2791.137706004083,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 4,
+      "durationMs": 0.898387037217617,
+      "phase": "update"
+    },
+    {
+      "atMs": 2791.2091410011053,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 4,
+      "durationMs": 1.1419699937105179,
+      "phase": "update"
+    },
+    {
+      "atMs": 2791.280289001763,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 4,
+      "durationMs": 0.9330819845199585,
+      "phase": "update"
+    },
+    {
+      "atMs": 2812.3731859996915,
+      "kind": "selected",
+      "owner": "drrm",
+      "navigationId": 4
+    },
+    {
+      "atMs": 2815.7542710006237,
+      "kind": "blur",
+      "owner": "services",
+      "navigationId": 4
+    },
+    {
+      "atMs": 2815.793126001954,
+      "kind": "focus",
+      "owner": "drrm",
+      "navigationId": 4
+    },
+    {
+      "atMs": 2908.517742998898,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 4,
+      "durationMs": 21.772728994488716,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2908.5540160015225,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 4,
+      "durationMs": 0.41518300026655197,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2908.6437360048294,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 4,
+      "durationMs": 2.86687795817852,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2909.2919950038195,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 4,
+      "durationMs": 38.64702605456114,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2909.3243260011077,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 4,
+      "durationMs": 0.6911669820547104,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2909.349973000586,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 4,
+      "durationMs": 0.4654410555958748,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 2924.6002350002527,
+      "kind": "request-end",
+      "owner": "other",
+      "navigationId": 4,
+      "durationMs": 375.0145209953189,
+      "code": 200,
+      "operationId": 2
+    },
+    {
+      "atMs": 3250.199417002499,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 4,
+      "durationMs": 31.16078893840313,
+      "phase": "update"
+    },
+    {
+      "atMs": 3250.509391002357,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 4,
+      "durationMs": 19.180862054228783,
+      "phase": "update"
+    },
+    {
+      "atMs": 3251.092774003744,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 4,
+      "durationMs": 36.07373998314142,
+      "phase": "update"
+    },
+    {
+      "atMs": 3251.4937160015106,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 4,
+      "durationMs": 38.11860103905201,
+      "phase": "update"
+    },
+    {
+      "atMs": 3251.7434240058064,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 4,
+      "durationMs": 137.4156277924776,
+      "phase": "update"
+    },
+    {
+      "atMs": 3251.7696320042014,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 4,
+      "durationMs": 2.064225099980831,
+      "phase": "update"
+    },
+    {
+      "atMs": 3279.1422780007124,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 4,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 3623.3539360016584,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 4,
+      "durationMs": 30.400145076215267,
+      "phase": "update"
+    },
+    {
+      "atMs": 3623.6659330055118,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 4,
+      "durationMs": 19.706317991018295,
+      "phase": "update"
+    },
+    {
+      "atMs": 3624.3399410024285,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 4,
+      "durationMs": 35.8955160304904,
+      "phase": "update"
+    },
+    {
+      "atMs": 3624.9060830026865,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 4,
+      "durationMs": 31.727071054279804,
+      "phase": "update"
+    },
+    {
+      "atMs": 3625.2268990054727,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 4,
+      "durationMs": 155.37274092435837,
+      "phase": "update"
+    },
+    {
+      "atMs": 3625.256305001676,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 4,
+      "durationMs": 2.421194963157177,
+      "phase": "update"
+    },
+    {
+      "atMs": 3636.5523580014706,
+      "kind": "press",
+      "owner": "services",
+      "navigationId": 5
+    },
+    {
+      "atMs": 3636.6500620022416,
+      "kind": "listeners-end",
+      "owner": "services",
+      "navigationId": 5,
+      "operationId": 5
+    },
+    {
+      "atMs": 3637.2654270008206,
+      "kind": "dispatch-end",
+      "owner": "services",
+      "navigationId": 5,
+      "operationId": 5
+    },
+    {
+      "atMs": 3775.9825370013714,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 5,
+      "durationMs": 1.185376986861229,
+      "phase": "update"
+    },
+    {
+      "atMs": 3776.121852003038,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 5,
+      "durationMs": 1.930825024843216,
+      "phase": "update"
+    },
+    {
+      "atMs": 3776.324201002717,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 5,
+      "durationMs": 3.901819996535778,
+      "phase": "update"
+    },
+    {
+      "atMs": 3776.4043539986014,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 5,
+      "durationMs": 1.06477702409029,
+      "phase": "update"
+    },
+    {
+      "atMs": 3776.476391002536,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 5,
+      "durationMs": 1.0958510041236877,
+      "phase": "update"
+    },
+    {
+      "atMs": 3776.543452002108,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 5,
+      "durationMs": 0.9920410215854645,
+      "phase": "update"
+    },
+    {
+      "atMs": 3794.2191520035267,
+      "kind": "selected",
+      "owner": "services",
+      "navigationId": 5
+    },
+    {
+      "atMs": 3798.8231879994273,
+      "kind": "blur",
+      "owner": "drrm",
+      "navigationId": 5
+    },
+    {
+      "atMs": 3798.842661999166,
+      "kind": "focus",
+      "owner": "services",
+      "navigationId": 5
+    },
+    {
+      "atMs": 4153.786756999791,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 5,
+      "durationMs": 34.01190195977688,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4154.135813005269,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 5,
+      "durationMs": 22.060014955699444,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4155.264882005751,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 5,
+      "durationMs": 34.61196502298117,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4155.790246002376,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 5,
+      "durationMs": 40.47345895320177,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4156.074247002602,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 5,
+      "durationMs": 155.56345987319946,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4156.113469004631,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 5,
+      "durationMs": 7.223869971930981,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4206.225615002215,
+      "kind": "request-start",
+      "owner": "other",
+      "navigationId": 5,
+      "operationId": 3
+    },
+    {
+      "atMs": 4351.326154001057,
+      "kind": "press",
+      "owner": "drrm",
+      "navigationId": 6
+    },
+    {
+      "atMs": 4351.387313999236,
+      "kind": "listeners-end",
+      "owner": "drrm",
+      "navigationId": 6,
+      "operationId": 6
+    },
+    {
+      "atMs": 4351.7853800058365,
+      "kind": "dispatch-end",
+      "owner": "drrm",
+      "navigationId": 6,
+      "operationId": 6
+    },
+    {
+      "atMs": 4509.494415000081,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 6,
+      "durationMs": 1.0272450298070908,
+      "phase": "update"
+    },
+    {
+      "atMs": 4509.71225900203,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 6,
+      "durationMs": 1.8180249631404877,
+      "phase": "update"
+    },
+    {
+      "atMs": 4509.999368004501,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 6,
+      "durationMs": 3.3248279616236687,
+      "phase": "update"
+    },
+    {
+      "atMs": 4510.123222000897,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 6,
+      "durationMs": 1.6879149675369263,
+      "phase": "update"
+    },
+    {
+      "atMs": 4510.236744001508,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 6,
+      "durationMs": 2.476609006524086,
+      "phase": "update"
+    },
+    {
+      "atMs": 4510.3474030047655,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 6,
+      "durationMs": 2.0042790099978447,
+      "phase": "update"
+    },
+    {
+      "atMs": 4546.794713005424,
+      "kind": "selected",
+      "owner": "drrm",
+      "navigationId": 6
+    },
+    {
+      "atMs": 4551.092683002353,
+      "kind": "blur",
+      "owner": "services",
+      "navigationId": 6
+    },
+    {
+      "atMs": 4551.129060998559,
+      "kind": "focus",
+      "owner": "drrm",
+      "navigationId": 6
+    },
+    {
+      "atMs": 4643.8363239988685,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 6,
+      "durationMs": 25.251218028366566,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4643.874559998512,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 6,
+      "durationMs": 0.41290706396102905,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4643.965038999915,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 6,
+      "durationMs": 2.980465993285179,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4644.565019004047,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 6,
+      "durationMs": 32.63102899491787,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4644.652919001877,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 6,
+      "durationMs": 0.5439899861812592,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4644.685127004981,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 6,
+      "durationMs": 0.4091019928455353,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 4661.498109005392,
+      "kind": "request-end",
+      "owner": "other",
+      "navigationId": 6,
+      "durationMs": 455.12314699590206,
+      "code": 200,
+      "operationId": 3
+    },
+    {
+      "atMs": 5017.256710998714,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 6,
+      "durationMs": 27.705482058227062,
+      "phase": "update"
+    },
+    {
+      "atMs": 5017.542532004416,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 6,
+      "durationMs": 17.031038984656334,
+      "phase": "update"
+    },
+    {
+      "atMs": 5018.172049000859,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 6,
+      "durationMs": 30.8295940682292,
+      "phase": "update"
+    },
+    {
+      "atMs": 5018.643982000649,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 6,
+      "durationMs": 39.0173259973526,
+      "phase": "update"
+    },
+    {
+      "atMs": 5018.953288003802,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 6,
+      "durationMs": 180.4968280121684,
+      "phase": "update"
+    },
+    {
+      "atMs": 5018.979125998914,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 6,
+      "durationMs": 1.8278879895806313,
+      "phase": "update"
+    },
+    {
+      "atMs": 5046.667065002024,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 6,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 5386.370236001909,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 6,
+      "durationMs": 25.54233492165804,
+      "phase": "update"
+    },
+    {
+      "atMs": 5386.656837001443,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 6,
+      "durationMs": 18.872842885553837,
+      "phase": "update"
+    },
+    {
+      "atMs": 5387.501079000533,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 6,
+      "durationMs": 34.30303101986647,
+      "phase": "update"
+    },
+    {
+      "atMs": 5388.194620005786,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 6,
+      "durationMs": 31.86638491600752,
+      "phase": "update"
+    },
+    {
+      "atMs": 5388.505920998752,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 6,
+      "durationMs": 151.60282895714045,
+      "phase": "update"
+    },
+    {
+      "atMs": 5388.536565005779,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 6,
+      "durationMs": 2.0949419513344765,
+      "phase": "update"
+    },
+    {
+      "atMs": 5404.61899600178,
+      "kind": "press",
+      "owner": "services",
+      "navigationId": 7
+    },
+    {
+      "atMs": 5404.754092998803,
+      "kind": "listeners-end",
+      "owner": "services",
+      "navigationId": 7,
+      "operationId": 7
+    },
+    {
+      "atMs": 5405.426208004355,
+      "kind": "dispatch-end",
+      "owner": "services",
+      "navigationId": 7,
+      "operationId": 7
+    },
+    {
+      "atMs": 5580.82267100364,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 7,
+      "durationMs": 1.5701590552926064,
+      "phase": "update"
+    },
+    {
+      "atMs": 5581.021793998778,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 7,
+      "durationMs": 3.603539004921913,
+      "phase": "update"
+    },
+    {
+      "atMs": 5581.272756002843,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 7,
+      "durationMs": 5.506721019744873,
+      "phase": "update"
+    },
+    {
+      "atMs": 5581.367691002786,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 7,
+      "durationMs": 1.127925992012024,
+      "phase": "update"
+    },
+    {
+      "atMs": 5581.46658500284,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 7,
+      "durationMs": 1.1369950100779533,
+      "phase": "update"
+    },
+    {
+      "atMs": 5581.557156004012,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 7,
+      "durationMs": 1.6879540532827377,
+      "phase": "update"
+    },
+    {
+      "atMs": 5604.182970002294,
+      "kind": "selected",
+      "owner": "services",
+      "navigationId": 7
+    },
+    {
+      "atMs": 5608.240015000105,
+      "kind": "blur",
+      "owner": "drrm",
+      "navigationId": 7
+    },
+    {
+      "atMs": 5608.257834002376,
+      "kind": "focus",
+      "owner": "services",
+      "navigationId": 7
+    },
+    {
+      "atMs": 5943.002549000084,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 7,
+      "durationMs": 28.32587595283985,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5943.292334005237,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 7,
+      "durationMs": 17.016806975007057,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5944.013941004872,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 7,
+      "durationMs": 32.51239298284054,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5944.459199003875,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 7,
+      "durationMs": 38.62856002151966,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5944.705494001508,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 7,
+      "durationMs": 147.6310100182891,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5944.732017003,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 7,
+      "durationMs": 1.8740209564566612,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 5987.937860004604,
+      "kind": "request-start",
+      "owner": "other",
+      "navigationId": 7,
+      "operationId": 4
+    },
+    {
+      "atMs": 6147.298682004213,
+      "kind": "press",
+      "owner": "drrm",
+      "navigationId": 8
+    },
+    {
+      "atMs": 6147.3537360057235,
+      "kind": "listeners-end",
+      "owner": "drrm",
+      "navigationId": 8,
+      "operationId": 8
+    },
+    {
+      "atMs": 6147.746784001589,
+      "kind": "dispatch-end",
+      "owner": "drrm",
+      "navigationId": 8,
+      "operationId": 8
+    },
+    {
+      "atMs": 6253.383567005396,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 8,
+      "durationMs": 1.0209090039134026,
+      "phase": "update"
+    },
+    {
+      "atMs": 6253.57108899951,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 8,
+      "durationMs": 1.7576930075883865,
+      "phase": "update"
+    },
+    {
+      "atMs": 6253.814229004085,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 8,
+      "durationMs": 3.7285659685730934,
+      "phase": "update"
+    },
+    {
+      "atMs": 6253.944501005113,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 8,
+      "durationMs": 0.8873079493641853,
+      "phase": "update"
+    },
+    {
+      "atMs": 6254.052326999605,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 8,
+      "durationMs": 1.005585953593254,
+      "phase": "update"
+    },
+    {
+      "atMs": 6254.131076000631,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 8,
+      "durationMs": 1.04254499822855,
+      "phase": "update"
+    },
+    {
+      "atMs": 6279.098953001201,
+      "kind": "selected",
+      "owner": "drrm",
+      "navigationId": 8
+    },
+    {
+      "atMs": 6283.497284002602,
+      "kind": "blur",
+      "owner": "services",
+      "navigationId": 8
+    },
+    {
+      "atMs": 6283.529720000923,
+      "kind": "focus",
+      "owner": "drrm",
+      "navigationId": 8
+    },
+    {
+      "atMs": 6369.772532001138,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 8,
+      "durationMs": 23.084483087062836,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6369.806124001741,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 8,
+      "durationMs": 0.42085297405719757,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6369.890161000192,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 8,
+      "durationMs": 3.082170009613037,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6370.415157005191,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 8,
+      "durationMs": 32.65202097594738,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6370.4440409988165,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 8,
+      "durationMs": 0.5096540227532387,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6370.467070005834,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 8,
+      "durationMs": 0.35355599969625473,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 6387.091208003461,
+      "kind": "request-end",
+      "owner": "other",
+      "navigationId": 8,
+      "durationMs": 399.02290200442076,
+      "code": 200,
+      "operationId": 4
+    },
+    {
+      "atMs": 6711.119589999318,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 8,
+      "durationMs": 25.331294998526573,
+      "phase": "update"
+    },
+    {
+      "atMs": 6711.4531439989805,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 8,
+      "durationMs": 18.09382300823927,
+      "phase": "update"
+    },
+    {
+      "atMs": 6712.147247001529,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 8,
+      "durationMs": 28.720258057117462,
+      "phase": "update"
+    },
+    {
+      "atMs": 6712.690512001514,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 8,
+      "durationMs": 47.67470598965883,
+      "phase": "update"
+    },
+    {
+      "atMs": 6712.983052000403,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 8,
+      "durationMs": 144.66613699495792,
+      "phase": "update"
+    },
+    {
+      "atMs": 6713.011265002191,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 8,
+      "durationMs": 1.7504439428448677,
+      "phase": "update"
+    },
+    {
+      "atMs": 6739.362195000052,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 8,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 7087.730630002916,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 8,
+      "durationMs": 37.7822919934988,
+      "phase": "update"
+    },
+    {
+      "atMs": 7088.08014100045,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 8,
+      "durationMs": 19.681386940181255,
+      "phase": "update"
+    },
+    {
+      "atMs": 7088.661650002003,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 8,
+      "durationMs": 36.61635999381542,
+      "phase": "update"
+    },
+    {
+      "atMs": 7089.150387004018,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 8,
+      "durationMs": 33.51302910596132,
+      "phase": "update"
+    },
+    {
+      "atMs": 7089.496989004314,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 8,
+      "durationMs": 147.01635495573282,
+      "phase": "update"
+    },
+    {
+      "atMs": 7089.526528999209,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 8,
+      "durationMs": 1.6449969485402107,
+      "phase": "update"
+    },
+    {
+      "atMs": 7103.310887999833,
+      "kind": "press",
+      "owner": "services",
+      "navigationId": 9
+    },
+    {
+      "atMs": 7103.436319001019,
+      "kind": "listeners-end",
+      "owner": "services",
+      "navigationId": 9,
+      "operationId": 9
+    },
+    {
+      "atMs": 7104.064959004521,
+      "kind": "dispatch-end",
+      "owner": "services",
+      "navigationId": 9,
+      "operationId": 9
+    },
+    {
+      "atMs": 7326.177592001855,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 9,
+      "durationMs": 1.0445500388741493,
+      "phase": "update"
+    },
+    {
+      "atMs": 7326.330288000405,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 9,
+      "durationMs": 1.918931983411312,
+      "phase": "update"
+    },
+    {
+      "atMs": 7326.537884004414,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 9,
+      "durationMs": 3.599075958132744,
+      "phase": "update"
+    },
+    {
+      "atMs": 7326.618233002722,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 9,
+      "durationMs": 1.101338006556034,
+      "phase": "update"
+    },
+    {
+      "atMs": 7326.69010899961,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 9,
+      "durationMs": 1.0490949749946594,
+      "phase": "update"
+    },
+    {
+      "atMs": 7326.760420002043,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 9,
+      "durationMs": 1.1743230149149895,
+      "phase": "update"
+    },
+    {
+      "atMs": 7345.21513800323,
+      "kind": "selected",
+      "owner": "services",
+      "navigationId": 9
+    },
+    {
+      "atMs": 7349.050668999553,
+      "kind": "blur",
+      "owner": "drrm",
+      "navigationId": 9
+    },
+    {
+      "atMs": 7349.069384999573,
+      "kind": "focus",
+      "owner": "services",
+      "navigationId": 9
+    },
+    {
+      "atMs": 7685.890251003206,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 9,
+      "durationMs": 33.31063789129257,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7686.203331999481,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 9,
+      "durationMs": 19.32570105791092,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7686.945658005774,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 9,
+      "durationMs": 41.15767201036215,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7687.4056169986725,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 9,
+      "durationMs": 33.13496594130993,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7687.731789000332,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 9,
+      "durationMs": 148.66157214343548,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7687.760770000517,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 9,
+      "durationMs": 1.7081739529967308,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 7733.829308003187,
+      "kind": "request-start",
+      "owner": "other",
+      "navigationId": 9,
+      "operationId": 5
+    },
+    {
+      "atMs": 7859.482862003148,
+      "kind": "request-end",
+      "owner": "other",
+      "navigationId": 9,
+      "durationMs": 125.5293629989028,
+      "code": 200,
+      "operationId": 5
+    },
+    {
+      "atMs": 8256.795846000314,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 9,
+      "durationMs": 42.699511989951134,
+      "phase": "update"
+    },
+    {
+      "atMs": 8257.190756000578,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 9,
+      "durationMs": 24.158805936574936,
+      "phase": "update"
+    },
+    {
+      "atMs": 8258.07476400584,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 9,
+      "durationMs": 43.56088099628687,
+      "phase": "update"
+    },
+    {
+      "atMs": 8258.545141004026,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 9,
+      "durationMs": 43.292436979711056,
+      "phase": "update"
+    },
+    {
+      "atMs": 8258.840927004814,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 9,
+      "durationMs": 170.87836702167988,
+      "phase": "update"
+    },
+    {
+      "atMs": 8258.892257004976,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 9,
+      "durationMs": 1.8304219841957092,
+      "phase": "update"
+    },
+    {
+      "atMs": 8268.123438999057,
+      "kind": "press",
+      "owner": "drrm",
+      "navigationId": 10
+    },
+    {
+      "atMs": 8268.204184003174,
+      "kind": "listeners-end",
+      "owner": "drrm",
+      "navigationId": 10,
+      "operationId": 10
+    },
+    {
+      "atMs": 8268.4200810045,
+      "kind": "dispatch-end",
+      "owner": "drrm",
+      "navigationId": 10,
+      "operationId": 10
+    },
+    {
+      "atMs": 8286.481224000454,
+      "kind": "map-send",
+      "owner": "map",
+      "navigationId": 10,
+      "message": "SET_BOUNDARY",
+      "count": 3579
+    },
+    {
+      "atMs": 8707.526277005672,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 10,
+      "durationMs": 30.871613934636116,
+      "phase": "update"
+    },
+    {
+      "atMs": 8708.04456499964,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 10,
+      "durationMs": 20.698658920824528,
+      "phase": "update"
+    },
+    {
+      "atMs": 8708.935826003551,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 10,
+      "durationMs": 39.39401711523533,
+      "phase": "update"
+    },
+    {
+      "atMs": 8709.587252005935,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 10,
+      "durationMs": 36.00880006700754,
+      "phase": "update"
+    },
+    {
+      "atMs": 8709.903218999505,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 10,
+      "durationMs": 147.80550806969404,
+      "phase": "update"
+    },
+    {
+      "atMs": 8709.979513004422,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 10,
+      "durationMs": 2.765818953514099,
+      "phase": "update"
+    },
+    {
+      "atMs": 8763.360898002982,
+      "kind": "selected",
+      "owner": "drrm",
+      "navigationId": 10
+    },
+    {
+      "atMs": 8767.048895001411,
+      "kind": "blur",
+      "owner": "services",
+      "navigationId": 10
+    },
+    {
+      "atMs": 8767.105642005801,
+      "kind": "focus",
+      "owner": "drrm",
+      "navigationId": 10
+    },
+    {
+      "atMs": 8851.551517002285,
+      "kind": "commit",
+      "owner": "home",
+      "navigationId": 10,
+      "durationMs": 23.443628937005997,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8851.585178002715,
+      "kind": "commit",
+      "owner": "services",
+      "navigationId": 10,
+      "durationMs": 0.4514570012688637,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8851.675763003528,
+      "kind": "commit",
+      "owner": "drrm",
+      "navigationId": 10,
+      "durationMs": 2.8757879734039307,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8852.224497005343,
+      "kind": "commit",
+      "owner": "maps",
+      "navigationId": 10,
+      "durationMs": 30.3049029186368,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8852.263976998627,
+      "kind": "commit",
+      "owner": "health",
+      "navigationId": 10,
+      "durationMs": 0.4473549872636795,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8852.28869099915,
+      "kind": "commit",
+      "owner": "reports",
+      "navigationId": 10,
+      "durationMs": 0.3450310230255127,
+      "phase": "nested-update"
+    },
+    {
+      "atMs": 8899.041389003396,
+      "kind": "stop",
+      "owner": "other",
+      "navigationId": 10
+    }
+  ]
+}

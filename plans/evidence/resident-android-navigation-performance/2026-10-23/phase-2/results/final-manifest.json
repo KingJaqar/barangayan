@@ -1,0 +1,49 @@
+{
+  "packet": "repomix output files/resident-nav-phase2-final-20261023.xml",
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-android-mobile/src/components/map-view.tsx,apps/resident-android-mobile/tests/maps-presentation-ui.mjs,apps/resident-android-mobile/tests/map-state-bridge.mjs",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase2-final-20261023.xml"
+  ],
+  "exit": 0,
+  "sha256": "e89a5ccaaa9b4f7c7b6edde9734b7d7cca706dbcb603e1e44e5edb63e027b7e2",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/tests/map-state-bridge.mjs",
+      "chars": 670,
+      "sha256": "176012a350f448772ce2d43496eb7e932c49eb0baf3b2b7ad7e1e62ba0fe44cb"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "chars": 351,
+      "sha256": "dd9d30b2f7564e9a4c9594e4d7bc1cfeda217da2dd39543d56285fb9b1cac687"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "chars": 11632,
+      "sha256": "436d8921715a9c4ac49ed1d41c3ea098a6ee8299f13f46680b843b639b604202"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "final-reader-1.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "final-reader-2.txt",
+      "start": 11000,
+      "end": 13044,
+      "chars": 2044
+    }
+  ]
+}

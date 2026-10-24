@@ -34,9 +34,9 @@ export function ReportStatusBadge({ status }: { status: string }) {
 }
 
 /** Read controls are siblings of row links; one press dispatches one action. */
-export function ReadAction({ label, action, disabled = false, icon = 'checkmark-done-outline', compact = false }: {
+export function ReadAction({ label, action, disabled = false, icon = 'checkmark-done-outline', compact = false, inline = false }: {
   label: string; action: () => Promise<void>; disabled?: boolean;
-  icon?: keyof typeof Ionicons.glyphMap; compact?: boolean;
+  icon?: keyof typeof Ionicons.glyphMap; compact?: boolean; inline?: boolean;
 }) {
   const { resident } = useTheme();
   const locked = useRef(false);
@@ -49,10 +49,10 @@ export function ReadAction({ label, action, disabled = false, icon = 'checkmark-
         locked.current = true; setBusy(true); setError(false);
         try { await action(); } catch { setError(true); }
         finally { locked.current = false; setBusy(false); }
-      }} style={({ pressed }) => [reportStyles.readAction, compact && reportStyles.readIcon,
+      }} style={({ pressed }) => [reportStyles.readAction, compact && reportStyles.readIcon, inline && reportStyles.readInline,
         pressed && { backgroundColor: resident.pressed }]}>
-      {busy ? <ActivityIndicator size="small" color={resident.accentText} /> : <Ionicons name={icon} size={compact ? 18 : 16} color={disabled ? resident.muted : resident.accentText} accessible={false} />}
-      {!compact ? <ThemedText style={[reportStyles.readLabel, { color: disabled ? resident.muted : resident.accentText }]}>{label}</ThemedText> : null}
+      {busy ? <ActivityIndicator size="small" color={resident.accentText} /> : <Ionicons name={icon} size={compact ? 18 : inline ? 14 : 16} color={disabled ? resident.muted : resident.accentText} accessible={false} />}
+      {!compact ? <ThemedText numberOfLines={inline ? 1 : undefined} style={[reportStyles.readLabel, inline && reportStyles.readInlineLabel, { color: disabled ? resident.muted : resident.accentText }]}>{label}</ThemedText> : null}
     </Pressable>
     {error ? <ThemedText accessibilityRole="alert" style={[reportStyles.readError, { color: resident.danger }]}>Could not update read status. Try again.</ThemedText> : null}
   </View>;
@@ -84,6 +84,8 @@ export const reportStyles = StyleSheet.create({
   readColumn: { width: 48, justifyContent: 'center' },
   readAction: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 6, borderRadius: 100, paddingHorizontal: 12 },
   readIcon: { width: 48, paddingHorizontal: 0 },
+  readInline: { flexWrap: 'nowrap', paddingHorizontal: 0, gap: 4 },
+  readInlineLabel: { fontSize: 12, lineHeight: 18, includeFontPadding: false, textAlignVertical: 'center' },
   readLabel: { fontSize: 13.5, lineHeight: 19, fontWeight: '700' },
   readError: { fontSize: 12, lineHeight: 17, padding: 4 },
   state: { margin: 20, padding: 16, borderRadius: 16, alignItems: 'center', gap: 8 },

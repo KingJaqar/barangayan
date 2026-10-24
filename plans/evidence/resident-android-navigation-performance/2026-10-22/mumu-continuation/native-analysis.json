@@ -1,0 +1,202 @@
+{
+  "offsetMs": -0.000215,
+  "clockSource": "RN 0.86.2 HighResTimeStamp steady_clock nativePerformanceNow; native MONOTONIC↔BOOTTIME snapshot; empirical /proc/uptime bracket sanity check",
+  "brackets": [
+    {
+      "jsBeforeMs": 41813870.051896,
+      "bootUptimeMs": 41813930,
+      "jsAfterMs": 41813949.827939,
+      "uptimeResolutionMs": 10
+    },
+    {
+      "jsBeforeMs": 41844994.197214,
+      "bootUptimeMs": 41845050,
+      "jsAfterMs": 41845074.781084,
+      "uptimeResolutionMs": 10
+    }
+  ],
+  "traceErrors": [
+    {
+      "name": "trace_sorter_negative_timestamp_dropped",
+      "value": 92
+    }
+  ],
+  "intervals": [
+    {
+      "navigationId": 1,
+      "to": "drrm",
+      "pressMonoMs": 41816320.040148,
+      "nativeUpToJsMs": 19.136850997805595,
+      "dispatchMs": 0.5227220058441162,
+      "firstDestinationCommitMs": 85.19607700407505,
+      "destinationActualRenderMs": 4.219716973602772,
+      "selectionMs": 103.13526900112629,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41816517.18965,
+        "durationMs": 23.637269,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 2,
+      "to": "services",
+      "pressMonoMs": 41819319.164122,
+      "nativeUpToJsMs": 25.132527001202106,
+      "dispatchMs": 0.5959559977054596,
+      "firstDestinationCommitMs": 82.93174500018358,
+      "destinationActualRenderMs": 2.1151300072669983,
+      "selectionMs": 97.54350899904966,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41819717.189618,
+        "durationMs": 25.000882,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 3,
+      "to": "drrm",
+      "pressMonoMs": 41822586.16808,
+      "nativeUpToJsMs": 43.97255600243807,
+      "dispatchMs": 0.6908340007066727,
+      "firstDestinationCommitMs": 77.79444999992847,
+      "destinationActualRenderMs": 4.187303967773914,
+      "selectionMs": 91.73839399963617,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41822783.856254004,
+        "durationMs": 31.411479,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 4,
+      "to": "services",
+      "pressMonoMs": 41825586.641662,
+      "nativeUpToJsMs": 17.03788600116968,
+      "dispatchMs": 1.5934979990124702,
+      "firstDestinationCommitMs": 75.63817299902439,
+      "destinationActualRenderMs": 2.318957969546318,
+      "selectionMs": 96.47211100161076,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41825850.52289,
+        "durationMs": 25.910044,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 5,
+      "to": "drrm",
+      "pressMonoMs": 41828719.456649,
+      "nativeUpToJsMs": 60.930821999907494,
+      "dispatchMs": 0.5570650026202202,
+      "firstDestinationCommitMs": 71.84472200274467,
+      "destinationActualRenderMs": 3.7516949847340584,
+      "selectionMs": 91.75943200290203,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41828917.189526,
+        "durationMs": 21.749491,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 6,
+      "to": "services",
+      "pressMonoMs": 41831785.808116,
+      "nativeUpToJsMs": 43.72101599723101,
+      "dispatchMs": 0.7525240033864975,
+      "firstDestinationCommitMs": 75.99057700484991,
+      "destinationActualRenderMs": 1.5044780150055885,
+      "selectionMs": 93.98318100720644,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41832050.522828,
+        "durationMs": 27.470228,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 7,
+      "to": "drrm",
+      "pressMonoMs": 41834854.11118,
+      "nativeUpToJsMs": 14.151507996022701,
+      "dispatchMs": 0.5525360032916069,
+      "firstDestinationCommitMs": 70.28557900339365,
+      "destinationActualRenderMs": 3.914691984653473,
+      "selectionMs": 84.73587899655104,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41835050.522798,
+        "durationMs": 21.485543,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 8,
+      "to": "services",
+      "pressMonoMs": 41837852.815603,
+      "nativeUpToJsMs": 32.90097600221634,
+      "dispatchMs": 0.5904719978570938,
+      "firstDestinationCommitMs": 69.71034500002861,
+      "destinationActualRenderMs": 1.8829249739646912,
+      "selectionMs": 91.46602099388838,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41838117.189434,
+        "durationMs": 25.908873,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 9,
+      "to": "drrm",
+      "pressMonoMs": 41841054.055652,
+      "nativeUpToJsMs": 60.20050399750471,
+      "dispatchMs": 0.6756870001554489,
+      "firstDestinationCommitMs": 122.15574300289154,
+      "destinationActualRenderMs": 4.877493001520634,
+      "selectionMs": 140.97210799902678,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41841317.189402,
+        "durationMs": 24.398708,
+        "jank": "Unknown Jank"
+      }
+    },
+    {
+      "navigationId": 10,
+      "to": "services",
+      "pressMonoMs": 41844186.138262,
+      "nativeUpToJsMs": 57.16058200597763,
+      "dispatchMs": 0.6765879988670349,
+      "firstDestinationCommitMs": 78.65482699871063,
+      "destinationActualRenderMs": 1.9982629865407944,
+      "selectionMs": 96.55747099965811,
+      "nextAppFrameAfterCommit": {
+        "startMonoMs": 41844450.522704,
+        "durationMs": 27.05302,
+        "jank": "Unknown Jank"
+      }
+    }
+  ],
+  "summary": [
+    {
+      "to": "services",
+      "n": 5,
+      "nativeUpToJsMedianMs": 32.90097600221634,
+      "dispatchMedianMs": 0.6765879988670349,
+      "commitMedianMs": 75.99057700484991,
+      "commitMaxMs": 82.93174500018358,
+      "actualRenderMedianMs": 1.9982629865407944
+    },
+    {
+      "to": "drrm",
+      "n": 5,
+      "nativeUpToJsMedianMs": 43.97255600243807,
+      "dispatchMedianMs": 0.5570650026202202,
+      "commitMedianMs": 77.79444999992847,
+      "commitMaxMs": 122.15574300289154,
+      "actualRenderMedianMs": 4.187303967773914
+    }
+  ],
+  "limitations": [
+    "Native APK source revision unknown; clock correspondence supported empirically and by installed source, not rebuilt native source",
+    "Negative timestamp drops prevent full trace/presentation acceptance",
+    "Frame after commit does not establish first correct destination content; no T5 claim",
+    "No source-fix speedup comparison: different warm set and concurrently changed DRRM code; current DRRM Hub destination"
+  ]
+}

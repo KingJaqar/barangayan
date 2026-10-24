@@ -4,6 +4,7 @@ import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { ContentFormActions } from '@/components/admin/content-create-panel';
 import styles from '@/components/admin/content-forms.module.css';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
 
 import { emergencyInformationSchema, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
@@ -24,7 +25,10 @@ const DEFAULT_ICON = 'information-circle-outline';
 const DEFAULT_ICON_COLOR = '#0F6E5B';
 const DEFAULT_ICON_BG = '#E6F2EF';
 
-export function EmergencyForm({ barangayId, item }: { barangayId: string; item?: EmergencyInformation }) {
+export function EmergencyForm({ barangayId, item, inDialog = false, onBusyChange, onSaved, onCancel }: {
+  barangayId: string; item?: EmergencyInformation; inDialog?: boolean;
+  onBusyChange?: (busy: boolean) => void; onSaved?: () => void; onCancel?: () => void;
+}) {
   const router = useRouter();
 
   const isEditing = !!item;
@@ -95,6 +99,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
       }
 
       setSubmitting(true);
+      onBusyChange?.(true);
       const supabase = createSupabaseBrowserClient();
 
       const payload = {
@@ -180,15 +185,19 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
       }
 
       setSubmitting(false);
+      onSaved?.();
       router.refresh();
 
     } catch {
       toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
-    } finally { setSubmitting(false); }
+    } finally { setSubmitting(false); onBusyChange?.(false); }
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+    <form onSubmit={handleSubmit} aria-busy={submitting} className={inDialog ? editStyles.form : `${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <div className={inDialog ? editStyles.fields : 'contents'} data-edit-scroll={inDialog || undefined}>
+      <fieldset disabled={submitting} className="contents">
+      <div className={inDialog ? editStyles.grid : 'contents'}>
       <label className="text-sm">
         <span className={labelClass}>Title</span>
         <input
@@ -236,7 +245,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         />
       </label>
 
-      <div className={styles.groupHeading}><h3>Appearance</h3></div>
+      <div className={inDialog ? editStyles.groupTitle : styles.groupHeading}><h3>Appearance</h3></div>
 
       <label className="text-sm">
         <span className={labelClass}>Icon</span>
@@ -253,7 +262,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         <input className={inputClass} value={iconBg} onChange={(e) => setIconBg(e.target.value)} placeholder="#E6F2EF" />
       </label>
 
-      <div className={styles.groupHeading}><h3>Publication</h3></div>
+      <div className={inDialog ? editStyles.groupTitle : styles.groupHeading}><h3>Publication</h3></div>
 
       <label className="text-sm">
         <span className={labelClass}>Sort Order</span>
@@ -286,9 +295,11 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         <span className="font-medium">Active</span>
       </label>
 
-      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
-
-      <ContentFormActions busy={submitting}>
+      {error ? <p role="alert" className={inDialog ? `${editStyles.full} ${editStyles.error}` : "sm:col-span-2 text-sm text-red-600"}>{error}</p> : null}
+      </div>
+      </fieldset>
+      </div>
+      <ContentFormActions busy={submitting} onCancel={onCancel} cancelFirst={inDialog} className={inDialog ? editStyles.actions : undefined}>
         <button
           type="submit"
           disabled={submitting || !barangayId}

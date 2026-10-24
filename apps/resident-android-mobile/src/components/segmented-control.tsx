@@ -32,13 +32,15 @@ export interface SegmentedControlProps<Key extends string> {
   appearance?: 'default' | 'purpose';
   sizing?: 'equal' | 'content';
   compact?: boolean;
+  /** Underline only: reports where the active tab sits, so a scrolling parent can keep it in view. */
+  onActiveLayout?: (layout: { x: number; width: number }) => void;
 }
 
 export function SegmentedControl<Key extends string>(props: SegmentedControlProps<Key>) {
   return props.variant === 'underline' ? <UnderlineSegments {...props} /> : <PillSegments {...props} />;
 }
 
-function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, sizing = 'equal' }: SegmentedControlProps<Key>) {
+function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, sizing = 'equal', compact = false, onActiveLayout }: SegmentedControlProps<Key>) {
   const theme = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const [layouts, setLayouts] = useState<Record<string, { x: number; width: number }>>({});
@@ -58,6 +60,9 @@ function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, 
     width.value = immediate ? targetWidth : withTiming(targetWidth, timing);
     return () => { cancelAnimation(x); cancelAnimation(width); };
   }, [valid, targetX, targetWidth, reducedMotion, x, width]);
+  useEffect(() => {
+    if (valid && targetX !== undefined && targetWidth !== undefined) onActiveLayout?.({ x: targetX, width: targetWidth });
+  }, [valid, targetX, targetWidth, onActiveLayout]);
   const indicator = useAnimatedStyle(() => ({ width: width.value, transform: [{ translateX: x.value }] }));
   return <View accessibilityRole="tablist" style={[styles.underlineContainer, { borderBottomColor: theme.resident.border }]}>
     {segments.map(segment => {
@@ -69,7 +74,7 @@ function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, 
           setLayouts(current => current[segment.key]?.x === nextX && current[segment.key]?.width === nextWidth
             ? current : { ...current, [segment.key]: { x: nextX, width: nextWidth } });
         }}
-        style={[styles.underlineTab, sizing === 'equal' ? styles.equalTab : styles.contentTab]}>
+        style={[styles.underlineTab, compact && styles.compactUnderlineTab, sizing === 'equal' ? styles.equalTab : styles.contentTab]}>
         <ThemedText type="smallBold" style={[styles.underlineLabel, { color: selected ? theme.resident.text : theme.resident.muted }]}>{segment.label}</ThemedText>
       </Pressable>;
     })}
@@ -203,8 +208,9 @@ const styles = StyleSheet.create({
   compactLabel: { fontSize: 13, lineHeight: 18, fontWeight: '600' },
   underlineContainer: { flexDirection: 'row', position: 'relative', borderBottomWidth: 1 },
   underlineTab: { minWidth: 0, minHeight: 48, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
+  compactUnderlineTab: { minHeight: 44, paddingVertical: 8 },
   equalTab: { flex: 1 },
-  contentTab: { paddingHorizontal: 8 },
+  contentTab: { minWidth: 48, paddingHorizontal: 8 },
   underlineLabel: { fontSize: 15, lineHeight: 22, textAlign: 'center' },
   underline: { position: 'absolute', left: 0, bottom: -1, height: 3, borderTopLeftRadius: 2, borderTopRightRadius: 2 },
   container: {

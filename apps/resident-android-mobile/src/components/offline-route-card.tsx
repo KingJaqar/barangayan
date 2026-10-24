@@ -47,6 +47,8 @@ function routeMessage(route: LocalRouteState): { text: string; tone: 'info' | 'w
       return { text: 'Calculating walking route on this phone…', tone: 'info', busy: true };
     case 'unavailable':
       return { text: PROBLEM_TEXT[route.problem], tone: 'warning' };
+    case 'failed':
+      return { text: 'Walking route could not be calculated. Reopen Centers to retry.', tone: 'warning' };
     case 'done':
       break;
   }
@@ -112,8 +114,8 @@ export function OfflineRouteCard({
 
   if (routing.phase === 'loading') {
     return (
-      <View style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
-        <View style={styles.row}>
+      <View style={[styles.card, dense && styles.denseCard, compact && styles.compactCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
+        <View style={[styles.row, compact && styles.statusToggle]}>
           <ActivityIndicator size="small" color={theme.resident.accentText} />
           <ThemedText type="small" style={dense && styles.denseText}>Loading the offline map…</ThemedText>
         </View>
@@ -164,9 +166,30 @@ export function OfflineRouteCard({
   }
   const candidates = route.status === 'done' && route.result.status === 'attachment_ambiguous' ? route.result.candidates : [];
   const osmDate = routing.pack?.manifest.osmBaseTimestamp?.slice(0, 10);
+  const conditionsWarning = lines.some(line => line.tone === 'warning');
 
-  // Only informational diagnostics collapse. Every warning and required street choice
-  // stays readable without opening the summary, even when several failures coexist.
+  // On the map, keep status indicators visible and put full diagnostics behind Show.
+  // Required street choices still open automatically so routing can continue.
+  const statusToggle = (open: boolean) => <Pressable accessibilityRole="button"
+    accessibilityLabel={open ? 'Hide routing status' : 'Show full routing status'} accessibilityState={{ expanded: open }}
+    accessibilityHint={message?.text ?? lines.find(line => line.tone === 'warning')?.text ?? 'View road conditions and routing details'}
+    onPress={() => setExpanded(!open)} style={[styles.row, styles.statusToggle]}>
+    <View style={[styles.statusIndicators, { backgroundColor: conditionsWarning || message?.tone === 'warning' ? theme.resident.dangerSoft : theme.resident.accentSoft }]}>
+      {lines.length > 0 ? <Ionicons accessible accessibilityLabel={conditionsWarning ? 'Road conditions need attention' : 'Road conditions checked'} name={conditionsWarning ? 'cloud-offline-outline' : 'cloud-done-outline'} size={16} color={conditionsWarning ? theme.resident.danger : theme.resident.accentText} /> : null}
+      {message?.busy || connectedPending ? <ActivityIndicator accessibilityLabel="Checking route" size="small" color={theme.resident.accentText} /> : message ? <Ionicons accessible accessibilityLabel={message.text} name={message.tone === 'warning' ? 'alert-circle-outline' : 'walk-outline'} size={16} color={message.tone === 'warning' ? theme.resident.danger : theme.resident.accentText} /> : null}
+    </View>
+    <ThemedText type="smallBold" style={open ? styles.text : styles.statusTitle}>Routing status</ThemedText>
+    <View style={styles.statusAction}>
+      <ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>{open ? 'Hide' : 'Show'}</ThemedText>
+      <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={16} color={theme.resident.accentText} />
+    </View>
+  </Pressable>;
+  if (compact && !expanded && candidates.length === 0) {
+    return <View accessibilityLiveRegion="polite" style={[styles.card, styles.compactCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
+      {statusToggle(false)}
+    </View>;
+  }
+  // The list keeps warning text readable even when informational details collapse.
   if ((compact || dense) && !expanded && candidates.length === 0) {
     const warnings = lines.filter(line => line.tone === 'warning');
     if (message?.tone === 'warning') warnings.push(message);
@@ -189,9 +212,10 @@ export function OfflineRouteCard({
   return (
     <View
       accessibilityLiveRegion="polite"
-      style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
+      style={[styles.card, dense && styles.denseCard, compact && styles.mapDetailsCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }, style]}>
+      {compact && candidates.length === 0 ? statusToggle(true) : null}
       {lines.map(line => (
-        <View key={line.text} style={[styles.row, dense && styles.denseRow]}>
+        <View key={line.text} style={[styles.row, dense && styles.denseRow, compact && styles.mapDetailRow, compact && { backgroundColor: line.tone === 'warning' ? theme.resident.dangerSoft : theme.resident.surface }]}>
           <Ionicons name={line.tone === 'info' ? 'cloud-done-outline' : 'cloud-offline-outline'} size={16} color={line.tone === 'info' ? theme.resident.accentText : theme.resident.danger} />
           <ThemedText type="small" style={[styles.text, dense && styles.denseText]}>
             {line.text}
@@ -199,7 +223,7 @@ export function OfflineRouteCard({
         </View>
       ))}
       {message ? (
-        <View style={[styles.row, dense && styles.denseRow]}>
+        <View style={[styles.row, dense && styles.denseRow, compact && styles.mapDetailRow, compact && { backgroundColor: message.tone === 'warning' ? theme.resident.dangerSoft : theme.resident.accentSoft }]}>
           {message.busy ? (
             <ActivityIndicator size="small" color={theme.resident.accentText} />
           ) : (
@@ -230,7 +254,7 @@ export function OfflineRouteCard({
           Offline map{osmDate ? ` (${osmDate})` : ''} · {routing.pack.manifest.attribution}
         </ThemedText>
       ) : null}
-      {(compact || dense) && candidates.length === 0 ? (
+      {dense && candidates.length === 0 ? (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Hide routing status"
@@ -249,6 +273,13 @@ export function OfflineRouteCard({
 }
 
 const styles = StyleSheet.create({
+  compactCard: { paddingVertical: 0, paddingHorizontal: Spacing.two, alignSelf: 'flex-start', maxWidth: '100%', borderRadius: 24 },
+  statusToggle: { minHeight: 44, flexWrap: 'nowrap', alignItems: 'center', paddingVertical: Spacing.one, gap: Spacing.two },
+  statusTitle: { flexShrink: 1 },
+  statusIndicators: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.one, padding: Spacing.one, borderRadius: 12, flexShrink: 0 },
+  statusAction: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one, flexShrink: 0 },
+  mapDetailsCard: { paddingHorizontal: Spacing.two, paddingVertical: Spacing.two, gap: Spacing.one },
+  mapDetailRow: { alignItems: 'flex-start', padding: Spacing.two, borderRadius: 12, gap: Spacing.two },
   denseCard: {
     paddingHorizontal: 12,
     paddingVertical: 10,

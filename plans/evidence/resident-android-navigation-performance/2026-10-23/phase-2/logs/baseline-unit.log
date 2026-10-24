@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/auth-cleanup.test.ts (2 tests) 31ms
+ ✓ src/lib/tracking-duration.test.ts (13 tests) 9ms
+ ✓ src/lib/birthday-wheel.test.ts (6 tests) 12ms
+ ✓ src/lib/horizontal-scroll.test.ts (3 tests) 11ms
+ ✓ src/lib/map-presentation.test.ts (3 tests) 18ms
+ ✓ src/lib/login-error.test.ts (12 tests) 10ms
+ ✓ src/lib/resident-search.test.ts (7 tests) 29ms
+ ✓ src/lib/search-history.test.ts (5 tests) 30ms
+ ✓ src/lib/leaflet-assets.test.ts (1 test) 17ms
+ ✓ src/lib/resident-reduced-motion.test.ts (5 tests) 17ms
+ ✓ src/lib/setup-request.test.ts (6 tests) 36ms
+ ✓ src/lib/center-presentation.test.ts (6 tests) 63ms
+ ✓ src/lib/floating-tab-layout.test.ts (33 tests) 20ms
+ ✓ src/lib/refresh-resource.test.ts (8 tests) 152ms
+ ✓ src/lib/household.test.ts (6 tests) 114ms
+ ✓ src/lib/pkce-crypto.test.ts (2 tests) 53ms
+ ✓ src/lib/emergency-alert-filter.test.ts (7 tests) 638ms
+   ✓ emergency alert filtering preserves the existing local predicates > matches the previous screen for period and independent date-part combinations  627ms
+ ✓ src/lib/navigation-diagnostics.test.ts (7 tests) 2878ms
+   ✓ temporary navigation diagnostics > records nothing by default and bounds samples while retaining exact totals  708ms
+   ✓ temporary navigation diagnostics > propagates errors unchanged and ignores late completions from an earlier run  518ms
+   ✓ temporary navigation diagnostics > does not replace a later transport wrapper on stop  1072ms
+   ✓ temporary navigation diagnostics > installs no controller, timers or capture in production  386ms
+ ✓ src/lib/valid-id.test.ts (16 tests) 109ms
+ ✓ src/lib/resident-theme.test.ts (52 tests) 273ms
+ ✓ src/lib/home-request.test.ts (5 tests) 21ms
+ ✓ src/lib/google-auth-flow.test.ts (20 tests) 48ms
+ ✓ src/lib/password-recovery.test.ts (16 tests) 69ms
+ ✓ src/lib/setup-refresh.test.ts (4 tests) 13ms
+ ✓ src/lib/setup-navigation.test.ts (11 tests) 20ms
+ ✓ src/lib/sensitive-auth.test.ts (9 tests) 24ms
+ ✓ src/lib/account-setup-status.test.ts (8 tests) 87ms
+ ✓ src/lib/google-auth.test.ts (6 tests) 158ms
+ ✓ src/lib/offline-routing.test.ts (15 tests) 3021ms
+   ✓ graph activation requires mappings for known restrictions > defers offline, when the area has not activated the candidate, or when a closure is unmapped  455ms
+   ✓ interrupted activation recovers deterministically > a crash after any write leaves either the old or the new pack active, with matching avoidance  1620ms
+
+ Test Files  29 passed (29)
+      Tests  294 passed (294)
+   Start at  07:45:31
+   Duration  14.08s (transform 26.73s, setup 0ms, collect 97.58s, tests 7.98s, environment 16ms, prepare 50.88s)
+

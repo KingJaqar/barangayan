@@ -1,0 +1,6 @@
+{
+  "compilerCrash": "Debug Failure. False expression: jsx should have errors when reporting errors",
+  "scope": "Read-only compiler replay with all three owned modified files restored to pre-instrumentation contents and all three added files excluded; current dependencies/generated types/user work retained",
+  "file": "apps/resident-android-mobile/src/components/external-link.tsx",
+  "unchangedFromInitialBaseline": true
+}

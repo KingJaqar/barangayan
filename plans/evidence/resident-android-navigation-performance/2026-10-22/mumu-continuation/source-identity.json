@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-22T14:34:02.003Z",
+  "mainScriptId": "2",
+  "mainSourceSha256": "c506d8f1b86c2aeffe292ba3061525d768f1a2eeaeab032f90a19eba1fcc7134",
+  "mainSourceSaved": false,
+  "results": [
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "moduleId": 753,
+      "loadedFactorySha256": "494a7995d389301a99d320e093ef7564fa9f113262580a3fd9ff6127bd851eaa",
+      "generatedFactorySha256": "494a7995d389301a99d320e093ef7564fa9f113262580a3fd9ff6127bd851eaa",
+      "factoryMatches": true,
+      "originalSha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08",
+      "workingSha256": "c69983fc0845c97f4ea53cb41858791d8cb63836cea7e1ee2aef85b4333bbc08",
+      "sourceMatches": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/navigation-diagnostics.ts",
+      "moduleId": 2722,
+      "loadedFactorySha256": "7a51649cdd4a782be7be989130d7a726b671a1bea9b9313bd04d8d20882ca6c3",
+      "generatedFactorySha256": "7a51649cdd4a782be7be989130d7a726b671a1bea9b9313bd04d8d20882ca6c3",
+      "factoryMatches": true,
+      "originalSha256": "5943eddb56bc0524201280f434e5cd0b186a2e1913cc8ddecf19e9c2bae12a43",
+      "workingSha256": "5943eddb56bc0524201280f434e5cd0b186a2e1913cc8ddecf19e9c2bae12a43",
+      "sourceMatches": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx",
+      "moduleId": 2721,
+      "loadedFactorySha256": "f969854a04708fd500d2a42bd48d823ddf218094bb443059642c67054e6c776f",
+      "generatedFactorySha256": "f969854a04708fd500d2a42bd48d823ddf218094bb443059642c67054e6c776f",
+      "factoryMatches": true,
+      "originalSha256": "00870babc6ac1215e5121dae560ada743b602a9c509c53dab8661a881bf3ab5f",
+      "workingSha256": "00870babc6ac1215e5121dae560ada743b602a9c509c53dab8661a881bf3ab5f",
+      "sourceMatches": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "moduleId": 2299,
+      "loadedFactorySha256": "d730855a8683fd9bbc2da4309dfcd5043f4f19f692ce7fb66c3c7d29f6a79cd1",
+      "generatedFactorySha256": "d730855a8683fd9bbc2da4309dfcd5043f4f19f692ce7fb66c3c7d29f6a79cd1",
+      "factoryMatches": true,
+      "originalSha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371",
+      "workingSha256": "cec2d109b22c83aacb97d0ffa3f1b6ee0725c8a0227e1df483e7565612acf371",
+      "sourceMatches": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "moduleId": 2400,
+      "loadedFactorySha256": "b458c3669b4630dc85a1b456e808a1a2e51031d0b0c1b4d4af58d77433ef062a",
+      "generatedFactorySha256": "b458c3669b4630dc85a1b456e808a1a2e51031d0b0c1b4d4af58d77433ef062a",
+      "factoryMatches": true,
+      "originalSha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4",
+      "workingSha256": "6846fa4ce20daab5fb6d6170506c3979850bcee0dd7b98fab4366ca389e0d6f4",
+      "sourceMatches": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "moduleId": 2291,
+      "loadedFactorySha256": "11626d83e1cb9903e8ab26314ffc63c33dc86a30c6b494468c88ec86e6289bf9",
+      "generatedFactorySha256": "11626d83e1cb9903e8ab26314ffc63c33dc86a30c6b494468c88ec86e6289bf9",
+      "factoryMatches": true,
+      "originalSha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b",
+      "workingSha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b",
+      "sourceMatches": true
+    }
+  ]
+}

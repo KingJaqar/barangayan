@@ -1,0 +1,40 @@
+{
+  "packet": "repomix output files/resident-nav-phase3-20261023-review.xml",
+  "sha256": "0b0820be88403cf15e5473dded50ba668f8eb8ba90abde54c2cc1276e8c19c87",
+  "selected": [
+    "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+    "apps/resident-android-mobile/tests/root-navigation-isolation.mjs",
+    "apps/resident-android-mobile/src/app/_layout.tsx"
+  ],
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-android-mobile/tests/hidden-work-ownership.mjs,apps/resident-android-mobile/tests/root-navigation-isolation.mjs,apps/resident-android-mobile/src/app/_layout.tsx",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml,**/tmp/**,**/repomix output files/**",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase3-20261023-review.xml"
+  ],
+  "exit": 0,
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+      "chars": 469,
+      "sha256": "4b90edd59babe496e95245cad8729b2fcc25cf06a2d3270ba63c1f57fc1fcd56"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/root-navigation-isolation.mjs",
+      "chars": 140,
+      "sha256": "c3067be5464cdf5e5c417d9485639e578dd7f86e877fed9bb7c0c8ba06db311a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "chars": 5097,
+      "sha256": "afe59139e0d690134c5ff96cd0d9ad8ddab4b5050cb19ad4cdaf97ffc7db795e"
+    }
+  ],
+  "omissions": []
+}

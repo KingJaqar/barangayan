@@ -1,0 +1,849 @@
+{
+  "events": [
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "home",
+      "hostBeforeMs": 8796.0229,
+      "hostAfterMs": 8886.0579
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "services",
+      "hostBeforeMs": 9786.9119,
+      "hostAfterMs": 9868.005
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "drrm",
+      "hostBeforeMs": 10768.154,
+      "hostAfterMs": 10844.5588
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "maps",
+      "hostBeforeMs": 11744.5038,
+      "hostAfterMs": 11824.803
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "health",
+      "hostBeforeMs": 12725.2745,
+      "hostAfterMs": 12801.833
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 1,
+      "target": "reports",
+      "hostBeforeMs": 13702.1875,
+      "hostAfterMs": 13803.3432
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "home",
+      "hostBeforeMs": 14703.1128,
+      "hostAfterMs": 14782.922
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "services",
+      "hostBeforeMs": 15683.1511,
+      "hostAfterMs": 15824.6513
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "drrm",
+      "hostBeforeMs": 16725.3542,
+      "hostAfterMs": 16804.1657
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "maps",
+      "hostBeforeMs": 17704.5856,
+      "hostAfterMs": 17780.7543
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "health",
+      "hostBeforeMs": 18682.651,
+      "hostAfterMs": 18755.7044
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 2,
+      "target": "reports",
+      "hostBeforeMs": 19655.7738,
+      "hostAfterMs": 19734.6957
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "home",
+      "hostBeforeMs": 20635.5382,
+      "hostAfterMs": 20714.0054
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "services",
+      "hostBeforeMs": 21614.3974,
+      "hostAfterMs": 21699.4831
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "drrm",
+      "hostBeforeMs": 22598.9326,
+      "hostAfterMs": 22672.8491
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "maps",
+      "hostBeforeMs": 23573.9531,
+      "hostAfterMs": 23655.0942
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "health",
+      "hostBeforeMs": 24555.348,
+      "hostAfterMs": 24631.2471
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 3,
+      "target": "reports",
+      "hostBeforeMs": 25531.386,
+      "hostAfterMs": 25616.2653
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "home",
+      "hostBeforeMs": 26517.1669,
+      "hostAfterMs": 26597.5014
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "services",
+      "hostBeforeMs": 27497.023,
+      "hostAfterMs": 27574.2376
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "drrm",
+      "hostBeforeMs": 28474.4153,
+      "hostAfterMs": 28547.5087
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "maps",
+      "hostBeforeMs": 29447.5234,
+      "hostAfterMs": 29519.1442
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "health",
+      "hostBeforeMs": 30421.7254,
+      "hostAfterMs": 30495.162
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 4,
+      "target": "reports",
+      "hostBeforeMs": 31395.0753,
+      "hostAfterMs": 31479.044
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "home",
+      "hostBeforeMs": 32379.6094,
+      "hostAfterMs": 32459.9898
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "services",
+      "hostBeforeMs": 33360.822,
+      "hostAfterMs": 33439.6573
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "drrm",
+      "hostBeforeMs": 34340.026,
+      "hostAfterMs": 34425.6952
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "maps",
+      "hostBeforeMs": 35325.7856,
+      "hostAfterMs": 35399.8487
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "health",
+      "hostBeforeMs": 36300.2859,
+      "hostAfterMs": 36377.4162
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 5,
+      "target": "reports",
+      "hostBeforeMs": 37276.7953,
+      "hostAfterMs": 37351.8839
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "home",
+      "hostBeforeMs": 38252.2736,
+      "hostAfterMs": 38326.9487
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "services",
+      "hostBeforeMs": 39227.4574,
+      "hostAfterMs": 39304.8184
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "drrm",
+      "hostBeforeMs": 40207.5376,
+      "hostAfterMs": 40280.123
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "maps",
+      "hostBeforeMs": 41180.6016,
+      "hostAfterMs": 41253.9168
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "health",
+      "hostBeforeMs": 42154.4848,
+      "hostAfterMs": 42231.045
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 6,
+      "target": "reports",
+      "hostBeforeMs": 43131.0535,
+      "hostAfterMs": 43202.5986
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "home",
+      "hostBeforeMs": 44103.8867,
+      "hostAfterMs": 44174.4206
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "services",
+      "hostBeforeMs": 45076.4802,
+      "hostAfterMs": 45144.8727
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "drrm",
+      "hostBeforeMs": 46045.3313,
+      "hostAfterMs": 46113.6272
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "maps",
+      "hostBeforeMs": 47014.6907,
+      "hostAfterMs": 47083.406
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "health",
+      "hostBeforeMs": 47982.8747,
+      "hostAfterMs": 48054.5227
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 7,
+      "target": "reports",
+      "hostBeforeMs": 48956.2962,
+      "hostAfterMs": 49029.455
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "home",
+      "hostBeforeMs": 49928.9478,
+      "hostAfterMs": 50003.4387
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "services",
+      "hostBeforeMs": 50902.9607,
+      "hostAfterMs": 50983.7585
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "drrm",
+      "hostBeforeMs": 51884.4613,
+      "hostAfterMs": 51967.082
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "maps",
+      "hostBeforeMs": 52867.8289,
+      "hostAfterMs": 52940.8102
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "health",
+      "hostBeforeMs": 53841.3541,
+      "hostAfterMs": 53910.0978
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 8,
+      "target": "reports",
+      "hostBeforeMs": 54811.4606,
+      "hostAfterMs": 54884.4024
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "home",
+      "hostBeforeMs": 55784.0743,
+      "hostAfterMs": 55855.9886
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "services",
+      "hostBeforeMs": 56755.9941,
+      "hostAfterMs": 56832.2091
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "drrm",
+      "hostBeforeMs": 57733.0234,
+      "hostAfterMs": 57806.1383
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "maps",
+      "hostBeforeMs": 58706.0962,
+      "hostAfterMs": 58776.6693
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "health",
+      "hostBeforeMs": 59678.728,
+      "hostAfterMs": 59750.4107
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 9,
+      "target": "reports",
+      "hostBeforeMs": 60649.9905,
+      "hostAfterMs": 60722.8401
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "home",
+      "hostBeforeMs": 61623.3503,
+      "hostAfterMs": 61702.351
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "services",
+      "hostBeforeMs": 62603.5434,
+      "hostAfterMs": 62681.4106
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "drrm",
+      "hostBeforeMs": 63581.2881,
+      "hostAfterMs": 63659.7728
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "maps",
+      "hostBeforeMs": 64559.9896,
+      "hostAfterMs": 64634.3472
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "health",
+      "hostBeforeMs": 65536.2217,
+      "hostAfterMs": 65623.4091
+    },
+    {
+      "scenario": "six-tab-circuit",
+      "round": 10,
+      "target": "reports",
+      "hostBeforeMs": 66525.9582,
+      "hostAfterMs": 66600.5698
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 67502.6986,
+      "hostAfterMs": 67573.2305
+    },
+    {
+      "scenario": "home->services",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 68473.8286,
+      "hostAfterMs": 68545.2426
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 69444.8758,
+      "hostAfterMs": 69517.2613
+    },
+    {
+      "scenario": "home->drrm",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 70417.3278,
+      "hostAfterMs": 70486.2743
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 71386.5897,
+      "hostAfterMs": 71462.4113
+    },
+    {
+      "scenario": "home->maps",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 72361.9317,
+      "hostAfterMs": 72442.2976
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 73342.1725,
+      "hostAfterMs": 73416.6057
+    },
+    {
+      "scenario": "home->health",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 74315.8971,
+      "hostAfterMs": 74388.1133
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 75288.2318,
+      "hostAfterMs": 75360.8348
+    },
+    {
+      "scenario": "home->reports",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 76261.6969,
+      "hostAfterMs": 76339.5128
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 77239.7256,
+      "hostAfterMs": 77313.6035
+    },
+    {
+      "scenario": "services->home",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 78212.8555,
+      "hostAfterMs": 78290.3019
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 79190.7462,
+      "hostAfterMs": 79269.2795
+    },
+    {
+      "scenario": "services->drrm",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 80169.32,
+      "hostAfterMs": 80245.4964
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 81144.8115,
+      "hostAfterMs": 81219.6027
+    },
+    {
+      "scenario": "services->maps",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 82119.0057,
+      "hostAfterMs": 82195.8739
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 83096.1591,
+      "hostAfterMs": 83170.591
+    },
+    {
+      "scenario": "services->health",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 84069.8664,
+      "hostAfterMs": 84148.3123
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 85048.5553,
+      "hostAfterMs": 85119.9292
+    },
+    {
+      "scenario": "services->reports",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 86021.1214,
+      "hostAfterMs": 86095.6
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 86996.7576,
+      "hostAfterMs": 87074.0623
+    },
+    {
+      "scenario": "drrm->home",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 87974.4703,
+      "hostAfterMs": 88050.3738
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 88950.0541,
+      "hostAfterMs": 89030.9056
+    },
+    {
+      "scenario": "drrm->services",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 89931.054,
+      "hostAfterMs": 90006.3371
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 90906.1807,
+      "hostAfterMs": 90980.026
+    },
+    {
+      "scenario": "drrm->maps",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 91881.2478,
+      "hostAfterMs": 91959.1732
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 92859.5342,
+      "hostAfterMs": 92932.7807
+    },
+    {
+      "scenario": "drrm->health",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 93833.2371,
+      "hostAfterMs": 93906.1489
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 94806.6136,
+      "hostAfterMs": 94881.832
+    },
+    {
+      "scenario": "drrm->reports",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 95782.2907,
+      "hostAfterMs": 95857.7768
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 96758.3954,
+      "hostAfterMs": 96828.8036
+    },
+    {
+      "scenario": "maps->home",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 97731.5763,
+      "hostAfterMs": 97803.7054
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 98705.0946,
+      "hostAfterMs": 98778.7375
+    },
+    {
+      "scenario": "maps->services",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 99678.9862,
+      "hostAfterMs": 99751.8032
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 100654.6131,
+      "hostAfterMs": 100728.1057
+    },
+    {
+      "scenario": "maps->drrm",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 101628.9027,
+      "hostAfterMs": 101706.2117
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 102606.5436,
+      "hostAfterMs": 102677.7568
+    },
+    {
+      "scenario": "maps->health",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 103578.3358,
+      "hostAfterMs": 103648.4859
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 104547.9573,
+      "hostAfterMs": 104617.2191
+    },
+    {
+      "scenario": "maps->reports",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 105517.4553,
+      "hostAfterMs": 105590.2974
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 106490.2914,
+      "hostAfterMs": 106562.8107
+    },
+    {
+      "scenario": "health->home",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 107463.0049,
+      "hostAfterMs": 107538.1345
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 108438.643,
+      "hostAfterMs": 108515.8733
+    },
+    {
+      "scenario": "health->services",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 109416.4428,
+      "hostAfterMs": 109513.1151
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 110413.1062,
+      "hostAfterMs": 110483.0567
+    },
+    {
+      "scenario": "health->drrm",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 111383.1661,
+      "hostAfterMs": 111456.8447
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 112356.7742,
+      "hostAfterMs": 112435.1793
+    },
+    {
+      "scenario": "health->maps",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 113336.4114,
+      "hostAfterMs": 113407.7941
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 114308.6048,
+      "hostAfterMs": 114380.9906
+    },
+    {
+      "scenario": "health->reports",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 115280.964,
+      "hostAfterMs": 115350.4148
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 116249.7787,
+      "hostAfterMs": 116320.4061
+    },
+    {
+      "scenario": "reports->home",
+      "round": 0,
+      "target": "home",
+      "hostBeforeMs": 117220.3004,
+      "hostAfterMs": 117290.8354
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 118191.4118,
+      "hostAfterMs": 118261.1541
+    },
+    {
+      "scenario": "reports->services",
+      "round": 0,
+      "target": "services",
+      "hostBeforeMs": 119161.5057,
+      "hostAfterMs": 119237.1519
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 120137.787,
+      "hostAfterMs": 120222.1537
+    },
+    {
+      "scenario": "reports->drrm",
+      "round": 0,
+      "target": "drrm",
+      "hostBeforeMs": 121122.741,
+      "hostAfterMs": 121191.6356
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 122092.0778,
+      "hostAfterMs": 122195.4122
+    },
+    {
+      "scenario": "reports->maps",
+      "round": 0,
+      "target": "maps",
+      "hostBeforeMs": 123095.35,
+      "hostAfterMs": 123171.8936
+    },
+    {
+      "scenario": "pair-setup",
+      "round": 0,
+      "target": "reports",
+      "hostBeforeMs": 124072.7626,
+      "hostAfterMs": 124146.0261
+    },
+    {
+      "scenario": "reports->health",
+      "round": 0,
+      "target": "health",
+      "hostBeforeMs": 125046.7381,
+      "hostAfterMs": 125121.2723
+    }
+  ],
+  "limitations": [
+    "Host command brackets are not native T0; no host/JS clock subtraction",
+    "Development emulator with inspector/profiling overhead",
+    "No screenshot/UI hierarchy polling inside measurement"
+  ]
+}

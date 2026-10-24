@@ -8,6 +8,8 @@ const { build } = require('esbuild');
 const { chromium } = require('playwright');
 const root = path.join(app, 'src').replaceAll('\\', '/');
 const shared = path.resolve(app, '../../packages/shared/src').replaceAll('\\', '/');
+const iconGlyphs = require('@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/Ionicons.json');
+const iconFont = fs.readFileSync(require.resolve('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf')).toString('base64');
 const out =
   process.env.TEST_ARTIFACTS_DIR ??
   path.resolve(app, '../../tmp/family-attendance-phase3-20261022/settings-ui');
@@ -25,13 +27,13 @@ const mocks = {
     export const Alert={alert:(...args)=>window.fixture.alerts.push(args)};
     export const AccessibilityInfo={isReduceMotionEnabled:async()=>window.fixture.reduced,addEventListener:(event,fn)=>{window.fixture.listeners.add(fn);return{remove:()=>window.fixture.listeners.delete(fn)}}};`,
   'expo-router': `import React from 'react';export const useFocusEffect=fn=>React.useEffect(fn,[fn]);export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r)};export const useRouter=()=>router;export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
-  'react-native-safe-area-context': `import {View} from 'react-native';export const SafeAreaView=View;const insets={top:0,left:0,right:0,bottom:0};export const useSafeAreaInsets=()=>insets;`,
-  '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({name,size})=><View aria-hidden="true" data-icon={name} style={{width:size,height:size,flexShrink:0}}/>;Ionicons.glyphMap={};`,
+  'react-native-safe-area-context': `import {View} from 'react-native';export const SafeAreaView=View;const insets={top:0,left:0,right:0,bottom:0};export const useSafeAreaInsets=()=>window.fixture.insets??insets;`,
+  '@expo/vector-icons': `import React from 'react';const glyphs=${JSON.stringify(iconGlyphs)};export const Ionicons=({name,size,color})=><span aria-hidden="true" data-icon={name} style={{display:'inline-block',fontFamily:'FixtureIonicons',fontWeight:400,fontSize:size,lineHeight:size+'px',color,flexShrink:0,verticalAlign:'middle'}}>{String.fromCodePoint(glyphs[name]??0)}</span>;Ionicons.glyphMap=glyphs;`,
   'react-native-reanimated': `import React,{useRef} from 'react';import {View,Easing} from 'react-native';export default {View};export const useSharedValue=v=>useRef({value:v}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=(v,o)=>{window.fixture.durations.push(o?.duration);return v};export const withSpring=v=>v;export const cancelAnimation=()=>{};export {Easing};`,
   'react-native-svg': `import React from 'react';const el=t=>({children,...p})=>React.createElement(t,p,children);export default el('svg');export const Defs=el('defs'),LinearGradient=el('linearGradient'),Rect=el('rect'),Stop=el('stop');`,
   '@react-native-async-storage/async-storage': `export default {getItem:async k=>window.fixture.device[k]??null,setItem:async(k,v)=>{window.fixture.device[k]=v}};`,
   '@/hooks/use-auth': `export const useAuth=()=>window.fixture.auth;`,
-  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.loading,error:window.fixture.profileError,refetch:()=>{window.fixture.refetches++;window.fixture.profile={...window.fixture.profile};window.renderFixture()}});`,
+  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.loading,error:window.fixture.profileError,refetch:()=>{window.fixture.refetches++;window.fixture.profile={...window.fixture.profile};window.renderFixture()}});export const useProfileData=useProfile;`,
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>100;`,
   '@barangayan/shared': `export {idVerificationState} from '${shared}/lib/service-catalog.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID,isValidFontId} from '${shared}/constants/theme-fonts.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {EMAIL_REGEX,EMPLOYMENT_STATUSES,EMPLOYMENT_STATUSES_WITH_OCCUPATION,MOBILE_NUMBER_REGEX,NAME_REGEX,SEXES} from '${shared}/schemas/auth.ts';`,
   '@/lib/push-notifications': `export const registerPushToken=async()=>window.fixture.push.push('register');export const unregisterPushToken=async()=>window.fixture.push.push('unregister');`,
@@ -57,6 +59,7 @@ try {
   page.setDefaultTimeout(8000);
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text())});
   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+  await page.addStyleTag({content:`@font-face{font-family:FixtureIonicons;src:url(data:font/ttf;base64,${iconFont}) format('truetype')}`});
   await page.addScriptTag({path:path.join(out,'bundle.js')});
   const button=name=>page.getByRole('button',{name,exact:true});
   const settle=async()=>page.waitForTimeout(360);
@@ -85,6 +88,63 @@ try {
   await go('profile');
   for(const title of ['Personal Information','Contact','Address','Household Information'])await page.getByText(title,{exact:true}).waitFor();
   assert.equal(await button('Save Changes').isDisabled(),true);
+  // Reference presentation, using the real preference providers and local editors.
+  const originalProfile=await page.evaluate(()=>window.fixture.profile);
+  const writesBeforePresentation=await page.evaluate(()=>window.fixture.writes.length);
+  await page.setViewportSize({width:400,height:800});
+  await page.evaluate(()=>{
+    window.fixture.insets={top:32,left:0,right:0,bottom:0};
+    window.fixture.profile={...window.fixture.profile,first_name:'James',middle_name:'Floyd',last_name:'White',suffix:'Jr',full_name:'James Floyd White Jr',birth_date:'2001-02-02',email:'white@example.invalid',house_no:'A1',street:'Gen Luna Ave',city:'San Mateo',province:'Rizal',employment_status:'student',occupation:'',theme_preference:'light',accent_color:'#306B5B',font_preference:'system',household_members:[{id:'22222222-2222-4222-8222-222222222222',name:'Juan White',relation:'Parent',role:'Head of Family'}],barangays:{name:'Ampid 1',barangay_localities:{display_name:'Ampid 1'}}};
+    window.resetFixture();
+  });await settle();
+  await page.screenshot({path:path.join(out,'profile-reference-light.png')});
+  assert.match(await page.getByRole('textbox',{name:'First Name',exact:true}).evaluate(el=>getComputedStyle(el).fontFamily),/sans-serif/);
+  await button('Edit Employment Status').click();await settle();
+  assert.equal(await page.getByRole('radio',{name:'Student',exact:true}).getAttribute('aria-checked'),'true');
+  await page.screenshot({path:path.join(out,'profile-employment.png')});
+  await page.getByRole('radio',{name:'Self-employed',exact:true}).click();await settle();
+  await page.getByRole('textbox',{name:'Occupation',exact:true}).waitFor();
+  await button('Edit Employment Status').click();await page.getByRole('radio',{name:'Student',exact:true}).click();await settle();
+  assert.equal(await page.getByRole('textbox',{name:'Occupation',exact:true}).count(),0);
+  await button('Edit family member Juan White').scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'profile-address-household.png')});
+  await button('Add household member').click();await settle();
+  assert.equal(await button('Add Member').isDisabled(),true);
+  await page.screenshot({path:path.join(out,'profile-add-family.png')});
+  await button('More relation options').click();
+  await page.getByRole('radio',{name:'Relation: Other',exact:true}).click();
+  await page.getByRole('radio',{name:'Role: Student',exact:true}).click();
+  await page.getByRole('textbox',{name:'Household member full name'}).fill('Maria White');
+  await button('Add Member').click();await settle();
+  await button('Edit family member Maria White').click();await settle();
+  assert.equal(await page.getByRole('radio',{name:'Relation: Other',exact:true}).getAttribute('aria-checked'),'true');
+  const otherBounds=await page.getByRole('radio',{name:'Relation: Other',exact:true}).boundingBox();assert.ok(otherBounds.x>=0&&otherBounds.x+otherBounds.width<=400,'saved relation is visible when reopening the editor');
+  await page.getByRole('textbox',{name:'Household member full name'}).fill('Maria Updated');
+  await button('Update').click();await settle();
+  await button('Edit family member Maria Updated').click();await button('Remove').click();await settle();
+  assert.equal(await button('Edit family member Maria Updated').count(),0);
+  await button('Edit family member Juan White').click();await settle();
+  await page.screenshot({path:path.join(out,'profile-edit-family.png')});
+  await page.keyboard.press('Escape');await settle();
+  assert.equal(await page.evaluate(()=>window.fixture.writes.length),writesBeforePresentation,'member edits remain local until Save Changes');
+  assert.equal(await page.evaluate(()=>window.fixture.profile.household_members.length),1);
+  for(const width of [320,360,412]){
+    await page.setViewportSize({width,height:640});await button('Add household member').click();await settle();
+    const action=await button('Add Member').boundingBox();assert.ok(action.y>=0&&action.y+action.height<=640);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    await page.keyboard.press('Escape');await settle();
+  }
+  await page.setViewportSize({width:400,height:800});
+  await page.evaluate(()=>{window.fixture.profile={...window.fixture.profile,theme_preference:'dark',accent_color:'#2563EB',font_preference:'georgia'};window.resetFixture()});await settle();
+  await page.screenshot({path:path.join(out,'profile-reference-dark.png')});
+  assert.equal(await page.getByRole('heading',{name:'Profile',exact:true}).evaluate(el=>getComputedStyle(el).fontFamily),'serif');
+  await button('Edit Employment Status').click();await settle();await page.screenshot({path:path.join(out,'profile-employment-dark.png')});await page.keyboard.press('Escape');await settle();
+  await page.evaluate(()=>{window.fixture.reduced=true;for(const fn of window.fixture.listeners)fn(true)});
+  const motionStart=await page.evaluate(()=>window.fixture.durations.length);
+  await button('Add household member').click();await settle();await page.keyboard.press('Escape');await settle();
+  assert.ok((await page.evaluate(start=>window.fixture.durations.slice(start),motionStart)).every(duration=>duration<=100));
+  await page.evaluate(profile=>{window.fixture.profile=profile;window.fixture.insets=null;window.fixture.reduced=false;window.resetFixture()},originalProfile);await settle();
+  passed.push('reference layouts, numeric date, radio selections, occupation visibility, horizontal relation options, local family add/edit/remove, pinned actions at narrow widths, font/theme synchronization and reduced-motion profile sheets');
   await page.getByRole('textbox',{name:'First Name',exact:true}).fill('Draft');
   await page.evaluate(()=>{window.fixture.picked={uri:'synthetic://photo'};});await button('Change profile photo').click();await settle();
   assert.equal(await page.getByRole('textbox',{name:'First Name',exact:true}).inputValue(),'Draft');
@@ -109,8 +169,8 @@ try {
   await page.evaluate(()=>{window.fixture.rosterConflict=false});await button('Reload Profile').click();await settle();assert.equal(await page.getByText('Stale Child',{exact:true}).count(),0);
   passed.push('Settings conditional roster write preserves snapshot, never writes JSON directly, rejects stale save before demographic write and explicitly reloads');
 
-  for(let i=0;i<5;i++){await button('Edit Sex').click();await button('Close Select Sex').click();await settle()}
-  await button('Edit Employment Status').click();await button('Close Select Employment Status').click();await settle();
+  for(let i=0;i<5;i++){await button('Edit Sex').click();await button('Close Sex').click();await settle()}
+  await button('Edit Employment Status').click();await button('Close Employment Status').click();await settle();
   await button('Edit Date of Birth').click();await button('Close').click();await settle();
   for(const width of [320,360,400,412]){await page.setViewportSize({width,height:640});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true)}
   await page.screenshot({path:path.join(out,'profile-compact.png')});

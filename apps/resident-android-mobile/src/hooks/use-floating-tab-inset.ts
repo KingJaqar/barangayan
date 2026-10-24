@@ -1,11 +1,4 @@
-import { usePathname } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFloatingTabLayout } from './use-floating-tab-layout';
-
-const FLOATING_SCREENS = new Set([
-  '/home', '/services', '/drrm', '/maps', '/health', '/reports', '/announcements', '/settings',
-  '/home/emergency-info',
-]);
+import { useFloatingTabClearance } from './use-floating-tab-layout';
 
 /**
  * Shared visibility and scroll clearance for the bottom tabs.
@@ -13,9 +6,5 @@ const FLOATING_SCREENS = new Set([
  * Includes the measured bar, 12dp bottom offset, top gap and Android safe area.
  */
 export function useFloatingTabInset(ignoreMapHide = false) {
-  const pathname = usePathname();
-  const { bottom } = useSafeAreaInsets();
-  const { barHeight, keyboardVisible, mapNavHidden } = useFloatingTabLayout();
-  const hidden = !ignoreMapHide && mapNavHidden && (pathname === '/drrm' || pathname === '/home/emergency-info');
-  return FLOATING_SCREENS.has(pathname) && !keyboardVisible && !hidden ? barHeight + 8 + Math.max(bottom, 12) : 0;
+  return useFloatingTabClearance(ignoreMapHide);
 }

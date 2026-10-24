@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 import { DEFAULT_FONT_ID } from '@/constants/fonts';
 import { useAuth } from '@/hooks/use-auth';
-import { useProfile } from '@/hooks/use-profile';
+import { useProfileData } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 
 interface FontPreferenceContextValue {
@@ -23,7 +23,7 @@ const FontPreferenceContext = createContext<FontPreferenceContextValue>({
  */
 export function FontPreferenceProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
 
   const [fontId, setFontIdState] = useState<string>(DEFAULT_FONT_ID);
 

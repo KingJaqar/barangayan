@@ -1,0 +1,12 @@
+[
+  {
+    "name": "maps",
+    "code": 0,
+    "durationMs": 23770,
+    "cwd": "C:\\Users\\User\\barangayan",
+    "args": [
+      "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+    ],
+    "log": "C:\\Users\\User\\barangayan\\tmp\\resident-nav-phase2-20261023\\logs\\map-regression-maps.log"
+  }
+]

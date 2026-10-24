@@ -24,19 +24,14 @@ export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput) {
     service_kind: value.catalog.serviceKind,
     charter: {
       ...value.catalog.charter,
-      feesToBePaid: value.catalog.serviceKind === 'business' ? BUSINESS_FEE_DESCRIPTION
-        : ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? '₱100.00'
-        : value.catalog.serviceKind === 'certified_true_copy' ? '₱10.00 per page' : value.catalog.charter.feesToBePaid,
+      feesToBePaid: value.catalog.pricingMode === 'assessment' ? BUSINESS_FEE_DESCRIPTION
+        : value.catalog.serviceKind === 'general' ? value.catalog.charter.feesToBePaid
+        : `₱${(value.feeCentavos / 100).toFixed(2)}${value.catalog.pricingMode === 'per_page' ? ' per page' : ''}`,
     },
     purposes: value.catalog.purposes, requirement_rules: value.catalog.requirementRules,
-    pricing_mode: value.catalog.serviceKind === 'business' ? 'assessment'
-      : ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? 'fixed'
-      : value.catalog.serviceKind === 'certified_true_copy' ? 'per_page' : value.catalog.pricingMode,
+    pricing_mode: value.catalog.pricingMode,
     processing_target_minutes: value.catalog.processingTargetMinutes,
-    fee_centavos: ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? 10000
-      : value.catalog.serviceKind === 'certified_true_copy' ? 1000
-      : value.catalog.serviceKind === 'business' ? 0
-      : value.catalog.pricingMode === 'per_page' ? 1000 : value.catalog.pricingMode === 'fixed' ? value.feeCentavos : 0,
+    fee_centavos: value.catalog.pricingMode === 'assessment' ? 0 : value.feeCentavos,
     requirements: value.catalog.charter.checklistOfRequirements.split('\n').map(line => line.trim()).filter(Boolean),
   };
 }
@@ -56,9 +51,8 @@ export function catalogContract(row: Tables<'document_types'>) {
 export const BUSINESS_FEE_DESCRIPTION = 'See Attached Tax Code (depends on the kind of transaction)';
 
 export function servicePriceLabel(row: Tables<'document_types'>) {
-  if (row.service_kind === 'business') return BUSINESS_FEE_DESCRIPTION;
-  if (row.service_kind === 'certified_true_copy' || row.pricing_mode === 'per_page') return '₱10.00 per page';
-  if (['indigency', 'first_time_job_seeker'].includes(row.service_kind ?? '')) return '₱100.00';
+  if (row.pricing_mode === 'assessment') return BUSINESS_FEE_DESCRIPTION;
+  if (row.pricing_mode === 'per_page') return `₱${(row.fee_centavos / 100).toFixed(2)} per page`;
   return row.fee_centavos === 0 ? 'No payment required' : `₱${(row.fee_centavos / 100).toFixed(2)}`;
 }
 

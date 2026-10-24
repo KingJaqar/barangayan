@@ -1,0 +1,1574 @@
+{
+  "steps": [
+    "Requests",
+    "History",
+    "Logs",
+    "Reports",
+    "Home"
+  ],
+  "capture": {
+    "schema": "resident-navigation-phase0-v1",
+    "active": false,
+    "capacity": 8192,
+    "dropped": 0,
+    "clock": "performance.now; relative milliseconds; not synchronized to native input/presentation",
+    "startedAtMonotonicMs": 22296716.381324,
+    "counts": {
+      "start": 1,
+      "commit": 64,
+      "sla-tick": 88,
+      "sla-poll": 12,
+      "request-start": 16,
+      "request-end": 16,
+      "press": 3,
+      "listeners-end": 3,
+      "dispatch-end": 3,
+      "unmount": 7,
+      "mount": 1,
+      "selected": 2,
+      "blur": 2,
+      "focus": 2,
+      "stop": 1
+    },
+    "owners": {
+      "home": 1,
+      "services": 1,
+      "sla-compact": 0,
+      "sla-full": 0,
+      "drrm": 1,
+      "map": 1,
+      "maps": 1,
+      "health": 1,
+      "reports": 1,
+      "other": 2
+    },
+    "samples": [
+      {
+        "atMs": 0.0073809996247291565,
+        "kind": "start",
+        "owner": "other",
+        "navigationId": 0
+      },
+      {
+        "atMs": 315.44779999926686,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 14.7569669932127,
+        "phase": "update"
+      },
+      {
+        "atMs": 317.58641899749637,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 317.84144899994135,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 318.0545179992914,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 318.262741997838,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 318.4700019992888,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 752.7445820011199,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 753.5855199992657,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 754.1556029990315,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 754.9044540002942,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 755.4574959985912,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 756.1075190007687,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 756.6654560007155,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 1
+      },
+      {
+        "atMs": 758.1019660010934,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 2
+      },
+      {
+        "atMs": 759.3480469994247,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 3
+      },
+      {
+        "atMs": 770.8951850011945,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 4
+      },
+      {
+        "atMs": 771.957266997546,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 5
+      },
+      {
+        "atMs": 772.8235360011458,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 0,
+        "operationId": 6
+      },
+      {
+        "atMs": 879.1292009986937,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 122.35993300005794,
+        "code": 200,
+        "operationId": 1
+      },
+      {
+        "atMs": 881.7855609990656,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 110.84011299908161,
+        "code": 200,
+        "operationId": 4
+      },
+      {
+        "atMs": 895.2517170011997,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 4.504628002643585,
+        "phase": "update"
+      },
+      {
+        "atMs": 896.4971739985049,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 138.34171400219202,
+        "code": 200,
+        "operationId": 2
+      },
+      {
+        "atMs": 897.970323998481,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 138.58111099898815,
+        "code": 200,
+        "operationId": 3
+      },
+      {
+        "atMs": 921.3049609996378,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 9.6425949819386,
+        "phase": "update"
+      },
+      {
+        "atMs": 923.5551519989967,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 990.4938509985805,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 217.59238800033927,
+        "code": 200,
+        "operationId": 6
+      },
+      {
+        "atMs": 1009.4619259983301,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 3.9596840143203735,
+        "phase": "update"
+      },
+      {
+        "atMs": 1068.6869089975953,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 0,
+        "durationMs": 296.71118000149727,
+        "code": 200,
+        "operationId": 5
+      },
+      {
+        "atMs": 1081.4776019975543,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 3.7183669731020927,
+        "phase": "update"
+      },
+      {
+        "atMs": 1377.6671269983053,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 15.921565979719162,
+        "phase": "update"
+      },
+      {
+        "atMs": 1379.656589999795,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 1379.8805899992585,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 1384.3507569991052,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 1384.6324680000544,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 1384.860948998481,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 2454.7512740008533,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 0,
+        "durationMs": 18.69572003185749,
+        "phase": "update"
+      },
+      {
+        "atMs": 2456.972270999104,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 2457.5168169997633,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 2458.2377899996936,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 2458.4815430007875,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 2458.698799997568,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 0
+      },
+      {
+        "atMs": 3153.6884870007634,
+        "kind": "press",
+        "owner": "services",
+        "navigationId": 1
+      },
+      {
+        "atMs": 3153.9206409975886,
+        "kind": "listeners-end",
+        "owner": "services",
+        "navigationId": 1,
+        "operationId": 1
+      },
+      {
+        "atMs": 3153.9371219985187,
+        "kind": "dispatch-end",
+        "owner": "services",
+        "navigationId": 1,
+        "operationId": 1
+      },
+      {
+        "atMs": 3517.5845040008426,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 17.046785973012447,
+        "phase": "update"
+      },
+      {
+        "atMs": 3529.641506999731,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 3529.9326159991324,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 3530.1746389977634,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 3530.3830370008945,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 3530.589660000056,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 4583.056341998279,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 15.516953978687525,
+        "phase": "update"
+      },
+      {
+        "atMs": 4585.369718000293,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 4585.615871001035,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 4585.842168997973,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 4586.051606997848,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 4586.708432998508,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 5661.8630650006235,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 15.721997957676649,
+        "phase": "update"
+      },
+      {
+        "atMs": 5664.654459998012,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 5664.902025997639,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 5665.111936997622,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 5665.46885599941,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 5665.927129998803,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 6716.347153998911,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 15.8431649915874,
+        "phase": "update"
+      },
+      {
+        "atMs": 6718.491173997521,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 6718.736949998885,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 6718.9700750000775,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 6719.18606999889,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 6719.39031900093,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 7792.295414999127,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 25.905019968748093,
+        "phase": "update"
+      },
+      {
+        "atMs": 7794.435135997832,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 7794.680103000253,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 7795.196412999183,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 7795.426656998694,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 7795.637304998934,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 8849.411059997976,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 16.49439501389861,
+        "phase": "update"
+      },
+      {
+        "atMs": 8851.518613997847,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 8851.810289997607,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 8852.038908999413,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 8852.253784000874,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 8852.460090000182,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 9924.789487000555,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 14.16019093990326,
+        "phase": "update"
+      },
+      {
+        "atMs": 9926.852022998035,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 9927.149751998484,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 9927.384130001068,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 9927.64594899863,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 9927.854965999722,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 10985.197188999504,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 17.60929099097848,
+        "phase": "update"
+      },
+      {
+        "atMs": 10996.959835998714,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 10997.220091998577,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 10997.449255999178,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 10997.69254399836,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 10997.901110000908,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 12057.028520997614,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 21.531092945486307,
+        "phase": "update"
+      },
+      {
+        "atMs": 12059.357517000288,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 12059.60849500075,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 12059.819334000349,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 12060.043880999088,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 12060.33129600063,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 13113.804660998285,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 15.016548000276089,
+        "phase": "update"
+      },
+      {
+        "atMs": 13124.940035998821,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 13125.188338998705,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 13125.399424999952,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 13125.646152000874,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 13125.858908999711,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 14184.215912997723,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 18.366283927112818,
+        "phase": "update"
+      },
+      {
+        "atMs": 14186.529631000012,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 14186.805709999055,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 14187.022135999054,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 14187.285588998348,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 14187.524241000414,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15258.087799999863,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 15.13787092268467,
+        "phase": "update"
+      },
+      {
+        "atMs": 15260.341766998172,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15260.601046998054,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15260.827789001167,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15261.105604998767,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15261.320252999663,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15818.905804999173,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15819.707947000861,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15820.209915000945,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15820.666070997715,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15821.085791997612,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15821.445600997657,
+        "kind": "sla-poll",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 15821.954937998205,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 7
+      },
+      {
+        "atMs": 15822.936196997762,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 8
+      },
+      {
+        "atMs": 15823.457371998578,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 9
+      },
+      {
+        "atMs": 15824.71317299828,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 10
+      },
+      {
+        "atMs": 15825.837296999991,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 11
+      },
+      {
+        "atMs": 15827.275998000056,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 12
+      },
+      {
+        "atMs": 15944.979509998113,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 121.23198699951172,
+        "code": 200,
+        "operationId": 9
+      },
+      {
+        "atMs": 15960.83478499949,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 7.256141040474176,
+        "phase": "update"
+      },
+      {
+        "atMs": 15961.93046399951,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 139.85910599678755,
+        "code": 200,
+        "operationId": 7
+      },
+      {
+        "atMs": 15979.978491000831,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 5.553103014826775,
+        "phase": "update"
+      },
+      {
+        "atMs": 15985.350618999451,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 159.39599800109863,
+        "code": 200,
+        "operationId": 11
+      },
+      {
+        "atMs": 15987.111348997802,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 162.13887000083923,
+        "code": 200,
+        "operationId": 10
+      },
+      {
+        "atMs": 16003.2947390005,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 6.211883999407291,
+        "phase": "update"
+      },
+      {
+        "atMs": 16004.538688000292,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 181.5180110000074,
+        "code": 200,
+        "operationId": 8
+      },
+      {
+        "atMs": 16007.420416999608,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 16016.548546999693,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 3.5017250329256058,
+        "phase": "update"
+      },
+      {
+        "atMs": 16052.948690000921,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 225.32907300069928,
+        "code": 200,
+        "operationId": 12
+      },
+      {
+        "atMs": 16072.085914999247,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 4.00120497867465,
+        "phase": "update"
+      },
+      {
+        "atMs": 16307.937644999474,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 13.34954896941781,
+        "phase": "update"
+      },
+      {
+        "atMs": 16309.93723199889,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 16310.181540999562,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 16310.392877999693,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 16310.598628997803,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 16310.875351000577,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 17394.782775998116,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 18.771452005952597,
+        "phase": "update"
+      },
+      {
+        "atMs": 17396.93216700107,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 17397.46018199995,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 17397.70342599973,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 17397.911871999502,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 17398.23640500009,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18337.3196160011,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 30.209918953478336,
+        "phase": "update"
+      },
+      {
+        "atMs": 18345.90950600058,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18348.389343999326,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18350.56230999902,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18352.856644000858,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18355.001915998757,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18357.400240998715,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18373.560936998576,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 0.7516619935631752,
+        "phase": "nested-update"
+      },
+      {
+        "atMs": 18387.545791998506,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 13
+      },
+      {
+        "atMs": 18436.30324099958,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 0.5641099996864796,
+        "phase": "update"
+      },
+      {
+        "atMs": 18532.584369998425,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 144.96085999906063,
+        "code": 200,
+        "operationId": 13
+      },
+      {
+        "atMs": 18589.800301998854,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 42.654472056776285,
+        "phase": "update"
+      },
+      {
+        "atMs": 18592.68102899939,
+        "kind": "mount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18593.175877001137,
+        "kind": "sla-tick",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 18607.45746999979,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 5.118622928857803,
+        "phase": "update"
+      },
+      {
+        "atMs": 18608.562458999455,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 14
+      },
+      {
+        "atMs": 18748.65617099777,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 139.89347299933434,
+        "code": 200,
+        "operationId": 14
+      },
+      {
+        "atMs": 18778.7864609994,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 16.034536011517048,
+        "phase": "update"
+      },
+      {
+        "atMs": 19832.210981998593,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 3.0867539793252945,
+        "phase": "update"
+      },
+      {
+        "atMs": 20360.346331998706,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 2.040205992758274,
+        "phase": "update"
+      },
+      {
+        "atMs": 21005.26398799941,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 35.45699902623892,
+        "phase": "update"
+      },
+      {
+        "atMs": 21025.8954170011,
+        "kind": "unmount",
+        "owner": "sla-compact",
+        "navigationId": 1
+      },
+      {
+        "atMs": 21044.566808998585,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 0.5306340120732784,
+        "phase": "update"
+      },
+      {
+        "atMs": 21052.918733999133,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 0.48137200996279716,
+        "phase": "update"
+      },
+      {
+        "atMs": 21063.629790998995,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 1,
+        "operationId": 15
+      },
+      {
+        "atMs": 21209.656585998833,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 1,
+        "durationMs": 145.81313399970531,
+        "code": 200,
+        "operationId": 15
+      },
+      {
+        "atMs": 21498.748475000262,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 252.61803502216935,
+        "phase": "update"
+      },
+      {
+        "atMs": 22497.48969199881,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 2.7952079884707928,
+        "phase": "update"
+      },
+      {
+        "atMs": 23025.144687000662,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 1,
+        "durationMs": 1.6660179980099201,
+        "phase": "update"
+      },
+      {
+        "atMs": 23753.314955998212,
+        "kind": "press",
+        "owner": "reports",
+        "navigationId": 2
+      },
+      {
+        "atMs": 23753.419712997973,
+        "kind": "listeners-end",
+        "owner": "reports",
+        "navigationId": 2,
+        "operationId": 2
+      },
+      {
+        "atMs": 23753.89740499854,
+        "kind": "dispatch-end",
+        "owner": "reports",
+        "navigationId": 2,
+        "operationId": 2
+      },
+      {
+        "atMs": 23874.320160999894,
+        "kind": "commit",
+        "owner": "home",
+        "navigationId": 2,
+        "durationMs": 1.061297994107008,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.4633510001,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 2,
+        "durationMs": 2.432000983506441,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.589184001088,
+        "kind": "commit",
+        "owner": "drrm",
+        "navigationId": 2,
+        "durationMs": 0.7856409922242165,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.671680998057,
+        "kind": "commit",
+        "owner": "maps",
+        "navigationId": 2,
+        "durationMs": 1.077558010816574,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.743191000074,
+        "kind": "commit",
+        "owner": "health",
+        "navigationId": 2,
+        "durationMs": 1.047216009348631,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.81134900078,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 2,
+        "durationMs": 1.6394879892468452,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.878752999008,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 2,
+        "durationMs": 0.887643001973629,
+        "phase": "update"
+      },
+      {
+        "atMs": 23874.944038998336,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 2,
+        "durationMs": 0.8164919950067997,
+        "phase": "update"
+      },
+      {
+        "atMs": 23900.697886999696,
+        "kind": "selected",
+        "owner": "reports",
+        "navigationId": 2
+      },
+      {
+        "atMs": 23903.79889399931,
+        "kind": "blur",
+        "owner": "services",
+        "navigationId": 2
+      },
+      {
+        "atMs": 23903.836626000702,
+        "kind": "focus",
+        "owner": "reports",
+        "navigationId": 2
+      },
+      {
+        "atMs": 23948.015607997775,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 2,
+        "durationMs": 6.919174011796713,
+        "phase": "nested-update"
+      },
+      {
+        "atMs": 23948.229449998587,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 2,
+        "durationMs": 15.848714035004377,
+        "phase": "nested-update"
+      },
+      {
+        "atMs": 23959.5478569977,
+        "kind": "request-start",
+        "owner": "other",
+        "navigationId": 2,
+        "operationId": 16
+      },
+      {
+        "atMs": 24040.711787998676,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 2,
+        "durationMs": 0.6581839695572853,
+        "phase": "update"
+      },
+      {
+        "atMs": 24040.758653998375,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 2,
+        "durationMs": 0.08654700219631195,
+        "phase": "update"
+      },
+      {
+        "atMs": 24096.416338000447,
+        "kind": "request-end",
+        "owner": "other",
+        "navigationId": 2,
+        "durationMs": 136.74977600201964,
+        "code": 200,
+        "operationId": 16
+      },
+      {
+        "atMs": 24116.035262998194,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 2,
+        "durationMs": 8.005828969180584,
+        "phase": "update"
+      },
+      {
+        "atMs": 24228.12317299843,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 2,
+        "durationMs": 0.36045797914266586,
+        "phase": "update"
+      },
+      {
+        "atMs": 28752.7760469988,
+        "kind": "press",
+        "owner": "home",
+        "navigationId": 3
+      },
+      {
+        "atMs": 28752.88328300044,
+        "kind": "listeners-end",
+        "owner": "home",
+        "navigationId": 3,
+        "operationId": 3
+      },
+      {
+        "atMs": 28753.28855900094,
+        "kind": "dispatch-end",
+        "owner": "home",
+        "navigationId": 3,
+        "operationId": 3
+      },
+      {
+        "atMs": 28877.959948997945,
+        "kind": "commit",
+        "owner": "home",
+        "navigationId": 3,
+        "durationMs": 2.111923009157181,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.093008000404,
+        "kind": "commit",
+        "owner": "services",
+        "navigationId": 3,
+        "durationMs": 1.3832299821078777,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.16849499941,
+        "kind": "commit",
+        "owner": "drrm",
+        "navigationId": 3,
+        "durationMs": 0.7509199976921082,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.236304998398,
+        "kind": "commit",
+        "owner": "maps",
+        "navigationId": 3,
+        "durationMs": 1.3037749864161015,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.300080999732,
+        "kind": "commit",
+        "owner": "health",
+        "navigationId": 3,
+        "durationMs": 0.9964479878544807,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.365995999426,
+        "kind": "commit",
+        "owner": "reports",
+        "navigationId": 3,
+        "durationMs": 2.040515009313822,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.428993999958,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 3,
+        "durationMs": 0.834073007106781,
+        "phase": "update"
+      },
+      {
+        "atMs": 28878.489012997597,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 3,
+        "durationMs": 1.6649749986827374,
+        "phase": "update"
+      },
+      {
+        "atMs": 28905.320836998522,
+        "kind": "selected",
+        "owner": "home",
+        "navigationId": 3
+      },
+      {
+        "atMs": 28908.869265999645,
+        "kind": "blur",
+        "owner": "reports",
+        "navigationId": 3
+      },
+      {
+        "atMs": 28908.90152800083,
+        "kind": "focus",
+        "owner": "home",
+        "navigationId": 3
+      },
+      {
+        "atMs": 28938.523888997734,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 3,
+        "durationMs": 15.55559704452753,
+        "phase": "nested-update"
+      },
+      {
+        "atMs": 29029.330412000418,
+        "kind": "commit",
+        "owner": "other",
+        "navigationId": 3,
+        "durationMs": 0.1679150052368641,
+        "phase": "update"
+      },
+      {
+        "atMs": 29463.82872099802,
+        "kind": "stop",
+        "owner": "other",
+        "navigationId": 3
+      }
+    ]
+  },
+  "issues": [],
+  "qualification": "Control smoke only; History selected through actual visible text bounds. No paging available asserted, no data mutation or native performance acceptance."
+}

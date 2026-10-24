@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loginErrorMessage } from '../src/auth/login-error';
 import { pendingDestination, returnPath, safeReturnPath } from '../src/auth/pending-destination';
-import { RecoveryFlow, recoveryErrorMessage } from '../src/auth/recovery-flow';
+import { RECOVERY_HINT_MS, RecoveryFlow, recoveryErrorMessage } from '../src/auth/recovery-flow';
 import { authRequests, Ownership, readResendDeadline, RequestGate, resendSeconds, SetupTimeout, WriteBoundary } from '../src/auth/request-gate';
 
 type Auth = ConstructorParameters<typeof RecoveryFlow>[0];
@@ -17,13 +17,15 @@ function fakeAuth(overrides: { verifyUser?: { id: string }; sessionToken?: strin
       if (overrides.verifyError) return { data: { session: null, user: null }, error: overrides.verifyError };
       return { data: { session: { access_token: token, user: overrides.verifyUser ?? { id: 'u1' } }, user: overrides.verifyUser ?? { id: 'u1' } }, error: null };
     },
-    getSession: async () => ({ data: { session: { access_token: overrides.sessionToken ?? token, user: { id: 'u1' } } }, error: null }),
+    getSession: async () => ({ data: { session: { access_token: overrides.sessionToken ?? token, user: overrides.verifyUser ?? { id: 'u1' } } }, error: null }),
+    signOut: async () => { calls.push('sign-out'); return { error: null }; },
     updateUser: async (input: { password: string }) => { calls.push(`update:${input.password}`); return { data: {}, error: overrides.updateError ?? null }; },
   };
   return { calls, auth: auth as unknown as Auth, rotate: () => { token = 'token-2'; } };
 }
 
 describe('password recovery flow (P04-T05, A07)', () => {
+  afterEach(() => vi.useRealTimers());
   it('requires a verified code for the same session before a new password is written', async () => {
     const { auth, calls } = fakeAuth();
     const flow = new RecoveryFlow(auth);
@@ -57,10 +59,48 @@ describe('password recovery flow (P04-T05, A07)', () => {
   });
 
   it('does not accept a recovery session for a different account than the signed-in one', async () => {
-    const { auth } = fakeAuth({ verifyUser: { id: 'someone-else' } });
+    const { auth, calls } = fakeAuth({ verifyUser: { id: 'someone-else' } });
     const flow = new RecoveryFlow(auth);
     await expect(flow.verify('resident@example.com', '123456', USER)).rejects.toThrow(/could not be confirmed/);
     expect(flow.isVerified).toBe(false);
+    expect(calls).toContain('sign-out');
+  });
+
+  it('expires recovery proof even while the same access token is still present', async () => {
+    vi.useFakeTimers();
+    const { auth, calls } = fakeAuth();
+    const flow = new RecoveryFlow(auth);
+    await flow.verify('resident@example.com', '123456');
+    vi.setSystemTime(Date.now() + RECOVERY_HINT_MS + 1);
+    await expect(flow.update('Str0ng!pass', 'Str0ng!pass')).rejects.toThrow(/expired|Verify your reset code/);
+    expect(calls.some((call) => call.startsWith('update'))).toBe(false);
+  });
+
+  it('requires a new code after an ambiguous password write instead of sending it twice', async () => {
+    const { auth, calls } = fakeAuth({ updateError: Object.assign(new TypeError('lost response'), { name: 'AuthRetryableFetchError' }) });
+    const flow = new RecoveryFlow(auth);
+    await flow.verify('resident@example.com', '123456');
+    await expect(flow.update('Str0ng!pass', 'Str0ng!pass')).rejects.toThrow(/could not be confirmed/);
+    expect(flow.isVerified).toBe(false);
+    await expect(flow.update('Different1!', 'Different1!')).rejects.toThrow(/Verify your reset code/);
+    expect(calls.filter((call) => call.startsWith('update'))).toHaveLength(1);
+  });
+
+  it('cannot begin a late password write after the request watchdog has ended', async () => {
+    vi.useFakeTimers();
+    const { auth, calls } = fakeAuth();
+    const flow = new RecoveryFlow(auth);
+    await flow.verify('resident@example.com', '123456');
+    let finish: ((value: Awaited<ReturnType<Auth['getSession']>>) => void) | undefined;
+    const session = await auth.getSession();
+    auth.getSession = () => new Promise((resolve) => { finish = resolve; });
+    const result = flow.update('Str0ng!pass', 'Str0ng!pass').catch((error: unknown) => error);
+    await vi.advanceTimersByTimeAsync(30_001);
+    expect(await result).toBeInstanceOf(SetupTimeout);
+    finish?.(session);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(calls.some((call) => call.startsWith('update'))).toBe(false);
+    expect(authRequests.busy).toBe(false);
   });
 
   it('refuses the write when the verified session changed or expired', async () => {

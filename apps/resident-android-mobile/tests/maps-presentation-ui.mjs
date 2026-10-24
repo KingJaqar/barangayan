@@ -24,12 +24,13 @@ const mocks={
  '@/hooks/use-theme':`import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
  '@/hooks/use-theme-preference':`export const useThemePreference=()=>({scheme:window.fixture.mode});`,
  '@/hooks/use-font-preference':`export const useFontPreference=()=>({fontId:window.fixture.font});`,
- '@/hooks/use-floating-tab-inset':`export const useFloatingTabInset=()=>window.fixture.inset;`,
+ '@/hooks/use-floating-tab-layout':`import React,{createContext,useContext,useState} from 'react';const Context=createContext(null);export function FloatingTabLayoutProvider({children}){const[hidden,setHidden]=useState(false);window.fixture.navHidden=hidden;return <Context.Provider value={{mapNavHidden:hidden,setMapNavHidden:setHidden,mapNavProgress:{value:Number(hidden)}}}>{children}</Context.Provider>}export const useFloatingTabLayout=()=>useContext(Context);`,
+ '@/hooks/use-floating-tab-inset':`import{useFloatingTabLayout}from'@/hooks/use-floating-tab-layout';export const useFloatingTabInset=(ignoreMapHide=false)=>{const{mapNavHidden}=useFloatingTabLayout();return !ignoreMapHide&&mapNavHidden?0:window.fixture.inset};`,
  '@/hooks/use-resident-reduced-motion':`export const useResidentReducedMotion=()=>window.fixture.reduced;`,
  '@/hooks/use-profile':`export const useProfile=()=>({profile:window.fixture.profile});`,
  '@/lib/supabase':`export const supabase={from(table){const filters={};const q={select(){return q},is(){return q},order(){return q},eq(k,v){filters[k]=v;return q},in(k,v){filters[k]=v;return q},ilike(k,v){filters[k]=v;return q},then(resolve,reject){window.fixture.queries.push({table,filters});let rows=window.fixture[table]??[];if(table==='incidents'){if(filters.category_id)rows=rows.filter(r=>filters.category_id.includes(r.category_id));if(filters.title)rows=rows.filter(r=>r.title.toLowerCase().includes(filters.title.replaceAll('%','').toLowerCase()))}return Promise.resolve({data:rows,error:window.fixture.failTable===table?{message:'Synthetic source unavailable'}:null}).then(resolve,reject)}};return q},channel(name){const ch={name,on(){return ch},subscribe(){window.fixture.channels.push(name);return ch}};return ch},removeChannel(ch){window.fixture.channels=window.fixture.channels.filter(n=>n!==ch.name);return Promise.resolve()}};`,
 };
-await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import Maps from '${root}/app/(app)/maps/index.tsx';import{MapView}from'${root}/components/map-view.tsx';let generation=0;const root=createRoot(document.getElementById('root'));window.render=(remount=false)=>{if(remount)generation++;root.render(window.fixture.wrapper?<MapView key={generation} {...window.fixture.wrapper} onMarkerTap={id=>window.fixture.callbacks.push(['marker',id])} onMapTap={window.fixture.routing?pos=>window.fixture.callbacks.push(['route',pos]):null} onBackgroundTap={()=>window.fixture.callbacks.push(['background'])} onPickerMoved={pos=>window.fixture.callbacks.push(['picker',pos])} onPickerRejected={pos=>window.fixture.callbacks.push(['rejected',pos])}/>:<Maps key={generation}/>)};window.render();`,resolveDir:app,loader:'tsx'},bundle:true,define:{global:'globalThis'},format:'iife',platform:'browser',outfile:path.join(out,'bundle.js'),jsx:'automatic',plugins:[{name:'adapters',setup(b){b.onResolve({filter:/.*/},a=>{if(Object.hasOwn(mocks,a.path))return{path:a.path,namespace:'adapter'};if(a.path.startsWith('@/'))return{path:path.join(app,'src',a.path.slice(2))+ (fs.existsSync(path.join(app,'src',a.path.slice(2))+'.tsx')?'.tsx':'.ts')}});b.onLoad({filter:/.*/,namespace:'adapter'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:app}))}}]});
+await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import{FloatingTabLayoutProvider}from'@/hooks/use-floating-tab-layout';import Maps from '${root}/app/(app)/maps/index.tsx';import{MapView}from'${root}/components/map-view.tsx';let generation=0;const root=createRoot(document.getElementById('root'));window.render=(remount=false)=>{if(remount)generation++;root.render(window.fixture.wrapper?<MapView key={generation} {...window.fixture.wrapper} onMarkerTap={id=>window.fixture.callbacks.push(['marker',id])} onMapTap={window.fixture.routing?pos=>window.fixture.callbacks.push(['route',pos]):null} onBackgroundTap={()=>window.fixture.callbacks.push(['background'])} onPickerMoved={pos=>window.fixture.callbacks.push(['picker',pos])} onPickerRejected={pos=>window.fixture.callbacks.push(['rejected',pos])}/>:<FloatingTabLayoutProvider><Maps key={generation}/></FloatingTabLayoutProvider>)};window.render();`,resolveDir:app,loader:'tsx'},bundle:true,define:{global:'globalThis'},format:'iife',platform:'browser',outfile:path.join(out,'bundle.js'),jsx:'automatic',plugins:[{name:'adapters',setup(b){b.onResolve({filter:/.*/},a=>{if(Object.hasOwn(mocks,a.path))return{path:a.path,namespace:'adapter'};if(a.path.startsWith('@/'))return{path:path.join(app,'src',a.path.slice(2))+ (fs.existsSync(path.join(app,'src',a.path.slice(2))+'.tsx')?'.tsx':'.ts')}});b.onLoad({filter:/.*/,namespace:'adapter'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:app}))}}]});
 const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE??'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'});const page=await browser.newPage({viewport:{width:400,height:760}});const diagnostics=[];const passed=[];
 page.on('pageerror',e=>diagnostics.push(e.message));page.on('console',m=>{if(['warning','error'].includes(m.type()))diagnostics.push(m.text())});
 await page.route('**/*tile.openstreetmap.org/**',route=>route.fulfill({status:200,contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aMZkAAAAASUVORK5CYII=','base64')}));
@@ -42,6 +43,19 @@ try{
  await page.getByRole('button',{name:'Setup Later',exact:true}).click();
  await page.waitForFunction(()=>window.fixture.messages.some(m=>m.type==='MAP_READY'));
  await frame().locator('[title="Synthetic first incident"]').waitFor();
+ assert.equal(await page.evaluate(()=>window.fixture.navHidden),true);
+ const hiddenReveal=await page.getByRole('button',{name:'Show bottom tabs',exact:true}).boundingBox();
+ assert(Math.abs(page.viewportSize().height-hiddenReveal.y-hiddenReveal.height-10)<=1);
+ const hiddenControls=await page.getByRole('button',{name:'Zoom in',exact:true}).boundingBox();
+ await page.getByRole('button',{name:'Show bottom tabs',exact:true}).click();
+ assert.equal(await page.evaluate(()=>window.fixture.navHidden),false);
+ const visibleControls=await page.getByRole('button',{name:'Zoom in',exact:true}).boundingBox();
+ assert(visibleControls.y<hiddenControls.y);
+ await page.getByRole('button',{name:'Hide bottom tabs',exact:true}).click();
+ await page.getByRole('button',{name:'Show bottom tabs',exact:true}).click();
+ await frame().evaluate(()=>map.fire('click',{latlng:L.latLng(14.68,121.12)}));
+ await page.getByRole('button',{name:'Show bottom tabs',exact:true}).waitFor();
+ passed.push('Maps hides tabs on entry; chevron reveals/hides tabs and moves controls; background tap hides tabs again');
  assert.equal(await page.evaluate(()=>window.fixture.channels.length),1);
  const initialZoom=await frame().evaluate(()=>map.getZoom());await page.getByRole('button',{name:'Zoom in',exact:true}).click();await frame().waitForFunction(z=>map.getZoom()===z+1,initialZoom);
  const zoom=await frame().evaluate(()=>map.getZoom());await page.getByRole('button',{name:'Zoom out',exact:true}).click();await frame().waitForFunction(z=>map.getZoom()===z-1,zoom);
@@ -67,8 +81,11 @@ try{
  await page.getByRole('textbox',{name:'Search incidents'}).fill('first');await frame().locator('[title="Synthetic second incident"]').waitFor({state:'hidden'});
  const queries=await page.evaluate(()=>window.fixture.queries);assert.deepEqual(queries.filter(q=>q.table==='incidents').at(-1).filters.category_id,['c1','c2']);
  await page.getByRole('tab',{name:'Evacuation',exact:true}).click();assert.equal(await page.getByRole('textbox',{name:'Evacuation search unavailable'}).isEditable(),false);
+ assert.equal(await page.evaluate(()=>window.fixture.navHidden),true);
+ await page.getByRole('button',{name:'Show bottom tabs',exact:true}).click();
  await page.getByRole('button',{name:'Reset map to barangay boundary'}).click();await frame().waitForFunction(()=>map.getZoom()<17);
  await frame().locator('[title="Synthetic center"]').click();await page.getByText('Synthetic center address',{exact:true}).waitFor();await page.getByRole('button',{name:'Close selected location'}).click();
+ await page.getByRole('button',{name:'Show bottom tabs',exact:true}).waitFor();
  await page.getByRole('tab',{name:'Incidents',exact:true}).click();assert.equal(await page.getByRole('textbox',{name:'Search incidents'}).inputValue(),'first');
  passed.push('multi-select/filter visibility retains predicates; incident search preserved through layer switch; truthful unavailable center search');
  await render({mode:'dark',accent:'#ffffff',font:'georgia'});await page.getByRole('button',{name:'Zoom in',exact:true}).waitFor();
@@ -79,8 +96,28 @@ try{
  for(const width of [320,360,400,412]){await page.setViewportSize({width,height:640});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)}
  await page.screenshot({path:path.join(out,'maps-dark.png')});passed.push('dark/extreme accents/selected serif/320–412px; measured attribution, no theme/layout refit or query fan-out');
  await render({permission:'granted',gpsError:true});await page.getByRole('button',{name:'Center map on your location'}).click();await page.getByText(/Unable to get your location/).waitFor();
- await render({gpsError:false});await page.getByRole('button',{name:'Center map on your location'}).click();await frame().waitForFunction(()=>userLayer.getLayers().length===3);assert.equal(await page.evaluate(()=>window.fixture.gpsCalls),2);
+ const locationMessage='Unable to get your location. Try You again, or browse the map.';
+ for(const values of [{mode:'dark',accent:'#ffffff',font:'georgia'},{mode:'light',accent:'#6d28d9',font:'system'}]){
+  await render(values);
+  for(const width of [320,412]){
+   await page.setViewportSize({width,height:640});
+   const dismiss=page.getByRole('button',{name:'Dismiss location message',exact:true});
+   const notice=await dismiss.locator('..').boundingBox(),target=await dismiss.boundingBox();
+   assert(notice.height<=90,`compact full location notice at ${width}px: ${notice.height}`);
+   assert(target.width>=44&&target.height>=44);
+   assert.equal(await page.getByText(locationMessage,{exact:true}).count(),1);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  }
+  await page.screenshot({path:path.join(out,`maps-notice-${values.mode}.png`)});
+ }
+ await page.getByRole('button',{name:'Dismiss location message',exact:true}).click();
+ await page.getByText(locationMessage,{exact:true}).waitFor({state:'hidden'});
+ await page.getByRole('button',{name:'Center map on your location'}).click();await page.getByText(locationMessage,{exact:true}).waitFor();
+ const gpsBeforeRetry=await page.evaluate(()=>window.fixture.gpsCalls);
+ passed.push('full location message fits a compact inline notice at 320/412px in light/dark with custom accents/fonts; 44px dismiss target; dismiss and reopen work');
+ await render({gpsError:false});await page.getByRole('button',{name:'Center map on your location'}).click();await frame().waitForFunction(()=>userLayer.getLayers().length===3);assert.equal(await page.evaluate(()=>window.fixture.gpsCalls),gpsBeforeRetry+1);
  await page.evaluate(()=>{for(const fn of window.fixture.appListeners)fn('background');for(const fn of window.fixture.appListeners)fn('active')});
+ await page.getByRole('button',{name:'Hide bottom tabs',exact:true}).waitFor();
  passed.push('GPS failure visible, explicit retry/user dot/accuracy circle, foreground permission recheck');
  await page.getByRole('textbox',{name:'Search incidents'}).fill('missing');await page.getByText('No incidents reported in this area',{exact:true}).waitFor();
  await render({failTable:'incidents'});await page.getByRole('textbox',{name:'Search incidents'}).fill('missing again');await page.getByText('Synthetic source unavailable',{exact:true}).waitFor();await render({failTable:null});await page.getByRole('button',{name:'Retry locations'}).click();await page.getByText('Synthetic source unavailable',{exact:true}).waitFor({state:'hidden'});
@@ -98,8 +135,17 @@ try{
  passed.push('reduced overlay durations <=100ms; permission tooltip unmounts after fade; two foreground cycles keep one channel/listener without extra queries');
  // Regression harness uses the actual wrapper, including legacy default presentation.
  const boundary=await page.evaluate(()=>window.fixture.profile.barangays.boundary);
- await render({wrapper:{markers:[{id:'legacy',kind:'incident',position:{lat:14.68,lng:121.12},label:'<img src=x onerror=alert(1)>'}],boundary,picker:{enabled:true,position:{lat:14.68,lng:121.12}}}},true);
+ const legacyWrapper={markers:[{id:'legacy',kind:'incident',position:{lat:14.68,lng:121.12},label:'<img src=x onerror=alert(1)>'}],kindColors:{incident:'#123456'},boundary,picker:{enabled:true,position:{lat:14.68,lng:121.12}}};
+ await render({wrapper:legacyWrapper},true);
  await frame().waitForFunction(()=>typeof map!=='undefined'&&map!==null&&pickerEnabled);
+ await frame().evaluate(()=>{window.retainedMarker=markerEntries[0].marker;window.retainedBoundary=boundaryLayer.getLayers()[0];map.setView([14.681,121.121],17,{animate:false})});
+ const retainedView=await frame().evaluate(()=>({center:map.getCenter(),zoom:map.getZoom()}));
+ for(let i=0;i<10;i++)await render({wrapper:legacyWrapper});
+ assert.equal(await frame().evaluate(()=>markerEntries[0].marker===window.retainedMarker&&boundaryLayer.getLayers()[0]===window.retainedBoundary),true);
+ assert.deepEqual(await frame().evaluate(()=>({center:map.getCenter(),zoom:map.getZoom()})),retainedView);
+ await render({wrapper:{...legacyWrapper,kindColors:{}}});
+ await frame().waitForFunction(()=>!Object.hasOwn(kindColors,'incident'));
+ passed.push('ten equal-content wrapper updates retain actual Leaflet marker/boundary identities and panned viewport; removed color hints clear');
  await frame().evaluate(()=>map.fire('click',{latlng:L.latLng(14.681,121.121)}));await page.waitForFunction(()=>window.fixture.callbacks.some(c=>c[0]==='picker'));
  await frame().evaluate(()=>map.fire('click',{latlng:L.latLng(0,0)}));await page.waitForFunction(()=>window.fixture.callbacks.some(c=>c[0]==='rejected'));
  assert.deepEqual(await frame().evaluate(()=>{const p=pickerMarker.getLatLng();return[p.lat,p.lng]}),[14.681,121.121]);

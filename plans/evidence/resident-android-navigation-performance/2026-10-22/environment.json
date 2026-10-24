@@ -1,0 +1,66 @@
+{
+  "capturedAt": "2026-10-22T14:08:30.177Z",
+  "timezone": "Asia/Manila",
+  "device": "MuMu emulator (SM_S918U label; not physical hardware)",
+  "serial": "127.0.0.1:16384",
+  "os": "12",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "fontScale": "1.0",
+  "installedPackage": "com.barangayan.resident.dev",
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "build": "debuggable Expo development client; runtime SDK 57 observed in development menu",
+  "configuredReleasePackage": "com.barangayan.resident",
+  "sourceReference": "fcb7d1941d12434dead583194723f0cd1bde7b29",
+  "versions": {
+    "expo": {
+      "version": "57.0.10",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\expo\\package.json"
+    },
+    "expo-router": {
+      "version": "57.0.10",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\expo-router\\package.json"
+    },
+    "react": {
+      "version": "19.2.3",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\react\\package.json"
+    },
+    "react-native": {
+      "version": "0.86.2",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\react-native\\package.json"
+    },
+    "react-native-screens": {
+      "version": "4.26.2",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\react-native-screens\\package.json"
+    },
+    "react-native-webview": {
+      "version": "13.16.1",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\react-native-webview\\package.json"
+    },
+    "@supabase/supabase-js": {
+      "version": "2.112.1",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\@supabase\\supabase-js\\package.json"
+    },
+    "typescript": {
+      "version": "6.0.3",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\typescript\\package.json"
+    },
+    "esbuild": {
+      "version": "0.28.1",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\esbuild\\package.json"
+    },
+    "playwright": {
+      "version": "1.62.1",
+      "path": "C:\\Users\\User\\barangayan\\node_modules\\playwright\\package.json"
+    }
+  },
+  "network": "Existing connection, no throttling applied; no credentials or response bodies recorded",
+  "thermalState": "Not recorded during timed samples",
+  "account": "Existing signed-in resident; identity excluded",
+  "limits": [
+    "Installed native APK source revision unknown; fingerprint identifies this native baseline",
+    "Selected compiled Metro modules matched working source; full native/release source match pending",
+    "Final native six-tab smoke runner did not complete; use validated 120-event run as earlier-source evidence",
+    "Physical device and synchronized T0/T5 acceptance pending"
+  ]
+}

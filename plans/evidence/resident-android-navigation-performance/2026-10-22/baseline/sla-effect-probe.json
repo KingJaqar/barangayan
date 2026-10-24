@@ -1,0 +1,67 @@
+{
+  "scope": "Actual component effects, substituted hooks/timers/RPC; logical 30 seconds, not native timing or network evidence",
+  "results": [
+    {
+      "n": 0,
+      "compact": true,
+      "initialCalls": 0,
+      "activeIntervals": 0,
+      "callsAfterTwoPolls": 0,
+      "ticks": 0,
+      "polls": 0,
+      "owners": {},
+      "afterUnmountIntervals": 0,
+      "afterUnmountOwners": {}
+    },
+    {
+      "n": 1,
+      "compact": true,
+      "initialCalls": 1,
+      "activeIntervals": 2,
+      "callsAfterTwoPolls": 3,
+      "ticks": 30,
+      "polls": 2,
+      "owners": {
+        "sla-compact": 1
+      },
+      "afterUnmountIntervals": 0,
+      "afterUnmountOwners": {
+        "sla-compact": 0
+      }
+    },
+    {
+      "n": 3,
+      "compact": true,
+      "initialCalls": 3,
+      "activeIntervals": 6,
+      "callsAfterTwoPolls": 9,
+      "ticks": 90,
+      "polls": 6,
+      "owners": {
+        "sla-compact": 3
+      },
+      "afterUnmountIntervals": 0,
+      "afterUnmountOwners": {
+        "sla-compact": 0
+      }
+    },
+    {
+      "n": 1,
+      "compact": false,
+      "initialCalls": 1,
+      "activeIntervals": 2,
+      "callsAfterTwoPolls": 3,
+      "ticks": 30,
+      "polls": 2,
+      "owners": {
+        "sla-compact": 0,
+        "sla-full": 1
+      },
+      "afterUnmountIntervals": 0,
+      "afterUnmountOwners": {
+        "sla-compact": 0,
+        "sla-full": 0
+      }
+    }
+  ]
+}

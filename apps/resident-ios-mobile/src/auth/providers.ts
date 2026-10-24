@@ -148,21 +148,26 @@ export function createProviderAuth(client: Client) {
   async function startApple(intent: AttemptIntent = 'sign_in', purpose: ReauthPurpose | null = null): Promise<ProviderAttempt> {
     if (intent === 'link') throw new Error('Linking Apple to an existing account is not available.');
     if (starting || authRequests.busy) throw new Error('An earlier sign-in request is still finishing. Please wait.');
-    if (!(await isAppleSignInAvailable())) throw new Error('Sign in with Apple is not available on this device.');
     starting = true;
     try {
-      await begin('apple', intent, purpose);
+      if (!(await isAppleSignInAvailable())) throw new Error('Sign in with Apple is not available on this device.');
+      const attempt = await begin('apple', intent, purpose);
       const nonce = await createAppleNonce((length) => Crypto.getRandomBytes(length), hashHex);
       let credential: AppleAuthentication.AppleAuthenticationCredential;
       try {
         credential = await AppleAuthentication.signInAsync({
           requestedScopes: intent === 'reauthenticate' ? [] : [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL],
           nonce: nonce.hashed,
+          state: attempt.id,
         });
       } catch (cause) {
         await clearProviderAttempt();
         if (cause && typeof cause === 'object' && 'code' in cause && cause.code === 'ERR_REQUEST_CANCELED') throw new Error('Sign in with Apple was cancelled. You can try again.');
         throw new Error('Sign in with Apple could not be completed. Please try again.');
+      }
+      if (credential.state !== attempt.id) {
+        await clearProviderAttempt();
+        throw new Error('This Apple response does not match your sign-in request. Please try again.');
       }
       if (!credential.identityToken) {
         await clearProviderAttempt();

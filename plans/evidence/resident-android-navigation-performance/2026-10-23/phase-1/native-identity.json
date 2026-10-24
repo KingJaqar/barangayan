@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-22T22:24:24.679Z",
+  "results": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "moduleId": 1910,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "7c416c444ff88ea8e7863a9cbdff6bb9d8924a4aeb54ebfb383d75601ebee664",
+      "currentFactorySha256": "7c416c444ff88ea8e7863a9cbdff6bb9d8924a4aeb54ebfb383d75601ebee664",
+      "sourceMatches": true,
+      "sourceSha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "moduleId": 2384,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "598f3c82dcfcb67670653692bda75903c4b1b7a304361b4157ed050e8e0b6284",
+      "currentFactorySha256": "598f3c82dcfcb67670653692bda75903c4b1b7a304361b4157ed050e8e0b6284",
+      "sourceMatches": true,
+      "sourceSha256": "eafb8c807c28ccf2f1e0e4a5188b1ebcebde0ec39ba32d3ef028a56a7c85c7ed"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-refresh-resource.ts",
+      "moduleId": 2723,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "8d6c97b732cf4eec4859bbcbbdf984bca08f20bc00c6afe2748b7d265aad5fb9",
+      "currentFactorySha256": "8d6c97b732cf4eec4859bbcbbdf984bca08f20bc00c6afe2748b7d265aad5fb9",
+      "sourceMatches": true,
+      "sourceSha256": "77dfaf3f170e981102bb95452139d58d83d3b6635d29bf8624fa934c0dfaa225"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "moduleId": 2724,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "cb6007f0218b984606a28a15031fa943bad283d3a1ee3ec260d9995095e38a43",
+      "currentFactorySha256": "cb6007f0218b984606a28a15031fa943bad283d3a1ee3ec260d9995095e38a43",
+      "sourceMatches": true,
+      "sourceSha256": "a84b4404d0589b801d726a06d732ed814fece8dd125e9a3c9202031a582f69bb"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "moduleId": 2381,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "ab8520dee9fe8bcc20961dd1215d48d9575088041174abb81483832d82c030ce",
+      "currentFactorySha256": "ab8520dee9fe8bcc20961dd1215d48d9575088041174abb81483832d82c030ce",
+      "sourceMatches": true,
+      "sourceSha256": "35592b4bb47b9fc14ea98076ced1c089393ac3b7d89b5e9e0e459898748342c0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "moduleId": 2444,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "7ea6ecd68fb3e99014612019fe5efe1ef853307f433c9e12f2b5c55a3703ea73",
+      "currentFactorySha256": "7ea6ecd68fb3e99014612019fe5efe1ef853307f433c9e12f2b5c55a3703ea73",
+      "sourceMatches": true,
+      "sourceSha256": "d13e8d778afa2d7b6f9fc1508465c5bbcd35f3e4659e3b635e47bf6ed9b8592a"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "moduleId": 2595,
+      "initialized": true,
+      "factoryMatches": true,
+      "loadedFactorySha256": "0df1eafad6e7bfd239dc2860b9cb8226fa4445ded8c3c794e6ab20bcdad8e723",
+      "currentFactorySha256": "0df1eafad6e7bfd239dc2860b9cb8226fa4445ded8c3c794e6ab20bcdad8e723",
+      "sourceMatches": true,
+      "sourceSha256": "1d7df0efdca645b86bf4362dae6003a02c1edfad9f36c407082f66de11629d93"
+    }
+  ],
+  "passed": true
+}

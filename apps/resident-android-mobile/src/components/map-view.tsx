@@ -21,6 +21,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import type NativeWebView from 'react-native-webview';
+import { mountDiagnosticOwner, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from '@/lib/navigation-diagnostics';
 
 import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from '@/components/leaflet-assets';
 import { isMapPosition, readMapMessage, type LocalMapInboundMessage, type MapPresentation } from '@/lib/map-presentation';
@@ -379,10 +380,8 @@ const LEAFLET_HTML = `
         case 'SET_MARKERS': {
           if (!map || !msg.payload || !Array.isArray(msg.payload.markers)) break;
 
-          // Capture any category colour hints supplied alongside the markers
-          if (msg.payload.kindColors) {
-            Object.assign(kindColors, msg.payload.kindColors);
-          }
+          // The payload is the current set of hints, including removed categories.
+          kindColors = msg.payload.kindColors || {};
 
           markerLayer.clearLayers();
           markerEntries = [];
@@ -645,11 +644,29 @@ function userLocationMessage(location: MapUserLocation | null | undefined): MapB
   };
 }
 
+// Map state is plain JSON data. Compare before serializing so equal network rows,
+// geometry and inline presentation objects do not rebuild Leaflet layers/icons.
+function sameMapState(left: unknown, right: unknown): boolean {
+  if (left === right) return true;
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return left.length === right.length && left.every((value, index) => sameMapState(value, right[index]));
+  }
+  if (Array.isArray(left) || Array.isArray(right)) return false;
+  if (typeof left !== 'object' || left === null || typeof right !== 'object' || right === null) return false;
+  const a = left as Record<string, unknown>, b = right as Record<string, unknown>;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length
+    && keys.every(key => Object.hasOwn(b, key) && sameMapState(a[key], b[key]));
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, showTiles = true, packMap = null, roadMarks = null, route = null, routePadding, onMapTap = null, presentation, onBackgroundTap, style }, ref) => {
   const webViewRef = useRef<NativeWebView>(null);
   const isReadyRef = useRef(false);
+  const sentStateRef = useRef(new Map<LocalMapInboundMessage['type'], LocalMapInboundMessage>());
+  const boundaryRefitRef = useRef(boundaryRefitKey);
+  useEffect(() => mountDiagnosticOwner('map'), []);
   // Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
   const routePaddingRef = useRef(routePadding);
   routePaddingRef.current = routePadding;
@@ -658,8 +675,15 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
   // (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
   const lastAcceptedPickerPosRef = useRef<LatLng | null>(picker?.position ?? null);
 
-  function sendMessage(msg: LocalMapInboundMessage) {
+  function resetDocument() {
+    isReadyRef.current = false;
+    sentStateRef.current.clear();
+  }
+
+  function sendMessage(msg: LocalMapInboundMessage, force = false) {
     if (!webViewRef.current || !isReadyRef.current) return;
+    const stateful = msg.type === 'SET_MARKERS' || msg.type === 'SET_BOUNDARY' || msg.type === 'SET_PRESENTATION';
+    if (stateful && !force && sameMapState(sentStateRef.current.get(msg.type), msg)) return;
     const js = `
       (function() {
         var event = new MessageEvent('message', { data: ${JSON.stringify(JSON.stringify(msg))} });
@@ -668,6 +692,8 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       true;
     `;
     webViewRef.current.injectJavaScript(js);
+    if (stateful) sentStateRef.current.set(msg.type, msg);
+    if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('map-send', 'map', { message: msg.type, count: js.length });
   }
 
   useImperativeHandle(ref, () => ({
@@ -713,7 +739,7 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
     sendMessage(route && route.length >= 2 ? { type: 'DRAW_ROUTE', payload: { points: route, padding: routePaddingRef.current } } : { type: 'CLEAR_ROUTE' });
   }, [route]);
 
-  // Push new markers whenever the prop changes (after the map is ready).
+  // References may change after an equal response; only changed state crosses the bridge.
   useEffect(() => {
     if (!isReadyRef.current) return;
     sendMessage({
@@ -736,8 +762,10 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
 
   // Draw/update the boundary outline whenever it changes.
   useEffect(() => {
+    const refit = boundaryRefitRef.current !== boundaryRefitKey;
+    boundaryRefitRef.current = boundaryRefitKey;
     if (!isReadyRef.current) return;
-    sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary ?? null } });
+    sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary ?? null } }, refit);
   }, [boundary, boundaryRefitKey]);
 
   // Toggle picker mode / move the pin whenever the prop changes. A position supplied
@@ -771,6 +799,7 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
     switch (msg.type) {
       case 'MAP_ERROR': { onMapError?.(); break; }
       case 'MAP_READY': {
+        if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('map-ready', 'map');
         if (isReadyRef.current) break;
         isReadyRef.current = true;
         if (presentation) sendMessage({ type: 'SET_PRESENTATION', payload: presentation });
@@ -847,8 +876,12 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       style={[styles.webView, style]}
       source={{ html: LEAFLET_HTML }}
       onMessage={handleMessage}
-      onError={onMapError}
-      onRenderProcessGone={() => { isReadyRef.current = false; onMapError?.(); }}
+      onLoadStart={() => {
+        resetDocument();
+        if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('map-load', 'map');
+      }}
+      onError={() => { resetDocument(); onMapError?.(); }}
+      onRenderProcessGone={() => { resetDocument(); onMapError?.(); }}
       injectedJavaScript={
         zoomControlTop !== undefined
           ? `(function(){var s=document.createElement('style');s.textContent='.leaflet-top.leaflet-left{margin-top:${Math.round(zoomControlTop)}px !important;}';document.head.appendChild(s);})();true;`

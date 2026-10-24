@@ -25,7 +25,7 @@ const mocks = {
     export const Platform={...R.Platform,OS:'android',select:o=>o.android??o.default};
     export const Alert={alert:(...args)=>window.fixture.alerts.push(args)};
     export const AccessibilityInfo={isReduceMotionEnabled:async()=>window.fixture.reduced,addEventListener:(event,fn)=>{window.fixture.listeners.add(fn);return{remove:()=>window.fixture.listeners.delete(fn)}}};`,
-  'expo-router': `import React from 'react';export const useIsFocused=()=>true;export const useFocusEffect=fn=>React.useEffect(fn,[fn]);export const useLocalSearchParams=()=>window.fixture.params;export const usePathname=()=>'/health/register';export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r),replace:r=>window.fixture.routes.push(r),setParams:p=>Object.assign(window.fixture.params,p)};export const useRouter=()=>router;`,
+  'expo-router': `import React from 'react';export const useIsFocused=()=>true;export const useFocusEffect=fn=>{const [focused,setFocused]=React.useState(true);React.useEffect(()=>{const listener=e=>setFocused(e.detail);window.addEventListener('health-focus',listener);return()=>window.removeEventListener('health-focus',listener)},[]);React.useEffect(()=>focused?fn():undefined,[fn,focused])};export const useLocalSearchParams=()=>window.fixture.params;export const usePathname=()=>'/health/register';export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r),replace:r=>window.fixture.routes.push(r),setParams:p=>Object.assign(window.fixture.params,p)};export const useRouter=()=>router;`,
   'react-native-safe-area-context': `import {View} from 'react-native';export const SafeAreaView=View;const insets={top:0,left:0,right:0,bottom:0};export const useSafeAreaInsets=()=>insets;`,
   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({name,size})=><View aria-hidden="true" data-icon={name} style={{width:size,height:size,flexShrink:0}}/>;Ionicons.glyphMap={};`,
   'react-native-reanimated': `import {useRef} from 'react';import {View,Easing} from 'react-native';export default {View};export const useSharedValue=v=>useRef({value:v}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=v=>v;export const withSpring=v=>v;export const cancelAnimation=()=>{};export {Easing};`,
@@ -34,8 +34,8 @@ const mocks = {
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>100;`,
   '@barangayan/shared': `export {DRIVE_TYPES,DRIVE_TYPE_CONFIG} from '${shared}/constants/drive-types.ts';export {residentDriveRegistrationResultSchema,driveRegistrationSchema,RESIDENT_DRIVE_REGISTRATION_COLUMNS} from '${shared}/schemas/drive-registration.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:window.fixture.needsCompletion});`,
-  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.profileLoading,error:null,refetch:()=>window.renderFixture()});`,
-  '@/lib/supabase': `export const supabase={from:table=>{const filters=[];let columns='';const q={select:c=>{columns=c;return q},eq:(k,v)=>{filters.push([k,v]);return q},is:()=>q,order:()=>q,gte:(k,v)=>{filters.push(['gte',v]);return q},lte:()=>q,single:()=>q,then:(resolve,reject)=>{
+  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.profileLoading,error:null,refetch:()=>window.renderFixture()});export const useProfileData=useProfile;`,
+  '@/lib/supabase': `export const supabase={from:table=>{const filters=[];let columns='';const q={select:c=>{columns=c;return q},eq:(k,v)=>{filters.push([k,v]);return q},is:()=>q,order:()=>q,gte:(k,v)=>{filters.push(['gte',v]);return q},lte:()=>q,single:()=>q,abortSignal:()=>q,then:(resolve,reject)=>{
     const f=window.fixture;f.reads.push({table,filters,columns});let data=null,error=null;
     if(table==='profiles')data={barangay_id:f.profile.barangay_id};
     if(table==='medical_drives'){
@@ -43,7 +43,7 @@ const mocks = {
       else{data=columns==='drive_date, type'?f.drives.map(d=>({drive_date:d.drive_date,type:d.type})):f.drives;error=f.listError?{message:'Synthetic list failure'}:null}
     }
     if(table==='drive_registrations'){data=f.registrations;error=f.regError?{message:'Synthetic registrations failure'}:null}
-    return Promise.resolve({data,error}).then(resolve,reject);
+    const response=f.holdReads?new Promise(yes=>(f.pendingReads??=[]).push(()=>yes({data,error}))):Promise.resolve({data,error});return response.then(resolve,reject);
   }};return q},channel:()=>{const c={on:()=>c,subscribe:()=>{window.fixture.channels.add(c);return c}};return c},removeChannel:c=>window.fixture.channels.delete(c),rpc:async(name,args)=>{const f=window.fixture;f.writes.push({name,args});await new Promise(r=>setTimeout(r,f.delay));return {data:f.response,error:f.rpcError?{message:f.rpcError}:null}}};`,
   './guest-auth-callout-screen': `import React from 'react';import {Text} from 'react-native';export const GuestAuthCalloutScreen=()=> <Text>Log In Required</Text>;`,
   'expo-image': `import React from 'react';import {View} from 'react-native';export const Image=({style})=><View style={style}/>;`,
@@ -108,6 +108,57 @@ try {
       { patch, reset },
     );
   await page.getByText('Synthetic Dental Drive', { exact: true }).waitFor();
+  await page.getByText('Synthetic Dental Drive', { exact: true }).evaluate(node => { window.retainedDriveNode=node; });
+  await page.evaluate(() => { window.fixture.holdReads=true;window.dispatchEvent(new CustomEvent('health-focus',{detail:false})); });
+  await page.waitForTimeout(30);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('health-focus',{detail:true})));
+  await page.getByText('Refreshing medical drives…',{exact:true}).waitFor();
+  assert.equal(await page.getByText('Synthetic Dental Drive',{exact:true}).isVisible(),true);
+  assert.equal(await page.getByText('Synthetic Dental Drive',{exact:true}).evaluate(node=>node===window.retainedDriveNode),true);
+  await page.evaluate(() => {window.fixture.holdReads=false;window.fixture.pendingReads.splice(0).forEach(resolve=>resolve())});
+  await page.getByText('Refreshing medical drives…',{exact:true}).waitFor({state:'detached'});
+  passed.push('actual Health screen keeps warm drive rows visible through deferred focus refresh');
+  await page.screenshot({ path: path.join(out, 'active-drives-light.png') });
+  await render({ drives: [] }, true);
+  const emptyDrives = page.getByText('No medical drives on this date.', { exact: true });
+  await emptyDrives.waitFor();
+  await page.evaluate(()=>{window.fixture.listError=true;window.dispatchEvent(new CustomEvent('health-focus',{detail:false}))});
+  await page.waitForTimeout(30);
+  await page.evaluate(()=>window.dispatchEvent(new CustomEvent('health-focus',{detail:true})));
+  await button('Retry drives').waitFor();
+  assert.equal(await emptyDrives.isVisible(),true,'A failed background refresh keeps the loaded empty state');
+  await render({listError:false});await button('Retry drives').click();await button('Retry drives').waitFor({state:'hidden'});
+  if(await button('Retry calendar').count()){await button('Retry calendar').click();await button('Retry calendar').waitFor({state:'hidden'});}
+  passed.push('loaded empty drives remain visible beside a background refresh error and recover through retry');
+  for (const width of [320, 400]) {
+    await page.setViewportSize({ width, height: 740 });
+    await page.screenshot({ path: path.join(out, `empty-drives-${width}.png`) });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    const calendar = await page.getByRole('button', { name: /Open month and year picker/ })
+      .locator('..').locator('..').boundingBox();
+    assert.ok(calendar.height <= 340, 'full calendar stays compact even in a six-week month');
+    const empty = await emptyDrives.boundingBox();
+    assert.ok(empty.y + empty.height < 640, 'drive summary remains above the reserved bottom navigation area');
+  }
+  await button('Next month').click();
+  await button('Previous month').click();
+  const calendarAnimations = await page.evaluate(() => window.fixture.durations.filter(d => d === 160).length);
+  assert.ok(calendarAnimations > 0);
+  await render({ mode: 'dark', accent: '#ffff00', font: 'georgia' });
+  assert.equal(await page.evaluate(() => window.fixture.durations.filter(d => d === 160).length), calendarAnimations);
+  await page.screenshot({ path: path.join(out, 'empty-drives-dark.png') });
+  await page.evaluate(() => window.fixture.listeners.forEach(fn => fn(true)));
+  await button('Next month').click();
+  await button('Previous month').click();
+  assert.equal(await page.evaluate(() => window.fixture.durations.filter(d => d === 160).length), calendarAnimations);
+  await page.evaluate(() => {
+    const f = window.fixture;
+    f.drives = [f.drive]; f.mode = 'light'; f.accent = '#0F6E5B'; f.font = 'system';
+    window.resetFixture();
+  });
+  await page.setViewportSize({ width: 400, height: 844 });
+  await page.getByText('Synthetic Dental Drive', { exact: true }).waitFor();
+  passed.push('compact full calendar and empty summary; theme changes do not replay motion; reduced motion disables grid animation');
   const reads = await page.evaluate(() => window.fixture.reads.length);
   await button('Hide calendar').click();
   await button('Show calendar').click();
@@ -150,6 +201,17 @@ try {
   });
   await page.getByRole('tab', { name: 'My Registrations', exact: true }).click();
   await page.getByText('DEN-SERVER-0', { exact: true }).waitFor();
+  const retainedRegistration=page.getByRole('button',{name:'View details for Synthetic Dental Drive',exact:true}).first();
+  await retainedRegistration.evaluate(node=>{window.retainedRegistrationNode=node});
+  await page.evaluate(()=>{window.fixture.holdReads=true;window.dispatchEvent(new CustomEvent('health-focus',{detail:false}))});
+  await page.waitForTimeout(30);
+  await page.evaluate(()=>window.dispatchEvent(new CustomEvent('health-focus',{detail:true})));
+  await page.getByText('Refreshing registrations…',{exact:true}).waitFor();
+  assert.equal(await retainedRegistration.evaluate(node=>node===window.retainedRegistrationNode),true);
+  assert.equal(await page.getByRole('button',{name:'View details for Synthetic Dental Drive',exact:true}).count(),4);
+  await page.evaluate(()=>{window.fixture.holdReads=false;window.fixture.pendingReads.splice(0).forEach(resolve=>resolve())});
+  await page.getByText('Refreshing registrations…',{exact:true}).waitFor({state:'detached'});
+  passed.push('actual registrations keep all warm rows and their mounted identity during deferred focus refresh');
   for (const status of ['Pending', 'Confirmed', 'Attended', 'Cancelled']) {
     await button(status).click();
     assert.equal(await page.getByRole('button', { name: /View details for/ }).count(), 1);

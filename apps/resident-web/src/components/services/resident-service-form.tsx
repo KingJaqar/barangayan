@@ -563,7 +563,7 @@ export function ResidentServiceForm({
           {['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind) ? (
             <>
               <p>
-                HOA certification may support or establish residency. The document fee is ₱100.00.
+                HOA certification may support or establish residency. Document fee: {servicePriceLabel(doc)}.
               </p>
               {upload('hoa', 'HOA certification', catalog.requirementRules.hoaRequired)}
               <label className="min-h-12 py-3">
@@ -617,7 +617,7 @@ export function ResidentServiceForm({
                   onChange={(event) => setTotalPages(event.target.value)} className={fieldClass} />
               </label>
               <p>
-                Fee: ₱10.00 × total pages across all copies.
+                Fee: {servicePriceLabel(doc)} across all copies.
               </p>
             </>
           ) : null}

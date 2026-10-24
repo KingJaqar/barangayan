@@ -1,0 +1,233 @@
+{
+  "triage": "destination React commit ≥300ms or dispatch ≥100ms; not release target",
+  "slowObservations": 19,
+  "pairs": [
+    {
+      "pair": "services→drrm",
+      "n": 11,
+      "classification": [
+        "post-dispatch to destination React commit"
+      ]
+    },
+    {
+      "pair": "health→reports",
+      "n": 2,
+      "classification": [
+        "post-dispatch to destination React commit"
+      ]
+    },
+    {
+      "pair": "services→home",
+      "n": 2,
+      "classification": [
+        "post-dispatch to destination React commit"
+      ]
+    },
+    {
+      "pair": "services→health",
+      "n": 2,
+      "classification": [
+        "post-dispatch to destination React commit"
+      ]
+    },
+    {
+      "pair": "services→reports",
+      "n": 2,
+      "classification": [
+        "post-dispatch to destination React commit"
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 3,
+      "handlerToCommitMs": 1129.903301000595,
+      "dispatchMs": 1.0126279965043068,
+      "postDispatchMs": 1128.8906730040908,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 9,
+      "handlerToCommitMs": 1186.9223360046744,
+      "dispatchMs": 0.34488099813461304,
+      "postDispatchMs": 1186.5774550065398,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 15,
+      "handlerToCommitMs": 1103.4961300045252,
+      "dispatchMs": 0.28436000645160675,
+      "postDispatchMs": 1103.2117699980736,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "health",
+      "to": "reports",
+      "id": 18,
+      "handlerToCommitMs": 619.3475559949875,
+      "dispatchMs": 0.28531699627637863,
+      "postDispatchMs": 619.0622389987111,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 21,
+      "handlerToCommitMs": 1161.0009469985962,
+      "dispatchMs": 0.2852329984307289,
+      "postDispatchMs": 1160.7157140001655,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 33,
+      "handlerToCommitMs": 1162.3016580045223,
+      "dispatchMs": 0.2802570015192032,
+      "postDispatchMs": 1162.0214010030031,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 39,
+      "handlerToCommitMs": 1123.428890004754,
+      "dispatchMs": 0.26065200567245483,
+      "postDispatchMs": 1123.1682379990816,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "health",
+      "to": "reports",
+      "id": 42,
+      "handlerToCommitMs": 370.64923100173473,
+      "dispatchMs": 0.5269680023193359,
+      "postDispatchMs": 370.1222629994154,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 45,
+      "handlerToCommitMs": 1156.2778809964657,
+      "dispatchMs": 0.26053600013256073,
+      "postDispatchMs": 1156.0173449963331,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 51,
+      "handlerToCommitMs": 1117.1085280030966,
+      "dispatchMs": 0.5125200003385544,
+      "postDispatchMs": 1116.596008002758,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 57,
+      "handlerToCommitMs": 1149.01470400393,
+      "dispatchMs": 0.29869700223207474,
+      "postDispatchMs": 1148.716007001698,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "home",
+      "id": 63,
+      "handlerToCommitMs": 1152.4764230027795,
+      "dispatchMs": 0.3993080034852028,
+      "postDispatchMs": 1152.0771149992943,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "home",
+      "id": 72,
+      "handlerToCommitMs": 1158.911220997572,
+      "dispatchMs": 0.2970379963517189,
+      "postDispatchMs": 1158.6141830012202,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 74,
+      "handlerToCommitMs": 1136.6047540009022,
+      "dispatchMs": 0.5826969966292381,
+      "postDispatchMs": 1136.022057004273,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "health",
+      "id": 78,
+      "handlerToCommitMs": 1210.1692240014672,
+      "dispatchMs": 0.3413489982485771,
+      "postDispatchMs": 1209.8278750032187,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "reports",
+      "id": 80,
+      "handlerToCommitMs": 1148.2770299986005,
+      "dispatchMs": 0.3153039962053299,
+      "postDispatchMs": 1147.9617260023952,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "drrm",
+      "id": 85,
+      "handlerToCommitMs": 1167.0877989977598,
+      "dispatchMs": 0.31252099573612213,
+      "postDispatchMs": 1166.7752780020237,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "health",
+      "id": 105,
+      "handlerToCommitMs": 1255.4792959988117,
+      "dispatchMs": 0.30629099905490875,
+      "postDispatchMs": 1255.1730049997568,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    },
+    {
+      "from": "services",
+      "to": "reports",
+      "id": 115,
+      "handlerToCommitMs": 1171.833668000996,
+      "dispatchMs": 0.62134899944067,
+      "postDispatchMs": 1171.2123190015554,
+      "observedDominantInterval": "post-dispatch to destination React commit",
+      "nativeInputAndCorrectPresentation": "not measured in historical run"
+    }
+  ]
+}

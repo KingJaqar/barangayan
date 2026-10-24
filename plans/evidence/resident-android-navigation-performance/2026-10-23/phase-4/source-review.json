@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-23T03:32:30.336Z",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/history-resource.ts",
+      "baselineSha256": null,
+      "sha256": "b33b2bb7623232b33976e64b47d8ffd63bb23d3b38fcefcb9d12fda6fa39308e"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/history-resource.test.ts",
+      "baselineSha256": null,
+      "sha256": "a3a4c68fface6ab22953d90acec953404cfd7dfc2acd0769a9b3717424237137"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+      "baselineSha256": null,
+      "sha256": "1371c4a3864c4f2b589452cc5e44c9351fbf9fbd67085b5a05ae06f7fa32b2fb"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-my-incidents.ts",
+      "baselineSha256": "cdb05922643ffb61a149b7973e37bbf4c08977cc251d97192f8281c6df85bcff",
+      "sha256": "f00b58fe0eecb111999ba91cd6c26e5bc599017b65876afa9e083e6e097ecbb8"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "baselineSha256": "bca23cdce6d8d64af1d2d458536a23542fc2df8b82d7b3c3d70824031e3803a0",
+      "sha256": "ff59712bd4343c53fbd6598fc55a4771ae5e4dd3585309130faec258ee1e62df"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/incident-card.tsx",
+      "baselineSha256": "3a93845c2777897444cc83242477a00c8d24748a748585a27a206a8747b734fd",
+      "sha256": "f7f07bdacdaec3cd458eece452cea59aa8080c3f12e31d359599a9a232ae78fb"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "baselineSha256": "635924d1caa87573c9beaf9523390e2276eadd9f650bdea72d234fe55a585494",
+      "sha256": "a719b2a2c4927829434ba7ed901afcdb59b5680ebed28d81dbf13fd8d9cca627"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "baselineSha256": "790fbedf50c06be6ff7c6cc190a53d5da42dc3fafaad73ec226dba3c27a6f28d",
+      "sha256": "f54331e53bf25b68e602569d375e3857dcd89c0541784e17004d60aac114d052"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "baselineSha256": "76685e42299058852e567b4388451fa2e18fed56f94c19cd9f77d909d05078a8",
+      "sha256": "1b2db422ec87ee4c4280e57cb5bb32bb3e5054230e9cf0bdd2d2c737ab0da40a"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-lists-ui.mjs",
+      "baselineSha256": "a369d73b17227cb1917dd3172f1d7b31c2f40ef6ea14979ce20069d7817cfdf3",
+      "sha256": "04f7672819209d1316daf757e16884e9bbc1be20b21afff1c2c7c13bbda364b0"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "baselineSha256": "ded6444df422df3049898bb8425725da2c69e09f68d8f155c094496b6ca17ff1",
+      "sha256": "060159da1f321f6d8f46bba38f74bd548899a1114a812feb9bd918e4e090ad8d"
+    },
+    {
+      "path": "plans/Resident_Android_Bottom_Tab_Navigation_Performance_Investigation_and_Fix_Plan_2026_10_22.md",
+      "baselineSha256": "a951141f7e204ee27da1083126b93a30eeca5e4de19f9a1ce0937e488418638c",
+      "sha256": "49da1d998ee7b59cacd509ff86e6c981558085d7e752c95ef4b60b1c49ccd579"
+    }
+  ],
+  "unexpectedDrift": [],
+  "onlySelectedPlanPhaseChanged": true,
+  "packageLockUnchanged": true
+}

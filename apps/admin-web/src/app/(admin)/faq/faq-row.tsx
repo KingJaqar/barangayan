@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEditDialog } from '@/components/admin/content-edit-dialog';
+import editStyles from '@/components/admin/content-edit-dialog.module.css';
+
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import styles from '@/components/admin/content-workspace.module.css';
@@ -204,81 +207,83 @@ export function FaqRow({ article }: { article: FaqArticle }) {
 
   const meta = FAQ_CATEGORY_META[article.category as keyof typeof FAQ_CATEGORY_META];
 
-  if (isEditing) {
-    return (
+  return (
+    <>
+    <ContentEditDialog open={isEditing} title="Edit FAQ article" context={article.question}
+      description="Update the answer, category, display order, and publication status." busy={submitting} onClose={() => setIsEditing(false)}>
       <form
         onSubmit={handleSave}
-        className={styles.rowEdit}>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="col-span-2 text-sm">
-            <span className="mb-1 block font-medium">Question</span>
-            <input className={inputClass} value={question} onChange={(e) => setQuestion(e.target.value)} required />
-          </label>
+        className={editStyles.form} aria-busy={submitting}>
+        <div className={editStyles.fields} data-edit-scroll>
+        <fieldset disabled={submitting}>
+          <div className={editStyles.grid}>
+            <label className={editStyles.full}>
+              <span className="mb-1 block font-medium">Question</span>
+              <input className={inputClass} value={question} onChange={(e) => setQuestion(e.target.value)} required />
+            </label>
 
-          <label className="col-span-2 text-sm">
-            <span className="mb-1 block font-medium">Answer</span>
-            <textarea
-              className={inputClass}
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              rows={4}
-              required
-            />
-          </label>
+            <label className={editStyles.full}>
+              <span className="mb-1 block font-medium">Answer</span>
+              <textarea
+                className={inputClass}
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                rows={4}
+                required
+              />
+            </label>
 
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Category</span>
-            <AdminSelect kind="faq" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
-              {Object.entries(FAQ_CATEGORY_META).map(([key, val]) => (
-                <option key={key} value={key}>{val.label}</option>
-              ))}
-            </AdminSelect>
-          </label>
+            <h3 className={editStyles.groupTitle}>Publication</h3>
+            <label className="text-sm">
+              <span className="mb-1 block font-medium">Category</span>
+              <AdminSelect kind="faq" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+                {Object.entries(FAQ_CATEGORY_META).map(([key, val]) => (
+                  <option key={key} value={key}>{val.label}</option>
+                ))}
+              </AdminSelect>
+            </label>
 
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Sort Order</span>
-            <input
-              className={inputClass}
-              type="number"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            />
-          </label>
+            <label className="text-sm">
+              <span className="mb-1 block font-medium">Sort Order</span>
+              <input
+                className={inputClass}
+                type="number"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              />
+            </label>
 
-          <label className="col-span-2 flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={isActive}
-              onChange={(e) => setIsActive(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Published</span>
-          </label>
+            <label className={`${editStyles.full} flex items-center gap-2 text-sm`}>
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="h-4 w-4 rounded border-zinc-300"
+              />
+              <span className="font-medium">Published</span>
+            </label>
 
-          {error ? <p className="col-span-2 text-sm text-red-600">{error}</p> : null}
+            {error ? <p role="alert" className={`${editStyles.full} ${editStyles.error}`}>{error}</p> : null}
 
-          <div className="col-span-2 flex items-center gap-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-              aria-busy={submitting}>
-              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              disabled={submitting}
-              className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-              Cancel
-            </button>
           </div>
+        </fieldset>
+        </div>
+        <div className={editStyles.actions}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            disabled={submitting}>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            aria-busy={submitting}>
+            <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          </button>
         </div>
       </form>
-    );
-  }
-
-  return (
+    </ContentEditDialog>
     <div className={styles.row}>
       <div className={styles.rowHeader}>
         <div className={styles.rowMain}>
@@ -328,7 +333,7 @@ export function FaqRow({ article }: { article: FaqArticle }) {
           ) : (
             <>
               <button
-                onClick={startEdit}
+                onClick={startEdit} aria-haspopup="dialog"
                 title="Edit"
                 className={styles.primaryAction}>
                 Edit
@@ -349,5 +354,6 @@ export function FaqRow({ article }: { article: FaqArticle }) {
         <p className="line-clamp-2">{article.answer}</p>
       </div>
     </div>
+    </>
   );
 }

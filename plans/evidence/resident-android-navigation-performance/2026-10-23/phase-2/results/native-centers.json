@@ -1,0 +1,15 @@
+{
+  "steps": [
+    "Centers",
+    "select available center",
+    "clear selection",
+    "reset and zoom",
+    "return after two tab round trips"
+  ],
+  "selected": true,
+  "routeGuidance": true,
+  "presses": 5,
+  "loads": 1,
+  "dropped": 0,
+  "issues": []
+}

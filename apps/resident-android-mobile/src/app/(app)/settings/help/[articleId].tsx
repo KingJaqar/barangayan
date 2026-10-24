@@ -22,7 +22,7 @@ export default function HelpArticleScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    if (!articleId || !barangayId) {
+    if (!articleId) {
       setArticle(null);
       setError(null);
       setIsLoading(false);
@@ -31,9 +31,11 @@ export default function HelpArticleScreen() {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
-    supabase.from('faq_articles').select('*')
-      .eq('id', articleId).eq('barangay_id', barangayId)
-      .eq('is_active', true).is('deleted_at', null).single()
+    let request = supabase.from('faq_articles').select('*')
+      .eq('id', articleId).eq('is_active', true).is('deleted_at', null);
+    // Without a barangay (guests), RLS scopes the read, matching the Help Center list.
+    if (barangayId) request = request.eq('barangay_id', barangayId);
+    request.single()
       .then(({ data, error: qErr }) => {
         if (cancelled) return;
         if (qErr) setError(qErr.message);

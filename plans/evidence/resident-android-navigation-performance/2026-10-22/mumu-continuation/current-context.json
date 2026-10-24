@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-22T14:45:03.255Z",
+  "ownership": "Concurrent/user source; no application code changed during MuMu continuation",
+  "drift": [
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs"
+  ],
+  "packet": "repomix output files/resident-nav-mumu-20261022-current.xml",
+  "packetSha256": "dee13ad5c1619ef777f718f50a1bad201822cd3392fb4d1f2fcfb532cf06818c",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "sha256": "c4d7e05ad24cf9b91de59e81ab624cf28a551d0e344ca67e0762ef7ae9ba6ee7"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "8952faf0351b40c4ce9187ccd7e103e31d8ba4770216a46814057b1ceacce22b"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "name": "current-reader-1.txt",
+      "start": 0,
+      "end": 5723
+    }
+  ]
+}

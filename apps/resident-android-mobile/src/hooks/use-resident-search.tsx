@@ -1,21 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Keyboard } from 'react-native';
 import { usePathname } from 'expo-router';
 
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
-import { normalizeSearchQuery, queryResidentSearch, type SearchGroup } from '@/lib/resident-search';
+import { isSearchableQuery, normalizeSearchQuery, queryResidentSearch, SEARCH_DEADLINE_MS, type SearchGroup } from '@/lib/resident-search';
 import { createSearchHistoryStore } from '@/lib/search-history';
+import { useSearchSession } from '@/hooks/use-search-session';
 
 const historyStore = createSearchHistoryStore(AsyncStorage);
-type SearchDraft = {
-  query: string; setQuery: (query: string) => void; history: string[]; historyError: string | null;
-  rememberSearch: (query: string) => void; selectSearch: (query: string) => void;
-  removeSearch: (query: string) => void; clearHistory: () => void;
+type SearchDraft = ReturnType<typeof useSearchSession> & {
+  history: string[]; historyError: 'load' | 'save' | null; reloadHistory: () => void;
+  rememberSearch: (query: string) => void; removeSearch: (query: string) => void; clearHistory: () => void;
 };
-const SearchContext = createContext<SearchDraft>({ query: '', setQuery: () => {}, history: [], historyError: null,
-  rememberSearch: () => {}, selectSearch: () => {}, removeSearch: () => {}, clearHistory: () => {} });
+const SearchContext = createContext<SearchDraft>({ query: '', setQuery: () => {}, history: [], historyError: null, reloadHistory: () => {},
+  submittedQuery: null, submission: 0, origin: '/home', openSearch: () => {}, submitSearch: () => false, editSearch: () => {}, backFromSearch: () => {},
+  rememberSearch: () => {}, removeSearch: () => {}, clearHistory: () => {} });
 
 /** Lives above navigation: the header input and Search screen share one draft. */
 export function ResidentSearchProvider({ children }: { children: ReactNode }) {
@@ -25,42 +27,48 @@ export function ResidentSearchProvider({ children }: { children: ReactNode }) {
 }
 
 function AccountSearchProvider({ userId, children }: { userId: string | null; children: ReactNode }) {
-  const [query, setQuery] = useState('');
+  const { profile } = useProfile();
+  const searchSession = useSearchSession(JSON.stringify([userId, profile?.barangay_id ?? null]));
   const [history, setHistory] = useState<string[]>([]);
-  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyError, setHistoryError] = useState<SearchDraft['historyError']>(null);
   const revision = useRef(0);
   const mounted = useRef(true);
+  /** Only the latest load or edit may publish; a failed edit re-reads what is actually saved. */
+  const sync = useCallback((account: string, operation: Promise<string[]>, failure: 'load' | 'save') => {
+    const ticket = ++revision.current;
+    const current = () => mounted.current && revision.current === ticket;
+    void operation.then(values => {
+      if (!current()) return;
+      setHistory(values);
+      setHistoryError(null);
+    }).catch(() => {
+      if (!current()) return;
+      setHistoryError(failure);
+      if (failure === 'save') void historyStore.load(account).then(values => { if (current()) setHistory(values); }, () => {});
+    });
+  }, []);
   useEffect(() => {
     mounted.current = true;
-    const ticket = ++revision.current;
-    if (userId) void historyStore.load(userId).then(values => {
-      if (mounted.current && revision.current === ticket) setHistory(values);
-    }).catch(() => {
-      if (mounted.current && revision.current === ticket) setHistoryError('Recent searches could not be loaded.');
-    });
+    if (userId) sync(userId, historyStore.load(userId), 'load');
     return () => { mounted.current = false; };
-  }, [userId]);
+  }, [userId, sync]);
   const value = useMemo<SearchDraft>(() => {
-    function update(operation: Promise<string[]>) {
-      const ticket = ++revision.current;
-      void operation.then(values => {
-        if (!mounted.current || revision.current !== ticket) return;
-        setHistory(values);
-        setHistoryError(null);
-      }).catch(() => {
-        if (mounted.current && revision.current === ticket) setHistoryError('Recent searches could not be saved. Please try again.');
-      });
-    }
     const rememberSearch = (input: string) => {
-      const normalized = normalizeSearchQuery(input);
-      if (userId && /[\p{L}\p{N}]/u.test(normalized)) update(historyStore.remember(userId, normalized));
+      if (userId && isSearchableQuery(input)) sync(userId, historyStore.remember(userId, normalizeSearchQuery(input)), 'save');
     };
-    return { query, setQuery, history, historyError, rememberSearch,
-      selectSearch: (input: string) => { setQuery(normalizeSearchQuery(input)); rememberSearch(input); },
-      removeSearch: (input: string) => { if (userId) update(historyStore.remove(userId, input)); },
-      clearHistory: () => { if (userId) update(historyStore.clear(userId)); },
+    return { ...searchSession, history, historyError, rememberSearch,
+      // Keyboard, button, recent and suggestion submissions all take this one path.
+      submitSearch: (input: string) => {
+        if (!searchSession.submitSearch(input)) return false;
+        rememberSearch(input);
+        Keyboard.dismiss();
+        return true;
+      },
+      reloadHistory: () => { if (userId) sync(userId, historyStore.load(userId), 'load'); },
+      removeSearch: (input: string) => { if (userId) sync(userId, historyStore.remove(userId, input), 'save'); },
+      clearHistory: () => { if (userId) sync(userId, historyStore.clear(userId), 'save'); },
     };
-  }, [query, history, historyError, userId]);
+  }, [searchSession, history, historyError, userId, sync]);
   return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
 }
 
@@ -74,7 +82,7 @@ export function useResidentSearch() {
   const userId = session?.user.id ?? null;
   const barangayId = profile?.barangay_id ?? null;
   const normalized = normalizeSearchQuery(query);
-  const enabled = pathname === '/search' && /[\p{L}\p{N}]/u.test(normalized);
+  const enabled = pathname === '/search' && isSearchableQuery(normalized);
   const [retry, setRetry] = useState(0);
   const key = JSON.stringify([normalized, userId, barangayId, enabled, retry, isLoading, profileError]);
   // Revisiting a query and reopening search are fresh activations.
@@ -92,7 +100,7 @@ export function useResidentSearch() {
     const timer = setTimeout(async () => {
       try {
         if (userId && (profileError || !barangayId)) throw new Error('Profile unavailable');
-        timeout = setTimeout(() => controller.abort(), 12000);
+        timeout = setTimeout(() => controller.abort(), SEARCH_DEADLINE_MS);
         const groups = await queryResidentSearch(supabase, { userId, barangayId }, normalized, controller.signal);
         if (current) setSettled({ key: identity, groups, error: null });
       } catch {

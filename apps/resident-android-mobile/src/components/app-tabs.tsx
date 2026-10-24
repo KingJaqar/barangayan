@@ -15,6 +15,8 @@ import { useUnreadCounts } from '@/hooks/use-unread-counts';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { NavigationDiagnosticScreen } from '@/components/navigation-diagnostic-screen';
+import { beginDiagnosticNavigation, diagnosticRoute, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from '@/lib/navigation-diagnostics';
 
 const TABS = [
   { name: 'home', label: 'Home', icon: 'home' },
@@ -30,6 +32,11 @@ export default function ResidentTabs() {
   return <Tabs
     initialRouteName="home"
     backBehavior="history"
+    screenLayout={navigationDiagnosticsAvailable ? ({ route, children }) => <NavigationDiagnosticScreen name={route.name}>{children}</NavigationDiagnosticScreen> : undefined}
+    screenListeners={navigationDiagnosticsAvailable ? ({ route }) => ({
+      focus: () => recordNavigationDiagnostic('focus', diagnosticRoute(route.name)),
+      blur: () => recordNavigationDiagnostic('blur', diagnosticRoute(route.name)),
+    }) : undefined}
     tabBar={props => <FloatingTabBar {...props} />}
     screenOptions={{
       headerShown: false,
@@ -43,6 +50,7 @@ export default function ResidentTabs() {
     <Tabs.Screen name="settings" options={{ href: null }} />
     <Tabs.Screen name="announcements" options={{ href: null }} />
     <Tabs.Screen name="search" options={{ href: null }} />
+    <Tabs.Screen name="explore" options={{ href: null }} />
   </Tabs>;
 }
 function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
@@ -52,13 +60,16 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const pathname = usePathname();
   const { activeReportsCount, resolvedUnreadCount } = useUnreadCounts();
   const { setBarHeight, barHeight, mapNavHidden, mapNavProgress } = useFloatingTabLayout();
-  const mapRoute = pathname === '/drrm' || pathname === '/home/emergency-info';
+  const mapRoute = pathname === '/maps' || pathname === '/drrm' || pathname === '/home/emergency-info';
   const hidden = mapRoute && mapNavHidden;
   const barMotion = useAnimatedStyle(() => ({ transform: [{ translateY: mapRoute ? (mapNavProgress?.value ?? 0) * (barHeight + Math.max(insets.bottom, 12) + 8) : 0 }] }));
   const reducedMotion = useResidentReducedMotion(true);
   const [width, setWidth] = useState(0);
   const selectedRoute = state.routes[state.index];
   const selected = TABS.findIndex(tab => tab.name === selectedRoute?.name);
+  useEffect(() => {
+    if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('selected', diagnosticRoute(selectedRoute?.name));
+  }, [selectedRoute?.name]);
   const position = useSharedValue(Math.max(0, selected));
   const opacity = useSharedValue(selected >= 0 ? 1 : 0);
   useEffect(() => {
@@ -98,8 +109,11 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
         return <Pressable key={tab.name} accessibilityRole="tab" accessibilityLabel={label}
           accessibilityState={{ selected: active }} style={styles.tab}
           onPress={() => {
+            const diagnosticId = navigationDiagnosticsAvailable ? beginDiagnosticNavigation(tab.name) : undefined;
             const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+            if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('listeners-end', tab.name, {}, diagnosticId);
             if (!event.defaultPrevented && !active) navigation.navigate(route.name);
+            if (navigationDiagnosticsAvailable) recordNavigationDiagnostic(event.defaultPrevented ? 'prevented' : 'dispatch-end', tab.name, {}, diagnosticId);
           }}
           onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}>
           <TabContent tab={tab} active={active} reducedMotion={reducedMotion} badges={tab.name === 'reports' ? (

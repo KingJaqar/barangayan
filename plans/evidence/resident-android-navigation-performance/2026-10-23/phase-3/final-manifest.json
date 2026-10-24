@@ -1,0 +1,144 @@
+{
+  "packet": "repomix output files/resident-nav-phase3-20261023-final.xml",
+  "sha256": "d6fefd2af1140a66826e73ee670e3c0767c2b0b64cc576471c3ae009a2e633ba",
+  "selected": [
+    "apps/resident-android-mobile/src/app/_layout.tsx",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/src/components/offline-route-card.tsx",
+    "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+    "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+    "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+    "apps/resident-android-mobile/src/hooks/use-local-route.ts",
+    "apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+    "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+    "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+    "apps/resident-android-mobile/src/hooks/use-app-foreground.ts",
+    "apps/resident-android-mobile/src/hooks/use-visible-clock.ts",
+    "apps/resident-android-mobile/src/lib/agency-sla-snapshot.ts",
+    "apps/resident-android-mobile/src/lib/agency-sla-snapshot.test.ts",
+    "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+    "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+    "apps/resident-android-mobile/tests/root-navigation-isolation.mjs"
+  ],
+  "args": [
+    "C:/Users/User/AppData/Local/npm-cache/_npx/e34444800c30a7c5/node_modules/repomix/bin/repomix.cjs",
+    "--include",
+    "apps/resident-android-mobile/src/app/_layout.tsx,apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx,apps/resident-android-mobile/src/components/offline-route-card.tsx,apps/resident-android-mobile/src/components/services/agency-sla-status.tsx,apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts,apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx,apps/resident-android-mobile/src/hooks/use-local-route.ts,apps/resident-android-mobile/src/hooks/use-resident-route.ts,apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts,apps/resident-android-mobile/tests/tracking-payment-ui.mjs,apps/resident-android-mobile/src/hooks/use-app-foreground.ts,apps/resident-android-mobile/src/hooks/use-visible-clock.ts,apps/resident-android-mobile/src/lib/agency-sla-snapshot.ts,apps/resident-android-mobile/src/lib/agency-sla-snapshot.test.ts,apps/resident-android-mobile/src/lib/floating-tab-inset.ts,apps/resident-android-mobile/tests/hidden-work-ownership.mjs,apps/resident-android-mobile/tests/root-navigation-isolation.mjs",
+    "--ignore",
+    "**/.env*,**/node_modules/**,**/repomix-output.xml,**/*.mp4,**/*.png,**/*.jpg,**/tmp/**,**/repomix output files/**",
+    "--style",
+    "xml",
+    "--compress",
+    "--output",
+    "repomix output files/resident-nav-phase3-20261023-final.xml"
+  ],
+  "exit": 0,
+  "omissions": [],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-app-foreground.ts",
+      "sha256": "6f02f057e97b7a9b5cc0862200a20db2f1202c6004249d62539e8d6ffe2dc689",
+      "chars": 326
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-visible-clock.ts",
+      "sha256": "67cc7a1f3bf747386bbd2b01d3b81cb838fe4158eff7da874bb43c933de06531",
+      "chars": 324
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/agency-sla-snapshot.test.ts",
+      "sha256": "d370920cc66558a0699281fc36b72a8a3afd4479448095a42e80326683610640",
+      "chars": 111
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/agency-sla-snapshot.ts",
+      "sha256": "6a484e7d1006b8bd3157ac735fed90844f8aeb4b740fa560c22cbc6f1d9349a9",
+      "chars": 545
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+      "sha256": "b45400501b607555a7face3e4f007c01c97aaf37092a72dad8c4d8583567f649",
+      "chars": 324
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/hidden-work-ownership.mjs",
+      "sha256": "074ee9a3a7ee6ebaa317ee240b4c18b6f8c43fd963e3134bb13543f978d933fb",
+      "chars": 469
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/root-navigation-isolation.mjs",
+      "sha256": "5d69c9a8665f190c1d88a58a2b7ae72106074f9a529a87fd719647a337c4c0ab",
+      "chars": 140
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "sha256": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d",
+      "chars": 975
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-local-route.ts",
+      "sha256": "1eccfd061f623417d19e248607d604dd0c259192ab924b5f3a887235e354a56b",
+      "chars": 2040
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+      "sha256": "794e2cc2027ea47a0b827578d4f14bbc416c4964343e7fc95c3ed3356c54232a",
+      "chars": 3397
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+      "sha256": "1172de573189858c3b3b4a609d6bb04af7e586d57564410a83bf85a6ea1e7032",
+      "chars": 449
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "sha256": "62f059ae81041f5ba1156d46ef7034eaa37d86dce047fbaa4a35f160e3246f16",
+      "chars": 1247
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "sha256": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b",
+      "chars": 364
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+      "sha256": "950be5b6de08137447bf55350038a5c5857c10f2536992dcb80b98e3dedad2c6",
+      "chars": 253
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "01aca3869382190d67cd0ddfacce9fdf8603a4a5a5ee8dca3d8991ba5be20211",
+      "chars": 5031
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/offline-route-card.tsx",
+      "sha256": "e2bda51304d4dc8ba814672bed107bede76b4425888c8558bd58b07a70fc8ee7",
+      "chars": 2000
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "sha256": "f3a69052ce3e0fc233646cb979186d9e5c16d53f833c965d05d477abb632f8c4",
+      "chars": 5097
+    }
+  ],
+  "chunks": [
+    {
+      "name": "final-reader-1.txt",
+      "start": 0,
+      "end": 11000,
+      "chars": 11000
+    },
+    {
+      "name": "final-reader-2.txt",
+      "start": 11000,
+      "end": 22000,
+      "chars": 11000
+    },
+    {
+      "name": "final-reader-3.txt",
+      "start": 22000,
+      "end": 25487,
+      "chars": 3487
+    }
+  ]
+}

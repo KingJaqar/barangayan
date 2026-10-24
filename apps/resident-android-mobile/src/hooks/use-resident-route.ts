@@ -8,7 +8,6 @@ import {
 import type { CenterRouteSummary } from '@barangayan/shared/src/lib/evacuation-routing';
 import type { RouteServiceProvenance } from '@barangayan/shared/src/lib/evacuation-route-service';
 import { useEffect, useMemo, useState } from 'react';
-import { AppState } from 'react-native';
 
 import { useLocalRoute, type LocalRouteState } from '@/hooks/use-local-route';
 import {
@@ -57,6 +56,8 @@ function sameRoute(a: ConnectedRouteOutcome, b: ConnectedRouteOutcome): boolean 
  * local mode, and connected mode is restored only by a later successful request (section 4).
  */
 export function useResidentRoute(options: {
+  /** The owning Centers screen is focused and the app is foregrounded. */
+  active: boolean;
   pack: LoadedPack | null;
   conditions: StoredConditions | null;
   avoidance: readonly LocalAvoidanceRecord[];
@@ -66,8 +67,8 @@ export function useResidentRoute(options: {
   /** NetInfo says the internet is unreachable; no request is made (mode stays local). */
   internetUnreachable: boolean;
 }): ResidentRouteState {
-  const { pack, conditions, avoidance, origin, centerId, originEdgeId, internetUnreachable } = options;
-  const local = useLocalRoute({ pack, conditions, avoidance, origin, centerId, originEdgeId });
+  const { active, pack, conditions, avoidance, origin, centerId, originEdgeId, internetUnreachable } = options;
+  const local = useLocalRoute({ active, pack, conditions, avoidance, origin, centerId, originEdgeId });
   const avoid = useMemo(() => avoidedEdgeIds(avoidance), [avoidance]);
   const [entry, setEntry] = useState<ConnectedEntry | null>(null);
 
@@ -79,11 +80,11 @@ export function useResidentRoute(options: {
   const revision = origin?.revision;
   const canRequest = graphVersion !== null && lat !== undefined && lng !== undefined && revision !== undefined && !internetUnreachable && SERVICE_URL.startsWith('http');
   const key = canRequest
-    ? JSON.stringify([graphVersion, revision, centerId, originEdgeId, avoid, conditionsRevision])
+    ? JSON.stringify([graphVersion, revision, lat, lng, accuracyMeters, centerId, originEdgeId, avoid, conditionsRevision])
     : null;
 
   useEffect(() => {
-    if (key === null || graphVersion === null || lat === undefined || lng === undefined || revision === undefined) return;
+    if (!active || key === null || graphVersion === null || lat === undefined || lng === undefined || revision === undefined) return;
     const requestKey: string = key;
     const requestGraphVersion: string = graphVersion;
     const requestOrigin = { lat, lng, accuracyMeters, revision };
@@ -97,10 +98,6 @@ export function useResidentRoute(options: {
     async function run() {
       timer = null;
       if (controller.signal.aborted) return;
-      if (AppState.currentState !== 'active') {
-        schedule(REFRESH_INTERVAL_MS);
-        return;
-      }
       const outcome = await requestConnectedRoute({
         url: SERVICE_URL,
         anonKey: ANON_KEY,
@@ -127,7 +124,7 @@ export function useResidentRoute(options: {
       controller.abort();
       if (timer !== null) clearTimeout(timer);
     };
-  }, [key, graphVersion, lat, lng, accuracyMeters, revision, centerId, originEdgeId, avoid, conditionsRevision]);
+  }, [active, key, graphVersion, lat, lng, accuracyMeters, revision, centerId, originEdgeId, avoid, conditionsRevision]);
 
   const current = key !== null && entry !== null && entry.key === key ? entry.outcome : null;
   const connected = current !== null && current.kind === 'route' ? current : null;
@@ -146,7 +143,7 @@ export function useResidentRoute(options: {
     route,
     mode: connected !== null ? 'connected' : 'local',
     connectedFailure: current !== null && current.kind === 'failure' ? current.failure : null,
-    connectedPending: key !== null && current === null,
+    connectedPending: active && key !== null && current === null,
     service: connected !== null ? connected.service : null,
     ranking,
   };

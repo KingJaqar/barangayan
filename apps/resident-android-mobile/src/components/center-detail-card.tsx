@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { centerOccupancy } from '@/lib/center-presentation';
 import { useTheme } from '@/hooks/use-theme';
+import { Spacing } from '@/constants/theme';
 
 export interface CenterDetailCardProps {
   name: string;
@@ -15,6 +17,7 @@ export interface CenterDetailCardProps {
   /** True when metrics come from the selected walking route. */
   isRoadRoute?: boolean;
   onClose?: () => void;
+  compact?: boolean;
 }
 
 export function CenterDetailCard({
@@ -26,8 +29,11 @@ export function CenterDetailCard({
   capacity,
   isRoadRoute,
   onClose,
+  compact = false,
 }: CenterDetailCardProps) {
   const theme = useTheme();
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const showDetails = !compact || detailsExpanded;
 
   const occupancy = centerOccupancy(currentOccupancy, capacity);
   const barColor = theme.resident[occupancy.tone];
@@ -37,29 +43,39 @@ export function CenterDetailCard({
   const hasRoute = distanceKm !== undefined && Number.isFinite(distanceKm) && distanceKm >= 0 && walkingTimeMins !== undefined && walkingTimeMins > 0;
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
-      <View style={styles.headerRow}>
-        <View style={styles.titleColumn}>
-          <ThemedText type="smallBold" style={[styles.name, { color: theme.text }]}>
+    <View style={[styles.card, compact && styles.compactCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
+      <View style={[styles.headerRow, compact && styles.compactHeader]}>
+        <View style={[styles.titleColumn, compact && styles.compactCopy]}>
+          <ThemedText type="smallBold" style={[!compact && styles.name, { color: theme.resident.text }]}>
             {name}
           </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary" style={styles.address}>
+          <ThemedText type="small" themeColor="textSecondary" style={!compact && styles.address}>
             {address}
           </ThemedText>
+          {compact ? <View style={styles.summaryRow}>
+            <Ionicons name="walk-outline" size={16} color={theme.resident.muted} />
+            <ThemedText type="small" style={styles.summaryText}>{hasRoute ? `${walkingTimeMins} min · ${distanceKm?.toFixed(1)} km${isRoadRoute ? '' : ' (est.)'}` : 'Walking distance unavailable'}</ThemedText>
+          </View> : null}
         </View>
+        <View style={compact && styles.compactActions}>
         {onClose ? (
           <Pressable
             accessibilityRole="button"
             onPress={onClose}
             hitSlop={10}
             accessibilityLabel="Close center details"
-            style={[styles.closeButton, { backgroundColor: theme.resident.surface }]}>
+            style={[styles.closeButton, compact && styles.compactClose, { backgroundColor: theme.resident.surface }]}>
             <Ionicons name="close" size={16} color={theme.textSecondary} />
           </Pressable>
         ) : null}
+        {compact ? <Pressable accessibilityRole="button" accessibilityLabel={detailsExpanded ? 'Hide center details' : 'Show center details'} accessibilityState={{ expanded: detailsExpanded }} onPress={() => setDetailsExpanded(value => !value)} style={styles.detailsToggle}>
+          <ThemedText type="smallBold" style={{ color: theme.resident.accentText }}>{detailsExpanded ? 'Less' : 'Details'}</ThemedText>
+          <Ionicons name={detailsExpanded ? 'chevron-up' : 'chevron-down'} size={16} color={theme.resident.accentText} />
+        </Pressable> : null}
+        </View>
       </View>
 
-      <View style={styles.metaRow}>
+      {showDetails ? <View style={styles.metaRow}>
         <View style={[styles.badge, { backgroundColor: badgeBg }]}>
           <ThemedText type="smallBold" style={[styles.badgeText, { color: barColor }]}>
             {displayOccupancy}
@@ -70,23 +86,31 @@ export function CenterDetailCard({
             {capacityText}
           </ThemedText>
         ) : null}
-        <View style={styles.metaSpacer} />
+        {!compact ? <><View style={styles.metaSpacer} />
         <Ionicons name="walk-outline" size={14} color={theme.textSecondary} />
         <ThemedText type="smallBold" style={[styles.metaText, { color: theme.text }]}>
           {hasRoute
             ? `${walkingTimeMins} min · ${distanceKm?.toFixed(1)} km${isRoadRoute ? '' : ' (est.)'}`
             : 'Walking distance unavailable'}
-        </ThemedText>
-      </View>
+        </ThemedText></> : null}
+      </View> : null}
 
-      <View style={[styles.track, { backgroundColor: theme.resident.surface }]}>
+      {showDetails ? <View style={[styles.track, { backgroundColor: theme.resident.surface }]}>
         <View style={[styles.fill, { backgroundColor: barColor, width: `${occupancy.fill}%` }]} />
-      </View>
+      </View> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  compactCard: { paddingHorizontal: Spacing.two, paddingVertical: Spacing.one, gap: 0 },
+  compactHeader: { alignItems: 'center', gap: Spacing.one },
+  compactCopy: { gap: Spacing.half, justifyContent: 'center', minWidth: 0 },
+  compactActions: { alignItems: 'flex-end', flexShrink: 0 },
+  compactClose: { width: 44, height: 44, borderRadius: 22 },
+  summaryRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
+  summaryText: { flex: 1, minWidth: 0 },
+  detailsToggle: { minHeight: 44, minWidth: 44, flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
   card: {
     borderRadius: 16,
     borderWidth: 1,

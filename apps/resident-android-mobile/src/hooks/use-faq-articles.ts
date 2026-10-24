@@ -16,22 +16,15 @@ export function useFaqArticles(barangayId: string | null): {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Guests have no barangay: read unscoped and let RLS decide (anon policy from 0088,
+  // incomplete-account browsing from 0103), as resident-web does.
   const doFetch = useCallback(() => {
-    if (!barangayId) {
-      setArticles([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
-    supabase
-      .from('faq_articles')
-      .select('*')
-      .eq('barangay_id', barangayId)
-      .eq('is_active', true)
-      .is('deleted_at', null)
+    let query = supabase.from('faq_articles').select('*').eq('is_active', true).is('deleted_at', null);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+    query
       .order('sort_order', { ascending: true })
       .then(({ data, error: qErr }) => {
         if (qErr) {
@@ -47,16 +40,18 @@ export function useFaqArticles(barangayId: string | null): {
     let cancelled = false;
 
     doFetch();
+    // Guest reads span barangays, so there is no single-barangay change feed to follow.
+    if (!barangayId) return;
 
     const channel = supabase
-      .channel(uniqueChannelName(`faq-articles:${barangayId ?? 'all'}`))
+      .channel(uniqueChannelName(`faq-articles:${barangayId}`))
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'faq_articles',
-          filter: `barangay_id=eq.${barangayId ?? ''}`,
+          filter: `barangay_id=eq.${barangayId}`,
         },
         () => {
           if (!cancelled) doFetch();

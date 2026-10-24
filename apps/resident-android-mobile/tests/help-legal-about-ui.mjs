@@ -36,7 +36,7 @@ const adapters = {
   '@barangayan/shared': `export {FAQ_CATEGORIES,FAQ_CATEGORY_META} from '${shared}/schemas/faq';export {SITE_CONTENT_SECTION_META} from '${shared}/schemas/site-content';export {ACCENT_COLORS} from '${shared}/constants/theme-colors';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts';`,
   '@/lib/supabase': `export const supabase={from:table=>{
     const call={table,ops:[]};window.fixture.reads.push(call);const q={};
-    for(const method of ['select','eq','is','order','single','maybeSingle'])q[method]=(...args)=>{call.ops.push([method,...args]);return q};
+    for(const method of ['select','eq','is','order','limit','single','maybeSingle'])q[method]=(...args)=>{call.ops.push([method,...args]);return q};
     q.then=resolve=>new Promise(r=>setTimeout(r,window.fixture.delay)).then(()=>{
       const error=window.fixture.errors[table];let data=window.fixture.rows[table]??[];
       for(const [method,column,value] of call.ops)if(method==='eq'||method==='is')data=data.filter(row=>row[column]===value);

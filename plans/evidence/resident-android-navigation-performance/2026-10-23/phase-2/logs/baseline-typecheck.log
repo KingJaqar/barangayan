@@ -1,0 +1,17 @@
+C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:123693
+      throw e;
+      ^
+
+Error: Debug Failure. False expression: jsx should have errors when reporting errors
+    at getSignatureApplicabilityError (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:76198:15)
+    at resolveCall (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:76646:25)
+    at resolveJsxOpeningLikeElement (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:77443:12)
+    at resolveSignature (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:77485:16)
+    at getResolvedSignature (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:77502:20)
+    at checkJsxOpeningLikeElementOrOpeningFragment (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:74804:17)
+    at checkJsxSelfClosingElementDeferred (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:74305:5)
+    at checkDeferredNode (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:86947:9)
+    at Set.forEach (<anonymous>)
+    at checkDeferredNodes (C:\Users\User\barangayan\node_modules\typescript\lib\_tsc.js:86912:27)
+
+Node.js v24.13.1

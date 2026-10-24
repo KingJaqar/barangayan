@@ -1,0 +1,12 @@
+{
+  "stage": "baseline",
+  "at": "2026-10-22T23:50:23.061Z",
+  "counts": {
+    "SET_PRESENTATION": 6
+  },
+  "loads": 0,
+  "ready": 0,
+  "presses": 6,
+  "dropped": 0,
+  "issues": []
+}

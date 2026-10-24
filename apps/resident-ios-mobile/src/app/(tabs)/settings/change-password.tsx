@@ -1,10 +1,11 @@
 import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from '@barangayan/shared';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuthFlow } from '../../../auth/auth-flow';
 import type { ReauthenticationState } from '../../../auth/fresh-authentication';
 import { passwordMode } from '../../../auth/setup-route';
-import { authRequests } from '../../../auth/request-gate';
+import { authRequests, Ownership, WriteBoundary } from '../../../auth/request-gate';
+import { classifyFailure } from '../../../data/outcome';
 import { RequireResident } from '../../../components/require-resident';
 import { Action, Body, Card, Field, Notice, Screen, useDiscardGuard } from '../../../components/ui';
 import { emptyPasswordDraft, PasswordStep, type PasswordDraft } from '../../../features/auth/password-step';
@@ -47,15 +48,18 @@ function ChangeOrManage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
+  const ownership = useRef(new Ownership());
+  useEffect(() => { const owner = ownership.current; return () => owner.invalidate(); }, []);
   useDiscardGuard(!busy && !success && !!(currentPassword || newPassword || confirmPassword));
 
   function recover() {
-    if (busy) return;
+    if (busy || authRequests.busy) return;
     void setRecovery(true).then(() => router.replace('/auth/recovery')).catch(() => setMessage('Unable to start recovery. Please try again.'));
   }
 
   async function submit() {
-    if (busy || authRequests.busy) return;
+    if (busy || uncertain || authRequests.busy) return;
     const parsed = changePasswordSchema.safeParse({ currentPassword, newPassword, confirmPassword });
     if (!parsed.success) {
       setErrors(Object.fromEntries(Object.entries(parsed.error.flatten().fieldErrors).map(([key, values]) => [key, values?.[0]])));
@@ -65,28 +69,42 @@ function ChangeOrManage() {
     const email = session?.user.email;
     if (!email) { setMessage('Your account has no sign-in email on file, so the current password cannot be checked. Contact your barangay for help.'); return; }
     setBusy(true); setMessage(''); setErrors({});
+    const owns = ownership.current.ticket();
+    const write = new WriteBoundary();
     try {
       // updateUser does not check the old password: re-authenticate first so a left-open
       // session cannot silently take over the account.
-      const { data: reauth, error: reauthError } = await client.auth.signInWithPassword({ email, password: parsed.data.currentPassword });
-      if (reauthError) {
-        if (reauthError.code === 'invalid_credentials') setErrors({ currentPassword: 'Current password is incorrect' });
-        else if (reauthError.status === 429 || reauthError.code === 'over_request_rate_limit') setMessage('Too many attempts. Please wait a moment and try again.');
-        else setMessage('Unable to check your current password. Check your connection and try again.');
-        return;
-      }
-      if (reauth.user?.id !== session?.user.id) { setMessage('The account changed. Log in to your own account and try again.'); return; }
-      const { error: updateError } = await client.auth.updateUser({ password: parsed.data.newPassword });
-      if (updateError) {
-        setMessage(updateError.code === 'same_password' ? 'Choose a password different from your current one.' : updateError.code === 'weak_password' ? 'Choose a stronger password.' : 'Your password could not be changed. Check your connection and try again.');
-        return;
-      }
+      await authRequests.run(async () => {
+        if (!owns()) return;
+        const { data: reauth, error: reauthError } = await client.auth.signInWithPassword({ email, password: parsed.data.currentPassword });
+        if (reauthError) throw reauthError;
+        if (!owns()) return;
+        const { data, error: sessionError } = await client.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!owns()) return;
+        if (reauth.user?.id !== session?.user.id || data.session?.user.id !== session?.user.id) throw new Error('Account changed');
+        write.begin();
+        const { error: updateError } = await client.auth.updateUser({ password: parsed.data.newPassword });
+        if (updateError) throw updateError;
+      });
+      if (!owns()) return;
       // The server observer records the write; refresh so Settings labels follow.
       void refreshSetup();
       setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
       setSuccess(true); setMessage('Your password was changed.');
-    } catch { setMessage('Check your connection and try again.'); }
-    finally { setBusy(false); }
+    } catch (cause) {
+      if (!owns()) return;
+      const code = cause && typeof cause === 'object' && 'code' in cause ? cause.code : null;
+      if (write.started && code !== 'weak_password' && code !== 'same_password' && classifyFailure(cause, { write: true }) === 'unknown-commit') {
+        setUncertain(true);
+        setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
+        setMessage('The password change could not be confirmed. Use password recovery to confirm access before another change.');
+      } else if (code === 'invalid_credentials') setErrors({ currentPassword: 'Current password is incorrect' });
+      else if (code === 'same_password') setMessage('Choose a password different from your current one.');
+      else if (code === 'weak_password') setMessage('Choose a stronger password.');
+      else setMessage('Your password could not be changed. Check your connection and account, then retry or use password recovery.');
+    }
+    finally { write.close(); if (owns()) setBusy(false); }
   }
 
   if (mode === 'loading' || mode === 'error' || mode === 'recover_only') {
@@ -107,14 +125,15 @@ function ChangeOrManage() {
       : 'Enter your current password, then choose a new one: at least 8 characters with an uppercase letter, a number and a special character.'}</Body>
     {!!refreshError && <Notice tone="danger" message={refreshError} />}
     <Card>
-      <Field label="Current password" required error={errors.currentPassword} value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry textContentType="password" autoComplete="current-password" autoCapitalize="none" editable={!busy && !success} />
+      <Field label="Current password" required error={errors.currentPassword} value={currentPassword} onChangeText={setCurrentPassword} secureTextEntry textContentType="password" autoComplete="current-password" autoCapitalize="none" editable={!busy && !success && !uncertain} />
       <Action label="Forgot password?" secondary disabled={busy} onPress={recover} />
-      <Field label="New password" required error={errors.newPassword ?? (newInvalid ? 'Use 8+ characters with an uppercase letter, a number and a special character' : undefined)} value={newPassword} onChangeText={setNewPassword} secureTextEntry textContentType="newPassword" autoComplete="new-password" autoCapitalize="none" editable={!busy && !success} />
-      <Field label="Confirm new password" required error={errors.confirmPassword} value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry textContentType="newPassword" autoComplete="new-password" autoCapitalize="none" editable={!busy && !success} />
+      <Field label="New password" required error={errors.newPassword ?? (newInvalid ? 'Use 8+ characters with an uppercase letter, a number and a special character' : undefined)} value={newPassword} onChangeText={setNewPassword} secureTextEntry textContentType="newPassword" autoComplete="new-password" autoCapitalize="none" editable={!busy && !success && !uncertain} />
+      <Field label="Confirm new password" required error={errors.confirmPassword} value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry textContentType="newPassword" autoComplete="new-password" autoCapitalize="none" editable={!busy && !success && !uncertain} />
       {!!newPassword && !!confirmPassword && <Body tone={matching ? 'primary' : 'danger'} role="footnote">{matching ? 'Passwords match' : "Passwords don't match"}</Body>}
     </Card>
     {!!message && <Notice tone={success ? 'primary' : 'danger'} message={message} />}
-    <Action label={busy ? 'Changing password…' : 'Change password'} disabled={busy || success} onPress={() => void submit()} />
+    <Action label={busy ? 'Changing password…' : 'Change password'} disabled={busy || success || uncertain} onPress={() => void submit()} />
+    {uncertain && <Action label="Confirm access through password recovery" secondary disabled={busy} onPress={recover} />}
     {mode === 'manage' && <Action label="Recover password by email" secondary disabled={busy} onPress={recover} />}
     {success && <Action label="Done" secondary onPress={() => router.back()} />}
   </Screen>;

@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/agency-sla.test.ts (13 tests) 9ms
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 33ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 186ms
+
+ Test Files  3 passed (3)
+      Tests  85 passed (85)
+   Start at  12:02:07
+   Duration  1.75s (transform 293ms, setup 0ms, collect 512ms, tests 228ms, environment 1ms, prepare 795ms)
+

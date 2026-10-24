@@ -1,0 +1,13 @@
+{
+  "baseline": true,
+  "results": {
+    "equalContentAfterTenRenders": {
+      "SET_MARKERS": 11,
+      "SET_BOUNDARY": 11,
+      "SET_PRESENTATION": 11
+    },
+    "sentWhileReloading": 1,
+    "readyCallbacksAfterReload": 1
+  },
+  "issues": []
+}

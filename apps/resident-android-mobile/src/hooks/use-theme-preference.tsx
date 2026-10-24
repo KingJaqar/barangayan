@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
-import { useProfile } from '@/hooks/use-profile';
+import { useProfileData } from '@/hooks/use-profile';
 import { supabase } from '@/lib/supabase';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
@@ -76,7 +76,7 @@ const ThemePreferenceContext = createContext<ThemePreferenceContextValue>({
  */
 export function ThemePreferenceProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const [themePreference, setThemePreferenceState] = useState<ThemePreference>('light');
   const themeOverridden = useRef(false);
   const [accentColor, setAccentColorState] = useState(DEFAULT_ACCENT_COLOR);
