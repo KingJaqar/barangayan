@@ -1,0 +1,24 @@
+{
+  "route": "/drrm Family add",
+  "nativeTouchSelectAllCutPaste": true,
+  "emptyAfterCutVerified": true,
+  "exactSyntheticPasteVerified": true,
+  "caretInsertionAndRestoration": true,
+  "geometry": {
+    "editor": [
+      48,
+      396,
+      1032,
+      540
+    ],
+    "viewport": [
+      0,
+      300,
+      1080,
+      948
+    ],
+    "keyboardTop": 1167,
+    "clearance": 627
+  },
+  "submitted": false
+}

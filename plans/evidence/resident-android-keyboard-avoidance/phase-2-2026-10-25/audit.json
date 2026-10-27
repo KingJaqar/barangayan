@@ -1,0 +1,10 @@
+{
+  "ownedSourceReview": "pass",
+  "allUserInputsPreserved": true,
+  "selectedPlanBoundary": "pass",
+  "packetsAndSources": "pass",
+  "candidateChecks": "pass with explicitly recorded pre-existing failures",
+  "nativeCleanup": "pass",
+  "phaseStatus": "Partially complete",
+  "pendingNativeAcceptance": true
+}

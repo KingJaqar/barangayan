@@ -1,0 +1,392 @@
+{
+  "head": "d9253f0d42934133143d3b67955a4f987504914d",
+  "recordedAt": "2026-10-25 Asia/Manila",
+  "note": "Initial planning-time identities. Revalidate every hash in W0 before reuse; a changed hash invalidates findings tied to that file.",
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "role": "edit",
+      "sha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0",
+      "bytes": 6867,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-announcements.ts",
+      "role": "edit",
+      "sha256": "0106ec9c889963f847cb4064d765a87fd3677d396ce30d7b033645d7da196e20",
+      "bytes": 2756,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts",
+      "role": "edit",
+      "sha256": "7120f818941d81145ba5cf090e65e9cb19af2d6601ae8be0220821aa9a2123bf",
+      "bytes": 3605,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-hotlines.ts",
+      "role": "edit",
+      "sha256": "45bfea6f77ead6e729775e0aede04eddde297fe32114c8eb2dde9dfd1dc36deb",
+      "bytes": 3557,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "role": "edit",
+      "sha256": "537f49f3e14a4cd9b764c2a8d3acdb2f2068dddd31d3f5586df88095c60f3541",
+      "bytes": 3179,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-qr-content.ts",
+      "role": "edit",
+      "sha256": "dac7accde26ce4a3b11768d47cabf1ed971125d74fb45c948091654a4edebba7",
+      "bytes": 3362,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "role": "edit",
+      "sha256": "a719b2a2c4927829434ba7ed901afcdb59b5680ebed28d81dbf13fd8d9cca627",
+      "bytes": 3348,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "role": "edit",
+      "sha256": "d1352048956b9a724e0cf0532ed3d5701ae7e676b6a1155a14d4c7ad13261694",
+      "bytes": 4077,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "role": "edit",
+      "sha256": "1b2db422ec87ee4c4280e57cb5bb32bb3e5054230e9cf0bdd2d2c737ab0da40a",
+      "bytes": 17391,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "role": "edit",
+      "sha256": "f54331e53bf25b68e602569d375e3857dcd89c0541784e17004d60aac114d052",
+      "bytes": 7062,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/documents-list.tsx",
+      "role": "edit",
+      "sha256": "dd3347d6f55f24663081777974a10bf8942621396c2dc0692bdc7a854301010f",
+      "bytes": 6119,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+      "role": "edit",
+      "sha256": "5b69580e60501b90726c748884d63c84386a28b03475ad701f33b95f33b4d5d0",
+      "bytes": 32632,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "role": "edit",
+      "sha256": "b0568bf0b1fb67a671e068cbdc59e58cc2faf4c66a238d39b31bc7211f55fd81",
+      "bytes": 12452,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "role": "edit",
+      "sha256": "63d89e1176151bf984eb8072a7fa926ec5fd862ce9d7133f917ff1825c1d0ce8",
+      "bytes": 10254,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "role": "edit",
+      "sha256": "b563926a027abfd9a25d869e840b5bd3be76ec801557f7eb76d598a07e0befd8",
+      "bytes": 5764,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "role": "edit",
+      "sha256": "ab242c9af0984f49927070f25ee4612ad4d8d2b83fa52e70bc602101f54a4e40",
+      "bytes": 19541,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "role": "edit",
+      "sha256": "d13e8d778afa2d7b6f9fc1508465c5bbcd35f3e4659e3b635e47bf6ed9b8592a",
+      "bytes": 7486,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "role": "edit",
+      "sha256": "b3497ae844de18ff4632fd1e4d3c9dfc17a41e5ffb201e42b4a92dc1763bf6c9",
+      "bytes": 33382,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "role": "edit",
+      "sha256": "52d8d2f1b55f193b3b5fb97041275ed964cca88be2e2ac8734f525b7f0cae01d",
+      "bytes": 6954,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "role": "read-only-context",
+      "sha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391",
+      "bytes": 3429,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-refresh-resource.ts",
+      "role": "read-only-context",
+      "sha256": "ff078aba0716f7850c54819fe2a1fc072bee6ce142475b98367b431886ac800e",
+      "bytes": 1030,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+      "role": "read-only-context",
+      "sha256": "1371c4a3864c4f2b589452cc5e44c9351fbf9fbd67085b5a05ae06f7fa32b2fb",
+      "bytes": 724,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-my-incidents.ts",
+      "role": "read-only-context",
+      "sha256": "f00b58fe0eecb111999ba91cd6c26e5bc599017b65876afa9e083e6e097ecbb8",
+      "bytes": 3408,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "role": "read-only-context",
+      "sha256": "2e480b182d48c9b2f167c305af6fd417a174cb8372585af3875e500263a4f2ac",
+      "bytes": 10315,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-household-attendance.ts",
+      "role": "read-only-context",
+      "sha256": "344b6ca9c2ddd36f8eafa343bd0f10c6bb60b3806b0057fc859947269bd8a208",
+      "bytes": 2752,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "role": "read-only-context",
+      "sha256": "ed261da13bc24510d5829240298d39d26d902c5e663955203e66e7998a44a77a",
+      "bytes": 5467,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-theme.ts",
+      "role": "read-only-context",
+      "sha256": "b99950984eeff815a3cbf8f63e371f5de37d0e607ae9cf7898012577498131cb",
+      "bytes": 764,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/constants/resident-theme.ts",
+      "role": "read-only-context",
+      "sha256": "f0b782a76c8b5964ef628bf1a7671aa392a2696d4ba2565a5fe3d30c18ab64b1",
+      "bytes": 3952,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/hub-content.tsx",
+      "role": "read-only-context",
+      "sha256": "e11a1753799ad002b1480b3da0a8c739eda4482d754e8ebf1ea8f4313a24013b",
+      "bytes": 4151,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/alerts-content.tsx",
+      "role": "read-only-context",
+      "sha256": "3e50709d4a10aeae209cb0a9f69914e3dae4a96ab925548d8a04e02cfbe4c690",
+      "bytes": 8581,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/drrm.tsx",
+      "role": "read-only-context",
+      "sha256": "ae1cb3141cff2806c7dc4505c1885fd2e3a60da5b46ec9d774a75096b80b1de0",
+      "bytes": 130,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/index.tsx",
+      "role": "read-only-context",
+      "sha256": "28c54e567b9ef6ac5d837b72057ac66f1a2044f059f0b38f5b711042726f1120",
+      "bytes": 3702,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+      "role": "read-only-context",
+      "sha256": "4b01f1b6d2a6f755b2c1df22208007879e3bcab50a69af96d1ec90f08468f35f",
+      "bytes": 2594,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "role": "read-only-context",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "bytes": 2122,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/eslint.config.js",
+      "role": "read-only-context",
+      "sha256": "7bafa023a1892f5876fe3bfc766bcac3da246a8ea347ca007b6ec0d970813886",
+      "bytes": 1818,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tsconfig.json",
+      "role": "read-only-context",
+      "sha256": "09570b139a14ee71947b40b6ef8d639323603fd031bf253d32f449a77d3ab58e",
+      "bytes": 318,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "role": "read-only-context",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+      "bytes": 142,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "AGENTS.md",
+      "role": "read-only-context",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "CLAUDE.md",
+      "role": "read-only-context",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "role": "regression-test",
+      "sha256": "f0e48e950a2cb88c2214c3e31099d97c3ddd76f90a426173f7efe59a0ca34136",
+      "bytes": 18129,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "role": "regression-test",
+      "sha256": "c101b4dbcd3e5ada731aa37c63d3634821afb1e0c20c471ea51894ac720e906f",
+      "bytes": 29668,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+      "role": "regression-test",
+      "sha256": "3429746530ff3b3a9d958d6588a7bfaab81ceb48f9d76845577f60d6cc3283c8",
+      "bytes": 29791,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-lists-ui.mjs",
+      "role": "regression-test",
+      "sha256": "04f7672819209d1316daf757e16884e9bbc1be20b21afff1c2c7c13bbda364b0",
+      "bytes": 23484,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "role": "regression-test",
+      "sha256": "1b461af13a03801a3f4333ec06a688a2035033a2beb37009c376ab0449591be9",
+      "bytes": 8135,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "role": "regression-test",
+      "sha256": "c75c93ce23ce9eaf02a8fa9d2e2ca219ef5ab0dc773e805805c4ad38162e501d",
+      "bytes": 21659,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-hub-alerts-ui.mjs",
+      "role": "regression-test",
+      "sha256": "0d993af949392bd2a72d4b7a9c913ad67912a2f28308b8bb6ef6dc4854fa13d1",
+      "bytes": 18486,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-scan-family-ui.mjs",
+      "role": "regression-test",
+      "sha256": "d786293565d4b94e1a0e1a98dea32112dca18a689ec50b2b124a11ff84e2f318",
+      "bytes": 33234,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+      "role": "regression-test",
+      "sha256": "1172de573189858c3b3b4a609d6bb04af7e586d57564410a83bf85a6ea1e7032",
+      "bytes": 25954,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+      "role": "regression-test",
+      "sha256": "28614853ba42032c9d0db6ee1b02fbc6a03e77faa538cf7c78b08e39e57a7521",
+      "bytes": 7757,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "role": "regression-test",
+      "sha256": "6d89ecbd258e44c49bc77c981d38c306f970362b4f0d4d30b79144a399d3fa9a",
+      "bytes": 29351,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/help-legal-about-ui.mjs",
+      "role": "regression-test",
+      "sha256": "d6add1ec549db208dde120cdc8063a5fde107003fd17dfe20ba278b008586006",
+      "bytes": 20196,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "role": "regression-test",
+      "sha256": "630f6599adcf4e9976f86473472b7679a4bfaf4fdc759aeb6bac8dc3fc208c3c",
+      "bytes": 13933,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-explore.mjs",
+      "role": "regression-test",
+      "sha256": "3bec59cef0d951c5cf59a107a7daa30dff0461f64300f4f14a1625575f03a6e0",
+      "bytes": 40655,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-session.mjs",
+      "role": "regression-test",
+      "sha256": "caa2295e9894c2a0cbd99a819fcf44c6cc78e995112a6ca77fd27fad8e0ca230",
+      "bytes": 12519,
+      "gitStatus": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-submit.mjs",
+      "role": "regression-test",
+      "sha256": "0352b1e933a2bf2e5bb55ba580362ca0a12eb2491e7aec8918291f4b900a31f9",
+      "bytes": 16821,
+      "gitStatus": "clean"
+    }
+  ]
+}

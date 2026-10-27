@@ -13,6 +13,7 @@ import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useHouseholdAttendance } from '@/hooks/use-household-attendance';
+import { useRegisterPullRefresh } from '@/components/pull-refresh';
 import { attendanceTime } from '@/lib/household';
 import type { HouseholdAttendance } from '@barangayan/shared';
 
@@ -37,7 +38,9 @@ function AccountFamily() {
   const householdName = profile?.last_name ? `${profile.last_name} Family` : 'Your Household';
   const holder = attendance.attendance?.people.find(person => person.kind === 'holder');
   const statusUnavailable = attendance.loading || !!attendance.error || !attendance.attendance;
-  function refresh() { void refetch(); void attendance.refetch(); }
+  const reload = () => Promise.all([refetch(), attendance.refetch()]);
+  function refresh() { void reload(); }
+  useRegisterPullRefresh(reload);
   return <View style={styles.root}>
     <View><ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>Household: {householdName}</ThemedText>
       <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Staff confirm who is present. Showing a code alone does not record attendance.</ThemedText></View>

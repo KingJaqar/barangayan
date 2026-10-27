@@ -32,7 +32,7 @@ export function FeedbackModal({ visible, kind, title, message, onDismiss, autoDi
         <View style={[styles.icon, { backgroundColor: content.kind === 'success' ? resident.accentSoft : resident.dangerSoft }]}>
           <Ionicons name={content.kind === 'success' ? 'checkmark-circle-outline' : 'alert-circle-outline'} size={40} color={color} />
         </View>
-        <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{content.title}</ThemedText>
+        <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{content.title}</ThemedText>
         {content.message ? <ThemedText style={[styles.message, { color: resident.muted }]}>{content.message}</ThemedText> : null}
         <Pressable accessibilityRole="button" accessibilityLabel="Close feedback" onPress={close} style={styles.close}>
           <ThemedText style={{ color: resident.accentText, fontWeight: '700' }}>Close</ThemedText>

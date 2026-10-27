@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-26T01:53:26.748Z",
+  "profileClean": true,
+  "homeVisible": true,
+  "imeHidden": true,
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "font": "1.0",
+  "navigation": "0",
+  "navigationOverlays": [
+    "[ ] com.android.internal.systemui.navbar.gestural_wide_back",
+    "[ ] com.android.internal.systemui.navbar.threebutton",
+    "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back",
+    "[ ] com.android.internal.systemui.navbar.gestural",
+    "[ ] com.android.internal.systemui.navbar.gestural_narrow_back"
+  ],
+  "camera": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]"
+}

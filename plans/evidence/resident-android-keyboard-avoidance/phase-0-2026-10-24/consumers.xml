@@ -1,0 +1,222 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/services/payment/?requestId?.tsx, apps/resident-android-mobile/src/app/(app)/services/payment/pickup/?requestId?.tsx, apps/resident-android-mobile/src/app/emergency-centers.tsx, apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx, apps/resident-android-mobile/src/app/(app)/settings/index.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            emergency-info/
+              index.tsx
+          services/
+            payment/
+              pickup/
+                [requestId].tsx
+              [requestId].tsx
+          settings/
+            index.tsx
+        emergency-centers.tsx</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx">import { useEffect, useMemo, useState } from &apos;react&apos;;
+import { ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import Animated, { FadeIn } from &apos;react-native-reanimated&apos;;
+⋮----
+import { useIsFocused, useLocalSearchParams } from &apos;expo-router&apos;;
+⋮----
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { GuestAuthCallout } from &apos;@/components/guest-auth-callout&apos;;
+import { FamilyContent } from &apos;@/components/family-content&apos;;
+import { useEmergencyGuidelines } from &apos;@/hooks/use-emergency-guidelines&apos;;
+import { useEmergencyHotlines } from &apos;@/hooks/use-emergency-hotlines&apos;;
+import { useEmergencyAnnouncements } from &apos;@/hooks/use-emergency-announcements&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { HubContent } from &apos;@/components/drrm/hub-content&apos;;
+import { AlertsContent } from &apos;@/components/drrm/alerts-content&apos;;
+import { CentersContent } from &apos;@/components/evacuation-centers-panel&apos;;
+import { useDeviceLocation } from &apos;@/hooks/use-device-location&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { QrGuideContent } from &apos;@/components/qr-guide-content&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import type { LatLng } from &apos;@barangayan/shared&apos;;
+⋮----
+type EmergencyInfoTab = &apos;hub&apos; | &apos;centers&apos; | &apos;scan&apos; | &apos;family&apos; | &apos;alerts&apos;;
+⋮----
+function isEmergencyInfoTab(value: unknown): value is EmergencyInfoTab
+⋮----
+// The confirmed origin (never the map viewport) is the position used for sorting and
+// routing. Acquisition runs only while the Centers tab is shown.
+⋮----
+// Sync when navigated back into this screen with a different `tab` param
+// (e.g. tapping a different Maps DRRM card while this screen stays mounted).</file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx">import { useLocalSearchParams } from &apos;expo-router&apos;;
+import { ResidentPaymentScreen } from &apos;@/components/services/resident-payment-screen&apos;;
+export default function PaymentScreen()</file><file path="apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx">import { useLocalSearchParams } from &apos;expo-router&apos;;
+import { ResidentPaymentScreen } from &apos;@/components/services/resident-payment-screen&apos;;</file><file path="apps/resident-android-mobile/src/app/(app)/settings/index.tsx">import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { idVerificationState } from &apos;@barangayan/shared&apos;;
+import Constants from &apos;expo-constants&apos;;
+import { Href, Link, useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useState, type ReactNode } from &apos;react&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { Alert, Animated as NativeAnimated, Modal, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { Avatar } from &apos;@/components/avatar&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { CustomAccentColorModal } from &apos;@/components/custom-accent-color-modal&apos;;
+import { DeleteAccountModal } from &apos;@/components/delete-account-modal&apos;;
+import { Divider } from &apos;@/components/divider&apos;;
+import { LoadingOverlay } from &apos;@/components/loading-overlay&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { PreferenceToggle } from &apos;@/components/preference-toggle&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { SettingsIcon } from &apos;@/components/settings-icon&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ACCENT_COLORS, Spacing } from &apos;@/constants/theme&apos;;
+import { getResidentTheme } from &apos;@/constants/resident-theme&apos;;
+import { getMobileFontFamily, MOBILE_FONT_OPTIONS } from &apos;@/constants/fonts&apos;;
+import { FunctionsHttpError } from &apos;@supabase/supabase-js&apos;;
+⋮----
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useNotificationPreferences } from &apos;@/hooks/use-notification-preferences&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useReportModalMotion } from &apos;@/hooks/use-report-modal-motion&apos;;
+import { MAX_CUSTOM_COLORS, useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+import { clearGoogleReauthentication, googleReauthentication, startGoogleAuth } from &apos;@/lib/google-auth&apos;;
+import { accountSettingsRows, deletionConfirmation } from &apos;@/lib/sensitive-auth&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// supabase.functions.invoke() surfaces a non-2xx response as a generic
+// FunctionsHttpError (&quot;Edge Function returned a non-2xx status code&quot;) — the
+// actual `{ error: &quot;...&quot; }` body our edge functions send (e.g. export&apos;s
+// rate-limit message, delete&apos;s failure reasons) only lives on error.context,
+// the raw Response. Unwrap it so Alert.alert shows the real message instead
+// of a useless generic one.
+async function toEdgeFunctionError(error: unknown): Promise&lt;Error&gt;
+⋮----
+// Response wasn&apos;t JSON (or already consumed) — fall through to the generic error.
+⋮----
+// SMS stays local-state only — no backend requested, out of scope per the plan.
+⋮----
+async function handleLogout()
+⋮----
+// Auth removes the signed-in stack and opens Log In after logout.
+⋮----
+// ── Data Privacy Act: Download My Data ───────────────────────────────────
+// Asks for a format *before* calling the edge function — the export is
+// rate-limited (see export-my-data/index.ts), so the format picker itself
+// must not spend a call; only the actually-chosen export does.
+function handleDownloadData()
+⋮----
+async function runDataExport(format: &apos;json&apos; | &apos;pdf&apos;)
+⋮----
+// Legacy filesystem API throughout this function, not the new File/Paths
+// one: in Expo Go, Paths.cache resolves to an experience-isolated
+// directory that Expo Go&apos;s bundled Android FileProvider config doesn&apos;t
+// recognize, so sharing a URI under it fails with &quot;Not allowed to read
+// file under given URL&quot;. FileSystem.cacheDirectory (legacy) is the one
+// directory Expo Go&apos;s sharing has reliably supported for years.
+⋮----
+// printToFileAsync is native Android code — it writes straight into
+// the OS-level cache dir, bypassing expo-file-system entirely, so its
+// output isn&apos;t under the scoped directory above either. Copying it
+// there first is the same fix as the JSON case, one layer down: get
+// the file into the one place Expo Go&apos;s FileProvider will actually
+// let expo-sharing read from.
+⋮----
+// ── Data Privacy Act: Delete My Account ──────────────────────────────────
+// Two gates before this irreversible action runs: a plain confirm dialog,
+// then a password re-entry modal (a session left open on a shared/lost
+// device shouldn&apos;t be enough on its own to permanently delete an account).
+function handleDeleteAccount()
+⋮----
+// The confirmation step depends on the server-maintained password state: an
+// existing (or unknown legacy) password is re-entered; a passwordless Google
+// resident confirms with fresh same-account Google authentication instead.
+⋮----
+// ── Passwordless Google deletion ─────────────────────────────────────────
+// Results are rendered from state (inline notice / modal), not Alert: an Alert
+// raised while Android is returning from the browser can be silently dropped.
+async function confirmDeleteWithGoogle()
+⋮----
+// Runs after the in-app return and after a callback that routed back to Settings.
+// Still requires an explicit final tap; cancelling consumes the confirmation.
+⋮----
+// Only the focused Settings screen may show the final dialog.
+⋮----
+function cancelGoogleDeletion()
+⋮----
+async function deleteAfterGoogle()
+⋮----
+// Recheck at the moment of the irreversible request, not when the dialog opened.
+⋮----
+async function confirmDeleteAccount(password: string)
+⋮----
+// Re-authenticate first — mirrors change-password.tsx&apos;s rationale: the
+// delete-my-account function only checks that the caller holds *a*
+// valid session, not that the person holding it is the account owner
+// right now.
+⋮----
+&lt;AccentSwatch key=
+⋮----
+selected=
+⋮----
+&lt;Pressable key=
+⋮----
+// While the password modal is open it shows its own inline spinner
+// (see DeleteAccountModal) — the full-screen overlay only takes over
+// once that modal has closed and the final logout() is in flight, so
+// the two loading indicators never stack.
+⋮----
+onSave=
+⋮----
+onPressIn=
+⋮----
+/** Secondary row text; a warning adds an icon and color, never color alone. */
+⋮----
+const theme = useTheme();</file><file path="apps/resident-android-mobile/src/app/emergency-centers.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { LatLng } from &apos;@barangayan/shared&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { useMemo, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { CentersContent } from &apos;@/components/evacuation-centers-panel&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Fonts, Spacing } from &apos;@/constants/theme&apos;;
+import { useDeviceLocation } from &apos;@/hooks/use-device-location&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/**
+ * Public emergency entry (DRRM routing plan R6, invariant 9): the Centers map and offline
+ * routes outside every authentication guard, so session restoration, account setup or a
+ * failed sign-in never keeps a resident from evacuation routes. Same Centers panel as the
+ * Emergency &amp; DRRM Info screen.
+ */
+export default function EmergencyCentersScreen()</file></files></repomix>

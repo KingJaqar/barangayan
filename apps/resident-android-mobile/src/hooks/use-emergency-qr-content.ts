@@ -35,7 +35,7 @@ export function useEmergencyQrContent(barangayId: string | null) {
       query = query.eq('barangay_id', barangayId);
     }
 
-    query.then(({ data, error: qErr }) => {
+    return query.then(({ data, error: qErr }) => {
       if (cancelledRef.current) return;
       if (qErr) {
         setError(qErr.message);

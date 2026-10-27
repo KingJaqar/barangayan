@@ -1,0 +1,87 @@
+{
+  "flow": "probe-complete",
+  "configuration": "default",
+  "results": [
+    {
+      "id": "B09",
+      "name": "probe-complete-default-B09-focus",
+      "editor": [
+        123,
+        882,
+        528,
+        1001
+      ],
+      "viewport": [
+        0,
+        291,
+        1080,
+        1920
+      ],
+      "keyboardTop": 1167,
+      "clearance": 166,
+      "focused": true
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

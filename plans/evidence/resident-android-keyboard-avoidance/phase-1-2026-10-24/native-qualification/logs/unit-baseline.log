@@ -1,0 +1,6 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+[low_level_alloc.cc : 554] RAW: Check new_pages != nullptr failed: VirtualAlloc failed
+[low_level_alloc.cc : 554] RAW: Check new_pages != nullptr failed: VirtualAlloc failed
+·················································································································································································································································

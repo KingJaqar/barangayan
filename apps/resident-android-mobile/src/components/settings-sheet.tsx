@@ -18,7 +18,19 @@ export function SettingsSheet({ visible, title, onClose, children, footer, appea
   const [height, setHeight] = useState(0);
   const profile = appearance !== 'default';
   const family = appearance === 'family';
+  const scrollPanel = Platform.OS === 'android' && (family || !profile);
   const { mounted, panel, scrim, reduced } = useReportModalMotion(visible, profile ? (visible ? 280 : 200) : 280, profile ? 180 : 200);
+  const header = <>
+    <View style={[styles.handle, { backgroundColor: resident.border }]} />
+    <View style={[styles.header, profile && styles.profileHeader, family && styles.familyHeader]}>
+      <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, profile && { color: resident.text }, family && styles.centeredTitle]}>{title}</ThemedText>
+      {!family ? <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel={`Close ${title}`} style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
+        <Ionicons name="close" size={20} color={resident.text} />
+      </Pressable> : null}
+    </View>
+  </>;
+  const bodyStyle = [styles.body, profile && styles.profileBody, { paddingBottom: footer ? 16 : Math.max(insets.bottom, profile ? 24 : 20) }];
+  const actions = footer ? <View style={[styles.footer, profile && styles.profileFooter, { borderTopColor: resident.border, paddingBottom: Math.max(insets.bottom, profile ? 28 : 20) }]}>{footer}</View> : null;
   return <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
     <KeyboardAvoidingView style={[styles.overlay, { paddingTop: insets.top + 12 }]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]} />
@@ -29,17 +41,17 @@ export function SettingsSheet({ visible, title, onClose, children, footer, appea
           opacity: reduced ? panel : height > 0 ? 1 : 0,
           transform: [{ translateY: reduced ? 0 : panel.interpolate({ inputRange: [0, 1], outputRange: [height || screenHeight, 0] }) }],
         }]}>
-        <View style={[styles.handle, { backgroundColor: resident.border }]} />
-        <View style={[styles.header, profile && styles.profileHeader, family && styles.familyHeader]}>
-          <ThemedText accessibilityRole="header" style={[styles.title, profile && { color: resident.text }, family && styles.centeredTitle]}>{title}</ThemedText>
-          {!family ? <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel={`Close ${title}`} style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
-            <Ionicons name="close" size={20} color={resident.text} />
-          </Pressable> : null}
-        </View>
-        <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={profile ? false : undefined} style={styles.scroll} contentContainerStyle={[styles.body, profile && styles.profileBody, { paddingBottom: footer ? 16 : Math.max(insets.bottom, profile ? 24 : 20) }]}>
-          {children}
-        </ScrollView>
-        {footer ? <View style={[styles.footer, profile && styles.profileFooter, { borderTopColor: resident.border, paddingBottom: Math.max(insets.bottom, profile ? 28 : 20) }]}>{footer}</View> : null}
+        {scrollPanel ? <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={profile ? false : undefined} style={styles.scroll}>
+          {header}
+          <View style={bodyStyle}>{children}</View>
+          {actions}
+        </ScrollView> : <>
+          {header}
+          <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={profile ? false : undefined} style={styles.scroll} contentContainerStyle={bodyStyle}>
+            {children}
+          </ScrollView>
+          {actions}
+        </>}
       </Animated.View>
     </KeyboardAvoidingView>
   </Modal>;

@@ -1,0 +1,23 @@
+﻿node : node:internal/modules/run_main:107
+At line:1 char:884
++ ... tive-ui') { node "tests\$t.mjs" *> "C:\Users\User\barangayan\plans\ev ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (node:internal/modules/run_main:107:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: 'See all My reports', exact: true }) to be visible[22m
+
+    at C:\Users\User\barangayan\tmp\resident-pull-refresh-20261025\head-wt\apps\resident-android-mobile\tests\resident-
+search-explore.mjs:496:20 {
+  log: [
+    "  - waiting for getByRole('button', { name: 'See all My reports', exact: true }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

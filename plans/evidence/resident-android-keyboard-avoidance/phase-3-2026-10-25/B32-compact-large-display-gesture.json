@@ -1,0 +1,140 @@
+{
+  "tag": "compact-large-display-gesture",
+  "states": [
+    {
+      "label": "Cancel",
+      "action": [
+        189,
+        322,
+        520,
+        621
+      ],
+      "viewport": [
+        0,
+        0,
+        1080,
+        806
+      ],
+      "keyboardTop": 806
+    },
+    {
+      "label": "Delete",
+      "action": [
+        560,
+        322,
+        891,
+        515
+      ],
+      "viewport": [
+        0,
+        0,
+        1080,
+        806
+      ],
+      "keyboardTop": 806
+    },
+    {
+      "label": "Cancel",
+      "action": [
+        189,
+        318,
+        520,
+        617
+      ],
+      "viewport": [
+        0,
+        0,
+        1080,
+        806
+      ],
+      "keyboardTop": 806
+    },
+    {
+      "label": "Delete",
+      "action": [
+        560,
+        318,
+        891,
+        511
+      ],
+      "viewport": [
+        0,
+        0,
+        1080,
+        806
+      ],
+      "keyboardTop": 806
+    }
+  ],
+  "submitted": false,
+  "before": {
+    "editor": [
+      189,
+      1057,
+      891,
+      1219
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      1680
+    ],
+    "keyboardTop": 72,
+    "clearance": -1147
+  },
+  "focus": {
+    "editor": [
+      189,
+      563,
+      891,
+      725
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      806
+    ],
+    "keyboardTop": 806,
+    "clearance": 81
+  },
+  "errorPresent": true,
+  "afterError": {
+    "editor": [
+      189,
+      79,
+      891,
+      241
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      806
+    ],
+    "keyboardTop": 806,
+    "clearance": 565
+  },
+  "restored": [
+    [
+      0,
+      0,
+      1080,
+      1680
+    ],
+    [
+      0,
+      0,
+      1080,
+      1680
+    ],
+    [
+      0,
+      0,
+      1080,
+      1680
+    ]
+  ],
+  "status": "pass for measured focus/full-action-scroll/empty-error/three-cycle subset"
+}

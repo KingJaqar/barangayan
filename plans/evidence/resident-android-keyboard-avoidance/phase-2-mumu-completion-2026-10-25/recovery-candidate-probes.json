@@ -1,0 +1,220 @@
+{
+  "state": "Boundary probes only; no OTP send, verify or password update. Normal header Back cancels recovery and preserves the session.",
+  "results": [
+    {
+      "id": "B05",
+      "state": "signed-in read-only boundary",
+      "readOnly": true
+    },
+    {
+      "id": "B07",
+      "label": "New password",
+      "configuration": "recovery-candidate",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "recovery-candidate-B07-focus",
+          "editor": [
+            72,
+            693,
+            1008,
+            861
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 306,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B07-paste",
+          "editor": [
+            72,
+            693,
+            1008,
+            861
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 306,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B07-selection",
+          "editor": [
+            72,
+            693,
+            1008,
+            861
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 306,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B07-reopen-1",
+          "editor": [
+            72,
+            693,
+            1008,
+            861
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 306,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B07-reopen-2",
+          "editor": [
+            72,
+            693,
+            1008,
+            861
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 306,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B08",
+      "label": "Confirm new password",
+      "configuration": "recovery-candidate",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "recovery-candidate-B08-focus",
+          "editor": [
+            72,
+            780,
+            1008,
+            948
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 219,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B08-paste",
+          "editor": [
+            72,
+            780,
+            1008,
+            948
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 219,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B08-selection",
+          "editor": [
+            72,
+            780,
+            1008,
+            948
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 219,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B08-reopen-1",
+          "editor": [
+            72,
+            780,
+            1008,
+            948
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 219,
+          "focused": true
+        },
+        {
+          "name": "recovery-candidate-B08-reopen-2",
+          "editor": [
+            72,
+            780,
+            1008,
+            948
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            948
+          ],
+          "keyboardTop": 1167,
+          "clearance": 219,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "submitted": false,
+  "classification": "Rejected first candidate: editors visible but header offset counted twice, leaving219px excess above IME; OTP capture interrupted by its 45-second countdown preventing UI idle."
+}

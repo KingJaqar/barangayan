@@ -33,7 +33,7 @@ export function ScanFamilySheet({ visible, onClose, title, children, footer, bus
       }, picker && styles.picker]}>
         {!picker ? <View style={[styles.handle, { backgroundColor: resident.border }]} /> : null}
         <View style={styles.header}>
-          <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{title}</ThemedText>
+          <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{title}</ThemedText>
           <Pressable onPress={close} disabled={busy} accessibilityRole="button" accessibilityLabel={`Close ${title}`} accessibilityState={{ disabled: busy }} style={[styles.close, { backgroundColor: resident.surface }]}>
             <Ionicons name="close" size={20} color={resident.text} />
           </Pressable>

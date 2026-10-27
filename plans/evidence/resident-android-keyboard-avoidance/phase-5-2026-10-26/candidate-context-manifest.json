@@ -1,0 +1,27 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "7cd7f0bb64916336e89a3674b3e5fcee59c484968dfcbbe09aed934b4aa6c70b",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx",
+      "characters": 272
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "characters": 469
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "characters": 5265
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "characters": 1783
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "characters": 2205
+    }
+  ],
+  "totalCharacters": 10356
+}

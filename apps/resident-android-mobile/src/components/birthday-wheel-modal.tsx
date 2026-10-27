@@ -3,6 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View, type NativeScrollEvent,
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecoveryButton } from '@/components/password-recovery-screen';
+import { HealthSheet } from '@/components/health/health-presentation';
 import { PrimaryButton } from '@/components/primary-button';
 import { SettingsSheet } from '@/components/settings-sheet';
 import { ThemedText } from '@/components/themed-text';
@@ -10,10 +11,10 @@ import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { BIRTHDAY_MONTHS, birthdayIso, birthdayParts, daysInBirthdayMonth, limitBirthday, type BirthdayParts } from '@/lib/birthday-wheel';
 
-const ROW_HEIGHT = 40;
+export const ROW_HEIGHT = 40;
 const VISIBLE_ROWS = 7;
-const WHEEL_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
-const WHEEL_PADDING = ROW_HEIGHT * Math.floor(VISIBLE_ROWS / 2);
+export const WHEEL_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
+export const WHEEL_PADDING = ROW_HEIGHT * Math.floor(VISIBLE_ROWS / 2);
 type WheelItem = { value: number; label: string };
 
 export function BirthdayWheelModal({ visible, value, onClose, onConfirm, presentation = 'default' }: {
@@ -21,9 +22,9 @@ export function BirthdayWheelModal({ visible, value, onClose, onConfirm, present
   value: string;
   onClose: () => void;
   onConfirm: (value: string) => void;
-  presentation?: 'default' | 'resident';
+  presentation?: 'default' | 'resident' | 'profile';
 }) {
-  if (presentation === 'resident') return <BirthdayWheelContent value={value} visible={visible} presentation="resident" onClose={onClose} onConfirm={onConfirm} />;
+  if (presentation !== 'default') return <BirthdayWheelContent value={value} visible={visible} presentation={presentation} onClose={onClose} onConfirm={onConfirm} />;
   // A fresh draft on each opening; scrolling and Cancel never change the form.
   return <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
     {visible ? <BirthdayWheelContent key={value} visible={visible} value={value} onClose={onClose} onConfirm={onConfirm} /> : null}
@@ -36,7 +37,7 @@ function BirthdayWheelContent({ value, onClose, onConfirm, presentation = 'defau
   const today = useMemo(() => new Date(), []);
   const [draft, setDraft] = useState(() => birthdayParts(value, today));
   useEffect(() => {
-    if (presentation === 'resident' && visible) setDraft(birthdayParts(value, today));
+    if (presentation !== 'default' && visible) setDraft(birthdayParts(value, today));
   }, [presentation, visible, value, today]);
   const minimumYear = useMemo(() => Math.min(1900, birthdayParts(value, today).year), [value, today]);
   const years = useMemo(() => Array.from({ length: today.getFullYear() - minimumYear + 1 }, (_, index) => ({ value: minimumYear + index, label: String(minimumYear + index) })), [minimumYear, today]);
@@ -47,6 +48,19 @@ function BirthdayWheelContent({ value, onClose, onConfirm, presentation = 'defau
   function update(part: keyof BirthdayParts, next: number) {
     setDraft(previous => limitBirthday({ ...previous, [part]: next }, today));
   }
+
+  if (presentation === 'profile') return <HealthSheet visible={visible} title="Select Date of Birth" onClose={onClose} scrollable={false}
+    footer={<View style={styles.profileFooter}>
+      <View style={{ flex: 1 }}><PrimaryButton presentation="resident" label="Close" variant="secondary" onPress={onClose} /></View>
+      <View style={{ flex: 1 }}><PrimaryButton presentation="resident" label="Done" onPress={() => onConfirm(birthdayIso(draft))} /></View>
+    </View>}>
+    <View style={styles.profileWheels}>
+      <View pointerEvents="none" style={[styles.profileSelection, { backgroundColor: theme.resident.accentSoft }]} />
+      <WheelColumn label="Month" items={months} value={draft.month} onChange={next => update('month', next)} rowHeight={60} visibleRows={5} boldSelected wide />
+      <WheelColumn label="Day" items={days} value={draft.day} onChange={next => update('day', next)} rowHeight={60} visibleRows={5} boldSelected />
+      <WheelColumn label="Year" items={years} value={draft.year} onChange={next => update('year', next)} rowHeight={60} visibleRows={5} boldSelected />
+    </View>
+  </HealthSheet>;
 
   const wheels = <View style={styles.wheels}>
     <View pointerEvents="none" style={[styles.selectedRow, { borderColor: presentation === 'resident' ? theme.resident.border : theme.backgroundSelected }]} />
@@ -64,7 +78,7 @@ function BirthdayWheelContent({ value, onClose, onConfirm, presentation = 'defau
     <View style={[styles.sheet, { backgroundColor: theme.background, paddingBottom: Math.max(insets.bottom, Spacing.three) }]} accessibilityViewIsModal>
       <View style={styles.header}>
         <Pressable accessibilityRole="button" accessibilityLabel="Cancel birthday selection" onPress={onClose} hitSlop={8}><ThemedText themeColor="primary">Cancel</ThemedText></Pressable>
-        <ThemedText accessibilityRole="header" type="smallBold">Date of birth</ThemedText>
+        <ThemedText accessibilityRole="header" type="residentHeader" style={{ fontSize: 14, lineHeight: 20 }}>Date of birth</ThemedText>
         <View style={styles.headerSpacer} />
       </View>
       {wheels}
@@ -74,14 +88,20 @@ function BirthdayWheelContent({ value, onClose, onConfirm, presentation = 'defau
   </View>;
 }
 
-function WheelColumn({ label, items, value, onChange, wide = false }: {
+export function WheelColumn({ label, items, value, onChange, wide = false, rowHeight = ROW_HEIGHT, visibleRows = VISIBLE_ROWS, boldSelected = false }: {
   label: string;
   items: readonly WheelItem[];
   value: number;
   onChange: (value: number) => void;
   wide?: boolean;
+  rowHeight?: number;
+  visibleRows?: number;
+  boldSelected?: boolean;
 }) {
   const theme = useTheme();
+  const ROW_HEIGHT = rowHeight;
+  const wheelHeight = rowHeight * visibleRows;
+  const wheelPadding = rowHeight * Math.floor(visibleRows / 2);
   const scroll = useRef<ScrollView>(null);
   const initialized = useRef(false);
   const lastValue = useRef<number | null>(null);
@@ -94,7 +114,7 @@ function WheelColumn({ label, items, value, onChange, wide = false }: {
       initialized.current = true;
     });
     return () => cancelAnimationFrame(frame);
-  }, [value, selectedIndex, items.length]);
+  }, [value, selectedIndex, items.length, ROW_HEIGHT]);
 
   function select(index: number) {
     const item = items[Math.max(0, Math.min(index, items.length - 1))];
@@ -117,8 +137,8 @@ function WheelColumn({ label, items, value, onChange, wide = false }: {
     <ScrollView
       ref={scroll}
       testID={`birthday-${label.toLowerCase()}-wheel`}
-      style={styles.wheel}
-      contentContainerStyle={styles.wheelContent}
+      style={[styles.wheel, { height: wheelHeight }]}
+      contentContainerStyle={{ paddingVertical: wheelPadding }}
       contentOffset={{ x: 0, y: selectedIndex * ROW_HEIGHT }}
       onContentSizeChange={() => { if (!initialized.current) { scroll.current?.scrollTo({ y: selectedIndex * ROW_HEIGHT, animated: false }); initialized.current = true; } }}
       onScroll={onScroll} scrollEventThrottle={16}
@@ -127,8 +147,8 @@ function WheelColumn({ label, items, value, onChange, wide = false }: {
       showsVerticalScrollIndicator={false} importantForAccessibility="no-hide-descendants">
       {items.map((item, index) => {
         const distance = Math.abs(index - selectedIndex);
-        return <Pressable key={item.value} accessible={false} onPress={() => select(index)} style={styles.wheelRow}>
-          <ThemedText style={[styles.wheelText, { color: theme.text, opacity: distance === 0 ? 1 : distance === 1 ? 0.45 : distance === 2 ? 0.25 : 0.1 }]} numberOfLines={1}>{item.label}</ThemedText>
+        return <Pressable key={item.value} accessible={false} onPress={() => select(index)} style={[styles.wheelRow, { height: rowHeight }]}>
+          <ThemedText style={[styles.wheelText, boldSelected && distance === 0 && { fontWeight: '700' }, { color: theme.text, opacity: distance === 0 ? 1 : distance === 1 ? (boldSelected ? 0.7 : 0.45) : distance === 2 ? 0.25 : 0.1 }]} numberOfLines={1}>{item.label}</ThemedText>
         </Pressable>;
       })}
     </ScrollView>
@@ -136,6 +156,9 @@ function WheelColumn({ label, items, value, onChange, wide = false }: {
 }
 
 const styles = StyleSheet.create({
+  profileFooter: { flexDirection: 'row', gap: 12 },
+  profileWheels: { flexDirection: 'row', height: 300, position: 'relative' },
+  profileSelection: { position: 'absolute', left: 0, right: 0, top: 120, height: 60, borderRadius: 12 },
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
   sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: Spacing.four, paddingTop: Spacing.three, gap: Spacing.three },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },

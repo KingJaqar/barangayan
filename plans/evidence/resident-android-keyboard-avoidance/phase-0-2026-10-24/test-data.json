@@ -1,0 +1,104 @@
+{
+  "status": "Prepared local input payloads only. No development accounts, backend records or UI fixtures provisioned/executed; native/account cases explicitly pending by user instruction.",
+  "inputs": {
+    "shortText": "Keyboard baseline sample",
+    "longText": "Line 1: keyboard visibility sample\nLine 2: keyboard visibility sample\nLine 3: keyboard visibility sample\nLine 4: keyboard visibility sample\nLine 5: keyboard visibility sample\nLine 6: keyboard visibility sample\nLine 7: keyboard visibility sample\nLine 8: keyboard visibility sample\nLine 9: keyboard visibility sample\nLine 10: keyboard visibility sample\nLine 11: keyboard visibility sample\nLine 12: keyboard visibility sample\nLine 13: keyboard visibility sample\nLine 14: keyboard visibility sample\nLine 15: keyboard visibility sample\nLine 16: keyboard visibility sample\nLine 17: keyboard visibility sample\nLine 18: keyboard visibility sample\nLine 19: keyboard visibility sample\nLine 20: keyboard visibility sample\nLine 21: keyboard visibility sample\nLine 22: keyboard visibility sample\nLine 23: keyboard visibility sample\nLine 24: keyboard visibility sample\nLine 25: keyboard visibility sample\nLine 26: keyboard visibility sample\nLine 27: keyboard visibility sample\nLine 28: keyboard visibility sample\nLine 29: keyboard visibility sample\nLine 30: keyboard visibility sample\nLine 31: keyboard visibility sample\nLine 32: keyboard visibility sample\nLine 33: keyboard visibility sample\nLine 34: keyboard visibility sample\nLine 35: keyboard visibility sample\nLine 36: keyboard visibility sample\nLine 37: keyboard visibility sample\nLine 38: keyboard visibility sample\nLine 39: keyboard visibility sample\nLine 40: keyboard visibility sample\nLine 41: keyboard visibility sample\nLine 42: keyboard visibility sample\nLine 43: keyboard visibility sample\nLine 44: keyboard visibility sample\nLine 45: keyboard visibility sample\nLine 46: keyboard visibility sample\nLine 47: keyboard visibility sample\nLine 48: keyboard visibility sample\nLine 49: keyboard visibility sample\nLine 50: keyboard visibility sample\nLine 51: keyboard visibility sample\nLine 52: keyboard visibility sample\nLine 53: keyboard visibility sample\nLine 54: keyboard visibility sample\nLine 55: keyboard visibility sample\nLine 56: keyboard visibility sample\nLine 57: keyboard visibility sample\nLine 58: keyboard visibility sample\nLine 59: keyboard visibility sample\nLine 60: keyboard visibility sample",
+    "invalidEmail": "invalid",
+    "email": "keyboard-baseline@example.invalid",
+    "phone": "09171234567",
+    "age": "34",
+    "priorDoseDate": "2026-09-01",
+    "copies": "2",
+    "totalPages": "12",
+    "hex": "#2563EB",
+    "invalidHex": "#ZZZZZZ"
+  },
+  "groups": [
+    {
+      "id": "T-local",
+      "prerequisites": "No account mutation; type hex locally; close without save",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-signed-out",
+      "prerequisites": "Signed-out login; type locally; do not send login without approved test credentials",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-registration",
+      "prerequisites": "Development email/code step access; no email/code requested in this execution",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-recovery",
+      "prerequisites": "Development recovery context and verified reset session; no email/OTP/password write executed",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-setup",
+      "prerequisites": "Incomplete required and optional account setup plus optional completion; ready=true; no uncertainty/conflict; employment allowing occupation; drafts across Back",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-profile",
+      "prerequisites": "Complete development profile; configured locality; known and unknown DOB variants; editable email remains unsaved",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-fallback-locality",
+      "prerequisites": "Separate development profile with absent barangay_localities; never alter production locality to reach City",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-existing-password",
+      "prerequisites": "Development account whose server-owned password state allows existing-password form and delete password dialog; no final writes",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-first-password",
+      "prerequisites": "Passwordless development Google account; fresh same-account confirmation through existing guard; no update submission",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-household",
+      "prerequisites": "Development household with at least one saved editable member; add/edit separate; do not save member mutations for keyboard-only tests",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-health",
+      "prerequisites": "Eligible development drive and household member; missing resident DOB for Age; vaccination dose other than first for priorDate; no registration submission",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-verification",
+      "prerequisites": "Matching unverified development email with pending code state; no verification email sent",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-id",
+      "prerequisites": "Other ID type; local synthetic front-image fixture to be supplied in development; manual/extracted review step; no real ID upload or final submission",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-service",
+      "prerequisites": "Approved development catalog entries for explanation-required, business and certified_true_copy; separate legacy doc with no catalogContract; no catalog rules changed",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-page-count",
+      "prerequisites": "Development request owned by test resident; fee_assessment_state=page_count_required; not completed/cancelled; both payment/pickup; no page assessment/payment submitted",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-report",
+      "prerequisites": "Development profile/category access; local incident draft and location-picker Modal; no incident or location save",
+      "readiness": "Unresolved development access; not instantiated"
+    },
+    {
+      "id": "T-search",
+      "prerequisites": "Guest and signed-in contexts where allowed; public/signed-in/DRRM centers; available test incidents/centers; preserve query/history/map state during native protocol",
+      "readiness": "Unresolved development access; not instantiated"
+    }
+  ],
+  "credentialHandling": "No passwords, OTPs, account identifiers, tokens or credentials stored in this catalog. Use approved development access supplied out of band."
+}

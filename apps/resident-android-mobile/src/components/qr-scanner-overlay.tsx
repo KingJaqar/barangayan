@@ -79,7 +79,7 @@ export function QrScannerOverlay({ visible, onClose }: { visible: boolean; onClo
         <SafeAreaView style={styles.root}>
           <View style={styles.header}>
             <Pressable onPress={close} style={styles.close} accessibilityRole="button" accessibilityLabel="Close QR scanner"><Ionicons name="close" size={24} color={resident.mediaForeground} /></Pressable>
-            <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.mediaForeground }]}>Scan QR Code</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.mediaForeground }]}>Scan QR Code</ThemedText>
             <View style={styles.close} />
           </View>
           <View style={styles.finder} onLayout={({ nativeEvent: { layout } }) => {

@@ -1,0 +1,35 @@
+{
+  "version": "1.18.1",
+  "style": "parsable XML, compressed",
+  "sha256": "1277a0ce2ba1902dc7a367d658a86041b5479c42c3c9175fa3b0d5ff9788c9f2",
+  "bytes": 11830,
+  "estimateTokens": 2826,
+  "security": "No suspicious files; default security scan enabled",
+  "missing": [],
+  "unexpected": [],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "chars": 467
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "chars": 349
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "chars": 5183
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "chars": 2124
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "chars": 8449
+    }
+  ],
+  "supersedes": "Initial --stdin attempts omitted nested entries on Windows. --include selectors resolved all 46; no security/ignore relaxation."
+}

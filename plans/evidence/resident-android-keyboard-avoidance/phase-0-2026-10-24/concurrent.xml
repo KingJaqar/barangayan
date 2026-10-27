@@ -1,0 +1,213 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/maps/index.tsx, apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx, apps/resident-android-mobile/tests/maps-presentation-ui.mjs, apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          maps/
+            index.tsx
+      components/
+        evacuation-centers-panel.tsx
+    tests/
+      drrm-centers-ui.mjs
+      maps-presentation-ui.mjs</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/tests/drrm-centers-ui.mjs">// Real Centers, shell, native wrapper and bundled Leaflet. Location/routing/native
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+// Shared values notify subscribers; timings are recorded, not native frame measurements.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=&gt;
+const frame=()
+⋮----
+// Let the last 500ms Leaflet flight finish before replacing the browser clock.
+⋮----
+const transitionCount=()</file><file path="apps/resident-android-mobile/tests/maps-presentation-ui.mjs">// Real Maps + data hooks + native wrapper + bundled Leaflet. Browser/native/transport
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=&gt;
+const frame=()
+⋮----
+// Regression harness uses the actual wrapper, including legacy default presentation.</file><file path="apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { useFocusEffect, useIsFocused } from &apos;expo-router&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { MapSelectionOverlay, type MapPlace } from &apos;@/components/maps/map-selection-overlay&apos;;
+import Animated, { useAnimatedStyle } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { useAmpid1Boundary } from &apos;@/hooks/use-ampid1-boundary&apos;;
+import { EvacuationCenterCard } from &apos;@/components/evacuation-center-card&apos;;
+import { CenterDetailCard } from &apos;@/components/center-detail-card&apos;;
+import { LocationStatusCard } from &apos;@/components/location-status-card&apos;;
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from &apos;@/components/map-view&apos;;
+import { useDeviceLocation } from &apos;@/hooks/use-device-location&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { OfflineRouteCard } from &apos;@/components/offline-route-card&apos;;
+import { RoadMarkCard } from &apos;@/components/road-mark-card&apos;;
+import { useResidentRoute } from &apos;@/hooks/use-resident-route&apos;;
+import { useOfflineRouting } from &apos;@/hooks/use-offline-routing&apos;;
+import { useAppForeground } from &apos;@/hooks/use-app-foreground&apos;;
+import { nearestEdge } from &apos;@/lib/offline-routing&apos;;
+import type { LatLng, LocationAction, MapLngLat, MapMarker } from &apos;@barangayan/shared&apos;;
+import type { AttachmentCandidate, RoutingEdge } from &apos;@barangayan/shared/src/lib/evacuation-routing&apos;;
+import { useNetInfo } from &apos;@react-native-community/netinfo&apos;;
+import { useEmergencyMapHeader } from &apos;@/hooks/use-emergency-map-header&apos;;
+import { useSearchInactivity } from &apos;@/hooks/use-search-inactivity&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+⋮----
+export function CentersContent({
+  theme,
+  centers: fetchedCenters,
+  isLoading,
+  error,
+  refetch,
+  view,
+  onViewChange,
+  nearestFirst,
+  onNearestToggle,
+  userPosition,
+  location,
+  onFitAll,
+  resident = false,
+}: {
+  theme: ReturnType&lt;typeof useTheme&gt;;
+  centers: ReturnType&lt;typeof useEvacuationCenters&gt;[&apos;centers&apos;];
+  isLoading: boolean;
+  error: string | null;
+refetch: ()
+⋮----
+const collapseSearch = () =&gt;
+⋮----
+// Retain the outgoing list until the first map is ready, avoiding an empty frame.
+⋮----
+const complete = () =&gt;
+⋮----
+// Reserve a separate row for the 44dp chevron above Android system navigation.
+⋮----
+// Walking routes are computed on this phone from the installed routing pack, verified
+// closures and the resident&apos;s own blocked roads (DRRM routing plan R6), so they work
+// offline. A route that cannot be computed is explained in words and never drawn as a
+// straight line (invariant 7).
+⋮----
+// Online tiles only when the internet is known to be reachable; offline, the pack&apos;s vector
+// roads are the basemap and no tile requests are made.
+⋮----
+// A street chosen from the attachment chooser belongs to one origin revision and graph.
+⋮----
+// Only the route to the selected center is drawn; the automatic run exists to rank the list, and
+// a result still on screen for a previous selection is never shown for the new one.
+⋮----
+const handleChooseSegment = (candidate: AttachmentCandidate) =&gt;
+⋮----
+// Walking distance replaces the straight-line estimate once a route result ranks the centers.
+// A center the result cannot reach shows no distance rather than a misleading straight line.
+⋮----
+// Layout/theme changes update clearance without replaying camera movement.
+⋮----
+// Ages shown in the status card are refreshed once a minute.
+⋮----
+// Marking a road as blocked on this phone (local avoidance).
+⋮----
+const closeMarking = () =&gt;
+const handleMapTap = (position: LatLng) =&gt;
+const handleConfirmMark = () =&gt;
+const handleRemoveMark = (recordId: string) =&gt;
+⋮----
+const selectCenter = (center: ReturnType&lt;typeof useEvacuationCenters&gt;[&apos;centers&apos;][number]) =&gt;
+const handleMarkerTap = (id: string) =&gt;
+const dismissCenter = ()
+const handleShowAll = () =&gt;
+const handleResetMap = () =&gt;
+// &quot;Locate me&quot; updates the shared controller (marker + routing origin), not just the
+// viewport. The map follows the result of an explicit request only.
+⋮----
+const handleLocateMe = () =&gt;
+⋮----
+const handleLocationAction = (action: LocationAction) =&gt;
+⋮----
+// Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+⋮----
+if (marking) closeMarking();
+else if (resident)
+⋮----
+
+⋮----
+&lt;TextInput ref=</file><file path="apps/resident-android-mobile/src/app/(app)/maps/index.tsx">import type { LatLng } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { useFocusEffect } from &apos;expo-router&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useCallback, useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import Reanimated, { useAnimatedStyle } from &apos;react-native-reanimated&apos;;
+import { MapView, type MapViewHandle } from &apos;@/components/map-view&apos;;
+import { MapSelectionOverlay, type MapPlace } from &apos;@/components/maps/map-selection-overlay&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useIncidentCategories } from &apos;@/hooks/use-incident-categories&apos;;
+import { useIncidents } from &apos;@/hooks/use-incidents&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { isMapPosition } from &apos;@/lib/map-presentation&apos;;
+⋮----
+type MapTab = &apos;incidents&apos; | &apos;evacuation&apos;;
+type PermissionStatus = Location.LocationPermissionResponse[&apos;status&apos;];
+⋮----
+export default function MapsScreen()
+⋮----
+// Keep the 44dp chevron above system navigation and all map controls above it.
+⋮----
+const owns = ()
+⋮----
+// Preserve automatic acquisition for granted permission and foreground permission rechecks.
+⋮----
+async function check(initial: boolean)
+⋮----
+function clearSelection()
+⋮----
+}} onBackgroundTap=
+⋮----
+}} onMapError=
+⋮----
+onPress=</file></files></repomix>

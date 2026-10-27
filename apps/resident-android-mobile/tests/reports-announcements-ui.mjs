@@ -16,7 +16,7 @@ const baselineRoot=path.resolve(app,'../../tmp/resident-android-magicpatterns-ph
 function source(p){if(!baseline)return p;const relative=path.relative(path.resolve(app,'../..'),p);const old=path.join(baselineRoot,relative);return fs.existsSync(old)?old:p;}
 const mocks={
  '@/global.css':'',
- 'react-native':`import React from 'react';import {Animated as A,View as V} from 'react-native-web';export * from 'react-native-web';export const View=React.forwardRef(({accessibilityViewIsModal,accessibilityElementsHidden,importantForAccessibility,...p},ref)=><V {...p} ref={ref}/>);export const Animated={...A,timing:(v,o)=>{window.fixture.durations.push(o.duration);return A.timing(v,{...o,useNativeDriver:false})}};`,
+ 'react-native':`import React from 'react';import {Animated as A,View as V} from 'react-native-web';export * from 'react-native-web';export const View=React.forwardRef(({accessibilityViewIsModal,accessibilityElementsHidden,importantForAccessibility,...p},ref)=><V {...p} ref={ref}/>);export const Animated={...A,timing:(v,o)=>{window.fixture.durations.push(o.duration);return A.timing(v,{...o,useNativeDriver:false})}};export const RefreshControl=({children,style,...p})=>{const ref=React.useRef(p);ref.current=p;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
  'react-native-safe-area-context':`import React from 'react';import {View} from 'react-native';export const SafeAreaView=({edges,...p})=><View {...p}/>;export const useSafeAreaInsets=()=>({top:0,bottom:0,left:0,right:0});`,
  'react-native-reanimated':`import React,{useRef} from 'react';import {View,Easing} from 'react-native';export default {View,createAnimatedComponent:c=>c};export const useSharedValue=v=>useRef({value:v}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=v=>v;export const withSpring=v=>v;export const runOnJS=fn=>fn;export const withRepeat=v=>v;export const withSequence=(...v)=>v.at(-1);export const cancelAnimation=()=>{};export const interpolateColor=(v,i,o)=>o[v>=.5?1:0];export {Easing};`,
  '@expo/vector-icons':`import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size,flexShrink:0}}/>;`,
@@ -52,13 +52,20 @@ try{
  await render({});await page.getByText('Synthetic unresolved',{exact:true}).waitFor();
  for(const label of ['Submitted','Progress','Resolved','Withdrawn','Unresolved'])assert.equal(await page.getByRole('button',{name:label,exact:true}).count(),1);
  assert.equal(await page.getByRole('button',{name:'Report incident',exact:true}).count(),1);
+ assert.equal(await page.evaluate(()=>window.pullControls.size),1,'the reports list is the only pull scroller');
  await page.evaluate(()=>window.fixture.queries=[]);
- await page.getByRole('tab',{name:'Active',exact:true}).click();await page.getByText('Synthetic in_progress',{exact:true}).waitFor();assert.equal(await page.getByText('Synthetic withdrawn',{exact:true}).count(),0);assert.equal(await page.evaluate(()=>window.fixture.queries.filter(q=>q.table==='incidents'&&q.action==='select'&&!q.head&&q.filters.some(([key,value])=>key==='status'&&Array.isArray(value))).length),1);
- await page.getByRole('tab',{name:'Resolved',exact:true}).click();await page.getByText('Synthetic resolved',{exact:true}).waitFor();
+ await page.evaluate(()=>[...window.pullControls][0].current.onRefresh());
+ await page.waitForFunction(()=>window.fixture.queries.some(q=>q.table==='incidents'&&q.action==='select'&&!q.head));
+ await page.waitForFunction(()=>![...window.pullControls][0].current.refreshing);
+ assert.equal(await page.getByText('Synthetic unresolved',{exact:true}).count(),1,'rows stay on screen through a pull');
+ passed.push('pulling the reports list reloads incidents, keeps rows and clears the spinner');
+ await page.evaluate(()=>window.fixture.queries=[]);
+ await page.getByRole('tab',{name:/^Active, \d+ active reports$/}).click();await page.getByText('Synthetic in_progress',{exact:true}).waitFor();assert.equal(await page.getByText('Synthetic withdrawn',{exact:true}).count(),0);assert.equal(await page.evaluate(()=>window.fixture.queries.filter(q=>q.table==='incidents'&&q.action==='select'&&!q.head&&q.filters.some(([key,value])=>key==='status'&&Array.isArray(value))).length),1);
+ await page.getByRole('tab',{name:/^Resolved, \d+ unread resolved reports$/}).click();await page.getByText('Synthetic resolved',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Mark Synthetic resolved as read'}).click();await page.getByRole('button',{name:'Mark Synthetic resolved as unread'}).waitFor();assert.equal(await page.getByRole('button',{name:'Mark all as read'}).isDisabled(),true);
  await page.getByRole('button',{name:'Mark Synthetic resolved as unread'}).click();await page.getByRole('button',{name:'Mark all as read'}).click();await page.waitForFunction(()=>window.fixture.incidents[2].resolved_read_at!==null);
  passed.push('all statuses, Active predicates, resolved toggle/bulk persistence and zero-count disable');
- for(let i=0;i<5;i++){for(const name of ['Active','Resolved','Incidents'])await page.getByRole('tab',{name,exact:true}).click();}await page.getByText('Synthetic unresolved',{exact:true}).waitFor();await page.waitForFunction(()=>window.fixture.topics.size===4&&window.fixture.channels.length===4);passed.push('five rapid tab cycles retain one feed subscription, unique topics during delayed removal and one initial query per filter change');
+ for(let i=0;i<5;i++){for(const name of ['Active','Resolved','Incidents'])await page.getByRole('tab',{name: new RegExp('^' + name + '(,|$)')}).click();}await page.getByText('Synthetic unresolved',{exact:true}).waitFor();await page.waitForFunction(()=>window.fixture.topics.size===4&&window.fixture.channels.length===4);passed.push('five rapid tab cycles retain one feed subscription, unique topics during delayed removal and one initial query per filter change');
  await render({session:null,params:{}});await page.getByText('Guest sign in required').waitFor();assert.equal(await page.getByRole('button',{name:'Report incident',exact:true}).count(),0);
  await render({session:{user:{id:'resident'}},failTable:'incidents'});await page.getByText('Your reports could not be loaded. Please try again.').waitFor();await page.evaluate(()=>window.fixture.failTable=null);await page.getByRole('button',{name:'Retry loading'}).click();await page.getByText('Synthetic unresolved',{exact:true}).waitFor();passed.push('guest gate and report source error/retry');
  await render({screen:'news',params:{announcementId:'news-1'}});await page.getByText('Full synthetic news body',{exact:false}).waitFor();assert.equal(await page.evaluate(()=>window.fixture.writes.filter(w=>w.table==='announcement_reads').length),1);await page.getByRole('button',{name:'Close',exact:true}).click();await page.getByText('Full synthetic news body',{exact:false}).waitFor({state:'hidden'});
@@ -88,6 +95,20 @@ try{
  for(let i=0;i<5;i++){await render({visible:false},false);await render({visible:true},false);await page.getByRole('button',{name:'Use This Location'}).waitFor();}await render({visible:false},false);await page.getByRole('button',{name:'Use This Location'}).waitFor({state:'hidden'});await page.waitForFunction(()=>window.fixture.channels.length===3);assert.equal(await page.evaluate(()=>window.fixture.durations.includes(280)&&window.fixture.durations.includes(200)),true);passed.push('corrected address preserved, five interrupted picker exits, 280/200ms configuration and provider cleanup');
  await render({screen:'news',params:{},mode:'dark',accent:'#ffffff',font:'georgia',failTable:null});await page.getByText('Synthetic news',{exact:true}).waitFor();
  for(const width of [320,360,400,412]){await page.setViewportSize({width,height:700});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)}await page.screenshot({path:path.join(out,'news-dark.png')});passed.push('dark/custom light accent/selected font and 320–412px overflow checks');
+ assert.equal(await page.evaluate(()=>window.pullControls.size),1,'the announcements list is the only pull scroller');
+ {const channels=await page.evaluate(()=>window.fixture.channels.length);
+ const pullNews=async()=>{await page.evaluate(()=>[...window.pullControls][0].current.onRefresh());await page.waitForFunction(()=>![...window.pullControls][0].current.refreshing)};
+ await page.evaluate(()=>window.fixture.queries=[]);await pullNews();
+ assert.equal(await page.evaluate(()=>window.fixture.queries.filter(q=>q.table==='announcements'&&q.action==='select').length),1,'one announcements request per pull');
+ assert.equal(await page.evaluate(()=>window.fixture.channels.length),channels,'a pull opens no realtime channel');
+ await page.evaluate(()=>window.fixture.news.push({...window.fixture.news[0],id:'news-2',title:'Pulled news',published_at:'2000-01-01T00:00:00.000Z'}));await pullNews();
+ await page.getByText('Pulled news',{exact:true}).waitFor();
+ await page.evaluate(()=>window.fixture.failTable='announcements');await pullNews();
+ assert.equal(await page.getByText('Synthetic news',{exact:true}).count(),1,'a failed pull keeps the list');
+ assert.equal(await page.getByText('Pulled news',{exact:true}).count(),1);
+ assert.equal(await page.getByText(/could not be loaded/).count(),0,'a failed pull adds no error state');
+ await page.evaluate(()=>{window.fixture.failTable=null;window.fixture.news.pop()});
+ passed.push('pulling announcements reloads once without a new channel, shows new rows and keeps the list when the pull fails');}
  for(const screen of ['form','picker','detail']){for(const mode of ['light','dark']){await render({screen,mode,accent:mode==='dark'?'#ffffff':'#cc3366',font:'georgia',visible:true,params:{incidentId:'incident-0'}});await page.waitForTimeout(300);for(const width of [320,360,400,412]){await page.setViewportSize({width,height:800});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)}await page.screenshot({path:path.join(out,screen+'-'+mode+'.png')});}}
  passed.push('all three target screens: 320–412px, light/dark custom accents and selected serif without page overflow');
  }

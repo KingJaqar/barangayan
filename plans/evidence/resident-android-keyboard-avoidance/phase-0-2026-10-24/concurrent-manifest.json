@@ -1,0 +1,34 @@
+{
+  "capturedAt": "2026-10-24T13:20:39.225Z",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "currentSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "headSha256": "e133463efa31f1bf04bbf31f2387ec436d42a39858cfa14bc3c1e5ce5bf057c5",
+      "ownership": "Concurrent user/other-task change; preserved and not authored by Phase 0",
+      "snapshot": "tmp\\resident-keyboard-phase0-20261024\\current-after-concurrent\\apps\\resident-android-mobile\\src\\app\\(app)\\maps\\index.tsx"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "currentSha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "headSha256": "01aca3869382190d67cd0ddfacce9fdf8603a4a5a5ee8dca3d8991ba5be20211",
+      "ownership": "Concurrent user/other-task change; preserved and not authored by Phase 0",
+      "snapshot": "tmp\\resident-keyboard-phase0-20261024\\current-after-concurrent\\apps\\resident-android-mobile\\src\\components\\evacuation-centers-panel.tsx"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "currentSha256": "2ce9c76dc7d9bcf76d66a238b9cfe25ab0d7fd23548bf9fa05fde0062faf82c1",
+      "headSha256": "dd9d30b2f7564e9a4c9594e4d7bc1cfeda217da2dd39543d56285fb9b1cac687",
+      "ownership": "Concurrent user/other-task change; preserved and not authored by Phase 0",
+      "snapshot": "tmp\\resident-keyboard-phase0-20261024\\current-after-concurrent\\apps\\resident-android-mobile\\tests\\maps-presentation-ui.mjs"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "currentSha256": "a18aa7bdc4bedb292787cd9265b243a67b98dd96b47bf7dd58b9af9192060e56",
+      "headSha256": "0fe0ea18ac11054c0cdc3d1d1297f92fbae2cdb41781de541a50c5909651df60",
+      "ownership": "Concurrent user/other-task change; preserved and not authored by Phase 0",
+      "snapshot": "tmp\\resident-keyboard-phase0-20261024\\current-after-concurrent\\apps\\resident-android-mobile\\tests\\drrm-centers-ui.mjs"
+    }
+  ],
+  "analysis": "Changes system-bottom safe-area clearance for map chevrons/overlays and supporting UI fixtures; editable input definitions unchanged. C16 source line246→249; C17 line422→427. Baseline checks do not qualify these later changes."
+}

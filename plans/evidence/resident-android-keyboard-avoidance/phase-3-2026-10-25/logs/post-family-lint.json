@@ -1,0 +1,13 @@
+{
+  "stage": "post-family",
+  "check": "lint",
+  "command": [
+    "node",
+    "../../node_modules/eslint/bin/eslint.js",
+    "src",
+    "--no-cache"
+  ],
+  "start": "2026-10-25T13:44:28.445Z",
+  "end": "2026-10-25T13:45:46.867Z",
+  "status": 0
+}

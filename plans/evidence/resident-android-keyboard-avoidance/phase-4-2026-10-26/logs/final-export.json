@@ -1,0 +1,16 @@
+{
+  "stage": "final",
+  "check": "export",
+  "command": [
+    "node",
+    "../../node_modules/expo/bin/cli",
+    "export",
+    "--platform",
+    "android",
+    "--output-dir",
+    "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase4-20261026\\final-export"
+  ],
+  "start": "2026-10-26T04:08:56.123Z",
+  "end": "2026-10-26T04:09:27.570Z",
+  "status": 0
+}

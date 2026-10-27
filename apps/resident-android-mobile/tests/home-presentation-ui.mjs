@@ -44,11 +44,12 @@ const mocks = {
     export const View=React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...props},ref)=><WebView {...props} ref={ref} aria-hidden={accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'||undefined}/>);
     export const Pressable=React.forwardRef(({accessibilityState,...props},ref)=><WebPressable {...props} ref={ref} aria-busy={accessibilityState?.busy}/>);
     export const AppState={addEventListener:(event,callback)=>{window.fixture.listeners.add(callback);return {remove:()=>window.fixture.listeners.delete(callback)}}};
-    export const AccessibilityInfo={sendAccessibilityEvent:(target,event)=>window.fixture.focusEvents.push(event)};`,
+    export const AccessibilityInfo={sendAccessibilityEvent:(target,event)=>window.fixture.focusEvents.push(event)};
+    export const RefreshControl=({children,style,...props})=>{const ref=React.useRef(props);ref.current=props;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
   '@barangayan/shared': `export * from '${shared}/lib/request-status.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
   'expo-router': `import React,{useEffect} from 'react';export const useRouter=()=>({push:href=>window.fixture.routes.push(href)});export const useFocusEffect=fn=>useEffect(()=>window.fixture.focused?fn():undefined,[fn,window.fixture.focused]);export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:window.fixture.needsCompletion});`,
-  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile});`,
+  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,refetch:()=>{window.fixture.profileRefetches+=1;return Promise.resolve()}});`,
   '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.fontId});`,
   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reducedMotion;`,
@@ -64,9 +65,9 @@ const mocks = {
 await build({
   stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Home from '${root}/app/(app)/home/index.tsx';
     const requests=['submitted','in_progress','ready_for_pickup'].map((status,index)=>({id:'request-'+index,resident_id:'synthetic-resident',reference_number:'SYNTHETIC-'+index,status,payment_status:index===0?'unpaid':'paid',created_at:'2026-10-18T01:00:00Z',status_history:index===1?[{status:'in_progress',at:'2026-10-19T02:00:00Z'}]:null,document_types:{name:index===2?'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)':'Service '+index}}));
-    window.fixture={session:{user:{id:'synthetic-resident'}},profile:{full_name:'Test Resident',avatar_url:null,barangays:{name:'Synthetic barangay'}},needsCompletion:false,requests,announcements:[{id:'news',title:'Synthetic community advisory with a long title for full text coverage',category:'general',published_at:'2026-10-18T02:00:00Z'}],mode:'light',accent:'#0F6E5B',fontId:'system',reducedMotion:true,focused:true,listeners:new Set(),motions:[],focusEvents:[],queries:[],routes:[],fail:{},reject:{},hold:false,waiting:[]};
+    window.fixture={session:{user:{id:'synthetic-resident'}},profile:{full_name:'Test Resident',avatar_url:null,barangays:{name:'Synthetic barangay'}},needsCompletion:false,requests,announcements:[{id:'news',title:'Synthetic community advisory with a long title for full text coverage',category:'general',published_at:'2026-10-18T02:00:00Z'}],mode:'light',accent:'#0F6E5B',fontId:'system',reducedMotion:true,focused:true,listeners:new Set(),motions:[],focusEvents:[],queries:[],routes:[],profileRefetches:0,fail:{},reject:{},hold:false,waiting:[]};
     const root=createRoot(document.getElementById('root'));let generation=0;window.renderHome=()=>root.render(<Home key={generation}/>);window.resetHome=()=>{generation++;window.renderHome();};window.unmountHome=()=>root.render(null);window.renderHome();`, resolveDir: app, loader: 'tsx' },
-  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty' },
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
   define: { __DEV__: 'false', global: 'globalThis', 'process.env.NODE_ENV': '"production"' },
   ...(workspaceOnly ? { tsconfigRaw: { compilerOptions: { jsx: 'react-jsx' } } } : {}),
   plugins: [{ name: 'fixtures', setup(b) {
@@ -111,6 +112,53 @@ try {
   await right().waitFor();
   assert.equal(await page.getByRole('button', { name: /Scroll announcements/ }).count(), 0);
   passed.push('Actual latest-three/latest-one query shapes and measured chevrons at both boundaries');
+
+  const pulling = () => page.evaluate(() => [...window.pullControls][0].current.refreshing);
+  const pullHome = async () => { await page.evaluate(() => [...window.pullControls][0].current.onRefresh()); await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing); };
+  assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'Home mounts one pull scroller');
+  await page.evaluate(() => { window.fixture.queries = []; });
+  await pullHome();
+  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
+  ]);
+  assert.equal(await page.evaluate(() => window.fixture.profileRefetches), 1);
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.requests[0].document_types.name = 'Pulled service'; window.fixture.announcements[0].title = 'Pulled advisory'; });
+  await pullHome();
+  await page.getByText('Pulled service', { exact: true }).waitFor();
+  await page.getByText('Pulled advisory', { exact: true }).waitFor();
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.fail = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.fail = {}; window.fixture.reject = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.reject = {}; });
+  assert.equal(await cards().count(), 3);
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 1);
+  assert.equal(await page.getByText(/could not be loaded/).count(), 0, 'a failed pull keeps the cards and adds no error state');
+  await page.evaluate(() => { window.fixture.hold = true; window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+  await page.evaluate(() => { const control = [...window.pullControls][0].current; control.onRefresh(); control.onRefresh(); });
+  await page.waitForFunction(() => window.fixture.waiting.length === 2);
+  assert.equal(await pulling(), true);
+  assert.deepEqual(await page.evaluate(() => [window.fixture.queries.length, window.fixture.profileRefetches]), [2, 1], 'a second pull during a flight starts nothing');
+  await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  await page.getByText('Your requests will appear here. Tap Documents to request a document.').waitFor();
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 0, 'a pull started for the previous account never writes after a switch');
+  await page.evaluate(() => { window.fixture.hold = true; });
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(() => window.fixture.waiting.length >= 1);
+  await page.evaluate(() => window.unmountHome());
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.evaluate(() => {
+    window.fixture.session = { user: { id: 'synthetic-resident' } }; window.fixture.requests[0].document_types.name = 'Service 0';
+    window.fixture.announcements[0].title = 'Synthetic community advisory with a long title for full text coverage';
+    window.fixture.queries = []; window.fixture.waiting = []; window.resetHome();
+  });
+  await cards().first().waitFor();
+  await page.evaluate(() => { window.fixture.queries = []; });
+  passed.push('Pulling Home reloads announcements, requests and profile together, shows new data, keeps cards through failed pulls, runs one flight, ignores a previous account and unmounted pull');
 
   await cards().nth(1).click();
   await close().waitFor();

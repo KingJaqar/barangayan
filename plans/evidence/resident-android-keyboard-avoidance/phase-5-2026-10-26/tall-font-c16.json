@@ -1,0 +1,239 @@
+{
+  "at": "2026-10-27T01:16:48.869Z",
+  "status": "pass stated subset",
+  "config": "tall-font",
+  "observations": [
+    {
+      "tag": "tall-font-c16-focus",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "Search locations...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-typed",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-native-cut",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "Search locations...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-native-paste",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-start",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-end",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-middle",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-filters-closed",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-filters-open",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-c16-return",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "open": {
+        "tag": "tall-font-c16-reopen-1",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          409,
+          885,
+          531
+        ],
+        "imeTop": 641,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          377,
+          1080,
+          1680
+        ],
+        [
+          0,
+          377,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "tall-font-c16-reopen-2",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          409,
+          885,
+          531
+        ],
+        "imeTop": 641,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          377,
+          1080,
+          1680
+        ],
+        [
+          0,
+          377,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "tall-font-c16-reopen-3",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          409,
+          885,
+          531
+        ],
+        "imeTop": 641,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          377,
+          1080,
+          1680
+        ],
+        [
+          0,
+          377,
+          1080,
+          1680
+        ]
+      ]
+    }
+  ],
+  "checks": [
+    "focus",
+    "start/middle/end caret",
+    "filter toggle while typing",
+    "disabled evacuation lookalike",
+    "query retained on incident return",
+    "three dismiss/reopen cycles with WebView bounds restored"
+  ],
+  "remaining": [
+    "touch paste/selection",
+    "selected incident marker",
+    "actual map camera identity"
+  ]
+}

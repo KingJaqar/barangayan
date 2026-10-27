@@ -1,0 +1,11 @@
+{
+  "numericTyping": true,
+  "nativeCutAndGboardClipboardPaste": true,
+  "exactValue": "7",
+  "restorationCycles": [
+    1,
+    2,
+    3
+  ],
+  "medicalSubmission": false
+}

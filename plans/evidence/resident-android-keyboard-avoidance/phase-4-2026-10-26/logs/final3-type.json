@@ -1,0 +1,14 @@
+{
+  "stage": "final3",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-26T06:44:10.097Z",
+  "end": "2026-10-26T06:44:34.606Z",
+  "status": 0
+}

@@ -1,0 +1,451 @@
+{
+  "sources": [
+    {
+      "path": "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+      "sha256": "1133e6aab46575ab8d7ff92c43bd0f94536115b393ec2aa731c38923c75432e7",
+      "bytes": 85929
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "sha256": "f987256771ad44d554e5faddd60d896cfdb5158a5b29cbc517f824941525dd6e",
+      "bytes": 33923
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "sha256": "6e2ce9effdc1b81c8ca4e643f88cbc86802d975441b7742020bba9b24282d9b2",
+      "bytes": 7514
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+      "bytes": 20684
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "sha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "bytes": 26909
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "f8500e1eef82d32ba670ba3a40bd87063c3540afd46d040b788db778cb5f5ba6",
+      "bytes": 7839
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "sha256": "ff5269cdce6a6b93ee9d4de23a6e711e5a89929a78deac7355b3076890abc124",
+      "bytes": 20773
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523",
+      "bytes": 60088
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "08bb36034f029319bf60ffcd679920ad7cf2483eea4cbe514c3c2e14fd9f7cb7",
+      "bytes": 25402
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "bytes": 35031
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "51cb2fc9f146ecb6cfe7b3a4de40e0936332db94b4715880b5a42f7304df308b",
+      "bytes": 10399
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "sha256": "97f4fa666996462f77ebbe87c03af661d7519b751493b3e39e8050e828c2b0fa",
+      "bytes": 5867
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "sha256": "27dc5f6cb77b8cc150fb07a4d0e71e1d44759187da0c3be34fab24392f59d88d",
+      "bytes": 4312
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "sha256": "5c2ec161b275239849c11139d4fd23b92ceb09fcf26db28e9f47ffd9c8416d66",
+      "bytes": 3574
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "sha256": "aa46701c7394089a68fa5bc5d1c727b94863801d72b0e3e287a7b9a684e17edf",
+      "bytes": 25602
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "sha256": "7eac34ccb6d54650ca2e91e606ccb51f0ed02c2f4b951b28614575568c70d69b",
+      "bytes": 28353
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/documents-list.tsx",
+      "sha256": "4978058e0d93a5557000f846ba726008293a9768f0157009f800de53e7d4f0c2",
+      "bytes": 6666
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "sha256": "0a198283bd134d72f9de93ed456e0d1c21c827c37f62bd9e63f784f1b7b725d9",
+      "bytes": 7165
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "sha256": "8857f38ff8c09dcd32fd3690447fde7ca1b1f2262149453ed96e8802d8c92a71",
+      "bytes": 17753
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-announcements.ts",
+      "sha256": "e0641ed4ce7f44cb00c7809604f3cf3d1c0a4110378be65fe5250619b3499f61",
+      "bytes": 3054
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "sha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+      "bytes": 3186
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts",
+      "sha256": "fa8118da6380f3c868f01b8af808643f411f9927aff482779d54a8e7f96fc7db",
+      "bytes": 3508
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-hotlines.ts",
+      "sha256": "5124d4f274fbc7dbcef31f5643849d7ef749ae10fe14e9852283d99648fe209e",
+      "bytes": 3460
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-qr-content.ts",
+      "sha256": "866f52f1a87e919bf26fcbd360646a3b4bff3129470afa6863858f6d163b95d0",
+      "bytes": 3369
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "sha256": "d0429dac75d76c3c31b1aedd025ce35e09a36ec01597b0024199788b90ad2b1f",
+      "bytes": 6889
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "sha256": "a18aa7bdc4bedb292787cd9265b243a67b98dd96b47bf7dd58b9af9192060e56",
+      "bytes": 35151
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+      "sha256": "7c4c55919f530722fdaf8d0a19abdac658575d8a87ab2817525c937d2d1e3b31",
+      "bytes": 31964
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "sha256": "4fab8e06cb28d7b43b4a3d8af7514c35147dfa6767ed63a3749c6257f857c460",
+      "bytes": 26028
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "sha256": "2ce9c76dc7d9bcf76d66a238b9cfe25ab0d7fd23548bf9fa05fde0062faf82c1",
+      "bytes": 26998
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "sha256": "494ffed6fb2699b6d592072068fcb5b6c0c2fbbb1445cc21a24d8ca3ac0e01d6",
+      "bytes": 18387
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "sha256": "be45513724ef2c3c96a8a382f012e911a402da3e99634c109dc479e72593d47f",
+      "bytes": 32126
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.test.ts",
+      "sha256": "b018a0536683fd110aafa21d15378225035000af78354769ed57e9ea77b4a57a",
+      "bytes": 7684
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.ts",
+      "sha256": "4ea0e04db9324d7cf4a3940603b309995dbefd214ac6a7181f6b726ff8f88b5c",
+      "bytes": 8089
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "sha256": "68d05b9a01002aa2b2c5b9e392835788b2d87c297012b185268fbf5d4230154f",
+      "bytes": 7910
+    },
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "bytes": 410
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "bytes": 2122
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "sha256": "507d51f5145b7304129795b6b8fe300945bf73649fd7431bb53042b1fb5bcc5f",
+      "bytes": 1295
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "sha256": "e5e40c5ce355e7ecae13a5de27e0f2a6cb44d12e988f6e73ad201527302e13d6",
+      "bytes": 454
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "sha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3",
+      "bytes": 7497
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "sha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627",
+      "bytes": 12138
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "sha256": "2dc66b3bb3f31bbce8e2cebf4d8d144750208f75781d74e6626bdfab9c8926a2",
+      "bytes": 2907
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "sha256": "8786234c44200d2173b6089b4f6187fe0c085f07c9760c190c046cecdcd332c1",
+      "bytes": 4434
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "sha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040",
+      "bytes": 5436
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "sha256": "b4ba9d218ce2e75c7b44dff9a57901ffb99d36c15c10fdb60c8ee738285c7917",
+      "bytes": 9913
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "sha256": "6d34635c47f6bf5327cbe69c92d37b5a2c792fe607c8be01c49a61056190e015",
+      "bytes": 16252
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx",
+      "sha256": "2ec722252d77d39e6deaaa1b342b7b26cbbae8ad57a6322d8cbc5f61b0b351bb",
+      "bytes": 313
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx",
+      "sha256": "534d3f01144a1c6cb93aedca9afccf4476868801b4bbe6ca2fb46052dbd8669f",
+      "bytes": 319
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "sha256": "a277a31f0aaabf56b5b274ce3b5c69607e304a97d7dfdddb461dba38e9f8e9be",
+      "bytes": 4665
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "sha256": "813263bad308bfad52ae802360bdb6180cc5cb3913b9935a372b3f81e425d607",
+      "bytes": 940
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "sha256": "6716c3119f0bc7fd72eefe4ef190b83b339b910c81baad90821ab03107aaac86",
+      "bytes": 6239
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "sha256": "be666e411e4ef0d9a504b636cc3e87819aff410e0373a2fcf346aa3e268b0cf3",
+      "bytes": 9377
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "sha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150",
+      "bytes": 9796
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "sha256": "b0568bf0b1fb67a671e068cbdc59e58cc2faf4c66a238d39b31bc7211f55fd81",
+      "bytes": 12452
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "sha256": "8ad3ce3714feeaa889eb73ae9d886de189b12601f2d357f1b46c791136469ab7",
+      "bytes": 4757
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx",
+      "sha256": "5290cf154cfca3990269f4d2366947dfe88d9ee75cc48110cacc3dedfa39c1c1",
+      "bytes": 4431
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "sha256": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d",
+      "bytes": 3321
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+      "sha256": "b45400501b607555a7face3e4f007c01c97aaf37092a72dad8c4d8583567f649",
+      "bytes": 742
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+      "sha256": "950be5b6de08137447bf55350038a5c5857c10f2536992dcb80b98e3dedad2c6",
+      "bytes": 4040
+    },
+    {
+      "path": "apps/resident-android-mobile/eas.json",
+      "sha256": "14361fc46e197f809aa6dfda5d4d5bae23e751deadf1ee3cfe3a10f45c97459f",
+      "bytes": 241
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "sha256": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+      "bytes": 1155
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "sha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802",
+      "bytes": 28626
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "sha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4",
+      "bytes": 27670
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "sha256": "0ce7afcd82f803f54e5b80f2f95ae6b4938925571c27d0ab152c08b2c680f0e6",
+      "bytes": 19195
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "sha256": "22de541455a70f00e29033ddba4493ad94dcf88ddfa0a28a2d51b5a826361941",
+      "bytes": 2740
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "sha256": "afe59139e0d690134c5ff96cd0d9ad8ddab4b5050cb19ad4cdaf97ffc7db795e",
+      "bytes": 9044
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "57d48ee30992f6e39f98577c967720e5c091d3d5d66e86a607e6ea3c6660f67c",
+      "bytes": 10527
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "sha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47",
+      "bytes": 4401
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "sha256": "b7bcf711b2a496d59f96fb9233fd3305765ee2f8a013480ba4e28aed30a47f9a",
+      "bytes": 8410
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "sha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "bytes": 5929
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "sha256": "06b289a6762438aa93ae119ccbf55fdd6723194692f9562f115935a007abcff9",
+      "bytes": 10282
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "sha256": "da0537942e0ba7949ef1f5ca221953d37228d9e2240e4508fd5cd0b4992f234c",
+      "bytes": 12774
+    },
+    {
+      "path": "apps/resident-android-mobile/tsconfig.json",
+      "sha256": "09570b139a14ee71947b40b6ef8d639323603fd031bf253d32f449a77d3ab58e",
+      "bytes": 318
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+      "bytes": 142
+    },
+    {
+      "path": "plans/Resident_Android_Keyboard_Avoidance_Audit_2026_10_24.md",
+      "sha256": "49d5ae3ab4db28cb190c946fe28402e16c7005e484600dff4fcbd4e93b668c47",
+      "bytes": 36862
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "bytes": 667658
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "sha256": "b2896dba882b8b95fb4f33082ddeba42ab6824f9a7fa56b4a44fd092750737c0",
+      "bytes": 3419
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "sha256": "1d7df0efdca645b86bf4362dae6003a02c1edfad9f36c407082f66de11629d93",
+      "bytes": 38465
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/drrm.tsx",
+      "sha256": "ae1cb3141cff2806c7dc4505c1885fd2e3a60da5b46ec9d774a75096b80b1de0",
+      "bytes": 130
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/ledger.json",
+      "sha256": "332af6dae8b7d0fa6a5f83ee140902334216e11c49ff47e348c47077c3fc19d2",
+      "bytes": 382101
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/context-index.md",
+      "sha256": "83f3cb4ce8ef31f58acb175b38ea502cf56138fa6c2d2f3a0cf321a53616aa58",
+      "bytes": 16330
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/routes-and-matrix.json",
+      "sha256": "247cad3f0ec8960d4535bf1e6fd3806ce42ccfa4a9b685e03d2583794b175e70",
+      "bytes": 17625
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/verification.json",
+      "sha256": "6c5d19f6bd6ff76b9c97234897dedb00dc5f03e019872bc1a2c1173ad74bc848",
+      "bytes": 3348
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/native-identity.json",
+      "sha256": "470bbb13fdf3d4ad820662ee29c53e5986988b1afd19e948a00cfe7b84c5d020",
+      "bytes": 1708
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/context-index.md",
+      "sha256": "7bcb7593bb569feb164181c196e210491798b5b8a5a80e55dfba1ccd55bba03e",
+      "bytes": 8158
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/verification.json",
+      "sha256": "4935b28fe55d1f1556b5688517150a331fe7c403f0bbd1c5300137b4ed7a1cbd",
+      "bytes": 5905
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/mumu-2026-10-24/source-identity.json",
+      "sha256": "b376392d4c684e929cdb02a517d0f61c33fa6787310783e0cc29c4b06561fabc",
+      "bytes": 13679
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/mumu-2026-10-24/native-results.json",
+      "sha256": "108f99b3bd6f47bff5a1f9d24500aa7da0c0ac2bcde06c348125a527e81ba7bf",
+      "bytes": 22984
+    }
+  ],
+  "ownership": "All baseline working-copy edits are user/pre-existing work, including previously implemented keyboard and loading fixes.",
+  "excluded": "Secrets, runtime tokens and unrelated untracked evidence"
+}

@@ -1,0 +1,84 @@
+
+C:\Users\User\barangayan\apps\resident-android-mobile\.expo\types\router.d.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+C:\Users\User\barangayan\apps\resident-android-mobile\scripts\generate-leaflet-assets.mjs
+  37:76  error  'Buffer' is not defined  no-undef
+
+C:\Users\User\barangayan\apps\resident-android-mobile\tests\drrm-centers-ui.mjs
+   78:29   error  'markerLayer' is not defined  no-undef
+  104:40   error  'map' is not defined          no-undef
+  104:155  error  'map' is not defined          no-undef
+  105:50   error  'markerLayer' is not defined  no-undef
+  105:248  error  'map' is not defined          no-undef
+  105:273  error  'L' is not defined            no-undef
+  150:29   error  'map' is not defined          no-undef
+  150:54   error  'L' is not defined            no-undef
+  176:30   error  'markerLayer' is not defined  no-undef
+  191:29   error  'markerLayer' is not defined  no-undef
+  203:61   error  'map' is not defined          no-undef
+  203:82   error  'map' is not defined          no-undef
+  213:59   error  'map' is not defined          no-undef
+  213:80   error  'map' is not defined          no-undef
+
+C:\Users\User\barangayan\apps\resident-android-mobile\tests\drrm-hub-alerts-ui.mjs
+  69:131  warning  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+
+C:\Users\User\barangayan\apps\resident-android-mobile\tests\drrm-scan-family-ui.mjs
+  99:117  warning  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+
+C:\Users\User\barangayan\apps\resident-android-mobile\tests\health-presentation-ui.mjs
+  106:9  warning  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+
+C:\Users\User\barangayan\apps\resident-android-mobile\tests\maps-presentation-ui.mjs
+   36:112  error  'Buffer' is not defined          no-undef
+   69:29   error  'map' is not defined             no-undef
+   69:54   error  'L' is not defined               no-undef
+   73:47   error  'map' is not defined             no-undef
+   73:162  error  'map' is not defined             no-undef
+   74:40   error  'map' is not defined             no-undef
+   74:156  error  'map' is not defined             no-undef
+   76:36   error  'map' is not defined             no-undef
+   81:192  error  'map' is not defined             no-undef
+   81:217  error  'L' is not defined               no-undef
+   83:30   error  'markerEntries' is not defined   no-undef
+   83:68   error  'markerEntries' is not defined   no-undef
+   86:45   error  'map' is not defined             no-undef
+   88:35   error  'map' is not defined             no-undef
+   99:115  error  'map' is not defined             no-undef
+  105:51   error  'map' is not defined             no-undef
+  105:72   error  'map' is not defined             no-undef
+  107:55   error  'map' is not defined             no-undef
+  107:76   error  'map' is not defined             no-undef
+  131:143  error  'userLayer' is not defined       no-undef
+  139:108  error  'markerEntries' is not defined   no-undef
+  140:29   error  'markerEntries' is not defined   no-undef
+  153:62   error  'map' is not defined             no-undef
+  153:74   error  'pickerEnabled' is not defined   no-undef
+  154:52   error  'markerEntries' is not defined   no-undef
+  154:100  error  'boundaryLayer' is not defined   no-undef
+  154:129  error  'map' is not defined             no-undef
+  155:57   error  'map' is not defined             no-undef
+  155:78   error  'map' is not defined             no-undef
+  157:42   error  'markerEntries' is not defined   no-undef
+  157:91   error  'boundaryLayer' is not defined   no-undef
+  158:55   error  'map' is not defined             no-undef
+  158:76   error  'map' is not defined             no-undef
+  160:51   error  'kindColors' is not defined      no-undef
+  162:29   error  'map' is not defined             no-undef
+  162:54   error  'L' is not defined               no-undef
+  163:29   error  'map' is not defined             no-undef
+  163:54   error  'L' is not defined               no-undef
+  164:55   error  'pickerMarker' is not defined    no-undef
+  165:95   error  'map' is not defined             no-undef
+  165:120  error  'L' is not defined               no-undef
+  169:62   error  'map' is not defined             no-undef
+  169:74   error  'basemapLayer' is not defined    no-undef
+  169:111  error  'routeLayer' is not defined      no-undef
+  170:42   error  'map' is not defined             no-undef
+  170:55   error  'tileLayer' is not defined       no-undef
+  170:114  error  'roadMarksLayer' is not defined  no-undef
+
+✖ 66 problems (62 errors, 4 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

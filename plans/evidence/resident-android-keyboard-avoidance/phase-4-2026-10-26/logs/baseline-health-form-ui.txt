@@ -1,0 +1,11 @@
+{
+  "passed": [
+    "member/self switching, age reset, None/multiple comorbidities and consent retain scroll/form identity",
+    "five rapid submit events dispatch one RPC; exact server number/Pending status; success motion does not replay on theme",
+    "stock/duplicate/server errors preserve consent and retry; vaccination-only dose date validates and sends actual date",
+    "malformed server result cannot show success; full stock and missing profile have explicit safe states",
+    "missing drive ID, failed drive fetch/retry and actual guest gate remain recoverable",
+    "compact short-height dark/serif/extreme-accent form; reduced-motion picker Back cycles; channel ownership after navigation"
+  ],
+  "errors": []
+}

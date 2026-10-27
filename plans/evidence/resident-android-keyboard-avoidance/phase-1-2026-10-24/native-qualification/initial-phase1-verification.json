@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-24 Asia/Manila",
+  "sourceHead": "d9253f0d42934133143d3b67955a4f987504914d",
+  "cwd": "apps/resident-android-mobile",
+  "typecheck": {
+    "command": "node ../../node_modules/typescript/bin/tsc --noEmit --pretty false",
+    "exit": 0,
+    "status": "pass",
+    "log": "logs/typecheck-baseline.log"
+  },
+  "lint": {
+    "command": "node ../../node_modules/eslint/bin/eslint.js src --no-cache",
+    "exit": 0,
+    "status": "pass, no diagnostics",
+    "log": "logs/lint-baseline.log"
+  },
+  "unit": {
+    "command": "node ../../node_modules/vitest/vitest.mjs run --reporter=dot",
+    "exit": 0,
+    "status": "pass",
+    "files": 32,
+    "tests": 335,
+    "log": "logs/unit-baseline.log"
+  },
+  "export": {
+    "command": "node ../../node_modules/expo/bin/cli export --platform android --output-dir ../../tmp/resident-keyboard-phase1-20261024/android-export",
+    "env": {
+      "CI": "1",
+      "EXPO_OFFLINE": "1",
+      "EXPO_NO_TELEMETRY": "1",
+      "TEMP": "workspace tmp/resident-keyboard-phase1-20261024/compiler-temp",
+      "TMP": "same as TEMP"
+    },
+    "exit": 0,
+    "status": "pass with pre-existing tooling warning",
+    "warning": "NO_COLOR ignored because FORCE_COLOR is set; same warning recorded in Phase 0",
+    "log": "logs/export-baseline.log",
+    "limit": "Android JS/Hermes export, not APK/native field validation"
+  },
+  "native": {
+    "status": "pending manual verification",
+    "performed": false,
+    "reproducedFailures": 0,
+    "passes": 0,
+    "reason": "Phase 0 has no build-paired native field observations or provisioned test-account branches; no mechanism can be selected"
+  },
+  "ios": {
+    "source": "unchanged",
+    "runtimeSmoke": "not run; no shared component edit",
+    "acceptance": "No native behavior claim"
+  },
+  "repomix": {
+    "version": "1.18.1",
+    "status": "pass",
+    "files": 12,
+    "completeReadChunks": [
+      {
+        "index": 0,
+        "chars": 10654
+      }
+    ],
+    "log": "logs/repomix.log",
+    "initialAttempt": "Failed because preparation had not completed and selector file was absent; diagnosed and corrected with a validated selector guard. Initial log retained."
+  },
+  "checkReuse": "Checks ran before plan progress edits. No app/config/dependency bytes changed afterward; final identity/diff/scope checks reuse those current-source results. No repeated app check was warranted.",
+  "phaseStatus": "Partially complete",
+  "acceptance": {
+    "representativeFailuresFixed": "not met: prerequisite missing",
+    "visibleInputNoJumpAndNoDuplicateGap": "pending manual verification",
+    "passingConsumersRetained": "pending manual verification: none passed in baseline",
+    "iosPathsUnchanged": "met at source level; native behavior not exercised"
+  },
+  "preExistingFailures": "No type/lint/unit/export failure observed. Existing tooling color warnings retained. Existing native gaps are unresolved, not test failures.",
+  "closure": {
+    "status": "pass",
+    "snapshottedInputs": 63,
+    "changedInputs": [
+      "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md"
+    ],
+    "otherPlanSectionsByteIdentical": true,
+    "trackedUserDiffByteIdentical": true,
+    "stagedDiffByteIdentical": true,
+    "packetIdentityValid": true,
+    "planWhitespace": "pass",
+    "newDependencies": 0
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "purpose": "Missing three-cycle restoration and immediate reopen after custom-color layout change",
+  "cycles": [
+    {
+      "cycle": 1,
+      "geometry": {
+        "editor": [
+          318,
+          961,
+          930,
+          1095
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 72
+      },
+      "restored": true
+    },
+    {
+      "cycle": 2,
+      "geometry": {
+        "editor": [
+          318,
+          961,
+          930,
+          1095
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 72
+      },
+      "restored": true
+    },
+    {
+      "cycle": 3,
+      "geometry": {
+        "editor": [
+          318,
+          961,
+          930,
+          1095
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 72
+      },
+      "restored": true
+    }
+  ],
+  "saved": false,
+  "immediateReopenOriginal": true,
+  "backDismissed": true,
+  "issues": [
+    {
+      "kind": "warning",
+      "at": 1792978155514.958,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "status": "pass for stated checks"
+}

@@ -29,6 +29,7 @@ import { FunctionsHttpError } from '@supabase/supabase-js';
 import { useAuth } from '@/hooks/use-auth';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { useNotificationPreferences } from '@/hooks/use-notification-preferences';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
@@ -58,7 +59,8 @@ async function toEdgeFunctionError(error: unknown): Promise<Error> {
 
 export default function SettingsScreen() {
   const { session, logout, setup, setupRefreshError, refreshCompletion } = useAuth();
-  const { profile, isLoading: profileLoading, error: profileError } = useProfile();
+  const { profile, isLoading: profileLoading, error: profileError, refetch: refetchProfile } = useProfile();
+  const pull = usePullRefresh([refetchProfile, refreshCompletion]);
   const idVerified = !profileLoading && !profileError && idVerificationState(profile) === 'verified';
   const idStatus = idVerified ? 'Verified' : profileLoading ? 'Checking verification…' : profileError ? 'Verification unavailable' : profile?.id_verification_status === 'pending' ? 'Pending verification' : profile?.id_verification_status === 'verification_failed' ? 'Verification failed — try again' : 'Not verified';
   const rows = accountSettingsRows(setup);
@@ -291,7 +293,9 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + Spacing.three }]}>
+        <ScrollView
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+          contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + Spacing.three }]}>
         {session ? (
           <>
           <Card variant="resident" style={styles.profileCard}>
@@ -632,7 +636,7 @@ function GoogleDeletionDialog({ visible, busy, onCancel, onConfirm }: {
       <NativeAnimated.View accessibilityViewIsModal pointerEvents={visible ? 'auto' : 'none'} style={[styles.confirmSheet, { backgroundColor: resident.card, opacity: panel,
         transform: [{ scale: reduced ? 1 : panel.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
       }]}>
-        <ThemedText accessibilityRole="header" style={styles.confirmTitle}>Permanently Delete Account?</ThemedText>
+        <ThemedText type="residentHeader" accessibilityRole="header" style={styles.confirmTitle}>Permanently Delete Account?</ThemedText>
         <ThemedText type="small" themeColor="textSecondary" style={styles.confirmText}>Google confirmed it is you. Deleting cannot be undone.</ThemedText>
         <PrimaryButton presentation="resident" label="Delete Account" variant="destructiveFilled" loading={busy} onPress={onConfirm} />
         <PrimaryButton presentation="resident" label="Cancel" variant="secondary" disabled={busy} onPress={onCancel} />

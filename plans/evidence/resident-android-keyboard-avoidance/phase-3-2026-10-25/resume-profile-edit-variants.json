@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "results": [
+    {
+      "config": "compact-large-font",
+      "cycles": [],
+      "saved": false,
+      "status": "incomplete",
+      "error": "Command failed: adb -s emulator-5554 shell input swipe 10 1400 10 275 400\n\r\nException occurred while executing 'swipe':\r\njava.lang.SecurityException: Injecting to another application requires INJECT_EVENTS permission\r\n\tat com.android.server.input.InputManagerService.injectInputEventInternal(InputManagerService.java:933)\r\n\tat com.android.server.input.InputManagerService.injectInputEvent(InputManagerService.java:836)\r\n\tat android.hardware.input.InputManager.injectInputEvent(InputManager.java:1249)\r\n\tat com.android.server.input.InputShellCommand.injectMotionEvent(InputShellCommand.java:159)\r\n\tat com.android.server.input.InputShellCommand.sendSwipe(InputShellCommand.java:449)\r\n\tat com.android.server.input.InputShellCommand.runSwipe(InputShellCommand.java:412)\r\n\tat com.android.server.input.InputShellCommand.onCommand(InputShellCommand.java:222)\r\n\tat com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)\r\n\tat android.os.ShellCommand.exec(ShellCommand.java:38)\r\n\tat com.android.server.input.InputManagerService.onShellCommand(InputManagerService.java:3603)\r\n\tat android.os.Binder.shellCommand(Binder.java:950)\r\n\tat android.os.Binder.onTransact(Binder.java:834)\r\n\tat android.hardware.input.IInputManager$Stub.onTransact(IInputManager.java:1201)\r\n\tat android.os.Binder.execTransactInternal(Binder.java:1184)\r\n\tat android.os.Binder.execTransact(Binder.java:1143)\r\n"
+    },
+    {
+      "config": "compact-large-display-gesture",
+      "cycles": [],
+      "saved": false,
+      "status": "incomplete",
+      "error": "Command failed: adb -s emulator-5554 shell input swipe 10 1354 10 332 400\n\r\nException occurred while executing 'swipe':\r\njava.lang.SecurityException: Injecting to another application requires INJECT_EVENTS permission\r\n\tat com.android.server.input.InputManagerService.injectInputEventInternal(InputManagerService.java:933)\r\n\tat com.android.server.input.InputManagerService.injectInputEvent(InputManagerService.java:836)\r\n\tat android.hardware.input.InputManager.injectInputEvent(InputManager.java:1249)\r\n\tat com.android.server.input.InputShellCommand.injectMotionEvent(InputShellCommand.java:159)\r\n\tat com.android.server.input.InputShellCommand.sendSwipe(InputShellCommand.java:449)\r\n\tat com.android.server.input.InputShellCommand.runSwipe(InputShellCommand.java:412)\r\n\tat com.android.server.input.InputShellCommand.onCommand(InputShellCommand.java:222)\r\n\tat com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)\r\n\tat android.os.ShellCommand.exec(ShellCommand.java:38)\r\n\tat com.android.server.input.InputManagerService.onShellCommand(InputManagerService.java:3603)\r\n\tat android.os.Binder.shellCommand(Binder.java:950)\r\n\tat android.os.Binder.onTransact(Binder.java:834)\r\n\tat android.hardware.input.IInputManager$Stub.onTransact(IInputManager.java:1201)\r\n\tat android.os.Binder.execTransactInternal(Binder.java:1184)\r\n\tat android.os.Binder.execTransact(Binder.java:1143)\r\n"
+    }
+  ],
+  "finalProfileClean": true
+}

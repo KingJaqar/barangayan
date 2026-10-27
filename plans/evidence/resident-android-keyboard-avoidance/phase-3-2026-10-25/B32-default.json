@@ -1,0 +1,35 @@
+{
+  "status": "pass for measured default dialog geometry, typing, toggle, restoration and reopen subset",
+  "passwordAndActionsVisible": true,
+  "syntheticTextRemoved": true,
+  "passwordToggleFocusAndImeObserved": true,
+  "keyboardCycles": 3,
+  "originalGeometryRestoredEachCycle": true,
+  "closeReopenEmptyAndVisible": true,
+  "deletionSubmitted": false,
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792930658107.722,
+      "classification": "existing push-notification path"
+    },
+    {
+      "kind": "warning",
+      "at": 1792932582088.815,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792930658107.722,
+      "classification": "existing push-notification path"
+    },
+    {
+      "kind": "warning",
+      "at": 1792932582088.815,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "limit": "Permanent Phase 3 candidate; full per-field/configuration protocol remains incomplete"
+}

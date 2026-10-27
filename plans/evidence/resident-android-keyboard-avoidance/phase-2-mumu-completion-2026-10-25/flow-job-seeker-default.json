@@ -1,0 +1,156 @@
+{
+  "flow": "job-seeker",
+  "configuration": "default",
+  "results": [
+    {
+      "id": "B25",
+      "label": "Explain your purpose",
+      "configuration": "job-seeker-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "job-seeker-default-B25-focus",
+          "editor": [
+            60,
+            798,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        },
+        {
+          "name": "job-seeker-default-B25-paste",
+          "editor": [
+            60,
+            796,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        },
+        {
+          "name": "job-seeker-default-B25-selection",
+          "editor": [
+            60,
+            796,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "configuration": "job-seeker-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "job-seeker-default-B31-focus",
+          "editor": [
+            60,
+            660,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        },
+        {
+          "name": "job-seeker-default-B31-paste",
+          "editor": [
+            60,
+            660,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        },
+        {
+          "name": "job-seeker-default-B31-selection",
+          "editor": [
+            60,
+            660,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167,
+          "clearance": 225,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792914936946.444
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792914936946.444
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

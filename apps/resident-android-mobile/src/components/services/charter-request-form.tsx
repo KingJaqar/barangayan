@@ -324,7 +324,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
       <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
-      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <View style={styles.hero}>
             <ThemedText type="subtitle" style={styles.heroTitle}>

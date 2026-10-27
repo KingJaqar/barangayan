@@ -10,6 +10,7 @@ const root = path.join(app, 'src').replaceAll('\\', '/');
 const shared = path.resolve(app, '../../packages/shared/src').replaceAll('\\', '/');
 const iconGlyphs = require('@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/Ionicons.json');
 const iconFont = fs.readFileSync(require.resolve('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf')).toString('base64');
+const headerFont = fs.readFileSync(path.join(app, 'assets/fonts/GideonRoman-Regular.ttf')).toString('base64');
 const out =
   process.env.TEST_ARTIFACTS_DIR ??
   path.resolve(app, '../../tmp/family-attendance-phase3-20261022/settings-ui');
@@ -24,6 +25,7 @@ const mocks = {
     export const Modal=({visible,onRequestClose,children})=>{React.useEffect(()=>{if(!visible)return;const fn=e=>{if(e.key==='Escape')onRequestClose?.()};document.addEventListener('keydown',fn,true);return()=>document.removeEventListener('keydown',fn,true)},[visible,onRequestClose]);return visible?<div role="dialog" style={{position:'fixed',inset:0,display:'flex',zIndex:10}}>{children}</div>:null};
     export const Pressable=React.forwardRef(({accessibilityState,...p},r)=><R.Pressable {...p} ref={r} aria-selected={accessibilityState?.selected} aria-busy={accessibilityState?.busy} aria-checked={accessibilityState?.checked}/>);
     export const Platform={...R.Platform,OS:'android',select:o=>o.android??o.default};
+    export const RefreshControl=({children,style,...p})=>{const ref=React.useRef(p);ref.current=p;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};
     export const Alert={alert:(...args)=>window.fixture.alerts.push(args)};
     export const AccessibilityInfo={isReduceMotionEnabled:async()=>window.fixture.reduced,addEventListener:(event,fn)=>{window.fixture.listeners.add(fn);return{remove:()=>window.fixture.listeners.delete(fn)}}};`,
   'expo-router': `import React from 'react';export const useFocusEffect=fn=>React.useEffect(fn,[fn]);export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r)};export const useRouter=()=>router;export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
@@ -35,7 +37,7 @@ const mocks = {
   '@/hooks/use-auth': `export const useAuth=()=>window.fixture.auth;`,
   '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.loading,error:window.fixture.profileError,refetch:()=>{window.fixture.refetches++;window.fixture.profile={...window.fixture.profile};window.renderFixture()}});export const useProfileData=useProfile;`,
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>100;`,
-  '@barangayan/shared': `export {idVerificationState} from '${shared}/lib/service-catalog.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID,isValidFontId} from '${shared}/constants/theme-fonts.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {EMAIL_REGEX,EMPLOYMENT_STATUSES,EMPLOYMENT_STATUSES_WITH_OCCUPATION,MOBILE_NUMBER_REGEX,NAME_REGEX,SEXES} from '${shared}/schemas/auth.ts';`,
+  '@barangayan/shared': `export {DRIVE_TYPE_CONFIG} from '${shared}/constants/drive-types.ts';export {idVerificationState} from '${shared}/lib/service-catalog.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID,isValidFontId} from '${shared}/constants/theme-fonts.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {EMAIL_REGEX,EMPLOYMENT_STATUSES,EMPLOYMENT_STATUSES_WITH_OCCUPATION,MOBILE_NUMBER_REGEX,NAME_REGEX,SEXES} from '${shared}/schemas/auth.ts';`,
   '@/lib/push-notifications': `export const registerPushToken=async()=>window.fixture.push.push('register');export const unregisterPushToken=async()=>window.fixture.push.push('unregister');`,
   '@/lib/google-auth': `export const clearGoogleReauthentication=async()=>{window.fixture.google='none'};export const googleReauthentication=async()=>window.fixture.google;export const startGoogleAuth=async()=>{window.fixture.googleStarts++};`,
   '@/lib/image-upload': `export const imageExtension=()=> 'jpg';export const pickImageAsset=async()=>{if(window.fixture.pickerError)throw Error('Synthetic picker failure');return window.fixture.picked};export const readImageBytes=async()=>{if(window.fixture.photoError)throw Error('Synthetic photo failure');return new Uint8Array([1])};`,
@@ -49,7 +51,7 @@ const mocks = {
 await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import Settings from '${root}/app/(app)/settings/index';import Profile from '${root}/app/(app)/settings/profile';import {ThemePreferenceProvider} from '${root}/hooks/use-theme-preference';import {FontPreferenceProvider} from '${root}/hooks/use-font-preference';import {NotificationPreferencesProvider} from '${root}/hooks/use-notification-preferences';
 const id='11111111-1111-4111-8111-111111111111';
 const profile={id,first_name:'Synthetic',middle_name:'',last_name:'Resident',suffix:'',full_name:'Synthetic Resident',email:'resident@example.invalid',mobile_number:'09171234567',sex:'male',birth_date:'1990-01-02',house_no:'1',street:'Synthetic Street',city:'Synthetic City',province:'Synthetic Province',employment_status:'employed',occupation:'Tester',household_members:[],avatar_url:null,barangays:{name:'Synthetic Barangay',barangay_localities:{display_name:'Synthetic Barangay'}},accent_color:'#0F6E5B',theme_preference:'light',font_preference:'system',custom_accent_colors:[],email_verification_status:'verified'};
-const auth={session:{user:{id,email:profile.email}},setup:{state:'ready',status:{passwordSet:true,hasGoogleIdentity:false,profileComplete:true}},refreshCompletion:async()=>{},logout:async()=>{window.fixture.logouts++;window.fixture.auth.session=null;window.fixture.profile=null;window.renderFixture()}};
+const auth={session:{user:{id,email:profile.email}},setup:{state:'ready',status:{passwordSet:true,hasGoogleIdentity:false,profileComplete:true}},refreshCompletion:async()=>{window.fixture.refreshes=(window.fixture.refreshes??0)+1},logout:async()=>{window.fixture.logouts++;window.fixture.auth.session=null;window.fixture.profile=null;window.renderFixture()}};
 window.fixture={screen:'settings',profile,auth,loading:false,profileError:null,reduced:false,device:{},writes:[],alerts:[],routes:[],durations:[],push:[],invokes:[],shares:[],listeners:new Set(),delay:200,refetches:0,google:'none',googleStarts:0,logouts:0,picked:null};
 const root=createRoot(document.getElementById('root'));let generation=0;window.renderFixture=()=>root.render(<ThemePreferenceProvider key={generation}><FontPreferenceProvider><NotificationPreferencesProvider>{window.fixture.screen==='profile'?<Profile/>:window.fixture.screen==='settings'?<Settings/>:null}</NotificationPreferencesProvider></FontPreferenceProvider></ThemePreferenceProvider>);window.resetFixture=()=>{generation++;window.renderFixture()};window.renderFixture();`,loader:'jsx',resolveDir:app},outfile:path.join(out,'bundle.js'),bundle:true,format:'iife',jsx:'automatic',define:{__DEV__:'false',global:'globalThis','process.env.NODE_ENV':'"production"'},plugins:[{name:'native-adapters',setup(b){b.onResolve({filter:/.*/},a=>a.path in mocks?{path:a.path,namespace:'fixture'}:undefined);b.onLoad({filter:/.*/,namespace:'fixture'},a=>({contents:mocks[a.path],loader:'jsx',resolveDir:app}));}}]});
 const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE??'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'});
@@ -59,12 +61,19 @@ try {
   page.setDefaultTimeout(8000);
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text())});
   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
-  await page.addStyleTag({content:`@font-face{font-family:FixtureIonicons;src:url(data:font/ttf;base64,${iconFont}) format('truetype')}`});
+  await page.addStyleTag({content:`@font-face{font-family:FixtureIonicons;src:url(data:font/ttf;base64,${iconFont}) format('truetype')}@font-face{font-family:GideonRoman;src:url(data:font/ttf;base64,${headerFont}) format('truetype');font-weight:400;font-style:normal}`});
   await page.addScriptTag({path:path.join(out,'bundle.js')});
   const button=name=>page.getByRole('button',{name,exact:true});
   const settle=async()=>page.waitForTimeout(360);
   const go=async screen=>{await page.evaluate(screen=>{window.fixture.screen=screen;window.renderFixture()},screen);await settle()};
   await button('Add a custom color').waitFor();
+  // Pull-to-refresh: the hub's one scroller owns the control; a pull reloads the profile and the account setup status once each.
+  assert.equal(await page.evaluate(()=>window.pullControls?.size??0),1,'Settings mounts one pull control');
+  await page.evaluate(()=>{window.fixture.refetches=0;window.fixture.refreshes=0;[...window.pullControls][0].current.onRefresh()});await page.waitForTimeout(150);
+  assert.deepEqual(await page.evaluate(()=>[window.fixture.refetches,window.fixture.refreshes]),[1,1],'a pull reads the profile and the setup status once');
+  assert.equal(await button('Add a custom color').count(),1,'Settings content stays through the pull');
+  assert.equal(await page.evaluate(()=>[...window.pullControls][0].current.refreshing),false,'the spinner ends');
+  passed.push('Settings pull reloads the profile and the account setup status once and keeps the content');
   assert.equal(await page.getByRole('button',{name:/^Accent color #/}).count(),20);
   for(const name of ['System Default','Inter','Arial','Helvetica','Segoe UI','Verdana','Tahoma','Trebuchet MS','Georgia','Times New Roman'])assert.equal(await button(name).count(),1);
   await page.getByRole('tab',{name:'Dark',exact:true}).click();await settle();
@@ -137,7 +146,8 @@ try {
   await page.setViewportSize({width:400,height:800});
   await page.evaluate(()=>{window.fixture.profile={...window.fixture.profile,theme_preference:'dark',accent_color:'#2563EB',font_preference:'georgia'};window.resetFixture()});await settle();
   await page.screenshot({path:path.join(out,'profile-reference-dark.png')});
-  assert.equal(await page.getByRole('heading',{name:'Profile',exact:true}).evaluate(el=>getComputedStyle(el).fontFamily),'serif');
+  assert.deepEqual(await page.getByRole('heading',{name:'Profile',exact:true}).evaluate(el=>({family:getComputedStyle(el).fontFamily,weight:getComputedStyle(el).fontWeight})),{family:'GideonRoman',weight:'400'});
+  assert.equal(await page.getByRole('textbox',{name:'First Name',exact:true}).evaluate(el=>getComputedStyle(el).fontFamily),'serif');
   await button('Edit Employment Status').click();await settle();await page.screenshot({path:path.join(out,'profile-employment-dark.png')});await page.keyboard.press('Escape');await settle();
   await page.evaluate(()=>{window.fixture.reduced=true;for(const fn of window.fixture.listeners)fn(true)});
   const motionStart=await page.evaluate(()=>window.fixture.durations.length);
@@ -171,7 +181,27 @@ try {
 
   for(let i=0;i<5;i++){await button('Edit Sex').click();await button('Close Sex').click();await settle()}
   await button('Edit Employment Status').click();await button('Close Employment Status').click();await settle();
-  await button('Edit Date of Birth').click();await button('Close').click();await settle();
+  const birthdayBefore=await button('Edit Date of Birth').innerText();
+  const birthdayWrites=await page.evaluate(()=>window.fixture.writes.length);
+  await button('Edit Date of Birth').click();await settle();
+  for(const part of ['month','day','year'])assert.equal(await page.getByTestId(`birthday-${part}-wheel`).count(),1);
+  const pickBirthday=async(part,label)=>page.getByTestId(`birthday-${part}-wheel`).getByText(label,{exact:true}).evaluate(el=>el.click());
+  await pickBirthday('year','2000');await pickBirthday('month','February');await pickBirthday('day','29');
+  await button('Close').click();await settle();
+  assert.equal(await button('Edit Date of Birth').innerText(),birthdayBefore,'Close discards the birthday draft');
+  await button('Edit Date of Birth').click();await settle();
+  await pickBirthday('year','2000');await pickBirthday('month','February');await pickBirthday('day','29');
+  await page.screenshot({path:path.join(out,'profile-birthday-wheel.png')});
+  await button('Done').click();await settle();
+  assert.match(await button('Edit Date of Birth').innerText(),/02\/29\/2000/);
+  assert.equal(await page.evaluate(()=>window.fixture.writes.length),birthdayWrites,'Done updates the local form only');
+  await button('Edit Date of Birth').click();await settle();
+  await pickBirthday('year','2001');
+  assert.equal(await page.getByTestId('birthday-day-wheel').getByText('29',{exact:true}).count(),0,'non-leap years omit February 29');
+  await button('Done').click();await settle();
+  assert.match(await button('Edit Date of Birth').innerText(),/02\/28\/2001/);
+  await button('Edit Date of Birth').click();await settle();await page.keyboard.press('Escape');await settle();
+  passed.push('birthday Month-Day-Year wheels discard on Close, confirm locally on Done, clamp leap days and dismiss on Back');
   for(const width of [320,360,400,412]){await page.setViewportSize({width,height:640});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true)}
   await page.screenshot({path:path.join(out,'profile-compact.png')});
   passed.push('five option-sheet open/close cycles, employment and birthday dismissal, compact widths have no document overflow');

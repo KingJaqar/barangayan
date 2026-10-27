@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-26T13:43:54.449Z",
+  "status": "pass native paste/long horizontal caret and cleanup",
+  "config": "compact-font",
+  "kind": "incident",
+  "route": "drrm",
+  "paste": [
+    {
+      "tag": "compact-font-long-paste-incident-drrm-native-cut",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 927,
+      "text": "Search locations...",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-long-paste-incident-drrm-native-paste",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        409,
+        885,
+        531
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    }
+  ],
+  "longCharacterCount": 162,
+  "maximum": null,
+  "imeSubmissionVerified": false,
+  "syntheticTextCleared": true
+}

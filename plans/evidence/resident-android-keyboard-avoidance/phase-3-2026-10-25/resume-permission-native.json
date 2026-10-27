@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "original": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+  "permissionRequestApproved": false,
+  "nativeDeniedPickerOpened": true,
+  "headerActionsReachable": true,
+  "cancelPreservesDenied": true,
+  "restored": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+  "originalPermissionAndFlagsRestored": true
+}

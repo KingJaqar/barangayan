@@ -14,6 +14,7 @@ import { HomeAction } from '@/components/home/home-action';
 import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
 import { PrimaryButton } from '@/components/primary-button';
 import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { ThemedText } from '@/components/themed-text';
 import { DocumentIcon } from '@/components/document-icon';
@@ -39,7 +40,7 @@ const QUICK_ACTIONS = [
 export default function HomeScreen() {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
-  const { profile } = useProfile();
+  const { profile, refetch: refetchProfile } = useProfile();
   const { resident } = useTheme();
   const router = useRouter();
   const bottomTabInset = useFloatingTabInset();
@@ -57,31 +58,43 @@ export default function HomeScreen() {
   const pendingTracking = useRef<string | null>(null);
   const homeActive = useRef(true);
   const requestTargets = useRef(new Map<string, View>());
+  // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
+  const pullNews = useRef<(() => Promise<void>) | null>(null);
+  const pullRequests = useRef<(() => Promise<void>) | null>(null);
+  const pull = usePullRefresh([() => pullNews.current?.(), () => pullRequests.current?.(), refetchProfile]);
 
   useEffect(() => {
     let active = true;
     // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
-    Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1))
+    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
+    fetchLatest()
       .then(({ data, error }) => {
         if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
       }).catch(() => {
         if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
       });
-    return () => { active = false; };
+    pullNews.current = () => fetchLatest().then(({ data, error }) => {
+      if (!error && active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullNews.current = null; };
   }, [announcementRetry]);
 
   useEffect(() => {
     if (!userId) return;
     let active = true;
     // Preserve the existing authenticated resident scope and latest-three limit.
-    Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
-      .order('created_at', { ascending: false }).limit(3))
+    const fetchRecent = () => Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
+      .order('created_at', { ascending: false }).limit(3));
+    fetchRecent()
       .then(({ data, error }) => {
         if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
       }).catch(() => {
         if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
       });
-    return () => { active = false; };
+    pullRequests.current = () => fetchRecent().then(({ data, error }) => {
+      if (!error && active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullRequests.current = null; };
   }, [userId, requestKey]);
 
   useEffect(() => {
@@ -121,7 +134,8 @@ export default function HomeScreen() {
   }
 
   return <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: resident.card }]}>
-    <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}>
+    <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+      refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
       <View style={styles.inset}><ProfileCompletionBanner /></View>
       <View style={styles.identitySection}>
         {userId ? <View style={styles.identity}>

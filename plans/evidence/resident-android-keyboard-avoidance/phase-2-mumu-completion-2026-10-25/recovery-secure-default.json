@@ -1,0 +1,124 @@
+{
+  "configuration": "default",
+  "state": "Unverified recovery boundary reached through normal signed-in recovery action",
+  "geometryOnly": true,
+  "results": [
+    {
+      "id": "B07",
+      "label": "New password",
+      "baseline": {
+        "name": "recovery-secure-default-B07-before",
+        "editor": [
+          72,
+          921,
+          1008,
+          1089
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1920
+        ],
+        "keyboardTop": null,
+        "clearance": null,
+        "focused": false
+      },
+      "focused": {
+        "name": "recovery-secure-default-B07-focus",
+        "editor": [
+          72,
+          912,
+          1008,
+          1080
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1080
+        ],
+        "keyboardTop": 1080,
+        "clearance": 0,
+        "focused": true
+      },
+      "restored": {
+        "name": "recovery-secure-default-B07-restored",
+        "editor": [
+          72,
+          912,
+          1008,
+          1080
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1920
+        ],
+        "keyboardTop": 1080,
+        "clearance": 0,
+        "focused": true
+      }
+    },
+    {
+      "id": "B08",
+      "label": "Confirm new password",
+      "baseline": {
+        "name": "recovery-secure-default-B08-before",
+        "editor": [
+          72,
+          1584,
+          1008,
+          1752
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1920
+        ],
+        "keyboardTop": null,
+        "clearance": null,
+        "focused": false
+      },
+      "focused": {
+        "name": "recovery-secure-default-B08-focus",
+        "editor": [
+          72,
+          912,
+          1008,
+          1080
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1080
+        ],
+        "keyboardTop": 1080,
+        "clearance": 0,
+        "focused": true
+      },
+      "restored": {
+        "name": "recovery-secure-default-B08-restored",
+        "editor": [
+          72,
+          1260,
+          1008,
+          1428
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1920
+        ],
+        "keyboardTop": 1080,
+        "clearance": -348,
+        "focused": true
+      }
+    }
+  ],
+  "submitted": false
+}

@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-27T01:00:05.956Z",
+  "status": "pass selected incident/filter/camera/nav/already-open header",
+  "config": "tall-display",
+  "existingIncidentSelected": true,
+  "focused": {
+    "tag": "tall-display-incident-selected-focus",
+    "label": "Search incidents",
+    "bounds": [
+      179,
+      306,
+      861,
+      443
+    ],
+    "imeTop": 580,
+    "text": "Search locations...",
+    "focused": "true"
+  },
+  "shared": {
+    "tag": "tall-display-incident-selected-header-already-open",
+    "label": "Search services, announcements and your records",
+    "bounds": [
+      284,
+      101,
+      779,
+      250
+    ],
+    "imeTop": 580,
+    "text": "Search Barangayan",
+    "focused": "true"
+  },
+  "cameraAndZoomPreserved": true,
+  "userChosenNavRestored": true,
+  "nonCentersHeaderHasNoIdleCollapse": true,
+  "nativeWebViewExceptions": 0,
+  "cameraComparisons": [
+    {
+      "x": 0.375,
+      "y": 0.75
+    },
+    {
+      "x": 0.375,
+      "y": 0.25
+    },
+    {
+      "x": 0.375,
+      "y": 0.25
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-25T00:28:04.453Z",
+  "phaseStatus": "Complete",
+  "branch": "No shared adaptation required",
+  "baselineInputs": 67,
+  "ownedInputChanges": [
+    "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+    "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/context-index.md",
+    "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/verification.json"
+  ],
+  "applicationSourceRestoredByteExact": true,
+  "userTrackedDiffIdentical": true,
+  "indexIdentical": true,
+  "otherPlanSectionsIdentical": true,
+  "selectedHeaderStatusReferenceUpdated": true,
+  "finalLoadedSourceMatches": 29,
+  "nativeQualificationPass": true,
+  "finalHomeKeyboardHidden": true,
+  "noDomainSubmissions": true,
+  "newDependencies": 0,
+  "limits": "No permanent W3/W8 fix, full field/release matrix or native iOS acceptance inferred"
+}

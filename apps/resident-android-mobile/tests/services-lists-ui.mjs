@@ -37,13 +37,13 @@ const mocks = {
 await build({
   stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';
     const profile={id:'synthetic-resident',id_verification_status:'verified',approved_id_submission_id:'synthetic-id',current_id_submission_id:'synthetic-id',id_repair_required:false};
-    const documents=[{id:'fixed',name:'Certificate of Indigency',service_kind:'indigency',contract_version:2,processing_target_minutes:15,fee_centavos:10000},{id:'business',name:'Issuance of Barangay Clearance for Business Establishments',service_kind:'business',contract_version:2,processing_target_minutes:15,fee_centavos:0},{id:'pages',name:'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)',service_kind:'certified_true_copy',contract_version:2,processing_target_minutes:15,fee_centavos:1000},{id:'free',name:'Free legacy service',contract_version:1,processing_target_hours:24,fee_centavos:0}];
+    const documents=[{id:'fixed',name:'Certificate of Indigency',service_kind:'indigency',pricing_mode:'fixed',contract_version:2,processing_target_minutes:15,fee_centavos:10000},{id:'business',name:'Issuance of Barangay Clearance for Business Establishments',service_kind:'business',pricing_mode:'assessment',contract_version:2,processing_target_minutes:15,fee_centavos:0},{id:'pages',name:'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)',service_kind:'certified_true_copy',pricing_mode:'per_page',contract_version:2,processing_target_minutes:15,fee_centavos:1000},{id:'free',name:'Free legacy service',pricing_mode:'fixed',contract_version:1,processing_target_hours:24,fee_centavos:0}];
     documents.forEach(doc=>{doc.is_active=true});const statuses=[['submitted','unpaid'],['submitted','paid'],['submitted','waived'],['in_progress','paid'],['ready_for_pickup','paid'],['completed','paid'],['cancelled','unpaid']];
     const requests=statuses.map(([status,payment_status],index)=>({id:'request-'+index,resident_id:'synthetic-resident',status,payment_status,reference_number:'SYNTHETIC-'+index,created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-19T00:00:00Z',document_types:{name:'Service '+index,processing_target_hours:24,fee_centavos:10000},timing_model:index===6?'legacy':'agency_minutes_v1',contract_version:2,fee_assessment_state:index===0?'page_count_required':'assessed',assessed_amount_centavos:index===0?null:index===2?0:10000,payments:index===1?[{status:'paid',document_fee_centavos:7500,amount_centavos:7500}]:[]}));
     window.fixture={session:{user:{id:'synthetic-resident'}},profileState:{profile,isLoading:false,error:null,refetch:()=>{window.fixture.retries++;}},mode:'light',accent:'#0F6E5B',fontId:'system',documents,requests,fail:{},channels:new Map(),queries:[],routes:[],retries:0};
     const root=createRoot(document.getElementById('root'));let generation=0;window.renderServices=()=>root.render(<Services key={generation}/>);window.resetServices=()=>{generation++;window.renderServices();};window.refreshLists=()=>{for(const channel of window.fixture.channels.values())channel.callback();};window.renderServices();`, resolveDir: app, loader: 'tsx' },
   outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
-  define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
+  define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"', 'process.env.EXPO_PUBLIC_QRPH_SETTLEMENT_READY': '"false"' },
   plugins: [{ name: 'fixtures', setup(b) {
     b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : args.path === 'react-native' ? { path: require.resolve('react-native-web') } : undefined);
     b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
@@ -62,12 +62,24 @@ try {
   page.on('console', message => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
-  const tab = name => page.getByRole('tab', { name, exact: true });
+  // Filter chips may carry a live count ("Active 2"), so match the label plus an optional number.
+  const tab = name => page.getByRole('tab', { name: /^(All|Active|Pickup|History|Paid|Processing|Pending Payment|Certificates|Clearances|Business|Records)$/.test(name) ? new RegExp('^' + name + '( [0-9]+)?$') : name, exact: true });
   const requestRows = () => page.getByRole('button', { name: /^Service \d+$/ });
   await page.getByText('Available Documents', { exact: true }).waitFor();
   await page.getByText('No payment required', { exact: true }).waitFor();
   await page.getByText('₱10.00 per page', { exact: true }).waitFor();
-  await page.getByText('See Attached Tax Code (depends on the kind of transaction)', { exact: true }).waitFor();
+  await page.getByText('Varies', { exact: true }).waitFor();
+  assert.equal(await page.getByText('See Attached Tax Code (depends on the kind of transaction)', { exact: true }).count(), 0, 'The long tax-code text belongs on the detail screen');
+  await page.getByText('~15 min', { exact: true }).first().waitFor();
+  assert.equal(await page.getByText('15 minutes of agency processing').count(), 0);
+  assert.equal(await page.getByRole('button', { name: /^(Certificate of Indigency|Issuance of Barangay Clearance.*|Reproduction.*|Free legacy service)$/ }).count(), 4);
+  await tab('Business').click();
+  assert.equal(await page.getByRole('button', { name: /^(Certificate of Indigency|Issuance of Barangay Clearance.*|Reproduction.*|Free legacy service)$/ }).count(), 1);
+  await tab('Records').click();
+  await page.getByRole('button', { name: /^Reproduction/ }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Certificate of Indigency', exact: true }).count(), 0);
+  await tab('All').click();
+  assert.equal(await page.getByRole('button', { name: /^(Certificate of Indigency|Issuance of Barangay Clearance.*|Reproduction.*|Free legacy service)$/ }).count(), 4);
   await page.getByRole('button', { name: 'Certificate of Indigency', exact: true }).click();
   assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/services/fixed');
   await page.screenshot({ path: path.join(out, 'documents-light.png') });
@@ -83,7 +95,18 @@ try {
 
   await tab('Requests').click();
   await requestRows().first().waitFor();
-  assert.equal(await requestRows().count(), 7);
+  // "All" is five overlapping sections of open work: Active 4, Pickup 1, Pending 1, Paid 2, Processing 1.
+  assert.equal(await requestRows().count(), 9);
+  for (const title of ['Active Requests, 4', 'Pickup Requests, 1', 'Pending Payment, 1', 'Paid, 2', 'Processing, 1'])
+    await page.getByRole('button', { name: title, exact: true }).waitFor();
+  await page.getByText('Pending Payment', { exact: true }).first().waitFor();
+  assert.equal(await page.getByText('Previous timing model').count(), 0);
+  assert.equal(await page.getByText('00:00:00').count(), 0);
+  // Collapsing a section drops its rows; expanding restores them.
+  await page.getByRole('button', { name: 'Active Requests, 4', exact: true }).click();
+  await page.waitForFunction(() => document.querySelectorAll('[aria-label^="Service "]').length === 5);
+  await page.getByRole('button', { name: 'Active Requests, 4', exact: true }).click();
+  await page.waitForFunction(() => document.querySelectorAll('[aria-label^="Service "]').length === 9);
   assert.equal(await page.getByText('My Requests', { exact: true }).count(), 0);
   assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
   await tab('Active').click();
@@ -111,7 +134,10 @@ try {
   assert.equal(await requestRows().count(), 1);
   await tab('History').click();
   assert.equal(await requestRows().count(), 2);
-  await page.getByText('Previous timing model', { exact: true }).waitFor();
+  assert.equal(await page.getByText('Previous timing model').count(), 0, 'Internal timing label is never shown to residents');
+  assert.equal(await page.getByText('00:00:00').count(), 0);
+  await page.getByText(/^Cancelled /).first().waitFor();
+  await page.getByText(/^Completed /).first().waitFor();
   await tab('Active').click();
   assert.equal(await requestRows().count(), 4, 'Leaving Active clears its subfilter');
   await page.screenshot({ path: path.join(out, 'requests-active-light.png') });
@@ -136,7 +162,7 @@ try {
   for (const [width, mode, accent, fontId] of [[320,'dark','#ffffff','georgia'],[400,'light','#2563eb','system'],[360,'dark','#c2410c','tahoma'],[412,'light','#000000','times-new-roman']]) {
     await page.setViewportSize({ width, height: 640 });
     await page.evaluate(({mode,accent,fontId}) => { Object.assign(window.fixture,{mode,accent,fontId});window.renderServices(); }, {mode,accent,fontId});
-    assert.equal(await requestRows().count(), 7);
+    assert.equal(await requestRows().count(), 9);
     assert.equal(await page.evaluate(() => window.requestScroller.isConnected), true);
     assert.equal(await page.evaluate(() => window.fixture.channels.size), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -147,10 +173,11 @@ try {
   await page.evaluate(() => { window.requestScroller.scrollTop=0; });
   const rightArrow=page.getByRole('button',{name:'Scroll request filters right',exact:true});
   await rightArrow.waitFor();
-  await rightArrow.click();
+  // Badged chips are wider, so the strip may need a few nudges to reach its end.
+  for (let nudge = 0; nudge < 5 && await rightArrow.isVisible(); nudge++) { await rightArrow.click(); await page.waitForTimeout(100); }
   await rightArrow.waitFor({state:'hidden'});
   const leftArrow=page.getByRole('button',{name:'Scroll request filters left',exact:true});
-  await leftArrow.click();
+  for (let nudge = 0; nudge < 5 && await leftArrow.isVisible(); nudge++) { await leftArrow.click(); await page.waitForTimeout(100); }
   await leftArrow.waitFor({state:'hidden'});
   passed.push('320/360/400/412 widths, light/dark/custom accents and preference refresh preserve rows/scroller/queries; overflow arrows stop at both edges');
 
@@ -160,6 +187,8 @@ try {
   assert.equal(await page.getByText('Latest updates on your requests', { exact: true }).count(), 0);
   assert.equal(await page.getByText('Valid ID Verified', { exact: true }).count(), 0);
   await page.getByText('Free', { exact: true }).waitFor();
+  await page.getByText('October 2026', { exact: true }).waitFor();
+  assert.equal(await page.getByText('₱100.00', { exact: true }).count(), 3, 'A cancelled entry shows no price');
   await page.getByText('₱10.00 per page — enter total pages to continue', { exact: true }).waitFor();
   assert.equal(await requestRows().count(), 0, 'Logs must remain noninteractive');
   await page.screenshot({ path: path.join(out, 'logs-light.png') });
@@ -168,14 +197,31 @@ try {
   await page.getByText('Available Documents', { exact: true }).waitFor();
   passed.push('Logs preserve ledger/free/unknown fees and noninteractive rows; New request opens Documents');
 
+  // Needs-action requests sort first and answer "what do I do now?" with one line and a Pay now button.
+  await tab('Requests').click();
+  await page.evaluate(() => {
+    const base = window.fixture.requests[0];
+    const make = (id, name, status, payment_status, extra = {}) => ({ ...base, id, reference_number: id, status, payment_status, payment_method: null, sla_state: 'running', fee_assessment_state: 'assessed', assessed_amount_centavos: 10000, document_types: { name, processing_target_hours: 24, fee_centavos: 10000 }, ...extra });
+    window.fixture.requests = [make('ok', 'Paid first', 'in_progress', 'paid'), make('pay', 'Pay me', 'submitted', 'unpaid'), make('req', 'Needs papers', 'in_progress', 'paid', { sla_state: 'paused' })];
+    window.refreshLists();
+  });
+  await page.getByText('Pay ₱100.00 to continue', { exact: true }).first().waitFor();
+  await page.getByText('Requirements needed. Open to review.', { exact: true }).first().waitFor();
+  await page.getByText('Requirements Needed', { exact: true }).first().waitFor();
+  const order = await page.evaluate(() => Array.from(document.querySelectorAll('[aria-label="Pay me"],[aria-label="Needs papers"],[aria-label="Paid first"]')).map(el => el.getAttribute('aria-label')));
+  assert.equal(order[0] === 'Paid first', false, 'Rows needing action are pinned above routine ones');
+  await page.getByRole('button', { name: 'Pay ₱100.00 for Pay me', exact: true }).first().click();
+  assert.ok((await page.evaluate(() => window.fixture.routes)).includes('/services/payment/pay'));
+  passed.push('Pinned needs-action rows, single status pill, next-step line and Pay now route');
+
   await tab('Requests').click();
   await page.evaluate(() => { window.fixture.requests=[];window.refreshLists(); });
-  await page.getByText('No requests here yet', { exact: true }).waitFor();
+  await page.getByText('Nothing open right now', { exact: true }).waitFor();
   await page.evaluate(() => { window.fixture.fail.requests=true;window.refreshLists(); });
   await page.getByText('Could not load your requests. Reconnect and retry.', { exact: true }).waitFor();
   await page.evaluate(() => { window.fixture.fail.requests=false; });
   await page.getByRole('button', { name: 'Retry requests', exact: true }).click();
-  await page.getByText('No requests here yet', { exact: true }).waitFor();
+  await page.getByText('Nothing open right now', { exact: true }).waitFor();
   await page.evaluate(() => { window.fixture.profileState.error='Could not refresh your profile.';window.renderServices(); });
   const retriesBefore = await page.evaluate(() => window.fixture.retries);
   await page.getByRole('button', { name: 'Retry verification check', exact: true }).click();
@@ -206,14 +252,13 @@ try {
     window.resetServices();
   });
   await tab('Requests').click();
+  await tab('Active').click();
   const largeRows=()=>page.getByRole('button',{name:/^Large service /});
   await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===25);
   await page.getByRole('button',{name:'Load older requests',exact:true}).click();
-  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===50);
-  await page.getByRole('button',{name:'Load older requests',exact:true}).click();
-  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===63);
+  await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===32);
   assert.equal(await page.getByRole('button',{name:'Load older requests',exact:true}).count(),0);
-  assert.equal(new Set(await largeRows().allTextContents()).size,63);
+  assert.equal(new Set(await largeRows().allTextContents()).size,32);
   await tab('History').click();
   await page.waitForFunction(()=>document.querySelectorAll('[aria-label^="Large service "]').length===25);
   await page.getByRole('button',{name:'Load older requests',exact:true}).click();

@@ -1,0 +1,42 @@
+{
+  "repomix": "1.18.1",
+  "security": "clean",
+  "packetSha256": "7cd7f0bb64916336e89a3674b3e5fcee59c484968dfcbbe09aed934b4aa6c70b",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx",
+      "packetEntrySha256": "ee5cf9bde221487bf155ee3a162e306deaa68a1faeee8645e894aec29d3e62a3",
+      "sourceSha256": "98179c325511f0b20f528e7467a16ebf0393921fc6b269b0a9c0be147a5d0376"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "packetEntrySha256": "aed34b8f049b4b373532aa65332d2cc1b1ee359dbba8b87dcf97e538e57f5ac7",
+      "sourceSha256": "b9fc5fb7266883e68c297a82651d1286d1969de7477df8e9d37f56437c48f1cf"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "packetEntrySha256": "0163c842040ccbab786a1325c993f25cd97b3fce80b6e3811cf679da29631279",
+      "sourceSha256": "ff4b9441003e9db8e5eb6a5f6b5794798edf195f7e25c34580978ff65b2008ee"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "packetEntrySha256": "6019e483dbbc4f1d89f5589183cdf9c1e63ce5d52173e63c7fe8cb7dd46e4dd1",
+      "sourceSha256": "288de53b5ad4876bd0252c2e7e1f5343fd7cd8844f8fe873b56f01fdd9bdbfe7"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "packetEntrySha256": "641822b98f3eb70fd2c6392ba76e6d5e23a6888b7fba7049c071008788fb24d9",
+      "sourceSha256": "d42147aeaff1d9aa4eec91169c0ef9d98a2e855550c9410774eb354642ecccf7"
+    }
+  ],
+  "reader": {
+    "entriesReused": 5,
+    "entriesIdenticalTo": "candidate-context.xml",
+    "completedAnalysisRange": [
+      0,
+      10356
+    ],
+    "continuation": null,
+    "originalSourceVerification": "Owned diff, measurement/effect cleanup, JSX/header/parent controls and full new regression assertions read after compression gaps."
+  }
+}

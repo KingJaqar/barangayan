@@ -78,13 +78,15 @@ try {
   await page.waitForFunction(() => window.profile.profile?.full_name === 'latest' && !window.profile.isLoading);
   assert.equal(await page.evaluate(() => window.beforeBoundary === window.profile.profile.barangays), true);
   assert.equal(await page.evaluate(() => window.dataCommits-window.beforeCommits), 1);
-  await page.evaluate(() => {window.beforeCommits=window.dataCommits;window.beforeWrites=window.cacheWrites;window.profile.refetch()});
-  await reply(await waitRead('profiles'), {...profileRow('A'),full_name:'latest'});
-  await page.waitForFunction(() => !window.profile.isLoading);
+  await page.evaluate(() => {window.beforeCommits=window.dataCommits;window.beforeWrites=window.cacheWrites;window.refetchSettled=false;window.profile.refetch().then(()=>{window.refetchSettled=true})});
+  const awaited = await waitRead('profiles');
+  assert.equal(await page.evaluate(() => window.refetchSettled), false);
+  await reply(awaited, {...profileRow('A'),full_name:'latest'});
+  await page.waitForFunction(() => window.refetchSettled && !window.profile.isLoading);
   assert.equal(await page.evaluate(() => window.dataCommits-window.beforeCommits), 0);
   assert.equal(await page.evaluate(() => window.cacheWrites-window.beforeWrites), 0);
   await page.evaluate(() => {window.equalRefreshMetrics={dataConsumerCommits:window.dataCommits-window.beforeCommits,cacheWrites:window.cacheWrites-window.beforeWrites}});
-  passed.push('Overlapping profile invalidations coalesce; old reply suppressed; equal profile/geometry and cache identity retained; data consumers have zero refresh-status commits');
+  passed.push('Overlapping profile invalidations coalesce; old reply suppressed; equal profile/geometry and cache identity retained; data consumers have zero refresh-status commits; refetch resolves only after the read settles');
 
   await page.evaluate(() => window.focus(false));
   await page.waitForTimeout(20);
@@ -126,13 +128,13 @@ try {
   assert.equal(await page.evaluate(() => Object.keys(window.health.monthEventMap)[0]), '2026-12-01');
   passed.push('Date/month/calendar ownership cancels obsolete transport and survives newest-before-oldest replies');
 
-  await page.evaluate(() => window.profile.refetch());
+  await page.evaluate(() => { void window.profile.refetch(); });
   for (let attempt=0;attempt<3;attempt++) await reply(await waitRead('profiles'),null,{message:'offline'});
   await page.waitForFunction(() => !!window.profile.error && !window.profile.isLoading);
   assert.equal(await page.evaluate(() => window.profile.profile?.full_name), 'latest');
   assert.equal(await page.evaluate(() => window.profile.profile?.id_verification_status), null);
   assert.equal(await page.evaluate(() => window.profile.profile?.approved_id_submission_id), null);
-  await page.evaluate(() => window.profile.refetch());
+  await page.evaluate(() => { void window.profile.refetch(); });
   await reply(await waitRead('profiles'), profileRow('A'));
   await page.waitForFunction(() => !window.profile.error && window.profile.profile?.id_verification_status === 'verified');
   passed.push('Profile retries remain bounded; failure preserves demographics and revokes cached approval; explicit retry restores authoritative status');

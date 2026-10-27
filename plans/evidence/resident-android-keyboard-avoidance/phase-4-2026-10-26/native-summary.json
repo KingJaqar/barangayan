@@ -1,0 +1,1144 @@
+{
+  "redaction": "No input values, account details, coordinates or screenshot pixels. Raw personal captures remain ignored in tmp.",
+  "captures": [
+    {
+      "name": "baseline-A01-focus",
+      "at": "2026-10-26T03:49:07.550Z",
+      "rawCaptureSha256": "fb033e6dc27bab25cdc6521f8bff61277bdcdbf16c0505a33b052b669680c35a",
+      "imageSha256": "bca71e79c7a9e4bd59fa3cdf1684901561b6c60ec97c59fbd297e2f215f7567d",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Description",
+          "bounds": [
+            99,
+            1007,
+            981,
+            918
+          ],
+          "focused": false,
+          "enabled": true
+        },
+        {
+          "label": "Submit Report",
+          "bounds": [
+            48,
+            967,
+            1032,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "baseline-A02-long",
+      "at": "2026-10-26T03:50:36.099Z",
+      "rawCaptureSha256": "6b7578a0e0e74bc5b993f8a45bfe97d1a9d6b68da533d42cc3e17e8370bc78f1",
+      "imageSha256": "05e92f9e44acfd7399cd404c30851f1b04839beec29f7cce8a32dca31c58c5f6",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Description",
+          "bounds": [
+            99,
+            240,
+            981,
+            918
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Report",
+          "bounds": [
+            48,
+            967,
+            1032,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A03-initial-focus",
+      "at": "2026-10-26T06:39:15.148Z",
+      "rawCaptureSha256": "6639869b0d23d6bd26cdfe613e9524686e7de544114472060ef09f493d759e9b",
+      "imageSha256": "64c963146a16563ca911590c8298541a2837df0946ae98a166920e6c60f556da",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Specific area details",
+          "bounds": [
+            99,
+            726,
+            981,
+            918
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Report",
+          "bounds": [
+            48,
+            967,
+            1032,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A03-long-caret",
+      "at": "2026-10-26T06:39:43.594Z",
+      "rawCaptureSha256": "d3cbfc1811594208d0243940c2de9df1a3a208b08abbffbc13ef9f1890f5f9ff",
+      "imageSha256": "63d53085c58fc49f92adfc55fa899717f608fddf69fcaa4c2008dc12694eac33",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Specific area details",
+          "bounds": [
+            99,
+            414,
+            981,
+            918
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Report",
+          "bounds": [
+            48,
+            967,
+            1032,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A04-modal-focus-typed",
+      "at": "2026-10-26T06:42:04.838Z",
+      "rawCaptureSha256": "95f3bfdde6692c7199da1565a85a603fc4d54bccf7196e7fa76b8c5f6082f5d1",
+      "imageSha256": "c3f1ebc8b27bf1578a7fde4e2bb39789d408bf7f8f53aaceaf93f4c38d5aff3f",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            525
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Use This Location",
+          "bounds": [
+            60,
+            955,
+            1020,
+            1107
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "A04-return-report-draft",
+      "at": "2026-10-26T06:42:18.717Z",
+      "rawCaptureSha256": "36e472f6f51ea62b23c45e169ac8e6451a80286c16f0d0eb73932f808d279349",
+      "imageSha256": "7918afb06d31d314e5df3e7f1382237c133f017e450eed167d29c9d16234c980",
+      "imeVisible": false,
+      "keyboardTop": 1080,
+      "controls": [
+        {
+          "label": "Specific area details",
+          "bounds": [
+            99,
+            900,
+            981,
+            1404
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Report",
+          "bounds": [
+            48,
+            1720,
+            1032,
+            1872
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "baseline-compact-A05",
+      "at": "2026-10-26T04:03:30.587Z",
+      "rawCaptureSha256": "a3e796fae1e1a3a43cc0d8188d18e15d38f60081930bf2b40cfc6bd6551fe955",
+      "imageSha256": "841598e45e3654283feef23d619205ffd92906d1d84ae146bf40ed507b7bed5b",
+      "imeVisible": true,
+      "keyboardTop": 927,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            600
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            760,
+            1020,
+            972
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            60,
+            1011,
+            1020,
+            1189
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A05-long-end",
+      "at": "2026-10-26T06:49:32.219Z",
+      "rawCaptureSha256": "d1a757db26a0dac60543e91217194d5fdffb7f9ed2d61b51f3966cdff09300bf",
+      "imageSha256": "582c96f28a1c3e22e90ac9dade42be12d102017b40657ac11668343c1d7677d4",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            372,
+            1020,
+            1167
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-default-action-window-scroll",
+      "at": "2026-10-26T06:46:11.003Z",
+      "rawCaptureSha256": "c0903d6215cac69b22c5b4f56fdc394dcbde0988f3b6fa5a1dc69b68a56ea862",
+      "imageSha256": "1e3f21b77e3b1f905b40753b3526b9a3f4cf6cfdb4043c3d4c99b28c7b90fac9",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            400,
+            1020,
+            544
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            120,
+            895,
+            960,
+            1047
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-compact-focus",
+      "at": "2026-10-26T06:52:48.570Z",
+      "rawCaptureSha256": "66a33ce53404e76ec7c41134c2cf4aaaa0752fb7e276b70346984d1bc344ede4",
+      "imageSha256": "445cb1729c9a7ee0faaafe48799db76437911ea00c6f0328f533141e47b52f41",
+      "imeVisible": true,
+      "keyboardTop": 927,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            705,
+            1020,
+            917
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-compact-full-action",
+      "at": "2026-10-26T06:55:53.073Z",
+      "rawCaptureSha256": "136601e6b9edfa6055358057d7cb1f16e10c01ef3ec1efa10219bfacf157a8a8",
+      "imageSha256": "507e14b03bd76a1e7c0dfd952526de48f9133ce684f93ad2ad331ea23bb6401b",
+      "imeVisible": true,
+      "keyboardTop": 927,
+      "controls": [
+        {
+          "label": "Save My Location",
+          "bounds": [
+            120,
+            635,
+            960,
+            807
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-focus",
+      "at": "2026-10-26T07:01:06.293Z",
+      "rawCaptureSha256": "3b23bd9b84910dc8210e8d93e9c4922d6156f69224a9ba42314151f2309c5516",
+      "imageSha256": "706e0f4878150c46a0356c3970ab5a8ce13c6a776f16eff807854843934a781a",
+      "imeVisible": true,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            526,
+            1013,
+            765
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-full-action",
+      "at": "2026-10-26T07:01:30.612Z",
+      "rawCaptureSha256": "8c328315f6bab0a2d8fc01668e4dbd812ee81ed846276256cab3f03947f56fef",
+      "imageSha256": "396609d1ace3ecfe271a3cc5ec36e20a732d0feb44006a2365b974f6f71ded7b",
+      "imeVisible": true,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Save My Location",
+          "bounds": [
+            136,
+            560,
+            946,
+            753
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-restoration-before",
+      "at": "2026-10-26T06:46:54.451Z",
+      "rawCaptureSha256": "78a5eef2f78416da0d0326d724a1cfb7b48b49b04a8222f40d21c3f63edd25aa",
+      "imageSha256": "f1943645a903a573e0713cb5bf53a5a9d5d21ab487411759bd51d9e58d881185",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            600
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            1020,
+            1020,
+            1164
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            60,
+            1696,
+            1020,
+            1848
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-restored-1",
+      "at": "2026-10-26T06:47:04.259Z",
+      "rawCaptureSha256": "bd7e9c2812d5079cea59c4c1bb34d541f18573371a38d741680dc23f362bf66b",
+      "imageSha256": "0111f423dccf3f4d8111157911447faf06d6d94cbf1e65d24f21ee0cc45d3a4f",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            600
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            1020,
+            1020,
+            1164
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            60,
+            1696,
+            1020,
+            1848
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-restored-2",
+      "at": "2026-10-26T06:47:14.041Z",
+      "rawCaptureSha256": "6844d26ef32d43f1dde04a36f58b3812e573fe253af2983b94a76742c790f069",
+      "imageSha256": "0111f423dccf3f4d8111157911447faf06d6d94cbf1e65d24f21ee0cc45d3a4f",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            600
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            1020,
+            1020,
+            1164
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            60,
+            1696,
+            1020,
+            1848
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-restored-3",
+      "at": "2026-10-26T06:47:23.817Z",
+      "rawCaptureSha256": "ec58b3389200266ab588a16aaca1f76ba0b916c9c1e0fad6f17b135dbfacc2b1",
+      "imageSha256": "f1943645a903a573e0713cb5bf53a5a9d5d21ab487411759bd51d9e58d881185",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            240,
+            1080,
+            600
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            60,
+            1020,
+            1020,
+            1164
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            60,
+            1696,
+            1020,
+            1848
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-open-1",
+      "at": "2026-10-26T08:35:54.397Z",
+      "rawCaptureSha256": "8b7d59f95b3ebe7713841c6fa9d78e86659ab7e173846245755daad3c07fc70c",
+      "imageSha256": "e9c15f17fa9a0668e9fccf59dfe573a3ac1f56ba1e9f31ceb40f02ae50d30180",
+      "imeVisible": true,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            501,
+            1013,
+            740
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-restored-1",
+      "at": "2026-10-26T08:35:58.633Z",
+      "rawCaptureSha256": "b99077e102ee8075c763c48addbf4bf7b291aca45dda437d5a31d1ba42043eb4",
+      "imageSha256": "149b59beb77fa4da11b3d5e13406fa853c807006ea9d80976574e22c33315eac",
+      "imeVisible": false,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            352,
+            1080,
+            757
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            906,
+            1013,
+            1145
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            68,
+            1406,
+            1013,
+            1600
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-open-2",
+      "at": "2026-10-26T08:36:04.337Z",
+      "rawCaptureSha256": "7a6eae4259daa9297cfedcc3119426e2752508b3ae7a5f9beb1dbaa088faea20",
+      "imageSha256": "e9c15f17fa9a0668e9fccf59dfe573a3ac1f56ba1e9f31ceb40f02ae50d30180",
+      "imeVisible": true,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            501,
+            1013,
+            740
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-restored-2",
+      "at": "2026-10-26T08:36:08.606Z",
+      "rawCaptureSha256": "715dadd733e47cec6ca7d00a86289a2df4d00e66221bcae77a1953c478a86791",
+      "imageSha256": "149b59beb77fa4da11b3d5e13406fa853c807006ea9d80976574e22c33315eac",
+      "imeVisible": false,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            352,
+            1080,
+            757
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            906,
+            1013,
+            1145
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            68,
+            1406,
+            1013,
+            1600
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-open-3",
+      "at": "2026-10-26T08:36:14.331Z",
+      "rawCaptureSha256": "972b552fb0b1384048cb5f56a66161a281d3eb7a6604c4f561281404657dd0cb",
+      "imageSha256": "e9c15f17fa9a0668e9fccf59dfe573a3ac1f56ba1e9f31ceb40f02ae50d30180",
+      "imeVisible": true,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            501,
+            1013,
+            740
+          ],
+          "focused": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "final3-display-idle-restored-3",
+      "at": "2026-10-26T08:36:18.560Z",
+      "rawCaptureSha256": "cb5c55e8ec7cde33ea8a2c40afd92af99f15458a9ae1db670c23ed37fad5910c",
+      "imageSha256": "7937e56d26004dc0b647c8b850a8971ff3faa70b1b60782628e50ef5f4b1e9a3",
+      "imeVisible": false,
+      "keyboardTop": 887,
+      "controls": [
+        {
+          "label": "Map WebView",
+          "bounds": [
+            0,
+            352,
+            1080,
+            757
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Detected Address",
+          "bounds": [
+            68,
+            906,
+            1013,
+            1145
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Save My Location",
+          "bounds": [
+            68,
+            1406,
+            1013,
+            1600
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "A06-initial-focus",
+      "at": "2026-10-26T06:18:50.631Z",
+      "rawCaptureSha256": "82cd325813470a9e5e2f414342bd40b0cfb1ede4a1e7e82a551fc17b240c90d2",
+      "imageSha256": "3d721b75146d6b390baec746945e973ab7edb49f3b6fbc72094487623d297737",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-native-paste",
+      "at": "2026-10-26T06:21:23.998Z",
+      "rawCaptureSha256": "ace59f5f64e38b6070efbf4fc0ddbfb0095a631253b6109740ae1c57605aa400",
+      "imageSha256": "eb00599933f8f45c95c6427eb6ea9c4bff390c2b563f65d117f1bf1f11334e0d",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-dismiss-1",
+      "at": "2026-10-26T06:21:28.060Z",
+      "rawCaptureSha256": "fa6283796b48ca52cc6fb81f1928ede9c2671398da078d9c533b829485aca031",
+      "imageSha256": "64b4aeb0bbcae15fed07924501f9e4f5436ec219c05cfd6d67d93eb6336e0d56",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            1714,
+            1020,
+            1872
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-reopen-1",
+      "at": "2026-10-26T06:21:33.985Z",
+      "rawCaptureSha256": "11901bdba4f7a1c9b932345c573c92c67003b292cec50906f569d7b45fd6ee25",
+      "imageSha256": "ffc7cc4a7f017f9e80331ae54b5eaa1088c10370fc7cea586fa233df8aca9b59",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-dismiss-2",
+      "at": "2026-10-26T06:21:38.062Z",
+      "rawCaptureSha256": "9d4aa9d08b1da05878cf5166bafabd2ee843c9605afe24e7aea1d6fe13f98d69",
+      "imageSha256": "64b4aeb0bbcae15fed07924501f9e4f5436ec219c05cfd6d67d93eb6336e0d56",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            1714,
+            1020,
+            1872
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-reopen-2",
+      "at": "2026-10-26T06:21:43.858Z",
+      "rawCaptureSha256": "7aed91ee1f998c6bb26d19791964b7d794d41f56a639a06e498ffedf925d0a73",
+      "imageSha256": "ffc7cc4a7f017f9e80331ae54b5eaa1088c10370fc7cea586fa233df8aca9b59",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-dismiss-3",
+      "at": "2026-10-26T06:21:47.895Z",
+      "rawCaptureSha256": "d233015fb0b72e8fa0d3a5eb977cbe4e1a19ca302dca87460e200bfc57e356e2",
+      "imageSha256": "64b4aeb0bbcae15fed07924501f9e4f5436ec219c05cfd6d67d93eb6336e0d56",
+      "imeVisible": false,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            1714,
+            1020,
+            1872
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "A06-reopen-3",
+      "at": "2026-10-26T06:21:53.690Z",
+      "rawCaptureSha256": "9307fe891a46a154b22fd0af00fa6d239ae30ce6e03cc552a1c77c710cc18d39",
+      "imageSha256": "05af87ee06bc48c0c532465562a70ef138092f4a5f4b6cdd2367a60f76e06768",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            388,
+            969,
+            532
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "baseline-A07-focus-typed",
+      "at": "2026-10-26T04:03:05.710Z",
+      "rawCaptureSha256": "f60531f51af4947d60a6ec8f7e61c938455dac6fd55986bcc0701edeb59272ae",
+      "imageSha256": "b06704ae2466384c9b194010def532a64a6e16fe47c7696e24bad7c93c7f1b21",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Previous dose date",
+          "bounds": [
+            111,
+            778,
+            969,
+            922
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "authorized-invalid-age-before-submit",
+      "at": "2026-10-26T09:33:05.477Z",
+      "rawCaptureSha256": "1995ce9c8e697707509217b66b5a0f58a7415a8c34ba05ccbd31ded2a67156e5",
+      "imageSha256": "773da0c7bd6e67dcf7e5764eb7b412e3216b84af6ed496c6ed7a47810c4b6082",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            778,
+            969,
+            922
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "authorized-invalid-age-error",
+      "at": "2026-10-26T09:33:39.068Z",
+      "rawCaptureSha256": "a3712f30ada9fc1481e66d360fe1bc883786478e64940550dc7c2a691dcf288d",
+      "imageSha256": "301dc8b4ee351512a516f48a196d193fcb338aad84779e3c68e08b605900c372",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Age",
+          "bounds": [
+            111,
+            778,
+            969,
+            922
+          ],
+          "focused": true,
+          "enabled": true
+        },
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "controlled-submit-error-area",
+      "at": "2026-10-26T09:36:51.708Z",
+      "rawCaptureSha256": "694142952a08e9a5b6d845b5ee2dc602cf93d09fe6a49879f9dae4599e28b8ae",
+      "imageSha256": "dab0812e984abb6b7b215d5ed8ac18ef6f259525f7a5b6b292d1c168d6725e21",
+      "imeVisible": true,
+      "keyboardTop": 1167,
+      "controls": [
+        {
+          "label": "Submit Registration",
+          "bounds": [
+            60,
+            961,
+            1020,
+            1119
+          ],
+          "focused": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "name": "authorized-error-member-removed-final",
+      "at": "2026-10-26T10:30:24.094Z",
+      "rawCaptureSha256": "23e0f17c3feaf86d1d9b083eb0a50c211b40384789007df4733b3524aaf0bda3",
+      "imageSha256": "ff2390533c5aa27109cd735c5a9a6d54079c0250ec38604bded34fc00d2cd47f",
+      "imeVisible": false,
+      "keyboardTop": null,
+      "controls": [
+        {
+          "label": "Save Changes",
+          "bounds": [
+            60,
+            1716,
+            1020,
+            1872
+          ],
+          "focused": false,
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "name": "final-home",
+      "at": "2026-10-26T10:32:23.239Z",
+      "rawCaptureSha256": "ebcf4ccf5420d4f8234e9837023bf2f712280433fe884ef50f2736b2f0ab7065",
+      "imageSha256": "6faca03e7898a3d9f9ee67ae388e2e20dfc74ebb0d076fa130b25a7ef946dbd0",
+      "imeVisible": false,
+      "keyboardTop": null,
+      "controls": []
+    }
+  ]
+}

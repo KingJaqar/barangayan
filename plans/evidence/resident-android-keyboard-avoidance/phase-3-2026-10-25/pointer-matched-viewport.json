@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "method": "Normal Windows pointer in MuMu with native read-only bounds capture",
+  "screen": "1080x1332",
+  "density": 480,
+  "font": 1.3,
+  "cases": [
+    {
+      "mode": "add",
+      "geometry": {
+        "editor": [
+          60,
+          415,
+          1020,
+          579
+        ],
+        "viewport": [
+          0,
+          138,
+          1080,
+          579
+        ],
+        "keyboardTop": 579,
+        "clearance": 0
+      },
+      "fullInputHeight": 164,
+      "actions": [
+        {
+          "label": "Add Member",
+          "bounds": [
+            60,
+            323,
+            1020,
+            495
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "edit",
+      "geometry": {
+        "editor": [
+          60,
+          415,
+          1020,
+          579
+        ],
+        "viewport": [
+          0,
+          138,
+          1080,
+          579
+        ],
+        "keyboardTop": 579,
+        "clearance": 0
+      },
+      "fullInputHeight": 164,
+      "actions": [
+        {
+          "label": "Remove",
+          "bounds": [
+            60,
+            223,
+            368,
+            495
+          ]
+        },
+        {
+          "label": "Update",
+          "bounds": [
+            404,
+            223,
+            1020,
+            395
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "pass for measured full input and full action reachability;0px input border clearance, preferred8dp not met",
+  "bannerRecreated": false,
+  "profileSaved": false,
+  "syntheticName": "Q",
+  "typing": "Visible Gboard key succeeded; Windows type_text clipboard method did not insert text"
+}

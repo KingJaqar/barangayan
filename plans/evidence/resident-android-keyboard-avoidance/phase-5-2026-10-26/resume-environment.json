@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-26T12:53:30.248Z",
+  "boot": "85d51837-1c14-472e-a2fa-24b10c4350e6",
+  "api": "32",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "font": "1.0",
+  "navigation": "0",
+  "ime": "com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME",
+  "osFingerprint": "Samsung/dm3q/dm3q:12/V417IR/478:user/release-keys",
+  "osRelease": "12",
+  "imeVersion": "18.5.4.993608717-release-arm64-v8a",
+  "nativeVersionCode": 1,
+  "nativeMinSdk": 24,
+  "nativeTargetSdk": 36,
+  "nativeLastUpdate": "2026-10-15 09:35:07"
+}

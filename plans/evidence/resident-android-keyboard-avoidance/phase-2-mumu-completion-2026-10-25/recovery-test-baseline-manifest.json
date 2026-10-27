@@ -1,0 +1,11 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "0bde92d281fe134dd6e2ab92cb73497fd060489a161a4e663ec5ed956f0871b3",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "characters": 268
+    }
+  ],
+  "totalCharacters": 338
+}

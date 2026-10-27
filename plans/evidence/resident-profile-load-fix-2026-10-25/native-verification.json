@@ -1,0 +1,27 @@
+{
+  "accountRole": "admin",
+  "profileDeleted": false,
+  "allBaselineReadStatuses200": true,
+  "accurateAccountMessage": true,
+  "oldConnectionMessage": false,
+  "retryOffered": false,
+  "editableInputs": 0,
+  "saveOffered": false,
+  "backToHome": true,
+  "signOutOffered": true,
+  "finalHomeKeyboardHidden": true,
+  "noAccountOrProfileMutation": true,
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    }
+  ],
+  "limits": "Native administrator restriction verified; eligible resident and error/edge states exercised through actual form browser fixtures and shared helper API/tests, not a resident-account native save."
+}

@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-26T13:04:31.776Z",
+  "status": "pass selected center/camera/status/idle/list and stated header subset",
+  "config": "exclusive-default",
+  "route": "drrm",
+  "selectedCenterFromExistingData": true,
+  "focus": {
+    "tag": "exclusive-default-selected-idle-drrm-selected-focus",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      582,
+      1029,
+      714
+    ],
+    "imeTop": 1167,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "typed": {
+    "tag": "exclusive-default-selected-idle-drrm-no-match",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      582,
+      897,
+      714
+    ],
+    "imeTop": 1167,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "reopened": {
+    "tag": "exclusive-default-selected-idle-drrm-idle-reopen",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      582,
+      897,
+      714
+    ],
+    "imeTop": 1167,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "returnFocus": {
+    "tag": "exclusive-default-selected-idle-drrm-list-map-return",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      582,
+      1029,
+      714
+    ],
+    "imeTop": 1167,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "cameraAndZoomRetained": true,
+  "sameNativeMapTarget": true,
+  "listEditorAbsent": true,
+  "idle": {
+    "resetAt": 1793019777207,
+    "earlyCheckPassed": true,
+    "collapseObserved": true,
+    "activeQueryRetained": true
+  },
+  "headerIdle": {
+    "openHeader": {
+      "tag": "exclusive-default-selected-idle-drrm-header-already-open",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        330,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    "resetDelayPassed": true,
+    "collapsedAfterDeadline": true
+  },
+  "nativeWebViewExceptions": 0
+}

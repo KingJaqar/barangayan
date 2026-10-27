@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-27T01:04:36.694Z",
+  "status": "pass submit/edit/clear/back and exact origin",
+  "origin": "maps",
+  "config": "tall-display",
+  "observations": [
+    {
+      "tag": "tall-display-lifecycle-maps-entry",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        631,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-lifecycle-maps-submitted",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        892,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "false"
+    },
+    {
+      "tag": "tall-display-lifecycle-maps-edit",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        631,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-lifecycle-maps-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        779,
+        250
+      ],
+      "imeTop": 580,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ],
+  "syntheticRecentRemoved": true
+}

@@ -1,0 +1,23 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "6ea7c54ec5429b9e67c20d706c8f6831e27310ca574e9199874dedb64beea51f",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "characters": 268
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/auth-header.tsx",
+      "characters": 698
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "characters": 817
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "characters": 1196
+    }
+  ],
+  "totalCharacters": 3256
+}

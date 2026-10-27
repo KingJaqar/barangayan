@@ -1,4 +1,4 @@
-import { formatCentavosAsPHP, formatDateTime, requestFee, requestFeeLabel, type Tables } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatMonthYear, formatRelativeDateTime, requestFee, requestFeeLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PrimaryButton } from '@/components/primary-button';
+import { useRegisterPullRefresh } from '@/components/pull-refresh';
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
@@ -48,7 +49,15 @@ export function LogsList() {
   }, [userId]);
   const history = useHistoryPages(userId ?? 'guest', load, 'Could not load activity. Reconnect and retry.');
   const { refresh } = history;
+  useRegisterPullRefresh(refresh);
   const requests = history.data?.rows ?? [];
+  // Rows arrive newest-first, so each month is one contiguous run.
+  const months = requests.reduce<{ label: string; rows: ServiceRequest[] }[]>((groups, request) => {
+    const label = formatMonthYear(request.updated_at);
+    if (groups.at(-1)?.label === label) groups.at(-1)!.rows.push(request);
+    else groups.push({ label, rows: [request] });
+    return groups;
+  }, []);
   useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
 
   if (!session) {
@@ -79,8 +88,11 @@ export function LogsList() {
 
   return (
     <View style={serviceListStyles.list}>
+      {months.map(month => (
+        <View key={month.label} style={styles.month}>
+          <ThemedText type="smallBold" accessibilityRole="header" style={styles.monthHeader}>{month.label}</ThemedText>
       <ServicesPanel>
-        {requests.map((request, index) => {
+        {month.rows.map((request, index) => {
           const payment = request.payments.find(row => ['paid', 'pending'].includes(row.status)) ?? request.payments[0];
           const amount = requestFee(request, request.document_types?.fee_centavos ?? 0, payment?.document_fee_centavos ?? payment?.amount_centavos);
           return (
@@ -102,22 +114,27 @@ export function LogsList() {
                   {request.document_types?.name ?? 'Document Request'}
                 </ThemedText>
                 <ThemedText type="small" themeColor="textSecondary" style={serviceListStyles.meta}>
-                  {formatDateTime(request.updated_at)}
+                  {formatRelativeDateTime(request.updated_at)}
                 </ThemedText>
                 <View style={styles.badgeRow}>
                   <StatusBadge status={request.status} presentation="resident" />
-                  <View style={[styles.pricePill, { backgroundColor: theme.resident.accentSoft }]}>
-                    <Ionicons name="pricetag-outline" size={14} color={theme.resident.accentText} accessible={false} />
-                    <ThemedText type="smallBold" style={[styles.priceText, { color: theme.resident.accentText }]}>
-                      {amount === 0 ? 'Free' : amount === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(amount)}
-                    </ThemedText>
-                  </View>
+                  {/* A cancelled request was never charged, so it carries no price. */}
+                  {request.status === 'cancelled' ? null : (
+                    <View style={[styles.pricePill, { backgroundColor: theme.resident.accentSoft }]}>
+                      <Ionicons name="pricetag-outline" size={14} color={theme.resident.accentText} accessible={false} />
+                      <ThemedText type="smallBold" style={[styles.priceText, { color: theme.resident.accentText }]}>
+                        {amount === 0 ? 'Free' : amount === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(amount)}
+                      </ThemedText>
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
           );
         })}
       </ServicesPanel>
+        </View>
+      ))}
       {history.error ? <ServicesErrorState message={history.error} retryLabel="Retry activity" onRetry={refresh} /> : null}
       {history.data?.hasMore ? <PrimaryButton presentation="resident" variant="secondary" label="Load older activity"
         accessibilityLabel="Load older activity" loading={history.fetching} onPress={history.loadMore} /> : null}
@@ -127,6 +144,8 @@ export function LogsList() {
 
 const styles = StyleSheet.create({
   list: { paddingHorizontal: 20 },
+  month: { gap: 8 },
+  monthHeader: { fontSize: 14, lineHeight: 20, paddingHorizontal: 4 },
   logRow: { gap: 10, paddingHorizontal: 12, paddingVertical: 10, minHeight: 72 },
   logIcon: { width: 36, height: 36, borderRadius: 10 },
   logTitle: { fontSize: 14, lineHeight: 18 },

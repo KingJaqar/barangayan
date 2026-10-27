@@ -19,6 +19,7 @@ import { registerPushToken } from '@/lib/push-notifications';
 import { View } from 'react-native';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
+import { Fonts } from '@/constants/theme';
 import { EmergencyEntryLink } from '@/components/emergency-entry-link';
 import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from '@/lib/setup-navigation';
 import { useTheme } from '@/hooks/use-theme';
@@ -168,7 +169,7 @@ function RootNavigator() {
   const authReachable = !session || holdInAuthGroup;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false, headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
       {/* Unconditionally reachable — it only redirects into whichever of (app)/(auth) is
           actually reachable below, so it doesn't need its own guard. */}
       <Stack.Screen name="index" />

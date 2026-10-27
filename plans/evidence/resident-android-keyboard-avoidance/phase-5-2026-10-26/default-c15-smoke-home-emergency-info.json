@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-26T11:43:27.061Z",
+  "status": "pass focus/type/clear/back subset",
+  "origin": "home/emergency-info",
+  "config": "default",
+  "observations": [
+    {
+      "tag": "default-c15-smoke-home-emergency-info-focus",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c15-smoke-home-emergency-info-typed",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c15-smoke-home-emergency-info-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ]
+}

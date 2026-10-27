@@ -1,0 +1,12 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 30000ms exceeded.
+    at waitRead (C:\Users\User\barangayan\apps\resident-android-mobile\tests\refresh-ownership.mjs:50:16)
+    at C:\Users\User\barangayan\apps\resident-android-mobile\tests\refresh-ownership.mjs:132:61 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

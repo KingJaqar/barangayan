@@ -1,0 +1,66 @@
+{
+  "typecheck": {
+    "command": "node ../../node_modules/typescript/bin/tsc --noEmit --pretty false",
+    "cwd": "apps/resident-android-mobile",
+    "exit": 0,
+    "status": "pass",
+    "log": "logs/typecheck-baseline.log"
+  },
+  "lint": {
+    "command": "node ../../node_modules/eslint/bin/eslint.js src --no-cache",
+    "cwd": "apps/resident-android-mobile",
+    "exit": 0,
+    "status": "pass",
+    "log": "logs/lint-direct-baseline.log",
+    "note": "Expo lint wrapper initially slow; after source inspection bypassed package-manager launcher using same installed ESLint/config, no rules changed. Wrapper also returned0; direct run supplies independent completion evidence."
+  },
+  "unit": {
+    "command": "node ../../node_modules/vitest/vitest.mjs run --reporter=dot",
+    "cwd": "apps/resident-android-mobile",
+    "exit": 0,
+    "status": "pass",
+    "tests": 335,
+    "files": 32,
+    "log": "logs/unit-baseline.log"
+  },
+  "exportInitial": {
+    "command": "CI=1 EXPO_OFFLINE=1 EXPO_NO_TELEMETRY=1 node ../../node_modules/expo/bin/cli export --platform android --output-dir ../../tmp/resident-keyboard-phase0-20261024/android-export",
+    "status": "environment failure",
+    "exit": 1,
+    "log": "logs/export-baseline.log",
+    "reason": "Hermes temporary bytecode write permission denied; compiler warnings only on failed sandbox compilation"
+  },
+  "export": {
+    "command": "Same offline Android export outside restriction; output-dir android-export-verified",
+    "exit": 0,
+    "status": "pass with existing tooling warnings",
+    "log": "logs/export-verified.log",
+    "note": "NO_COLOR/FORCE_COLOR environment warning repeated by Metro workers. No production source changes; not a warning-free or native APK validation claim."
+  },
+  "native": {
+    "status": "pending manual verification",
+    "fieldPasses": 0,
+    "reproducedFailures": 0,
+    "reason": "User explicitly left native device/account cases pending after candidate/server qualification."
+  },
+  "checkSelection": "Phase 0 authored no application/config/dependency change. Baseline type/lint/unit/export passed on initially captured source. Subsequent concurrent user/other-task Maps/Centers and UI-fixture changes were preserved, snapshotted and inspected; these checks do not qualify those later changes, and were not rerun for external work. Final artifact checks validate current input references, expected concurrent identities, unchanged remaining sources, ledger coverage and selected plan progress scope. Native/iOS/runtime acceptance remains pending.",
+  "concurrentChanges": {
+    "manifest": "concurrent-manifest.json",
+    "applicationChecksOnConcurrentBytes": "not run in Phase 0",
+    "inputDefinitions": "unchanged; C16/C17 line references refreshed"
+  },
+  "nativeContinuation": {
+    "report": "mumu-2026-10-24/report.md",
+    "source": "29 loaded source/factory matches",
+    "definitionsObserved": 19,
+    "editableCases": 19,
+    "initialFocusFailures": 8,
+    "partialVisible": 11,
+    "fullProtocolPasses": 0,
+    "currentTypecheck": "pass",
+    "currentLint": "pass",
+    "currentUnit": "335 tests /32 files pass",
+    "console": "one buffered warning; final metadata unchanged from mid-run; no exception event sampled",
+    "note": "Supersedes earlier no-native-runtime gap; other steps, branches and release matrix remain pending."
+  }
+}

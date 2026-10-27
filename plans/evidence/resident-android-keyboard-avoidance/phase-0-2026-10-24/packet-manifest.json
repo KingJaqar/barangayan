@@ -1,0 +1,231 @@
+{
+  "version": "1.18.1",
+  "style": "parsable XML, compressed",
+  "sha256": "4ad8609a2ed94ed57a3c5d1437b2af562a897286e9f0f34f9b81d0ad5a486e3c",
+  "bytes": 103054,
+  "estimateTokens": 24954,
+  "security": "No suspicious files; default security scan enabled",
+  "missing": [],
+  "unexpected": [],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "chars": 1691
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "chars": 2103
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "chars": 5381
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "chars": 2378
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "chars": 3971
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "chars": 1076
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "chars": 3973
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "chars": 7095
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "chars": 2757
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "chars": 613
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "chars": 817
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "chars": 983
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "chars": 1508
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "chars": 1378
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "chars": 1477
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "chars": 883
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "chars": 5095
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "chars": 1208
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "chars": 486
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx",
+      "chars": 610
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "chars": 1936
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "chars": 2401
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "chars": 1335
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "chars": 2082
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "chars": 953
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "chars": 1714
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "chars": 5029
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "chars": 1195
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "chars": 1073
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "chars": 1304
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "chars": 3840
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "chars": 1781
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "chars": 1694
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "chars": 599
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "chars": 2177
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "chars": 973
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+      "chars": 322
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "chars": 163
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "chars": 1294
+    },
+    {
+      "path": "apps/resident-android-mobile/eas.json",
+      "chars": 240
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2121
+    },
+    {
+      "path": "apps/resident-android-mobile/tsconfig.json",
+      "chars": 316
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "chars": 45
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 0
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 10
+    },
+    {
+      "path": "package.json",
+      "chars": 408
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "chars": 11894
+    },
+    {
+      "chunk": 1,
+      "chars": 9308
+    },
+    {
+      "chunk": 2,
+      "chars": 11602
+    },
+    {
+      "chunk": 3,
+      "chars": 11785
+    },
+    {
+      "chunk": 4,
+      "chars": 11725
+    },
+    {
+      "chunk": 5,
+      "chars": 10766
+    },
+    {
+      "chunk": 6,
+      "chars": 11980
+    },
+    {
+      "chunk": 7,
+      "chars": 5047
+    }
+  ],
+  "supersedes": "Initial --stdin attempts omitted nested entries on Windows. --include selectors resolved all 46; no security/ignore relaxation."
+}

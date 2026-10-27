@@ -1,0 +1,200 @@
+{
+  "completedDate": "2026-10-25 Asia/Manila",
+  "phaseStatus": "Complete",
+  "decision": "Use existing native focus reveal after local Android geometry repair. No shared helper/ref API/provider change required by reproduced evidence.",
+  "delivery": "Phase 1 no-shared-adaptation branch; no application changes retained. Permanent W3/W8 fixes remain in Phases 2/3.",
+  "observations": {
+    "profileBefore": {
+      "capture": "profile-baseline-focused",
+      "at": "2026-10-24T15:36:47.485Z",
+      "serial": "127.0.0.1:16384",
+      "editorBoundsPx": [
+        111,
+        1328,
+        969,
+        1412
+      ],
+      "keyboardTopPx": 1167,
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        1677
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/profile-baseline-focused.png"
+    },
+    "profileCandidate": {
+      "capture": "profile-candidate-focused",
+      "at": "2026-10-24T15:37:59.922Z",
+      "serial": "127.0.0.1:16384",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/profile-candidate-focused.png"
+    },
+    "profileStreetCandidate": {
+      "capture": "profile-street-focused",
+      "at": "2026-10-24T15:41:05.035Z",
+      "serial": "127.0.0.1:16384",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/profile-street-focused.png"
+    },
+    "deletionBefore": {
+      "capture": "resume-delete-baseline",
+      "at": "2026-10-25T00:09:13.393Z",
+      "serial": "emulator-5554",
+      "editorBoundsPx": [
+        168,
+        975,
+        912,
+        1119
+      ],
+      "keyboardTopPx": 1080,
+      "scrollBoundsPx": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/resume-delete-baseline.png"
+    },
+    "deletionCandidate": {
+      "capture": "delete-candidate-focused",
+      "at": "2026-10-25T00:09:50.467Z",
+      "serial": "emulator-5554",
+      "editorBoundsPx": [
+        168,
+        538,
+        912,
+        682
+      ],
+      "keyboardTopPx": 1080,
+      "scrollBoundsPx": [
+        0,
+        0,
+        1080,
+        1080
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/delete-candidate-focused.png"
+    },
+    "deletionPlainKeyboard": {
+      "capture": "delete-candidate-visible-password",
+      "at": "2026-10-25T00:10:03.204Z",
+      "serial": "emulator-5554",
+      "editorBoundsPx": [
+        168,
+        599,
+        912,
+        743
+      ],
+      "keyboardTopPx": 1167,
+      "scrollBoundsPx": [
+        0,
+        0,
+        1080,
+        1167
+      ],
+      "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/delete-candidate-visible-password.png"
+    }
+  },
+  "profile": {
+    "status": "pass for local-mechanism qualification only",
+    "alreadyVisibleFocusNoJump": true,
+    "openKeyboardFocusSwitch": true,
+    "nameValidationGrowth": true,
+    "typedCharacterRemoved": true,
+    "keyboardCycles": 3,
+    "scrollAndFooterRestoredEachCycle": true,
+    "worstSampleStreetRevealed": true,
+    "initialIssues": [
+      {
+        "kind": "warning",
+        "at": 1792851006296.529
+      },
+      {
+        "kind": "warning",
+        "at": 1792854130748.217
+      }
+    ],
+    "finalIssues": [
+      {
+        "kind": "warning",
+        "at": 1792851006296.529
+      },
+      {
+        "kind": "warning",
+        "at": 1792854130748.217
+      }
+    ],
+    "limit": "Temporary candidate, not shipped Phase 2 fix; no full per-field/release/iOS acceptance"
+  },
+  "deletion": {
+    "status": "pass for local-mechanism qualification only",
+    "passwordAndActionsVisible": true,
+    "syntheticTextRemoved": true,
+    "passwordToggleFocusAndImeObserved": true,
+    "keyboardCycles": 3,
+    "originalGeometryRestoredEachCycle": true,
+    "closeReopenEmptyAndVisible": true,
+    "deletionSubmitted": false,
+    "initialIssues": [
+      {
+        "kind": "warning",
+        "at": 1792886679873.522
+      }
+    ],
+    "finalIssues": [
+      {
+        "kind": "warning",
+        "at": 1792886679873.522
+      }
+    ],
+    "limit": "Temporary candidate; not a Phase 3 implementation or full release/iOS acceptance"
+  },
+  "unchangedOwnerSmoke": {
+    "status": "pass for representative unchanged-owner geometry smoke",
+    "headerSearchVisible": true,
+    "familySheetCycles": 3,
+    "familyNameRemainedEmpty": true,
+    "profileSaveDisabled": true,
+    "finalHomeKeyboardHidden": true,
+    "domainSubmissions": 0,
+    "initialIssues": [
+      {
+        "kind": "warning",
+        "at": 1792887379716.09
+      }
+    ],
+    "finalIssues": [
+      {
+        "kind": "warning",
+        "at": 1792887379716.09
+      }
+    ],
+    "limit": "Not full per-field protocol, all consumers, other device configurations, or native iOS acceptance"
+  },
+  "fieldAcceptance": "Representative geometry qualification only; no baseline field promoted to full-protocol or permanent fixed-pass.",
+  "nativeBinary": "Fingerprint qualified; native source revision and release matrix remain unresolved outside Phase 1"
+}

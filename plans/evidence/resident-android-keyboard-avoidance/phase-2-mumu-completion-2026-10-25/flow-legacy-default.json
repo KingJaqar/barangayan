@@ -1,0 +1,124 @@
+{
+  "flow": "legacy",
+  "configuration": "default",
+  "results": [
+    {
+      "id": "C13",
+      "label": "Purpose of Request",
+      "configuration": "legacy-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "legacy-default-C13-focus",
+          "editor": [
+            111,
+            573,
+            969,
+            765
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167,
+          "clearance": 402,
+          "focused": true
+        },
+        {
+          "name": "legacy-default-C13-paste",
+          "editor": [
+            111,
+            573,
+            969,
+            765
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167,
+          "clearance": 402,
+          "focused": true
+        },
+        {
+          "name": "legacy-default-C13-selection",
+          "editor": [
+            111,
+            573,
+            969,
+            765
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167,
+          "clearance": 402,
+          "focused": true
+        },
+        {
+          "name": "legacy-default-C13-reopen-1",
+          "editor": [
+            111,
+            573,
+            969,
+            765
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167,
+          "clearance": 402,
+          "focused": true
+        },
+        {
+          "name": "legacy-default-C13-reopen-2",
+          "editor": [
+            111,
+            573,
+            969,
+            765
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167,
+          "clearance": 402,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

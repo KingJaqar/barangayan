@@ -35,7 +35,7 @@ export function ActionSuccessModal({ visible, title, message, amountLabel, onCon
       <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Acknowledge confirmation" accessibilityRole="button" onPress={onConfirm} />
       <Animated.View accessibilityViewIsModal style={[styles.card, { backgroundColor: resident.card, opacity: progress, transform: [{ scale: reducedMotion ? 1 : progress.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }] }]}>
         <View style={[styles.check, { backgroundColor: resident.accentSoft }]}><Ionicons name="checkmark-circle-outline" size={40} color={resident.accentText} accessible={false} /></View>
-        <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{content.title}</ThemedText>
+        <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{content.title}</ThemedText>
         {content.amountLabel ? <ThemedText style={[styles.amount, { color: resident.accentText }]}>{content.amountLabel}</ThemedText> : null}
         <ThemedText style={[styles.caption, { color: resident.muted }]}>{content.message}</ThemedText>
         <PrimaryButton presentation="resident" label="OK" onPress={onConfirm} />

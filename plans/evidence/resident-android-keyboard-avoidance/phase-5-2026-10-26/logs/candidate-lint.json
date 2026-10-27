@@ -1,0 +1,13 @@
+{
+  "stage": "candidate",
+  "check": "lint",
+  "command": [
+    "node",
+    "../../node_modules/eslint/bin/eslint.js",
+    "src",
+    "--no-cache"
+  ],
+  "start": "2026-10-26T14:24:42.149Z",
+  "end": "2026-10-26T14:27:00.560Z",
+  "status": 0
+}

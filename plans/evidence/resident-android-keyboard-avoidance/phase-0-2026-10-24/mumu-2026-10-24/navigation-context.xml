@@ -1,0 +1,110 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx, apps/resident-android-mobile/src/app/(app)/reports/index.tsx, apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          reports/
+            index.tsx
+      components/
+        reports/
+          my-incidents-feed.tsx
+        scrollable-chevron-row.tsx</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx">import { Children, useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from &apos;react-native&apos;;
+⋮----
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { horizontalScrollEdges, horizontalScrollTarget } from &apos;@/lib/horizontal-scroll&apos;;
+⋮----
+interface ScrollableChevronRowProps {
+  children: ReactNode;
+  contentContainerStyle?: StyleProp&lt;ViewStyle&gt;;
+  /** Opt-in interactive controls; existing Settings rows keep their current presentation. */
+  label?: string;
+  /** Home shelves snap by the measured first card plus their gap. */
+  snapToItems?: boolean;
+  /** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
+  reveal?: { x: number; width: number };
+}
+⋮----
+/** Opt-in interactive controls; existing Settings rows keep their current presentation. */
+⋮----
+/** Home shelves snap by the measured first card plus their gap. */
+⋮----
+/** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
+⋮----
+/**
+ * Horizontal ScrollView wrapper that shows a filled chevron badge on whichever edge still
+ * has content to scroll to — used by the Settings screen&apos;s App Theme accent-color swatches
+ * and Font Style chips so both rows signal &quot;there&apos;s more here&quot; the same way. The badges are
+ * solid (theme.primary background, white icon, drop shadow) rather than bare icons so
+ * they read clearly over any swatch/chip color underneath.
+ */
+export function ScrollableChevronRow(props: ScrollableChevronRowProps)
+⋮----
+function InteractiveChevronRow(
+⋮----
+// Leave room for the 44 dp edge chevrons so the revealed range is never drawn under one.
+⋮----
+function update()
+function advance(direction: number)
+⋮----
+accessibilityLabel=
+⋮----
+/** Home keeps the reference&apos;s 200ms edge fade without leaving hidden touch/focus targets. */
+⋮----
+function updateScrollState(offsetX: number)
+⋮----
+function handleScroll(event:
+⋮----
+function handleContentSizeChange(width: number)
+⋮----
+function handleLayout(event:</file><file path="apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx">import { router } from &apos;expo-router&apos;;
+import { FlatList, View } from &apos;react-native&apos;;
+import type { FilterChip } from &apos;@/components/filter-chips&apos;;
+import { IncidentCard } from &apos;@/components/reports/incident-card&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ReportSourceState } from &apos;@/components/reports/report-presentation&apos;;
+import { ServicesNewRequestButton } from &apos;@/components/services/services-list-presentation&apos;;
+import { INCIDENT_STATUSES, INCIDENT_STATUS_META, type IncidentStatus } from &apos;@/constants/incident-status&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useMyIncidents } from &apos;@/hooks/use-my-incidents&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type StatusFilterKey = IncidentStatus | &apos;all&apos;;
+export function useStatusChips(): FilterChip&lt;StatusFilterKey&gt;[]</file><file path="apps/resident-android-mobile/src/app/(app)/reports/index.tsx">import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useState } from &apos;react&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+import { FilterChips } from &apos;@/components/filter-chips&apos;;
+import { GuestAuthCallout } from &apos;@/components/guest-auth-callout&apos;;
+import { MyIncidentsFeed, type StatusFilterKey, useStatusChips } from &apos;@/components/reports/my-incidents-feed&apos;;
+import { ReadAction, ReportSourceState, reportStyles } from &apos;@/components/reports/report-presentation&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+⋮----
+type ReportsSegment = &apos;incident-reports&apos; | &apos;active&apos; | &apos;resolved&apos;;</file></files></repomix>

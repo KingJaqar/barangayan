@@ -1,0 +1,223 @@
+{
+  "status": "Partially complete",
+  "checks": [
+    {
+      "check": "type",
+      "baseline": {
+        "stage": "baseline",
+        "check": "type",
+        "command": [
+          "node",
+          "../../node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "--pretty",
+          "false"
+        ],
+        "start": "2026-10-26T03:46:34.318Z",
+        "end": "2026-10-26T03:46:53.518Z",
+        "status": 0
+      },
+      "phase4Final": {
+        "stage": "final3",
+        "check": "type",
+        "command": [
+          "node",
+          "../../node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "--pretty",
+          "false"
+        ],
+        "start": "2026-10-26T06:44:10.097Z",
+        "end": "2026-10-26T06:44:34.606Z",
+        "status": 0
+      },
+      "finalWithConcurrentUserChanges": {
+        "stage": "final5",
+        "check": "type",
+        "command": [
+          "node",
+          "../../node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "--pretty",
+          "false"
+        ],
+        "start": "2026-10-26T10:37:55.630Z",
+        "end": "2026-10-26T10:38:24.683Z",
+        "status": 0
+      }
+    },
+    {
+      "check": "lint",
+      "baseline": {
+        "stage": "baseline",
+        "check": "lint",
+        "command": [
+          "node",
+          "../../node_modules/eslint/bin/eslint.js",
+          "src",
+          "--no-cache"
+        ],
+        "start": "2026-10-26T03:46:53.624Z",
+        "end": "2026-10-26T03:47:56.588Z",
+        "status": 0
+      },
+      "phase4Final": {
+        "stage": "final3",
+        "check": "lint",
+        "command": [
+          "node",
+          "../../node_modules/eslint/bin/eslint.js",
+          "src",
+          "--no-cache"
+        ],
+        "start": "2026-10-26T06:44:34.703Z",
+        "end": "2026-10-26T06:45:27.879Z",
+        "status": 0
+      },
+      "finalWithConcurrentUserChanges": {
+        "stage": "final5",
+        "check": "lint",
+        "command": [
+          "node",
+          "../../node_modules/eslint/bin/eslint.js",
+          "src",
+          "--no-cache"
+        ],
+        "start": "2026-10-26T10:37:55.630Z",
+        "end": "2026-10-26T10:39:00.354Z",
+        "status": 0
+      }
+    },
+    {
+      "check": "unit",
+      "baseline": {
+        "stage": "baseline",
+        "check": "unit",
+        "command": [
+          "node",
+          "../../node_modules/vitest/vitest.mjs",
+          "run",
+          "--reporter=dot",
+          "--maxWorkers=1",
+          "--minWorkers=1"
+        ],
+        "start": "2026-10-26T03:46:34.303Z",
+        "end": "2026-10-26T03:47:00.740Z",
+        "status": 0
+      },
+      "phase4Final": {
+        "stage": "final3",
+        "check": "unit",
+        "command": [
+          "node",
+          "../../node_modules/vitest/vitest.mjs",
+          "run",
+          "--reporter=dot",
+          "--maxWorkers=1",
+          "--minWorkers=1"
+        ],
+        "start": "2026-10-26T06:44:10.197Z",
+        "end": "2026-10-26T06:44:37.274Z",
+        "status": 0
+      },
+      "finalWithConcurrentUserChanges": {
+        "stage": "final5",
+        "check": "unit",
+        "command": [
+          "node",
+          "../../node_modules/vitest/vitest.mjs",
+          "run",
+          "--reporter=dot",
+          "--maxWorkers=1",
+          "--minWorkers=1"
+        ],
+        "start": "2026-10-26T10:37:55.659Z",
+        "end": "2026-10-26T10:38:23.029Z",
+        "status": 0
+      }
+    },
+    {
+      "check": "export",
+      "baseline": {
+        "stage": "baseline",
+        "check": "export",
+        "command": [
+          "node",
+          "../../node_modules/expo/bin/cli",
+          "export",
+          "--platform",
+          "android",
+          "--output-dir",
+          "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase4-20261026\\baseline-export"
+        ],
+        "start": "2026-10-26T03:47:00.843Z",
+        "end": "2026-10-26T03:48:01.556Z",
+        "status": 0
+      },
+      "phase4Final": {
+        "stage": "final3",
+        "check": "export",
+        "command": [
+          "node",
+          "../../node_modules/expo/bin/cli",
+          "export",
+          "--platform",
+          "android",
+          "--output-dir",
+          "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase4-20261026\\final3-export"
+        ],
+        "start": "2026-10-26T06:44:37.373Z",
+        "end": "2026-10-26T06:45:12.549Z",
+        "status": 0
+      },
+      "finalWithConcurrentUserChanges": {
+        "stage": "final5",
+        "check": "export",
+        "command": [
+          "node",
+          "../../node_modules/expo/bin/cli",
+          "export",
+          "--platform",
+          "android",
+          "--output-dir",
+          "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase4-20261026\\final5-export"
+        ],
+        "start": "2026-10-26T10:37:55.660Z",
+        "end": "2026-10-26T10:38:40.775Z",
+        "status": 0
+      }
+    }
+  ],
+  "mobileTests": {
+    "files": 32,
+    "tests": 335,
+    "result": "pass"
+  },
+  "preExistingLintWarnings": [
+    "birthday-wheel-modal ROW_HEIGHT effect dependency",
+    "health-presentation unused useState"
+  ],
+  "finalRemainingLintWarnings": [
+    "health-presentation unused useState; external birthday edit removed the other baseline warning"
+  ],
+  "browser": {
+    "focusedHealth": "6 groups pass",
+    "focusedLocation": "3 groups pass; no captured diagnostics",
+    "fullReports": "pre-existing line95 motion assertion",
+    "fullHealth": "pre-existing line139 duplicate calendar locator",
+    "fullVerification": "pre-existing Detect Your Location case-sensitive locator; final line201"
+  },
+  "acceptance": {
+    "reproducedA05Obstruction": "met for recorded focus/action subsets",
+    "fullA01ThroughA07Protocol": "pending manual verification",
+    "changedSurfaceRestoration": "default and settled larger-display 3 cycles pass; initial41px comparison unresolved",
+    "sourceIosAndDomainPreservation": "met by owned diff/supporting checks",
+    "fullNativeRuntimeIdentityAndConsole": "pending manual verification",
+    "userWorkPreservation": "met for baseline snapshot scope",
+    "authorizedMemberCleanup": "met"
+  },
+  "remaining": "ledger.md",
+  "report": "report.md",
+  "newDependencies": [],
+  "nativeIosPhysicalReleaseQualification": "not performed; outside current gate"
+}

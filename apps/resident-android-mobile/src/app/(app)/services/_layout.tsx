@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Fonts } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 
 // Native Stack nested inside the "Services" NativeTabs tab, so screens here (Document
@@ -8,7 +9,7 @@ import { useAuth } from '@/hooks/use-auth';
 export default function ServicesLayout() {
   const { session } = useAuth();
   return (
-    <Stack key={session?.user.id ?? 'guest'}>
+    <Stack key={session?.user.id ?? 'guest'} screenOptions={{ headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
       {/* index.tsx builds its own segmented-control header — the native Stack header
           would otherwise show a stray "index" title above it (same fix as Settings). */}
       <Stack.Screen name="index" options={{ headerShown: false }} />

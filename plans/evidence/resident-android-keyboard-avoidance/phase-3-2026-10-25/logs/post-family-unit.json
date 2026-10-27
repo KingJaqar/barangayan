@@ -1,0 +1,15 @@
+{
+  "stage": "post-family",
+  "check": "unit",
+  "command": [
+    "node",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "--reporter=dot",
+    "--maxWorkers=1",
+    "--minWorkers=1"
+  ],
+  "start": "2026-10-25T13:45:46.965Z",
+  "end": "2026-10-25T13:46:13.844Z",
+  "status": 0
+}

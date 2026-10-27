@@ -1,0 +1,14 @@
+[
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+    "originalSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20",
+    "candidateSha256": "33c11e244d38dff54d4fb3cfb4cc8388b2f022c6208db5ef0762e4cbcd8d4f18",
+    "disposition": "Temporary qualification only; restored before Phase 1 closure"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+    "originalSha256": "b7bcf711b2a496d59f96fb9233fd3305765ee2f8a013480ba4e28aed30a47f9a",
+    "candidateSha256": "79bd03e86878607e96e23a7011a1408213d1bb51f3e1278473c23ae97bc8e46d",
+    "disposition": "Temporary qualification only; restored before Phase 1 closure"
+  }
+]

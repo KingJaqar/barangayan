@@ -1,0 +1,209 @@
+{
+  "at": "2026-10-26T11:53:51.665Z",
+  "status": "pass stated subset",
+  "config": "default",
+  "route": "emergency-centers",
+  "observations": [
+    {
+      "tag": "default-c17-emergency-centers-focus",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        1029,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-typed",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-start",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-end",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-middle",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-reopen-active",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-map-return",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c17-emergency-centers-clear",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        1029,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "open": {
+        "tag": "default-c17-emergency-centers-cycle-1",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          435,
+          1029,
+          567
+        ],
+        "imeTop": 1167,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          240,
+          1080,
+          1920
+        ],
+        [
+          0,
+          240,
+          1080,
+          1920
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "default-c17-emergency-centers-cycle-2",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          435,
+          1029,
+          567
+        ],
+        "imeTop": 1167,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          240,
+          1080,
+          1920
+        ],
+        [
+          0,
+          240,
+          1080,
+          1920
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "default-c17-emergency-centers-cycle-3",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          435,
+          1029,
+          567
+        ],
+        "imeTop": 1167,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          240,
+          1080,
+          1920
+        ],
+        [
+          0,
+          240,
+          1080,
+          1920
+        ]
+      ]
+    }
+  ],
+  "listEditorAbsent": true,
+  "oneEditor": true,
+  "remaining": [
+    "touch paste/selection",
+    "selected center/route overlay",
+    "idle-collapse timing",
+    "actual map camera identity"
+  ]
+}

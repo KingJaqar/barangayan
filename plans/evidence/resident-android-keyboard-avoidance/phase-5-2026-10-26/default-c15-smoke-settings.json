@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-26T11:57:39.532Z",
+  "status": "pass focus/type/clear/back subset",
+  "origin": "settings",
+  "config": "default",
+  "observations": [
+    {
+      "tag": "default-c15-smoke-settings-focus",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c15-smoke-settings-typed",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c15-smoke-settings-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "state": "Boundary probes only; no OTP send, verify or password update. Normal header Back cancels recovery and preserves the session.",
+  "results": [
+    {
+      "id": "B05",
+      "state": "signed-in read-only boundary",
+      "readOnly": true
+    },
+    {
+      "id": "B07",
+      "label": "New password",
+      "configuration": "recovery-root-height",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "recovery-root-height-B07-focus",
+          "editor": [
+            72,
+            912,
+            1008,
+            1080
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 87,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B07-paste",
+          "editor": [
+            72,
+            912,
+            1008,
+            1080
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 87,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B07-selection",
+          "editor": [
+            72,
+            912,
+            1008,
+            1080
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 87,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B07-reopen-1",
+          "editor": [
+            72,
+            912,
+            1008,
+            1080
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 87,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B07-reopen-2",
+          "editor": [
+            72,
+            912,
+            1008,
+            1080
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 87,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B08",
+      "label": "Confirm new password",
+      "configuration": "recovery-root-height",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "recovery-root-height-B08-focus",
+          "editor": [
+            72,
+            999,
+            1008,
+            1167
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B08-paste",
+          "editor": [
+            72,
+            999,
+            1008,
+            1167
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B08-selection",
+          "editor": [
+            72,
+            999,
+            1008,
+            1167
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B08-reopen-1",
+          "editor": [
+            72,
+            999,
+            1008,
+            1167
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "recovery-root-height-B08-reopen-2",
+          "editor": [
+            72,
+            999,
+            1008,
+            1167
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B06",
+      "state": "Missing-code-delivery boundary; verify/resend untouched",
+      "baseline": {
+        "name": "recovery-root-height-B06-before",
+        "editor": [
+          72,
+          861,
+          1008,
+          1035
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1920
+        ],
+        "keyboardTop": null,
+        "clearance": null,
+        "focused": false
+      },
+      "entered": {
+        "name": "recovery-root-height-B06-six-digits",
+        "editor": [
+          72,
+          861,
+          1008,
+          1035
+        ],
+        "viewport": [
+          0,
+          219,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 132,
+        "focused": true
+      },
+      "sixDigitTyping": true,
+      "fullProtocol": false
+    }
+  ],
+  "submitted": false
+}

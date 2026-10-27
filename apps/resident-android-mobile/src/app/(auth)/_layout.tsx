@@ -3,6 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 
 import { AuthHeader } from '@/components/auth-header';
+import { Fonts } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { authSetupRequests } from '@/lib/setup-request';
 import { passwordRecovery } from '@/lib/supabase';
@@ -37,7 +38,7 @@ export default function AuthLayout() {
     header: () => <AuthHeader title={title} onBack={cancelRecovery} />,
   });
   return (
-    <Stack screenOptions={{ headerTitle: '', headerShadowVisible: false }}>
+    <Stack screenOptions={{ headerTitle: '', headerShadowVisible: false, headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
       <Stack.Screen name="welcome" options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="value-prop" options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="personalization" options={{ headerShown: false, animation: 'fade' }} />

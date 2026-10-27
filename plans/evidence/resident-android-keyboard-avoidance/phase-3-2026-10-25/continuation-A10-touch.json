@@ -1,0 +1,27 @@
+{
+  "nativeHexTyping": true,
+  "invalidSaveDisabled": true,
+  "validSaveEnabled": true,
+  "lowercaseNormalized": true,
+  "nativeTouchSelectAllCutPaste": true,
+  "exactSyntheticPasteVerified": true,
+  "geometry": {
+    "editor": [
+      318,
+      716,
+      930,
+      850
+    ],
+    "viewport": [
+      0,
+      336,
+      1080,
+      898
+    ],
+    "keyboardTop": 1167,
+    "clearance": 317
+  },
+  "originalRestored": true,
+  "closeReopenOriginal": true,
+  "preferenceSaved": false
+}

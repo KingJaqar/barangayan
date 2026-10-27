@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { PaymentMethodRow } from '@/components/services/payment-method-row';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ThemedText } from '@/components/themed-text';
 import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
@@ -56,6 +57,7 @@ export function ResidentPaymentScreen({
       }
     } catch { setError('Could not load the payment details. Reconnect and retry.'); setRequest(null); }
   }, [requestId]);
+  const pull = usePullRefresh([refresh]);
   useFocusEffect(
     useCallback(() => {
       void refresh();
@@ -138,6 +140,7 @@ export function ResidentPaymentScreen({
       />
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.resident.card }}
+        refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
         contentContainerStyle={styles.content}>
         {request ? (
           <>

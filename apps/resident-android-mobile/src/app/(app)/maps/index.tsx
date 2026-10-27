@@ -4,8 +4,8 @@ import * as Location from 'expo-location';
 import { useFocusEffect } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator, Animated, AppState, Easing, Keyboard, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { MapView, type MapViewHandle } from '@/components/map-view';
 import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
@@ -34,6 +34,7 @@ export default function MapsScreen() {
   const fontFamily = getMobileFontFamily(fontId);
   const bottomTabInset = useFloatingTabInset();
   const fullTabInset = useFloatingTabInset(true);
+  const { bottom: systemBottomInset } = useSafeAreaInsets();
   const { mapNavHidden, setMapNavHidden, mapNavProgress } = useFloatingTabLayout();
   const reducedMotion = useResidentReducedMotion(true);
   const { profile } = useProfile();
@@ -65,12 +66,45 @@ export default function MapsScreen() {
   const [mapAttempt, setMapAttempt] = useState(0);
   const [mapHeight, setMapHeight] = useState(0);
   const [topHeight, setTopHeight] = useState(0);
+  const incidentSearch = useRef<TextInput>(null);
+  const revealSearch = useRef<() => void>(() => {});
+  const [compactSearch, setCompactSearch] = useState(false);
+  const searchActive = Platform.OS === 'android' && focused && activeTab === 'incidents';
+  useEffect(() => {
+    if (!searchActive) { setCompactSearch(false); return; }
+    let revision = 0;
+    let frame: number | null = null;
+    const reveal = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      const ticket = ++revision;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const keyboard = Keyboard.metrics();
+        if (!keyboard) return;
+        incidentSearch.current?.measureInWindow((_x, y, _width, height) => {
+          if (ticket === revision && height > 0 && y + height > keyboard.screenY) setCompactSearch(true);
+        });
+      });
+    };
+    revealSearch.current = reveal;
+    const show = Keyboard.addListener('keyboardDidShow', reveal);
+    const hide = Keyboard.addListener('keyboardDidHide', () => { ++revision; setCompactSearch(false); });
+    reveal();
+    return () => {
+      ++revision;
+      if (frame !== null) cancelAnimationFrame(frame);
+      revealSearch.current = () => {};
+      show.remove(); hide.remove();
+    };
+  }, [searchActive]);
   const [overlayHeight, setOverlayHeight] = useState(48);
-  // Leave room for the reveal button and map attribution beneath the controls.
-  const navHiddenBottom = 84;
-  const navVisibleBottom = Math.max(navHiddenBottom, fullTabInset + 24);
+  // Keep the 44dp chevron above system navigation and all map controls above it.
+  const revealHiddenBottom = systemBottomInset + 12;
+  const revealVisibleBottom = Math.max(revealHiddenBottom, fullTabInset - 4);
+  const navHiddenBottom = revealHiddenBottom + 44 + 28;
+  const navVisibleBottom = revealVisibleBottom + 44 + 28;
   const overlayBottom = mapNavHidden ? navHiddenBottom : navVisibleBottom;
-  const revealTravel = Math.max(0, fullTabInset - 14);
+  const revealTravel = revealVisibleBottom - revealHiddenBottom;
   const overlayMotion = useAnimatedStyle(() => ({ transform: [{ translateY: (navVisibleBottom - navHiddenBottom) * (mapNavProgress?.value ?? 0) }] }));
   const revealMotion = useAnimatedStyle(() => ({ transform: [{ translateY: revealTravel * (mapNavProgress?.value ?? 0) }] }));
 
@@ -199,9 +233,9 @@ export default function MapsScreen() {
   const presentation = useMemo(() => ({
     selectedMarkerId: selected?.id ?? null, reducedMotion,
     padding: { top: topHeight + 24, bottom: overlayBottom + overlayHeight + 24 },
-    attributionBottom: Math.max(bottomTabInset + 4, 56), surface: resident.card, text: resident.text,
+    attributionBottom: Math.max(bottomTabInset + 4, systemBottomInset + 56), surface: resident.card, text: resident.text,
     border: resident.border, fontFamily: fontFamily ?? 'sans-serif',
-  }), [selected?.id, reducedMotion, topHeight, overlayBottom, overlayHeight, bottomTabInset, resident.card, resident.text, resident.border, fontFamily]);
+  }), [selected?.id, reducedMotion, topHeight, overlayBottom, overlayHeight, bottomTabInset, systemBottomInset, resident.card, resident.text, resident.border, fontFamily]);
   function clearSelection() { setSelectedId(null); }
   const controls = <View style={styles.controls}>
     <View style={[styles.pill, { backgroundColor: resident.card, borderColor: resident.border }]}>
@@ -223,7 +257,7 @@ export default function MapsScreen() {
     </View>
   </View>;
   return <SafeAreaView edges={['left', 'right']} style={[styles.screen, { backgroundColor: resident.card }]}>
-    <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" compact onChange={tab => { setActiveTab(tab); clearSelection(); }} />
+    {compactSearch ? null : <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" compact onChange={tab => { setActiveTab(tab); clearSelection(); }} />}
     <View style={styles.mapArea} onLayout={event => { const height = event.nativeEvent.layout.height; setMapHeight(current => current === height ? current : height); }}>
       <View style={StyleSheet.absoluteFill} onTouchStart={() => setMapNavHidden(true)}>
       <MapView key={mapAttempt} ref={map} markers={markers} kindColors={kindColors} boundary={boundary}
@@ -240,10 +274,10 @@ export default function MapsScreen() {
         }} onMapError={() => setMapError(true)} style={StyleSheet.absoluteFill} />
       </View>
       <ScrollView keyboardShouldPersistTaps="handled" style={[styles.top, mapHeight > 0 && { maxHeight: Math.max(48, mapHeight - overlayBottom - 112) }]}
-        contentContainerStyle={styles.topContent} onLayout={event => { const height = event.nativeEvent.layout.height; setTopHeight(current => current === height ? current : height); }}>
+        contentContainerStyle={styles.topContent} onLayout={event => { const height = event.nativeEvent.layout.height; setTopHeight(current => current === height ? current : height); revealSearch.current(); }}>
         <View style={[styles.search, { backgroundColor: resident.card, borderColor: resident.border }]}>
           <Ionicons name="search-outline" size={20} color={resident.text} accessible={false} />
-          <TextInput accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}
+          <TextInput ref={incidentSearch} onFocus={() => revealSearch.current()} accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}
             style={[styles.searchInput, { color: resident.text, fontFamily }]} value={activeTab === 'incidents' ? searchQuery : ''}
             onChangeText={query => { setSearchQuery(query); clearSelection(); }} editable={activeTab === 'incidents'}
             placeholder={activeTab === 'incidents' ? 'Search locations...' : 'Incident search only'} placeholderTextColor={resident.muted} />
@@ -289,7 +323,7 @@ export default function MapsScreen() {
           {activeTab === 'incidents' ? 'No incidents reported in this area' : 'No evacuation centers found'}
         </ThemedText> : null}
       </Reanimated.View>
-      <Reanimated.View style={[styles.reveal, { bottom: 10 + revealTravel }, revealMotion]}>
+      <Reanimated.View style={[styles.reveal, { bottom: revealVisibleBottom }, revealMotion]}>
         <Pressable accessibilityRole="button" accessibilityLabel={mapNavHidden ? 'Show bottom tabs' : 'Hide bottom tabs'}
           onPress={() => setMapNavHidden(!mapNavHidden)} style={[styles.revealButton, { backgroundColor: resident.card, borderColor: resident.border }]}>
           <Ionicons name={mapNavHidden ? 'chevron-up' : 'chevron-down'} size={20} color={resident.text} accessible={false} />

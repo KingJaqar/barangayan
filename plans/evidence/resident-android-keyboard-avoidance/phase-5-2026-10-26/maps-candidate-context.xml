@@ -1,0 +1,120 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/maps/index.tsx, apps/resident-android-mobile/tests/maps-presentation-ui.mjs
+- Files matching these patterns are excluded: **/.env*, **/repomix-output.xml
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          maps/
+            index.tsx
+    tests/
+      maps-presentation-ui.mjs
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/tests/maps-presentation-ui.mjs">
+// Real Maps + data hooks + native wrapper + bundled Leaflet. Browser/native/transport
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Regression harness uses the actual wrapper, including legacy default presentation.
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/maps/index.tsx">
+import type { LatLng } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
+⋮----
+import { useFocusEffect } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, AppState, Easing, Keyboard, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import { MapView, type MapViewHandle } from '@/components/map-view';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useIncidentCategories } from '@/hooks/use-incident-categories';
+import { useIncidents } from '@/hooks/use-incidents';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { isMapPosition } from '@/lib/map-presentation';
+⋮----
+type MapTab = 'incidents' | 'evacuation';
+type PermissionStatus = Location.LocationPermissionResponse['status'];
+⋮----
+export default function MapsScreen()
+⋮----
+const reveal = () =>
+⋮----
+// Keep the 44dp chevron above system navigation and all map controls above it.
+⋮----
+const owns = ()
+⋮----
+// Preserve automatic acquisition for granted permission and foreground permission rechecks.
+⋮----
+async function check(initial: boolean)
+⋮----
+function clearSelection()
+⋮----
+onPress=
+</file>
+
+</files>

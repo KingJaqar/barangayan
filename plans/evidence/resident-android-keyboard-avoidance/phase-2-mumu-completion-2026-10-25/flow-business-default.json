@@ -1,0 +1,336 @@
+{
+  "flow": "business",
+  "configuration": "default",
+  "results": [
+    {
+      "id": "B25",
+      "label": "Explain your purpose",
+      "configuration": "business-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "business-default-B25-focus",
+          "editor": [
+            60,
+            752,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B25-paste",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B25-selection",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B26",
+      "label": "Business name",
+      "configuration": "business-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "business-default-B26-focus",
+          "editor": [
+            60,
+            752,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B26-paste",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B26-selection",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B26-reopen-1",
+          "editor": [
+            60,
+            750,
+            1020,
+            894
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 273,
+          "focused": true
+        },
+        {
+          "name": "business-default-B26-reopen-2",
+          "editor": [
+            60,
+            750,
+            1020,
+            894
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 273,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B27",
+      "label": "Establishment address",
+      "configuration": "business-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "business-default-B27-focus",
+          "editor": [
+            60,
+            752,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B27-paste",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B27-selection",
+          "editor": [
+            60,
+            750,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "configuration": "business-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "business-default-B31-focus",
+          "editor": [
+            60,
+            614,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B31-paste",
+          "editor": [
+            60,
+            614,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        },
+        {
+          "name": "business-default-B31-selection",
+          "editor": [
+            60,
+            614,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167,
+          "clearance": 271,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    },
+    {
+      "kind": "warning",
+      "at": 1792913051397.599
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    },
+    {
+      "kind": "warning",
+      "at": 1792913051397.599
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

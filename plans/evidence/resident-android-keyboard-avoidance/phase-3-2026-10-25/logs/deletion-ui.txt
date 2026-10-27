@@ -1,0 +1,20 @@
+{
+  "passed": [
+    "Settings pull reloads the profile and the account setup status once and keeps the content",
+    "20 presets/10 fonts and real preference providers persist theme/accent/font",
+    "extreme custom color accepted; duplicate and invalid hex recover; Cancel/Back dismiss",
+    "format chooser makes no request; PDF/JSON adapters used; password deletion cancellation makes no delete request",
+    "deletion empty error, eye toggle, loading input/close guards, rejected reauthentication, retained draft and clean reopen; zero delete requests",
+    "reference layouts, numeric date, radio selections, occupation visibility, horizontal relation options, local family add/edit/remove, pinned actions at narrow widths, font/theme synchronization and reduced-motion profile sheets",
+    "avatar saves immediately without erasing dirty fields; household stays local until explicit save; five synchronous taps cause one profile write",
+    "invalid/save error/photo picker error preserve inputs and recovery",
+    "Settings conditional roster write preserves snapshot, never writes JSON directly, rejects stale save before demographic write and explicitly reloads",
+    "five option-sheet open/close cycles, employment and birthday dismissal, compact widths have no document overflow",
+    "malformed household data cannot be silently overwritten by a profile save",
+    "custom color cap displays recoverable feedback",
+    "push retains unregister side effect; SMS remains local without a remote write",
+    "Google-confirmed deletion Cancel consumes confirmation without a delete request",
+    "reduced-motion dismissal works; logout keeps device dark mode and resets account accent"
+  ],
+  "errors": []
+}

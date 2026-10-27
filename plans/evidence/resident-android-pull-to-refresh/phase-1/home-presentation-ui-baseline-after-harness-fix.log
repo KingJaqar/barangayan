@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "Actual latest-three/latest-one query shapes and measured chevrons at both boundaries",
+    "Home → tracking → Back → Services, repeated 3 times (unvisited Services)",
+    "Home → tracking → Back → Services, repeated 3 times (visited Services)",
+    "Same request in both tabs preserves independent stacks; Services Back restores its original root",
+    "Control reproduces the original loop when Home opens the Services-owned URL",
+    "Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries",
+    "Five quick actions, See all/news destinations and 320/360/400/412 theme/font/extreme-accent layouts without reloads",
+    "Single-card no-overflow/cancelled history and normal/reduced sheet targets, background close and theme change while open",
+    "Short 320px viewport and long summary title retain reachable Close and full-tracking controls",
+    "Profile-completion, authenticated empty and guest states",
+    "Visible database/transport failures and explicit independent retry recovery",
+    "Loading state, late previous-account response isolation, focus/unmount listener cleanup and no console warnings/errors"
+  ],
+  "errors": [],
+  "out": "C:\\Users\\User\\barangayan\\tmp\\resident-pull-refresh-20261025\\phase-1\\home-base"
+}
+
+real	0m9.699s
+user	0m0.015s
+sys	0m0.031s

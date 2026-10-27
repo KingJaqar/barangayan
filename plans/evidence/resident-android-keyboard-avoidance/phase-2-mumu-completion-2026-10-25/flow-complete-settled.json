@@ -1,0 +1,224 @@
+{
+  "flow": "complete",
+  "configuration": "settled",
+  "results": [
+    {
+      "id": "B10",
+      "label": "Last Name",
+      "configuration": "complete-settled",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Discard synthetic draft through normal Back action; reopen and verify original value",
+      "states": [
+        {
+          "name": "complete-settled-B10-focus",
+          "editor": [
+            552,
+            882,
+            957,
+            1001
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 166,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B10-paste",
+          "editor": [
+            552,
+            882,
+            957,
+            1001
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 166,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B10-selection",
+          "editor": [
+            552,
+            882,
+            957,
+            1001
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 166,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B11",
+      "label": "Middle Name (optional)",
+      "configuration": "complete-settled",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Discard synthetic draft through normal Back action; reopen and verify original value",
+      "states": [
+        {
+          "name": "complete-settled-B11-focus",
+          "editor": [
+            123,
+            1048,
+            528,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B11-paste",
+          "editor": [
+            123,
+            1048,
+            528,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B11-selection",
+          "editor": [
+            123,
+            1048,
+            528,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "B12",
+      "label": "Suffix (optional)",
+      "configuration": "complete-settled",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 1,
+      "originalValueRestored": true,
+      "restoration": "Discard synthetic draft through normal Back action; reopen and verify original value",
+      "states": [
+        {
+          "name": "complete-settled-B12-focus",
+          "editor": [
+            552,
+            1048,
+            957,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B12-paste",
+          "editor": [
+            552,
+            1048,
+            957,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "complete-settled-B12-selection",
+          "editor": [
+            552,
+            1048,
+            957,
+            1167
+          ],
+          "viewport": [
+            0,
+            291,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

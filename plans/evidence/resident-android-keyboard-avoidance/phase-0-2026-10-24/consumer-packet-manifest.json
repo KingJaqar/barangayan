@@ -1,0 +1,39 @@
+{
+  "version": "1.18.1",
+  "style": "parsable XML, compressed",
+  "sha256": "78fa4ab6cf8404fc129e94e8396e550d6eb38076ea58d982285aec212aa90f65",
+  "bytes": 14117,
+  "estimateTokens": 3251,
+  "security": "No suspicious files; default security scan enabled",
+  "missing": [],
+  "unexpected": [],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "chars": 1914
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx",
+      "chars": 178
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx",
+      "chars": 138
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "chars": 6401
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "chars": 1087
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "chars": 10172
+    }
+  ],
+  "supersedes": "Initial --stdin attempts omitted nested entries on Windows. --include selectors resolved all 46; no security/ignore relaxation."
+}

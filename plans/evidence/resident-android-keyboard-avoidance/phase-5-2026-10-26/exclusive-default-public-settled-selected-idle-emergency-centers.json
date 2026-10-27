@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-26T13:13:39.090Z",
+  "status": "pass selected center/camera/status/idle/list and stated header subset",
+  "config": "exclusive-default-public-settled",
+  "route": "emergency-centers",
+  "selectedCenterFromExistingData": true,
+  "focus": {
+    "tag": "exclusive-default-public-settled-selected-idle-emergency-centers-selected-focus",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      435,
+      1029,
+      567
+    ],
+    "imeTop": 1167,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "typed": {
+    "tag": "exclusive-default-public-settled-selected-idle-emergency-centers-no-match",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      435,
+      897,
+      567
+    ],
+    "imeTop": 1167,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "reopened": {
+    "tag": "exclusive-default-public-settled-selected-idle-emergency-centers-idle-reopen",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      435,
+      897,
+      567
+    ],
+    "imeTop": 1167,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "returnFocus": {
+    "tag": "exclusive-default-public-settled-selected-idle-emergency-centers-list-map-return",
+    "label": "Search evacuation centers",
+    "bounds": [
+      183,
+      435,
+      1029,
+      567
+    ],
+    "imeTop": 1167,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "cameraAndZoomRetained": true,
+  "sameNativeMapTarget": true,
+  "listEditorAbsent": true,
+  "idle": {
+    "resetAt": 1793020365854,
+    "earlyCheckPassed": true,
+    "collapseObserved": true,
+    "activeQueryRetained": true
+  },
+  "headerIdle": null,
+  "nativeWebViewExceptions": 0
+}

@@ -1,0 +1,13 @@
+{
+  "stage": "final2",
+  "check": "lint",
+  "command": [
+    "node",
+    "../../node_modules/eslint/bin/eslint.js",
+    "src",
+    "--no-cache"
+  ],
+  "start": "2026-10-26T06:29:44.150Z",
+  "end": "2026-10-26T06:31:52.440Z",
+  "status": 0
+}

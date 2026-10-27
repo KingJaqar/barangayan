@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-26T10:40:01.631Z",
+  "snapshotInputs": 80,
+  "unchangedInputs": 74,
+  "changedOwnedPaths": [
+    "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+    "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+    "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs"
+  ],
+  "unexpectedChangedPaths": [],
+  "lateExternalPaths": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "64e7852270eb35c160692469e67e8ea1bf03839b1fdeb71cf0e769cd8d845f9f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx",
+      "sha256": "3080a9bec1e8099a3283905762e8850f69c6ae602c931c5a279078a785215d33"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "sha256": "f0e5c69460cd6b912cc9ecb936bbb48936dcc551434c526055d79dc4e86dd77b"
+    }
+  ],
+  "stagedPatchUnchanged": true,
+  "planOutsideSelectedPhaseUnchanged": true,
+  "limit": "Hash preservation covers the 80 captured nonsecret inputs, not unrelated historical artifacts. Existing dirty work is user-owned; no resets or commits were made."
+}

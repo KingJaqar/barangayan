@@ -1,0 +1,67 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "731fdd23bc8a0757ad8a34b0330d3bf3b01688f6cf4ec8d849aed9a57dd161f0",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-report-modal-motion.ts",
+      "characters": 811
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "characters": 165
+    },
+    {
+      "path": "CLAUDE.md",
+      "characters": 12
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/health/health-presentation.tsx",
+      "characters": 1327
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "characters": 1938
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "characters": 2179
+    },
+    {
+      "path": "AGENTS.md",
+      "characters": 2
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "characters": 5383
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "characters": 4151
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/service-screen-header.tsx",
+      "characters": 376
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/primary-button.tsx",
+      "characters": 1590
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "characters": 2123
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "characters": 1296
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "characters": 1693
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "characters": 11632
+    }
+  ],
+  "totalCharacters": 35587
+}

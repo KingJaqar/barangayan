@@ -1,0 +1,143 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          settings/
+            location-verification.tsx
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx">
+/**
+ * Settings > Location Verification.
+ *
+ * A full-screen map (centered on the resident's barangay — Ampid I, San Mateo for this
+ * pilot — with its boundary outlined) where the resident drags a pin to their exact
+ * home location and saves it. Reuses the same MapView + boundary-constrained picker
+ * mode already built for Incident Reports' "pin your location" flow
+ * (components/reports/location-picker-modal.tsx / components/map-view.tsx) — dragging
+ * or tapping outside the boundary is rejected and the pin snaps back. Also reuses that
+ * flow's reverse-geocode-then-editable-address pattern (reverseGeocode) so the pin's
+ * address shows as readable text, not just coordinates, and the resident can correct it.
+ *
+ * Persists to profiles.verified_location (jsonb {lat,lng}) + verified_location_address
+ * (text, migration 0091) + location_verified_at (migration 0090). This is a
+ * resident-initiated, self-reported confirmation — distinct from
+ * profiles.registration_location (0078), the one-time best-effort GPS fix captured
+ * automatically at signup for admin review.
+ */
+import { Ionicons } from '@expo/vector-icons';
+import type { LatLng } from '@barangayan/shared';
+import { reverseGeocode, isPointInPolygon } from '@barangayan/shared';
+⋮----
+import type { MultiPolygon, Polygon } from 'geojson';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+⋮----
+import { GuestPrompt } from '@/components/guest-prompt';
+import { AuthHeader } from '@/components/auth-header';
+import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
+import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+import { TextField } from '@/components/text-field';
+import { ThemedText } from '@/components/themed-text';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
+import { isMapPosition } from '@/lib/map-presentation';
+import { supabase } from '@/lib/supabase';
+⋮----
+// True once a geocode attempt has finished with no result — distinguishes "still
+// detecting" from "detection failed, please type it in" so an empty field after
+// loading doesn't just look broken.
+⋮----
+async function fetchAddressFor(pos: LatLng)
+⋮----
+// Ignore stale responses from a since-superseded pin placement.
+⋮----
+// Seed the pin: the resident's previously-saved location if there is one (with its
+// previously-saved address, so a re-visit doesn't re-geocode for no reason), otherwise
+// try a live GPS fix — auto-detecting its address — falling back to the barangay's
+// default center if that fails (permission denied, GPS unavailable, or an emulator
+// with no fix).
+⋮----
+const isCurrent = ()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+/** "Detect Your Location" button — a manual, explicit re-run of the same GPS fix the
+   * screen tries automatically on first load (see the seed effect above), for a resident
+   * who wants to re-center on their current device location instead of dragging the pin
+   * by hand (e.g. after the pin drifted while adjusting the address, or on a return visit
+   * where the previously-saved pin no longer matches where they're standing). Moves the
+   * pin and re-detects its address exactly like a drag/tap does. Unlike the silent
+   * first-load fallback, a failure here is a direct result of this tap, so it's reported
+   * with an alert rather than silently falling back to the barangay's default center.
+   */
+async function handleDetectLocation()
+⋮----
+function handlePickerMoved(pos: LatLng)
+⋮----
+function handlePickerRejected()
+⋮----
+async function handleSave()
+⋮----
+// Freeze the address paired with this pin while its existing save is pending.
+⋮----
+// A refresh keeps the map and pin mounted; saving stays blocked while `isLoading`.
+⋮----
+onMapError=
+⋮----
+</file>
+
+</files>

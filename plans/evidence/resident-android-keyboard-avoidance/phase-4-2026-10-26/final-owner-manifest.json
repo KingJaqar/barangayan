@@ -1,0 +1,11 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "303b6cc95b87292039fe8052d748d65992c713c616f94b16011d172f5ee188c9",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "characters": 4223
+    }
+  ],
+  "totalCharacters": 4306
+}

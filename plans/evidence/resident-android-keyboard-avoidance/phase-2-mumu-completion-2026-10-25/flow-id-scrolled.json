@@ -1,0 +1,132 @@
+{
+  "flow": "id",
+  "configuration": "scrolled",
+  "results": [
+    {
+      "id": "B21",
+      "label": "Specify ID type",
+      "configuration": "id-scrolled",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "id-scrolled-B21-focus",
+          "editor": [
+            48,
+            999,
+            1032,
+            1167
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "id-scrolled-B21-paste",
+          "editor": [
+            48,
+            999,
+            1032,
+            1167
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "id-scrolled-B21-selection",
+          "editor": [
+            48,
+            999,
+            1032,
+            1167
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "id-scrolled-B21-reopen-1",
+          "editor": [
+            48,
+            999,
+            1032,
+            1167
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        },
+        {
+          "name": "id-scrolled-B21-reopen-2",
+          "editor": [
+            48,
+            999,
+            1032,
+            1167
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 0,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    },
+    {
+      "kind": "warning",
+      "at": 1792909547627.781
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    },
+    {
+      "kind": "warning",
+      "at": 1792909547627.781
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

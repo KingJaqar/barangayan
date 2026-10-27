@@ -1,0 +1,83 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "b8df5a53ef6d1fd824496b2923c5632a891d1a183d9779820429bc821e7b0774",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx",
+      "characters": 612
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-drrm-sheet-motion.ts",
+      "characters": 474
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-report-modal-motion.ts",
+      "characters": 811
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts",
+      "characters": 345
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "characters": 165
+    },
+    {
+      "path": "CLAUDE.md",
+      "characters": 12
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx",
+      "characters": 1453
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "characters": 955
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "characters": 1716
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "characters": 1075
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "characters": 601
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "characters": 562
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "characters": 1283
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "characters": 2179
+    },
+    {
+      "path": "AGENTS.md",
+      "characters": 2
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "characters": 2123
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "characters": 1296
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "characters": 6483
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "characters": 7133
+    }
+  ],
+  "totalCharacters": 30457
+}

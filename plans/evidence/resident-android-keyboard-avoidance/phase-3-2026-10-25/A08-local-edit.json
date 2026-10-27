@@ -1,0 +1,30 @@
+{
+  "nativeProfileDraftOnly": true,
+  "profileSaved": false,
+  "syntheticName": "Keyboard QA",
+  "states": [
+    {
+      "editor": [
+        60,
+        405,
+        1020,
+        549
+      ],
+      "viewport": [
+        0,
+        321,
+        1080,
+        871
+      ],
+      "keyboardTop": 1167,
+      "clearance": 618
+    }
+  ],
+  "openedWithIme": false,
+  "editTypingRestored": true,
+  "status": "incomplete",
+  "error": "Native keyboard shortcut did not select/copy synthetic text; Paste inserted synchronized host clipboard. No profile save submitted. Cleanup being verified by cold restart.",
+  "freshProfileClean": true,
+  "localDraftDiscarded": true,
+  "cleanup": "Cold restart discarded unsaved local state; real Profile reopened with Save Changes disabled"
+}

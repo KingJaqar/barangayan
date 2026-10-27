@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "planned": [
+    [
+      "compact-large-display-gesture",
+      [
+        "A10"
+      ]
+    ]
+  ],
+  "results": [
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          290,
+          634,
+          979,
+          807
+        ],
+        "viewport": [
+          0,
+          163,
+          1080,
+          887
+        ],
+        "keyboardTop": 887,
+        "clearance": 80
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            81,
+            527,
+            520,
+            727
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            560,
+            527,
+            999,
+            819
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    }
+  ],
+  "fullProtocol": false
+}

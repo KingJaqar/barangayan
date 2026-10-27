@@ -1,0 +1,11 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "22f77e60dbeea6338d0e263045f0a0faf4ec65306abccf7942d766d55f366cc8",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "characters": 3943
+    }
+  ],
+  "totalCharacters": 4018
+}

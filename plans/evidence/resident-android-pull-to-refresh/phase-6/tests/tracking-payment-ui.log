@@ -1,0 +1,18 @@
+{
+  "passed": [
+    "method dispatch retains the existing RPC and route",
+    "business QR eligibility and existing page limit remain enforced",
+    "pickup confirmation follows both RPCs; rerender/theme changes do not repeat writes",
+    "tracking routes, terminal/waived/refunded branches, and load error recovery",
+    "tracking timing panel renders all three authoritative SLA values",
+    "tracking pull re-reads request and pending payment once, shows new data, and keeps the screen through a failed pull",
+    "readable long durations, exact disclosure, paused/terminal/error states, all submitted details, 320–412 widths, theme/font changes, and non-restarting motion",
+    "QR decoration stops on blur, background, reduced motion and real expiry",
+    "actual provider hook rejects invented expiry and retains paid-during-cancel race",
+    "receipt uses paid server data, preserves tracking destination, and reports native export failure",
+    "success acknowledgement closes and provider channels clean up",
+    "long content fits 320/360/400/412 widths in dark/extreme accent",
+    "payment pull re-reads the request once and shows new data"
+  ],
+  "errors": []
+}

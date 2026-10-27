@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "actual Health screen keeps warm drive rows visible through deferred focus refresh",
+    "loaded empty drives remain visible beside a background refresh error and recover through retry",
+    "compact full calendar and empty summary; theme changes do not replay motion; reduced motion disables grid animation",
+    "pulling the day list reloads drives and clears the spinner",
+    "calendar visibility is local; month/year jump, month-wide and category queries retained",
+    "pulling the month view reloads the month drives and clears the spinner",
+    "actual registrations keep all warm rows and their mounted identity during deferred focus refresh",
+    "pulling My Registrations reloads them, keeps all rows and clears the spinner",
+    "four registration status filters; authoritative detail, pinned Close and five retained M04 exits",
+    "date/month/registrations errors remain visible with user-driven retry",
+    "compact width, dark mode, extreme accent and selected serif list renders",
+    "member/self switching, age reset, None/multiple comorbidities and consent retain scroll/form identity",
+    "five rapid submit events dispatch one RPC; exact server number/Pending status; success motion does not replay on theme",
+    "stock/duplicate/server errors preserve consent and retry; vaccination-only dose date validates and sends actual date",
+    "malformed server result cannot show success; full stock and missing profile have explicit safe states",
+    "missing drive ID, failed drive fetch/retry and actual guest gate remain recoverable",
+    "compact short-height dark/serif/extreme-accent form; reduced-motion picker Back cycles; channel ownership after navigation"
+  ],
+  "errors": []
+}

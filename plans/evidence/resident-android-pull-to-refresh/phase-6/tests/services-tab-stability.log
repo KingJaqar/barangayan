@@ -1,0 +1,1 @@
+{"passed":["Services focus constructs zero redundant profile reads; explicit retry still refreshes","Three background refreshes keep the document list at the same position","Refresh failures still show retry guidance","Changed verification status still shows verification guidance"],"documentListY":55}

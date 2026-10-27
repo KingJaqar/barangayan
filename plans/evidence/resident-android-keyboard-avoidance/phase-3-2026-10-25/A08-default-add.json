@@ -1,0 +1,125 @@
+{
+  "tag": "A08-default-add",
+  "label": "Household member full name",
+  "before": {
+    "editor": [
+      60,
+      960,
+      1020,
+      1104
+    ],
+    "viewport": [
+      0,
+      876,
+      1080,
+      1632
+    ],
+    "keyboardTop": null,
+    "clearance": null
+  },
+  "focus": {
+    "editor": [
+      60,
+      405,
+      1020,
+      549
+    ],
+    "viewport": [
+      0,
+      321,
+      1080,
+      879
+    ],
+    "keyboardTop": 1167,
+    "clearance": 618
+  },
+  "actions": [
+    {
+      "action": "Add Member",
+      "bounds": [
+        60,
+        927,
+        1020,
+        1083
+      ]
+    }
+  ],
+  "typing": true,
+  "syntheticTextRestored": true,
+  "cycles": 3,
+  "restored": [
+    {
+      "editor": [
+        60,
+        960,
+        1020,
+        1104
+      ],
+      "viewport": [
+        0,
+        876,
+        1080,
+        1632
+      ],
+      "keyboardTop": 1167,
+      "clearance": 63
+    },
+    {
+      "editor": [
+        60,
+        960,
+        1020,
+        1104
+      ],
+      "viewport": [
+        0,
+        876,
+        1080,
+        1632
+      ],
+      "keyboardTop": 1167,
+      "clearance": 63
+    },
+    {
+      "editor": [
+        60,
+        960,
+        1020,
+        1104
+      ],
+      "viewport": [
+        0,
+        876,
+        1080,
+        1632
+      ],
+      "keyboardTop": 1167,
+      "clearance": 63
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792930658107.722,
+      "classification": "existing push-notification path"
+    },
+    {
+      "kind": "warning",
+      "at": 1792932582088.815,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792930658107.722,
+      "classification": "existing push-notification path"
+    },
+    {
+      "kind": "warning",
+      "at": 1792932582088.815,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "scope": "Native focus, typing, action reachability and restoration; paste/selection/error variants recorded separately"
+}

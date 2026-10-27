@@ -1,0 +1,26 @@
+[
+  {
+    "script": "smokes.cjs",
+    "args": [],
+    "exit": 0,
+    "signal": null
+  },
+  {
+    "script": "flows.cjs",
+    "args": [
+      "password",
+      "default"
+    ],
+    "exit": 0,
+    "signal": null
+  },
+  {
+    "script": "flows.cjs",
+    "args": [
+      "id",
+      "default"
+    ],
+    "exit": 1,
+    "signal": null
+  }
+]

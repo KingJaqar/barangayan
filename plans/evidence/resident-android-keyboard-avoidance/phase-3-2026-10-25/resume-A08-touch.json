@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "originImeOpenVerified": true,
+  "method": "Native touch Cut/Paste within one uninterrupted command; both menu targets matched observed pixels",
+  "nativeTouchPaste": true,
+  "exactSyntheticValueVerified": true,
+  "caretInsertionAndRestore": true,
+  "geometry": {
+    "editor": [
+      60,
+      405,
+      1020,
+      549
+    ],
+    "viewport": [
+      0,
+      138,
+      1080,
+      1167
+    ],
+    "keyboardTop": 1167,
+    "clearance": 618
+  },
+  "profileSaved": false,
+  "earlierSeparatedAttempt": "Failed: clipboard value differed; not counted as pass"
+}

@@ -1,0 +1,114 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "e4515d87a0e10e9a00c5402c6886ea6f0e18000f8be96c0eb4e1e98257fb60f7",
+  "bytes": 16080,
+  "estimatedTokens": 4417,
+  "security": "Default scan enabled, no suspicious files",
+  "missing": [],
+  "unexpected": [],
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx",
+      "chars": 610,
+      "readRange": [
+        0,
+        610
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+      "chars": 322,
+      "readRange": [
+        0,
+        322
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "chars": 163,
+      "readRange": [
+        0,
+        163
+      ]
+    },
+    {
+      "path": "CLAUDE.md",
+      "chars": 10,
+      "readRange": [
+        0,
+        10
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "chars": 599,
+      "readRange": [
+        0,
+        599
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "chars": 973,
+      "readRange": [
+        0,
+        973
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "chars": 1304,
+      "readRange": [
+        0,
+        1304
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts",
+      "chars": 251,
+      "readRange": [
+        0,
+        251
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "chars": 2177,
+      "readRange": [
+        0,
+        2177
+      ]
+    },
+    {
+      "path": "AGENTS.md",
+      "chars": 0,
+      "readRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "chars": 2121,
+      "readRange": [
+        0,
+        2121
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "chars": 1294,
+      "readRange": [
+        0,
+        1294
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "index": 0,
+      "chars": 10654
+    }
+  ],
+  "note": "Compressed code omits bodies. Resolve original JSX/styles/callbacks; no claim of measured model usage savings."
+}

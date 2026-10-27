@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.boundingBox: Error: strict mode violation: getByRole('button', { name: /Open month and year picker/ }).locator('..').locator('..') resolved to 2 elements:
+    1) <div class="css-g5y9jx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af">…</div> aka getByText('October 2026 SMTWTFS18192021222324252627282930311234567')
+    2) <div class="css-g5y9jx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af">…</div> aka locator('.css-g5y9jx.r-1udh08x > div:nth-child(2)')
+
+Call log:
+  - waiting for getByRole('button', { name: /Open month and year picker/ }).locator('..').locator('..')
+
+    at C:\Users\User\barangayan\apps\resident-android-mobile\tests\health-presentation-ui.mjs:139:36 {
+  log: [
+    "  - waiting for getByRole('button', { name: /Open month and year picker/ }).locator('..').locator('..')"
+  ]
+}
+
+Node.js v24.13.1

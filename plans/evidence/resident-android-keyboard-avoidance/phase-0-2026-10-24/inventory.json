@@ -1,0 +1,1812 @@
+{
+  "definitions": 59,
+  "counts": {
+    "A": 10,
+    "B": 32,
+    "C": 17
+  },
+  "rows": [
+    {
+      "id": "A01",
+      "screen": "New incident report",
+      "field": "Title",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 459,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+        "line": 459,
+        "tag": "IncidentFormField",
+        "guards": [],
+        "jsx": "<IncidentFormField label=\"Title\" required limit={100} value={title} onChangeText={setTitle} disabled={submitting || submitted} placeholder=\"e.g. Broken streetlight on Purok 3\" />"
+      },
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4"
+    },
+    {
+      "id": "A02",
+      "screen": "New incident report",
+      "field": "Description",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 460,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+        "line": 460,
+        "tag": "IncidentFormField",
+        "guards": [],
+        "jsx": "<IncidentFormField label=\"Description\" limit={1000} value={description} onChangeText={setDescription} disabled={submitting || submitted} multiline placeholder=\"Describe the incident in detail…\" />"
+      },
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4"
+    },
+    {
+      "id": "A03",
+      "screen": "New incident report",
+      "field": "Specific area details",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 488,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+        "line": 488,
+        "tag": "IncidentFormField",
+        "guards": [],
+        "jsx": "<IncidentFormField label=\"Specific area details\" limit={300} value={specificAreaDetails} onChangeText={setSpecificAreaDetails} disabled={submitting || submitted} multiline\n            placeholder=\"e.g. Near the sari-sari store, blue gate\" helper=\"Add precise details to help find the spot (e.g. near the blue gate, 2nd house from the corner).\" />"
+      },
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4"
+    },
+    {
+      "id": "A04",
+      "screen": "Pin Your Location",
+      "field": "Address",
+      "condition": "Editable correction of detected address; its own modal wrapper uses padding.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "line": 116,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+        "line": 116,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField presentation=\"resident\" appearance=\"requestForm\" accessibilityLabel=\"Address, optional\"\n            value={address} onChangeText={value => { request.current++; setLoading(false); setAddress(value); }}\n            placeholder={loading ? 'Detecting address…' : 'Type to correct the detected address'} maxLength={300} />"
+      },
+      "sourceSha256": "06b289a6762438aa93ae119ccbf55fdd6723194692f9562f115935a007abcff9"
+    },
+    {
+      "id": "A05",
+      "screen": "Location Verification",
+      "field": "Detected Address",
+      "condition": "Multiline; height behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "line": 267,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+        "line": 267,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "detailsExpanded",
+            "branch": "true"
+          },
+          {
+            "condition": "unavailable",
+            "branch": "false"
+          },
+          {
+            "condition": "!session",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" label=\"Detected Address\" accessibilityLabel=\"Detected Address\" multiline\n              placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}\n              value={address} editable={!saving} maxLength={300} onChangeText={value => {\n                geocodeRequestId.current += 1;\n                setAddressLoading(false); setAddress(value); setSaved(false); setAddressDetectFailed(false);\n              }} error={addressDetectFailed && !address ? \"Couldn't detect this address automatically — please type it in.\" : undefined} />"
+      },
+      "sourceSha256": "0ce7afcd82f803f54e5b80f2f95ae6b4938925571c27d0ab152c08b2c680f0e6"
+    },
+    {
+      "id": "A06",
+      "screen": "Health registration",
+      "field": "Age",
+      "condition": "Shown when profileAge is null, including household-member registration.",
+      "workPackage": "W7 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 556,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+        "line": 556,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "profileAge !== null",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField\n                presentation=\"resident\"\n                label=\"Age\"\n                accessibilityLabel=\"Age\"\n                value={age}\n                onChangeText={setAge}\n                keyboardType=\"number-pad\"\n                maxLength={3}\n                placeholder=\"Enter age\"\n              />"
+      },
+      "sourceSha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802"
+    },
+    {
+      "id": "A07",
+      "screen": "Health registration",
+      "field": "Previous dose date",
+      "condition": "Vaccination drive and dose is not 1st Dose.",
+      "workPackage": "W7 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 635,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+        "line": 635,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "needsPriorDate",
+            "branch": "true"
+          },
+          {
+            "condition": "vaccination",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField\n                  presentation=\"resident\"\n                  label=\"Previous dose date\"\n                  value={priorDate}\n                  onChangeText={setPriorDate}\n                  placeholder=\"YYYY-MM-DD\"\n                  maxLength={10}\n                  autoCapitalize=\"none\"\n                />"
+      },
+      "sourceSha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802"
+    },
+    {
+      "id": "A08",
+      "screen": "Profile → Add/Edit Family Member",
+      "field": "Full name",
+      "condition": "SettingsSheet uses Android height behavior; add/edit share one input.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 476,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 476,
+        "tag": "TextInput",
+        "guards": [],
+        "jsx": "<TextInput accessibilityLabel=\"Household member full name\" style={[mModalStyles.input, { borderColor: theme.resident.border, backgroundColor: theme.resident.surface, color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} value={name} onChangeText={setName} placeholder=\"e.g. Maria White\" placeholderTextColor={theme.resident.muted} selectionColor={theme.resident.accentText} autoCapitalize=\"words\" returnKeyType=\"done\" />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "A09",
+      "screen": "Emergency Info → Family → Add/Edit Member",
+      "field": "Full Name",
+      "condition": "ScanFamilySheet uses Android height behavior; separate editor from Profile.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "line": 60,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+        "line": 60,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField presentation=\"resident\" label=\"Full Name\" accessibilityLabel=\"Full Name\" placeholder=\"Enter full name\" value={name} onChangeText={setName} maxLength={200} editable={!busy} returnKeyType=\"done\" />"
+      },
+      "sourceSha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204"
+    },
+    {
+      "id": "A10",
+      "screen": "Settings → Custom Accent Color",
+      "field": "Hex color",
+      "condition": "SettingsSheet uses Android height behavior.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "line": 55,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+        "line": 55,
+        "tag": "TextInput",
+        "guards": [],
+        "jsx": "<TextInput accessibilityLabel=\"Hex color\" value={hexText} maxLength={7} autoCapitalize=\"characters\" autoCorrect={false}\r\n        style={[styles.input, { color: resident.text, backgroundColor: resident.surface, borderColor: resident.controlBorder, fontFamily: getMobileFontFamily(fontId) }]}\r\n        onChangeText={value => { const next = (value.startsWith('#') ? value : `#${value}`).toUpperCase(); setHexText(next); setError(null); if (isValidHexColor(next)) setPickedColor(next); }} />"
+      },
+      "sourceSha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47"
+    },
+    {
+      "id": "B01",
+      "screen": "Login",
+      "field": "Email",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 92,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+        "line": 92,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\n                label=\"Email\"\n                placeholder=\"you@example.com\"\n                autoCapitalize=\"none\"\n                autoCorrect={false}\r\n                autoComplete=\"email\"\r\n                keyboardType=\"email-address\"\n                value={email}\n                onChangeText={value => { setEmail(value); setError(null); }}\r\n                style={styles.input}\r\n              />"
+      },
+      "sourceSha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3"
+    },
+    {
+      "id": "B02",
+      "screen": "Login",
+      "field": "Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 103,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+        "line": 103,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\n                label=\"Password\"\n                placeholder=\"Password\"\n                secureTextEntry={!isPasswordVisible}\n                value={password}\n                onChangeText={value => { setPassword(value); setError(null); }}\r\n                style={styles.input}\r\n                passwordVisibility={{\n                  visible: isPasswordVisible,\n                  onToggle: () => setIsPasswordVisible((visible) => !visible),\n                }}\n              />"
+      },
+      "sourceSha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3"
+    },
+    {
+      "id": "B03",
+      "screen": "Registration",
+      "field": "Email address",
+      "condition": "Email step.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+        "line": 107,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "step === 'email'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField label=\"Email address\" accessibilityLabel=\"Email address\" autoCapitalize=\"none\" autoCorrect={false} autoComplete=\"email\" keyboardType=\"email-address\" placeholder=\"name@example.com\" returnKeyType=\"done\" onSubmitEditing={send} value={email} editable={!loading} onChangeText={setEmail} style={[styles.input, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} />"
+      },
+      "sourceSha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627"
+    },
+    {
+      "id": "B04",
+      "screen": "Registration",
+      "field": "Confirmation code",
+      "condition": "Email confirmation step; one six-digit numeric input.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+        "line": 107,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "step === 'email'",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField key=\"email-code\" label=\"Confirmation code\" accessibilityLabel=\"Six-digit email code\" autoComplete=\"sms-otp\" textContentType=\"oneTimeCode\" keyboardType=\"number-pad\" maxLength={6} value={code} editable={!loading} onChangeText={value => setCode(value.replace(/\\D/g, ''))} style={[styles.input, styles.codeInput, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} />"
+      },
+      "sourceSha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627"
+    },
+    {
+      "id": "B05",
+      "screen": "Forgot Password",
+      "field": "Email address",
+      "condition": "Disabled while a session exists or a request is loading; editable in the applicable recovery state.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "line": 47,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+        "line": 47,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\r\n          label=\"Email address\"\r\n          accessibilityLabel=\"Email address\"\r\n          placeholder=\"you@example.com\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"email\"\r\n          keyboardType=\"email-address\"\r\n          value={email}\r\n          onChangeText={setEmail}\r\n          editable={!session && !loading}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+      },
+      "sourceSha256": "2dc66b3bb3f31bbce8e2cebf4d8d144750208f75781d74e6626bdfab9c8926a2"
+    },
+    {
+      "id": "B06",
+      "screen": "Password recovery → Verify code",
+      "field": "6-digit reset code",
+      "condition": "RecoveryCodeInput renders one TextInput with six visual digit cells; counted once.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "line": 82,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+        "line": 82,
+        "tag": "RecoveryCodeInput",
+        "guards": [],
+        "jsx": "<RecoveryCodeInput\r\n          value={code}\r\n          onChangeText={setCode}\r\n          disabled={loading || resending}\r\n        />"
+      },
+      "sourceSha256": "8786234c44200d2173b6089b4f6187fe0c085f07c9760c190c046cecdcd332c1"
+    },
+    {
+      "id": "B07",
+      "screen": "Password recovery → Reset Password",
+      "field": "New Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 71,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+        "line": 71,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\r\n          label=\"New Password\"\r\n          accessibilityLabel=\"New password\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"new-password\"\r\n          passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((visible) => !visible) }}\r\n          value={password}\r\n          onChangeText={setPassword}\r\n          editable={!loading}\r\n          error={fieldErrors.password}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+      },
+      "sourceSha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040"
+    },
+    {
+      "id": "B08",
+      "screen": "Password recovery → Reset Password",
+      "field": "Confirm New Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 92,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+        "line": 92,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\r\n          label=\"Confirm New Password\"\r\n          accessibilityLabel=\"Confirm new password\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"new-password\"\r\n          passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((visible) => !visible) }}\r\n          value={confirmPassword}\r\n          onChangeText={setConfirmPassword}\r\n          editable={!loading}\r\n          error={fieldErrors.confirmPassword}\r\n          success={confirmPassword && confirmPassword === password ? 'Passwords match' : undefined}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+      },
+      "sourceSha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040"
+    },
+    {
+      "id": "B09",
+      "screen": "Account setup / Complete Profile",
+      "field": "First Name",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 274,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 274,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"First Name\" accessibilityLabel=\"First Name\"\r\n                  editable={editable}\n                  required\r\n                  value={firstName}\r\n                  onChangeText={setFirstName}\r\n                  {...fieldStatus(firstName, fieldErrors.firstName, validateName)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B10",
+      "screen": "Account setup / Complete Profile",
+      "field": "Last Name",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 284,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 284,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"Last Name\" accessibilityLabel=\"Last Name\"\r\n                  editable={editable}\n                  required\r\n                  value={lastName}\r\n                  onChangeText={setLastName}\r\n                  {...fieldStatus(lastName, fieldErrors.lastName, validateName)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B11",
+      "screen": "Account setup / Complete Profile",
+      "field": "Middle Name (optional)",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 296,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 296,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"Middle Name (optional)\" accessibilityLabel=\"Middle Name (optional)\"\r\n                  editable={editable}\n                  value={middleName}\r\n                  onChangeText={setMiddleName}\r\n                  {...fieldStatus(middleName, fieldErrors.middleName)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B12",
+      "screen": "Account setup / Complete Profile",
+      "field": "Suffix (optional)",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 305,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 305,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"Suffix (optional)\" accessibilityLabel=\"Suffix (optional)\"\r\n                  editable={editable}\n                  value={suffix}\r\n                  onChangeText={setSuffix}\r\n                  {...fieldStatus(suffix, fieldErrors.suffix)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B13",
+      "screen": "Account setup / Complete Profile",
+      "field": "Mobile Number",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 362,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 362,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n              label=\"Mobile Number\" accessibilityLabel=\"Mobile Number\"\r\n              editable={editable}\n              required\r\n              keyboardType=\"phone-pad\"\r\n              maxLength={11}\r\n              placeholder=\"09171234567\"\r\n              value={mobileNumber}\r\n              onChangeText={setMobileNumber}\r\n              {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}\r\n            />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B14",
+      "screen": "Account setup / Complete Profile",
+      "field": "House No.",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 385,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 385,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"House No.\" accessibilityLabel=\"House No.\"\r\n                  editable={editable}\n                  required\r\n                  value={houseNo}\r\n                  onChangeText={setHouseNo}\r\n                  {...fieldStatus(houseNo, fieldErrors.houseNo)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B15",
+      "screen": "Account setup / Complete Profile",
+      "field": "Street",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 395,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 395,
+        "tag": "TextField",
+        "guards": [
+          "ready"
+        ],
+        "jsx": "<TextField\r\n                  label=\"Street\" accessibilityLabel=\"Street\"\r\n                  editable={editable}\n                  required\r\n                  value={street}\r\n                  onChangeText={setStreet}\r\n                  {...fieldStatus(street, fieldErrors.street)}\r\n                />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B16",
+      "screen": "Account setup / Complete Profile",
+      "field": "Occupation (optional)",
+      "condition": "Only shown for an employment status that permits occupation.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 436,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 436,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus)",
+            "branch": "true"
+          },
+          "ready"
+        ],
+        "jsx": "<TextField label=\"Occupation (optional)\" accessibilityLabel=\"Occupation (optional)\" editable={editable} value={occupation} onChangeText={setOccupation} />"
+      },
+      "sourceSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c"
+    },
+    {
+      "id": "B17",
+      "screen": "Settings → Change/Manage Password",
+      "field": "Current Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 238,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+        "line": 238,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+            "branch": "false"
+          },
+          {
+            "condition": "!session",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\"\n                  label=\"Current Password\"\n                  required\n                  value={currentPassword}\n                  editable={!loading}\n                  onChangeText={setCurrentPassword}\n                  error={fieldErrors.currentPassword}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"current-password\"\n                  passwordVisibility={{ visible: showCurrent, onToggle: () => setShowCurrent((v) => !v) }}\n                />"
+      },
+      "sourceSha256": "49de5ccfb2dd963ece0abc3a8f98fd544ff6fdf05232610135990b4b9d732a8e"
+    },
+    {
+      "id": "B18",
+      "screen": "Settings → Change/Manage Password",
+      "field": "New Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 260,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+        "line": 260,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+            "branch": "false"
+          },
+          {
+            "condition": "!session",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\"\n                  label=\"New Password\"\n                  required\n                  value={newPassword}\n                  editable={!loading}\n                  onChangeText={setNewPassword}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"new-password\"\n                  {...fieldStatus(newPassword, fieldErrors.newPassword, validateNewPassword, 'Password strength: good')}\n                  passwordVisibility={{ visible: showNew, onToggle: () => setShowNew((v) => !v) }}\n                />"
+      },
+      "sourceSha256": "49de5ccfb2dd963ece0abc3a8f98fd544ff6fdf05232610135990b4b9d732a8e"
+    },
+    {
+      "id": "B19",
+      "screen": "Settings → Change/Manage Password",
+      "field": "Confirm New Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 271,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+        "line": 271,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+            "branch": "false"
+          },
+          {
+            "condition": "!session",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\"\n                  label=\"Confirm New Password\"\n                  required\n                  value={confirmPassword}\n                  editable={!loading}\n                  onChangeText={setConfirmPassword}\n                  error={confirmPasswordError}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"new-password\"\n                  passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((v) => !v) }}\n                />"
+      },
+      "sourceSha256": "49de5ccfb2dd963ece0abc3a8f98fd544ff6fdf05232610135990b4b9d732a8e"
+    },
+    {
+      "id": "B20",
+      "screen": "Settings → Email Verification",
+      "field": "Six-digit code",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "line": 135,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+        "line": 135,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "pending",
+            "branch": "true"
+          },
+          {
+            "condition": "matches && !verified",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" label=\"Six-digit code\" accessibilityLabel=\"Email Code\" value={code}\n              onChangeText={value => setCode(value.replace(/\\D/g, '').slice(0, 6))} keyboardType=\"number-pad\"\n              autoComplete=\"one-time-code\" textContentType=\"oneTimeCode\" maxLength={6} editable={!loading}\n              placeholder=\"000000\" style={styles.codeInput} />"
+      },
+      "sourceSha256": "b4ba9d218ce2e75c7b44dff9a57901ffb99d36c15c10fdb60c8ee738285c7917"
+    },
+    {
+      "id": "B21",
+      "screen": "Settings → Valid ID",
+      "field": "Specify ID type",
+      "condition": "Step 1, only when ID type is Other.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 259,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+        "line": 259,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "idType === 'Other'",
+            "branch": "true"
+          },
+          {
+            "condition": "step === 1",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" label=\"Specify ID type\" required accessibilityLabel=\"Specify ID type\" value={otherIdType} maxLength={193} onChangeText={setOtherIdType} style={recoveryStyles.field} />"
+      },
+      "sourceSha256": "dbc5210dc9d2a14bb5934edd9d3a476e9fcbceb605c11e002610fec540a12a6e"
+    },
+    {
+      "id": "B22",
+      "screen": "Settings → Valid ID",
+      "field": "Full name",
+      "condition": "Step 3; expanded from FIELDS.fullName.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 285,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+        "line": 285,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "field.key === 'birthDate'",
+            "branch": "false"
+          },
+          {
+            "condition": "step === 3",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.resident.card }]} />"
+      },
+      "sourceSha256": "dbc5210dc9d2a14bb5934edd9d3a476e9fcbceb605c11e002610fec540a12a6e"
+    },
+    {
+      "id": "B23",
+      "screen": "Settings → Valid ID",
+      "field": "ID number (if shown)",
+      "condition": "Step 3; expanded from FIELDS.idNumber.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 285,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+        "line": 285,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "field.key === 'birthDate'",
+            "branch": "false"
+          },
+          {
+            "condition": "step === 3",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.resident.card }]} />"
+      },
+      "sourceSha256": "dbc5210dc9d2a14bb5934edd9d3a476e9fcbceb605c11e002610fec540a12a6e"
+    },
+    {
+      "id": "B24",
+      "screen": "Settings → Valid ID",
+      "field": "Address (if shown)",
+      "condition": "Step 3; expanded from FIELDS.address; multiline.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 285,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+        "line": 285,
+        "tag": "TextField",
+        "guards": [
+          {
+            "condition": "field.key === 'birthDate'",
+            "branch": "false"
+          },
+          {
+            "condition": "step === 3",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextField presentation=\"resident\" key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.resident.card }]} />"
+      },
+      "sourceSha256": "dbc5210dc9d2a14bb5934edd9d3a476e9fcbceb605c11e002610fec540a12a6e"
+    },
+    {
+      "id": "B25",
+      "screen": "Services → Charter request form",
+      "field": "Explain your purpose",
+      "condition": "Only when the selected purpose requires an explanation.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 419,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 419,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "option?.requiresExplanation",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Explain your purpose\" value={explanation} onChange={setExplanation} required error={fieldErrors.purposeExplanation} onLayout={(event) => locate('purposeExplanation', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B26",
+      "screen": "Services → Charter request form",
+      "field": "Business name",
+      "condition": "Business service only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 427,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 427,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "catalog.serviceKind === 'business'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Business name\" value={businessName} onChange={setBusinessName} maxLength={200} required error={fieldErrors.businessName} onLayout={(event) => locate('businessName', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B27",
+      "screen": "Services → Charter request form",
+      "field": "Establishment address",
+      "condition": "Business service only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 428,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 428,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "catalog.serviceKind === 'business'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Establishment address\" value={address} onChange={setAddress} required error={fieldErrors.establishmentAddress} onLayout={(event) => locate('establishmentAddress', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B28",
+      "screen": "Services → Charter request form",
+      "field": "Record/document reference",
+      "condition": "Certified true copy only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 459,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 459,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "catalog.serviceKind === 'certified_true_copy'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Record/document reference\" value={reference} onChange={setReference} required error={fieldErrors.recordReference} onLayout={(event) => locate('recordReference', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B29",
+      "screen": "Services → Charter request form",
+      "field": "Number of copies",
+      "condition": "Certified true copy only; numeric.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 460,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 460,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "catalog.serviceKind === 'certified_true_copy'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Number of copies\" value={copies} onChange={setCopies} numeric required error={fieldErrors.copies} onLayout={(event) => locate('copies', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B30",
+      "screen": "Services → Charter request form",
+      "field": "Total pages across all copies",
+      "condition": "Certified true copy only; numeric.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 461,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 461,
+        "tag": "Field",
+        "guards": [
+          {
+            "condition": "catalog.serviceKind === 'certified_true_copy'",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<Field label=\"Total pages across all copies\" value={totalPages} onChange={setTotalPages} numeric required error={fieldErrors.totalPages} onLayout={(event) => locate('totalPages', event)} disabled={submitting} />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B31",
+      "screen": "Services → Charter request form",
+      "field": "Additional notes (optional)",
+      "condition": "Shared notes field; multiline.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 479,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 479,
+        "tag": "Field",
+        "guards": [],
+        "jsx": "<Field label=\"Additional notes (optional)\" value={notes} onChange={setNotes} disabled={submitting} large />"
+      },
+      "sourceSha256": "844ed08cc3b088107a145e3f6d812a1fbc8f2f54a59dfc5a5c81033c3ec718a4"
+    },
+    {
+      "id": "B32",
+      "screen": "Settings → Delete Account dialog",
+      "field": "Password",
+      "condition": "Resident presentation is used by Settings; Android behavior is undefined in this modal.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "line": 79,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+        "line": 79,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\r\n      presentation={presentation}\r\n      label=\"Password\"\r\n      value={password}\r\n      onChangeText={(v) => { setPassword(v); setError(null); }}\r\n      autoCapitalize=\"none\"\r\n      autoComplete=\"current-password\"\r\n      editable={!loading}\r\n      passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((v) => !v) }}\r\n    />"
+      },
+      "sourceSha256": "b7bcf711b2a496d59f96fb9233fd3305765ee2f8a013480ba4e28aed30a47f9a"
+    },
+    {
+      "id": "C01",
+      "screen": "Account setup / Settings → Create/Set Password",
+      "field": "Password",
+      "condition": "Shared component used by account-setup and FirstPasswordFromSettings; ScrollView without KeyboardAvoidingView.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 84,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+        "line": 84,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField presentation={presentation} label=\"Password\" accessibilityLabel=\"Password\" required value={password} editable={!loading} onChangeText={setPassword} secureTextEntry={!visible} autoCapitalize=\"none\" autoComplete=\"new-password\" error={errors.password} passwordVisibility={{ visible, onToggle: () => setVisible(value => !value) }} />"
+      },
+      "sourceSha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150"
+    },
+    {
+      "id": "C02",
+      "screen": "Account setup / Settings → Create/Set Password",
+      "field": "Confirm Password",
+      "condition": "Shared component used by account-setup and FirstPasswordFromSettings; ScrollView without KeyboardAvoidingView.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 86,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+        "line": 86,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField presentation={presentation} label=\"Confirm Password\" accessibilityLabel=\"Confirm Password\" required value={confirmPassword} editable={!loading} onChangeText={setConfirmPassword} secureTextEntry={!confirmVisible} autoCapitalize=\"none\" autoComplete=\"new-password\" error={errors.confirmPassword} passwordVisibility={{ visible: confirmVisible, onToggle: () => setConfirmVisible(value => !value) }} />"
+      },
+      "sourceSha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150"
+    },
+    {
+      "id": "C03",
+      "screen": "Settings → Profile",
+      "field": "First Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1018,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1018,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"First Name\"\n            required\n            value={firstName}\n            placeholder=\"Enter first name\"\n            onChangeText={setFirstName}\n            {...fieldStatus(firstName, fieldErrors.firstName, validateName)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C04",
+      "screen": "Settings → Profile",
+      "field": "Middle Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1027,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1027,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Middle Name\"\n            value={middleName}\n            placeholder=\"Optional\"\n            onChangeText={setMiddleName}\n            {...fieldStatus(middleName, fieldErrors.middleName, validateName)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C05",
+      "screen": "Settings → Profile",
+      "field": "Last Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1035,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1035,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Last Name\"\n            required\n            value={lastName}\n            placeholder=\"Enter last name\"\n            onChangeText={setLastName}\n            {...fieldStatus(lastName, fieldErrors.lastName, validateName)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C06",
+      "screen": "Settings → Profile",
+      "field": "Suffix",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1044,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1044,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Suffix\"\n            value={suffix}\n            placeholder=\"Optional — e.g. Jr., III\"\n            onChangeText={setSuffix}\n            {...fieldStatus(suffix, fieldErrors.suffix, validateName)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C07",
+      "screen": "Settings → Profile",
+      "field": "Occupation",
+      "condition": "Conditional on employment status.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1084,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1084,
+        "tag": "InlineFieldInput",
+        "guards": [
+          {
+            "condition": "employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus)",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<InlineFieldInput label=\"Occupation\" value={occupation} placeholder=\"Optional\" onChangeText={setOccupation} />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C08",
+      "screen": "Settings → Profile",
+      "field": "Email",
+      "condition": "Editable here, unlike the read-only account-setup email.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1089,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1089,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Email\"\n            required\n            value={email}\n            placeholder=\"Enter email address\"\n            onChangeText={setEmail}\n            keyboardType=\"email-address\"\n            {...fieldStatus(email, fieldErrors.email, validateEmail)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C09",
+      "screen": "Settings → Profile",
+      "field": "Mobile Number",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1099,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1099,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Mobile Number\"\n            required\n            value={mobileNumber}\n            placeholder=\"09171234567\"\n            onChangeText={setMobile}\n            keyboardType=\"phone-pad\"\n            maxLength={11}\n            {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C10",
+      "screen": "Settings → Profile",
+      "field": "House No.",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1112,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1112,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"House No.\"\n            required\n            value={houseNo}\n            placeholder=\"Enter house/unit number\"\n            onChangeText={setHouseNo}\n            {...fieldStatus(houseNo, fieldErrors.houseNo)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C11",
+      "screen": "Settings → Profile",
+      "field": "Street",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1121,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1121,
+        "tag": "InlineFieldInput",
+        "guards": [],
+        "jsx": "<InlineFieldInput\n            label=\"Street\"\n            required\n            value={street}\n            placeholder=\"Enter street\"\n            onChangeText={setStreet}\n            {...fieldStatus(street, fieldErrors.street)}\n          />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C12",
+      "screen": "Settings → Profile",
+      "field": "City",
+      "condition": "Editable fallback only when barangay_localities is absent; otherwise a LockedField.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1134,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 1134,
+        "tag": "InlineFieldInput",
+        "guards": [
+          {
+            "condition": "profile?.barangays?.barangay_localities",
+            "branch": "false"
+          }
+        ],
+        "jsx": "<InlineFieldInput label=\"City\" required value={city} placeholder=\"Enter city/municipality\" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />"
+      },
+      "sourceSha256": "fc46d16a3905c7ef11782345fa62956efb94b9e91c459404afc3950bd54c8f20"
+    },
+    {
+      "id": "C13",
+      "screen": "Services → Legacy document request",
+      "field": "Purpose of Request",
+      "condition": "Fallback when catalogContract(doc) is absent; multiline. Charter documents take the other branch.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "line": 211,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+        "line": 211,
+        "tag": "TextField",
+        "guards": [],
+        "jsx": "<TextField\r\n              presentation=\"resident\"\r\n              accessibilityLabel=\"Purpose of Request\"\r\n              editable={!submitting}\r\n              placeholder=\"e.g. Employment requirement\"\r\n              value={notes}\r\n              onChangeText={setNotes}\r\n              multiline\r\n              maxLength={1000}\r\n              style={{ minHeight: 64, fontFamily: getMobileFontFamily(fontId) }}\r\n            />"
+      },
+      "sourceSha256": "6d34635c47f6bf5327cbe69c92d37b5a2c792fe607c8be01c49a61056190e015"
+    },
+    {
+      "id": "C14",
+      "screen": "Services → Payment / Pickup",
+      "field": "Total pages across all copies",
+      "condition": "Shown when fee_assessment_state is page_count_required and request is not completed/cancelled. Shared by payment and pickup routes; counted once.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "line": 171,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+        "line": 171,
+        "tag": "TextInput",
+        "guards": [
+          {
+            "condition": "request.fee_assessment_state === 'page_count_required' && !['completed', 'cancelled'].includes(request.status)",
+            "branch": "true"
+          },
+          {
+            "condition": "request",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextInput accessibilityLabel=\"Total pages across all copies\" keyboardType=\"number-pad\" value={pages} onChangeText={setPages} editable={!pending} style={[styles.pageInput, {borderColor:theme.resident.controlBorder,color:theme.resident.text,fontFamily:getMobileFontFamily(fontId)}]} />"
+      },
+      "sourceSha256": "b0568bf0b1fb67a671e068cbdc59e58cc2faf4c66a238d39b31bc7211f55fd81"
+    },
+    {
+      "id": "C15",
+      "screen": "Resident header search",
+      "field": "Search services, announcements and your records",
+      "condition": "Shared header used across resident app tabs/search flow; editable when searching. Counted once across consumers.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "line": 138,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/resident-header.tsx",
+        "line": 138,
+        "tag": "TextInput",
+        "guards": [],
+        "jsx": "<TextInput\n            ref={input} value={query} onChangeText={value => { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}\n            // Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.\n            onFocus={() => { if (enteringSearch) resetSearchIdle(); else editSearch(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}\n            accessibilityLabel=\"Search services, announcements and your records\"\n            placeholder=\"Search Barangayan\" placeholderTextColor={theme.resident.muted}\n            returnKeyType=\"search\" autoCorrect={false}\n            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />"
+      },
+      "sourceSha256": "da0537942e0ba7949ef1f5ca221953d37228d9e2240e4508fd5cd0b4992f234c"
+    },
+    {
+      "id": "C16",
+      "screen": "Maps → Incidents",
+      "field": "Search incidents",
+      "condition": "Editable only on incidents tab; evacuation tab reuses a disabled version, not another editable field.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "line": 249,
+      "planLine": 246,
+      "input": {
+        "file": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+        "line": 249,
+        "tag": "TextInput",
+        "guards": [],
+        "jsx": "<TextInput accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}\n            style={[styles.searchInput, { color: resident.text, fontFamily }]} value={activeTab === 'incidents' ? searchQuery : ''}\n            onChangeText={query => { setSearchQuery(query); clearSelection(); }} editable={activeTab === 'incidents'}\n            placeholder={activeTab === 'incidents' ? 'Search locations...' : 'Incident search only'} placeholderTextColor={resident.muted} />"
+      },
+      "sourceSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827"
+    },
+    {
+      "id": "C17",
+      "screen": "Evacuation centers search",
+      "field": "Search evacuation centers",
+      "condition": "Expanded centerSearch control shared by public emergency-centers and signed-in Emergency Info → Evacuation Centers; count once.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "line": 427,
+      "planLine": 422,
+      "input": {
+        "file": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+        "line": 427,
+        "tag": "TextInput",
+        "guards": [
+          {
+            "condition": "searchExpanded",
+            "branch": "true"
+          }
+        ],
+        "jsx": "<TextInput ref={searchInput} autoFocus accessibilityLabel=\"Search evacuation centers\" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={resetSearchIdle} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />"
+      },
+      "sourceSha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2"
+    }
+  ],
+  "inputs": [
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 166,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField presentation=\"resident\" appearance=\"requestForm\" accessibilityLabel={required ? label + ', required' : label === 'Specific area details' ? 'Specific area details' : label}\n      value={value} onChangeText={onChangeText} maxLength={limit} placeholder={placeholder} editable={!disabled} multiline={multiline}\n      style={{ backgroundColor: resident.card, borderWidth: 0, borderRadius: 0, padding: 0, paddingHorizontal: 0, paddingVertical: 0, minHeight: multiline ? 64 : 28, fontSize: 15, lineHeight: 21, textAlignVertical: 'top' }} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 459,
+      "tag": "IncidentFormField",
+      "guards": [],
+      "jsx": "<IncidentFormField label=\"Title\" required limit={100} value={title} onChangeText={setTitle} disabled={submitting || submitted} placeholder=\"e.g. Broken streetlight on Purok 3\" />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 460,
+      "tag": "IncidentFormField",
+      "guards": [],
+      "jsx": "<IncidentFormField label=\"Description\" limit={1000} value={description} onChangeText={setDescription} disabled={submitting || submitted} multiline placeholder=\"Describe the incident in detail…\" />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 488,
+      "tag": "IncidentFormField",
+      "guards": [],
+      "jsx": "<IncidentFormField label=\"Specific area details\" limit={300} value={specificAreaDetails} onChangeText={setSpecificAreaDetails} disabled={submitting || submitted} multiline\n            placeholder=\"e.g. Near the sari-sari store, blue gate\" helper=\"Add precise details to help find the spot (e.g. near the blue gate, 2nd house from the corner).\" />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "line": 116,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField presentation=\"resident\" appearance=\"requestForm\" accessibilityLabel=\"Address, optional\"\n            value={address} onChangeText={value => { request.current++; setLoading(false); setAddress(value); }}\n            placeholder={loading ? 'Detecting address…' : 'Type to correct the detected address'} maxLength={300} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "line": 267,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "detailsExpanded",
+          "branch": "true"
+        },
+        {
+          "condition": "unavailable",
+          "branch": "false"
+        },
+        {
+          "condition": "!session",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\" label=\"Detected Address\" accessibilityLabel=\"Detected Address\" multiline\n              placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}\n              value={address} editable={!saving} maxLength={300} onChangeText={value => {\n                geocodeRequestId.current += 1;\n                setAddressLoading(false); setAddress(value); setSaved(false); setAddressDetectFailed(false);\n              }} error={addressDetectFailed && !address ? \"Couldn't detect this address automatically — please type it in.\" : undefined} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 556,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "profileAge !== null",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField\n                presentation=\"resident\"\n                label=\"Age\"\n                accessibilityLabel=\"Age\"\n                value={age}\n                onChangeText={setAge}\n                keyboardType=\"number-pad\"\n                maxLength={3}\n                placeholder=\"Enter age\"\n              />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 635,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "needsPriorDate",
+          "branch": "true"
+        },
+        {
+          "condition": "vaccination",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextField\n                  presentation=\"resident\"\n                  label=\"Previous dose date\"\n                  value={priorDate}\n                  onChangeText={setPriorDate}\n                  placeholder=\"YYYY-MM-DD\"\n                  maxLength={10}\n                  autoCapitalize=\"none\"\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 301,
+      "tag": "TextInput",
+      "guards": [],
+      "jsx": "<TextInput\n          ref={input}\n          style={[fieldStyles.inlineInput, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]}\n          accessibilityLabel={label}\n          value={value}\n          onChangeText={onChangeText}\n          placeholder={placeholder}\n          placeholderTextColor={theme.resident.muted}\n          selectionColor={theme.resident.accentText}\n          keyboardType={keyboardType ?? 'default'}\n          autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}\n          maxLength={maxLength}\n          returnKeyType=\"done\"\n        />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 476,
+      "tag": "TextInput",
+      "guards": [],
+      "jsx": "<TextInput accessibilityLabel=\"Household member full name\" style={[mModalStyles.input, { borderColor: theme.resident.border, backgroundColor: theme.resident.surface, color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} value={name} onChangeText={setName} placeholder=\"e.g. Maria White\" placeholderTextColor={theme.resident.muted} selectionColor={theme.resident.accentText} autoCapitalize=\"words\" returnKeyType=\"done\" />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1018,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"First Name\"\n            required\n            value={firstName}\n            placeholder=\"Enter first name\"\n            onChangeText={setFirstName}\n            {...fieldStatus(firstName, fieldErrors.firstName, validateName)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1027,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Middle Name\"\n            value={middleName}\n            placeholder=\"Optional\"\n            onChangeText={setMiddleName}\n            {...fieldStatus(middleName, fieldErrors.middleName, validateName)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1035,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Last Name\"\n            required\n            value={lastName}\n            placeholder=\"Enter last name\"\n            onChangeText={setLastName}\n            {...fieldStatus(lastName, fieldErrors.lastName, validateName)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1044,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Suffix\"\n            value={suffix}\n            placeholder=\"Optional — e.g. Jr., III\"\n            onChangeText={setSuffix}\n            {...fieldStatus(suffix, fieldErrors.suffix, validateName)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1084,
+      "tag": "InlineFieldInput",
+      "guards": [
+        {
+          "condition": "employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus)",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<InlineFieldInput label=\"Occupation\" value={occupation} placeholder=\"Optional\" onChangeText={setOccupation} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1089,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Email\"\n            required\n            value={email}\n            placeholder=\"Enter email address\"\n            onChangeText={setEmail}\n            keyboardType=\"email-address\"\n            {...fieldStatus(email, fieldErrors.email, validateEmail)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1099,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Mobile Number\"\n            required\n            value={mobileNumber}\n            placeholder=\"09171234567\"\n            onChangeText={setMobile}\n            keyboardType=\"phone-pad\"\n            maxLength={11}\n            {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1112,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"House No.\"\n            required\n            value={houseNo}\n            placeholder=\"Enter house/unit number\"\n            onChangeText={setHouseNo}\n            {...fieldStatus(houseNo, fieldErrors.houseNo)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1121,
+      "tag": "InlineFieldInput",
+      "guards": [],
+      "jsx": "<InlineFieldInput\n            label=\"Street\"\n            required\n            value={street}\n            placeholder=\"Enter street\"\n            onChangeText={setStreet}\n            {...fieldStatus(street, fieldErrors.street)}\n          />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1134,
+      "tag": "InlineFieldInput",
+      "guards": [
+        {
+          "condition": "profile?.barangays?.barangay_localities",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<InlineFieldInput label=\"City\" required value={city} placeholder=\"Enter city/municipality\" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "line": 60,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField presentation=\"resident\" label=\"Full Name\" accessibilityLabel=\"Full Name\" placeholder=\"Enter full name\" value={name} onChangeText={setName} maxLength={200} editable={!busy} returnKeyType=\"done\" />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "line": 55,
+      "tag": "TextInput",
+      "guards": [],
+      "jsx": "<TextInput accessibilityLabel=\"Hex color\" value={hexText} maxLength={7} autoCapitalize=\"characters\" autoCorrect={false}\r\n        style={[styles.input, { color: resident.text, backgroundColor: resident.surface, borderColor: resident.controlBorder, fontFamily: getMobileFontFamily(fontId) }]}\r\n        onChangeText={value => { const next = (value.startsWith('#') ? value : `#${value}`).toUpperCase(); setHexText(next); setError(null); if (isValidHexColor(next)) setPickedColor(next); }} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 92,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\n                label=\"Email\"\n                placeholder=\"you@example.com\"\n                autoCapitalize=\"none\"\n                autoCorrect={false}\r\n                autoComplete=\"email\"\r\n                keyboardType=\"email-address\"\n                value={email}\n                onChangeText={value => { setEmail(value); setError(null); }}\r\n                style={styles.input}\r\n              />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 103,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\n                label=\"Password\"\n                placeholder=\"Password\"\n                secureTextEntry={!isPasswordVisible}\n                value={password}\n                onChangeText={value => { setPassword(value); setError(null); }}\r\n                style={styles.input}\r\n                passwordVisibility={{\n                  visible: isPasswordVisible,\n                  onToggle: () => setIsPasswordVisible((visible) => !visible),\n                }}\n              />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "step === 'email'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextField label=\"Email address\" accessibilityLabel=\"Email address\" autoCapitalize=\"none\" autoCorrect={false} autoComplete=\"email\" keyboardType=\"email-address\" placeholder=\"name@example.com\" returnKeyType=\"done\" onSubmitEditing={send} value={email} editable={!loading} onChangeText={setEmail} style={[styles.input, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "step === 'email'",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField key=\"email-code\" label=\"Confirmation code\" accessibilityLabel=\"Six-digit email code\" autoComplete=\"sms-otp\" textContentType=\"oneTimeCode\" keyboardType=\"number-pad\" maxLength={6} value={code} editable={!loading} onChangeText={value => setCode(value.replace(/\\D/g, ''))} style={[styles.input, styles.codeInput, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "line": 47,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n          label=\"Email address\"\r\n          accessibilityLabel=\"Email address\"\r\n          placeholder=\"you@example.com\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"email\"\r\n          keyboardType=\"email-address\"\r\n          value={email}\r\n          onChangeText={setEmail}\r\n          editable={!session && !loading}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "line": 82,
+      "tag": "RecoveryCodeInput",
+      "guards": [],
+      "jsx": "<RecoveryCodeInput\r\n          value={code}\r\n          onChangeText={setCode}\r\n          disabled={loading || resending}\r\n        />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 71,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n          label=\"New Password\"\r\n          accessibilityLabel=\"New password\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"new-password\"\r\n          passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((visible) => !visible) }}\r\n          value={password}\r\n          onChangeText={setPassword}\r\n          editable={!loading}\r\n          error={fieldErrors.password}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 92,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n          label=\"Confirm New Password\"\r\n          accessibilityLabel=\"Confirm new password\"\r\n          autoCapitalize=\"none\"\r\n          autoCorrect={false}\r\n          autoComplete=\"new-password\"\r\n          passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((visible) => !visible) }}\r\n          value={confirmPassword}\r\n          onChangeText={setConfirmPassword}\r\n          editable={!loading}\r\n          error={fieldErrors.confirmPassword}\r\n          success={confirmPassword && confirmPassword === password ? 'Passwords match' : undefined}\r\n          style={[recoveryStyles.field, { backgroundColor: theme.background }]}\r\n        />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 274,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"First Name\" accessibilityLabel=\"First Name\"\r\n                  editable={editable}\n                  required\r\n                  value={firstName}\r\n                  onChangeText={setFirstName}\r\n                  {...fieldStatus(firstName, fieldErrors.firstName, validateName)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 284,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"Last Name\" accessibilityLabel=\"Last Name\"\r\n                  editable={editable}\n                  required\r\n                  value={lastName}\r\n                  onChangeText={setLastName}\r\n                  {...fieldStatus(lastName, fieldErrors.lastName, validateName)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 296,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"Middle Name (optional)\" accessibilityLabel=\"Middle Name (optional)\"\r\n                  editable={editable}\n                  value={middleName}\r\n                  onChangeText={setMiddleName}\r\n                  {...fieldStatus(middleName, fieldErrors.middleName)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 305,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"Suffix (optional)\" accessibilityLabel=\"Suffix (optional)\"\r\n                  editable={editable}\n                  value={suffix}\r\n                  onChangeText={setSuffix}\r\n                  {...fieldStatus(suffix, fieldErrors.suffix)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 362,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n              label=\"Mobile Number\" accessibilityLabel=\"Mobile Number\"\r\n              editable={editable}\n              required\r\n              keyboardType=\"phone-pad\"\r\n              maxLength={11}\r\n              placeholder=\"09171234567\"\r\n              value={mobileNumber}\r\n              onChangeText={setMobileNumber}\r\n              {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}\r\n            />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 373,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n              label=\"Email Address\" accessibilityLabel=\"Email Address\"\r\n              editable={false}\r\n              required\r\n              autoCapitalize=\"none\"\r\n              keyboardType=\"email-address\"\r\n              value={email}\r\n\r\n            />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 385,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"House No.\" accessibilityLabel=\"House No.\"\r\n                  editable={editable}\n                  required\r\n                  value={houseNo}\r\n                  onChangeText={setHouseNo}\r\n                  {...fieldStatus(houseNo, fieldErrors.houseNo)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 395,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField\r\n                  label=\"Street\" accessibilityLabel=\"Street\"\r\n                  editable={editable}\n                  required\r\n                  value={street}\r\n                  onChangeText={setStreet}\r\n                  {...fieldStatus(street, fieldErrors.street)}\r\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 411,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField label=\"City\" accessibilityLabel=\"City\" value={barangay?.city ?? ''} editable={false} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 412,
+      "tag": "TextField",
+      "guards": [
+        "ready"
+      ],
+      "jsx": "<TextField label=\"Province\" accessibilityLabel=\"Province\" value={barangay?.province ?? ''} editable={false} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 436,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus)",
+          "branch": "true"
+        },
+        "ready"
+      ],
+      "jsx": "<TextField label=\"Occupation (optional)\" accessibilityLabel=\"Occupation (optional)\" editable={editable} value={occupation} onChangeText={setOccupation} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 238,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+          "branch": "false"
+        },
+        {
+          "condition": "!session",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\"\n                  label=\"Current Password\"\n                  required\n                  value={currentPassword}\n                  editable={!loading}\n                  onChangeText={setCurrentPassword}\n                  error={fieldErrors.currentPassword}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"current-password\"\n                  passwordVisibility={{ visible: showCurrent, onToggle: () => setShowCurrent((v) => !v) }}\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 260,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+          "branch": "false"
+        },
+        {
+          "condition": "!session",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\"\n                  label=\"New Password\"\n                  required\n                  value={newPassword}\n                  editable={!loading}\n                  onChangeText={setNewPassword}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"new-password\"\n                  {...fieldStatus(newPassword, fieldErrors.newPassword, validateNewPassword, 'Password strength: good')}\n                  passwordVisibility={{ visible: showNew, onToggle: () => setShowNew((v) => !v) }}\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 271,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "mode === 'loading' || mode === 'error' || mode === 'recover_only'",
+          "branch": "false"
+        },
+        {
+          "condition": "!session",
+          "branch": "false"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\"\n                  label=\"Confirm New Password\"\n                  required\n                  value={confirmPassword}\n                  editable={!loading}\n                  onChangeText={setConfirmPassword}\n                  error={confirmPasswordError}\n                  autoCapitalize=\"none\"\n                  autoComplete=\"new-password\"\n                  passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((v) => !v) }}\n                />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "line": 135,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "pending",
+          "branch": "true"
+        },
+        {
+          "condition": "matches && !verified",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\" label=\"Six-digit code\" accessibilityLabel=\"Email Code\" value={code}\n              onChangeText={value => setCode(value.replace(/\\D/g, '').slice(0, 6))} keyboardType=\"number-pad\"\n              autoComplete=\"one-time-code\" textContentType=\"oneTimeCode\" maxLength={6} editable={!loading}\n              placeholder=\"000000\" style={styles.codeInput} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 259,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "idType === 'Other'",
+          "branch": "true"
+        },
+        {
+          "condition": "step === 1",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\" label=\"Specify ID type\" required accessibilityLabel=\"Specify ID type\" value={otherIdType} maxLength={193} onChangeText={setOtherIdType} style={recoveryStyles.field} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 285,
+      "tag": "TextField",
+      "guards": [
+        {
+          "condition": "field.key === 'birthDate'",
+          "branch": "false"
+        },
+        {
+          "condition": "step === 3",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextField presentation=\"resident\" key={field.key} label={field.label} required={field.key === 'fullName'} accessibilityLabel={field.label} value={details[field.key]} maxLength={field.maxLength} autoCorrect={false} autoCapitalize={field.key === 'idNumber' ? 'characters' : 'words'} multiline={field.key === 'address'} onChangeText={value => { setDetails(previous => ({ ...previous, [field.key]: value })); setFieldErrors(previous => ({ ...previous, [field.key]: '' })); }} error={fieldErrors[field.key]} style={[recoveryStyles.field, { backgroundColor: theme.resident.card }]} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 76,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n        presentation=\"resident\"\r\n        appearance=\"requestForm\"\r\n        accessibilityLabel={label}\r\n        value={value}\r\n        onChangeText={onChange}\r\n        maxLength={maxLength}\r\n        keyboardType={numeric ? 'number-pad' : 'default'}\r\n        multiline={!numeric}\r\n        editable={!disabled}\r\n        error={error}\r\n        style={[styles.input, large && styles.notesInput, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.resident.danger, borderWidth: 1.5 } : undefined]}\r\n      />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 419,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "option?.requiresExplanation",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Explain your purpose\" value={explanation} onChange={setExplanation} required error={fieldErrors.purposeExplanation} onLayout={(event) => locate('purposeExplanation', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 427,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "catalog.serviceKind === 'business'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Business name\" value={businessName} onChange={setBusinessName} maxLength={200} required error={fieldErrors.businessName} onLayout={(event) => locate('businessName', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 428,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "catalog.serviceKind === 'business'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Establishment address\" value={address} onChange={setAddress} required error={fieldErrors.establishmentAddress} onLayout={(event) => locate('establishmentAddress', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 459,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "catalog.serviceKind === 'certified_true_copy'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Record/document reference\" value={reference} onChange={setReference} required error={fieldErrors.recordReference} onLayout={(event) => locate('recordReference', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 460,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "catalog.serviceKind === 'certified_true_copy'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Number of copies\" value={copies} onChange={setCopies} numeric required error={fieldErrors.copies} onLayout={(event) => locate('copies', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 461,
+      "tag": "Field",
+      "guards": [
+        {
+          "condition": "catalog.serviceKind === 'certified_true_copy'",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<Field label=\"Total pages across all copies\" value={totalPages} onChange={setTotalPages} numeric required error={fieldErrors.totalPages} onLayout={(event) => locate('totalPages', event)} disabled={submitting} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 479,
+      "tag": "Field",
+      "guards": [],
+      "jsx": "<Field label=\"Additional notes (optional)\" value={notes} onChange={setNotes} disabled={submitting} large />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "line": 79,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n      presentation={presentation}\r\n      label=\"Password\"\r\n      value={password}\r\n      onChangeText={(v) => { setPassword(v); setError(null); }}\r\n      autoCapitalize=\"none\"\r\n      autoComplete=\"current-password\"\r\n      editable={!loading}\r\n      passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((v) => !v) }}\r\n    />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 84,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField presentation={presentation} label=\"Password\" accessibilityLabel=\"Password\" required value={password} editable={!loading} onChangeText={setPassword} secureTextEntry={!visible} autoCapitalize=\"none\" autoComplete=\"new-password\" error={errors.password} passwordVisibility={{ visible, onToggle: () => setVisible(value => !value) }} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 86,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField presentation={presentation} label=\"Confirm Password\" accessibilityLabel=\"Confirm Password\" required value={confirmPassword} editable={!loading} onChangeText={setConfirmPassword} secureTextEntry={!confirmVisible} autoCapitalize=\"none\" autoComplete=\"new-password\" error={errors.confirmPassword} passwordVisibility={{ visible: confirmVisible, onToggle: () => setConfirmVisible(value => !value) }} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "line": 211,
+      "tag": "TextField",
+      "guards": [],
+      "jsx": "<TextField\r\n              presentation=\"resident\"\r\n              accessibilityLabel=\"Purpose of Request\"\r\n              editable={!submitting}\r\n              placeholder=\"e.g. Employment requirement\"\r\n              value={notes}\r\n              onChangeText={setNotes}\r\n              multiline\r\n              maxLength={1000}\r\n              style={{ minHeight: 64, fontFamily: getMobileFontFamily(fontId) }}\r\n            />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "line": 171,
+      "tag": "TextInput",
+      "guards": [
+        {
+          "condition": "request.fee_assessment_state === 'page_count_required' && !['completed', 'cancelled'].includes(request.status)",
+          "branch": "true"
+        },
+        {
+          "condition": "request",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextInput accessibilityLabel=\"Total pages across all copies\" keyboardType=\"number-pad\" value={pages} onChangeText={setPages} editable={!pending} style={[styles.pageInput, {borderColor:theme.resident.controlBorder,color:theme.resident.text,fontFamily:getMobileFontFamily(fontId)}]} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "line": 138,
+      "tag": "TextInput",
+      "guards": [],
+      "jsx": "<TextInput\n            ref={input} value={query} onChangeText={value => { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}\n            // Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.\n            onFocus={() => { if (enteringSearch) resetSearchIdle(); else editSearch(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}\n            accessibilityLabel=\"Search services, announcements and your records\"\n            placeholder=\"Search Barangayan\" placeholderTextColor={theme.resident.muted}\n            returnKeyType=\"search\" autoCorrect={false}\n            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "line": 249,
+      "tag": "TextInput",
+      "guards": [],
+      "jsx": "<TextInput accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}\n            style={[styles.searchInput, { color: resident.text, fontFamily }]} value={activeTab === 'incidents' ? searchQuery : ''}\n            onChangeText={query => { setSearchQuery(query); clearSelection(); }} editable={activeTab === 'incidents'}\n            placeholder={activeTab === 'incidents' ? 'Search locations...' : 'Incident search only'} placeholderTextColor={resident.muted} />"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "line": 427,
+      "tag": "TextInput",
+      "guards": [
+        {
+          "condition": "searchExpanded",
+          "branch": "true"
+        }
+      ],
+      "jsx": "<TextInput ref={searchInput} autoFocus accessibilityLabel=\"Search evacuation centers\" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={resetSearchIdle} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />"
+    }
+  ]
+}

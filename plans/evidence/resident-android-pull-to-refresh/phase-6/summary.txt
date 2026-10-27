@@ -1,0 +1,35 @@
+tsc exit 0 28s
+vitest exit 0 16s
+export exit 0 48s
+test document-forms-ui exit 0 6s
+test drrm-centers-ui exit 0 22s
+test drrm-hub-alerts-ui exit 0 6s
+test drrm-scan-family-ui exit 0 26s
+test health-presentation-ui exit 0 18s
+test help-legal-about-ui exit 0 28s
+test hidden-work-ownership exit 0 4s
+test home-presentation-ui exit 0 9s
+test map-state-bridge exit 0 2s
+test maps-presentation-ui exit 0 25s
+test navigation-regressions exit 0 120s
+test pull-refresh-emergency-ui exit 0 4s
+test pull-refresh-services-ui exit 0 4s
+test pull-refresh-ui exit 0 2s
+test refresh-ownership exit 0 6s
+test reports-announcements-ui exit 0 12s
+test request-document-presentation-ui exit 0 5s
+test request-tracking-navigation exit 0 0s
+test resident-details-loading-ui exit 0 4s
+test resident-search-explore exit 1 18s
+test resident-search-history-ui exit 0 3s
+test resident-search-lifecycle exit 0 5s
+test resident-search-session exit 0 18s
+test resident-search-submit exit 0 4s
+test resident-shell-lifecycle exit 0 3s
+test root-navigation-isolation exit 0 2s
+test services-lists-ui exit 0 6s
+test services-tab-stability exit 0 3s
+test settings-profile-ui exit 0 35s
+test tracking-payment-ui exit 0 7s
+test verification-sensitive-ui exit 1 33s
+DONE

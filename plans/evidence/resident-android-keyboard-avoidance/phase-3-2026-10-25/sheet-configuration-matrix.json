@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "configuration": "compact-large-font",
+      "kind": "A08",
+      "status": "incomplete",
+      "error": "Cannot read properties of undefined (reading 'text')"
+    },
+    {
+      "configuration": "compact-large-font",
+      "kind": "A09-emergency",
+      "status": "pass for focus/typing where exercised/actions/restoration subset"
+    },
+    {
+      "configuration": "compact-large-font",
+      "kind": "A09-drrm",
+      "status": "pass for focus/typing where exercised/actions/restoration subset"
+    },
+    {
+      "configuration": "compact-large-font",
+      "kind": "A10",
+      "status": "incomplete",
+      "error": "Custom color unavailable after horizontal swipe"
+    }
+  ],
+  "fullProtocol": false
+}

@@ -3,6 +3,7 @@ import { ProfileCompletionBanner } from '@/components/profile-completion-banner'
 import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
 import { useProfile } from '@/hooks/use-profile';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -39,6 +40,7 @@ export default function ServicesScreen() {
   const { profile, refetch, isLoading, error } = useProfile();
   const theme = useTheme();
   const bottomTabInset = useFloatingTabInset();
+  const pull = usePullRefresh([refetch]);
 
   const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
   const initialSegment: ServicesSegment =
@@ -100,13 +102,16 @@ export default function ServicesScreen() {
           // list scrolls; the banner/verification block scrolls away above them.
           <RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} />
         ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
-            {statusBlock}
-            {!session || segment === 'documents' ? <DocumentsList verification={verifiedChip} /> : null}
-            {session && segment === 'logs' && <LogsList />}
-          </ScrollView>
+          <PullRefreshScope register={pull.register}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+              contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
+              {statusBlock}
+              {!session || segment === 'documents' ? <DocumentsList verification={verifiedChip} /> : null}
+              {session && segment === 'logs' && <LogsList />}
+            </ScrollView>
+          </PullRefreshScope>
         )}
 
       <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />

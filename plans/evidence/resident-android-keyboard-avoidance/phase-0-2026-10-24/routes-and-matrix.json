@@ -1,0 +1,711 @@
+{
+  "routes": [
+    {
+      "code": "R001",
+      "url": "/reports/new",
+      "branch": "Editable incident draft; title/description/area; errors and long text",
+      "data": "T-report"
+    },
+    {
+      "code": "R002",
+      "url": "/reports/new",
+      "branch": "Pin Your Location native Modal; address correction; geocode loading/error",
+      "data": "T-report"
+    },
+    {
+      "code": "R003",
+      "url": "/settings/location-verification",
+      "branch": "Signed in; details expanded; loaded and failed address detection",
+      "data": "T-profile"
+    },
+    {
+      "code": "R004",
+      "url": "/health/register?driveId=<test-drive>",
+      "branch": "Resident with unknown age; profileAge=null",
+      "data": "T-health"
+    },
+    {
+      "code": "R005",
+      "url": "/health/register?driveId=<test-drive>",
+      "branch": "Household member selected; profileAge=null",
+      "data": "T-health"
+    },
+    {
+      "code": "R006",
+      "url": "/health/register?driveId=<test-vaccination-drive>",
+      "branch": "Resident; vaccination; dose other than 1st Dose",
+      "data": "T-health"
+    },
+    {
+      "code": "R007",
+      "url": "/health/register?driveId=<test-vaccination-drive>",
+      "branch": "Household member; vaccination; dose other than 1st Dose",
+      "data": "T-health"
+    },
+    {
+      "code": "R008",
+      "url": "/settings/profile",
+      "branch": "Add Family Member native SettingsSheet",
+      "data": "T-household"
+    },
+    {
+      "code": "R009",
+      "url": "/settings/profile",
+      "branch": "Edit Family Member native SettingsSheet",
+      "data": "T-household"
+    },
+    {
+      "code": "R010",
+      "url": "/home/emergency-info?tab=family",
+      "branch": "Add Family Member native ScanFamilySheet; signed in",
+      "data": "T-household"
+    },
+    {
+      "code": "R011",
+      "url": "/home/emergency-info?tab=family",
+      "branch": "Edit Family Member native ScanFamilySheet; signed in",
+      "data": "T-household"
+    },
+    {
+      "code": "R012",
+      "url": "/drrm?tab=family",
+      "branch": "Add Family Member native ScanFamilySheet; signed in",
+      "data": "T-household"
+    },
+    {
+      "code": "R013",
+      "url": "/drrm?tab=family",
+      "branch": "Edit Family Member native ScanFamilySheet; signed in",
+      "data": "T-household"
+    },
+    {
+      "code": "R014",
+      "url": "/settings",
+      "branch": "Custom Accent Color native SettingsSheet; hex editing and invalid hex",
+      "data": "T-local"
+    },
+    {
+      "code": "R015",
+      "url": "/(auth)/login",
+      "branch": "Signed out; email/password; password toggle and validation growth",
+      "data": "T-signed-out"
+    },
+    {
+      "code": "R016",
+      "url": "/(auth)/register",
+      "branch": "Email step; not loading",
+      "data": "T-registration"
+    },
+    {
+      "code": "R017",
+      "url": "/(auth)/register",
+      "branch": "Confirmation-code step; not loading; numeric paste/autofill",
+      "data": "T-registration"
+    },
+    {
+      "code": "R018",
+      "url": "/(auth)/forgot-password",
+      "branch": "Signed out; not loading; email editable",
+      "data": "T-recovery"
+    },
+    {
+      "code": "R019",
+      "url": "/(auth)/otp",
+      "branch": "Recovery flow; existing email context; single native reset-code input",
+      "data": "T-recovery"
+    },
+    {
+      "code": "R020",
+      "url": "/(auth)/reset-password",
+      "branch": "Verified recovery session; new/confirm password; no update submission",
+      "data": "T-recovery"
+    },
+    {
+      "code": "R021",
+      "url": "/account-setup",
+      "branch": "Required details; ready; not loading/uncertain/conflicted",
+      "data": "T-setup"
+    },
+    {
+      "code": "R022",
+      "url": "/account-setup",
+      "branch": "Optional details; ready; not loading/uncertain/conflicted",
+      "data": "T-setup"
+    },
+    {
+      "code": "R023",
+      "url": "/complete-profile",
+      "branch": "Optional completion; ready; employment with/without occupation",
+      "data": "T-setup"
+    },
+    {
+      "code": "R024",
+      "url": "/settings/change-password",
+      "branch": "Existing password mode; not loading; existing-password form",
+      "data": "T-existing-password"
+    },
+    {
+      "code": "R025",
+      "url": "/settings/email-verification",
+      "branch": "Matching unverified email; pending verification; not loading",
+      "data": "T-verification"
+    },
+    {
+      "code": "R026",
+      "url": "/settings/valid-id",
+      "branch": "Step 1; ID type Other",
+      "data": "T-id"
+    },
+    {
+      "code": "R027",
+      "url": "/settings/valid-id",
+      "branch": "Step 3; manually entered details; local synthetic front image",
+      "data": "T-id"
+    },
+    {
+      "code": "R028",
+      "url": "/settings/valid-id",
+      "branch": "Step 3; extracted details with status/error growth",
+      "data": "T-id"
+    },
+    {
+      "code": "R029",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Charter contract; purpose.requiresExplanation=true",
+      "data": "T-service"
+    },
+    {
+      "code": "R030",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Charter serviceKind=business",
+      "data": "T-service"
+    },
+    {
+      "code": "R031",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Charter serviceKind=certified_true_copy",
+      "data": "T-service"
+    },
+    {
+      "code": "R032",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Additional notes; standard charter",
+      "data": "T-service"
+    },
+    {
+      "code": "R033",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Additional notes; business",
+      "data": "T-service"
+    },
+    {
+      "code": "R034",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Additional notes; certified_true_copy",
+      "data": "T-service"
+    },
+    {
+      "code": "R035",
+      "url": "/settings",
+      "branch": "Resident Delete Account password Modal; open only; NEVER confirm deletion",
+      "data": "T-existing-password"
+    },
+    {
+      "code": "R036",
+      "url": "/account-setup",
+      "branch": "Required first password; retain draft across details/back",
+      "data": "T-setup"
+    },
+    {
+      "code": "R037",
+      "url": "/account-setup",
+      "branch": "Optional first password; skip action changes body height",
+      "data": "T-setup"
+    },
+    {
+      "code": "R038",
+      "url": "/settings/change-password",
+      "branch": "First-password branch; fresh same-account Google confirmation",
+      "data": "T-first-password"
+    },
+    {
+      "code": "R039",
+      "url": "/settings/profile",
+      "branch": "Editable profile with configured locality; save-bar sibling",
+      "data": "T-profile"
+    },
+    {
+      "code": "R040",
+      "url": "/settings/profile",
+      "branch": "Employment status permits occupation; status-row growth",
+      "data": "T-profile"
+    },
+    {
+      "code": "R041",
+      "url": "/settings/profile",
+      "branch": "Fallback only: barangay_localities absent; configured City remains locked",
+      "data": "T-fallback-locality"
+    },
+    {
+      "code": "R042",
+      "url": "/services/request/<test-documentId>",
+      "branch": "Legacy fallback: catalogContract(doc) absent",
+      "data": "T-service"
+    },
+    {
+      "code": "R043",
+      "url": "/services/payment/<test-requestId>",
+      "branch": "page_count_required; status neither completed nor cancelled",
+      "data": "T-page-count"
+    },
+    {
+      "code": "R044",
+      "url": "/services/payment/pickup/<test-requestId>",
+      "branch": "Same request conditions; pickup prop changes parent flow",
+      "data": "T-page-count"
+    },
+    {
+      "code": "R045",
+      "url": "/search",
+      "branch": "Enter header search from /home; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R046",
+      "url": "/explore",
+      "branch": "Submit from /home; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R047",
+      "url": "/search",
+      "branch": "Enter header search from /services; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R048",
+      "url": "/explore",
+      "branch": "Submit from /services; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R049",
+      "url": "/search",
+      "branch": "Enter header search from /drrm; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R050",
+      "url": "/explore",
+      "branch": "Submit from /drrm; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R051",
+      "url": "/search",
+      "branch": "Enter header search from /home/emergency-info; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R052",
+      "url": "/explore",
+      "branch": "Submit from /home/emergency-info; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R053",
+      "url": "/search",
+      "branch": "Enter header search from /maps; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R054",
+      "url": "/explore",
+      "branch": "Submit from /maps; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R055",
+      "url": "/search",
+      "branch": "Enter header search from /health; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R056",
+      "url": "/explore",
+      "branch": "Submit from /health; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R057",
+      "url": "/search",
+      "branch": "Enter header search from /reports; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R058",
+      "url": "/explore",
+      "branch": "Submit from /reports; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R059",
+      "url": "/search",
+      "branch": "Enter header search from /announcements; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R060",
+      "url": "/explore",
+      "branch": "Submit from /announcements; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R061",
+      "url": "/search",
+      "branch": "Enter header search from /settings; keyboard already open/closed; clear/Back/idle",
+      "data": "T-search"
+    },
+    {
+      "code": "R062",
+      "url": "/explore",
+      "branch": "Submit from /settings; refocus submitted query; Back restores origin",
+      "data": "T-search"
+    },
+    {
+      "code": "R063",
+      "url": "/maps",
+      "branch": "Incidents only; filters/selected marker/navigation shown and hidden; evacuation lookalike disabled",
+      "data": "T-search"
+    },
+    {
+      "code": "R064",
+      "url": "/emergency-centers",
+      "branch": "List-state regression; C17 search editor is map-only in current source; no editable list occurrence",
+      "data": "T-search"
+    },
+    {
+      "code": "R065",
+      "url": "/emergency-centers",
+      "branch": "Expanded search in map; filters/selection/route overlay; collapse and reopen",
+      "data": "T-search"
+    },
+    {
+      "code": "R066",
+      "url": "/home/emergency-info?tab=centers",
+      "branch": "List-state regression; C17 search editor is map-only in current source; no editable list occurrence",
+      "data": "T-search"
+    },
+    {
+      "code": "R067",
+      "url": "/home/emergency-info?tab=centers",
+      "branch": "Expanded search in map; filters/selection/route overlay; collapse and reopen",
+      "data": "T-search"
+    },
+    {
+      "code": "R068",
+      "url": "/drrm?tab=centers",
+      "branch": "List-state regression; C17 search editor is map-only in current source; no editable list occurrence",
+      "data": "T-search"
+    },
+    {
+      "code": "R069",
+      "url": "/drrm?tab=centers",
+      "branch": "Expanded search in map; filters/selection/route overlay; collapse and reopen",
+      "data": "T-search"
+    }
+  ],
+  "byId": {
+    "A01": [
+      "R001"
+    ],
+    "A02": [
+      "R001"
+    ],
+    "A03": [
+      "R001"
+    ],
+    "A04": [
+      "R002"
+    ],
+    "A05": [
+      "R003"
+    ],
+    "A06": [
+      "R004",
+      "R005"
+    ],
+    "A07": [
+      "R006",
+      "R007"
+    ],
+    "A08": [
+      "R008",
+      "R009"
+    ],
+    "A09": [
+      "R010",
+      "R011",
+      "R012",
+      "R013"
+    ],
+    "A10": [
+      "R014"
+    ],
+    "B01": [
+      "R015"
+    ],
+    "B02": [
+      "R015"
+    ],
+    "B03": [
+      "R016"
+    ],
+    "B04": [
+      "R017"
+    ],
+    "B05": [
+      "R018"
+    ],
+    "B06": [
+      "R019"
+    ],
+    "B07": [
+      "R020"
+    ],
+    "B08": [
+      "R020"
+    ],
+    "B09": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B10": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B11": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B12": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B13": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B14": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B15": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B16": [
+      "R021",
+      "R022",
+      "R023"
+    ],
+    "B17": [
+      "R024"
+    ],
+    "B18": [
+      "R024"
+    ],
+    "B19": [
+      "R024"
+    ],
+    "B20": [
+      "R025"
+    ],
+    "B21": [
+      "R026"
+    ],
+    "B22": [
+      "R027",
+      "R028"
+    ],
+    "B23": [
+      "R027",
+      "R028"
+    ],
+    "B24": [
+      "R027",
+      "R028"
+    ],
+    "B25": [
+      "R029"
+    ],
+    "B26": [
+      "R030"
+    ],
+    "B27": [
+      "R030"
+    ],
+    "B28": [
+      "R031"
+    ],
+    "B29": [
+      "R031"
+    ],
+    "B30": [
+      "R031"
+    ],
+    "B31": [
+      "R032",
+      "R033",
+      "R034"
+    ],
+    "B32": [
+      "R035"
+    ],
+    "C01": [
+      "R036",
+      "R037",
+      "R038"
+    ],
+    "C02": [
+      "R036",
+      "R037",
+      "R038"
+    ],
+    "C03": [
+      "R039"
+    ],
+    "C04": [
+      "R039"
+    ],
+    "C05": [
+      "R039"
+    ],
+    "C06": [
+      "R039"
+    ],
+    "C07": [
+      "R040"
+    ],
+    "C08": [
+      "R039"
+    ],
+    "C09": [
+      "R039"
+    ],
+    "C10": [
+      "R039"
+    ],
+    "C11": [
+      "R039"
+    ],
+    "C12": [
+      "R041"
+    ],
+    "C13": [
+      "R042"
+    ],
+    "C14": [
+      "R043",
+      "R044"
+    ],
+    "C15": [
+      "R045",
+      "R046",
+      "R047",
+      "R048",
+      "R049",
+      "R050",
+      "R051",
+      "R052",
+      "R053",
+      "R054",
+      "R055",
+      "R056",
+      "R057",
+      "R058",
+      "R059",
+      "R060",
+      "R061",
+      "R062"
+    ],
+    "C16": [
+      "R063"
+    ],
+    "C17": [
+      "R064",
+      "R065",
+      "R066",
+      "R067",
+      "R068",
+      "R069"
+    ]
+  },
+  "matrix": [
+    {
+      "code": "M0",
+      "api": "32 / Android 12",
+      "screen": "MuMuPlayer primary: 1080x1920 px /480dpi =360x640dp",
+      "navigation": "Observed setting0; actual navigation-mode variant not independently qualified",
+      "font": "Observed font_scale1.0; account font/accent/theme retained",
+      "availability": "Active resident development client;29 loaded keyboard-related JS modules/source maps match current files;19 editable-case observations and one list-state regression; remaining M0 cases pending",
+      "ime": "Gboard18.5.4.993608717-release-arm64-v8a; show_ime_with_hard_keyboard=1"
+    },
+    {
+      "code": "M1",
+      "api": "24 / Android 7 (SDK 57 and installed APK floor)",
+      "screen": "Compact-height emulator",
+      "navigation": "Three-button",
+      "font": "Default",
+      "availability": "Unavailable in connected inventory"
+    },
+    {
+      "code": "M1L",
+      "api": "24 / Android 7",
+      "screen": "Compact-height emulator",
+      "navigation": "Gesture if supported by device; otherwise record N/A and exercise gestures on M2/M3",
+      "font": "Larger font and display; exact settings to record",
+      "availability": "Unavailable in connected inventory"
+    },
+    {
+      "code": "M2",
+      "api": "Currently deployed edge-to-edge Android: API needs release-policy confirmation",
+      "screen": "Release validation device",
+      "navigation": "Gesture",
+      "font": "Default",
+      "availability": "No such qualified connected device; deployed OS not established"
+    },
+    {
+      "code": "M2L",
+      "api": "Same deployed edge-to-edge version as M2",
+      "screen": "Compact-height variant",
+      "navigation": "Three-button",
+      "font": "Larger font and display; exact settings to record",
+      "availability": "Unavailable"
+    },
+    {
+      "code": "M3",
+      "api": "Newest Android supported for release: policy/API unresolved; targetSdk 36 is not an upper support limit",
+      "screen": "Release validation device",
+      "navigation": "Three-button",
+      "font": "Default",
+      "availability": "Unavailable; no inferred newest-release API"
+    },
+    {
+      "code": "M3L",
+      "api": "Same newest-supported release as M3",
+      "screen": "Compact-height variant",
+      "navigation": "Gesture",
+      "font": "Larger font and display; exact settings to record",
+      "availability": "Unavailable"
+    }
+  ],
+  "physicalPhone": "Optional if available; none in adb inventory. Remains a recorded device gap."
+}

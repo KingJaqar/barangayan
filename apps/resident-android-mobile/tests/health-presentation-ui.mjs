@@ -24,6 +24,7 @@ const mocks = {
     export const ScrollView=React.forwardRef(({onScroll,onMomentumScrollEnd,onScrollEndDrag,...p},r)=><R.ScrollView {...p} ref={r} onScroll={e=>{onScroll?.(e);onMomentumScrollEnd?.(e)}}/>);
     export const Platform={...R.Platform,OS:'android',select:o=>o.android??o.default};
     export const Alert={alert:(...args)=>window.fixture.alerts.push(args)};
+    export const RefreshControl=({children,style,...p})=>{const ref=React.useRef(p);ref.current=p;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};
     export const AccessibilityInfo={isReduceMotionEnabled:async()=>window.fixture.reduced,addEventListener:(event,fn)=>{window.fixture.listeners.add(fn);return{remove:()=>window.fixture.listeners.delete(fn)}}};`,
   'expo-router': `import React from 'react';export const useIsFocused=()=>true;export const useFocusEffect=fn=>{const [focused,setFocused]=React.useState(true);React.useEffect(()=>{const listener=e=>setFocused(e.detail);window.addEventListener('health-focus',listener);return()=>window.removeEventListener('health-focus',listener)},[]);React.useEffect(()=>focused?fn():undefined,[fn,focused])};export const useLocalSearchParams=()=>window.fixture.params;export const usePathname=()=>'/health/register';export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r),replace:r=>window.fixture.routes.push(r),setParams:p=>Object.assign(window.fixture.params,p)};export const useRouter=()=>router;`,
   'react-native-safe-area-context': `import {View} from 'react-native';export const SafeAreaView=View;const insets={top:0,left:0,right:0,bottom:0};export const useSafeAreaInsets=()=>insets;`,
@@ -159,6 +160,13 @@ try {
   await page.setViewportSize({ width: 400, height: 844 });
   await page.getByText('Synthetic Dental Drive', { exact: true }).waitFor();
   passed.push('compact full calendar and empty summary; theme changes do not replay motion; reduced motion disables grid animation');
+  assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'the drives list is the only pull scroller');
+  const listReads = await page.evaluate(() => window.fixture.reads.length);
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(n => window.fixture.reads.slice(n).some(r => r.table === 'medical_drives'), listReads);
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  assert.equal(await page.getByText('Synthetic Dental Drive', { exact: true }).count(), 1, 'rows stay on screen through a pull');
+  passed.push('pulling the day list reloads drives and clears the spinner');
   const reads = await page.evaluate(() => window.fixture.reads.length);
   await button('Hide calendar').click();
   await button('Show calendar').click();
@@ -179,6 +187,11 @@ try {
     window.fixture.reads.some((r) => r.filters.some(([k, v]) => k === 'type' && v === 'dental')),
   );
   passed.push('calendar visibility is local; month/year jump, month-wide and category queries retained');
+  const monthReads = await page.evaluate(() => window.fixture.reads.length);
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(n => window.fixture.reads.slice(n).some(r => r.table === 'medical_drives' && r.filters.some(([k, v]) => k === 'gte' && v.endsWith('-02-01'))), monthReads);
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  passed.push('pulling the month view reloads the month drives and clears the spinner');
   await button('Register').click();
   assert.equal(
     await page.evaluate(() => window.fixture.routes.at(-1).params.driveId),
@@ -212,6 +225,13 @@ try {
   await page.evaluate(()=>{window.fixture.holdReads=false;window.fixture.pendingReads.splice(0).forEach(resolve=>resolve())});
   await page.getByText('Refreshing registrations…',{exact:true}).waitFor({state:'detached'});
   passed.push('actual registrations keep all warm rows and their mounted identity during deferred focus refresh');
+  assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'the registrations list is the only pull scroller');
+  const registrationReads = await page.evaluate(() => window.fixture.reads.length);
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(n => window.fixture.reads.slice(n).some(r => r.table === 'drive_registrations'), registrationReads);
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  assert.equal(await page.getByRole('button', { name: 'View details for Synthetic Dental Drive', exact: true }).count(), 4);
+  passed.push('pulling My Registrations reloads them, keeps all rows and clears the spinner');
   for (const status of ['Pending', 'Confirmed', 'Attended', 'Cancelled']) {
     await button(status).click();
     assert.equal(await page.getByRole('button', { name: /View details for/ }).count(), 1);

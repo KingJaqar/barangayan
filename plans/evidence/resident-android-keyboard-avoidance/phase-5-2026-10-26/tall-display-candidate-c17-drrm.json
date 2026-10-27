@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-27T00:46:47.971Z",
+  "status": "pass completed with separate Map-return continuation",
+  "mapReturn": {
+    "tag": "tall-display-candidate-c17-drrm-map-return",
+    "label": "Search evacuation centers",
+    "bounds": [
+      205,
+      314,
+      1023,
+      463
+    ],
+    "imeTop": 580,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "observations": [
+    {
+      "tag": "tall-display-candidate-c17-drrm-initial",
+      "bounds": [
+        205,
+        314,
+        875,
+        463
+      ],
+      "text": "zzphasefive"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-typed",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "text": "zzphasefive"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-native-cut",
+      "bounds": [
+        205,
+        314,
+        1023,
+        464
+      ],
+      "text": "Search 7 evacuation centers..."
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-native-paste",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "text": "zzphasefive"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-start",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "text": "azzphasefive"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-end",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "text": "azzphasefivez"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-middle",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "text": "azzphasefivemz"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-retained",
+      "bounds": [
+        205,
+        314,
+        875,
+        463
+      ],
+      "text": "zzphasefive"
+    },
+    {
+      "tag": "tall-display-candidate-c17-drrm-map-return",
+      "bounds": [
+        205,
+        314,
+        1023,
+        463
+      ],
+      "text": "Search 7 evacuation centers..."
+    }
+  ],
+  "listEditorAbsent": true,
+  "threeGeometryRestorationAssertionsPassed": true,
+  "syntheticTextCleared": true
+}

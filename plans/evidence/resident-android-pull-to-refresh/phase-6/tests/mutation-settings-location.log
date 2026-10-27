@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: the map stays mounted while the profile refreshes
+
+0 !== 1
+
+    at file:///C:/Users/User/barangayan/apps/resident-android-mobile/tests/pull-refresh-settings-ui.mjs:145:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

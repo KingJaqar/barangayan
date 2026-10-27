@@ -1,0 +1,652 @@
+{
+  "at": "2026-10-27T00:57:51.323Z",
+  "status": "diagnostic only",
+  "before": {
+    "ready": true,
+    "center": {
+      "lat": 14.682095030068956,
+      "lng": 121.11480072140695
+    },
+    "zoom": 17,
+    "size": {
+      "x": 320,
+      "y": 373
+    },
+    "selected": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+    "markers": [
+      {
+        "id": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+        "title": "Uneven Road",
+        "point": {
+          "x": 160,
+          "y": 186
+        }
+      },
+      {
+        "id": "662bb4ae-49d9-49ad-b495-9eba45b351d0",
+        "title": "Broken road",
+        "point": {
+          "x": 224,
+          "y": 110
+        }
+      },
+      {
+        "id": "284a142a-ed4d-45f4-8bf2-86b7178c40b1",
+        "title": "Craked street",
+        "point": {
+          "x": -4720,
+          "y": 5531
+        }
+      },
+      {
+        "id": "737a54b9-a43d-49d6-8bb9-b528ba188de3",
+        "title": "Sample report title",
+        "point": {
+          "x": 410,
+          "y": 319
+        }
+      },
+      {
+        "id": "dc396884-7b4f-44a5-9638-edb592898ade",
+        "title": "report title",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "2d7e7d6b-b386-4180-b8ef-f7d56e3c8020",
+        "title": "sample title",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "e62ec4e3-fd31-4a83-b4da-692ee60afe01",
+        "title": "Broken Streetlight",
+        "point": {
+          "x": 430,
+          "y": 252
+        }
+      },
+      {
+        "id": "3b0af8de-7f6f-44c1-af94-f76e630d5410",
+        "title": "sample report",
+        "point": {
+          "x": 278,
+          "y": 172
+        }
+      },
+      {
+        "id": "d8252800-68eb-4a4e-be1f-2ff696f3afe1",
+        "title": "Stuck trash bags in drainage hole",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "25fb714f-ce6b-4976-9dcd-8cd0cfd4a52b",
+        "title": "Flooding near the covered court",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "9c7ec38d-0a5d-4095-8e29-88f93ba39264",
+        "title": "Broken streetlight",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "d1701c42-151d-4f44-a436-959b86c83127",
+        "title": "ddddd",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "4120bd4b-71f6-4459-88b5-e7ab1c5dc00f",
+        "title": "sad",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "3cf3a192-2b23-4b6d-bc92-5eb783d3286c",
+        "title": "sdas",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "e6ef547d-1dcf-410a-a7ea-ba48bd99507f",
+        "title": "asds",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "dd54b7ed-45b1-4643-9236-fb1f82a05b2c",
+        "title": "www",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "570fb1df-db4e-4554-bb82-800adcd4e115",
+        "title": "WITHDRAW CYCLE TEST — flooding on Purok 5",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "524ba578-fa82-44e4-a158-c3ef41dd06cc",
+        "title": "Broken streetlight on Purok 3",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "9d1b6286-739a-4f09-b0dd-131319392292",
+        "title": "pic",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "58e07a31-ca88-4da4-8198-fdbc7d05a8a1",
+        "title": "TEST — automated verification report (safe to delete)",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "3a2b5ad8-579d-4c6d-bcae-23e32ef90c54",
+        "title": "sadas",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000207",
+        "title": "Streetlamp completely out near the Purok 3 basketball court",
+        "point": {
+          "x": 253,
+          "y": 109
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000208",
+        "title": "Knee-deep flooding on the alley between Purok 3 and Purok 4 after heavy rain",
+        "point": {
+          "x": 178,
+          "y": 167
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000209",
+        "title": "Deep crack running across the main road near the barangay hall gate",
+        "point": {
+          "x": 318,
+          "y": 51
+        }
+      }
+    ]
+  },
+  "open": {
+    "ready": true,
+    "center": {
+      "lat": 14.682087246188251,
+      "lng": 121.11480474472047
+    },
+    "zoom": 17,
+    "size": {
+      "x": 320,
+      "y": 418
+    },
+    "selected": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+    "markers": [
+      {
+        "id": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+        "title": "Uneven Road",
+        "point": {
+          "x": 160,
+          "y": 208
+        }
+      },
+      {
+        "id": "662bb4ae-49d9-49ad-b495-9eba45b351d0",
+        "title": "Broken road",
+        "point": {
+          "x": 224,
+          "y": 132
+        }
+      },
+      {
+        "id": "284a142a-ed4d-45f4-8bf2-86b7178c40b1",
+        "title": "Craked street",
+        "point": {
+          "x": -4720,
+          "y": 5553
+        }
+      },
+      {
+        "id": "737a54b9-a43d-49d6-8bb9-b528ba188de3",
+        "title": "Sample report title",
+        "point": {
+          "x": 410,
+          "y": 341
+        }
+      },
+      {
+        "id": "dc396884-7b4f-44a5-9638-edb592898ade",
+        "title": "report title",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "2d7e7d6b-b386-4180-b8ef-f7d56e3c8020",
+        "title": "sample title",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "e62ec4e3-fd31-4a83-b4da-692ee60afe01",
+        "title": "Broken Streetlight",
+        "point": {
+          "x": 430,
+          "y": 274
+        }
+      },
+      {
+        "id": "3b0af8de-7f6f-44c1-af94-f76e630d5410",
+        "title": "sample report",
+        "point": {
+          "x": 278,
+          "y": 194
+        }
+      },
+      {
+        "id": "d8252800-68eb-4a4e-be1f-2ff696f3afe1",
+        "title": "Stuck trash bags in drainage hole",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "25fb714f-ce6b-4976-9dcd-8cd0cfd4a52b",
+        "title": "Flooding near the covered court",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "9c7ec38d-0a5d-4095-8e29-88f93ba39264",
+        "title": "Broken streetlight",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "d1701c42-151d-4f44-a436-959b86c83127",
+        "title": "ddddd",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "4120bd4b-71f6-4459-88b5-e7ab1c5dc00f",
+        "title": "sad",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "3cf3a192-2b23-4b6d-bc92-5eb783d3286c",
+        "title": "sdas",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "e6ef547d-1dcf-410a-a7ea-ba48bd99507f",
+        "title": "asds",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "dd54b7ed-45b1-4643-9236-fb1f82a05b2c",
+        "title": "www",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "570fb1df-db4e-4554-bb82-800adcd4e115",
+        "title": "WITHDRAW CYCLE TEST — flooding on Purok 5",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "524ba578-fa82-44e4-a158-c3ef41dd06cc",
+        "title": "Broken streetlight on Purok 3",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "9d1b6286-739a-4f09-b0dd-131319392292",
+        "title": "pic",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "58e07a31-ca88-4da4-8198-fdbc7d05a8a1",
+        "title": "TEST — automated verification report (safe to delete)",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "3a2b5ad8-579d-4c6d-bcae-23e32ef90c54",
+        "title": "sadas",
+        "point": {
+          "x": 620,
+          "y": 371
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000207",
+        "title": "Streetlamp completely out near the Purok 3 basketball court",
+        "point": {
+          "x": 253,
+          "y": 131
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000208",
+        "title": "Knee-deep flooding on the alley between Purok 3 and Purok 4 after heavy rain",
+        "point": {
+          "x": 178,
+          "y": 189
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000209",
+        "title": "Deep crack running across the main road near the barangay hall gate",
+        "point": {
+          "x": 318,
+          "y": 73
+        }
+      }
+    ]
+  },
+  "restored": {
+    "ready": true,
+    "center": {
+      "lat": 14.682092435442089,
+      "lng": 121.11480474472047
+    },
+    "zoom": 17,
+    "size": {
+      "x": 320,
+      "y": 373
+    },
+    "selected": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+    "markers": [
+      {
+        "id": "abc6b618-1abf-4f6e-9d0f-7aeb90caf15e",
+        "title": "Uneven Road",
+        "point": {
+          "x": 160,
+          "y": 186
+        }
+      },
+      {
+        "id": "662bb4ae-49d9-49ad-b495-9eba45b351d0",
+        "title": "Broken road",
+        "point": {
+          "x": 224,
+          "y": 110
+        }
+      },
+      {
+        "id": "284a142a-ed4d-45f4-8bf2-86b7178c40b1",
+        "title": "Craked street",
+        "point": {
+          "x": -4720,
+          "y": 5531
+        }
+      },
+      {
+        "id": "737a54b9-a43d-49d6-8bb9-b528ba188de3",
+        "title": "Sample report title",
+        "point": {
+          "x": 410,
+          "y": 319
+        }
+      },
+      {
+        "id": "dc396884-7b4f-44a5-9638-edb592898ade",
+        "title": "report title",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "2d7e7d6b-b386-4180-b8ef-f7d56e3c8020",
+        "title": "sample title",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "e62ec4e3-fd31-4a83-b4da-692ee60afe01",
+        "title": "Broken Streetlight",
+        "point": {
+          "x": 430,
+          "y": 252
+        }
+      },
+      {
+        "id": "3b0af8de-7f6f-44c1-af94-f76e630d5410",
+        "title": "sample report",
+        "point": {
+          "x": 278,
+          "y": 172
+        }
+      },
+      {
+        "id": "d8252800-68eb-4a4e-be1f-2ff696f3afe1",
+        "title": "Stuck trash bags in drainage hole",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "25fb714f-ce6b-4976-9dcd-8cd0cfd4a52b",
+        "title": "Flooding near the covered court",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "9c7ec38d-0a5d-4095-8e29-88f93ba39264",
+        "title": "Broken streetlight",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "d1701c42-151d-4f44-a436-959b86c83127",
+        "title": "ddddd",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "4120bd4b-71f6-4459-88b5-e7ab1c5dc00f",
+        "title": "sad",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "3cf3a192-2b23-4b6d-bc92-5eb783d3286c",
+        "title": "sdas",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "e6ef547d-1dcf-410a-a7ea-ba48bd99507f",
+        "title": "asds",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "dd54b7ed-45b1-4643-9236-fb1f82a05b2c",
+        "title": "www",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "570fb1df-db4e-4554-bb82-800adcd4e115",
+        "title": "WITHDRAW CYCLE TEST — flooding on Purok 5",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "524ba578-fa82-44e4-a158-c3ef41dd06cc",
+        "title": "Broken streetlight on Purok 3",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "9d1b6286-739a-4f09-b0dd-131319392292",
+        "title": "pic",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "58e07a31-ca88-4da4-8198-fdbc7d05a8a1",
+        "title": "TEST — automated verification report (safe to delete)",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "3a2b5ad8-579d-4c6d-bcae-23e32ef90c54",
+        "title": "sadas",
+        "point": {
+          "x": 620,
+          "y": 349
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000207",
+        "title": "Streetlamp completely out near the Purok 3 basketball court",
+        "point": {
+          "x": 253,
+          "y": 109
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000208",
+        "title": "Knee-deep flooding on the alley between Purok 3 and Purok 4 after heavy rain",
+        "point": {
+          "x": 178,
+          "y": 167
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000209",
+        "title": "Deep crack running across the main road near the barangay hall gate",
+        "point": {
+          "x": 318,
+          "y": 51
+        }
+      }
+    ]
+  },
+  "focused": {
+    "tag": "c16-camera-diagnosis-focused",
+    "label": "Search incidents",
+    "bounds": [
+      179,
+      306,
+      861,
+      443
+    ],
+    "imeTop": 580,
+    "text": "Search locations...",
+    "focused": "true"
+  },
+  "pixelCenters": [
+    {
+      "x": 28065933.625,
+      "y": 15393518.25
+    },
+    {
+      "x": 28065934,
+      "y": 15393519
+    },
+    {
+      "x": 28065934,
+      "y": 15393518.5
+    }
+  ]
+}

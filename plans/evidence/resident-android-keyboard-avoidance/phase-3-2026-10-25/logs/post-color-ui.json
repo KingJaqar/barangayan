@@ -1,0 +1,11 @@
+{
+  "stage": "post-color",
+  "check": "ui",
+  "command": [
+    "node",
+    "tests/settings-profile-ui.mjs"
+  ],
+  "start": "2026-10-26T01:16:18.740Z",
+  "end": "2026-10-26T01:17:01.685Z",
+  "status": 0
+}

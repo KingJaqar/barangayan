@@ -1,0 +1,540 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/src/components/password-recovery-screen.tsx, apps/resident-android-mobile/src/components/resident-details-form.tsx, apps/resident-android-mobile/src/components/resident-password-step.tsx, apps/resident-android-mobile/src/app/(auth)/login.tsx, apps/resident-android-mobile/src/app/(auth)/register.tsx, apps/resident-android-mobile/src/app/(auth)/otp.tsx, apps/resident-android-mobile/src/app/(auth)/reset-password.tsx, apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx, apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx, apps/resident-android-mobile/src/components/services/charter-request-form.tsx, apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          settings/
+            change-password.tsx
+            valid-id.tsx
+        (auth)/
+          login.tsx
+          otp.tsx
+          register.tsx
+          reset-password.tsx
+      components/
+        services/
+          charter-request-form.tsx
+          resident-payment-screen.tsx
+        password-recovery-screen.tsx
+        resident-details-form.tsx
+        resident-password-step.tsx
+AGENTS.md
+CLAUDE.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/app/(auth)/otp.tsx">import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { Pressable, View } from &apos;react-native&apos;;
+⋮----
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryCodeInput, RecoveryError, recoveryStyles } from &apos;@/components/password-recovery-screen&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+import { recoveryErrorMessage } from &apos;@/lib/password-recovery&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+type OtpParams = {
+  // Only &apos;recovery&apos; is supported now — signup OTP was removed when email
+  // confirmation was disabled (migration 0012 / register.tsx refactor).
+  type: &apos;recovery&apos;;
+  email: string;
+};
+⋮----
+// Only &apos;recovery&apos; is supported now — signup OTP was removed when email
+// confirmation was disabled (migration 0012 / register.tsx refactor).
+⋮----
+// Password-recovery OTP screen. The signup branch was removed: with Confirm Email
+// disabled in the hosted project, signUp() creates a live session immediately, so
+// signup OTP is neither sent nor needed. Profile creation now happens via a database
+// trigger (handle_new_user) — see migration 0012 and register.tsx.
+export default function OtpScreen()
+⋮----
+async function handleVerify()
+⋮----
+async function handleResend()</file><file path="apps/resident-android-mobile/src/app/(auth)/reset-password.tsx">import { newPasswordSchema } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useState } from &apos;react&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryError, recoveryStyles } from &apos;@/components/password-recovery-screen&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+import { recoveryErrorMessage } from &apos;@/lib/password-recovery&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+async function handleUpdate()
+⋮----
+// The verified recovery session is now a normal login.</file><file path="apps/resident-android-mobile/src/components/resident-details-form.tsx">import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, RegistrationLocalityError, ResidentSetupStatusError, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;./birthday-calendar-modal&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { RegistrationMap } from &apos;./registration-map&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, profileSetupRequests, SetupOwner, SetupTimeout } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** YYYY-MM-DD → &quot;August 8, 2000&quot; */
+function fmtDate(iso: string | null): string
+⋮----
+/** Red asterisk suffix for required-field labels that don&apos;t render through TextField
+ * (Sex / Date of Birth / Employment Status use their own chip/pressable labels). */
+function RequiredMark()
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a
+// field shows a red alert or a green check the moment its value becomes
+// invalid/valid — the same treatment the Confirm Password field already gave
+// the password-match check, generalized to every text field. Empty fields stay
+// silent until a submit attempt populates fieldErrors (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+/**
+ * Resolves a TextField&apos;s error/success pair for one field:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/**
+ * Section card wrapper — same shape as Settings &gt; Profile&apos;s SectionCard (rounded,
+ * bordered, backgroundElement fill) with an icon + title header, used to break the
+ * long registration form into scannable groups instead of one flat field list.
+ */
+export function FormSection({
+  icon,
+  title,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  children: React.ReactNode;
+})
+⋮----
+/**
+ * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
+ * has a `TextField` shape, and unlike SegmentedControl this never implies a default
+ * selection: with `active` unset, no chip renders as chosen.
+ */
+⋮----
+/** Registration and deferred completion share the restored form and validators. */
+⋮----
+const load = async () =&gt;
+⋮----
+const point = (value: Json | null | undefined) =&gt; value &amp;&amp; typeof value === &apos;object&apos; &amp;&amp; !Array.isArray(value) &amp;&amp; typeof value.lat === &apos;number&apos; &amp;&amp; typeof value.lng === &apos;number&apos; ?
+⋮----
+// Fresh profile belongs to this account/load attempt, not an offline context cache.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function handleSubmit()
+⋮----
+// A lost response may have committed. Reload/review before any repeat write.
+⋮----
+function leave(action: () =&gt; void)
+⋮----
+onPress=
+⋮----
+&lt;BirthdayCalendarModal visible=</file><file path="apps/resident-android-mobile/src/components/resident-password-step.tsx">import { residentPasswordStepSchema, getResidentAccountSetupStatus, residentSetupFailure } from &apos;@barangayan/shared&apos;;
+import { createClient } from &apos;@supabase/supabase-js&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ScrollView, View } from &apos;react-native&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { FormSection } from &apos;./resident-details-form&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, SetupOwner, SetupTimeout, SetupWriteBoundary } from &apos;@/lib/setup-request&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+⋮----
+/** First-time creation only. Known/unknown existing credentials use Manage Password. */
+export type ResidentPasswordDraft = { password: string; confirmPassword: string; uncertain: boolean };
+/** `settings` is first-password setup from Settings: no sign-out/skip wording, and
+ * `beforeWrite` must re-prove fresh same-user authentication right before the write. */
+⋮----
+const setPassword = (value: string) =&gt; onDraftChange(
+const setConfirmPassword = (value: string) =&gt; onDraftChange(
+⋮----
+async function save(checkOnly = false)
+⋮----
+// Independent, non-persisting client: checking a lost write cannot switch
+// the app&apos;s session or count passwordSet=true as proof of this password.
+⋮----
+// A timeout/transport error can follow a successful commit. Never blindly
+// repeat updateUser: require the exact entered credential or recovery.</file><file path="apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx">import { idConfirmedDetailsSchema, idVerificationState, ID_TYPES, OTHER_ID_TYPE_PREFIX, publishIdEvidence, type IdConfirmedDetails } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { CameraView, useCameraPermissions } from &apos;expo-camera&apos;;
+import { randomUUID } from &apos;expo-crypto&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { BirthdayWheelModal } from &apos;@/components/birthday-wheel-modal&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { RecoveryError, recoveryStyles, StepFlowScreen } from &apos;@/components/password-recovery-screen&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { SettingsSheet } from &apos;@/components/settings-sheet&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { ACCEPTED_IMAGE_MIME_TYPES, imageExtension, pickImageAsset, readImageBytes, type PickedImage } from &apos;@/lib/image-upload&apos;;
+import { extractIdDetails } from &apos;@/lib/valid-id&apos;;
+import { idPhotoBytes } from &apos;@/lib/id-photo-bytes&apos;;
+import { birthdayLabel } from &apos;@/lib/birthday-wheel&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export default function ValidIdScreen()
+⋮----
+const current = (userId: string)
+⋮----
+function goBack()
+⋮----
+// Back handling follows the current step and camera state.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function readDetails(path: string, userId: string)
+⋮----
+async function providePhoto(picked: PickedImage, capturedBytes?: Uint8Array)
+⋮----
+async function choosePhoto()
+⋮----
+async function openCamera()
+⋮----
+async function takePhoto()
+⋮----
+async function retryReading()
+⋮----
+function continueFlow()
+⋮----
+async function submit()
+⋮----
+setStep(1); setIdType(&apos;&apos;); setOtherIdType(&apos;&apos;); setPhoto(null); setDetails(EMPTY_DETAILS);
+setDetailsReady(false); setFieldErrors(
+publication.current = null; setSubmitted(false); setReplacing(true);
+⋮----
+&lt;PhotoAction label=
+⋮----
+&lt;PhotoAction label=&quot;Try reading the photo again&quot; icon=&quot;refresh-outline&quot; onPress=
+&lt;PhotoAction label=&quot;Enter details manually&quot; icon=&quot;create-outline&quot; onPress=
+⋮----</file><file path="apps/resident-android-mobile/src/components/password-recovery-screen.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Animated, Easing, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+export function PasswordRecoveryScreen({ step, title, description, children }: {
+  step: 1 | 2 | 3;
+  title: string;
+  description: string;
+  children: ReactNode;
+})
+⋮----
+/** One autofill/paste-capable input, presented as six cells. Screen readers read
+ * the input once; the visual cells never become six separate focus targets. */
+⋮----
+onChangeText=
+⋮----
+onBlur=
+⋮----
+{/* Paint the cells above the native input instead of relying on a transparent
+            text color, which Android can replace with its default while editing.
+            Touches still reach the one input; its accessibility/autofill stay intact. */}
+⋮----
+borderColor: focused &amp;&amp; index === Math.min(value.length, 5) ? theme.primary : theme.backgroundSelected,</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/src/app/(auth)/login.tsx">import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { Link, useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { GuestBrowseButton } from &apos;@/components/guest-browse-button&apos;;
+import { LogoutToast } from &apos;@/components/logout-toast&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { authSetupRequests, SetupTimeout, SetupOwner } from &apos;@/lib/setup-request&apos;;
+import { residentEmailStepSchema } from &apos;@barangayan/shared&apos;;
+import { loginErrorMessage } from &apos;@/lib/login-error&apos;;
+⋮----
+type LoginParams = {
+  /** Prefills the email field when coming from the registration flow. */
+  email?: string;
+};
+⋮----
+/** Prefills the email field when coming from the registration flow. */
+⋮----
+async function handleLogin()
+⋮----
+// No explicit navigation needed — the session update flows into AuthProvider and
+// Stack.Protected in the root layout routes into (app) automatically.</file><file path="apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx">import { formatCentavosAsPHP, requestFee, requestFeeLabel, type Tables } from &apos;@barangayan/shared&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { PaymentMethodRow } from &apos;@/components/services/payment-method-row&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+type Request = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: { name: string; fee_centavos: number; service_kind: string | null } | null;
+  payments: { status: string; document_fee_centavos: number | null; amount_centavos: number }[];
+};
+function paymentErrorMessage(failure: unknown, fallback: string): string
+⋮----
+async function startQr()
+⋮----
+async function savePages()</file><file path="apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx">import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { ActionSuccessModal } from &apos;@/components/services/action-success-modal&apos;;
+import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ResidentPasswordStep, type ResidentPasswordDraft } from &apos;@/components/resident-password-step&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { clearGoogleReauthentication, googleReauthentication } from &apos;@/lib/google-auth&apos;;
+import { passwordMode, type ReauthenticationState } from &apos;@/lib/sensitive-auth&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Mirrors the Register screen&apos;s as-you-type treatment (register.tsx&apos;s fieldStatus/
+// validatePassword) — a red alert or green check appears below New Password the
+// moment its value becomes invalid/valid, instead of waiting for Update Password
+// to be pressed. Empty fields stay silent until a submit attempt populates
+// fieldErrors (the &quot;required&quot; message).
+function validateNewPassword(value: string): string | null
+⋮----
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/** Centered, auto-dismissing confirmation used after the password update succeeds. */
+function ResultPopup({
+  visible,
+  onDismiss,
+  title = &apos;Password Updated&apos;,
+  subtitle = &apos;Your password has been changed successfully.&apos;,
+}: {
+  visible: boolean;
+onDismiss: ()
+⋮----
+// Mode comes from the server-maintained password state: true → change with the
+// current password; null (unknown history) → manage, never &quot;not set&quot;; false → first
+// password, unlocked only by fresh same-account Google authentication.
+⋮----
+// Stay on first-password setup for this user after its own success refreshes the
+// status to passwordSet=true, so its confirmation can finish returning to Settings.
+⋮----
+// The status row below is the single place that reports a mismatch in real time —
+// same treatment as Register&apos;s Confirm Password field. Keep any other Confirm
+// Password validation message, but avoid duplicating the schema&apos;s mismatch message
+// directly under the field after submission.
+⋮----
+function handleForgotPassword()
+⋮----
+// Enable the existing login recovery stack before leaving the signed-in screen.
+⋮----
+async function handleUpdate()
+⋮----
+// Supabase&apos;s updateUser() doesn&apos;t check the old password — re-authenticate first so a
+// stolen/left-open session can&apos;t silently take over the account by setting a new one.
+⋮----
+// The server observer records this write; refresh so Settings labels follow.
+⋮----
+/** First password from Settings for a passwordless Google resident. The write is
+ * unlocked only by a completed same-user `set_password` Google attempt whose
+ * Auth-recorded oauth sign-in is within the application window; it is rechecked
+ * right before updateUser and consumed afterwards (or when the resident leaves). */
+⋮----
+function leave()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+onSaved=
+⋮----
+await refreshCompletion();
+setShowSuccess(true);
+⋮----
+onSkip=
+onBack=
+⋮----
+onDismiss=</file><file path="apps/resident-android-mobile/src/components/services/charter-request-form.tsx">import {
+  residentServiceError,
+  catalogContract,
+  createRequestKey,
+  idVerificationMessages,
+  idVerificationState,
+  ResidentSubmissionAttempt,
+  servicePriceLabel,
+  serviceRequestFieldErrors,
+  submissionSchemaForCatalog,
+  supportingAttachmentMetadata,
+  uploadSupportingEvidence,
+  type ServiceSubmissionInput,
+  type Tables,
+  type ServiceRequestField,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  View,
+  type LayoutChangeEvent,
+} from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { PurposeSheet } from &apos;@/components/services/purpose-sheet&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { pickSupportingFile, type SupportingFile } from &apos;@/lib/supporting-upload&apos;;
+⋮----
+type Requirement = ServiceSubmissionInput[&apos;attachments&apos;][number][&apos;requirementCode&apos;];
+⋮----
+const locate = (field: ServiceRequestField, event: LayoutChangeEvent) =&gt;
+⋮----
+async function pick(code: Requirement)
+async function submit()
+⋮----
+&lt;View onLayout=
+⋮----
+setFiles((previous) =&gt;
+⋮----
+
+⋮----
+&lt;Field label=&quot;Explain your purpose&quot; value=
+⋮----
+&lt;Field label=&quot;Business name&quot; value=
+&lt;Field label=&quot;Establishment address&quot; value=
+⋮----
+HOA certification may support or establish residency. Document fee:
+⋮----
+setRenter(value);
+if (!value)
+⋮----
+&lt;Field label=&quot;Record/document reference&quot; value=
+&lt;Field label=&quot;Number of copies&quot; value=
+&lt;Field label=&quot;Total pages across all copies&quot; value=
+⋮----
+Fee:</file><file path="apps/resident-android-mobile/src/app/(auth)/register.tsx">import { EMAIL_OTP_REGISTRATION_METADATA, residentEmailStepSchema, residentCodeStepSchema, residentSetupFailure } from &apos;@barangayan/shared&apos;;
+import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, AppState, BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, SetupOwner, SetupTimeout, RESEND_DEADLINE_KEY, resendSeconds, readResendDeadline } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** Only email/code live here. A verified session moves into server-owned setup. */
+⋮----
+function back()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function send()
+⋮----
+if (cause instanceof SetupTimeout) setStep(&apos;code&apos;); // Delivery can still have happened.
+⋮----
+async function verify()
+⋮----
+// AuthProvider/Stack.Protected owns navigation; retain the verified session.
+⋮----
+function openLogin()
+⋮----
+const theme = useTheme();</file></files></repomix>

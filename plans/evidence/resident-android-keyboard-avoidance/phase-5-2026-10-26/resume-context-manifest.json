@@ -1,0 +1,51 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "cab26fc0854c3b82cd48ef257087f1baf5fa28f1a533f7d6fbb0fa65f9ff9772",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx",
+      "characters": 164
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx",
+      "characters": 151
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "characters": 1082
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/_layout.tsx",
+      "characters": 225
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/_layout.tsx",
+      "characters": 81
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/themed-text.tsx",
+      "characters": 792
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx",
+      "characters": 543
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/_layout.tsx",
+      "characters": 954
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "characters": 5185
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "characters": 5140
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx",
+      "characters": 476
+    }
+  ],
+  "totalCharacters": 15547
+}

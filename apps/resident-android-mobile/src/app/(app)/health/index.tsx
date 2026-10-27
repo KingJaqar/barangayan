@@ -1,9 +1,10 @@
 import { DRIVE_TYPES, DRIVE_TYPE_CONFIG } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Animated, Easing, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Animated, Easing, PanResponder, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { WheelColumn } from '@/components/birthday-wheel-modal';
 import { FilterChips } from '@/components/filter-chips';
 import {
   HealthDriveSummary,
@@ -16,6 +17,7 @@ import {
   healthTypeColor,
 } from '@/components/health/health-presentation';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ProgressBar } from '@/components/progress-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
@@ -58,6 +60,18 @@ function localToday() {
   return `${t.getFullYear()}-${pad2(t.getMonth() + 1)}-${pad2(t.getDate())}`;
 }
 
+function shiftDate(iso: string, days: number) {
+  const d = parseLocalDate(iso);
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+function weekStartOf(iso: string) {
+  return shiftDate(iso, -parseLocalDate(iso).getDay());
+}
+
+const PICKER_ROW = 60;
+const PICKER_ROWS = 5;
+
 function MonthYearPicker({
   visible,
   value,
@@ -70,73 +84,45 @@ function MonthYearPicker({
   onClose: () => void;
 }) {
   const { resident } = useTheme();
-  const [year, setYear] = useState(value.year);
+  const [draft, setDraft] = useState<Month>(value);
   useEffect(() => {
-    if (visible) setYear(value.year);
-  }, [visible, value.year]);
-  const today = new Date();
-  const min = today.getFullYear() - 1,
-    max = today.getFullYear() + 5;
+    if (visible) setDraft(value);
+  }, [visible, value]);
+  const thisYear = new Date().getFullYear();
+  const years = Array.from({ length: 7 }, (_, i) => ({ value: thisYear - 1 + i, label: String(thisYear - 1 + i) }));
+  if (!years.some((y) => y.value === draft.year)) years.push({ value: draft.year, label: String(draft.year) });
+  years.sort((x, y) => x.value - y.value);
+  const months = MONTH_NAMES.map((label, i) => ({ value: i + 1, label }));
   return (
-    <HealthSheet visible={visible} title="Select Month & Year" onClose={onClose}
-      footer={<PrimaryButton presentation="resident" label="Close" variant="secondary" onPress={onClose} />}>
-      <View style={styles.toolbar}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Previous year"
-          disabled={year <= min}
-          onPress={() => setYear((y) => Math.max(min, y - 1))}
-          style={styles.iconButton}
-        >
-          <Ionicons name="chevron-back" size={20} color={year <= min ? resident.muted : resident.text} />
-        </Pressable>
-        <ThemedText style={styles.subheading}>{year}</ThemedText>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Next year"
-          disabled={year >= max}
-          onPress={() => setYear((y) => Math.min(max, y + 1))}
-          style={styles.iconButton}
-        >
-          <Ionicons
-            name="chevron-forward"
-            size={20}
-            color={year >= max ? resident.muted : resident.text}
-          />
-        </Pressable>
-      </View>
-      <View style={styles.monthGrid}>
-        {MONTH_NAMES.map((label, i) => {
-          const selected = year === value.year && i + 1 === value.month;
-          return (
-            <Pressable
-              key={label}
-              accessibilityRole="button"
-              accessibilityLabel={`${label} ${year}`}
-              accessibilityState={{ selected }}
+    <HealthSheet visible={visible} title="Select Month & Year" onClose={onClose} scrollable={false}
+      footer={
+        <View style={styles.pickerFooter}>
+          <View style={{ flex: 1 }}>
+            <PrimaryButton presentation="resident" label="Close" variant="secondary" onPress={onClose} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <PrimaryButton
+              presentation="resident"
+              label="Done"
               onPress={() => {
-                onSelect(year, i + 1);
+                onSelect(draft.year, draft.month);
                 onClose();
               }}
-              style={[
-                styles.monthCell,
-                {
-                  backgroundColor: selected ? resident.accent : resident.surface,
-                  borderColor:
-                    selected && resident.accentNeedsOutline ? resident.controlBorder : 'transparent',
-                },
-              ]}
-            >
-              <ThemedText style={{ color: selected ? resident.onAccent : resident.text, fontSize: 13 }}>
-                {label.slice(0, 3)}
-              </ThemedText>
-            </Pressable>
-          );
-        })}
+            />
+          </View>
+        </View>
+      }>
+      <View style={styles.wheels}>
+        <View pointerEvents="none" style={[styles.wheelSelection, { backgroundColor: resident.accentSoft }]} />
+        <WheelColumn label="Month" items={months} value={draft.month} onChange={(month) => setDraft((d) => ({ ...d, month }))} rowHeight={PICKER_ROW} visibleRows={PICKER_ROWS} boldSelected wide />
+        <WheelColumn label="Year" items={years} value={draft.year} onChange={(year) => setDraft((d) => ({ ...d, year }))} rowHeight={PICKER_ROW} visibleRows={PICKER_ROWS} boldSelected wide />
       </View>
     </HealthSheet>
   );
 }
+
+const WEEKDAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const EXPAND_MS = 280;
 
 function DriveCalendar({
   selectedDate,
@@ -159,6 +145,122 @@ function DriveCalendar({
   const { year, month } = currentMonth;
   const reducedMotion = useResidentReducedMotion(true);
   const gridOpacity = useRef(new Animated.Value(1)).current;
+  const [expanded, setExpanded] = useState(false);
+  const [weekStart, setWeekStart] = useState(() => weekStartOf(selectedDate));
+  const [pagerWidth, setPagerWidth] = useState(300);
+  const [weekHeight, setWeekHeight] = useState(0);
+  const [monthHeight, setMonthHeight] = useState(0);
+  const weekMiddle = parseLocalDate(shiftDate(weekStart, 3));
+
+  // Week pager: three pages (previous, current, next) sit in one row and `drag` is a
+  // native-driven translateX, so finger-follow and snapping never touch the JS thread.
+  const drag = useRef(new Animated.Value(0)).current;
+  const sliding = useRef(false);
+  // Expand/collapse: one JS-driven height + slide so the card resizes smoothly.
+  const boxHeight = useRef(new Animated.Value(0)).current;
+  const reveal = useRef(new Animated.Value(0)).current;
+  const sized = useRef(false);
+  // Only one calendar is ever visible: the week strip at rest, otherwise the month grid,
+  // which the animated box height slides open / closed from the top.
+  const [settled, setSettled] = useState(true);
+  // 1 = week strip visible, 0 = month grid visible; only animated once a slide has finished.
+  const swap = useRef(new Animated.Value(1)).current;
+  const monthSwap = swap.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
+  const showWeek = !expanded && settled;
+
+  useEffect(() => {
+    setWeekStart(weekStartOf(selectedDate));
+  }, [selectedDate]);
+  // Runs before paint: the new week is committed in the centre page, so reset the offset in the same frame.
+  useLayoutEffect(() => {
+    drag.setValue(0);
+    sliding.current = false;
+  }, [weekStart, drag]);
+
+  useEffect(() => {
+    if (!weekHeight || !monthHeight) return;
+    const target = expanded ? monthHeight : weekHeight;
+    if (!sized.current || reducedMotion) {
+      sized.current = true;
+      boxHeight.setValue(target);
+      reveal.setValue(expanded ? 1 : 0);
+      swap.setValue(expanded ? 0 : 1);
+      setSettled(true);
+      return;
+    }
+    const animation = Animated.parallel([
+      Animated.timing(boxHeight, { toValue: target, duration: EXPAND_MS, easing: Easing.inOut(Easing.cubic), useNativeDriver: false }),
+      Animated.timing(reveal, { toValue: expanded ? 1 : 0, duration: EXPAND_MS, easing: Easing.inOut(Easing.cubic), useNativeDriver: false }),
+    ]);
+    animation.start(({ finished }) => {
+      if (!finished) return;
+      setSettled(true);
+      // Slide is done: fade the finished state in.
+      const fade = Easing.out(Easing.cubic);
+      // Mirror of collapse: the old layer stays put through the slide, then cross-fades to the new one.
+      Animated.timing(swap, { toValue: expanded ? 0 : 1, duration: 220, easing: fade, useNativeDriver: true }).start();
+    });
+    return () => animation.stop();
+  }, [expanded, weekHeight, monthHeight, reducedMotion, boxHeight, reveal, swap, gridOpacity]);
+
+  const toggleExpanded = () => {
+    setSettled(false);
+    // Collapsing starts from the month grid; expanding keeps the week strip until the slide ends.
+    if (expanded) swap.setValue(0);
+    setWeekStart(weekStartOf(selectedDate));
+    setExpanded((value) => !value);
+  };
+  const slideWeek = (dir: 1 | -1) => {
+    if (sliding.current) return;
+    sliding.current = true;
+    const commit = () => {
+      const next = shiftDate(weekStart, dir * 7);
+      const middle = parseLocalDate(shiftDate(next, 3));
+      setWeekStart(next);
+      if (middle.getMonth() + 1 !== month || middle.getFullYear() !== year) {
+        onJumpTo(middle.getFullYear(), middle.getMonth() + 1);
+      }
+    };
+    if (reducedMotion) {
+      commit();
+      return;
+    }
+    Animated.timing(drag, {
+      toValue: -dir * pagerWidth,
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) commit();
+      else sliding.current = false;
+    });
+  };
+  const snapBack = () => {
+    Animated.timing(drag, { toValue: 0, duration: 200, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+  };
+  const latest = useRef({ slideWeek, snapBack, pagerWidth });
+  latest.current = { slideWeek, snapBack, pagerWidth };
+  const swipe = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_e, g) =>
+        !sliding.current && Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderMove: (_e, g) => {
+        const w = latest.current.pagerWidth;
+        drag.setValue(Math.max(-w, Math.min(w, g.dx)));
+      },
+      onPanResponderRelease: (_e, g) => {
+        const w = latest.current.pagerWidth;
+        if (Math.abs(g.dx) > w * 0.25 || Math.abs(g.vx) > 0.5) {
+          latest.current.slideWeek(g.dx < 0 ? 1 : -1);
+        } else {
+          latest.current.snapBack();
+        }
+      },
+      onPanResponderTerminate: () => latest.current.snapBack(),
+    }),
+  ).current;
+
   const calendarKey = `${year}-${month}-${selectedDate}`;
   const previousCalendar = useRef(calendarKey);
   useEffect(() => {
@@ -186,109 +288,214 @@ function DriveCalendar({
       inMonth: date.getMonth() === month - 1,
     };
   });
+  const renderDay = (date: string, day: number, inMonth: boolean, circleWidth: number) => {
+    const selected = date === selectedDate;
+    return (
+      <Pressable
+        key={date}
+        accessibilityRole="button"
+        accessibilityLabel={healthDate(date, true)}
+        accessibilityState={{ selected }}
+        onPress={() => onDateSelect(date)}
+        style={({ pressed }) => [styles.dayColumn, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+      >
+        <View
+          style={[
+            styles.dayCircle,
+            {
+              width: Math.min(32, circleWidth / 7),
+              backgroundColor: selected ? resident.accent : 'transparent',
+              borderColor:
+                selected && resident.accentNeedsOutline
+                  ? resident.controlBorder
+                  : !selected && date === localToday()
+                    ? resident.accentText
+                    : 'transparent',
+            },
+          ]}
+        >
+          <ThemedText
+            style={[
+              styles.dayNumber,
+              {
+                color: selected ? resident.onAccent : !inMonth ? resident.muted : date === localToday() ? resident.accentText : resident.text,
+                opacity: !selected && !inMonth ? 0.5 : 1,
+              },
+            ]}
+          >
+            {day}
+          </ThemedText>
+          <View style={styles.dots}>
+            {(eventDateMap[date] ?? []).slice(0, 3).map((color, i) => (
+              <View
+                key={i}
+                style={[styles.dot, { backgroundColor: selected ? resident.onAccent : healthTypeColor(
+                  DRIVE_TYPES.find((type) => DRIVE_TYPE_CONFIG[type].color === color) ?? 'others', resident,
+                ) }]}
+              />
+            ))}
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+  const selectedWeekday = parseLocalDate(selectedDate).getDay();
+  const headings = (prefix: string) =>
+    WEEKDAY_LETTERS.map((day, i) => (
+      <View key={`${prefix}-${i}`} style={styles.weekdayColumn}>
+        <ThemedText style={[styles.dayLabel, { color: i === selectedWeekday ? resident.accentText : resident.muted }]}>{day}</ThemedText>
+      </View>
+    ));
+  const ready = weekHeight > 0 && monthHeight > 0;
   return (
     <>
-      <HealthPanel>
+      <View style={[styles.calendarFlat, { backgroundColor: resident.accentSoft, borderColor: resident.border }]}>
         <View style={styles.calendar}>
-          <View style={styles.toolbar}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Open month and year picker, currently ${MONTH_NAMES[month - 1]} ${year}`}
-              onPress={() => setPickerVisible(true)}
-              style={({ pressed }) => [styles.monthButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+          <Animated.View style={[styles.calendarStack, { height: ready ? boxHeight : weekHeight || undefined }]}>
+            <Animated.View
+              pointerEvents={showWeek ? 'auto' : 'none'}
+              importantForAccessibility={showWeek ? 'auto' : 'no-hide-descendants'}
+              style={[styles.calendarLayer, { opacity: swap }]}
+              onLayout={(event) => {
+                const next = Math.round(event.nativeEvent.layout.height);
+                setWeekHeight((previous) => (previous === next ? previous : next));
+              }}
             >
-              <ThemedText style={styles.monthTitle}>
-                {MONTH_NAMES[month - 1]} {year}{' '}
-                <Ionicons name="chevron-down" size={12} color={resident.muted} />
-              </ThemedText>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Previous month"
-              onPress={() => onMonthChange(-1)}
-              style={({ pressed }) => [styles.iconButton, styles.monthArrow, { backgroundColor: pressed ? resident.pressed : resident.surface }]}
-            >
-              <Ionicons name="chevron-back" size={20} color={resident.text} />
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Next month"
-              onPress={() => onMonthChange(1)}
-              style={({ pressed }) => [styles.iconButton, styles.monthArrow, { backgroundColor: pressed ? resident.pressed : resident.surface }]}
-            >
-              <Ionicons name="chevron-forward" size={20} color={resident.text} />
-            </Pressable>
-          </View>
-          <Animated.View
-            style={[styles.dayGrid, { opacity: gridOpacity }]}
-            onLayout={(event) => {
-              const next = event.nativeEvent.layout.width;
-              setGridWidth((previous) => (previous === next ? previous : next));
-            }}
-          >
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-              <View key={`heading-${i}`} style={styles.weekdayColumn}>
-                <ThemedText style={[styles.dayLabel, { color: resident.muted }]}>{day}</ThemedText>
-              </View>
-            ))}
-            {cells.map((cell) => {
-              const selected = cell.date === selectedDate;
-              return (
+              <View style={styles.toolbar}>
                 <Pressable
-                  key={cell.date}
                   accessibilityRole="button"
-                  accessibilityLabel={healthDate(cell.date, true)}
-                  accessibilityState={{ selected }}
-                  onPress={() => onDateSelect(cell.date)}
-                  style={({ pressed }) => [styles.dayColumn, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                  accessibilityLabel={`Open month and year picker, currently ${MONTH_NAMES[weekMiddle.getMonth()]} ${weekMiddle.getFullYear()}`}
+                  onPress={() => setPickerVisible(true)}
+                  style={({ pressed }) => [styles.monthButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
                 >
-                  <View
-                    style={[
-                      styles.dayCircle,
-                      {
-                        width: Math.min(34, gridWidth / 7),
-                        backgroundColor: selected ? resident.accent : 'transparent',
-                        borderColor:
-                          selected && resident.accentNeedsOutline
-                            ? resident.controlBorder
-                            : !selected && cell.date === localToday()
-                              ? resident.accentText
-                              : 'transparent',
-                      },
-                    ]}
-                  >
-                    <ThemedText
-                      style={[
-                        styles.dayNumber,
-                        {
-                          color: selected ? resident.onAccent : cell.inMonth ? resident.text : resident.muted,
-                          opacity: !selected && !cell.inMonth ? 0.5 : 1,
-                        },
-                      ]}
-                    >
-                      {cell.day}
-                    </ThemedText>
-                    <View style={styles.dots}>
-                      {(eventDateMap[cell.date] ?? []).slice(0, 3).map((color, i) => (
-                        <View
-                          key={i}
-                          style={[styles.dot, { backgroundColor: selected ? resident.onAccent : healthTypeColor(
-                            DRIVE_TYPES.find((type) => DRIVE_TYPE_CONFIG[type].color === color) ?? 'others', resident,
-                          ) }]}
-                        />
-                      ))}
-                    </View>
-                  </View>
+                  <ThemedText style={[styles.monthTitle, { color: resident.accentText }]}>
+                    {MONTH_NAMES[weekMiddle.getMonth()]} {weekMiddle.getFullYear()}{' '}
+                    <Ionicons name="chevron-down" size={14} color={resident.accentText} />
+                  </ThemedText>
                 </Pressable>
-              );
-            })}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Previous week"
+                  onPress={() => slideWeek(-1)}
+                  style={({ pressed }) => [styles.navButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                >
+                  <Ionicons name="chevron-back" size={20} color={resident.accentText} />
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Next week"
+                  onPress={() => slideWeek(1)}
+                  style={({ pressed }) => [styles.navButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                >
+                  <Ionicons name="chevron-forward" size={20} color={resident.accentText} />
+                </Pressable>
+              </View>
+              <View style={styles.dayGrid}>{headings('week-heading')}</View>
+              <View
+                style={styles.pager}
+                onLayout={(event) => {
+                  const next = event.nativeEvent.layout.width;
+                  setPagerWidth((previous) => (previous === next ? previous : next));
+                }}
+                {...swipe.panHandlers}
+              >
+                <Animated.View
+                  style={[
+                    styles.pagerTrack,
+                    { width: pagerWidth * 3, marginLeft: -pagerWidth, transform: [{ translateX: drag }] },
+                  ]}
+                >
+                  {[-7, 0, 7].map((delta) => {
+                    const start = shiftDate(weekStart, delta);
+                    return (
+                      <View key={start} style={[styles.pagerPage, { width: pagerWidth }]}>
+                        {Array.from({ length: 7 }, (_, i) => {
+                          const date = shiftDate(start, i);
+                          return renderDay(date, parseLocalDate(date).getDate(), true, pagerWidth);
+                        })}
+                      </View>
+                    );
+                  })}
+                </Animated.View>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Expand to full month calendar"
+                accessibilityState={{ expanded: false }}
+                onPress={toggleExpanded}
+                style={({ pressed }) => [styles.toggleBar, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+              >
+                <Ionicons name="chevron-down" size={20} color={resident.accentText} />
+              </Pressable>
+            </Animated.View>
+            <Animated.View
+              pointerEvents={showWeek ? 'none' : 'auto'}
+              importantForAccessibility={showWeek ? 'no-hide-descendants' : 'auto'}
+              style={[styles.calendarLayer, { opacity: monthSwap }]}
+              onLayout={(event) => {
+                const next = Math.round(event.nativeEvent.layout.height);
+                setMonthHeight((previous) => (previous === next ? previous : next));
+              }}
+            >
+              <View style={styles.toolbar}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Open month and year picker, currently ${MONTH_NAMES[month - 1]} ${year}`}
+                  onPress={() => setPickerVisible(true)}
+                  style={({ pressed }) => [styles.monthButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                >
+                  <ThemedText style={[styles.monthTitle, { color: resident.accentText }]}>
+                    {MONTH_NAMES[month - 1]} {year}{' '}
+                    <Ionicons name="chevron-down" size={14} color={resident.accentText} />
+                  </ThemedText>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Previous month"
+                  onPress={() => onMonthChange(-1)}
+                  style={({ pressed }) => [styles.navButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                >
+                  <Ionicons name="chevron-back" size={20} color={resident.accentText} />
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Next month"
+                  onPress={() => onMonthChange(1)}
+                  style={({ pressed }) => [styles.navButton, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+                >
+                  <Ionicons name="chevron-forward" size={20} color={resident.accentText} />
+                </Pressable>
+              </View>
+              <Animated.View
+                style={[styles.dayGrid, { opacity: gridOpacity }]}
+                onLayout={(event) => {
+                  const next = event.nativeEvent.layout.width;
+                  setGridWidth((previous) => (previous === next ? previous : next));
+                }}
+              >
+                {headings('heading')}
+                {cells.map((cell) => renderDay(cell.date, cell.day, cell.inMonth, gridWidth))}
+              </Animated.View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Collapse to week view"
+                accessibilityState={{ expanded: true }}
+                onPress={toggleExpanded}
+                style={({ pressed }) => [styles.toggleBar, { backgroundColor: pressed ? resident.pressed : 'transparent' }]}
+              >
+                <Ionicons name="chevron-up" size={20} color={resident.accentText} />
+              </Pressable>
+            </Animated.View>
           </Animated.View>
         </View>
-      </HealthPanel>
+      </View>
       <MonthYearPicker
         visible={pickerVisible}
         value={currentMonth}
-        onSelect={onJumpTo}
+        onSelect={(y, m) => {
+          onJumpTo(y, m);
+          if (!expanded) setWeekStart(weekStartOf(`${y}-${pad2(m)}-01`));
+        }}
         onClose={() => setPickerVisible(false)}
       />
     </>
@@ -441,6 +648,7 @@ function MyRegistrationsPanel({
   refreshing,
   error,
   onRetry,
+  onRefresh,
 }: {
   registrations: DriveRegistration[];
   hasLoaded: boolean;
@@ -448,9 +656,11 @@ function MyRegistrationsPanel({
   refreshing: boolean;
   error: string | null;
   onRetry: () => void;
+  onRefresh: () => unknown;
 }) {
   const { resident } = useTheme();
   const inset = useFloatingTabInset();
+  const pull = usePullRefresh([onRefresh]);
   const [status, setStatus] = useState<StatusFilter>('all');
   const [detailId, setDetailId] = useState<string | null>(null);
   // Keep the last content through exit while reading current server status on refresh.
@@ -478,7 +688,9 @@ function MyRegistrationsPanel({
           }))}
         />
       </View>
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: inset + 16 }]}>
+      <ScrollView
+        refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+        contentContainerStyle={[styles.content, { paddingBottom: inset + 16 }]}>
         <ThemedText accessibilityRole="header" style={styles.heading}>
           My applications
         </ThemedText>
@@ -631,6 +843,7 @@ export default function HealthScreen() {
   const loading = monthViewActive ? loadingMonthDrives : loadingDrives;
   const hasLoaded = monthViewActive ? hasLoadedMonthDrives : hasLoadedDrives;
   const refreshing = monthViewActive ? refreshingMonthDrives : refreshingDrives;
+  const pull = usePullRefresh(monthViewActive ? [fetchMonthDrives, refetchCalendar] : [refetch, refetchCalendar]);
   const activeError = monthViewActive ? monthError : error;
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.root, { backgroundColor: resident.card }]}>
@@ -649,6 +862,7 @@ export default function HealthScreen() {
       ) : null}
       {segment === 'active-drives' ? (
         <ScrollView
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
           contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 16 }]}
           keyboardShouldPersistTaps="handled"
         >
@@ -777,6 +991,7 @@ export default function HealthScreen() {
           onRetry={() => {
             void refetchRegistrations();
           }}
+          onRefresh={refetchRegistrations}
         />
       )}
     </SafeAreaView>
@@ -793,24 +1008,32 @@ const styles = StyleSheet.create({
   filters: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   registrationFilters: { paddingHorizontal: 14, paddingTop: 10 },
   iconButton: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-  calendar: { padding: 10 },
-  monthButton: { flex: 1, minHeight: 44, justifyContent: 'center', paddingHorizontal: 4, borderRadius: 10 },
+  calendar: { paddingTop: 0 },
+  calendarFlat: { borderBottomWidth: 1, marginHorizontal: -14, marginTop: -14, paddingHorizontal: 14, paddingTop: 6 },
+  navButton: { width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
+  toggleBar: { height: 22, borderRadius: 11, justifyContent: 'center', alignItems: 'center' },
+  calendarStack: { overflow: 'hidden' },
+  calendarLayer: { position: 'absolute', top: 0, left: 0, right: 0 },
+  pager: { overflow: 'hidden' },
+  pagerTrack: { flexDirection: 'row' },
+  pagerPage: { flexDirection: 'row' },
+  monthButton: { flex: 1, minHeight: 36, justifyContent: 'center', paddingHorizontal: 4, borderRadius: 10 },
   monthArrow: { borderRadius: 12 },
-  monthTitle: { fontSize: 16, lineHeight: 23, fontWeight: '800' },
+  monthTitle: { fontSize: 16, lineHeight: 22, fontWeight: '800' },
   dayGrid: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 2 },
-  weekdayColumn: { width: '14.285714%', minHeight: 24, justifyContent: 'center', alignItems: 'center' },
-  dayColumn: { width: '14.285714%', minHeight: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
-  dayLabel: { fontSize: 11.5, lineHeight: 16, fontWeight: '700' },
+  weekdayColumn: { width: '14.285714%', minHeight: 20, justifyContent: 'center', alignItems: 'center' },
+  dayColumn: { width: '14.285714%', minHeight: 36, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  dayLabel: { fontSize: 12, lineHeight: 16, fontWeight: '800' },
   dayCircle: {
-    width: 34,
-    minHeight: 34,
-    borderRadius: 17,
+    width: 32,
+    minHeight: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
   },
-  dayNumber: { fontSize: 14, lineHeight: 22, fontWeight: '600' },
-  dots: { position: 'absolute', bottom: 3, flexDirection: 'row', gap: 2 },
+  dayNumber: { fontSize: 15, lineHeight: 20, fontWeight: '500' },
+  dots: { position: 'absolute', bottom: 2, flexDirection: 'row', gap: 2 },
   dot: { width: 4, height: 4, borderRadius: 2 },
   monthToggle: { minHeight: 44, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1 },
   sectionHeader: { gap: 2, paddingTop: 2 },
@@ -833,13 +1056,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  monthGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  monthCell: {
-    width: '22%',
-    minHeight: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
+  pickerFooter: { flexDirection: 'row', gap: 12 },
+  wheels: { flexDirection: 'row', height: PICKER_ROW * PICKER_ROWS, position: 'relative' },
+  wheelSelection: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: PICKER_ROW * 2,
+    height: PICKER_ROW,
     borderRadius: 12,
-    borderWidth: 1,
   },
 });

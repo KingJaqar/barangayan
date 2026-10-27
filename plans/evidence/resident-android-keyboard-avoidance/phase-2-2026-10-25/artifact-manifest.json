@@ -1,0 +1,158 @@
+[
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/context-index.md",
+    "sha256": "cceaa7fe1db9bc67c56521be3a1bffd0218676665364a1fc7bb460351bafd44b"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/context.xml",
+    "sha256": "60847a072f429bf82848b0297f286f68b3d1b8a9eb24f9f70a51b7646c5b37a1"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/environment.json",
+    "sha256": "00073531f1999c806dd1a82241266b07418057de07717a65c4e3e4103f8132c8"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/final-owners-manifest.json",
+    "sha256": "706ff4b44cabd586aba2039e44c847e13eb5b7df5d1cd29bf00f26ab520f1711"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/final-owners.xml",
+    "sha256": "9ca6dc2b8c390f35ca3aee49c3d1d8678f6faa31a260f5170b3050771d7b2284"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/ledger.json",
+    "sha256": "bb44f528c8ddbd0aa28af998b8f2fdf612712dce24f113524584213d15f477ea"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/ledger.md",
+    "sha256": "5f7e30be4937bc8329b01c7f5921f7f05e0a44df08cde04b7cb686c718358924"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/native-results.json",
+    "sha256": "265009b74930691854a609617e21ca8d649ee381bcd4629a49f93e862d19ed2a"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/owned-code.patch",
+    "sha256": "02d347f1c1dc00bfdd7f3a7d744ce3cd4121cc619e8e6d37feb759d0ddf7eef9"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/owned-plan.patch",
+    "sha256": "c00680a15b43d3456f1a58aa6353129bab4aa7c54775c05668e38f199c62320a"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/packet-manifest.json",
+    "sha256": "dab1e249bb8462a3d3c6c0529032441d8d759cd4eee6b10fcc8563c5867b5548"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/report.md",
+    "sha256": "18639b7026a6b71e958bc2e56e4d79cb5e339960ac9a3333d718879864ea1b37"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/source-manifest.json",
+    "sha256": "06d67ff39a056ff9e32cbaec7125ebb0fb4ba7dd420118f066d058cc089236d8"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/supplement-inputs.json",
+    "sha256": "0e315707fbdb4e2fe62829d23314a337c2582130ccae170d2fdb40f764f2f103"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/verification.json",
+    "sha256": "9a6b91a238ab96c97c10aeaf5351af6fd8d600a16942f0fa55154fd65df4ae42"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/affected-verification-ui-final.log",
+    "sha256": "be3a9e1569ddd6d07d5917797467bdc797da1e521d453815c7509889429833e4"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/affected-verification-ui.log",
+    "sha256": "be3a9e1569ddd6d07d5917797467bdc797da1e521d453815c7509889429833e4"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/diff-check-final.log",
+    "sha256": "abceba88f846fb40d4fd226a3090a2298029ea6ea0528a8d0970a221d52e213d"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/document-forms-ui.log",
+    "sha256": "257352cd6e454ff8292389ceb9e91f375cef181b9bb5d2b2456e029246ffa712"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/export-baseline.log",
+    "sha256": "36f03e527de0233d7ffd1a6f9bc718cf4faf55edfc21b2d2781152c0e7d9fb5b"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/export-candidate.log",
+    "sha256": "2cec4e771b3d1a3d95f91c937c18a2f9a11a6556f078164e56f9cca4655655e1"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/export-final.log",
+    "sha256": "858c50b72f13a158781807f960868adca1c59f115add3c5e2f97d69c30dbb896"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/lint-baseline.log",
+    "sha256": "c49a88f2c3377fa8db8aeee266b16d83964e96ba1e9c6d1831ef545e1d7f6905"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/navigation-baseline.log",
+    "sha256": "8e3a180185374cf2bbcbd16015273c701c5f370d70f8670a326e5285146b11b5"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/repomix-supplement.log",
+    "sha256": "b0258d9faf2d6557dd16a920cebcd5783c39b2290f7b692342b97be85a2d8967"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/repomix.log",
+    "sha256": "8b8355e49dbc0f662cd20ec353f4d8625cbdea41f96b94e4a27f56063008004d"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/request-document-ui.log",
+    "sha256": "373ac4947cd4e82ba0a61848722e484c27df4647523e6c853f72a6497a8d1631"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/services-list-diagnosis.log",
+    "sha256": "34c2b3b84921d2a0dc7aa9c7f1110a421c42e6049f46d1fd6b69a8db71ba6e92"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/settings-ui-candidate.log",
+    "sha256": "1934dfddfec2aa38e17a124581700953ea26fb6bd6670cfb6824ee63395b19bd"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/snapshot-baseline-verification.log",
+    "sha256": "3ecaf2a7701fa2a9a038573bf119ef0bd510a882a19f8b8f77f5844cb530fd0d"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/source-lint-baseline.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/source-lint-candidate.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/source-lint-final.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/typecheck-baseline.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/typecheck-candidate.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/typecheck-final.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/unit-baseline.log",
+    "sha256": "70ca0feb0acfb2088d849fba942cfad4ab7a11c4126c654e99a9969f48baf18f"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/unit-candidate.log",
+    "sha256": "a0382ee92cf85ff7f4f9a2af1702c5dedc820c8a09fa41f57a877bd4b5d0599e"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/logs/verification-ui-candidate.log",
+    "sha256": "b3f6a805f1f17a4ffd80b0ba50a05f33222fc5ffa8a3369058c534d7b6f60a2d"
+  }
+]

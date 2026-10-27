@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { ApplicantForm } from '@/components/health/applicant-form';
+import { RegistrationAccountNotice } from '@/components/health/registration-account-notice';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { MedicalDrive } from '@/hooks/use-medical-drives';
@@ -12,6 +13,9 @@ import type { MedicalDrive } from '@/hooks/use-medical-drives';
 export default async function RegisterForDrivePage({ params }: { params: Promise<{ driveId: string }> }) {
   const { driveId } = await params;
   const { user, profile } = await requireUser();
+  if (profile.role !== 'resident') {
+    return <RegistrationAccountNotice next={`/health/register/${driveId}`} />;
+  }
   const supabase = await createSupabaseServerClient();
 
   const [{ data: drive }, { data: fullProfile }] = await Promise.all([

@@ -130,3 +130,19 @@ export function requestFee(
     return request.assessed_amount_centavos;
   return request.legacy_fee_centavos ?? legacyCatalogFee;
 }
+
+/** List rows stay compact: a tax-code assessed fee reads "Varies" here, the full explanation lives on the detail screen. */
+export function serviceListPriceLabel(row: Tables<'document_types'>) {
+  return row.pricing_mode === 'assessment' ? 'Varies' : servicePriceLabel(row);
+}
+
+/** Compact turnaround for list rows ("~15 min", "~2 hr", "Same day"); the charter wording stays on the detail screen. */
+export function serviceProcessingShortLabel(row: Tables<'document_types'>) {
+  if (row.contract_version !== 2) return formatProcessingTime(row.processing_target_hours).replace('Same Day', 'Same day');
+  const minutes = row.processing_target_minutes;
+  if (minutes === null) return formatProcessingTime(row.processing_target_hours).replace('Same Day', 'Same day');
+  if (minutes < 60) return `~${minutes} min`;
+  if (minutes < 480) return `~${Math.ceil(minutes / 60)} hr`;
+  if (minutes <= 1440) return 'Same day';
+  return `~${Math.ceil(minutes / 1440)} days`;
+}

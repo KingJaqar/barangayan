@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "original": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+  "permissionRequestApproved": false,
+  "error": "Signed-in Home did not become ready after cold start",
+  "restored": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+  "originalPermissionAndFlagsRestored": true
+}

@@ -1,0 +1,13 @@
+{
+  "stage": "post-color",
+  "check": "lint",
+  "command": [
+    "node",
+    "../../node_modules/eslint/bin/eslint.js",
+    "src",
+    "--no-cache"
+  ],
+  "start": "2026-10-26T01:16:18.671Z",
+  "end": "2026-10-26T01:18:13.073Z",
+  "status": 0
+}

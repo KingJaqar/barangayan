@@ -1,0 +1,79 @@
+{
+  "baselineMethod": "Original scoped snapshots plus Git-clean-before-edit account-setup files from HEAD; no repository sources replaced",
+  "baseline": [
+    {
+      "file": "src/lib/id-evidence.ts",
+      "line": 10,
+      "code": 2304,
+      "message": "Cannot find name 'FileReader'."
+    },
+    {
+      "file": "src/lib/id-evidence.ts",
+      "line": 12,
+      "code": 2304,
+      "message": "Cannot find name 'FileReader'."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 93,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 96,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 99,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 103,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    }
+  ],
+  "current": [
+    {
+      "file": "src/lib/id-evidence.ts",
+      "line": 10,
+      "code": 2304,
+      "message": "Cannot find name 'FileReader'."
+    },
+    {
+      "file": "src/lib/id-evidence.ts",
+      "line": 12,
+      "code": 2304,
+      "message": "Cannot find name 'FileReader'."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 93,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 96,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 99,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    },
+    {
+      "file": "src/lib/service-catalog.test.ts",
+      "line": 103,
+      "code": 2352,
+      "message": "Conversion of type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' to type 'CatalogFoundationFields & { barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ name: string; description: string | null; contract_version: number; service_kind: \"general\" | \"business\" | \"indigency\" | \"first_time_job_seeker\" | \"certified_true_copy\"; charter: { ...; }; ... 5 more ...; requirements: string[]; }' is missing the following properties from type '{ barangay_id: string; created_at: string; deleted_at: string | null; description: string | null; fee_centavos: number; id: string; is_active: boolean; name: string; processing_target_hours: number; requirements: string[]; }': barangay_id, created_at, deleted_at, id, and 2 more."
+    }
+  ]
+}

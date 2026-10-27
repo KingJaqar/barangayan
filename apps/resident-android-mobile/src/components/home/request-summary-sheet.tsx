@@ -92,7 +92,7 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose, 
         <View style={styles.header}>
           <View style={styles.titleGroup}>
             <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
-            <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
             <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
           </View>
         </View>

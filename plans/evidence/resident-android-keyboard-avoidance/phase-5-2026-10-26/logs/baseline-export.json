@@ -1,0 +1,16 @@
+{
+  "stage": "baseline",
+  "check": "export",
+  "command": [
+    "node",
+    "../../node_modules/expo/bin/cli",
+    "export",
+    "--platform",
+    "android",
+    "--output-dir",
+    "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase5-20261026\\baseline-export"
+  ],
+  "start": "2026-10-26T10:46:31.250Z",
+  "end": "2026-10-26T10:47:31.046Z",
+  "status": 0
+}

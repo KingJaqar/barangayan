@@ -4,6 +4,7 @@ import { RegisterDrawer } from '../src/components/health/register-drawer';
 import { NewReportDrawer } from '../src/components/reports/new-report-drawer';
 import { DocumentRequestModal } from '../src/components/services/document-request-modal/document-request-modal';
 import { serviceDocumentTypeValues } from '@barangayan/shared';
+import { useSignOut } from '../src/hooks/use-sign-out';
 
 const id = 'a1260000-0000-4000-8000-000000000001';
 const profile = { id, role: 'resident', barangay_id: id, first_name: 'Test', last_name: 'Resident', full_name: 'Test Resident', house_no: '12', street: 'Sample Street', sex: 'female', employment_status: 'unemployed', mobile_number: '09171234567', birth_date: '1995-01-01', id_verification_status: 'verified', approved_id_submission_id: id, current_id_submission_id: id, id_repair_required: false };
@@ -18,6 +19,10 @@ const fixture = window.__guards = { id, profile, reads: 0, writes: [], error: fa
     requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: false },
   } }) },
 };
+function DefaultLogout() {
+  const { signOut, pending } = useSignOut();
+  return <button disabled={pending} onClick={() => void signOut()}>Log out</button>;
+}
 function App() {
   const [state, setState] = useState({ action: 'drive', key: 0, open: false });
   useEffect(() => { fixture.open = (action, mode = 'complete', role = 'resident') => {
@@ -25,13 +30,16 @@ function App() {
       ...(mode.includes('incomplete-birth-date') ? { birth_date: null } : mode.includes('incomplete') ? { house_no: '' } : {}),
       ...(mode.includes('unverified') ? { id_verification_status: 'pending' } : {}) };
     fixture.reads = 0; fixture.writes = []; fixture.error = mode === 'error'; fixture.delay = mode === 'delayed' ? 500 : 0;
-    fixture.authenticated = mode !== 'guest';
+    fixture.authenticated = mode !== 'guest'; fixture.missingProfile = mode === 'missing-profile';
+    fixture.profile.deleted_at = mode === 'deleted' ? '2026-10-26T00:00:00Z' : null;
+    fixture.signOutCalls = []; fixture.signOutFails = false; fixture.preferencesReset = false; fixture.destination = null; fixture.registrationError = null;
+    document.cookie = 'sb-fixture-resident-web-auth-token=fixture; path=/';
     setState(previous => ({ action, key: previous.key + 1, open: true }));
   }; }, []);
   const close = () => setState(previous => ({ ...previous, open: false }));
   return <>
     <button onClick={() => { fixture.backgroundClicks = (fixture.backgroundClicks ?? 0) + 1; }}>Background action</button>
-    {state.action === 'drive' ? <RegisterDrawer key={state.key} driveId={state.open ? id : null} userId={id} open={state.open} onClose={close} />
+    {state.action === 'logout' ? <DefaultLogout key={state.key} /> : state.action === 'drive' ? <RegisterDrawer key={state.key} driveId={state.open ? id : null} userId={id} open={state.open} onClose={close} />
       : state.action === 'report' ? <NewReportDrawer key={state.key} open={state.open} onClose={close} onSubmitted={close} />
         : <DocumentRequestModal key={state.key} documentId={state.open ? id : null} open={state.open} isAuthenticated onClose={close} />}
   </>;

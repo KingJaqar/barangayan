@@ -1,0 +1,785 @@
+{
+  "results": [
+    {
+      "id": "C04",
+      "label": "Middle Name",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C04-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C04-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C04-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C04-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C04-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "label": "Last Name",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C05-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C05-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C05-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C05-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C05-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "label": "Suffix",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C06-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C06-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C06-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C06-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C06-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C08",
+      "label": "Email",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C08-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C08-paste",
+          "editor": [
+            111,
+            838,
+            969,
+            922
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 245,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C08-selection",
+          "editor": [
+            111,
+            838,
+            969,
+            922
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 245,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C08-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C08-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "label": "Mobile Number",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C09-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C09-paste",
+          "editor": [
+            111,
+            838,
+            969,
+            922
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 245,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C09-selection",
+          "editor": [
+            111,
+            838,
+            969,
+            922
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 245,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C09-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C09-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C10",
+      "label": "House No.",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C10-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C10-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C10-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C10-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C10-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    },
+    {
+      "id": "C11",
+      "label": "Street",
+      "configuration": "reserved-default",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "reserved-default-C11-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C11-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C11-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C11-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "reserved-default-C11-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ]
+}

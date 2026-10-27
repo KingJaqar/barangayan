@@ -1,0 +1,11 @@
+{
+  "passed": [
+    "Documents pull reloads the catalog and the profile once",
+    "Documents pull shows a catalog change",
+    "failed Documents pull keeps the list and shows no error",
+    "Logs pull reloads activity and the profile, not the catalog",
+    "Requests pull reloads the request list and the profile once",
+    "segment switching leaves exactly one control mounted"
+  ],
+  "errors": []
+}

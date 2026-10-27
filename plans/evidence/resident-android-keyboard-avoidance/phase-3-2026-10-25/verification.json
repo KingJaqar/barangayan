@@ -1,0 +1,730 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "phase": 3,
+  "status": "Partially complete",
+  "productFiles": [
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "sha256": "393ce16174bd75f95539fb0a416e6011843d28e8034f865c7140828930636d5f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "sha256": "66509888e08fc3d385b1db37323d76eb6eab1b3ca5e86e0d04cfb3d72ab57308"
+    }
+  ],
+  "newDependencies": [],
+  "checks": {
+    "type": {
+      "stage": "post-color",
+      "check": "type",
+      "command": [
+        "node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "start": "2026-10-26T01:16:18.601Z",
+      "end": "2026-10-26T01:16:51.678Z",
+      "status": 0
+    },
+    "lint": {
+      "stage": "post-color",
+      "check": "lint",
+      "command": [
+        "node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src",
+        "--no-cache"
+      ],
+      "start": "2026-10-26T01:16:18.671Z",
+      "end": "2026-10-26T01:18:13.073Z",
+      "status": 0
+    },
+    "unit": {
+      "stage": "post-color",
+      "check": "unit",
+      "command": [
+        "node",
+        "../../node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=dot",
+        "--maxWorkers=1",
+        "--minWorkers=1"
+      ],
+      "start": "2026-10-26T01:16:18.642Z",
+      "end": "2026-10-26T01:16:55.748Z",
+      "status": 0
+    },
+    "ui": {
+      "stage": "post-color",
+      "check": "ui",
+      "command": [
+        "node",
+        "tests/settings-profile-ui.mjs"
+      ],
+      "start": "2026-10-26T01:16:18.740Z",
+      "end": "2026-10-26T01:17:01.685Z",
+      "status": 0
+    },
+    "export": {
+      "stage": "post-color",
+      "check": "export",
+      "command": [
+        "node",
+        "../../node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase3-20261025\\post-color-export"
+      ],
+      "start": "2026-10-26T01:16:18.742Z",
+      "end": "2026-10-26T01:17:16.801Z",
+      "status": 0
+    }
+  },
+  "preExistingLintWarnings": 2,
+  "unitTests": 335,
+  "unitFiles": 32,
+  "settingsProfileGroups": 14,
+  "expandedActualComponentGroups": 16,
+  "expandedErrors": [],
+  "nativeSourceIdentity": {
+    "requested": 29,
+    "passed": true
+  },
+  "nativeColorConfigurations": [
+    {
+      "configuration": "restore",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          318,
+          961,
+          930,
+          1095
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 72
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            72,
+            949,
+            522,
+            1107
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            558,
+            949,
+            1008,
+            1101
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-font",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          318,
+          701,
+          930,
+          855
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          927
+        ],
+        "keyboardTop": 927,
+        "clearance": 72
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            72,
+            689,
+            522,
+            867
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            558,
+            689,
+            1008,
+            861
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          290,
+          634,
+          979,
+          807
+        ],
+        "viewport": [
+          0,
+          163,
+          1080,
+          887
+        ],
+        "keyboardTop": 887,
+        "clearance": 80
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            81,
+            527,
+            520,
+            727
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            560,
+            527,
+            999,
+            819
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    }
+  ],
+  "colorCycles": {
+    "date": "2026-10-26 Asia/Manila",
+    "purpose": "Missing three-cycle restoration and immediate reopen after custom-color layout change",
+    "cycles": [
+      {
+        "cycle": 1,
+        "geometry": {
+          "editor": [
+            318,
+            961,
+            930,
+            1095
+          ],
+          "viewport": [
+            0,
+            144,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 72
+        },
+        "restored": true
+      },
+      {
+        "cycle": 2,
+        "geometry": {
+          "editor": [
+            318,
+            961,
+            930,
+            1095
+          ],
+          "viewport": [
+            0,
+            144,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 72
+        },
+        "restored": true
+      },
+      {
+        "cycle": 3,
+        "geometry": {
+          "editor": [
+            318,
+            961,
+            930,
+            1095
+          ],
+          "viewport": [
+            0,
+            144,
+            1080,
+            1167
+          ],
+          "keyboardTop": 1167,
+          "clearance": 72
+        },
+        "restored": true
+      }
+    ],
+    "saved": false,
+    "immediateReopenOriginal": true,
+    "backDismissed": true,
+    "issues": [
+      {
+        "kind": "warning",
+        "at": 1792978155514.958,
+        "classification": "existing push-notification path"
+      }
+    ],
+    "status": "pass for stated checks"
+  },
+  "constrainedFamilyQualification": {
+    "date": "2026-10-26 Asia/Manila",
+    "method": "Normal Windows pointer in MuMu with native read-only bounds capture",
+    "screen": "1080x1332",
+    "density": 480,
+    "font": 1.3,
+    "cases": [
+      {
+        "mode": "add",
+        "geometry": {
+          "editor": [
+            60,
+            415,
+            1020,
+            579
+          ],
+          "viewport": [
+            0,
+            138,
+            1080,
+            579
+          ],
+          "keyboardTop": 579,
+          "clearance": 0
+        },
+        "fullInputHeight": 164,
+        "actions": [
+          {
+            "label": "Add Member",
+            "bounds": [
+              60,
+              323,
+              1020,
+              495
+            ]
+          }
+        ]
+      },
+      {
+        "mode": "edit",
+        "geometry": {
+          "editor": [
+            60,
+            415,
+            1020,
+            579
+          ],
+          "viewport": [
+            0,
+            138,
+            1080,
+            579
+          ],
+          "keyboardTop": 579,
+          "clearance": 0
+        },
+        "fullInputHeight": 164,
+        "actions": [
+          {
+            "label": "Remove",
+            "bounds": [
+              60,
+              223,
+              368,
+              495
+            ]
+          },
+          {
+            "label": "Update",
+            "bounds": [
+              404,
+              223,
+              1020,
+              395
+            ]
+          }
+        ]
+      }
+    ],
+    "status": "pass for measured full input and full action reachability;0px input border clearance, preferred8dp not met",
+    "bannerRecreated": false,
+    "profileSaved": false,
+    "syntheticName": "Q",
+    "typing": "Visible Gboard key succeeded; Windows type_text clipboard method did not insert text"
+  },
+  "remaining": [
+    "A09 actual saved-member edit on both routes, including removal-confirmation expansion and save-error/busy states: active development account has zero saved members",
+    "Birthday wheel native smoke: actual Valid ID caller requires already uploaded ID/photo review state",
+    "A10 native duplicate/limit-error growth and B32 native rejected-reauthentication/busy presentation remain unobserved. Controlled browser coverage passes but does not establish native geometry for these states"
+  ],
+  "fullNativeProtocolPassed": false,
+  "cleanup": {
+    "at": "2026-10-26T01:53:26.748Z",
+    "profileClean": true,
+    "homeVisible": true,
+    "imeHidden": true,
+    "size": "Physical size: 1080x1920",
+    "density": "Physical density: 480",
+    "font": "1.0",
+    "navigation": "0",
+    "navigationOverlays": [
+      "[ ] com.android.internal.systemui.navbar.gestural_wide_back",
+      "[ ] com.android.internal.systemui.navbar.threebutton",
+      "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back",
+      "[ ] com.android.internal.systemui.navbar.gestural",
+      "[ ] com.android.internal.systemui.navbar.gestural_narrow_back"
+    ],
+    "camera": "android.permission.CAMERA: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]"
+  },
+  "nativeRevision": "Installed APK source revision unknown; current development JS factories/maps verified",
+  "ios": "Source preserved; native iOS unperformed",
+  "nativeLocalEditVariants": {
+    "date": "2026-10-26 Asia/Manila",
+    "results": [
+      {
+        "config": "compact-large-font",
+        "cycles": [
+          {
+            "cycle": 1,
+            "geometry": {
+              "editor": [
+                60,
+                445,
+                1020,
+                609
+              ],
+              "viewport": [
+                0,
+                138,
+                1080,
+                927
+              ],
+              "keyboardTop": 927,
+              "clearance": 318
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  60,
+                  571,
+                  368,
+                  843
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  404,
+                  571,
+                  1020,
+                  743
+                ]
+              }
+            ],
+            "restored": true
+          },
+          {
+            "cycle": 2,
+            "geometry": {
+              "editor": [
+                60,
+                445,
+                1020,
+                609
+              ],
+              "viewport": [
+                0,
+                138,
+                1080,
+                927
+              ],
+              "keyboardTop": 927,
+              "clearance": 318
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  60,
+                  571,
+                  368,
+                  843
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  404,
+                  571,
+                  1020,
+                  743
+                ]
+              }
+            ],
+            "restored": true
+          },
+          {
+            "cycle": 3,
+            "geometry": {
+              "editor": [
+                60,
+                445,
+                1020,
+                609
+              ],
+              "viewport": [
+                0,
+                138,
+                1080,
+                927
+              ],
+              "keyboardTop": 927,
+              "clearance": 318
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  60,
+                  571,
+                  368,
+                  843
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  404,
+                  571,
+                  1020,
+                  743
+                ]
+              }
+            ],
+            "restored": true
+          }
+        ],
+        "saved": false,
+        "localUpdateReopen": true,
+        "status": "pass for stated subset"
+      },
+      {
+        "config": "compact-large-display-gesture",
+        "cycles": [
+          {
+            "cycle": 1,
+            "geometry": {
+              "editor": [
+                68,
+                500,
+                1013,
+                686
+              ],
+              "viewport": [
+                0,
+                156,
+                1080,
+                887
+              ],
+              "keyboardTop": 887,
+              "clearance": 201
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  68,
+                  590,
+                  369,
+                  887
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  410,
+                  590,
+                  1013,
+                  784
+                ]
+              }
+            ],
+            "restored": true
+          },
+          {
+            "cycle": 2,
+            "geometry": {
+              "editor": [
+                68,
+                383,
+                1013,
+                569
+              ],
+              "viewport": [
+                0,
+                156,
+                1080,
+                887
+              ],
+              "keyboardTop": 887,
+              "clearance": 318
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  68,
+                  487,
+                  369,
+                  793
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  410,
+                  487,
+                  1013,
+                  681
+                ]
+              }
+            ],
+            "restored": true
+          },
+          {
+            "cycle": 3,
+            "geometry": {
+              "editor": [
+                68,
+                383,
+                1013,
+                569
+              ],
+              "viewport": [
+                0,
+                156,
+                1080,
+                887
+              ],
+              "keyboardTop": 887,
+              "clearance": 318
+            },
+            "actions": [
+              {
+                "label": "Remove",
+                "bounds": [
+                  68,
+                  487,
+                  369,
+                  793
+                ]
+              },
+              {
+                "label": "Update",
+                "bounds": [
+                  410,
+                  487,
+                  1013,
+                  681
+                ]
+              }
+            ],
+            "restored": true
+          }
+        ],
+        "saved": false,
+        "localUpdateReopen": true,
+        "status": "pass for stated subset"
+      }
+    ],
+    "finalProfileClean": true
+  },
+  "nativeEditOrigin": {
+    "date": "2026-10-26 Asia/Manila",
+    "profileSaved": false,
+    "originImeOpenVerified": true,
+    "geometry": {
+      "editor": [
+        60,
+        405,
+        1020,
+        549
+      ],
+      "viewport": [
+        0,
+        138,
+        1080,
+        1167
+      ],
+      "keyboardTop": 1167,
+      "clearance": 618
+    },
+    "backDismissAndImmediateReopen": true,
+    "status": "pass for stated checks",
+    "draftDiscarded": true
+  },
+  "nativeEmergencyAddTouch": {
+    "date": "2026-10-26 Asia/Manila",
+    "route": "/home/emergency-info?tab=family",
+    "submitted": false,
+    "nativeTouchPasteCaret": true,
+    "geometry": {
+      "editor": [
+        48,
+        396,
+        1032,
+        540
+      ],
+      "viewport": [
+        0,
+        300,
+        1080,
+        948
+      ],
+      "keyboardTop": 1167,
+      "clearance": 627
+    },
+    "cancelled": true,
+    "status": "pass for stated subset"
+  },
+  "actionReview": "In larger-display Edit cycle1, Remove is297px versus the306px full height observed in cycles2/3. Only cycles2/3 prove its full reachability; all three viewport-restoration cycles pass. No cropped action is promoted to full-button evidence."
+}

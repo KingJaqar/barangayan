@@ -10,6 +10,7 @@ import { ActionSuccessModal } from '@/components/services/action-success-modal';
 import { GoogleButton } from '@/components/google-button';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
@@ -88,6 +89,7 @@ function ChangeOrManagePassword() {
   const theme = useTheme();
   const { session, setup, refreshCompletion, setPasswordRecovery, setupRefreshError } = useAuth();
   const mode = passwordMode(setup);
+  const pull = usePullRefresh([refreshCompletion]);
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -210,8 +212,9 @@ function ChangeOrManagePassword() {
             ) : null}
           </View>
         ) : (
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <ScrollView contentContainerStyle={[styles.content, styles.passwordContent]} keyboardShouldPersistTaps="handled">
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
+            <ScrollView contentContainerStyle={[styles.content, styles.passwordContent]} keyboardShouldPersistTaps="handled"
+              refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
               <View
                 style={[
                   styles.introCard,
@@ -339,6 +342,7 @@ function FirstPasswordFromSettings() {
     catch { setReauth('none'); }
   }, []);
   useFocusEffect(useCallback(() => { void check(); }, [check]));
+  const pull = usePullRefresh([check]);
 
   function leave() {
     if (authSetupRequests.busy) { setNotice('A request is still finishing. Please wait before leaving.'); return true; }
@@ -392,7 +396,8 @@ function FirstPasswordFromSettings() {
     <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
       <View style={{ flex: 1, backgroundColor: theme.resident.card }}>
         <AuthHeader presentation="resident" title="Set Password" onBack={leave} />
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView contentContainerStyle={styles.content}
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
           <View style={[styles.introCard, { backgroundColor: theme.resident.surface, borderColor: theme.resident.border }]}>
             <Ionicons name="information-circle-outline" size={18} color={theme.resident.accentText} />
             <ThemedText type="small" themeColor="textSecondary" style={styles.intro}>

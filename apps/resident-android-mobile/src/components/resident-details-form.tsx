@@ -1,8 +1,8 @@
-import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from '@barangayan/shared';
+import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, RegistrationLocalityError, ResidentSetupStatusError, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthHeader } from './auth-header';
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from './birthday-calendar-modal';
@@ -188,6 +188,8 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
   const [registrationLocation, setRegistrationLocation] = useState<{ gps: { lat: number; lng: number } | null; home: { lat: number; lng: number } | null }>({ gps: null, home: null });
   const [snapshot, setSnapshot] = useState<Tables<'profiles'> | null>(null);
   const [ready, setReady] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+  const [loadFailure, setLoadFailure] = useState<{ message: string; retryable: boolean } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
@@ -199,15 +201,17 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
   useEffect(() => {
     const scope = owner.current; scope.invalidate(); const owns = scope.ticket();
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10_000);
-    setReady(false); setError(null); setConflict(false); setUncertain(false);
-    if (uid) void Promise.all([
-      registrationLocality(supabase),
-      supabase.from('profiles').select('*').eq('id', uid).abortSignal(controller.signal).maybeSingle(),
-    ]).then(([locality, result]) => {
+    setReady(false); setInitializing(true); setLoadFailure(null); setError(null); setConflict(false); setUncertain(false);
+    const load = async () => {
+      if (!uid) throw new ResidentSetupStatusError({ name: 'AuthSessionMissingError' });
+      const result = await supabase.from('profiles').select('*').eq('id', uid).abortSignal(controller.signal).maybeSingle();
       if (!owns()) return;
-      if (result.error) throw result.error;
+      if (result.error) throw new ResidentSetupStatusError({ code: result.error.code, status: result.status });
       const p = result.data;
-      if (p && (p.role !== 'resident' || p.deleted_at)) throw new Error('This account cannot complete resident setup.');
+      if (p && (p.id !== uid || p.role !== 'resident' || p.deleted_at)) throw new ResidentSetupStatusError({ code: '42501' });
+      const locality = await registrationLocality(supabase, { barangayId: p?.barangay_id, signal: controller.signal });
+      if (!owns()) return;
+      if (controller.signal.aborted) throw new RegistrationLocalityError('locality', true);
       const names = residentNamePrefill(session?.user.user_metadata, p);
       setFirstName(names.firstName); setLastName(names.lastName);
       setMiddleName(p?.middle_name ?? ''); setSuffix(p?.suffix ?? '');
@@ -217,15 +221,24 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
       const point = (value: Json | null | undefined) => value && typeof value === 'object' && !Array.isArray(value) && typeof value.lat === 'number' && typeof value.lng === 'number' ? { lat: value.lat, lng: value.lng } : null;
       setRegistrationLocation({ gps: point(p?.registration_location), home: point(p?.registration_home_location) });
       setSnapshot(p); setBarangay({ ...locality, boundary: locality.boundary as Polygon | MultiPolygon | null }); setReady(true);
-    }).catch(() => { if (owns()) setError('Unable to load your current profile or registration locality. Check your connection and retry.'); })
-      .finally(() => clearTimeout(timer));
+    };
+    void load().catch(cause => {
+      if (!owns()) return;
+      setLoadFailure(cause instanceof ResidentSetupStatusError
+        ? ['unknown', 'network', 'state_unavailable'].includes(cause.failure.kind)
+          ? { message: 'Unable to load your profile. Check your connection and retry.', retryable: true }
+          : cause.failure
+        : cause instanceof RegistrationLocalityError
+          ? { message: cause.message, retryable: cause.retryable }
+          : { message: 'Unable to load your profile. Check your connection and retry.', retryable: true });
+    }).finally(() => { clearTimeout(timer); if (owns()) setInitializing(false); });
     return () => { scope.invalidate(); controller.abort(); clearTimeout(timer); };
     // Fresh profile belongs to this account/load attempt, not an offline context cache.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid, attempt]);
 
   async function handleSubmit() {
-    if (!ready || loading) return;
+    if (!ready || initializing || loadFailure || loading || conflict) return;
     const owns = owner.current.ticket();
     const parsed = residentDetailsStepSchema.safeParse({ firstName, lastName, middleName: middleName.trim() || undefined, suffix: suffix.trim() || undefined,
       sex: sex ?? undefined, mobileNumber, houseNo, street, employmentStatus: employmentStatus ?? undefined,
@@ -259,14 +272,21 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
     action();
   }
 
+  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
+  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
+      <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.background }]}>
         <AuthHeader title="Complete Profile" onBack={() => leave(onBack)} />
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.five }]} keyboardShouldPersistTaps="handled">
           <ThemedText style={styles.introTitle}>Let&apos;s get you set up</ThemedText>
           <ThemedText themeColor="textSecondary" style={styles.introSubtitle}>Fill in your details to register with your local barangay.</ThemedText>
+          {initializing && <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.two }}>
+            <ActivityIndicator color={theme.primary} />
+            <ThemedText accessibilityLiveRegion="polite">Loading your profile…</ThemedText>
+          </View>}
           {ready && <View style={{ gap: Spacing.three }} pointerEvents={loading || uncertain || conflict ? 'none' : 'auto'}>
                     <FormSection icon="person-outline" title="Personal Information">
             <View style={styles.fieldPairRow}>
@@ -440,18 +460,19 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
 
           <RegistrationMap key={attempt} boundary={barangay?.boundary ?? null} initialValue={registrationLocation} onConfirm={setRegistrationLocation} />
           </View>}
+          {loadFailure && <ThemedText accessibilityRole="alert" themeColor="accentRed">{loadFailure.message}</ThemedText>}
           {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed">{error}</ThemedText>}
-          {(!ready || conflict || uncertain) && <PrimaryButton label="Reload and review current profile" accessibilityLabel="Reload and review current profile" variant="secondary" onPress={() => {
+          {(!initializing && (loadFailure?.retryable || conflict || uncertain)) && <PrimaryButton label="Reload and review current profile" accessibilityLabel="Reload and review current profile" variant="secondary" onPress={() => {
             if (profileSetupRequests.busy) { setError('The earlier save is still finishing. Please wait before reloading.'); return; }
             setAttempt(value => value + 1);
           }} />}
-          <PrimaryButton label={required ? 'Next' : 'Confirm personal details'} accessibilityLabel={required ? 'Next' : 'Confirm personal details'} loading={loading} disabled={!ready || conflict || uncertain} onPress={handleSubmit} />
-          {!required && <PrimaryButton label="Skip for now" accessibilityLabel="Skip for now" variant="secondary" disabled={loading} onPress={() => leave(onSkip)} />}
+          {ready && <PrimaryButton label={required ? 'Next' : 'Confirm personal details'} accessibilityLabel={required ? 'Next' : 'Confirm personal details'} loading={loading} disabled={conflict || uncertain} onPress={handleSubmit} />}
+          {!required && <PrimaryButton label={loadFailure && !loadFailure.retryable ? 'Back to Home' : 'Skip for now'} accessibilityLabel={loadFailure && !loadFailure.retryable ? 'Back to Home' : 'Skip for now'} variant="secondary" disabled={loading} onPress={() => leave(onSkip)} />}
           <PrimaryButton label="Sign out" accessibilityLabel="Sign out" variant="secondary" disabled={loading} onPress={() => leave(() => { void logout(); })} />
         </ScrollView>
         </KeyboardAvoidingView>
-        <BirthdayCalendarModal visible={showBirthPicker} value={birthDateIso ? isoToLocalDate(birthDateIso) : null} onClose={() => setShowBirthPicker(false)} onSave={date => { setBirthDateIso(dateToIso(date)); setShowBirthPicker(false); }} />
-      </View>
+      </FormContainer>
+      <BirthdayCalendarModal visible={showBirthPicker} value={birthDateIso ? isoToLocalDate(birthDateIso) : null} onClose={() => setShowBirthPicker(false)} onSave={date => { setBirthDateIso(dateToIso(date)); setShowBirthPicker(false); }} />
     </SafeAreaView>
   );
 }

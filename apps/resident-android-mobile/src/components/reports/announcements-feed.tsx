@@ -4,6 +4,7 @@ import { FlatList, View } from 'react-native';
 import type { FilterChip } from '@/components/filter-chips';
 import { AnnouncementCard } from '@/components/reports/announcement-card';
 import { AnnouncementModal } from '@/components/reports/announcement-modal';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ReportSourceState } from '@/components/reports/report-presentation';
 import { useAnnouncements } from '@/hooks/use-announcements';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
@@ -24,7 +25,8 @@ export function AnnouncementsFeed({ openId, onOpenHandled, activeFilter = 'all' 
 }) {
   const { resident } = useTheme();
   const bottom = useFloatingTabInset();
-  const { items, loading, error, retry } = useAnnouncements(activeFilter);
+  const { items, loading, error, retry, refresh } = useAnnouncements(activeFilter);
+  const pull = usePullRefresh([refresh]);
   const { unreadAnnouncementIds, markAnnouncementRead } = useUnreadCounts();
   const [selected, setSelected] = useState<Announcement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -53,6 +55,7 @@ export function AnnouncementsFeed({ openId, onOpenHandled, activeFilter = 'all' 
     {readError ? <ReportSourceState message="The announcement opened, but its read status could not be saved. Use its read control to try again." /> : null}
     {error ? <ReportSourceState message={error} retry={retry} /> : loading ? <ReportSourceState message="Loading announcements…" /> :
       <FlatList data={items} keyExtractor={item => item.id}
+        refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
         contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 2, paddingBottom: bottom + 16 }}
         ListEmptyComponent={<ReportSourceState message="No announcements in this category." />}
         renderItem={({ item, index }) => <View style={{

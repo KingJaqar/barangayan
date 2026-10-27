@@ -1,0 +1,77 @@
+{
+  "occupation": {
+    "id": "C07",
+    "label": "Occupation",
+    "configuration": "profile-conditional",
+    "initialFocus": true,
+    "typing": true,
+    "nativeSelectionAndCopyPaste": true,
+    "caretInsertion": true,
+    "dismissalCycles": 1,
+    "originalValueRestored": true,
+    "restoration": "Restore original value in place",
+    "states": [
+      {
+        "name": "profile-conditional-C07-focus",
+        "editor": [
+          111,
+          840,
+          969,
+          924
+        ],
+        "viewport": [
+          0,
+          264,
+          1080,
+          924
+        ],
+        "keyboardTop": 1167,
+        "clearance": 243,
+        "focused": true
+      },
+      {
+        "name": "profile-conditional-C07-paste",
+        "editor": [
+          111,
+          840,
+          969,
+          924
+        ],
+        "viewport": [
+          0,
+          264,
+          1080,
+          924
+        ],
+        "keyboardTop": 1167,
+        "clearance": 243,
+        "focused": true
+      },
+      {
+        "name": "profile-conditional-C07-selection",
+        "editor": [
+          111,
+          840,
+          969,
+          924
+        ],
+        "viewport": [
+          0,
+          264,
+          1080,
+          924
+        ],
+        "keyboardTop": 1167,
+        "clearance": 243,
+        "focused": true
+      }
+    ]
+  },
+  "profileSaveDisabled": true,
+  "birthday": {
+    "independentNativeModal": true,
+    "openCloseCycles": 3,
+    "dateChanged": false,
+    "underlyingViewportRestored": true
+  }
+}

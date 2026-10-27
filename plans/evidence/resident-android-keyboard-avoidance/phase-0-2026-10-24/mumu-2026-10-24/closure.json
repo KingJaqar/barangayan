@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-24T14:46:32.070Z",
+  "status": "pass for native evidence/owned documentation integrity",
+  "sourceModulesMatched": 29,
+  "definitions": 59,
+  "observedDefinitions": 19,
+  "editableNativeCases": 19,
+  "failures": 8,
+  "partialVisible": 11,
+  "fullProtocolPasses": 0,
+  "ledgerRows": 791,
+  "editableRows": 770,
+  "listRegressionRows": 21,
+  "statuses": {
+    "Partial native observation; full protocol pending": 11,
+    "Pending manual verification": 751,
+    "Reproduced failure; candidate pending": 8,
+    "N/A editable case; list layout regression pending": 20,
+    "N/A editable case; native absence observed": 1
+  },
+  "externalTrackedDiffPreserved": true,
+  "indexUntouched": true,
+  "onlySelectedPlanProgressChanged": true,
+  "syntheticReportCleared": true,
+  "profileDraftUnchanged": true,
+  "finalHomeKeyboardHidden": true,
+  "sourceUnchangedDuringTests": true,
+  "rawCaptureCount": 96,
+  "limitations": "Native sampling, not complete field protocol or release/iOS acceptance. No application patch or candidate fix exists."
+}

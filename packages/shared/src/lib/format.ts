@@ -87,3 +87,25 @@ export function trashIncidentScore(createdAt: string, confirmationCount: number,
   const decay = Math.exp(-Math.LN2 / halfLifeDays * ageInDays);
   return Math.round(confirmationCount * decay * 100) / 100;
 }
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** "October 2026" — month-header label for grouped activity lists. */
+export function formatMonthYear(iso: string): string {
+  const date = new Date(iso);
+  return `${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+/**
+ * "Today, 9:03 PM" / "Yesterday, 9:03 PM" / "23 Oct, 9:03 PM". Meant to sit under a month
+ * header, so the year is omitted; `now` is injectable for tests.
+ */
+export function formatRelativeDateTime(iso: string, now: Date = new Date()): string {
+  const date = new Date(iso);
+  const time = new Intl.DateTimeFormat('en-PH', { hour: 'numeric', minute: '2-digit' }).format(date);
+  const dayStart = (value: Date) => new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
+  const daysAgo = Math.round((dayStart(now) - dayStart(date)) / 86_400_000);
+  if (daysAgo === 0) return `Today, ${time}`;
+  if (daysAgo === 1) return `Yesterday, ${time}`;
+  return `${date.getDate()} ${MONTHS[date.getMonth()].slice(0, 3)}, ${time}`;
+}

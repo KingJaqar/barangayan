@@ -1,0 +1,15 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "1f948597d9cb7cac341bbac9a6e94776cd8907a8621adb17e92dd08a7b75b686",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "characters": 3322
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "characters": 1155
+    }
+  ],
+  "totalCharacters": 4610
+}

@@ -1,0 +1,14 @@
+{
+  "mode": "compact-display",
+  "size": "Physical size: 1080x1920\r\nOverride size: 1080x1680",
+  "density": "Physical density: 480\r\nOverride density: 540",
+  "font": "1.3",
+  "navigation": "2",
+  "overlays": [
+    "[ ] com.android.internal.systemui.navbar.gestural_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.threebutton\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back\r",
+    "[x] com.android.internal.systemui.navbar.gestural\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_narrow_back\r"
+  ]
+}

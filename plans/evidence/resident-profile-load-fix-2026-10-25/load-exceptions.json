@@ -1,0 +1,13 @@
+[
+  {
+    "reason": "exception",
+    "description": "Error: This account cannot complete resident setup.",
+    "frames": [
+      {
+        "function": "anonymous",
+        "url": "",
+        "line": 381512
+      }
+    ]
+  }
+]

@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { GuestAuthCallout } from '@/components/guest-auth-callout';
 
@@ -33,7 +33,7 @@ export function GuestAuthCalloutScreen({ title, description, tabName, message }:
             <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.headerTitle, { color: theme.onPrimary }]}>
               {title}
             </ThemedText>
           </View>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
+    lineHeight: 24,
   },
   backButton: {
     position: 'absolute',

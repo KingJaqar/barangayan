@@ -1,0 +1,134 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/settings-sheet.tsx
+- Files matching these patterns are excluded: **/.env*, **/repomix-output.xml
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      components/
+        settings-sheet.tsx
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/components/settings-sheet.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useState, type ReactNode } from 'react';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { ThemedText } from '@/components/themed-text';
+import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
+import { useTheme } from '@/hooks/use-theme';
+
+/** Shared presentation for the color, profile-option and local household editors. */
+export function SettingsSheet({ visible, title, onClose, children, footer, appearance = 'default' }: {
+  visible: boolean; title: string; onClose: () => void; children: ReactNode; footer?: ReactNode;
+  appearance?: 'default' | 'profile' | 'family';
+}) {
+  const { resident } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height: screenHeight } = useWindowDimensions();
+  const [height, setHeight] = useState(0);
+  const profile = appearance !== 'default';
+  const family = appearance === 'family';
+  const scrollFamily = family && Platform.OS === 'android';
+  const { mounted, panel, scrim, reduced } = useReportModalMotion(visible, profile ? (visible ? 280 : 200) : 280, profile ? 180 : 200);
+  const header = <>
+    <View style={[styles.handle, { backgroundColor: resident.border }]} />
+    <View style={[styles.header, profile && styles.profileHeader, family && styles.familyHeader]}>
+      <ThemedText accessibilityRole="header" style={[styles.title, profile && { color: resident.text }, family && styles.centeredTitle]}>{title}</ThemedText>
+      {!family ? <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel={`Close ${title}`} style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
+        <Ionicons name="close" size={20} color={resident.text} />
+      </Pressable> : null}
+    </View>
+  </>;
+  const bodyStyle = [styles.body, profile && styles.profileBody, { paddingBottom: footer ? 16 : Math.max(insets.bottom, profile ? 24 : 20) }];
+  const actions = footer ? <View style={[styles.footer, profile && styles.profileFooter, { borderTopColor: resident.border, paddingBottom: Math.max(insets.bottom, profile ? 28 : 20) }]}>{footer}</View> : null;
+  return <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
+    <KeyboardAvoidingView style={[styles.overlay, { paddingTop: insets.top + 12 }]} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]} />
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel={`Dismiss ${title}`} />
+      <Animated.View accessibilityViewIsModal onAccessibilityEscape={profile ? onClose : undefined} pointerEvents={visible ? 'auto' : 'none'}
+        onLayout={event => { const next = Math.ceil(event.nativeEvent.layout.height); setHeight(current => current === next ? current : next); }}
+        style={[styles.sheet, profile && styles.profileSheet, { backgroundColor: resident.card, maxHeight: profile ? screenHeight - insets.top - 12 : screenHeight * 0.92,
+          opacity: reduced ? panel : height > 0 ? 1 : 0,
+          transform: [{ translateY: reduced ? 0 : panel.interpolate({ inputRange: [0, 1], outputRange: [height || screenHeight, 0] }) }],
+        }]}>
+        {scrollFamily ? <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={styles.scroll}>
+          {header}
+          <View style={bodyStyle}>{children}</View>
+          {actions}
+        </ScrollView> : <>
+          {header}
+          <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={profile ? false : undefined} style={styles.scroll} contentContainerStyle={bodyStyle}>
+            {children}
+          </ScrollView>
+          {actions}
+        </>}
+      </Animated.View>
+    </KeyboardAvoidingView>
+  </Modal>;
+}
+
+const styles = StyleSheet.create({
+  overlay: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { flexShrink: 1, borderTopLeftRadius: 24, borderTopRightRadius: 24, overflow: 'hidden', paddingTop: 12 },
+  profileSheet: { paddingTop: 10 },
+  profileHeader: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
+  familyHeader: { paddingTop: 16, paddingBottom: 16 },
+  centeredTitle: { textAlign: 'center' },
+  profileBody: { paddingHorizontal: 20, gap: 0 },
+  profileFooter: { borderTopWidth: 0, paddingHorizontal: 20, paddingTop: 16 },
+  handle: { width: 40, height: 4, borderRadius: 2, alignSelf: 'center' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 8, gap: 8 },
+  title: { flex: 1, minWidth: 0, fontSize: 19, lineHeight: 25, fontWeight: '800' },
+  close: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  scroll: { flexShrink: 1 },
+  body: { paddingHorizontal: 24, gap: 12 },
+  footer: { borderTopWidth: 1, paddingTop: 16, paddingHorizontal: 24, gap: 12 },
+});
+</file>
+
+</files>

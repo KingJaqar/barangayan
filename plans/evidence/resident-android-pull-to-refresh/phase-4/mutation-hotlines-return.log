@@ -1,0 +1,26 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: h refetch resolves only after the response is applied
++ actual - expected
+
+  {
++   id: 'old',
++   pendingWhileHeld: false,
++   thenable: false
+-   id: 'new',
+-   pendingWhileHeld: true,
+-   thenable: true
+  }
+
+    at file:///C:/Users/User/barangayan/apps/resident-android-mobile/tests/pull-refresh-emergency-ui.mjs:230:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: { thenable: false, pendingWhileHeld: false, id: 'old' },
+  expected: { thenable: true, pendingWhileHeld: true, id: 'new' },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

@@ -20,9 +20,9 @@ export async function clearProfileCache(userId?: string) {
 }
 
 interface ProfileRead { profile: Profile | null; serialized: string; error: string | null; }
-interface ProfileData { profile: Profile | null; refetch: () => void; }
+interface ProfileData { profile: Profile | null; refetch: () => Promise<void>; }
 interface ProfileStatus { isLoading: boolean; isInitialLoading: boolean; isRefreshing: boolean; error: string | null; }
-const ProfileDataContext = createContext<ProfileData>({ profile: null, refetch: () => {} });
+const ProfileDataContext = createContext<ProfileData>({ profile: null, refetch: async () => {} });
 const ProfileStatusContext = createContext<ProfileStatus>({ isLoading: true, isInitialLoading: true, isRefreshing: false, error: null });
 
 function unverified(profile: Profile): Profile {
@@ -81,7 +81,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   }, [userId]);
   const { data, fetching, loading, refreshing, error, refresh, invalidate } = useRefreshResource(userId ?? 'guest', load, refreshError, retainProfile);
-  const refetch = useCallback(() => { if (userId) void invalidate(); }, [userId, invalidate]);
+  const refetch = useCallback(() => userId ? invalidate() : Promise.resolve(), [userId, invalidate]);
 
   useEffect(() => {
     queueCache(() => clearProfileCache());

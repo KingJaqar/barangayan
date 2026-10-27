@@ -1,0 +1,14 @@
+{
+  "passed": [
+    "managed steps/body fallback, single-open state, unknown icons/JSON, missing dial number, one dispatch while pending and visible dialer failure",
+    "offline data retained with error/retry; repeated accordion changes keep listener count stable; dark/custom/font render",
+    "Hub loading, empty and unavailable sources remain separately visible",
+    "date drafts/apply/collapse, independent period AND date, applied summary and clear without period reset",
+    "scroll wheel month/day partial matching, timeline years from 2026, no typed-year input and Clear",
+    "Alerts cached error/retry, loading, source-empty and filtered-empty feedback",
+    "open picker advances at New Year; reopening catches up through 2029 without typed or content-derived years",
+    "reduced motion removes geometry interpolation, five reversal cycles, compact widths and all owned accessibility listeners cleaned on unmount; no console errors/warnings"
+  ],
+  "errors": [],
+  "out": "C:\\Users\\User\\AppData\\Local\\Temp\\claude\\C--Users-User-barangayan\\3972ee11-027e-4017-a338-31e0bc0b6ebf\\scratchpad\\art"
+}

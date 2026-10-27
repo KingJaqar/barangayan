@@ -1,0 +1,14 @@
+{
+  "stage": "resume-baseline",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-26T12:49:56.768Z",
+  "end": "2026-10-26T12:50:25.932Z",
+  "status": 0
+}

@@ -1,0 +1,481 @@
+{
+  "baselineWorkingCopyPreserved": true,
+  "compared": 79,
+  "unexpected": [],
+  "comparisons": [
+    {
+      "path": "AGENTS.md",
+      "baselineSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "currentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "owned": false
+    },
+    {
+      "path": "CLAUDE.md",
+      "baselineSha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "currentSha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "baselineSha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "currentSha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "baselineSha256": "507d51f5145b7304129795b6b8fe300945bf73649fd7431bb53042b1fb5bcc5f",
+      "currentSha256": "507d51f5145b7304129795b6b8fe300945bf73649fd7431bb53042b1fb5bcc5f",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "baselineSha256": "e5e40c5ce355e7ecae13a5de27e0f2a6cb44d12e988f6e73ad201527302e13d6",
+      "currentSha256": "e5e40c5ce355e7ecae13a5de27e0f2a6cb44d12e988f6e73ad201527302e13d6",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "baselineSha256": "b7bcf711b2a496d59f96fb9233fd3305765ee2f8a013480ba4e28aed30a47f9a",
+      "currentSha256": "393ce16174bd75f95539fb0a416e6011843d28e8034f865c7140828930636d5f",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "baselineSha256": "8ad3ce3714feeaa889eb73ae9d886de189b12601f2d357f1b46c791136469ab7",
+      "currentSha256": "66509888e08fc3d385b1db37323d76eb6eab1b3ca5e86e0d04cfb3d72ab57308",
+      "owned": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx",
+      "baselineSha256": "5290cf154cfca3990269f4d2366947dfe88d9ee75cc48110cacc3dedfa39c1c1",
+      "currentSha256": "5290cf154cfca3990269f4d2366947dfe88d9ee75cc48110cacc3dedfa39c1c1",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "baselineSha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "currentSha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "baselineSha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47",
+      "currentSha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "baselineSha256": "6716c3119f0bc7fd72eefe4ef190b83b339b910c81baad90821ab03107aaac86",
+      "currentSha256": "6716c3119f0bc7fd72eefe4ef190b83b339b910c81baad90821ab03107aaac86",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-report-modal-motion.ts",
+      "baselineSha256": "75b112aec526de8121c2081187b1a4af577cf943e39574164b80ce7c41cdf7fc",
+      "currentSha256": "75b112aec526de8121c2081187b1a4af577cf943e39574164b80ce7c41cdf7fc",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-drrm-sheet-motion.ts",
+      "baselineSha256": "d84e656e3d5035010d59c851f24f5141a38a8e70c22929f29bf6564dc7ec4c3a",
+      "currentSha256": "d84e656e3d5035010d59c851f24f5141a38a8e70c22929f29bf6564dc7ec4c3a",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts",
+      "baselineSha256": "e24da126ab6a075ba7be7dee45263a347929666103c1afbde790841abe13ddaa",
+      "currentSha256": "e24da126ab6a075ba7be7dee45263a347929666103c1afbde790841abe13ddaa",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "baselineSha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523",
+      "currentSha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "baselineSha256": "829d7fd959e4c8dbf4d1ad4a3ca915aeb85664fb998b4e8503c5f1d86ed51e75",
+      "currentSha256": "829d7fd959e4c8dbf4d1ad4a3ca915aeb85664fb998b4e8503c5f1d86ed51e75",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "baselineSha256": "51cb2fc9f146ecb6cfe7b3a4de40e0936332db94b4715880b5a42f7304df308b",
+      "currentSha256": "51cb2fc9f146ecb6cfe7b3a4de40e0936332db94b4715880b5a42f7304df308b",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx",
+      "baselineSha256": "ef8db03bf514f992e5d4a730279665a2988004b88e60313db33351697067df18",
+      "currentSha256": "ef8db03bf514f992e5d4a730279665a2988004b88e60313db33351697067df18",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "baselineSha256": "24fbdcfc73f3ee9c043aa46669e22e1de5bc6e5badc7310b20b243c438255411",
+      "currentSha256": "24fbdcfc73f3ee9c043aa46669e22e1de5bc6e5badc7310b20b243c438255411",
+      "owned": false
+    },
+    {
+      "path": "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+      "baselineSha256": "b9afc148c2ddddac8141cd51497024c4470e513bd62fd08265c11527c8e4ad0e",
+      "currentSha256": "520a7b672a75b3dac5a752e16ca9839fa5a1c5440e8dc70362ab914e8f4b4ea0",
+      "owned": true
+    },
+    {
+      "path": "package.json",
+      "baselineSha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "currentSha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "owned": false
+    },
+    {
+      "path": "package-lock.json",
+      "baselineSha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "currentSha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "baselineSha256": "64734621b366ea9581d9f712d2240b02cac82b520a0d76eaab05ac0945807f85",
+      "currentSha256": "64734621b366ea9581d9f712d2240b02cac82b520a0d76eaab05ac0945807f85",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "baselineSha256": "6e2ce9effdc1b81c8ca4e643f88cbc86802d975441b7742020bba9b24282d9b2",
+      "currentSha256": "6e2ce9effdc1b81c8ca4e643f88cbc86802d975441b7742020bba9b24282d9b2",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "baselineSha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+      "currentSha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "baselineSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "currentSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/index.tsx",
+      "baselineSha256": "e1beda342ef6e0f9b290728d33357d967081b456a9e111b392ef15919bde9c16",
+      "currentSha256": "e1beda342ef6e0f9b290728d33357d967081b456a9e111b392ef15919bde9c16",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "baselineSha256": "f8500e1eef82d32ba670ba3a40bd87063c3540afd46d040b788db778cb5f5ba6",
+      "currentSha256": "f8500e1eef82d32ba670ba3a40bd87063c3540afd46d040b788db778cb5f5ba6",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "baselineSha256": "2c8e4dc3fe575811aad2540e37994dcb817cf0e61aed88fec3b8a277e25e87b7",
+      "currentSha256": "2c8e4dc3fe575811aad2540e37994dcb817cf0e61aed88fec3b8a277e25e87b7",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "baselineSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "currentSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "baselineSha256": "fe76fa5b25537505c1f0093e5da3bb14e36875e71da85772b902dc7f3f621bfd",
+      "currentSha256": "fe76fa5b25537505c1f0093e5da3bb14e36875e71da85772b902dc7f3f621bfd",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "baselineSha256": "d46d9c0e5e828102995a3619b6272e8b410622bc22e0fd9f5dfbe9754d7ed04e",
+      "currentSha256": "d46d9c0e5e828102995a3619b6272e8b410622bc22e0fd9f5dfbe9754d7ed04e",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "baselineSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "currentSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "baselineSha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+      "currentSha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/count-badge.tsx",
+      "baselineSha256": "98239f8b0f517d3976b7effc25f552fbc24b187102b5f92989cbea1d4f06955b",
+      "currentSha256": "98239f8b0f517d3976b7effc25f552fbc24b187102b5f92989cbea1d4f06955b",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "baselineSha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "currentSha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/health/health-presentation.tsx",
+      "baselineSha256": "551e612c54c4d46a42517341d5417d6e38ff1406b6e4d84795112a6e2ef58af5",
+      "currentSha256": "551e612c54c4d46a42517341d5417d6e38ff1406b6e4d84795112a6e2ef58af5",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "baselineSha256": "a5e02a239a9f014be4b67a5e20489307873946a1e306fd9d0c51b76c9f6018c9",
+      "currentSha256": "a5e02a239a9f014be4b67a5e20489307873946a1e306fd9d0c51b76c9f6018c9",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "baselineSha256": "97f4fa666996462f77ebbe87c03af661d7519b751493b3e39e8050e828c2b0fa",
+      "currentSha256": "97f4fa666996462f77ebbe87c03af661d7519b751493b3e39e8050e828c2b0fa",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "baselineSha256": "27dc5f6cb77b8cc150fb07a4d0e71e1d44759187da0c3be34fab24392f59d88d",
+      "currentSha256": "27dc5f6cb77b8cc150fb07a4d0e71e1d44759187da0c3be34fab24392f59d88d",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "baselineSha256": "5c2ec161b275239849c11139d4fd23b92ceb09fcf26db28e9f47ffd9c8416d66",
+      "currentSha256": "5c2ec161b275239849c11139d4fd23b92ceb09fcf26db28e9f47ffd9c8416d66",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "baselineSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "currentSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/segmented-control.tsx",
+      "baselineSha256": "52ebb386050c6e915fec896799f0cbae5447d019ee7a81f43b9482dab9fdd0d0",
+      "currentSha256": "52ebb386050c6e915fec896799f0cbae5447d019ee7a81f43b9482dab9fdd0d0",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "baselineSha256": "b7cc38132b4b9f17fb1233f22ce05fb458c49556aacc137ad4b30e696e88de58",
+      "currentSha256": "b7cc38132b4b9f17fb1233f22ce05fb458c49556aacc137ad4b30e696e88de58",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "baselineSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "currentSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/documents-list.tsx",
+      "baselineSha256": "f3b8fda3f67cfc228a689a2265d7e1f455a9618a18689d6cb452c005ace2f79f",
+      "currentSha256": "f3b8fda3f67cfc228a689a2265d7e1f455a9618a18689d6cb452c005ace2f79f",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "baselineSha256": "3e8bfb5c07454c59dc4566b1248d3a5865693974848e9804a55ae14f786f2a67",
+      "currentSha256": "3e8bfb5c07454c59dc4566b1248d3a5865693974848e9804a55ae14f786f2a67",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+      "baselineSha256": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f",
+      "currentSha256": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "baselineSha256": "3e63b0e4b56808916ec0b7fe5cc3dae1e74f30497b93c842107a87e037111c1d",
+      "currentSha256": "3e63b0e4b56808916ec0b7fe5cc3dae1e74f30497b93c842107a87e037111c1d",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "baselineSha256": "90920ec8b76825908925ab0bc3a9e71423a2d92b4431f1cd10b33df960a7f04a",
+      "currentSha256": "90920ec8b76825908925ab0bc3a9e71423a2d92b4431f1cd10b33df960a7f04a",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-announcements.ts",
+      "baselineSha256": "e0641ed4ce7f44cb00c7809604f3cf3d1c0a4110378be65fe5250619b3499f61",
+      "currentSha256": "e0641ed4ce7f44cb00c7809604f3cf3d1c0a4110378be65fe5250619b3499f61",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "baselineSha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+      "currentSha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts",
+      "baselineSha256": "fa8118da6380f3c868f01b8af808643f411f9927aff482779d54a8e7f96fc7db",
+      "currentSha256": "fa8118da6380f3c868f01b8af808643f411f9927aff482779d54a8e7f96fc7db",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-hotlines.ts",
+      "baselineSha256": "5124d4f274fbc7dbcef31f5643849d7ef749ae10fe14e9852283d99648fe209e",
+      "currentSha256": "5124d4f274fbc7dbcef31f5643849d7ef749ae10fe14e9852283d99648fe209e",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-qr-content.ts",
+      "baselineSha256": "866f52f1a87e919bf26fcbd360646a3b4bff3129470afa6863858f6d163b95d0",
+      "currentSha256": "866f52f1a87e919bf26fcbd360646a3b4bff3129470afa6863858f6d163b95d0",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "baselineSha256": "d0429dac75d76c3c31b1aedd025ce35e09a36ec01597b0024199788b90ad2b1f",
+      "currentSha256": "d0429dac75d76c3c31b1aedd025ce35e09a36ec01597b0024199788b90ad2b1f",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "baselineSha256": "a18aa7bdc4bedb292787cd9265b243a67b98dd96b47bf7dd58b9af9192060e56",
+      "currentSha256": "a18aa7bdc4bedb292787cd9265b243a67b98dd96b47bf7dd58b9af9192060e56",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/health-presentation-ui.mjs",
+      "baselineSha256": "7c4c55919f530722fdaf8d0a19abdac658575d8a87ab2817525c937d2d1e3b31",
+      "currentSha256": "7c4c55919f530722fdaf8d0a19abdac658575d8a87ab2817525c937d2d1e3b31",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "baselineSha256": "4fab8e06cb28d7b43b4a3d8af7514c35147dfa6767ed63a3749c6257f857c460",
+      "currentSha256": "4fab8e06cb28d7b43b4a3d8af7514c35147dfa6767ed63a3749c6257f857c460",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "baselineSha256": "2ce9c76dc7d9bcf76d66a238b9cfe25ab0d7fd23548bf9fa05fde0062faf82c1",
+      "currentSha256": "2ce9c76dc7d9bcf76d66a238b9cfe25ab0d7fd23548bf9fa05fde0062faf82c1",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/refresh-ownership.mjs",
+      "baselineSha256": "494ffed6fb2699b6d592072068fcb5b6c0c2fbbb1445cc21a24d8ca3ac0e01d6",
+      "currentSha256": "494ffed6fb2699b6d592072068fcb5b6c0c2fbbb1445cc21a24d8ca3ac0e01d6",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "baselineSha256": "9a48e7211bdd81beb52816a753d4b6db2a6c88bdc070b3ae9ea099628eeba336",
+      "currentSha256": "9a48e7211bdd81beb52816a753d4b6db2a6c88bdc070b3ae9ea099628eeba336",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-lists-ui.mjs",
+      "baselineSha256": "edec2e24fd352343390b77e2d38803beb5db0e26e462ed8117963056f564d6c2",
+      "currentSha256": "edec2e24fd352343390b77e2d38803beb5db0e26e462ed8117963056f564d6c2",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/tracking-payment-ui.mjs",
+      "baselineSha256": "2fab619c09f65a33df118331ee25b771ba7f952f7f2f7aee7310257541928e51",
+      "currentSha256": "2fab619c09f65a33df118331ee25b771ba7f952f7f2f7aee7310257541928e51",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "baselineSha256": "717468bf7d474756feab7b3c31120b53d1005dc73ce01aff74dcca265fd06abf",
+      "currentSha256": "717468bf7d474756feab7b3c31120b53d1005dc73ce01aff74dcca265fd06abf",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/format.ts",
+      "baselineSha256": "d1c411b894cbc6a22e7515f003aaccc122eb9349f5d4b410f2b48fc6b248e8f3",
+      "currentSha256": "d1c411b894cbc6a22e7515f003aaccc122eb9349f5d4b410f2b48fc6b248e8f3",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.test.ts",
+      "baselineSha256": "b018a0536683fd110aafa21d15378225035000af78354769ed57e9ea77b4a57a",
+      "currentSha256": "b018a0536683fd110aafa21d15378225035000af78354769ed57e9ea77b4a57a",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.ts",
+      "baselineSha256": "4ea0e04db9324d7cf4a3940603b309995dbefd214ac6a7181f6b726ff8f88b5c",
+      "currentSha256": "4ea0e04db9324d7cf4a3940603b309995dbefd214ac6a7181f6b726ff8f88b5c",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "baselineSha256": "68d05b9a01002aa2b2c5b9e392835788b2d87c297012b185268fbf5d4230154f",
+      "currentSha256": "68d05b9a01002aa2b2c5b9e392835788b2d87c297012b185268fbf5d4230154f",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/service-catalog.ts",
+      "baselineSha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+      "currentSha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/pull-refresh.tsx",
+      "baselineSha256": "5112e653930a2650ff8760e7f378aa6883186ea03f14231ba1b998fc10be5001",
+      "currentSha256": "5112e653930a2650ff8760e7f378aa6883186ea03f14231ba1b998fc10be5001",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/services-filter-chips.tsx",
+      "baselineSha256": "61f1680cd51ca90c504e736cd922d9d3ef9f902c79eb36999a2d29c82c55e0b4",
+      "currentSha256": "61f1680cd51ca90c504e736cd922d9d3ef9f902c79eb36999a2d29c82c55e0b4",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/src/repomix-output.xml",
+      "baselineSha256": "b8e2d3cb97995f9911db51c22ac391c7d5c3a595fbe55af5e60bbe6faf4b702d",
+      "currentSha256": "b8e2d3cb97995f9911db51c22ac391c7d5c3a595fbe55af5e60bbe6faf4b702d",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/pull-refresh-emergency-ui.mjs",
+      "baselineSha256": "b4805858f20eb2ffcae5057a52825774a8d53ce5767a5d1e8885d626e1e35093",
+      "currentSha256": "b4805858f20eb2ffcae5057a52825774a8d53ce5767a5d1e8885d626e1e35093",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/pull-refresh-services-ui.mjs",
+      "baselineSha256": "8ec4253114a31cc81532211ba9f12fabb859753ff185392ee47ef41d6eed79e0",
+      "currentSha256": "8ec4253114a31cc81532211ba9f12fabb859753ff185392ee47ef41d6eed79e0",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/pull-refresh-settings-ui.mjs",
+      "baselineSha256": "5367d2a65be893c9edf79b1b4f67e4d623b5682f0db11ffcd40fad51ff97b78c",
+      "currentSha256": "5367d2a65be893c9edf79b1b4f67e4d623b5682f0db11ffcd40fad51ff97b78c",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/pull-refresh-ui.mjs",
+      "baselineSha256": "77a01d387a6f9f4d45767bf031421777c7598a0a4fea8eaa6c1f4fc4c667a567",
+      "currentSha256": "77a01d387a6f9f4d45767bf031421777c7598a0a4fea8eaa6c1f4fc4c667a567",
+      "owned": false
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-details-loading-ui.mjs",
+      "baselineSha256": "d73f04f70cadd12a6664ccfee209abde429c210e178fc8a29af04ab2794ce089",
+      "currentSha256": "d73f04f70cadd12a6664ccfee209abde429c210e178fc8a29af04ab2794ce089",
+      "owned": false
+    },
+    {
+      "path": "packages/shared/src/lib/registration-locality.test.ts",
+      "baselineSha256": "e0158ecfbb7be4bd43af914477b98887fa3ef8dca16ced6dfe47bb5e3ad182b9",
+      "currentSha256": "e0158ecfbb7be4bd43af914477b98887fa3ef8dca16ced6dfe47bb5e3ad182b9",
+      "owned": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "localDraftAddEdit": true,
+  "editTouchPaste": true,
+  "editCaret": true,
+  "removeAndUpdateReachable": true,
+  "localUpdateRetainsName": true,
+  "closeReopenRetainsName": true,
+  "draftDiscarded": true,
+  "freshProfileSaveDisabled": true,
+  "profileSaved": false
+}

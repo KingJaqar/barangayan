@@ -1,0 +1,47 @@
+[
+  {
+    "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "sha256": "a11731e3fdc9bf26152c65b10485c42559df4cbad2c24b874626a57d27bdebf2",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+    "sha256": "b9a3c93fd7d2c5fcbfca5bafbcc9ee8a52e0ebcf6ed2395243f0cea8761b2ca9",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+    "sha256": "47b4fe59288abac518cebadd4f8e2726b1a04fcc246b07c494eb90e5a0223b6e",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+    "sha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx",
+    "sha256": "7d419e2d08275d71ac0950c9ae9b6562db7c5956af2145bfc9234f0e5f6389c3",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+    "sha256": "29075fb33f13bded890985c9e9b54ce4a10a673f6b13d7284ffd10e5554456d5",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/health/health-presentation.tsx",
+    "sha256": "aea792c89e82787c5a45b0962912da638d737db35727f9539451716ecda757b2",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+    "sha256": "d3b350b030145b89b9add73d8322f50ca5aa51a0fc20ec343087e9615c9ffa9d",
+    "ownership": "concurrent external edit"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+    "sha256": "7096e95dfb09c907f923a31810b2a65a3061a6edbab7268913965fa6b69f5809",
+    "ownership": "concurrent external edit"
+  }
+]

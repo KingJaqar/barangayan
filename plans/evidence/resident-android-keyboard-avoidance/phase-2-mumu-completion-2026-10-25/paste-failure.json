@@ -1,0 +1,27 @@
+{
+  "kind": "business",
+  "id": "B25",
+  "label": "Explain your purpose",
+  "multilinePaste": {
+    "passed": false,
+    "reason": "Command failed: adb -s emulator-5554 shell input swipe 120 846 120 846 1100\n\r\nException occurred while executing 'swipe':\r\njava.lang.SecurityException: Injecting to another application requires INJECT_EVENTS permission\r\n\tat com.android.server.input.InputManagerService.injectInputEventInternal(InputManagerService.java:933)\r\n\tat com.android.server.input.InputManagerService.injectInputEvent(InputManagerService.java:836)\r\n\tat android.hardware.input.InputManager.injectInputEvent(InputManager.java:1249)\r\n\tat com.android.server.input.InputShellCommand.injectMotionEvent(InputShellCommand.java:159)\r\n\tat com.android.server.input.InputShellCommand.sendSwipe(InputShellCommand.java:449)\r\n\tat com.android.server.input.InputShellCommand.runSwipe(InputShellCommand.java:412)\r\n\tat com.android.server.input.InputShellCommand.onCommand(InputShellCommand.java:222)\r\n\tat com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)\r\n\tat android.os.ShellCommand.exec(ShellCommand.java:38)\r\n\tat com.android.server.input.InputManagerService.onShellCommand(InputManagerService.java:3603)\r\n\tat android.os.Binder.shellCommand(Binder.java:950)\r\n\tat android.os.Binder.onTransact(Binder.java:834)\r\n\tat android.hardware.input.IInputManager$Stub.onTransact(IInputManager.java:1201)\r\n\tat android.os.Binder.execTransactInternal(Binder.java:1184)\r\n\tat android.os.Binder.execTransact(Binder.java:1143)\r\n"
+  },
+  "states": [
+    {
+      "name": "paste-business-B25-end",
+      "editor": [
+        60,
+        240,
+        1020,
+        896
+      ],
+      "viewport": [
+        0,
+        240,
+        1080,
+        896
+      ],
+      "keyboardTop": 1167
+    }
+  ]
+}

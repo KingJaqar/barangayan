@@ -1,0 +1,189 @@
+{
+  "at": "2026-10-27T00:51:03.178Z",
+  "status": "pass",
+  "config": "tall-display",
+  "route": "emergency-centers",
+  "observations": [
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-initial",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        463
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-typed",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-native-cut",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        464
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-native-paste",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-start",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "imeTop": 580,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-end",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "imeTop": 580,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-middle",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        464
+      ],
+      "imeTop": 580,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-retained",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        875,
+        463
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-map-return",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        463
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-cycle-0",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        464
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-cycle-1",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        464
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-candidate-c17-emergency-centers-cycle-2",
+      "label": "Search evacuation centers",
+      "bounds": [
+        205,
+        314,
+        1023,
+        464
+      ],
+      "imeTop": 580,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "fullEditorHeight": true,
+  "restoredGeometry": [
+    {
+      "label": "android.webkit.WebView",
+      "bounds": [
+        0,
+        270,
+        1080,
+        1680
+      ]
+    },
+    {
+      "label": "android.webkit.WebView",
+      "bounds": [
+        0,
+        270,
+        1080,
+        1680
+      ]
+    }
+  ],
+  "listEditorAbsent": true,
+  "syntheticTextCleared": true
+}

@@ -1,0 +1,174 @@
+{
+  "selectors": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "package.json",
+    "package-lock.json",
+    "packages/shared/package.json",
+    "packages/shared/src/lib/resident-auth.ts",
+    "packages/shared/src/lib/resident-auth.test.ts",
+    "packages/shared/src/types/database.ts",
+    "packages/shared/src/schemas/service-foundations.ts",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+    "apps/resident-android-mobile/src/components/registration-map.tsx",
+    "apps/resident-android-mobile/src/app/complete-profile.tsx",
+    "apps/resident-android-mobile/src/app/account-setup.tsx",
+    "apps/resident-android-mobile/src/lib/setup-request.ts",
+    "apps/resident-android-mobile/src/hooks/use-profile.ts",
+    "apps/resident-web/AGENTS.md",
+    "apps/resident-web/CLAUDE.md",
+    "apps/resident-web/src/app/(auth)/register/register-form.tsx"
+  ],
+  "snapshots": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11
+    },
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "bytes": 410
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "bytes": 667658
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+      "bytes": 491
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "sha256": "e005125d35677303978d7fc213e01c453cf7d5e9929a7bbf8bd62d17644e8d68",
+      "bytes": 6755
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.test.ts",
+      "sha256": "1da0318e9a44c131306b92620e4da3f8f4cb877d67e75c5494e74247afd595a0",
+      "bytes": 6503
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "sha256": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb",
+      "bytes": 60065
+    },
+    {
+      "path": "packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "93ce2539e168bf51b93ebbf4e11c5a6ab24d0fe8b22b7564e5b3bc66575f9662",
+      "bytes": 10187
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "bytes": 2122
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "sha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c",
+      "bytes": 23911
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/registration-map.tsx",
+      "sha256": "903d3d7d9c927e061ddb5889946de7057f0cd8ff7557e5bf970a38c1e2ee43b4",
+      "bytes": 8234
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "sha256": "813263bad308bfad52ae802360bdb6180cc5cb3913b9935a372b3f81e425d607",
+      "bytes": 940
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "sha256": "a277a31f0aaabf56b5b274ce3b5c69607e304a97d7dfdddb461dba38e9f8e9be",
+      "bytes": 4665
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-request.ts",
+      "sha256": "473009f7823e531e1f20d8ebddb3fdfff0db7d6f0aafd44b0474e6694c27f3ec",
+      "bytes": 2424
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "sha256": "387f3f981c2b2b51cb3cccc6ef7d738d097f101d09477c5fc9fa5b3da55c92f0",
+      "bytes": 6867
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb",
+      "bytes": 678
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11
+    },
+    {
+      "path": "apps/resident-web/src/app/(auth)/register/register-form.tsx",
+      "sha256": "bb22533efcc5a804286bd3bc35932a741048c3f6d75ae6ad7234f12325ca5278",
+      "bytes": 36511
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "sha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "bytes": 26909
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "sha256": "ff5269cdce6a6b93ee9d4de23a6e711e5a89929a78deac7355b3076890abc124",
+      "bytes": 20773
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523",
+      "bytes": 60088
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "08bb36034f029319bf60ffcd679920ad7cf2483eea4cbe514c3c2e14fd9f7cb7",
+      "bytes": 25402
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "bytes": 35031
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "sha256": "7eac34ccb6d54650ca2e91e606ccb51f0ed02c2f4b951b28614575568c70d69b",
+      "bytes": 28353
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "sha256": "a18aa7bdc4bedb292787cd9265b243a67b98dd96b47bf7dd58b9af9192060e56",
+      "bytes": 35151
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "sha256": "2ce9c76dc7d9bcf76d66a238b9cfe25ab0d7fd23548bf9fa05fde0062faf82c1",
+      "bytes": 26998
+    }
+  ],
+  "versions": {
+    "@supabase/supabase-js": "2.112.1",
+    "@supabase/postgrest-js": "2.112.1",
+    "expo": "57.0.10",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "zod": "3.25.76"
+  },
+  "ownership": "All existing keyboard/Maps/Centers/UI-test changes are pre-existing. Only load-failure and directly related setup/locality fixes are owned.",
+  "exclusions": [
+    "environment secrets",
+    "runtime session/account data",
+    "unrelated apps"
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "at": "2026-10-27T01:13:01.108Z",
+  "status": "pass selected center/camera/status/idle/list and stated header subset",
+  "config": "tall-display",
+  "route": "home/emergency-info",
+  "selectedCenterFromExistingData": true,
+  "focus": {
+    "tag": "tall-display-selected-idle-home-emergency-info-selected-focus",
+    "label": "Search evacuation centers",
+    "bounds": [
+      205,
+      314,
+      1023,
+      463
+    ],
+    "imeTop": 580,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "typed": {
+    "tag": "tall-display-selected-idle-home-emergency-info-no-match",
+    "label": "Search evacuation centers",
+    "bounds": [
+      205,
+      314,
+      875,
+      464
+    ],
+    "imeTop": 580,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "reopened": {
+    "tag": "tall-display-selected-idle-home-emergency-info-idle-reopen",
+    "label": "Search evacuation centers",
+    "bounds": [
+      205,
+      314,
+      875,
+      463
+    ],
+    "imeTop": 580,
+    "text": "zzphasefive",
+    "focused": "true"
+  },
+  "returnFocus": {
+    "tag": "tall-display-selected-idle-home-emergency-info-list-map-return",
+    "label": "Search evacuation centers",
+    "bounds": [
+      205,
+      314,
+      1023,
+      463
+    ],
+    "imeTop": 580,
+    "text": "Search 7 evacuation centers...",
+    "focused": "true"
+  },
+  "cameraAndZoomRetained": true,
+  "sameNativeMapTarget": true,
+  "listEditorAbsent": true,
+  "idle": {
+    "resetAt": 1793063486286,
+    "earlyCheckPassed": true,
+    "collapseObserved": true,
+    "activeQueryRetained": true
+  },
+  "headerIdle": {
+    "openHeader": {
+      "tag": "tall-display-selected-idle-home-emergency-info-header-already-open",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        371,
+        101,
+        778,
+        250
+      ],
+      "imeTop": 580,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    "resetDelayPassed": true,
+    "collapsedAfterDeadline": true
+  },
+  "nativeWebViewExceptions": 0,
+  "cameraComparisons": [
+    {
+      "x": 0,
+      "y": 0.5
+    },
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0.5
+    },
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0
+    }
+  ]
+}

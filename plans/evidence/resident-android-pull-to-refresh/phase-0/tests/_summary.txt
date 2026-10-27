@@ -1,0 +1,17 @@
+refresh-ownership exit=0 secs=7
+settings-profile-ui exit=0 secs=34
+home-presentation-ui exit=1 secs=1
+health-presentation-ui exit=0 secs=19
+help-legal-about-ui exit=0 secs=25
+services-lists-ui exit=1 secs=4
+reports-announcements-ui exit=0 secs=11
+services-tab-stability exit=0 secs=4
+drrm-hub-alerts-ui exit=0 secs=6
+drrm-scan-family-ui exit=0 secs=25
+resident-search-explore exit=0 secs=13
+resident-search-session exit=0 secs=14
+resident-search-submit exit=0 secs=4
+resident-shell-lifecycle exit=0 secs=3
+tracking-payment-ui exit=0 secs=7
+request-tracking-navigation exit=0 secs=0
+DONE

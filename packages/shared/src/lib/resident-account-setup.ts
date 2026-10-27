@@ -32,7 +32,7 @@ export type ResidentSetupFailure = {
   retryable: boolean;
 };
 export function residentSetupFailure(error: { code?: string; status?: number; name?: string } | null | undefined): ResidentSetupFailure {
-  if (['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'].includes(error?.code || '') || error?.name === 'AuthSessionMissingError')
+  if (error?.status === 401 || ['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'].includes(error?.code || '') || error?.name === 'AuthSessionMissingError')
     return { kind: 'session_expired', message: 'Your session has ended. Sign out and sign in again to continue setup.', retryable: false };
   if (error?.status === 429 || ['over_email_send_rate_limit', 'over_request_rate_limit'].includes(error?.code || ''))
     return { kind: 'rate_limit', message: 'Please wait before trying again.', retryable: true };
@@ -59,8 +59,8 @@ export async function getResidentAccountSetupStatus(client: SupabaseClient<Datab
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 10000);
   try {
-    const { data, error } = await client.rpc('get_resident_account_setup_status').abortSignal(controller.signal);
-    if (error) throw new ResidentSetupStatusError(controller.signal.aborted ? { name: 'AbortError' } : error);
+    const { data, error, status } = await client.rpc('get_resident_account_setup_status').abortSignal(controller.signal);
+    if (error) throw new ResidentSetupStatusError(controller.signal.aborted ? { name: 'AbortError' } : { code: error.code, status });
     const parsed = residentAccountSetupStatusSchema.safeParse(data);
     if (!parsed.success) throw new ResidentSetupStatusError({ code: '55000' });
     return parsed.data;

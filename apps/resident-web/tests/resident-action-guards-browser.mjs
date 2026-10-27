@@ -16,8 +16,8 @@ const mock = path.join(import.meta.dirname, 'resident-action-guards-mocks.jsx');
 const bundle = await build({
   entryPoints: [path.join(import.meta.dirname, 'resident-action-guards-fixture.jsx')], bundle: true, write: false,
   outdir: output, jsx: 'automatic', tsconfig: path.join(app, 'tsconfig.json'),
-  alias: { ...Object.fromEntries(['next/link', 'next/navigation', '@/lib/supabase/client', '@/hooks/use-medical-drives', '@/components/reports/location-picker-map-wrapper'].map(name => [name, mock])), react: path.dirname(require.resolve('react/package.json')), 'react-dom': path.dirname(require.resolve('react-dom/package.json')) },
-  define: { 'process.env.NODE_ENV': '"development"', 'process.env': '{}' },
+  alias: { ...Object.fromEntries(['next/link', 'next/navigation', '@/lib/supabase/client', '@/hooks/use-medical-drives', '@/components/theme/use-reset-preferences', '@/components/reports/location-picker-map-wrapper'].map(name => [name, mock])), react: path.dirname(require.resolve('react/package.json')), 'react-dom': path.dirname(require.resolve('react-dom/package.json')) },
+  define: { 'process.env.NODE_ENV': '"development"', 'process.env.NEXT_PUBLIC_SUPABASE_URL': '"https://fixture.supabase.test"', 'process.env': '{}' },
 });
 const globals = path.join(app, 'src/app/globals.css');
 const css = (await postcss([tailwind({ base: app })]).process(fs.readFileSync(globals, 'utf8'), { from: globals })).css + bundle.outputFiles.find(file => file.path.endsWith('.css')).text;
@@ -74,6 +74,7 @@ try {
   await page.waitForFunction(() => !!window.__guards?.open);
   for (const role of ['admin', 'resident']) {
     for (const [action, modes] of [['drive', ['incomplete', 'incomplete-birth-date']], ['report', ['incomplete', 'incomplete-birth-date']], ['document', ['incomplete', 'unverified', 'incomplete-unverified']]]) {
+      if (role === 'admin' && action === 'drive') continue;
       for (const mode of modes) { await checkBlocked(action, mode, role); await close(); }
     }
   }
@@ -83,20 +84,74 @@ try {
   await page.keyboard.press('Escape');
   await page.getByRole('dialog').waitFor({ state: 'hidden' });
 
-  // Complete profiles retain the same flows for residents with and without admin access.
-  // An unverified ID alone does not change health/report eligibility.
+  // Medical registrations require resident identity; other services retain their rules.
   for (const role of ['resident', 'admin']) {
-    await open('drive', 'unverified', role);
-    await page.locator('[data-registration-consent]').check();
-    await page.getByRole('button', { name: 'Submit Registration', exact: true }).click();
-    await page.getByText('Registration Confirmed!', { exact: true }).waitFor();
-    assert.equal(await page.evaluate(() => window.__guards.writes.length), 1);
+    if (role === 'resident') {
+      await open('drive', 'unverified', role);
+      await page.locator('[data-registration-consent]').check();
+      await page.getByRole('button', { name: 'Submit Registration', exact: true }).click();
+      await page.getByText('Registration Confirmed!', { exact: true }).waitFor();
+      assert.equal(await page.evaluate(() => window.__guards.writes.length), 1);
+    }
     await open('report', 'unverified', role);
     await page.locator('#incident-title').waitFor();
     assert.equal(await warning().count(), 0);
     await open('document', 'complete', role);
     await page.getByRole('button', { name: 'Submit request', exact: true }).waitFor();
     assert.equal(await warning().count(), 0);
+  }
+
+  for (const mode of ['complete', 'incomplete', 'incomplete-birth-date']) {
+    await open('drive', mode, 'admin');
+    await page.getByRole('heading', { name: 'Use your resident account' }).waitFor();
+    assert.equal(await page.getByRole('link', { name: 'Complete Profile', exact: true }).count(), 0, 'Role restriction comes before completion');
+    assert.equal(await page.locator('[data-registration-consent]').count(), 0);
+    assert.deepEqual(await page.evaluate(() => window.__guards.writes), []);
+    await page.getByRole('button', { name: 'Keep browsing', exact: true }).click();
+    await page.getByRole('dialog').waitFor({ state: 'hidden' });
+  }
+  for (const [mode, role] of [['deleted', 'resident'], ['complete', 'unknown']]) {
+    await open('drive', mode, role);
+    await page.getByRole('heading', { name: 'Use your resident account' }).waitFor();
+    assert.equal(await page.locator('[data-registration-consent]').count(), 0);
+  }
+  await open('drive', 'missing-profile');
+  await page.getByRole('button', { name: 'Retry account check' }).waitFor();
+  assert.equal(await page.locator('[data-registration-consent]').count(), 0);
+
+  // Switching reuses the real local sign-out flow and keeps the selected drive.
+  await open('drive', 'complete', 'admin');
+  const switchAccount = page.getByRole('button', { name: 'Sign out and switch account', exact: true });
+  await switchAccount.waitFor();
+  assert.deepEqual(await page.evaluate(() => window.__guards.signOutCalls), [], 'No automatic sign-out');
+  await page.evaluate(() => { window.__guards.signOutFails = true; });
+  await switchAccount.click();
+  await page.waitForFunction(() => window.__guards.signOutCalls.length === 1);
+  assert.equal(await page.evaluate(() => window.__guards.destination), null);
+  assert.equal(await switchAccount.isEnabled(), true);
+  assert.equal(await page.evaluate(() => window.__guards.preferencesReset), false);
+  await page.evaluate(() => { window.__guards.signOutFails = false; });
+  await switchAccount.evaluate(button => { button.click(); button.click(); });
+  await page.waitForFunction(() => !!window.__guards.destination);
+  assert.deepEqual(await page.evaluate(() => window.__guards.signOutCalls), ['local', 'local']);
+  assert.equal(await page.evaluate(() => window.__guards.destination), `/login?next=${encodeURIComponent('/health/register/a1260000-0000-4000-8000-000000000001')}`);
+  assert.equal(await page.evaluate(() => window.__guards.preferencesReset), true);
+
+  // A changed role at submission still receives account guidance; unknown replies stay uncertain.
+  for (const [code, message, text] of [
+    ['P0010', 'Only an active resident', 'Use your resident account'],
+    ['P0003', 'No remaining slots', 'This medical drive has no remaining slots.'],
+    ['P0004', 'Already registered', 'You are already registered for this medical drive. Open My Registrations to view your registration.'],
+    ['', 'Lost reply', "We couldn't confirm your registration. Check My Registrations before trying again."],
+  ]) {
+    await open('drive', 'complete');
+    await page.locator('[data-registration-consent]').check();
+    await page.evaluate(({ code, message }) => { window.__guards.registrationError = { code, message }; }, { code, message });
+    await page.getByRole('button', { name: 'Submit Registration', exact: true }).click();
+    if (code === 'P0010') await page.getByRole('heading', { name: text, exact: true }).waitFor();
+    else await page.locator('#health-registration-error').filter({ hasText: text }).waitFor();
+    if (code === 'P0010') assert.equal(await page.locator('[data-registration-consent]').count(), 0);
+    if (code === 'P0004' || !code) assert.equal(await page.getByRole('link', { name: 'Open My Registrations', exact: true }).getAttribute('href'), '/health/my-registrations');
   }
 
   // Failure stays closed to form interaction and supports one explicit retry.
@@ -122,8 +177,21 @@ try {
     await page.evaluate(() => document.documentElement.classList.add('dark'));
     await checkBlocked('document', 'incomplete-unverified'); await close();
   }
+  await page.setViewportSize({ width: 320, height: 844 });
+  await open('drive', 'complete', 'admin');
+  const notice = page.getByRole('region', { name: 'Resident account required' });
+  await notice.waitFor();
+  await page.waitForFunction(() => Math.abs(document.querySelector('[role="dialog"]').getBoundingClientRect().left) < 1);
+  assert.equal(await notice.evaluate(element => element.scrollWidth > element.clientWidth + 1), false);
+  const noticeBounds = await notice.boundingBox();
+  assert.ok(noticeBounds.x >= 0 && noticeBounds.x + noticeBounds.width <= 321, 'Notice stays inside the viewport');
+  await page.screenshot({ path: path.join(output, 'admin-drive-320-dark.png') });
+  await page.evaluate(() => window.__guards.open('logout', 'complete'));
+  await page.getByRole('button', { name: 'Log out', exact: true }).click();
+  await page.waitForFunction(() => window.__guards.destination === '/login');
+  assert.deepEqual(await page.evaluate(() => window.__guards.signOutCalls), ['local'], 'Ordinary logout retains its existing destination and scope');
   assert.deepEqual(errors, []);
-  fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify({ passed: true, roles: ['resident', 'admin'], checks: ['all warning combinations for both roles', 'missing birth date despite saved completion timestamp', 'existing action URLs', 'keyboard focus trap', 'pointer blocking and layering', 'blocked forms not mounted', 'close/reopen and Escape', 'eligible drive submission for both roles', 'eligible report/document forms for both roles', 'ID gating limited to documents', 'read failures and explicit retries', 'stale reads ignored', 'React StrictMode without loops', 'dark 390/768px warning layout'], errors, limitation: 'Synthetic account/data boundaries; no live database writes.' }, null, 2));
+  fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify({ passed: true, roles: ['resident', 'admin', 'unknown'], checks: ['resident profile completion', 'admin role rejection before completion', 'deleted and unknown roles blocked', 'missing profile fails closed', 'explicit local sign-out with preserved drive and failure retry', 'specific registration rejections and uncertain outcomes', 'eligible resident drive submission', 'unchanged report/document rules for both roles', 'keyboard focus and pointer layering', 'read failure retry', 'stale reads ignored', 'React StrictMode', 'dark narrow layout'], errors, limitation: 'Synthetic account/data boundaries; no live database writes.' }, null, 2));
   console.log(`PASS: resident action guards. Evidence: ${output}`);
 } catch (error) {
   console.error(await page.locator('body').innerText()); console.error(errors); throw error;

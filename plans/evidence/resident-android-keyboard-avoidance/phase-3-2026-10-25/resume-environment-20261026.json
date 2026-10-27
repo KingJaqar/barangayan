@@ -1,0 +1,17 @@
+{
+  "api": "32",
+  "fingerprint": "Samsung/dm3q/dm3q:12/V417IR/478:user/release-keys",
+  "bootId": "908be858-2fd0-428e-b172-250b1eaa1439",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "font": "1.0",
+  "navigation": "0",
+  "ime": "com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME",
+  "imeVersion": [
+    "versionCode=176049702 minSdk=29 targetSdk=37",
+    "versionName=18.5.4.993608717-release-arm64-v8a"
+  ],
+  "at": "2026-10-26T00:30:48.393Z",
+  "clientDate": "2026-10-26 Asia/Manila",
+  "serial": "emulator-5554"
+}

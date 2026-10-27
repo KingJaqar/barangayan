@@ -1,0 +1,41 @@
+X [ERROR] Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\lib\setup-request.tsx
+
+    apps/resident-android-mobile/src/components/resident-details-form.tsx:18:82:
+      18 │ ...upRequests, SetupOwner, SetupTimeout } from '@/lib/setup-request';
+         ╵                                                ~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\global.css.tsx
+
+    apps/resident-android-mobile/src/constants/theme.ts:6:7:
+      6 │ import '@/global.css';
+        ╵        ~~~~~~~~~~~~~~
+
+X [ERROR] Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\constants\resident-theme.tsx
+
+    apps/resident-android-mobile/src/components/text-field.tsx:7:31:
+      7 │ import { ResidentLayout } from '@/constants/resident-theme';
+        ╵                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 3 errors:
+apps/resident-android-mobile/src/components/resident-details-form.tsx:18:82: ERROR: Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\lib\setup-request.tsx
+apps/resident-android-mobile/src/components/text-field.tsx:7:31: ERROR: Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\constants\resident-theme.tsx
+apps/resident-android-mobile/src/constants/theme.ts:6:7: ERROR: Cannot read file: C:\Users\User\barangayan\apps\resident-android-mobile\src\global.css.tsx
+    at failureErrorWithLog (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748:15)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1207:25
+    at runOnEndCallbacks (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1588:45)
+    at buildResponseToResult (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1205:7)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1232:16
+    at responseCallbacks.<computed> (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:884:9)
+    at handleIncomingPacket (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:939:12)
+    at Socket.readFromStdout (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:862:7)
+    at Socket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:559:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.13.1

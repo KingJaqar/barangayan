@@ -1,0 +1,19 @@
+{
+  "userExplicitlyAuthorizedAfterAutoReviewRejection": true,
+  "controlledAdbTapAttempted": true,
+  "invalidAge": 999,
+  "consentCheckedBeforeAttempt": true,
+  "validationMessageCaptured": false,
+  "successCaptured": false,
+  "outcome": "Unverified; no native validation pass claimed",
+  "networkRequestsInstrumented": false,
+  "laterEmulatorRestartLostForm": true,
+  "additionalSubmitAttempts": 0,
+  "sourceContract": "Confirmed invalid-age schema branch returns before register_for_drive; this does not prove runtime activation or absence of a backend request.",
+  "cleanup": {
+    "at": "2026-10-26T10:30:24.100Z",
+    "state": "removed; original empty active roster restored",
+    "userAuthorized": true,
+    "profileSaveDisabled": true
+  }
+}

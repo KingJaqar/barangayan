@@ -1,0 +1,17 @@
+app-unit: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\app-unit.log)
+routing-unit: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\routing-unit.log)
+refresh-ownership: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\refresh-ownership.log)
+hidden-work-ownership: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\hidden-work-ownership.log)
+map-state-bridge: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\map-state-bridge.log)
+root-navigation-isolation: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\root-navigation-isolation.log)
+request-tracking-navigation: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\request-tracking-navigation.log)
+resident-shell-lifecycle: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\resident-shell-lifecycle.log)
+services-tab-stability: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\services-tab-stability.log)
+services-lists-ui: fail (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\services-lists-ui.log)
+health-presentation-ui: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\health-presentation-ui.log)
+reports-announcements-ui: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\reports-announcements-ui.log)
+maps-presentation-ui: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\maps-presentation-ui.log)
+drrm-centers-ui: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\drrm-centers-ui.log)
+tracking-payment-ui: pass (C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art\tracking-payment-ui.log)
+Supporting behavioral evidence only. Android release/device acceptance is separate. Results: C:\Users\User\AppData\Local\Temp\claude\C--Users-User-barangayan\3972ee11-027e-4017-a338-31e0bc0b6ebf\scratchpad\art
+exit=1

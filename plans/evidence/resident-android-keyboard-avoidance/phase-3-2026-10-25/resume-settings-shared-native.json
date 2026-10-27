@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "results": [
+    {
+      "case": "Profile choice SettingsSheet",
+      "opened": true,
+      "closeReachable": true,
+      "cleanDraftRetained": true
+    },
+    {
+      "case": "ID type SettingsSheet",
+      "opened": true,
+      "closeReachable": true,
+      "uploaded": false,
+      "submitted": false
+    },
+    {
+      "case": "BirthdayWheelModal",
+      "status": "requires Valid ID review/photo state; not reached without creating/uploading ID evidence",
+      "source": "Only active modal caller is settings/valid-id.tsx; Profile/details use BirthdayCalendarModal"
+    }
+  ]
+}

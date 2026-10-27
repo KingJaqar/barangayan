@@ -1,0 +1,19 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "e8716a3fe704a545a3cbe49615a4ab0071056fe2890a49db7fc8e85dde513ded",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/auth-header.tsx",
+      "characters": 698
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "characters": 817
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "characters": 1304
+    }
+  ],
+  "totalCharacters": 3025
+}

@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "results": [
+    {
+      "cycle": 1,
+      "map": [
+        0,
+        352,
+        1080,
+        757
+      ],
+      "footer": [
+        68,
+        1406,
+        1013,
+        1600
+      ]
+    },
+    {
+      "cycle": 2,
+      "map": [
+        0,
+        352,
+        1080,
+        757
+      ],
+      "footer": [
+        68,
+        1406,
+        1013,
+        1600
+      ]
+    },
+    {
+      "cycle": 3,
+      "map": [
+        0,
+        352,
+        1080,
+        757
+      ],
+      "footer": [
+        68,
+        1406,
+        1013,
+        1600
+      ]
+    }
+  ],
+  "tolerancePx": 1,
+  "initialComparison": "Map differed by 41px; cause unresolved. Not an exact restoration pass. Three settled-idle cycles compared separately within 1px."
+}

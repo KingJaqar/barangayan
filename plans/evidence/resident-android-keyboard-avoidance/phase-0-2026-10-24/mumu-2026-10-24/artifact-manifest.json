@@ -1,0 +1,165 @@
+{
+  "at": "2026-10-24T14:42:27.787Z",
+  "summary": {
+    "definitions": 19,
+    "cases": 19,
+    "failures": 8,
+    "partialVisible": 11,
+    "fullProtocolPasses": 0
+  },
+  "evidence": [
+    {
+      "id": "C03",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c03-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c03-profile-focused.png",
+      "jsonSha256": "627a855b6db613346b9086938325454364c188bec04ce1b8669ea9aa7cb1c33a",
+      "screenshotSha256": "eeff2d17d3c93c61039910946ebfd76d68b67ecb4acc4ef0937520dcd97ea981"
+    },
+    {
+      "id": "C04",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c04-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c04-profile-focused.png",
+      "jsonSha256": "fdc4f914cedb965dbb12d37075380a9811c72d012fccea5a1ca2326ed7df03f7",
+      "screenshotSha256": "b7a40ab5cd0c1fb40aa904de3d332c668b354cac3b9c3651ec15cc5f8eb0dce3"
+    },
+    {
+      "id": "C05",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c05-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c05-profile-focused.png",
+      "jsonSha256": "dca0b42338242d290fcbce22571b394bac45210c8e52dfddc33e8bdd8717a63e",
+      "screenshotSha256": "d37763096d637b61ad54ba8c9398f3415cd688ca8bbf35570ea6f0d7db6058f9"
+    },
+    {
+      "id": "C06",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c06-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c06-profile-focused.png",
+      "jsonSha256": "e784264ff3e48d3c56db6c21b7a3771cab1c887c010e691c833e0a1638f56cfe",
+      "screenshotSha256": "ce1b8609000a1699b6c7634cba645226d55ae878f55b0c7dd690be4dd5375aed"
+    },
+    {
+      "id": "C08",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c08-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c08-profile-focused.png",
+      "jsonSha256": "0b9d5921622d8138b9d02f12d191f3e2e5d2f05f2f2585038bc778602364596d",
+      "screenshotSha256": "dc12d049010d867546c7134aa13eb3e64a0a12e4e12f32a7e35e69e3922a6106"
+    },
+    {
+      "id": "C09",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c09-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c09-profile-focused.png",
+      "jsonSha256": "9c1795a32f169acfc19db4881e1d02fa353405615e7b1de1baf7bf909a51d06a",
+      "screenshotSha256": "d19dc1db69ba51ec88a6b46623939bfe6c95d24918d5f0858d3c33c4f3bafe6e"
+    },
+    {
+      "id": "C10",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c10-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c10-profile-focused.png",
+      "jsonSha256": "bef4fa16fd3117db40e8cdfb6070b70b92223fc2cf4d81627d5b5265f65deffd",
+      "screenshotSha256": "95e435004eb4134a842e65af0407730bf616b2248c192ec3444921909bfa06df"
+    },
+    {
+      "id": "C11",
+      "consumer": "R039",
+      "json": "tmp/resident-keyboard-mumu-20261024/c11-profile-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c11-profile-focused.png",
+      "jsonSha256": "1954e058ae5952c6da1b4498a642c58853aa7d1ac9791a8e8210876c8c9e7d02",
+      "screenshotSha256": "042e887ac1556a40ea52fd54eef3367ea5d5140be7c6f80d6b515c7ad3b9498b"
+    },
+    {
+      "id": "A08",
+      "consumer": "R008",
+      "json": "tmp/resident-keyboard-mumu-20261024/a08-family-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a08-family-focused.png",
+      "jsonSha256": "efdc0da0295de9db038f462d46fba3cc2ebc579059376d1f8baaa2746adf0df1",
+      "screenshotSha256": "ffea587c32ac21dc7e3f74386ba4a9d7e22c4a62a8c2964608ea4c34b5bf7eaa"
+    },
+    {
+      "id": "A09",
+      "consumer": "R012",
+      "json": "tmp/resident-keyboard-mumu-20261024/a09-family-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a09-family-focused.png",
+      "jsonSha256": "f9d2c83bd4c9a4ddc5257591dbda21df0c7b1476e58d9810aa1458c3bb9b7eae",
+      "screenshotSha256": "4ee6e33f27480f501720bac5949db569db6c62fa52ae12712b610066b9d40641"
+    },
+    {
+      "id": "A10",
+      "consumer": "R014",
+      "json": "tmp/resident-keyboard-mumu-20261024/a10-color-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a10-color-focused.png",
+      "jsonSha256": "0595be821804c93aa15f033109950fd3427e3c8f9f4dba9f27f4817fc9cafbd0",
+      "screenshotSha256": "2160748f45361552723ee98099965793bcebea9396c5db9eaf42390947ac3cde"
+    },
+    {
+      "id": "B32",
+      "consumer": "R035",
+      "json": "tmp/resident-keyboard-mumu-20261024/b32-password-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/b32-password-focused.png",
+      "jsonSha256": "18f5e66914e8412534ee7f802532ccdf0a8a9b70baf84f971cf12a34d5a934b0",
+      "screenshotSha256": "fb4569fbfe971492ffc6e09ad0ae49ad4901cb500542a924b2a56e3be21f61fa"
+    },
+    {
+      "id": "A01",
+      "consumer": "R001",
+      "json": "tmp/resident-keyboard-mumu-20261024/a01-title-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a01-title-focused.png",
+      "jsonSha256": "b35f78be155d8fdd01e15bcd51d6dbf197e87607e067ccf96becb1c3b0e30226",
+      "screenshotSha256": "ba4d3ce2745dbf0796dcfc989f9c02869f521811a9791902319b75d0d0117a8b"
+    },
+    {
+      "id": "A02",
+      "consumer": "R001",
+      "json": "tmp/resident-keyboard-mumu-20261024/a02-description-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a02-description-focused.png",
+      "jsonSha256": "8db9dfaa17ce8ebbc52acea507e69032e26c07ff43dd8b3402e493e779214f6e",
+      "screenshotSha256": "cfd5a4b2046c820a2838acafec7c8230491b6e08179c00daade22c00c4b10c3c"
+    },
+    {
+      "id": "A03",
+      "consumer": "R001",
+      "json": "tmp/resident-keyboard-mumu-20261024/a03-area-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a03-area-focused.png",
+      "jsonSha256": "69e0f5291e61e6b71f75e563a31195a3e1582a75680829ff0ad8230b9e46efa4",
+      "screenshotSha256": "51f8a537ed6dd6d1df147665ce831ea8d71a157e4b8d8f8703e44a1b8815773a"
+    },
+    {
+      "id": "A04",
+      "consumer": "R002",
+      "json": "tmp/resident-keyboard-mumu-20261024/a04-picker-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/a04-picker-focused.png",
+      "jsonSha256": "c2d4d6d03c59e312a05bddeb4fda0e42310f6819119186d1366d0aa68dae448d",
+      "screenshotSha256": "a2da0f1eac81a842a9191daad5b110712f2242da7b4377693325cb826dfd1981"
+    },
+    {
+      "id": "C15",
+      "consumer": "R045",
+      "json": "tmp/resident-keyboard-mumu-20261024/c15-home-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c15-home-focused.png",
+      "jsonSha256": "fc8c678de73b68d29e12eb9098ea60447c69696d6667e8c01baa4028f7476ebc",
+      "screenshotSha256": "a3942b383b07a33ca5f220bdebde13d9e1045ca50dfcf24de5ed4cb41c24da37"
+    },
+    {
+      "id": "C16",
+      "consumer": "R063",
+      "json": "tmp/resident-keyboard-mumu-20261024/c16-maps-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c16-maps-focused.png",
+      "jsonSha256": "72675918bc918e947cafba6924fbb3f9b5dd9044fb589dc67d800bcada4ff797",
+      "screenshotSha256": "7f7070882bbc0a1f33f43323b37f0912908f0d4a8bb4430bf73035f192b87295"
+    },
+    {
+      "id": "C17",
+      "consumer": "R069",
+      "json": "tmp/resident-keyboard-mumu-20261024/c17-drrm-map-focused.json",
+      "screenshot": "tmp/resident-keyboard-mumu-20261024/c17-drrm-map-focused.png",
+      "jsonSha256": "178c27d1372fd419bc0b2c613f0fe840cbf9b6bd5e89952f5e02771d9e1be62f",
+      "screenshotSha256": "cc1d37c2c74198ebab7947c6bf2761f4b718281221d9252db870ea380a150e17"
+    }
+  ],
+  "gitDiffAtStart": "tmp/resident-keyboard-mumu-20261024/external-diff-before.patch"
+}

@@ -1,0 +1,8 @@
+{
+  "actualSharedHelper": "pass",
+  "defaultRegistrationLookup": "pass",
+  "explicitBarangayLookup": "pass",
+  "sameBarangay": true,
+  "boundaryPresent": true,
+  "readOnly": true
+}

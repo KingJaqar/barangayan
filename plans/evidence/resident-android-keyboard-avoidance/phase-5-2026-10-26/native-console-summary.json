@@ -1,0 +1,12 @@
+{
+  "nativePid": 17461,
+  "readerPid": 40340,
+  "start": "2026-10-26T11:58:45.879Z",
+  "command": "adb logcat for the identified native process; warning/error tags only",
+  "readAt": "2026-10-26T12:05:58.986Z",
+  "lines": 1,
+  "pushWarningLines": 0,
+  "exceptionPatternLines": 0,
+  "otherWarningErrorLines": 0,
+  "limitation": "Filtered native logcat for identified process during the recorded interval; not a complete Runtime console inspection"
+}

@@ -1,0 +1,83 @@
+{
+  "tag": "A09-default-emergency-add",
+  "label": "Full Name",
+  "before": {
+    "editor": [
+      48,
+      1005,
+      1032,
+      1149
+    ],
+    "viewport": [
+      0,
+      909,
+      1080,
+      1701
+    ],
+    "keyboardTop": null,
+    "clearance": null
+  },
+  "focus": {
+    "editor": [
+      48,
+      396,
+      1032,
+      540
+    ],
+    "viewport": [
+      0,
+      300,
+      1080,
+      948
+    ],
+    "keyboardTop": 1167,
+    "clearance": 627
+  },
+  "actions": [
+    {
+      "action": "Add Member",
+      "bounds": [
+        48,
+        987,
+        1032,
+        1119
+      ]
+    }
+  ],
+  "typing": true,
+  "syntheticTextRestored": true,
+  "cycles": 1,
+  "restored": [
+    {
+      "editor": [
+        48,
+        1005,
+        1032,
+        1149
+      ],
+      "viewport": [
+        0,
+        909,
+        1080,
+        1701
+      ],
+      "keyboardTop": 1167,
+      "clearance": 18
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792933985631.711,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792933985631.711,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "scope": "Native focus, typing, action reachability and restoration; paste/selection/error variants recorded separately"
+}

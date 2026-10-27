@@ -29,9 +29,11 @@ import { GuestPrompt } from '@/components/guest-prompt';
 import { AuthHeader } from '@/components/auth-header';
 import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { isMapPosition } from '@/lib/map-presentation';
@@ -46,7 +48,9 @@ function LocationVerificationContent() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { session } = useAuth();
-  const { profile, isLoading, error: profileError, refetch } = useProfile();
+  const { profile, isLoading, isInitialLoading, error: profileError, refetch } = useProfile();
+  const { keyboardVisible } = useFloatingTabLayout();
+  const pull = usePullRefresh([refetch]);
 
   const boundary = (profile?.barangays?.boundary as unknown as Polygon | MultiPolygon | null) ?? null;
   const savedLocation = isMapPosition(profile?.verified_location) ? profile.verified_location : null;
@@ -214,7 +218,13 @@ function LocationVerificationContent() {
     }
   }
 
-  const unavailable = isLoading || !!profileError || profile?.id !== session?.user.id;
+  // A refresh keeps the map and pin mounted; saving stays blocked while `isLoading`.
+  const unavailable = isInitialLoading || !!profileError || profile?.id !== session?.user.id;
+  const editingAddress = Platform.OS === 'android' && keyboardVisible && detailsExpanded;
+  const footer = <View style={[styles.footer, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 24) }]}>
+    <PrimaryButton presentation="resident" label={saved ? 'Location Saved ✓' : 'Save My Location'} onPress={handleSave} loading={saving}
+      disabled={!position || !boundary || (position !== null && boundary !== null && !isPointInPolygon(position, boundary))} />
+  </View>;
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.root, { backgroundColor: theme.resident.card }]}>
       <AuthHeader presentation="resident" title="Location Verification" />
@@ -222,7 +232,7 @@ function LocationVerificationContent() {
         <ThemedText accessibilityLiveRegion="polite" themeColor="textSecondary">{profileError ?? 'Loading your saved location…'}</ThemedText>
         {profileError ? <PrimaryButton presentation="resident" label="Retry" onPress={refetch} /> : null}
       </View> : <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={[styles.mapArea, !detailsExpanded && styles.mapAreaExpanded]}>
+        <View style={editingAddress ? styles.mapAreaEditing : [styles.mapArea, !detailsExpanded && styles.mapAreaExpanded]}>
           <MapView key={mapAttempt} markers={[]} boundary={boundary}
             picker={{ enabled: !saving, position }} onPickerMoved={handlePickerMoved} onPickerRejected={handlePickerRejected}
             onMapError={() => setMapError(true)} zoomControlTop={70} style={StyleSheet.absoluteFill} />
@@ -249,7 +259,8 @@ function LocationVerificationContent() {
           </ThemedText>
           <Ionicons name={detailsExpanded ? 'chevron-down' : 'chevron-up'} size={18} color={theme.resident.accentText} />
         </Pressable>
-        {detailsExpanded ? <ScrollView style={styles.sheet} contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
+        {detailsExpanded ? <ScrollView style={styles.sheet} contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled"
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
           <ThemedText style={styles.hint} themeColor="textSecondary">Drag the pin to your exact home location inside the barangay boundary, then save.</ThemedText>
           {mapError ? <View style={styles.message} accessibilityLiveRegion="polite">
             <ThemedText style={{ color: theme.resident.danger }}>The map could not load. Check your connection and retry.</ThemedText>
@@ -295,11 +306,9 @@ function LocationVerificationContent() {
               {locating ? 'Detecting location…' : 'Detect Your Location'}
             </ThemedText>
           </Pressable>
+          {editingAddress ? footer : null}
         </ScrollView> : null}
-        <View style={[styles.footer, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 24) }]}>
-          <PrimaryButton presentation="resident" label={saved ? 'Location Saved ✓' : 'Save My Location'} onPress={handleSave} loading={saving}
-            disabled={!position || !boundary || (position !== null && boundary !== null && !isPointInPolygon(position, boundary))} />
-        </View>
+        {editingAddress ? null : footer}
       </KeyboardAvoidingView>}
     </SafeAreaView>
   );
@@ -308,6 +317,7 @@ function LocationVerificationContent() {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   mapArea: { flexBasis: '42%', flexShrink: 1, minHeight: 120 },
+  mapAreaEditing: { height: 0, overflow: 'hidden' },
   mapAreaExpanded: { flex: 1, flexBasis: 0 },
   detailsToggle: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 20, paddingVertical: 8, borderTopWidth: 1 },
   detailsToggleLabel: { fontSize: 12, lineHeight: 18 },

@@ -1,0 +1,36 @@
+diff --git a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx b/apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx
+index 35ebc182..6f328650 100644
+--- a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx
++++ b/apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx
+@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
+ import { Image } from 'expo-image';
+ import { useLocalSearchParams, useRouter } from 'expo-router';
+ import { useCallback, useEffect, useRef, useState } from 'react';
+-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
++import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+ import { PlaceholderPanel } from '@/components/placeholder-panel';
+@@ -198,9 +198,12 @@ function RequestFormContent() {
+ 
+   if (catalogContract(doc)) return <CharterRequestForm key={doc.id} doc={doc}/>;
+ 
++  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
++  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
++
+   return (
+     <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.resident.card }]}>
+-      <View style={[styles.root, { backgroundColor: theme.background }]}>
++      <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.background }]}>
+         <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
+         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+           <ThemedText accessibilityRole="header" style={styles.title}>{doc.name}</ThemedText>
+@@ -297,7 +300,7 @@ function RequestFormContent() {
+           </View>
+           <PrimaryButton presentation="resident" label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
+         </View>
+-      </View>
++      </FormContainer>
+       <ServiceErrorToast notice={notice} onDismiss={dismissNotice} />
+     </SafeAreaView>
+   );

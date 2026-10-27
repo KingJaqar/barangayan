@@ -1,0 +1,22 @@
+{
+  "passed": [
+    "pulling the reports list reloads incidents, keeps rows and clears the spinner",
+    "all statuses, Active predicates, resolved toggle/bulk persistence and zero-count disable",
+    "five rapid tab cycles retain one feed subscription, unique topics during delayed removal and one initial query per filter change",
+    "guest gate and report source error/retry",
+    "Search news deep-open marks once, failed read recovery and five sheet open/close cycles",
+    "schema minimum/counters, waste zones, picker cancel/size error, duplicate submit lock and original return destination",
+    "picker rejection, optional address, confirm and cancel wiring (native map adapter)",
+    "detail load failure/retry and withdrawal confirmation cancel",
+    "portrait/landscape originals, wrapping carousel and full-screen arrows/counters, five viewer cycles",
+    "one confirm RPC during five rapid taps, expired withdrawal and terminal action guards",
+    "corrected address preserved, five interrupted picker exits, 280/200ms configuration and provider cleanup",
+    "dark/custom light accent/selected font and 320–412px overflow checks",
+    "all three target screens: 320–412px, light/dark custom accents and selected serif without page overflow",
+    "1003-row exact badge count independent of two loaded report pages, deterministic timestamp ties and account replacement"
+  ],
+  "errors": [
+    "\"shadow*\" style props are deprecated. Use \"boxShadow\".",
+    "props.pointerEvents is deprecated. Use style.pointerEvents"
+  ]
+}

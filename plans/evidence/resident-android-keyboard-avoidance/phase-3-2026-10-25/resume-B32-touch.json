@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "nativeTouchCutPaste": true,
+  "menuTargetsPixelMatched": true,
+  "exactSyntheticValueVerified": true,
+  "middleCaretInsertionAndRestoration": true,
+  "plainGeometry": {
+    "editor": [
+      168,
+      599,
+      912,
+      743
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      1167
+    ],
+    "keyboardTop": 1167,
+    "clearance": 424
+  },
+  "maskedGeometry": {
+    "editor": [
+      168,
+      572,
+      912,
+      716
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      1080
+    ],
+    "keyboardTop": 1080,
+    "clearance": 364
+  },
+  "syntheticPasswordCleared": true,
+  "cancelled": true,
+  "nonemptyDeletionSubmitted": false
+}

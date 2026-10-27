@@ -10,6 +10,7 @@ import { DrrmIconTile, DrrmSourceState, OfflineBadge } from '@/components/drrm/p
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
 import { useEmergencyQrContent } from '@/hooks/use-emergency-qr-content';
+import { useRegisterPullRefresh } from '@/components/pull-refresh';
 import { QrScannerOverlay } from '@/components/qr-scanner-overlay';
 import { QrPermissionModal } from '@/components/qr-permission-modal';
 import { QrShowModal } from '@/components/qr-show-modal';
@@ -19,6 +20,7 @@ export function QrGuideContent() {
   const { profile } = useProfile();
   const focused = useIsFocused();
   const { content, isLoading, error, isOffline, refetch } = useEmergencyQrContent(profile?.barangay_id ?? null);
+  useRegisterPullRefresh(refetch);
   const [overlay, setOverlay] = useState<'permission' | 'scanner' | 'qr' | null>(null);
   const close = useCallback(() => setOverlay(null), []);
   useEffect(() => { if (!focused) close(); }, [focused, close]);

@@ -147,7 +147,7 @@ export function PurposeSheet({
           <View {...pan.panHandlers} style={styles.dragZone}>
             <View style={[styles.grabber, { backgroundColor: theme.backgroundSelected }]} />
             <View style={styles.headerRow}>
-              <ThemedText type="heading" style={[styles.title, resident && styles.residentTitle]}>
+              <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, resident && styles.residentTitle]}>
                 {title}
               </ThemedText>
               <Pressable

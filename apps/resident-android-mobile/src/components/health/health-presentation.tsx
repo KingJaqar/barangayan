@@ -174,23 +174,24 @@ export function HealthSheet({
   onClose,
   children,
   footer,
+  scrollable = true,
 }: {
   visible: boolean;
   title: string;
   onClose: () => void;
   children: ReactNode;
   footer?: ReactNode;
+  scrollable?: boolean;
 }) {
   const { resident } = useTheme();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
-  const [panelHeight, setPanelHeight] = useState(height);
   const { mounted, panel, scrim, reduced } = useReportModalMotion(visible);
   return (
     <Modal visible={mounted} transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
       <KeyboardAvoidingView
         style={[styles.overlay, { paddingTop: insets.top + 12 }]}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <Animated.View
           pointerEvents="none"
@@ -204,10 +205,6 @@ export function HealthSheet({
         />
         <Animated.View
           accessibilityViewIsModal
-          onLayout={(event) => {
-            const next = Math.ceil(event.nativeEvent.layout.height);
-            setPanelHeight((previous) => (previous === next ? previous : next));
-          }}
           style={[
             styles.sheet,
             {
@@ -216,13 +213,13 @@ export function HealthSheet({
               opacity: reduced ? panel : 1,
               transform: reduced
                 ? []
-                : [{ translateY: panel.interpolate({ inputRange: [0, 1], outputRange: [panelHeight, 0] }) }],
+                : [{ translateY: panel.interpolate({ inputRange: [0, 1], outputRange: [height, 0] }) }],
             },
           ]}
         >
           <View style={[styles.handle, { backgroundColor: resident.border }]} />
           <View style={styles.sheetHeader}>
-            <ThemedText accessibilityRole="header" style={styles.sheetTitle}>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={styles.sheetTitle}>
               {title}
             </ThemedText>
             <Pressable
@@ -234,16 +231,22 @@ export function HealthSheet({
               <Ionicons name="close" size={22} color={resident.text} />
             </Pressable>
           </View>
-          <ScrollView
-            style={{ flexShrink: 1 }}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={[
-              styles.sheetBody,
-              { paddingBottom: footer ? 20 : Math.max(20, insets.bottom) },
-            ]}
-          >
-            {children}
-          </ScrollView>
+          {scrollable ? (
+            <ScrollView
+              style={{ flexShrink: 1 }}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={[
+                styles.sheetBody,
+                { paddingBottom: footer ? 20 : Math.max(20, insets.bottom) },
+              ]}
+            >
+              {children}
+            </ScrollView>
+          ) : (
+            <View style={[styles.sheetBody, { paddingBottom: footer ? 20 : Math.max(20, insets.bottom) }]}>
+              {children}
+            </View>
+          )}
           {footer ? (
             <View
               style={[

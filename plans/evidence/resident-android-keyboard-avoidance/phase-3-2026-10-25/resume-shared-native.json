@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "results": [
+    {
+      "case": "show-qr-slide",
+      "closeReachable": true,
+      "closeBounds": [
+        900,
+        474,
+        1032,
+        606
+      ]
+    },
+    {
+      "case": "center-picker",
+      "closeReachable": true,
+      "closeBounds": [
+        840,
+        294,
+        972,
+        426
+      ]
+    },
+    {
+      "case": "camera-permission-picker",
+      "status": "not presented in actual permission state; no permission modified"
+    }
+  ],
+  "scope": "Open, layout and dismiss smoke; no share/download/check-in/permission change"
+}

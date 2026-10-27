@@ -2,7 +2,7 @@ import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, r
 import { AgencySlaStatus } from '@/components/services/agency-sla-status';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,6 +10,7 @@ import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
 import { Card } from '@/components/card';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ProgressBar } from '@/components/progress-bar';
 import { ActionSuccessModal } from '@/components/services/action-success-modal';
 import { TrackingReveal } from '@/components/services/tracking-reveal';
@@ -104,16 +105,42 @@ export default function RequestTrackingScreen() {
   // so a requestId-only topic collides. removeChannel() is also async, so a plain
   // remount can race the teardown the same way.
   const [instanceId] = useState(() => Math.random().toString(36).slice(2));
+  // Set by the effect below so a pull re-reads under the current requestId without
+  // touching `retry` or the channel; null once the effect is torn down.
+  const pullTracking = useRef<(() => Promise<void>) | null>(null);
+  const pull = usePullRefresh([() => pullTracking.current?.()]);
 
   useEffect(() => {
     let cancelled = false;
 
-    function load() {
-      supabase
+    function fetchRequest() {
+      return supabase
         .from('service_requests')
         .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
         .eq('id', requestId)
-        .single()
+        .single();
+    }
+
+    function fetchPendingPayment() {
+      return supabase
+        .from('payments')
+        .select('id, expires_at')
+        .eq('service_request_id', requestId)
+        .eq('method', 'qrph')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+    }
+
+    function toPendingPayment(data: { id: string; expires_at: string | null } | null) {
+      return data
+        ? { id: data.id, expiresAt: data.expires_at ? new Date(data.expires_at).getTime() : Date.now() }
+        : null;
+    }
+
+    function load() {
+      fetchRequest()
         .then(({ data, error }) => {
           if (cancelled) return;
           setLoadError(error ? 'Could not load this request. Reconnect and retry.' : null);
@@ -124,24 +151,23 @@ export default function RequestTrackingScreen() {
     }
 
     function loadPendingPayment() {
-      supabase
-        .from('payments')
-        .select('id, expires_at')
-        .eq('service_request_id', requestId)
-        .eq('method', 'qrph')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
+      fetchPendingPayment()
         .then(({ data }) => {
           if (cancelled) return;
-          setPendingPayment(
-            data
-              ? { id: data.id, expiresAt: data.expires_at ? new Date(data.expires_at).getTime() : Date.now() }
-              : null,
-          );
+          setPendingPayment(toPendingPayment(data));
         });
     }
+
+    // A failed pull leaves the screen as it is: only a successful read is applied.
+    pullTracking.current = async () => {
+      const [found, payment] = await Promise.all([fetchRequest(), fetchPendingPayment()]);
+      if (cancelled) return;
+      if (!found.error && found.data) {
+        setLoadError(null);
+        setRequest(found.data as ServiceRequest);
+      }
+      if (!payment.error) setPendingPayment(toPendingPayment(payment.data));
+    };
 
     load();
     loadPendingPayment();
@@ -163,6 +189,7 @@ export default function RequestTrackingScreen() {
 
     return () => {
       cancelled = true;
+      pullTracking.current = null;
       supabase.removeChannel(channel);
     };
   }, [requestId, instanceId, retry]);
@@ -337,6 +364,7 @@ export default function RequestTrackingScreen() {
 
         <ScrollView
           contentContainerStyle={styles.content}
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
           showsVerticalScrollIndicator={false}>
           <TrackingReveal reducedMotion={reducedMotion} style={styles.sections}>
           <View style={styles.hero}>

@@ -1,0 +1,45 @@
+{
+  "flow": "probe-legacy",
+  "configuration": "after",
+  "results": [
+    {
+      "id": "C13",
+      "name": "probe-legacy-after-focus",
+      "editor": [
+        111,
+        573,
+        969,
+        765
+      ],
+      "viewport": [
+        0,
+        240,
+        1080,
+        858
+      ],
+      "keyboardTop": 1167,
+      "clearance": 402,
+      "focused": true,
+      "fixedAction": [
+        60,
+        979,
+        1020,
+        1131
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792910948713.354
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

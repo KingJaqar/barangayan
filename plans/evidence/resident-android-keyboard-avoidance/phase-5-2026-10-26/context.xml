@@ -1,0 +1,780 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx, apps/resident-android-mobile/src/app/(app)/maps/index.tsx, apps/resident-android-mobile/src/app/(app)/_layout.tsx, apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx, apps/resident-android-mobile/src/app/(app)/drrm.tsx, apps/resident-android-mobile/src/app/emergency-centers.tsx, apps/resident-android-mobile/src/hooks/use-search-inactivity.ts, apps/resident-android-mobile/src/hooks/use-search-session.ts, apps/resident-android-mobile/src/hooks/use-resident-search.tsx, apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx, apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx, apps/resident-android-mobile/src/lib/floating-tab-inset.ts, apps/resident-android-mobile/src/app/(app)/search.tsx, apps/resident-android-mobile/src/app/(app)/explore.tsx, apps/resident-android-mobile/tests/resident-search-session.mjs, apps/resident-android-mobile/tests/resident-search-submit.mjs, apps/resident-android-mobile/tests/resident-search-lifecycle.mjs, apps/resident-android-mobile/tests/maps-presentation-ui.mjs, apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+- Files matching these patterns are excluded: **/.env*, **/repomix-output.xml
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            emergency-info/
+              index.tsx
+          maps/
+            index.tsx
+          _layout.tsx
+          drrm.tsx
+          explore.tsx
+          search.tsx
+        emergency-centers.tsx
+      components/
+        evacuation-centers-panel.tsx
+        resident-header.tsx
+      hooks/
+        use-emergency-map-header.tsx
+        use-floating-tab-layout.tsx
+        use-resident-search.tsx
+        use-search-inactivity.ts
+        use-search-session.ts
+      lib/
+        floating-tab-inset.ts
+    tests/
+      drrm-centers-ui.mjs
+      maps-presentation-ui.mjs
+      resident-search-lifecycle.mjs
+      resident-search-session.mjs
+      resident-search-submit.mjs
+    app.config.js
+    app.json
+    package.json
+AGENTS.md
+CLAUDE.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/app/(app)/drrm.tsx">
+// Keep one Emergency & DRRM implementation for the tab and existing deep links.
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/explore.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { router, useNavigation, type Href } from 'expo-router';
+import { useEffect, useRef, useState, useSyncExternalStore, type ComponentProps } from 'react';
+import { ActivityIndicator, Keyboard, Pressable, SectionList, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+⋮----
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
+import { useSearchDraft } from '@/hooks/use-resident-search';
+import { useTheme } from '@/hooks/use-theme';
+import { queryResidentSearchPage, searchCategories, SEARCH_SOURCES, type SearchCategory, type SearchFailure, type SearchResult } from '@/lib/resident-search';
+import { createSearchResults, type SearchResultsState } from '@/lib/search-results';
+import { supabase } from '@/lib/supabase';
+⋮----
+type Tab = 'all' | SearchCategory;
+type Results = ReturnType<typeof createSearchResults>;
+⋮----
+const unsubscribed = () => () =>
+const idle = ()
+⋮----
+/** Detail results live in another tab's stack; the rest are tab screens that Back already returns from. */
+⋮----
+type OpenedResult = { tab: string; id: string; detail?: string; below?: string };
+⋮----
+/** Submitted results: All previews each eligible source; a category tab or See all pages through one source. */
+export default function ExploreScreen()
+⋮----
+// Foreground and realtime profile refreshes keep the profile; only a first load holds the search.
+⋮----
+// Every accepted submission (even of the same query) and every account scope gets fresh results, All, page 1 and top scroll.
+⋮----
+// A stack result opens above that tab's own screens (anchored on its index), so Back alone would
+// stop there. When the opened detail is popped back to the screen beneath it, continue back here.
+⋮----
+// Stack details hide the shared header, so this list grows while it is covered and Android clamps an
+// offset near its end. The offset captured on open is put back once the list is its old height again.
+⋮----
+// Still here before the navigation lands; anywhere else means the resident moved on.
+⋮----
+const openResult = (result: SearchResult) =>
+⋮----
+const select = (next: Tab) => setSelection(
+// See all can select a tab scrolled out of view; the row follows the selection.
+⋮----
+const label = (category: SearchCategory)
+⋮----
+: focused.more ? <Pressable accessibilityRole="button" accessibilityLabel=
+⋮----
+style=
+</file>
+
+<file path="apps/resident-android-mobile/src/app/emergency-centers.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import type { LatLng } from '@barangayan/shared';
+import { useRouter } from 'expo-router';
+import { useMemo, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+⋮----
+import { CentersContent } from '@/components/evacuation-centers-panel';
+import { ThemedText } from '@/components/themed-text';
+import { Fonts, Spacing } from '@/constants/theme';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
+⋮----
+/**
+ * Public emergency entry (DRRM routing plan R6, invariant 9): the Centers map and offline
+ * routes outside every authentication guard, so session restoration, account setup or a
+ * failed sign-in never keeps a resident from evacuation routes. Same Centers panel as the
+ * Emergency & DRRM Info screen.
+ */
+export default function EmergencyCentersScreen()
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx">
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+⋮----
+/** Limits the header's idle-collapse behavior to searches opened from Centers → Map. */
+export function EmergencyMapHeaderProvider(
+⋮----
+export const useEmergencyMapHeader = ()
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-search-inactivity.ts">
+import { useCallback, useEffect, useRef } from 'react';
+⋮----
+/** Restart the search's idle deadline on typing, focus, selection or touch. */
+export function useSearchInactivity(active: boolean, onCollapse: () => void)
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-search-session.ts">
+import { router, usePathname } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+⋮----
+import { isSearchableQuery, normalizeSearchQuery } from '@/lib/resident-search';
+⋮----
+type SearchOrigin = (typeof ORIGINS)[number];
+const originFor = (path: string): SearchOrigin
+const emptySession = (scope: string) => (
+⋮----
+/** Transient route contract; history persistence and result data stay with their existing owners. */
+export function useSearchSession(scope: string)
+⋮----
+// Reset this provider's state before descendants can commit another scope's draft.
+⋮----
+const once = () =>
+/** Explore → entry with the submitted query, or with `draft` (X passes '' for an empty entry). */
+const editSearch = (draft?: string) =>
+⋮----
+// A submitted Explore is reached from entry; popping removes its history item.
+⋮----
+/** Changes once per accepted submit, even for the same query: Explore keys its category (All), page and scroll state on it. */
+⋮----
+// Popping removes the entry from the tab history. A result opened in another tab moves that tab to the
+// end of the history, so the item before the entry may no longer be the origin: return there explicitly.
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/floating-tab-inset.ts">
+/** Scalar clearance shared by the shell adapter; root-to-root navigation keeps its value. */
+export function floatingTabInset({ pathname, bottom, barHeight, keyboardVisible, mapNavHidden }: {
+  pathname: string; bottom: number; barHeight: number; keyboardVisible: boolean; mapNavHidden: boolean;
+}, ignoreMapHide = false)
+</file>
+
+<file path="apps/resident-android-mobile/tests/resident-search-session.mjs">
+// The installed Expo tab reducer runs here; native rendering and the URL bridge are fixtures.
+⋮----
+await build(
+⋮----
+const at = pathname
+const state = () => page.evaluate(() => (
+⋮----
+// Draft edits do not replace the captured submitted query.
+⋮----
+// Search, submit, edit, resubmit, Back to entry, Back (pop + return to origin).
+⋮----
+// Two accepted submits per cycle plus the map and scope queries; rejected duplicates/invalid input save nothing.
+</file>
+
+<file path="apps/resident-android-mobile/tests/resident-search-submit.mjs">
+// Real header, entry screen, provider, session and history store; navigation uses the installed Expo tab reducer.
+// Storage is an isolated in-page fixture seeded with an over-limit save; no real account data is touched.
+⋮----
+await build(
+⋮----
+const at = pathname
+⋮----
+const snapshot = () => page.evaluate(() => (
+const settle = ()
+const backToEntry = async () =>
+async function expectOneSubmit(label, action, query)
+⋮----
+// Empty entry: hydration migrates the 12-item save to the 10 newest, then Recent precedes Suggested.
+⋮----
+// Invalid input: whitespace and punctuation emit nothing from the button or keyboard.
+⋮----
+// Typed entry: matching suggestions only, with Search immediately right of X.
+⋮----
+// The four valid submission paths share one path.
+⋮----
+// A double press still submits once. Its second tap may land on Explore's field, which (Phase 5) reopens the entry to edit.
+⋮----
+// On Explore the field and X take the Submit button's place: the field reopens the query, X an empty entry.
+⋮----
+// Storage failure keeps search usable and shows actionable history feedback.
+⋮----
+// Guests can search, but nothing is written.
+</file>
+
+<file path="apps/resident-android-mobile/app.config.js">
+// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application's normal configuration.
+module.exports = (
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/search.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ThemedText } from '@/components/themed-text';
+import { useResidentSearch, useSearchDraft } from '@/hooks/use-resident-search';
+import { useTheme } from '@/hooks/use-theme';
+import { searchSuggestions } from '@/lib/search-history';
+⋮----
+// Live matches only feed typed suggestions; submitted results belong to Explore.
+⋮----
+// Empty entry lists recents in their own section, so they must not use up the suggestion slots.
+⋮----
+
+⋮----
+<Pressable accessibilityRole="button" accessibilityLabel=
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx">
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Keyboard } from 'react-native';
+import { usePathname } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { floatingTabInset } from '@/lib/floating-tab-inset';
+import { cancelAnimation, Easing, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
+import { useResidentReducedMotion } from './use-resident-reduced-motion';
+⋮----
+/** One shell-owned measurement and keyboard subscription for the bar and its consumers. */
+export function FloatingTabLayoutProvider(
+⋮----
+/** Only this small adapter observes the full pathname; consumers receive scalar changes. */
+function FloatingTabClearance(
+⋮----
+return <ClearanceContext.Provider value=
+<VisibleBarClearanceContext.Provider value=
+⋮----
+export function useFloatingTabClearance(ignoreMapHide: boolean)
+⋮----
+export function useFloatingTabLayout()
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-resident-search.tsx">
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Keyboard } from 'react-native';
+import { usePathname } from 'expo-router';
+⋮----
+import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
+import { supabase } from '@/lib/supabase';
+import { isSearchableQuery, normalizeSearchQuery, queryResidentSearch, SEARCH_DEADLINE_MS, type SearchGroup } from '@/lib/resident-search';
+import { createSearchHistoryStore } from '@/lib/search-history';
+import { useSearchSession } from '@/hooks/use-search-session';
+⋮----
+type SearchDraft = ReturnType<typeof useSearchSession> & {
+  history: string[]; historyError: 'load' | 'save' | null; reloadHistory: () => void;
+  rememberSearch: (query: string) => void; removeSearch: (query: string) => void; clearHistory: () => void;
+};
+⋮----
+/** Lives above navigation: the header input and Search screen share one draft. */
+export function ResidentSearchProvider(
+⋮----
+/** Only the latest load or edit may publish; a failed edit re-reads what is actually saved. */
+⋮----
+const current = ()
+⋮----
+const rememberSearch = (input: string) =>
+⋮----
+// Keyboard, button, recent and suggestion submissions all take this one path.
+⋮----
+export const useSearchDraft = ()
+⋮----
+export function useResidentSearch()
+⋮----
+// Revisiting a query and reopening search are fresh activations.
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+</file>
+
+<file path="apps/resident-android-mobile/tests/drrm-centers-ui.mjs">
+// Real Centers, shell, native wrapper and bundled Leaflet. Location/routing/native
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+// Shared values notify subscribers; timings are recorded, not native frame measurements.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Let the last 500ms Leaflet flight finish before replacing the browser clock.
+⋮----
+const transitionCount=()
+</file>
+
+<file path="apps/resident-android-mobile/tests/maps-presentation-ui.mjs">
+// Real Maps + data hooks + native wrapper + bundled Leaflet. Browser/native/transport
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Regression harness uses the actual wrapper, including legacy default presentation.
+</file>
+
+<file path="apps/resident-android-mobile/tests/resident-search-lifecycle.mjs">
+await build(
+⋮----
+const set = q
+const wait = ()
+const count = ()
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/_layout.tsx">
+import { View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import AppTabs from '@/components/app-tabs';
+import { ResidentHeader } from '@/components/resident-header';
+import { UnreadCountsProvider } from '@/hooks/use-unread-counts';
+import { ResidentSearchProvider } from '@/hooks/use-resident-search';
+import { useAuth } from '@/hooks/use-auth';
+import { FloatingTabLayoutProvider } from '@/hooks/use-floating-tab-layout';
+import { useTheme } from '@/hooks/use-theme';
+import { EmergencyMapHeaderProvider } from '@/hooks/use-emergency-map-header';
+⋮----
+export default function AppLayout()
+</file>
+
+<file path="apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useFocusEffect, useIsFocused } from 'expo-router';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+⋮----
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useAmpid1Boundary } from '@/hooks/use-ampid1-boundary';
+import { EvacuationCenterCard } from '@/components/evacuation-center-card';
+import { CenterDetailCard } from '@/components/center-detail-card';
+import { LocationStatusCard } from '@/components/location-status-card';
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from '@/components/map-view';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { SegmentedControl } from '@/components/segmented-control';
+import { OfflineRouteCard } from '@/components/offline-route-card';
+import { RoadMarkCard } from '@/components/road-mark-card';
+import { useResidentRoute } from '@/hooks/use-resident-route';
+import { useOfflineRouting } from '@/hooks/use-offline-routing';
+import { useAppForeground } from '@/hooks/use-app-foreground';
+import { nearestEdge } from '@/lib/offline-routing';
+import type { LatLng, LocationAction, MapLngLat, MapMarker } from '@barangayan/shared';
+import type { AttachmentCandidate, RoutingEdge } from '@barangayan/shared/src/lib/evacuation-routing';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { PrimaryButton } from '@/components/primary-button';
+import { Spacing } from '@/constants/theme';
+⋮----
+export function CentersContent({
+  theme,
+  centers: fetchedCenters,
+  isLoading,
+  error,
+  refetch,
+  view,
+  onViewChange,
+  nearestFirst,
+  onNearestToggle,
+  userPosition,
+  location,
+  onFitAll,
+  resident = false,
+}: {
+  theme: ReturnType<typeof useTheme>;
+  centers: ReturnType<typeof useEvacuationCenters>['centers'];
+  isLoading: boolean;
+  error: string | null;
+refetch: ()
+⋮----
+const collapseSearch = () =>
+⋮----
+// Retain the outgoing list until the first map is ready, avoiding an empty frame.
+⋮----
+const complete = () =>
+⋮----
+// Reserve a separate row for the 44dp chevron above Android system navigation.
+⋮----
+// Walking routes are computed on this phone from the installed routing pack, verified
+// closures and the resident's own blocked roads (DRRM routing plan R6), so they work
+// offline. A route that cannot be computed is explained in words and never drawn as a
+// straight line (invariant 7).
+⋮----
+// Online tiles only when the internet is known to be reachable; offline, the pack's vector
+// roads are the basemap and no tile requests are made.
+⋮----
+// A street chosen from the attachment chooser belongs to one origin revision and graph.
+⋮----
+// Only the route to the selected center is drawn; the automatic run exists to rank the list, and
+// a result still on screen for a previous selection is never shown for the new one.
+⋮----
+const handleChooseSegment = (candidate: AttachmentCandidate) =>
+⋮----
+// Walking distance replaces the straight-line estimate once a route result ranks the centers.
+// A center the result cannot reach shows no distance rather than a misleading straight line.
+⋮----
+// Layout/theme changes update clearance without replaying camera movement.
+⋮----
+// Ages shown in the status card are refreshed once a minute.
+⋮----
+// Marking a road as blocked on this phone (local avoidance).
+⋮----
+const closeMarking = () =>
+const handleMapTap = (position: LatLng) =>
+const handleConfirmMark = () =>
+const handleRemoveMark = (recordId: string) =>
+⋮----
+const selectCenter = (center: ReturnType<typeof useEvacuationCenters>['centers'][number]) =>
+const handleMarkerTap = (id: string) =>
+const dismissCenter = ()
+const handleShowAll = () =>
+const handleResetMap = () =>
+// "Locate me" updates the shared controller (marker + routing origin), not just the
+// viewport. The map follows the result of an explicit request only.
+⋮----
+const handleLocateMe = () =>
+⋮----
+const handleLocationAction = (action: LocationAction) =>
+⋮----
+// Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+⋮----
+if (marking) closeMarking();
+else if (resident)
+⋮----
+
+⋮----
+<TextInput ref=
+</file>
+
+<file path="apps/resident-android-mobile/src/components/resident-header.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { router, usePathname } from 'expo-router';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+⋮----
+import { NotificationBell } from '@/components/notification-bell';
+import { ThemedText } from '@/components/themed-text';
+import { useSearchDraft } from '@/hooks/use-resident-search';
+import { useTheme } from '@/hooks/use-theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { isSearchableQuery } from '@/lib/resident-search';
+⋮----
+/** Stays mounted across navigation so the expanding search keeps its input. */
+⋮----
+// A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
+⋮----
+const closeSearch = () =>
+⋮----
+// Android Back takes the header's Back path, so leaving search also clears the submitted session.
+⋮----
+
+// Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =>
+</file>
+
+<file path="AGENTS.md">
+
+</file>
+
+<file path="apps/resident-android-mobile/package.json">
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+</file>
+
+<file path="apps/resident-android-mobile/app.json">
+{
+  "expo": {
+    "name": "barangayan",
+    "slug": "barangayan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo/barangayan-logo-1024.png",
+    "scheme": "barangayan",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/logo/barangayan-logo-1024.png",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in."
+      }
+    },
+    "android": {
+      "package": "com.barangayan.resident",
+      "versionCode": 6,
+      "icon": "./assets/logo/barangayan-logo-1024.png",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/logo/barangayan-logo-1024.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0F6E5B",
+          "image": "./assets/logo/barangayan-logo-1024.png",
+          "imageWidth": 76,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3ff53b52-c50e-4bdb-811a-ccd94cd74f54"
+      }
+    },
+    "owner": "alex123superman"
+  }
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/maps/index.tsx">
+import type { LatLng } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
+⋮----
+import { useFocusEffect } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import { MapView, type MapViewHandle } from '@/components/map-view';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useIncidentCategories } from '@/hooks/use-incident-categories';
+import { useIncidents } from '@/hooks/use-incidents';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { isMapPosition } from '@/lib/map-presentation';
+⋮----
+type MapTab = 'incidents' | 'evacuation';
+type PermissionStatus = Location.LocationPermissionResponse['status'];
+⋮----
+export default function MapsScreen()
+⋮----
+// Keep the 44dp chevron above system navigation and all map controls above it.
+⋮----
+const owns = ()
+⋮----
+// Preserve automatic acquisition for granted permission and foreground permission rechecks.
+⋮----
+async function check(initial: boolean)
+⋮----
+function clearSelection()
+⋮----
+}} onBackgroundTap=
+⋮----
+}} onMapError=
+⋮----
+onPress=
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx">
+import { useEffect, useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn } from 'react-native-reanimated';
+⋮----
+import { useIsFocused, useLocalSearchParams } from 'expo-router';
+⋮----
+import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/hooks/use-auth';
+import { GuestAuthCallout } from '@/components/guest-auth-callout';
+import { FamilyContent } from '@/components/family-content';
+import { useEmergencyGuidelines } from '@/hooks/use-emergency-guidelines';
+import { useEmergencyHotlines } from '@/hooks/use-emergency-hotlines';
+import { useEmergencyAnnouncements } from '@/hooks/use-emergency-announcements';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { HubContent } from '@/components/drrm/hub-content';
+import { AlertsContent } from '@/components/drrm/alerts-content';
+import { CentersContent } from '@/components/evacuation-centers-panel';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { SegmentedControl } from '@/components/segmented-control';
+import { QrGuideContent } from '@/components/qr-guide-content';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+import type { LatLng } from '@barangayan/shared';
+⋮----
+type EmergencyInfoTab = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
+⋮----
+function isEmergencyInfoTab(value: unknown): value is EmergencyInfoTab
+⋮----
+// The confirmed origin (never the map viewport) is the position used for sorting and
+// routing. Acquisition runs only while the Centers tab is shown.
+⋮----
+// Sync when navigated back into this screen with a different `tab` param
+// (e.g. tapping a different Maps DRRM card while this screen stays mounted).
+⋮----
+// Hub and Alerts sources live here; Scan and Family register their own while mounted. Centers has no control.
+</file>
+
+</files>

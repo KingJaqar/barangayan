@@ -1,0 +1,17 @@
+diff --git a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/components/password-recovery-screen.tsx b/apps/resident-android-mobile/src/components/password-recovery-screen.tsx
+index 4e5d8dc3..cd9188a7 100644
+--- a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/components/password-recovery-screen.tsx
++++ b/apps/resident-android-mobile/src/components/password-recovery-screen.tsx
+@@ -14,7 +14,11 @@ export function PasswordRecoveryScreen({ step, title, description, children }: {
+   description: string;
+   children: ReactNode;
+ }) {
+-  return <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
++  const content = <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
++  if (Platform.OS === 'android') {
++    return <KeyboardAvoidingView style={styles.screen} behavior="height">{content}</KeyboardAvoidingView>;
++  }
++  return content;
+ }
+ 
+ export function StepFlowScreen({ step, totalSteps, flowLabel, title, description, children, presentation = 'default', compact = false }: {

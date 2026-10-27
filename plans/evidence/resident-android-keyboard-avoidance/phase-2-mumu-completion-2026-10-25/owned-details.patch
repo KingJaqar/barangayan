@@ -1,0 +1,29 @@
+diff --git a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/components/resident-details-form.tsx b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+index 9590032e..03e22418 100644
+--- a/tmp/resident-keyboard-phase2-mumu-completion-20261025/before/apps/resident-android-mobile/src/components/resident-details-form.tsx
++++ b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+@@ -272,9 +272,12 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+     action();
+   }
+ 
++  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
++  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
++
+   return (
+     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
+-      <View style={[styles.root, { backgroundColor: theme.background }]}>
++      <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.background }]}>
+         <AuthHeader title="Complete Profile" onBack={() => leave(onBack)} />
+         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.five }]} keyboardShouldPersistTaps="handled">
+@@ -468,8 +471,8 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+           <PrimaryButton label="Sign out" accessibilityLabel="Sign out" variant="secondary" disabled={loading} onPress={() => leave(() => { void logout(); })} />
+         </ScrollView>
+         </KeyboardAvoidingView>
+-        <BirthdayCalendarModal visible={showBirthPicker} value={birthDateIso ? isoToLocalDate(birthDateIso) : null} onClose={() => setShowBirthPicker(false)} onSave={date => { setBirthDateIso(dateToIso(date)); setShowBirthPicker(false); }} />
+-      </View>
++      </FormContainer>
++      <BirthdayCalendarModal visible={showBirthPicker} value={birthDateIso ? isoToLocalDate(birthDateIso) : null} onClose={() => setShowBirthPicker(false)} onSave={date => { setBirthDateIso(dateToIso(date)); setShowBirthPicker(false); }} />
+     </SafeAreaView>
+   );
+ }

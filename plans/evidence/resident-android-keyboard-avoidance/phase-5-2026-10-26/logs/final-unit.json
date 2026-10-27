@@ -1,0 +1,15 @@
+{
+  "stage": "final",
+  "check": "unit",
+  "command": [
+    "node",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "--reporter=dot",
+    "--maxWorkers=1",
+    "--minWorkers=1"
+  ],
+  "start": "2026-10-27T00:45:51.565Z",
+  "end": "2026-10-27T00:46:22.834Z",
+  "status": 0
+}

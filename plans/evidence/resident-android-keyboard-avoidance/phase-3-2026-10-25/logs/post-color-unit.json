@@ -1,0 +1,15 @@
+{
+  "stage": "post-color",
+  "check": "unit",
+  "command": [
+    "node",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "--reporter=dot",
+    "--maxWorkers=1",
+    "--minWorkers=1"
+  ],
+  "start": "2026-10-26T01:16:18.642Z",
+  "end": "2026-10-26T01:16:55.748Z",
+  "status": 0
+}

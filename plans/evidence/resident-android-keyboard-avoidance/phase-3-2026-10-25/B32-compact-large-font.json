@@ -1,0 +1,95 @@
+{
+  "status": "pass for measured compact geometry/error/restoration subset",
+  "configuration": "compact-large-font",
+  "initialFocus": {
+    "editor": [
+      168,
+      495,
+      912,
+      639
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      840
+    ],
+    "keyboardTop": 840,
+    "clearance": 201
+  },
+  "fullActionsAfterScrolling": [
+    {
+      "label": "Cancel",
+      "bounds": [
+        168,
+        496,
+        522,
+        674
+      ]
+    },
+    {
+      "label": "Delete",
+      "bounds": [
+        558,
+        496,
+        912,
+        668
+      ]
+    }
+  ],
+  "headerReachable": "Visually verified compact-dialog-scroll-header.png; title fully visible after normal scroll toward top",
+  "emptyPasswordErrorVisible": true,
+  "afterError": {
+    "editor": [
+      168,
+      280,
+      912,
+      424
+    ],
+    "viewport": [
+      0,
+      0,
+      1080,
+      840
+    ],
+    "keyboardTop": 840,
+    "clearance": 416
+  },
+  "keyboardCycles": 3,
+  "restored": [
+    [
+      0,
+      0,
+      1080,
+      1680
+    ],
+    [
+      0,
+      0,
+      1080,
+      1680
+    ],
+    [
+      0,
+      0,
+      1080,
+      1680
+    ]
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792934762709.163,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792934762709.163,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "submitted": false,
+  "limitation": "No nonempty password submission, asynchronous error/loading or paste evidence inferred"
+}

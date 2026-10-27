@@ -1,0 +1,33 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "9ca6dc2b8c390f35ca3aee49c3d1d8678f6faa31a260f5170b3050771d7b2284",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/auth-header.tsx",
+      "characters": 698
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "characters": 2789
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/service-screen-header.tsx",
+      "characters": 374
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "characters": 3971
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "characters": 2401
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "characters": 7131
+    }
+  ],
+  "missing": [],
+  "omissions": "No unexplained omissions. Compression bodies verified in original source.",
+  "totalCharacters": 17817
+}

@@ -1,0 +1,14 @@
+{
+  "stage": "baseline",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-26T10:45:51.508Z",
+  "end": "2026-10-26T10:46:15.302Z",
+  "status": 0
+}

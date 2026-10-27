@@ -1,0 +1,10 @@
+{
+  "capturedAt": "2026-10-24T14:42:32.411Z",
+  "events": [
+    {
+      "kind": "warning",
+      "at": 1792851006296.529
+    }
+  ],
+  "unchangedSinceMidRun": true
+}

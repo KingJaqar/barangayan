@@ -48,6 +48,13 @@ describe('resident setup contracts', () => {
   it.each(['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'])('requires fresh sign-in for %s rather than retrying a revoked session', code => {
     expect(residentSetupFailure({ code, status: 403 })).toEqual({ kind: 'session_expired', message: 'Your session has ended. Sign out and sign in again to continue setup.', retryable: false });
   });
+  it('treats an HTTP 401 as an ended session rather than a retryable setup failure', () => {
+    expect(residentSetupFailure({ status: 401, code: 'PGRST301' })).toMatchObject({ kind: 'session_expired', retryable: false });
+  });
+  it('preserves the setup RPC response status when its error object has no HTTP status', async () => {
+    const client = { rpc: () => ({ abortSignal: async () => ({ data: null, error: { code: 'PGRST301' }, status: 401 }) }) } as unknown as SupabaseClient<Database>;
+    await expect(getResidentAccountSetupStatus(client)).rejects.toMatchObject({ failure: { kind: 'session_expired', retryable: false } });
+  });
   it('reads caller-only status and rejects malformed/error responses', async () => {
     const rpc = vi.fn().mockReturnValue({ abortSignal: vi.fn().mockResolvedValue({ data: status, error: null }) });
     const client = { rpc } as unknown as SupabaseClient<Database>;

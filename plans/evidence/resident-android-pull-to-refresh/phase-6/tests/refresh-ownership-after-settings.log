@@ -1,0 +1,23 @@
+{
+  "passed": [
+    "Mount/subscription equivalent profile reads share one transport",
+    "Overlapping profile invalidations coalesce; old reply suppressed; equal profile/geometry and cache identity retained; data consumers have zero refresh-status commits; refetch resolves only after the read settles",
+    "Warm Health feeds remain usable during slow/offline focus refresh; refresh failure and retry preserve content, including loaded empty results",
+    "Date/month/calendar ownership cancels obsolete transport and survives newest-before-oldest replies",
+    "Profile retries remain bounded; failure preserves demographics and revokes cached approval; explicit retry restores authoritative status",
+    "Successful mutation invalidates all active Health views; channel reconnect catches up profile and Health without a TTL",
+    "Sign-out aborts active private reads; ignored-abort success/failure and retired channel callbacks cannot restore data or restart private transport",
+    "Account switch/sign-out immediately hide private data; late old replies are rejected; foreground catches up; cache/listeners/channels clean up"
+  ],
+  "errors": [],
+  "metrics": {
+    "initialProfileRequests": 1,
+    "equalProfileRefresh": {
+      "dataConsumerCommits": 0,
+      "cacheWrites": 0
+    },
+    "totalRequests": 60,
+    "rpcCalls": 1
+  },
+  "scope": "Real hooks with synthetic deferred transport; no native timing claim"
+}

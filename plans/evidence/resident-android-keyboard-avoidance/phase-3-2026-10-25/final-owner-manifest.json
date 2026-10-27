@@ -1,0 +1,11 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "d8f13c84317ab85d4e86d9642e8954b052be60b9ed1d87ae5dd26b53906b9507",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "characters": 8445
+    }
+  ],
+  "totalCharacters": 8519
+}

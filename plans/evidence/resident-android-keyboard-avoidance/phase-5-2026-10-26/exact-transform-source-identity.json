@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-26T11:50:19.131Z",
+  "bundleSha256": "5a3301d68ba5b5ae8e4a305a6bb67cfb1568357f14c1562114933661845eac14",
+  "bundleBytes": 16356480,
+  "results": [
+    {
+      "name": "src/components/resident-header.tsx",
+      "moduleId": 2040,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "da0537942e0ba7949ef1f5ca221953d37228d9e2240e4508fd5cd0b4992f234c",
+      "downloadedFactorySha256": "267550c3d5e590a6e80a8695f23599591664921b748a9cead0da551a6ccb1723",
+      "currentFactorySha256": "267550c3d5e590a6e80a8695f23599591664921b748a9cead0da551a6ccb1723"
+    },
+    {
+      "name": "src/app/(app)/maps/index.tsx",
+      "moduleId": 2430,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "downloadedFactorySha256": "352c9e6f4dd4eba430b7c79b114c19a8ee355872dc838b808111df9125e6cace",
+      "currentFactorySha256": "352c9e6f4dd4eba430b7c79b114c19a8ee355872dc838b808111df9125e6cace"
+    },
+    {
+      "name": "src/components/evacuation-centers-panel.tsx",
+      "moduleId": 2301,
+      "downloadedFactoryMatches": false,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "a11731e3fdc9bf26152c65b10485c42559df4cbad2c24b874626a57d27bdebf2",
+      "downloadedFactorySha256": "a4126353d0a6a9e80787dba96474287c334ceb2d1aa244e0c1f8d1bf4a822da6",
+      "currentFactorySha256": "ee37f4b69f148290a5c7a163d690da46c47e677b3e0e6e671d062ebac5b03d35"
+    },
+    {
+      "name": "src/hooks/use-search-inactivity.ts",
+      "moduleId": 2059,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "7c0dba2f8a487683d33f56d3f2ebb67b3ab475a206480be335a301a512808297",
+      "downloadedFactorySha256": "592410e4595aee65a39e34513ad688fc3ff5e9029b105f8ca9adbb2cae4fda19",
+      "currentFactorySha256": "592410e4595aee65a39e34513ad688fc3ff5e9029b105f8ca9adbb2cae4fda19"
+    },
+    {
+      "name": "src/hooks/use-search-session.ts",
+      "moduleId": 2057,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "ba0a12dcd4173b5c285999727faddad59ea8b7c676765f57dd9976651938c05d",
+      "downloadedFactorySha256": "daa37a1d1be548aea9bbbf902c1b1c1eba3165c4e35c09f6771d4da702e29513",
+      "currentFactorySha256": "daa37a1d1be548aea9bbbf902c1b1c1eba3165c4e35c09f6771d4da702e29513"
+    },
+    {
+      "name": "src/hooks/use-floating-tab-layout.tsx",
+      "moduleId": 2035,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d",
+      "downloadedFactorySha256": "0f03bf8ad2963152c5ea41162ac4de7cb56741c289554f52b1cc0309837f9b31",
+      "currentFactorySha256": "0f03bf8ad2963152c5ea41162ac4de7cb56741c289554f52b1cc0309837f9b31"
+    },
+    {
+      "name": "src/app/emergency-centers.tsx",
+      "moduleId": 2723,
+      "downloadedFactoryMatches": false,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "b9a3c93fd7d2c5fcbfca5bafbcc9ee8a52e0ebcf6ed2395243f0cea8761b2ca9",
+      "downloadedFactorySha256": "5fe9ff2209608bceef4c1d6560a8a35b940d407799a45b2a7c6132ee434bad9f",
+      "currentFactorySha256": "0e61f5355346efedb53b17f6de4020ff6169b81c030260398dd1503ac57528d9"
+    }
+  ],
+  "allMatch": false,
+  "limitation": "Downloaded development bundle identity, not a live Runtime factory inspection. Runtime inspector is unresponsive; native APK revision unknown."
+}

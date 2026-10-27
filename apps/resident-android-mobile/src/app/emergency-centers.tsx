@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CentersContent } from '@/components/evacuation-centers-panel';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useProfile } from '@/hooks/use-profile';
@@ -42,7 +42,7 @@ export default function EmergencyCentersScreen() {
             style={styles.backButton}>
             <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
-          <ThemedText style={[styles.title, { color: theme.onPrimary }]}>Evacuation Centers</ThemedText>
+          <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: theme.onPrimary }]}>Evacuation Centers</ThemedText>
         </View>
         <View style={styles.body}>
           <CentersContent
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
+    lineHeight: 24,
   },
   body: {
     flex: 1,

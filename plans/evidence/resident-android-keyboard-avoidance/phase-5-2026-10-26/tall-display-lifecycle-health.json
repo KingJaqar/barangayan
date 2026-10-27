@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-27T01:05:28.742Z",
+  "status": "pass submit/edit/clear/back and exact origin",
+  "origin": "health",
+  "config": "tall-display",
+  "observations": [
+    {
+      "tag": "tall-display-lifecycle-health-entry",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        631,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-lifecycle-health-submitted",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        892,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "false"
+    },
+    {
+      "tag": "tall-display-lifecycle-health-edit",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        631,
+        250
+      ],
+      "imeTop": 580,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-display-lifecycle-health-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        284,
+        101,
+        779,
+        250
+      ],
+      "imeTop": 580,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ],
+  "syntheticRecentRemoved": true
+}

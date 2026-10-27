@@ -8,8 +8,9 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { ProfileCompletionNotice, ResidentVerificationNotice } from './resident-action-notices';
+import { RegistrationAccountNotice } from '@/components/health/registration-account-notice';
 
-type Eligibility = { incomplete: boolean; unverified: boolean };
+type Eligibility = { incomplete: boolean; unverified: boolean; driveAccountBlocked: boolean };
 
 /** Mounted only for an open action sheet. A failed/unfinished check never mounts its form. */
 export function ResidentActionGuard({ action, next, onClose, children }: {
@@ -29,6 +30,7 @@ export function ResidentActionGuard({ action, next, onClose, children }: {
     const timer = setTimeout(() => controller.abort(), 10000);
     async function check() {
       setError(false);
+      setResult(null);
       try {
         const client = createSupabaseBrowserClient();
         const { data: { user }, error: authError } = await client.auth.getUser();
@@ -40,9 +42,10 @@ export function ResidentActionGuard({ action, next, onClose, children }: {
         }
         const { data: profile, error: profileError } = await client.from('profiles')
           .select('*').eq('id', user.id).abortSignal(controller.signal).maybeSingle();
-        if (profileError) throw profileError;
+        if (profileError || (action === 'drive' && !profile)) throw profileError ?? new Error('Account unavailable');
         if (active) setResult({
-          // Match the resident-web banner even when this resident also has admin access.
+          driveAccountBlocked: action === 'drive' && (profile?.role !== 'resident' || !!profile?.deleted_at),
+          // Retain the existing completion checks for documents and reports.
           incomplete: !residentProfileComplete(profile, { includeAdmin: true }),
           unverified: action === 'document' && idVerificationState(profile) !== 'verified',
         });
@@ -63,6 +66,7 @@ export function ResidentActionGuard({ action, next, onClose, children }: {
     </div>
   );
   if (!result) return <LoadingStatus active label="Checking your account…" />;
+  if (result.driveAccountBlocked) return <RegistrationAccountNotice next={next} onClose={onClose} />;
   if (!result.incomplete && !result.unverified) return children;
 
   return (

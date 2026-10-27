@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "planned": [
+    [
+      "compact-large-font",
+      [
+        "A10"
+      ]
+    ],
+    [
+      "compact-large-display-gesture",
+      [
+        "A08",
+        "A09-emergency",
+        "A09-drrm",
+        "A10"
+      ]
+    ]
+  ],
+  "results": [
+    {
+      "configuration": "compact-large-font",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Missing configuration geometry/typing/actions/dismissal; default touch-paste evidence reused separately",
+      "status": "incomplete",
+      "error": "Editor has no visible bounds"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A08",
+      "attempts": 1,
+      "scope": "Missing configuration geometry/typing/actions/dismissal; default touch-paste evidence reused separately",
+      "focus": {
+        "editor": [
+          68,
+          500,
+          1013,
+          686
+        ],
+        "viewport": [
+          0,
+          156,
+          1080,
+          887
+        ],
+        "keyboardTop": 887,
+        "clearance": 201
+      },
+      "typingAndRestore": true,
+      "actions": [
+        {
+          "name": "Add Member",
+          "bounds": [
+            68,
+            847,
+            1013,
+            887
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A09-emergency",
+      "attempts": 1,
+      "scope": "Missing configuration geometry/typing/actions/dismissal; default touch-paste evidence reused separately",
+      "focus": {
+        "editor": [
+          54,
+          393,
+          1026,
+          555
+        ],
+        "viewport": [
+          0,
+          338,
+          1080,
+          636
+        ],
+        "keyboardTop": 887,
+        "clearance": 332
+      },
+      "typingAndRestore": true,
+      "actions": [
+        {
+          "name": "Add Member",
+          "bounds": [
+            54,
+            680,
+            1026,
+            833
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A09-drrm",
+      "attempts": 1,
+      "scope": "Missing configuration geometry/typing/actions/dismissal; default touch-paste evidence reused separately",
+      "focus": {
+        "editor": [
+          54,
+          393,
+          1026,
+          555
+        ],
+        "viewport": [
+          0,
+          338,
+          1080,
+          636
+        ],
+        "keyboardTop": 887,
+        "clearance": 332
+      },
+      "typingAndRestore": true,
+      "actions": [
+        {
+          "name": "Add Member",
+          "bounds": [
+            54,
+            680,
+            1026,
+            833
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Missing configuration geometry/typing/actions/dismissal; default touch-paste evidence reused separately",
+      "status": "incomplete",
+      "error": "Initial actual editor/viewport unavailable"
+    }
+  ],
+  "fullProtocol": false
+}

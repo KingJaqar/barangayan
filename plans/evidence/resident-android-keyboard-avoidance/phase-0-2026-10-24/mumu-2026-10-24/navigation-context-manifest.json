@@ -1,0 +1,19 @@
+{
+  "version": "1.18.1",
+  "exit": 0,
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "sha256": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/reports/index.tsx",
+      "sha256": "28c54e567b9ef6ac5d837b72057ac66f1a2044f059f0b38f5b711042726f1120"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "sha256": "a719b2a2c4927829434ba7ed901afcdb59b5680ebed28d81dbf13fd8d9cca627"
+    }
+  ],
+  "packetSha256": "b811fc1e1d2501162e90dabfe526b27032b0165d82b58524d0fce7fcae94f67c"
+}

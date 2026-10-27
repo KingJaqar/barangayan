@@ -1,0 +1,16 @@
+{
+  "stage": "post-family",
+  "check": "export",
+  "command": [
+    "node",
+    "../../node_modules/expo/bin/cli",
+    "export",
+    "--platform",
+    "android",
+    "--output-dir",
+    "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase3-20261025\\post-family-export"
+  ],
+  "start": "2026-10-25T13:44:01.888Z",
+  "end": "2026-10-25T13:44:43.923Z",
+  "status": 0
+}

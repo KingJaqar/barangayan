@@ -1,0 +1,1 @@
+{"passed":["suggestion submission saves search and opens Explore","empty entry shows Recent then Suggested","blank input shows recent searches","typing filters recent suggestions","remove recent suggestion","clear all recent searches"],"screenshots":"C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase5-20261026\\resume-resident-search-history-ui","errors":[]}

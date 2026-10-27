@@ -1,0 +1,74 @@
+{
+  "before": {
+    "name": "probe-complete-default-B15-focus",
+    "editor": [
+      417,
+      1790,
+      957,
+      1909
+    ],
+    "viewport": [
+      0,
+      291,
+      1080,
+      1920
+    ],
+    "keyboardTop": 1167,
+    "visible": false
+  },
+  "after": {
+    "name": "probe-complete-candidate-B15-focus",
+    "editor": [
+      417,
+      1048,
+      957,
+      1167
+    ],
+    "viewport": [
+      0,
+      291,
+      1080,
+      1167
+    ],
+    "keyboardTop": 1167,
+    "visible": true
+  },
+  "alreadyVisibleFirstNameNoJump": true,
+  "firstBefore": {
+    "name": "probe-complete-candidate-B09-before",
+    "editor": [
+      123,
+      882,
+      528,
+      1001
+    ],
+    "viewport": [
+      0,
+      291,
+      1080,
+      1920
+    ],
+    "keyboardTop": null,
+    "visible": false
+  },
+  "firstAfter": {
+    "name": "probe-complete-candidate-B09-focus",
+    "editor": [
+      123,
+      882,
+      528,
+      1001
+    ],
+    "viewport": [
+      0,
+      291,
+      1080,
+      1167
+    ],
+    "keyboardTop": 1167,
+    "visible": true
+  },
+  "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+  "mechanism": "Android root height owner includes header/body; existing iOS padding stays; native Birthday Modal is outside owner",
+  "offsetOrKeyboardSpacerAdded": false
+}

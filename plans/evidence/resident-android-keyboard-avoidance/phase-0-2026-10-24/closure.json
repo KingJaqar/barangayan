@@ -1,0 +1,202 @@
+{
+  "at": "2026-10-24T13:22:21.177Z",
+  "status": "pass for Phase 0 artifacts; concurrent work preserved",
+  "definitions": 59,
+  "consumerBranches": 69,
+  "idConsumerOccurrences": 113,
+  "matrixSlots": 7,
+  "ledgerRows": 791,
+  "nativePasses": 0,
+  "reproducedFailures": 0,
+  "pending": 791,
+  "expectedConcurrentSourceDrift": [
+    "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx"
+  ],
+  "unexpectedSourceDrift": [],
+  "unchangedSnapshottedInputs": 52,
+  "trackedExternalDiffs": [
+    "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+    "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+  ],
+  "ownedRuntimeDiff": false,
+  "indexDiff": false,
+  "planOutsideSelectedProgressUnchanged": true,
+  "packets": [
+    {
+      "file": "context.xml",
+      "sha256": "4ad8609a2ed94ed57a3c5d1437b2af562a897286e9f0f34f9b81d0ad5a486e3c",
+      "entries": 46,
+      "completeRead": true
+    },
+    {
+      "file": "consumers.xml",
+      "sha256": "78fa4ab6cf8404fc129e94e8396e550d6eb38076ea58d982285aec212aa90f65",
+      "entries": 5,
+      "completeRead": true
+    },
+    {
+      "file": "alias.xml",
+      "sha256": "9d614887b555da4300ad188fb710aead8f6ff9642a67f291db7ea7e0ea59e2ee",
+      "entries": 1,
+      "completeRead": true
+    },
+    {
+      "file": "concurrent.xml",
+      "sha256": "1277a0ce2ba1902dc7a367d658a86041b5479c42c3c9175fa3b0d5ff9788c9f2",
+      "entries": 4,
+      "completeRead": true
+    }
+  ],
+  "whitespaceIssues": [],
+  "limitations": "Artifact integrity, expected concurrent identity and unchanged remaining-source checks only. Native and account cases remain pending at user direction. App checks qualify earlier baseline bytes; later concurrent work was not retested in this Phase 0 task.",
+  "evidenceFiles": [
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/baseline.md",
+      "bytes": 115553,
+      "sha256": "c8e82ee359b4cf17da4686ee98140ed1f83a00f6dba5ff46bdc2e1eeca70575f"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/alias.xml",
+      "bytes": 2290,
+      "sha256": "9d614887b555da4300ad188fb710aead8f6ff9642a67f291db7ea7e0ea59e2ee"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/concurrent-manifest.json",
+      "bytes": 2379,
+      "sha256": "a9eae3d8377ee0d11a6f4d54cdb56b8b13f68bcb29210bca7840f2d0859d9aff"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/concurrent-packet-manifest.json",
+      "bytes": 972,
+      "sha256": "dc2f418c4b82f42e9e2b7678068ffbb141d29266bbf8537a08bb47bb7d380a0b"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/concurrent.xml",
+      "bytes": 11830,
+      "sha256": "1277a0ce2ba1902dc7a367d658a86041b5479c42c3c9175fa3b0d5ff9788c9f2"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/consumer-packet-manifest.json",
+      "bytes": 1130,
+      "sha256": "cdd655fe6667e0fd7cc3fee293018fcbcd360693806ce2eaf8fd9fccd868a11f"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/consumers.xml",
+      "bytes": 14117,
+      "sha256": "78fa4ab6cf8404fc129e94e8396e550d6eb38076ea58d982285aec212aa90f65"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/context-index.md",
+      "bytes": 13334,
+      "sha256": "a9128433bc33c95fe2460a57a0f635b9f6b097131335de8a542a86014e20c02f"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/context.xml",
+      "bytes": 103054,
+      "sha256": "4ad8609a2ed94ed57a3c5d1437b2af562a897286e9f0f34f9b81d0ad5a486e3c"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/inventory.json",
+      "bytes": 101163,
+      "sha256": "bd6ce63b8e169b1ee430d76610057b9e11e71f994e4e405a2d81640420c88f34"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/ledger.json",
+      "bytes": 352355,
+      "sha256": "e7369aa298e1b0688c90d5c808fe9c2b06978d23daba2437d69fb91544e60f85"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/export-baseline.log",
+      "bytes": 18914,
+      "sha256": "59f6b32b135e7e7fab351c9899b062ca0dd5e234e42ca62c752fccb37645ba46"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/export-verified.log",
+      "bytes": 7022,
+      "sha256": "832b24f07bf460a85af3a6904dc462988d49ce072b76da150e7d5b59a520fa8f"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/lint-baseline.log",
+      "bytes": 150,
+      "sha256": "04ff75e05904eec131fdd87ee1942306a08e2c719ad68260a84d1469a3988408"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/lint-direct-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/metro.log",
+      "bytes": 404,
+      "sha256": "fb7fe18794a7ef076200f01e5b1b1e1f8a71cc86bbf2b4e4f408354fc4020641"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/repomix-alias.log",
+      "bytes": 4593,
+      "sha256": "c14225370b39855bb9015fbb8c5eb5ae762e85eb4b9d385f08e6d486a2f813ab"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/repomix-concurrent.log",
+      "bytes": 4859,
+      "sha256": "149fca6b665a4fa09ce3c56039f44bd9822a4692b8f240667e56792e7b75006c"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/repomix-consumers.log",
+      "bytes": 4211,
+      "sha256": "cacc8df9e7862b1353e6924c681340084fe4cc07301988c6e0c0832694380bee"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/repomix-include.log",
+      "bytes": 5320,
+      "sha256": "a12c826a913c75de799a73196e0c7c0cf2db3a42535997114bb32e18a9928b1a"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/typecheck-baseline.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/logs/unit-baseline.log",
+      "bytes": 945,
+      "sha256": "e2ae6ee8517079953e1a969b4d159ad70bc7e8a7071ecd353e0bd2833bcf61ae"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/native-identity.json",
+      "bytes": 1708,
+      "sha256": "470bbb13fdf3d4ad820662ee29c53e5986988b1afd19e948a00cfe7b84c5d020"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/packet-manifest.json",
+      "bytes": 5867,
+      "sha256": "b6809b504540c0baf5cd64fdb667a8ac2419d4786056b5ca50affe38fd155ee6"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/resolved-config.json",
+      "bytes": 152,
+      "sha256": "aa7ad044855673557d63ffb58267a4191840c7a4c4346d410b27ee57bff96425"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/routes-and-matrix.json",
+      "bytes": 17345,
+      "sha256": "0d686f9572d47458c74f11d2b3fa4de1f3c1e02e8b30fea978d1f2510d8efefc"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/source-manifest.json",
+      "bytes": 15575,
+      "sha256": "6ec696d37f96a017869cc5062aacc123eaab29fe1566b593e920f6109f130dde"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/test-data.json",
+      "bytes": 7308,
+      "sha256": "2f9d28c2e8e7c6dd96f3549e62827464d58ec18413eef31538568e0c81cad337"
+    },
+    {
+      "path": "plans/evidence/resident-android-keyboard-avoidance/phase-0-2026-10-24/verification.json",
+      "bytes": 2757,
+      "sha256": "2d7ec6fb46d023708f29a746d992f0b531f65f2b28757d6b01849c9444dc564b"
+    }
+  ]
+}

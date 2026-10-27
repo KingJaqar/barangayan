@@ -1,0 +1,14 @@
+{
+  "stage": "candidate",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-26T04:05:53.202Z",
+  "end": "2026-10-26T04:06:10.945Z",
+  "status": 0
+}

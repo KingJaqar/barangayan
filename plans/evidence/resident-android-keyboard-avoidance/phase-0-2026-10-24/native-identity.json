@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-24 Asia/Manila",
+  "serial": "emulator-5554",
+  "physicalPhoneConfirmed": false,
+  "device": {
+    "model": "SM_S918U",
+    "manufacturer": "Samsung",
+    "api": 32,
+    "android": "12",
+    "widthPx": 1080,
+    "heightPx": 1920,
+    "densityDpi": 480,
+    "fontScale": 1,
+    "navigationSetting": "0 (setting value only)",
+    "ime": "com.sohu.inputmethod.sogou.chuizi/com.sohu.inputmethod.sogou.SogouIME"
+  },
+  "installed": {
+    "package": "com.barangayan.resident.dev",
+    "version": "1.0.0",
+    "versionCode": 1,
+    "minSdk": 24,
+    "targetSdk": 36,
+    "compileSdk": 36,
+    "firstInstall": "2026-10-15 09:35:07 (device-reported)",
+    "sha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+    "nativeSourceRevision": "unknown",
+    "manifestMainActivitySoftInputMode": "0x10 / adjustResize"
+  },
+  "launch": {
+    "activity": "expo.modules.devlauncher.launcher.DevLauncherActivity",
+    "observedWindowMode": "adjustPan",
+    "residentWindowObserved": false,
+    "screenshot": "tmp/resident-keyboard-phase0-20261024/native-launch.png",
+    "result": "Development launcher only; historical crash warning displayed, no current-source crash attribution",
+    "uiHierarchy": "Initial UIAutomator dump failed: null root node; screenshot and activity/window reads succeeded subsequently"
+  },
+  "localServer": "Restricted localhost fetch failed; local Metro start found port8081 occupied. Host server inspection not executed: automatic approval review failed due usage limit; not a safety determination. No server/process modified.",
+  "disposition": "Native/device/account cases explicitly pending by user instruction; no field protocol performed."
+}

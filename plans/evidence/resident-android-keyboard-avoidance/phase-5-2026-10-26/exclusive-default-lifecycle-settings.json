@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-26T13:01:58.569Z",
+  "status": "pass submit/edit/clear/back and exact origin",
+  "origin": "settings",
+  "config": "exclusive-default",
+  "observations": [
+    {
+      "tag": "exclusive-default-lifecycle-settings-entry",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "exclusive-default-lifecycle-settings-submitted",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        912,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "false"
+    },
+    {
+      "tag": "exclusive-default-lifecycle-settings-edit",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "exclusive-default-lifecycle-settings-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ],
+  "syntheticRecentRemoved": true
+}

@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "planned": [
+    [
+      "compact-large-font",
+      [
+        "A10"
+      ]
+    ],
+    [
+      "compact-large-display-gesture",
+      [
+        "A08",
+        "A10"
+      ]
+    ]
+  ],
+  "results": [
+    {
+      "configuration": "compact-large-font",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          318,
+          436,
+          930,
+          590
+        ],
+        "viewport": [
+          0,
+          336,
+          1080,
+          638
+        ],
+        "keyboardTop": 927,
+        "clearance": 337
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            72,
+            689,
+            522,
+            867
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            558,
+            689,
+            1008,
+            861
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A08",
+      "attempts": 1,
+      "scope": "Only incomplete full-action reachability; previous input/typing evidence retained",
+      "focus": {
+        "editor": [
+          68,
+          500,
+          1013,
+          686
+        ],
+        "viewport": [
+          0,
+          156,
+          1080,
+          887
+        ],
+        "keyboardTop": 887,
+        "clearance": 201
+      },
+      "actions": [
+        {
+          "name": "Add Member",
+          "bounds": [
+            68,
+            600,
+            1013,
+            794
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "status": "incomplete",
+      "error": "Focus/IME unavailable"
+    }
+  ],
+  "fullProtocol": false
+}

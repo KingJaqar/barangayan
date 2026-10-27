@@ -1,0 +1,35 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "9c3432f3912f50ee21f93b442433f95f3e4027b4a7da6f56b56a66442fffb935",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "characters": 351
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "characters": 2126
+    }
+  ],
+  "totalCharacters": 2606,
+  "finalSourceIdentities": [
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "sha256": "0e88403e51d9dce7502230d182fb6bea680d09d9c2ab2786156683dab17acc7c"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "sha256": "2933b45feccb340e16c33489493e3b35c80384827d25cda91b19b1af8d4d7f32"
+    }
+  ],
+  "reader": {
+    "entries": 2,
+    "completedRange": [
+      0,
+      2606
+    ],
+    "continuation": null,
+    "originalBodiesVerified": true,
+    "packetUnchanged": true
+  }
+}

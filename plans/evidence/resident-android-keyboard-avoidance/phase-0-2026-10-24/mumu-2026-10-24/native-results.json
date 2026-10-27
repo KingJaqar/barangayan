@@ -1,0 +1,543 @@
+{
+  "at": "2026-10-24T14:42:27.741Z",
+  "environment": "MuMuPlayer; primary native environment by user instruction",
+  "serial": "127.0.0.1:16384",
+  "alias": "emulator-5554",
+  "sameDeviceBootId": "7eaff94f-b404-4a2c-96fa-f1f02f3ea5b7",
+  "api": 32,
+  "android": "12",
+  "sizePx": [
+    1080,
+    1920
+  ],
+  "densityDpi": 480,
+  "fontScale": 1,
+  "navigationSetting": 0,
+  "navigationAppearance": "No in-display navigation buttons in screenshots; do not label a three-button or gesture variant verified solely from setting0",
+  "ime": {
+    "package": "com.google.android.inputmethod.latin",
+    "component": "com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME",
+    "version": "18.5.4.993608717-release-arm64-v8a",
+    "showImeWithHardKeyboard": 1
+  },
+  "nativePackage": "com.barangayan.resident.dev",
+  "nativeSourceRevision": "unknown; same development client, not a release APK qualification",
+  "loadedSourceModulesMatched": 29,
+  "mainActivityWindowMode": "adjustResize observed in active resident activity",
+  "defaultKeyboardTopPx": 1167,
+  "passwordKeyboardTopPx": 1080,
+  "observedDefinitions": 19,
+  "observedConsumerCases": 19,
+  "reproducedFailures": 8,
+  "limitedVisibleCases": 11,
+  "fullProtocolPasses": 0,
+  "listRegression": {
+    "consumer": "R068",
+    "result": "N/A editable case: no input rendered in list mode",
+    "source": "evacuation-centers-panel.tsx:436/489",
+    "nativeEvidence": "tmp/resident-keyboard-mumu-20261024/c17-drrm-list-before.png"
+  },
+  "untouchedDefinitions": 40,
+  "observations": [
+    {
+      "id": "C03",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c03-profile-focused",
+      "at": "2026-10-24T14:14:24.000Z",
+      "inputBoundsPx": [
+        111,
+        860,
+        969,
+        944
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 74.33333333333333,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c03-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c03-profile-focused.png",
+        "jsonSha256": "627a855b6db613346b9086938325454364c188bec04ce1b8669ea9aa7cb1c33a",
+        "screenshotSha256": "eeff2d17d3c93c61039910946ebfd76d68b67ecb4acc4ef0937520dcd97ea981"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C04",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c04-profile-focused",
+      "at": "2026-10-24T14:14:38.633Z",
+      "inputBoundsPx": [
+        111,
+        1094,
+        969,
+        1178
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -3.6666666666666665,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 11.666666666666666,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c04-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c04-profile-focused.png",
+        "jsonSha256": "fdc4f914cedb965dbb12d37075380a9811c72d012fccea5a1ca2326ed7df03f7",
+        "screenshotSha256": "b7a40ab5cd0c1fb40aa904de3d332c668b354cac3b9c3651ec15cc5f8eb0dce3"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C05",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c05-profile-focused",
+      "at": "2026-10-24T14:14:53.202Z",
+      "inputBoundsPx": [
+        111,
+        1328,
+        969,
+        1412
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -81.66666666666667,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 89.66666666666667,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c05-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c05-profile-focused.png",
+        "jsonSha256": "dca0b42338242d290fcbce22571b394bac45210c8e52dfddc33e8bdd8717a63e",
+        "screenshotSha256": "d37763096d637b61ad54ba8c9398f3415cd688ca8bbf35570ea6f0d7db6058f9"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C06",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c06-profile-focused",
+      "at": "2026-10-24T14:15:07.733Z",
+      "inputBoundsPx": [
+        111,
+        1562,
+        969,
+        1646
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -159.66666666666666,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 167.66666666666666,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c06-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c06-profile-focused.png",
+        "jsonSha256": "e784264ff3e48d3c56db6c21b7a3771cab1c887c010e691c833e0a1638f56cfe",
+        "screenshotSha256": "ce1b8609000a1699b6c7634cba645226d55ae878f55b0c7dd690be4dd5375aed"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C08",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c08-profile-focused",
+      "at": "2026-10-24T14:15:31.618Z",
+      "inputBoundsPx": [
+        111,
+        1546,
+        969,
+        1630
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -154.33333333333334,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 162.33333333333334,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c08-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c08-profile-focused.png",
+        "jsonSha256": "0b9d5921622d8138b9d02f12d191f3e2e5d2f05f2f2585038bc778602364596d",
+        "screenshotSha256": "dc12d049010d867546c7134aa13eb3e64a0a12e4e12f32a7e35e69e3922a6106"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C09",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c09-profile-focused",
+      "at": "2026-10-24T14:15:49.203Z",
+      "inputBoundsPx": [
+        111,
+        1405,
+        969,
+        1489
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -107.33333333333333,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 115.33333333333333,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c09-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c09-profile-focused.png",
+        "jsonSha256": "9c1795a32f169acfc19db4881e1d02fa353405615e7b1de1baf7bf909a51d06a",
+        "screenshotSha256": "d19dc1db69ba51ec88a6b46623939bfe6c95d24918d5f0858d3c33c4f3bafe6e"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C10",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c10-profile-focused",
+      "at": "2026-10-24T14:16:06.904Z",
+      "inputBoundsPx": [
+        111,
+        1438,
+        969,
+        1522
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -118.33333333333333,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 126.33333333333333,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c10-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c10-profile-focused.png",
+        "jsonSha256": "bef4fa16fd3117db40e8cdfb6070b70b92223fc2cf4d81627d5b5265f65deffd",
+        "screenshotSha256": "95e435004eb4134a842e65af0407730bf616b2248c192ec3444921909bfa06df"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C11",
+      "consumer": "R039",
+      "matrix": "M0",
+      "capture": "c11-profile-focused",
+      "at": "2026-10-24T14:16:21.535Z",
+      "inputBoundsPx": [
+        111,
+        1593,
+        969,
+        1677
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": -170,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Repair layout/scrolling",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 178,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c11-profile-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c11-profile-focused.png",
+        "jsonSha256": "1954e058ae5952c6da1b4498a642c58853aa7d1ac9791a8e8210876c8c9e7d02",
+        "screenshotSha256": "042e887ac1556a40ea52fd54eef3367ea5d5140be7c6f80d6b515c7ad3b9498b"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A08",
+      "consumer": "R008",
+      "matrix": "M0",
+      "capture": "a08-family-focused",
+      "at": "2026-10-24T14:17:53.707Z",
+      "inputBoundsPx": [
+        60,
+        405,
+        1020,
+        549
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 206,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a08-family-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a08-family-focused.png",
+        "jsonSha256": "efdc0da0295de9db038f462d46fba3cc2ebc579059376d1f8baaa2746adf0df1",
+        "screenshotSha256": "ffea587c32ac21dc7e3f74386ba4a9d7e22c4a62a8c2964608ea4c34b5bf7eaa"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A09",
+      "consumer": "R012",
+      "matrix": "M0",
+      "capture": "a09-family-focused",
+      "at": "2026-10-24T14:35:09.490Z",
+      "inputBoundsPx": [
+        48,
+        396,
+        1032,
+        540
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 209,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a09-family-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a09-family-focused.png",
+        "jsonSha256": "f9d2c83bd4c9a4ddc5257591dbda21df0c7b1476e58d9810aa1458c3bb9b7eae",
+        "screenshotSha256": "4ee6e33f27480f501720bac5949db569db6c62fa52ae12712b610066b9d40641"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A10",
+      "consumer": "R014",
+      "matrix": "M0",
+      "capture": "a10-color-focused",
+      "at": "2026-10-24T14:24:49.300Z",
+      "inputBoundsPx": [
+        318,
+        716,
+        930,
+        850
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 105.66666666666667,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a10-color-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a10-color-focused.png",
+        "jsonSha256": "0595be821804c93aa15f033109950fd3427e3c8f9f4dba9f27f4817fc9cafbd0",
+        "screenshotSha256": "2160748f45361552723ee98099965793bcebea9396c5db9eaf42390947ac3cde"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "B32",
+      "consumer": "R035",
+      "matrix": "M0",
+      "capture": "b32-password-focused",
+      "at": "2026-10-24T14:22:01.903Z",
+      "inputBoundsPx": [
+        168,
+        975,
+        912,
+        1119
+      ],
+      "keyboardTopPx": 1080,
+      "clearanceDp": -13,
+      "initialFocus": "FAIL: editor bounds overlap keyboard",
+      "decision": "Add/tune local avoidance",
+      "status": "Reproduced failure; candidate pending",
+      "minimumRevealDeltaDp": 21,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/b32-password-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/b32-password-focused.png",
+        "jsonSha256": "18f5e66914e8412534ee7f802532ccdf0a8a9b70baf84f971cf12a34d5a934b0",
+        "screenshotSha256": "fb4569fbfe971492ffc6e09ad0ae49ad4901cb500542a924b2a56e3be21f61fa"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A01",
+      "consumer": "R001",
+      "matrix": "M0",
+      "capture": "a01-title-focused",
+      "at": "2026-10-24T14:30:22.746Z",
+      "inputBoundsPx": [
+        99,
+        736,
+        981,
+        820
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 115.66666666666667,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a01-title-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a01-title-focused.png",
+        "jsonSha256": "b35f78be155d8fdd01e15bcd51d6dbf197e87607e067ccf96becb1c3b0e30226",
+        "screenshotSha256": "ba4d3ce2745dbf0796dcfc989f9c02869f521811a9791902319b75d0d0117a8b"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A02",
+      "consumer": "R001",
+      "matrix": "M0",
+      "capture": "a02-description-focused",
+      "at": "2026-10-24T14:27:06.396Z",
+      "inputBoundsPx": [
+        99,
+        726,
+        981,
+        918
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 83,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a02-description-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a02-description-focused.png",
+        "jsonSha256": "8db9dfaa17ce8ebbc52acea507e69032e26c07ff43dd8b3402e493e779214f6e",
+        "screenshotSha256": "cfd5a4b2046c820a2838acafec7c8230491b6e08179c00daade22c00c4b10c3c"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A03",
+      "consumer": "R001",
+      "matrix": "M0",
+      "capture": "a03-area-focused",
+      "at": "2026-10-24T14:30:47.237Z",
+      "inputBoundsPx": [
+        99,
+        726,
+        981,
+        918
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 83,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a03-area-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a03-area-focused.png",
+        "jsonSha256": "69e0f5291e61e6b71f75e563a31195a3e1582a75680829ff0ad8230b9e46efa4",
+        "screenshotSha256": "51f8a537ed6dd6d1df147665ce831ea8d71a157e4b8d8f8703e44a1b8815773a"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "A04",
+      "consumer": "R002",
+      "matrix": "M0",
+      "capture": "a04-picker-focused",
+      "at": "2026-10-24T14:31:28.211Z",
+      "inputBoundsPx": [
+        60,
+        684,
+        1020,
+        828
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 113,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/a04-picker-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/a04-picker-focused.png",
+        "jsonSha256": "c2d4d6d03c59e312a05bddeb4fda0e42310f6819119186d1366d0aa68dae448d",
+        "screenshotSha256": "a2da0f1eac81a842a9191daad5b110712f2242da7b4377693325cb826dfd1981"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C15",
+      "consumer": "R045",
+      "matrix": "M0",
+      "capture": "c15-home-focused",
+      "at": "2026-10-24T14:09:54.221Z",
+      "inputBoundsPx": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 315,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c15-home-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c15-home-focused.png",
+        "jsonSha256": "fc8c678de73b68d29e12eb9098ea60447c69696d6667e8c01baa4028f7476ebc",
+        "screenshotSha256": "a3942b383b07a33ca5f220bdebde13d9e1045ca50dfcf24de5ed4cb41c24da37"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C16",
+      "consumer": "R063",
+      "matrix": "M0",
+      "capture": "c16-maps-focused",
+      "at": "2026-10-24T14:41:13.739Z",
+      "inputBoundsPx": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 215.66666666666666,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c16-maps-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c16-maps-focused.png",
+        "jsonSha256": "72675918bc918e947cafba6924fbb3f9b5dd9044fb589dc67d800bcada4ff797",
+        "screenshotSha256": "7f7070882bbc0a1f33f43323b37f0912908f0d4a8bb4430bf73035f192b87295"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    },
+    {
+      "id": "C17",
+      "consumer": "R069",
+      "matrix": "M0",
+      "capture": "c17-drrm-map-focused",
+      "at": "2026-10-24T14:36:40.953Z",
+      "inputBoundsPx": [
+        183,
+        582,
+        1029,
+        714
+      ],
+      "keyboardTopPx": 1167,
+      "clearanceDp": 151,
+      "initialFocus": "OBSERVED VISIBLE: remaining protocol incomplete",
+      "decision": "Reopen for investigation",
+      "status": "Partial native observation; full protocol pending",
+      "minimumRevealDeltaDp": 0,
+      "evidence": {
+        "json": "tmp/resident-keyboard-mumu-20261024/c17-drrm-map-focused.json",
+        "screenshot": "tmp/resident-keyboard-mumu-20261024/c17-drrm-map-focused.png",
+        "jsonSha256": "178c27d1372fd419bc0b2c613f0fe840cbf9b6bd5e89952f5e02771d9e1be62f",
+        "screenshotSha256": "cc1d37c2c74198ebab7947c6bf2761f4b718281221d9252db870ea380a150e17"
+      },
+      "limitations": "UIAutomator bounds and software-keyboard touch region plus native screenshots; no caret pixel calculation, no all-state/release-matrix pass."
+    }
+  ],
+  "special": {
+    "multiline": "A02 typed462 characters/14 actual newlines; last caret line visible; synthetic draft cleared. Start/middle selection, paste and all growth/error variations remain pending.",
+    "cleanup": "Profile values untouched; Profile Save Changes remained disabled. Synthetic family text cleared and sheet closed. Synthetic header query cleared with app control; returned Home. Color and deletion dialogs cancelled; no preferences/credentials/deletion submitted. Incident draft cleared and exited; picker cancelled; no report/location submitted.",
+    "automationNotes": "Ctrl+A injection inserted a character instead of selecting; Backspace removed that character. Native selection/paste not claimed. First backdrop center tap refocused a sheet; corrected with Android Back and explicit close verification. Bounded navigation misses were resolved from fresh UI/source, not classified as app bugs.",
+    "remaining": "All other states/branches and devices remain pending; no authentication/read-only/service guard bypassed. No sign-out/account-switch/recovery email/password update/payment/ID upload/domain-data write performed."
+  }
+}

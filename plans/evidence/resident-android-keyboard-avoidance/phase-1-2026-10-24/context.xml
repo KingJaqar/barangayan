@@ -1,0 +1,295 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/package.json, apps/resident-android-mobile/app.json, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/src/components/text-field.tsx, apps/resident-android-mobile/src/components/settings-sheet.tsx, apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx, apps/resident-android-mobile/src/components/password-recovery-screen.tsx, apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx, apps/resident-android-mobile/src/lib/floating-tab-inset.ts, apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      components/
+        drrm/
+          scan-family-sheet.tsx
+        password-recovery-screen.tsx
+        settings-sheet.tsx
+        text-field.tsx
+      hooks/
+        use-floating-tab-layout.tsx
+      lib/
+        floating-tab-inset.ts
+        floating-tab-layout.test.ts
+    app.config.js
+    app.json
+    package.json
+AGENTS.md
+CLAUDE.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx">import { useState, type ReactNode } from &apos;react&apos;;
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useDrrmSheetMotion } from &apos;@/hooks/use-drrm-sheet-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** The three DRRM sheets share only presentation; callers retain all action/state ownership. */
+⋮----
+const close = () =&gt;</file><file path="apps/resident-android-mobile/src/lib/floating-tab-inset.ts">/** Scalar clearance shared by the shell adapter; root-to-root navigation keeps its value. */
+export function floatingTabInset({ pathname, bottom, barHeight, keyboardVisible, mapNavHidden }: {
+  pathname: string; bottom: number; barHeight: number; keyboardVisible: boolean; mapNavHidden: boolean;
+}, ignoreMapHide = false)</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/components/settings-sheet.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useState, type ReactNode } from &apos;react&apos;;
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useReportModalMotion } from &apos;@/hooks/use-report-modal-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Shared presentation for the color, profile-option and local household editors. */
+⋮----
+onLayout=
+⋮----</file><file path="apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx">import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from &apos;react&apos;;
+import { Keyboard } from &apos;react-native&apos;;
+import { usePathname } from &apos;expo-router&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { floatingTabInset } from &apos;@/lib/floating-tab-inset&apos;;
+import { cancelAnimation, Easing, useSharedValue, withTiming, type SharedValue } from &apos;react-native-reanimated&apos;;
+import { useResidentReducedMotion } from &apos;./use-resident-reduced-motion&apos;;
+⋮----
+/** One shell-owned measurement and keyboard subscription for the bar and its consumers. */
+export function FloatingTabLayoutProvider(
+⋮----
+/** Only this small adapter observes the full pathname; consumers receive scalar changes. */
+function FloatingTabClearance(
+⋮----
+return &lt;ClearanceContext.Provider value=
+&lt;VisibleBarClearanceContext.Provider value=
+⋮----
+export function useFloatingTabClearance(ignoreMapHide: boolean)
+⋮----
+export function useFloatingTabLayout()</file><file path="apps/resident-android-mobile/src/components/password-recovery-screen.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Animated, Easing, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+export function PasswordRecoveryScreen({ step, title, description, children }: {
+  step: 1 | 2 | 3;
+  title: string;
+  description: string;
+  children: ReactNode;
+})
+⋮----
+/** One autofill/paste-capable input, presented as six cells. Screen readers read
+ * the input once; the visual cells never become six separate focus targets. */
+⋮----
+onChangeText=
+⋮----
+onBlur=
+⋮----
+{/* Paint the cells above the native input instead of relying on a transparent
+            text color, which Android can replace with its default while editing.
+            Touches still reach the one input; its accessibility/autofill stay intact. */}
+⋮----
+borderColor: focused &amp;&amp; index === Math.min(value.length, 5) ? theme.primary : theme.backgroundSelected,</file><file path="apps/resident-android-mobile/src/lib/floating-tab-layout.test.ts">import { beforeEach, describe, expect, it } from &apos;vitest&apos;;
+import { floatingTabInset } from &apos;./floating-tab-inset&apos;;
+⋮----
+const readFloatingTabInset = (ignoreMapHide = false)
+⋮----
+// Every section and its subtabs keep the same floating bar clearance.</file><file path="apps/resident-android-mobile/src/components/text-field.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, TextInput, type TextInputProps, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface TextFieldProps extends TextInputProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  appearance?: &apos;default&apos; | &apos;requestForm&apos;;
+  label?: string;
+  error?: string;
+  /** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+  success?: string;
+  /** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+  required?: boolean;
+  /** Enables an in-field control for revealing or masking password text. */
+  passwordVisibility?: {
+    visible: boolean;
+    onToggle: () =&gt; void;
+  };
+}
+⋮----
+/** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+⋮----
+/** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+⋮----
+/** Enables an in-field control for revealing or masking password text. */
+⋮----
+export function TextField({
+  label,
+  error,
+  success,
+  required,
+  style,
+  passwordVisibility,
+  secureTextEntry,
+  presentation = &apos;default&apos;,
+  appearance = &apos;default&apos;,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps)
+⋮----
+function handlePasswordVisibilityToggle()
+⋮----
+// Tapping the affordance should not interrupt typing or dismiss the keyboard.
+⋮----
+onBlur=
+⋮----</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;,
+    &quot;test:navigation&quot;: &quot;node tests/navigation-regressions.mjs&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 6,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file></files></repomix>

@@ -1,0 +1,75 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "32b2492c42f33e98a6f5eeec76981030b695bfa8218d9758f81c75c54c7fac39",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-request.ts",
+      "characters": 956
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "characters": 673
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "characters": 10
+    },
+    {
+      "path": "CLAUDE.md",
+      "characters": 10
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "characters": 486
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "characters": 3840
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.test.ts",
+      "characters": 448
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "characters": 2001
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "characters": 1208
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/registration-map.tsx",
+      "characters": 650
+    },
+    {
+      "path": "packages/shared/src/schemas/service-foundations.ts",
+      "characters": 1112
+    },
+    {
+      "path": "packages/shared/package.json",
+      "characters": 490
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "characters": 1818
+    },
+    {
+      "path": "AGENTS.md",
+      "characters": 0
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "characters": 2121
+    },
+    {
+      "path": "package.json",
+      "characters": 408
+    },
+    {
+      "path": "apps/resident-web/src/app/(auth)/register/register-form.tsx",
+      "characters": 6548
+    }
+  ],
+  "totalCharacters": 23594
+}

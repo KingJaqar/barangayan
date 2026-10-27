@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-25 Asia/Manila",
+  "phase": 3,
+  "status": "Partially complete",
+  "productFiles": [
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "sha256": "393ce16174bd75f95539fb0a416e6011843d28e8034f865c7140828930636d5f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "sha256": "25178fb7ce4ed3dad1f622d121be1e801742f72e5d41a58069cc4b75476ed3b2"
+    }
+  ],
+  "newDependencies": [],
+  "checks": {
+    "baseline": {
+      "type": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "--pretty",
+          "false"
+        ],
+        "log": "logs/baseline-type.txt"
+      },
+      "lint": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/eslint/bin/eslint.js",
+          "src",
+          "--no-cache"
+        ],
+        "log": "logs/baseline-lint.txt"
+      },
+      "unit": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/vitest/vitest.mjs",
+          "run",
+          "--reporter=dot",
+          "--maxWorkers=1",
+          "--minWorkers=1"
+        ],
+        "log": "logs/baseline-unit.txt"
+      },
+      "ui": {
+        "exit": 0,
+        "command": [
+          "node",
+          "tests/settings-profile-ui.mjs"
+        ],
+        "log": "logs/baseline-ui.txt"
+      },
+      "export": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/expo/bin/cli",
+          "export",
+          "--platform",
+          "android",
+          "--output-dir",
+          "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase3-20261025\\baseline-export"
+        ],
+        "log": "logs/baseline-export.txt"
+      }
+    },
+    "post-family": {
+      "type": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "--pretty",
+          "false"
+        ],
+        "log": "logs/post-family-type.txt"
+      },
+      "lint": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/eslint/bin/eslint.js",
+          "src",
+          "--no-cache"
+        ],
+        "log": "logs/post-family-lint.txt"
+      },
+      "unit": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/vitest/vitest.mjs",
+          "run",
+          "--reporter=dot",
+          "--maxWorkers=1",
+          "--minWorkers=1"
+        ],
+        "log": "logs/post-family-unit.txt"
+      },
+      "ui": {
+        "exit": 0,
+        "command": [
+          "node",
+          "tests/settings-profile-ui.mjs"
+        ],
+        "log": "logs/post-family-ui.txt"
+      },
+      "export": {
+        "exit": 0,
+        "command": [
+          "node",
+          "../../node_modules/expo/bin/cli",
+          "export",
+          "--platform",
+          "android",
+          "--output-dir",
+          "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase3-20261025\\post-family-export"
+        ],
+        "log": "logs/post-family-export.txt"
+      }
+    }
+  },
+  "unitTests": 335,
+  "unitFiles": 32,
+  "settingsProfileGroups": 14,
+  "expandedActualComponentGroups": 16,
+  "drrmGroups": 13,
+  "nativeSourceIdentity": {
+    "requested": 29,
+    "passed": true
+  },
+  "planOutsidePhase3Identical": true,
+  "fullNativeProtocolPassed": false,
+  "remaining": [
+    "A09 saved-member edit state on both routes",
+    "Native touch selection/paste/caret and full hex protocol",
+    "Exact Gboard font-update-banner qualification of A08 candidate",
+    "Remaining sheet configuration/already-open/immediate-reopen/shared-consumer native matrix"
+  ],
+  "ios": "Source branches preserved; native iOS not performed",
+  "nativeRelease": "Installed APK source revision unknown; JS development pairing only",
+  "security": "No native domain submission or destructive action",
+  "cleanup": "Unsaved draft discarded; Profile clean; display/font/navigation restored; final Home/IME hidden"
+}

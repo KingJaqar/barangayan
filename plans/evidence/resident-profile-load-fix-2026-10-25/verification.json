@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-25",
+  "fixStatus": "Implemented; native eligible-resident completion/save pending manual verification",
+  "keyboardPhase2Status": "Partially complete; remaining field/consumer/device/iOS protocols unchanged",
+  "checks": {
+    "baselineMobileTypecheck": "pass",
+    "baselineAffectedLint": "pass",
+    "baselineSharedAuthSetupTests": { "status": "pass", "tests": 59 },
+    "finalSharedTests": { "status": "pass", "tests": 586, "files": 38, "log": "logs/shared-tests-release-check.log" },
+    "finalMobileTests": { "status": "pass", "tests": 335, "files": 32, "log": "logs/mobile-tests-release-check.log" },
+    "formBrowser": { "status": "pass", "groups": 6, "capturedErrorsWarnings": 0, "log": "logs/loading-ui-final.log" },
+    "existingSettingsProfileBrowser": { "status": "pass", "log": "logs/settings-ui-final.log" },
+    "mobileTypecheck": { "status": "pass", "log": "logs/mobile-typecheck-release-check.log" },
+    "affectedLint": { "status": "pass", "log": "logs/mobile-lint-release-check.log" },
+    "residentWebTypecheck": { "status": "pass", "version": "5.9.3", "log": "logs/web-typescript-5-final.log" },
+    "standaloneSharedTypecheck": { "status": "pre-existing-failure", "baseline": 6, "current": 6, "new": 0, "evidence": "shared-type-comparison.json" },
+    "androidJsHermesExport": { "status": "pass", "log": "logs/android-export-release-check.log", "nativeApkBuild": false },
+    "liveSharedLocalityHelper": { "status": "pass", "evidence": "live-helper-verification.json", "readonly": true },
+    "nativeAdminCase": { "status": "pass", "evidence": "native-verification.json" },
+    "nativeSourceIdentity": { "status": "pass", "modules": 29, "evidence": "final-source-identity.json" },
+    "ownedDiffAndPreservation": { "status": "pass", "evidence": "final-audit.json" },
+    "nativeConsole": "Monitored issue set unchanged; pre-existing buffered push-token warning remains"
+  },
+  "acceptance": [
+    { "criterion": "Identify actual observed cause from native execution", "status": "met", "evidence": "All three reads200/data; caught resident-only rejection for admin profile" },
+    { "criterion": "Accurate account/session errors and conditional retry without exposing unsafe form", "status": "met", "evidence": "Native admin case, six browser groups and shared regressions" },
+    { "criterion": "Preserve resident tenant and new-registration locality contract", "status": "met", "evidence": "Shared tests, actual-form differing-tenant fixture and live public helper reads" },
+    { "criterion": "Cancel obsolete loads, clear deadlines and prevent stale draft replacement", "status": "met", "evidence": "Locality unit tests and actual form stale-account/unmount fixtures" },
+    { "criterion": "Preserve account authorization, security, styling and other user work", "status": "met", "evidence": "Source review, type/tests and final-audit.json; no remote writes or dependency changes" },
+    { "criterion": "Native eligible-resident completion/save", "status": "pending manual verification", "steps": "Use a designated resident development account; test required and optional setup, readonly email/city and own locality, temporary network failure/retry, navigate away/back, and an explicitly approved test-account save. Active native account is admin; do not alter its role." },
+    { "criterion": "Original keyboard Phase2 full consumer/device/iOS acceptance", "status": "pending manual verification", "steps": "Follow the existing Phase2 result-or-gap ledger; this loading fix does not establish additional keyboard passes." }
+  ],
+  "scope": {
+    "newDependencies": 0,
+    "remoteDataAccountOrConfigMutations": 0,
+    "commitsPushesDeployments": 0,
+    "outOfScope": ["Six existing standalone shared type diagnostics", "Existing unrelated database security/performance advisories", "Remaining keyboard phase acceptance"]
+  }
+}

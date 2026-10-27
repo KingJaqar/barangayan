@@ -1,0 +1,17 @@
+{
+  "passed": [
+    "Hub pull reloads guidelines and hotlines, and nothing else",
+    "a rejected Hub source still lets the rest finish and the spinner end",
+    "the spinner waits for the sources and a second pull in one flight is ignored",
+    "Alerts pull reloads the announcements source only",
+    "Scan pull reloads the QR instructions only",
+    "Family pull awaits members and attendance together",
+    "switching tabs leaves only the mounted tab's sources registered",
+    "a tab switch mid-pull ends cleanly",
+    "Centers has no pull control and Hub gets exactly one back",
+    "unmounting mid-pull leaves no error",
+    "guest tabs register nothing, Hub still reloads",
+    "all four emergency hooks return a promise that resolves after the response is applied, and also on failure"
+  ],
+  "errors": []
+}

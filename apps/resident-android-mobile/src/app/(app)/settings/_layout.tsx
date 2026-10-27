@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Fonts } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 
@@ -8,7 +9,7 @@ export default function SettingsLayout() {
   const verificationAnimation = reducedMotion ? 'none' : 'slide_from_right';
 
   return (
-    <Stack>
+    <Stack screenOptions={{ headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
       {/* index.tsx builds its own colored header (matching the reference screenshot) —
           the native Stack header would otherwise show a stray "index" title above it. */}
       <Stack.Screen name="index" options={{ headerShown: false }} />

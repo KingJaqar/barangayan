@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/resident-account-setup.test.ts (16 tests) 20ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 19ms
+ ✓ src/lib/registration-locality.test.ts (9 tests) 18ms
+
+ Test Files  3 passed (3)
+      Tests  69 passed (69)
+   Start at  09:36:47
+   Duration  1.96s (transform 151ms, setup 0ms, collect 385ms, tests 57ms, environment 1ms, prepare 658ms)
+

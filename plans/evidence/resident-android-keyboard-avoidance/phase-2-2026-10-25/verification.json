@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-25 Asia/Manila",
+  "phaseStatus": "Partially complete",
+  "changedFiles": [
+    "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+    "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+    "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+    "apps/resident-android-mobile/src/components/services/charter-request-form.tsx"
+  ],
+  "newDependencies": [],
+  "nativeMeasuredDefinitions": 16,
+  "fullNativeProtocolPasses": 0,
+  "ledgerRows": 497,
+  "checks": {
+    "typecheck": "baseline/final exit0",
+    "sourceLint": "baseline/final exit0",
+    "broadLint": "baseline62 errors/4 warnings outside changed source; not modified",
+    "unit": "335 tests /32 files pass baseline and candidate; final library bytes unchanged",
+    "androidExport": "baseline and final Android JS/Hermes export exit0; pre-existing color-environment warning; no native APK build",
+    "navigation": "baseline14/15 suites pass; Services-list strict locator matches2 duplicate fee labels; diagnostic confirms",
+    "settingsProfileUi": "pass",
+    "affectedVerificationUi": "6 assertion groups pass on final source",
+    "documentFormsUi": "5 groups pass",
+    "requestDocumentUi": "6 groups pass",
+    "fullVerificationUi": "location Detect Your Location timeout occurs both final-source and snapshot-backed baseline runs; outside Phase2",
+    "nativeSourceIdentity": "29/29 final loaded factories/maps match current source",
+    "console": "Only existing Failed to get Expo push token warning class; no new sampled keyboard-related warning/error/exception; not a global warning-free claim"
+  },
+  "acceptance": {
+    "changedOwnersBeforeAfter": "met for four measured representative overlaps",
+    "visibleFieldNoJump": "met Profile First Name and Current Password",
+    "threeCycleRestoration": "met tested Profile/password/ID/charter surfaces; family smoke also3 cycles",
+    "allW1W5Consumers": "pending manual verification; exact result-or-gap rows retained",
+    "fullPerFieldProtocol": "pending manual verification",
+    "androidReleaseMatrix": "pending manual verification",
+    "nativeIos": "pending manual verification",
+    "noUnjustifiedSharedChanges": "met; StepFlow/TextField/sheets/config/dependencies unchanged"
+  },
+  "blockers": [
+    "Complete Profile cannot load profile/locality in active account",
+    "Designated signed-out/setup/first-password/pending-email/ID-photo/fallback-locality/legacy/page-count test states not available or not exercised",
+    "Only API32 default-font development-client device tested; other supported Android configurations and native iOS unavailable"
+  ],
+  "limitations": [
+    "Unexecuted branches are not presumed inaccessible or passing. Manual steps are in report.md.",
+    "APK source revision remains unknown; source29 development pairing and JS export do not qualify a release APK."
+  ],
+  "snapshots": "tmp/resident-keyboard-phase2-20261025/before",
+  "sourceIdentity": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/source-manifest.json",
+  "finalSourceHashes": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "sha256": "ff5269cdce6a6b93ee9d4de23a6e711e5a89929a78deac7355b3076890abc124"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "08bb36034f029319bf60ffcd679920ad7cf2483eea4cbe514c3c2e14fd9f7cb7"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "sha256": "7eac34ccb6d54650ca2e91e606ccb51f0ed02c2f4b951b28614575568c70d69b"
+    }
+  ]
+}

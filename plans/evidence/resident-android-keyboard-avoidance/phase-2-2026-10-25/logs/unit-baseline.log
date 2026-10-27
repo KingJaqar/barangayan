@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/offline-routing.test.ts (15 tests) 2130ms
+   ✓ interrupted activation recovers deterministically > a crash after any write leaves either the old or the new pack active, with matching avoidance  1214ms
+ ✓ src/lib/search-results.test.ts (23 tests) 480ms
+ ✓ src/lib/emergency-alert-filter.test.ts (7 tests) 300ms
+ ✓ src/lib/refresh-resource.test.ts (8 tests) 122ms
+ ✓ src/lib/navigation-diagnostics.test.ts (7 tests) 83ms
+ ✓ src/lib/resident-theme.test.ts (52 tests) 59ms
+ ✓ src/lib/household.test.ts (6 tests) 66ms
+ ✓ src/lib/account-setup-status.test.ts (8 tests) 46ms
+ ✓ src/lib/center-presentation.test.ts (6 tests) 37ms
+ ✓ src/lib/password-recovery.test.ts (16 tests) 36ms
+ ✓ src/lib/google-auth-flow.test.ts (20 tests) 23ms
+ ✓ src/lib/history-resource.test.ts (6 tests) 25ms
+ ✓ src/lib/setup-request.test.ts (6 tests) 23ms
+ ✓ src/lib/google-auth.test.ts (6 tests) 24ms
+ ✓ src/lib/resident-search.test.ts (7 tests) 23ms
+ ✓ src/lib/pkce-crypto.test.ts (2 tests) 19ms
+ ✓ src/lib/search-history.test.ts (8 tests) 15ms
+ ✓ src/lib/auth-cleanup.test.ts (2 tests) 24ms
+ ✓ src/lib/valid-id.test.ts (16 tests) 18ms
+ ✓ src/lib/sensitive-auth.test.ts (9 tests) 18ms
+ ✓ src/lib/home-request.test.ts (5 tests) 7ms
+ ✓ src/lib/resident-reduced-motion.test.ts (5 tests) 7ms
+ ✓ src/lib/setup-navigation.test.ts (11 tests) 9ms
+ ✓ src/lib/leaflet-assets.test.ts (1 test) 96ms
+ ✓ src/lib/floating-tab-layout.test.ts (33 tests) 9ms
+ ✓ src/lib/setup-refresh.test.ts (4 tests) 7ms
+ ✓ src/lib/map-presentation.test.ts (3 tests) 8ms
+ ✓ src/lib/birthday-wheel.test.ts (6 tests) 7ms
+ ✓ src/lib/horizontal-scroll.test.ts (3 tests) 7ms
+ ✓ src/lib/login-error.test.ts (12 tests) 8ms
+ ✓ src/lib/agency-sla-snapshot.test.ts (9 tests) 6ms
+ ✓ src/lib/tracking-duration.test.ts (13 tests) 7ms
+
+ Test Files  32 passed (32)
+      Tests  335 passed (335)
+   Start at  08:37:10
+   Duration  36.19s (transform 2.45s, setup 0ms, collect 10.43s, tests 3.75s, environment 9ms, prepare 10.25s)
+

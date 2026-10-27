@@ -1,0 +1,120 @@
+{
+  "tag": "A08-candidate-compact",
+  "label": "Household member full name",
+  "before": {
+    "editor": [
+      60,
+      626,
+      1020,
+      790
+    ],
+    "viewport": [
+      0,
+      319,
+      1080,
+      1680
+    ],
+    "keyboardTop": 72,
+    "clearance": -718
+  },
+  "focus": {
+    "editor": [
+      60,
+      445,
+      1020,
+      609
+    ],
+    "viewport": [
+      0,
+      138,
+      1080,
+      927
+    ],
+    "keyboardTop": 927,
+    "clearance": 318
+  },
+  "actions": [
+    {
+      "action": "Add Member",
+      "bounds": [
+        60,
+        671,
+        1020,
+        843
+      ]
+    }
+  ],
+  "typing": true,
+  "syntheticTextRestored": true,
+  "cycles": 3,
+  "restored": [
+    {
+      "editor": [
+        60,
+        626,
+        1020,
+        790
+      ],
+      "viewport": [
+        0,
+        319,
+        1080,
+        1680
+      ],
+      "keyboardTop": 927,
+      "clearance": 137
+    },
+    {
+      "editor": [
+        60,
+        626,
+        1020,
+        790
+      ],
+      "viewport": [
+        0,
+        319,
+        1080,
+        1680
+      ],
+      "keyboardTop": 927,
+      "clearance": 137
+    },
+    {
+      "editor": [
+        60,
+        626,
+        1020,
+        790
+      ],
+      "viewport": [
+        0,
+        319,
+        1080,
+        1680
+      ],
+      "keyboardTop": 927,
+      "clearance": 137
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792936013251.997,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792936013251.997,
+      "classification": "existing push-notification path"
+    },
+    {
+      "kind": "warning",
+      "at": 1792936071977.632,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "scope": "Native focus, typing, action reachability and restoration; paste/selection/error variants recorded separately"
+}

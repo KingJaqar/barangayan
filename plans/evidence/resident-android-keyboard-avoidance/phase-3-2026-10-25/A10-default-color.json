@@ -1,0 +1,92 @@
+{
+  "tag": "A10-default-color",
+  "label": "Hex color",
+  "before": {
+    "editor": [
+      318,
+      1469,
+      930,
+      1603
+    ],
+    "viewport": [
+      0,
+      382,
+      1080,
+      1651
+    ],
+    "keyboardTop": 1167,
+    "clearance": -436
+  },
+  "focus": {
+    "editor": [
+      318,
+      716,
+      930,
+      850
+    ],
+    "viewport": [
+      0,
+      336,
+      1080,
+      898
+    ],
+    "keyboardTop": 1167,
+    "clearance": 317
+  },
+  "actions": [
+    {
+      "action": "Cancel",
+      "bounds": [
+        72,
+        949,
+        522,
+        1107
+      ]
+    },
+    {
+      "action": "Save Color",
+      "bounds": [
+        558,
+        949,
+        1008,
+        1101
+      ]
+    }
+  ],
+  "typing": false,
+  "syntheticTextRestored": true,
+  "cycles": 1,
+  "restored": [
+    {
+      "editor": [
+        318,
+        1469,
+        930,
+        1603
+      ],
+      "viewport": [
+        0,
+        382,
+        1080,
+        1651
+      ],
+      "keyboardTop": 1167,
+      "clearance": -436
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792933985631.711,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792933985631.711,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "scope": "Native focus, typing, action reachability and restoration; paste/selection/error variants recorded separately"
+}

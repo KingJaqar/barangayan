@@ -1,0 +1,47 @@
+{
+  "flow": "probe-legacy",
+  "configuration": "before",
+  "results": [
+    {
+      "id": "C13",
+      "name": "probe-legacy-before-focus",
+      "editor": [
+        111,
+        573,
+        969,
+        765
+      ],
+      "viewport": [
+        0,
+        240,
+        1080,
+        1611
+      ],
+      "keyboardTop": 1167,
+      "clearance": 402,
+      "focused": true
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    },
+    {
+      "kind": "warning",
+      "at": 1792909547627.781
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792908104298.672
+    },
+    {
+      "kind": "warning",
+      "at": 1792909547627.781
+    }
+  ],
+  "monitoringError": null,
+  "submitted": false
+}

@@ -1,0 +1,10 @@
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\evacuation-centers-panel.tsx
+  107:37  warning  The ref value 'revealRevision.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'revealRevision.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  119:24  warning  The ref value 'revealRevision.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'revealRevision.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\health\health-presentation.tsx
+  2:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+

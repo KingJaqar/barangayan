@@ -15,7 +15,7 @@ import { useTheme } from '@/hooks/use-theme';
  * text turned it into a stretched pill next to the other two's circles. Only the rare
  * "99+" overflow case is allowed to widen into a pill, same as most badge conventions.
  */
-export function CountBadge({ count, background, presentation = 'default', size = 16, outlineWidth = 2 }: { count: number; background: string; presentation?: 'default' | 'resident'; size?: number; outlineWidth?: number }) {
+export function CountBadge({ count, background, foreground, presentation = 'default', size = 16, outlineWidth = 2 }: { count: number; background: string; foreground?: string; presentation?: 'default' | 'resident'; size?: number; outlineWidth?: number }) {
   const theme = useTheme();
   if (count <= 0) return null;
 
@@ -29,7 +29,7 @@ export function CountBadge({ count, background, presentation = 'default', size =
         { backgroundColor: background },
         presentation === 'resident' && { height: size, minWidth: size, width: isOverflow ? undefined : size, borderRadius: size / 2, outlineWidth, outlineStyle: 'solid', outlineColor: theme.resident.surface },
       ]}>
-      {presentation === 'resident' ? <ThemedText style={[styles.label, { fontSize: 9.5 }]} numberOfLines={1}>
+      {presentation === 'resident' ? <ThemedText style={[styles.label, { fontSize: 9.5 }, foreground ? { color: foreground } : undefined]} numberOfLines={1}>
         {isOverflow ? '99+' : count}
       </ThemedText> : <Text style={styles.label} numberOfLines={1}>
         {isOverflow ? '99+' : count}

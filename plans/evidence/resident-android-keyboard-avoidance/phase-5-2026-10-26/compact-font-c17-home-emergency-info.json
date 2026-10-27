@@ -1,0 +1,235 @@
+{
+  "at": "2026-10-26T13:31:15.514Z",
+  "status": "pass stated subset",
+  "config": "compact-font",
+  "route": "home/emergency-info",
+  "observations": [
+    {
+      "tag": "compact-font-c17-home-emergency-info-focus",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-typed",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-native-cut",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-native-paste",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-start",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-end",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-middle",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-reopen-active",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-map-return",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-home-emergency-info-clear",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "open": {
+        "tag": "compact-font-c17-home-emergency-info-cycle-1",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "compact-font-c17-home-emergency-info-cycle-2",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "compact-font-c17-home-emergency-info-cycle-3",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    }
+  ],
+  "listEditorAbsent": true,
+  "oneEditor": true,
+  "remaining": [
+    "touch paste/selection",
+    "selected center/route overlay",
+    "idle-collapse timing",
+    "actual map camera identity"
+  ]
+}

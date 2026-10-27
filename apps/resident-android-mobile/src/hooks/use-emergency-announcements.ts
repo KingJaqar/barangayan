@@ -84,7 +84,7 @@ export function useEmergencyAnnouncements() {
     setLoading(true);
     setError(null);
     setIsOffline(false);
-    supabase
+    return supabase
       .from('announcements')
       .select('*')
       .eq('category', 'emergency')

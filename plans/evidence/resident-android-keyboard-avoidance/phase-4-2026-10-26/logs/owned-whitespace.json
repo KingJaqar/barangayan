@@ -1,0 +1,5 @@
+{
+  "status": 0,
+  "stdout": "",
+  "stderr": "warning: in the working copy of 'apps/resident-android-mobile/tests/verification-sensitive-ui.mjs', LF will be replaced by CRLF the next time Git touches it\n"
+}

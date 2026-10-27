@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs, usePathname } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { cancelAnimation, Easing, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CountBadge } from '@/components/count-badge';
@@ -11,6 +11,7 @@ import { HomeTabIcon } from '@/components/home-tab-icon';
 import { ServicesTabIcon } from '@/components/services-tab-icon';
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
@@ -65,6 +66,13 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const barMotion = useAnimatedStyle(() => ({ transform: [{ translateY: mapRoute ? (mapNavProgress?.value ?? 0) * (barHeight + Math.max(insets.bottom, 12) + 8) : 0 }] }));
   const reducedMotion = useResidentReducedMotion(true);
   const [width, setWidth] = useState(0);
+  const { fontScale } = useWindowDimensions();
+  const { fontId } = useFontPreference();
+  const measurementKey = `${fontId}:${fontScale}`;
+  const [labelMeasurements, setLabelMeasurements] = useState<{ key: string; widths: number[] }>({ key: '', widths: [] });
+  // Measure the selected weight too, so switching tabs cannot change label visibility.
+  const showLabels = labelMeasurements.key === measurementKey
+    && TABS.every((_, index) => labelMeasurements.widths[index] > 0 && labelMeasurements.widths[index] + 2 <= width / TABS.length);
   const selectedRoute = state.routes[state.index];
   const selected = TABS.findIndex(tab => tab.name === selectedRoute?.name);
   useEffect(() => {
@@ -99,6 +107,21 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
         setWidth(current => current === next ? current : next);
         setBarHeight(height);
       }}>
+      {/* Intrinsic widths remain measurable even while the visible labels are hidden. */}
+      <View key={measurementKey} pointerEvents="none" accessible={false} accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants" style={styles.labelMeasurements}>
+        {TABS.map((tab, index) => <ThemedText key={tab.name} type="smallBold" numberOfLines={1}
+          style={[styles.label, styles.labelMeasurement]}
+          onLayout={event => {
+            const labelWidth = event.nativeEvent.layout.width;
+            setLabelMeasurements(current => {
+              if (current.key === measurementKey && current.widths[index] === labelWidth) return current;
+              const widths = current.key === measurementKey ? [...current.widths] : [];
+              widths[index] = labelWidth;
+              return { key: measurementKey, widths };
+            });
+          }}>{tab.label}</ThemedText>)}
+      </View>
       <Animated.View pointerEvents="none"
         style={[styles.indicator, { width: width / TABS.length, backgroundColor: theme.resident.accentSoft }, indicator]} />
       {TABS.map((tab, index) => {
@@ -116,7 +139,7 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
             if (navigationDiagnosticsAvailable) recordNavigationDiagnostic(event.defaultPrevented ? 'prevented' : 'dispatch-end', tab.name, {}, diagnosticId);
           }}
           onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}>
-          <TabContent tab={tab} active={active} reducedMotion={reducedMotion} badges={tab.name === 'reports' ? (
+          <TabContent tab={tab} active={active} showLabel={showLabels} reducedMotion={reducedMotion} badges={tab.name === 'reports' ? (
               <View style={styles.badges} pointerEvents="none">
                 <CountBadge count={activeReportsCount} background={theme.accentOrange} presentation="resident" />
                 <CountBadge count={resolvedUnreadCount} background={theme.accentGreen} presentation="resident" />
@@ -128,7 +151,7 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   </Animated.View>;
 }
 
-function TabContent({ tab, active, reducedMotion, badges }: { tab: (typeof TABS)[number]; active: boolean; reducedMotion: boolean; badges: ReactNode }) {
+function TabContent({ tab, active, showLabel, reducedMotion, badges }: { tab: (typeof TABS)[number]; active: boolean; showLabel: boolean; reducedMotion: boolean; badges: ReactNode }) {
   const { resident } = useTheme();
   const progress = useSharedValue(active ? 1 : 0);
   useEffect(() => {
@@ -148,9 +171,9 @@ function TabContent({ tab, active, reducedMotion, badges }: { tab: (typeof TABS)
       </Animated.View>
       {badges}
     </View>
-    <ThemedText type={active ? 'smallBold' : 'small'} style={styles.label}>
+    {showLabel && <ThemedText type={active ? 'smallBold' : 'small'} numberOfLines={1} style={[styles.label, styles.visibleLabel]}>
       <Animated.Text style={textColor}>{tab.label}</Animated.Text>
-    </ThemedText>
+    </ThemedText>}
   </>;
 }
 const styles = StyleSheet.create({
@@ -159,5 +182,8 @@ const styles = StyleSheet.create({
   tab: { flex: 1, minWidth: 0, minHeight: 54, alignItems: 'center', justifyContent: 'center', gap: 2, paddingVertical: 8 },
   icon: { width: 24, height: 24 },
   label: { fontSize: 11, lineHeight: 16, textAlign: 'center' },
+  visibleLabel: { maxWidth: '100%' },
+  labelMeasurements: { position: 'absolute', top: 0, left: 0, flexDirection: 'row', opacity: 0 },
+  labelMeasurement: { flexShrink: 0 },
   badges: { position: 'absolute', top: -8, left: 14, flexDirection: 'row', gap: 2 },
 });

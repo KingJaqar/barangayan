@@ -18,10 +18,12 @@ import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { HubContent } from '@/components/drrm/hub-content';
 import { AlertsContent } from '@/components/drrm/alerts-content';
 import { CentersContent } from '@/components/evacuation-centers-panel';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { SegmentedControl } from '@/components/segmented-control';
 import { QrGuideContent } from '@/components/qr-guide-content';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
 import type { LatLng } from '@barangayan/shared';
 
 type EmergencyInfoTab = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
@@ -74,14 +76,19 @@ export default function EmergencyInfoScreen() {
 
   const isHub = tab === 'hub';
   const isCenters = tab === 'centers';
+  const { searchAvoidance } = useEmergencyMapHeader();
   const isScan = tab === 'scan';
   const isFamily = tab === 'family';
   const isAlerts = tab === 'alerts';
+  // Hub and Alerts sources live here; Scan and Family register their own while mounted. Centers has no control.
+  const { refreshing, onRefresh, register } = usePullRefresh(
+    isHub ? [guidelinesSource.refetch, hotlinesSource.refetch] : isAlerts ? [refetchAlerts] : undefined,
+  );
 
   return (
       <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
         <View style={[styles.root, { backgroundColor: theme.background }]}>
-      <SegmentedControl segments={TABS} activeKey={tab} onChange={setTab} variant="underline" />
+      {searchAvoidance ? null : <SegmentedControl segments={TABS} activeKey={tab} onChange={setTab} variant="underline" />}
 
       {isCenters ? (
         <Animated.View
@@ -105,7 +112,9 @@ export default function EmergencyInfoScreen() {
         <Animated.View
           entering={isHub || isAlerts || isScan || isFamily ? undefined : FadeIn.duration(200)}
           style={styles.contentContainer}>
+          <PullRefreshScope register={register}>
           <ScrollView
+            refreshControl={<PullRefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             style={styles.scrollView}
             contentContainerStyle={[
               styles.scrollContent,
@@ -142,6 +151,7 @@ export default function EmergencyInfoScreen() {
               />
             )}
           </ScrollView>
+          </PullRefreshScope>
         </Animated.View>
       )}
     </View>

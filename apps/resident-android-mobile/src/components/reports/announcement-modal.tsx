@@ -39,7 +39,7 @@ export function AnnouncementModal({ visible, announcement, onClose, readError = 
           </View>
           {announcement ? <>
             {readError ? <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>Read status could not be saved. Close this announcement and use its read control to try again.</ThemedText> : null}
-            <ThemedText accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{announcement.title}</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{announcement.title}</ThemedText>
             <View style={styles.stamp}><Ionicons name="time-outline" size={14} color={resident.muted} accessible={false} />
               <ThemedText style={{ flex: 1, fontSize: 13, lineHeight: 19, color: resident.muted }}>{reportTimeAgo(announcement.published_at)} · {new Date(announcement.published_at).toLocaleString('en-PH', { dateStyle: 'long', timeStyle: 'short' })}</ThemedText>
             </View>

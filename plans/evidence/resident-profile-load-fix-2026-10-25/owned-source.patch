@@ -1,0 +1,195 @@
+diff --git a/apps/resident-android-mobile/src/components/resident-details-form.tsx b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+index ac1616f9..9590032e 100644
+--- a/apps/resident-android-mobile/src/components/resident-details-form.tsx
++++ b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+@@ -1,8 +1,8 @@
+-import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from '@barangayan/shared';
++import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, RegistrationLocalityError, ResidentSetupStatusError, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from '@barangayan/shared';
+ import { Ionicons } from '@expo/vector-icons';
+ import type { MultiPolygon, Polygon } from 'geojson';
+ import { useEffect, useRef, useState } from 'react';
+-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
++import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+ import { AuthHeader } from './auth-header';
+ import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from './birthday-calendar-modal';
+@@ -188,6 +188,8 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+   const [registrationLocation, setRegistrationLocation] = useState<{ gps: { lat: number; lng: number } | null; home: { lat: number; lng: number } | null }>({ gps: null, home: null });
+   const [snapshot, setSnapshot] = useState<Tables<'profiles'> | null>(null);
+   const [ready, setReady] = useState(false);
++  const [initializing, setInitializing] = useState(true);
++  const [loadFailure, setLoadFailure] = useState<{ message: string; retryable: boolean } | null>(null);
+   const [attempt, setAttempt] = useState(0);
+   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+   const [error, setError] = useState<string | null>(null);
+@@ -199,15 +201,17 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+   useEffect(() => {
+     const scope = owner.current; scope.invalidate(); const owns = scope.ticket();
+     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10_000);
+-    setReady(false); setError(null); setConflict(false); setUncertain(false);
+-    if (uid) void Promise.all([
+-      registrationLocality(supabase),
+-      supabase.from('profiles').select('*').eq('id', uid).abortSignal(controller.signal).maybeSingle(),
+-    ]).then(([locality, result]) => {
++    setReady(false); setInitializing(true); setLoadFailure(null); setError(null); setConflict(false); setUncertain(false);
++    const load = async () => {
++      if (!uid) throw new ResidentSetupStatusError({ name: 'AuthSessionMissingError' });
++      const result = await supabase.from('profiles').select('*').eq('id', uid).abortSignal(controller.signal).maybeSingle();
+       if (!owns()) return;
+-      if (result.error) throw result.error;
++      if (result.error) throw new ResidentSetupStatusError({ code: result.error.code, status: result.status });
+       const p = result.data;
+-      if (p && (p.role !== 'resident' || p.deleted_at)) throw new Error('This account cannot complete resident setup.');
++      if (p && (p.id !== uid || p.role !== 'resident' || p.deleted_at)) throw new ResidentSetupStatusError({ code: '42501' });
++      const locality = await registrationLocality(supabase, { barangayId: p?.barangay_id, signal: controller.signal });
++      if (!owns()) return;
++      if (controller.signal.aborted) throw new RegistrationLocalityError('locality', true);
+       const names = residentNamePrefill(session?.user.user_metadata, p);
+       setFirstName(names.firstName); setLastName(names.lastName);
+       setMiddleName(p?.middle_name ?? ''); setSuffix(p?.suffix ?? '');
+@@ -217,15 +221,24 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+       const point = (value: Json | null | undefined) => value && typeof value === 'object' && !Array.isArray(value) && typeof value.lat === 'number' && typeof value.lng === 'number' ? { lat: value.lat, lng: value.lng } : null;
+       setRegistrationLocation({ gps: point(p?.registration_location), home: point(p?.registration_home_location) });
+       setSnapshot(p); setBarangay({ ...locality, boundary: locality.boundary as Polygon | MultiPolygon | null }); setReady(true);
+-    }).catch(() => { if (owns()) setError('Unable to load your current profile or registration locality. Check your connection and retry.'); })
+-      .finally(() => clearTimeout(timer));
++    };
++    void load().catch(cause => {
++      if (!owns()) return;
++      setLoadFailure(cause instanceof ResidentSetupStatusError
++        ? ['unknown', 'network', 'state_unavailable'].includes(cause.failure.kind)
++          ? { message: 'Unable to load your profile. Check your connection and retry.', retryable: true }
++          : cause.failure
++        : cause instanceof RegistrationLocalityError
++          ? { message: cause.message, retryable: cause.retryable }
++          : { message: 'Unable to load your profile. Check your connection and retry.', retryable: true });
++    }).finally(() => { clearTimeout(timer); if (owns()) setInitializing(false); });
+     return () => { scope.invalidate(); controller.abort(); clearTimeout(timer); };
+     // Fresh profile belongs to this account/load attempt, not an offline context cache.
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [uid, attempt]);
+ 
+   async function handleSubmit() {
+-    if (!ready || loading) return;
++    if (!ready || initializing || loadFailure || loading || conflict) return;
+     const owns = owner.current.ticket();
+     const parsed = residentDetailsStepSchema.safeParse({ firstName, lastName, middleName: middleName.trim() || undefined, suffix: suffix.trim() || undefined,
+       sex: sex ?? undefined, mobileNumber, houseNo, street, employmentStatus: employmentStatus ?? undefined,
+@@ -267,6 +280,10 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.five }]} keyboardShouldPersistTaps="handled">
+           <ThemedText style={styles.introTitle}>Let&apos;s get you set up</ThemedText>
+           <ThemedText themeColor="textSecondary" style={styles.introSubtitle}>Fill in your details to register with your local barangay.</ThemedText>
++          {initializing && <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.two }}>
++            <ActivityIndicator color={theme.primary} />
++            <ThemedText accessibilityLiveRegion="polite">Loading your profile…</ThemedText>
++          </View>}
+           {ready && <View style={{ gap: Spacing.three }} pointerEvents={loading || uncertain || conflict ? 'none' : 'auto'}>
+                     <FormSection icon="person-outline" title="Personal Information">
+             <View style={styles.fieldPairRow}>
+@@ -440,13 +457,14 @@ export function ResidentDetailsForm({ required, onSaved, onSkip, onBack }: { req
+ 
+           <RegistrationMap key={attempt} boundary={barangay?.boundary ?? null} initialValue={registrationLocation} onConfirm={setRegistrationLocation} />
+           </View>}
++          {loadFailure && <ThemedText accessibilityRole="alert" themeColor="accentRed">{loadFailure.message}</ThemedText>}
+           {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed">{error}</ThemedText>}
+-          {(!ready || conflict || uncertain) && <PrimaryButton label="Reload and review current profile" accessibilityLabel="Reload and review current profile" variant="secondary" onPress={() => {
++          {(!initializing && (loadFailure?.retryable || conflict || uncertain)) && <PrimaryButton label="Reload and review current profile" accessibilityLabel="Reload and review current profile" variant="secondary" onPress={() => {
+             if (profileSetupRequests.busy) { setError('The earlier save is still finishing. Please wait before reloading.'); return; }
+             setAttempt(value => value + 1);
+           }} />}
+-          <PrimaryButton label={required ? 'Next' : 'Confirm personal details'} accessibilityLabel={required ? 'Next' : 'Confirm personal details'} loading={loading} disabled={!ready || conflict || uncertain} onPress={handleSubmit} />
+-          {!required && <PrimaryButton label="Skip for now" accessibilityLabel="Skip for now" variant="secondary" disabled={loading} onPress={() => leave(onSkip)} />}
++          {ready && <PrimaryButton label={required ? 'Next' : 'Confirm personal details'} accessibilityLabel={required ? 'Next' : 'Confirm personal details'} loading={loading} disabled={conflict || uncertain} onPress={handleSubmit} />}
++          {!required && <PrimaryButton label={loadFailure && !loadFailure.retryable ? 'Back to Home' : 'Skip for now'} accessibilityLabel={loadFailure && !loadFailure.retryable ? 'Back to Home' : 'Skip for now'} variant="secondary" disabled={loading} onPress={() => leave(onSkip)} />}
+           <PrimaryButton label="Sign out" accessibilityLabel="Sign out" variant="secondary" disabled={loading} onPress={() => leave(() => { void logout(); })} />
+         </ScrollView>
+         </KeyboardAvoidingView>
+diff --git a/packages/shared/src/lib/resident-account-setup.test.ts b/packages/shared/src/lib/resident-account-setup.test.ts
+index a8ad504f..b6911031 100644
+--- a/packages/shared/src/lib/resident-account-setup.test.ts
++++ b/packages/shared/src/lib/resident-account-setup.test.ts
+@@ -48,6 +48,13 @@ describe('resident setup contracts', () => {
+   it.each(['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'])('requires fresh sign-in for %s rather than retrying a revoked session', code => {
+     expect(residentSetupFailure({ code, status: 403 })).toEqual({ kind: 'session_expired', message: 'Your session has ended. Sign out and sign in again to continue setup.', retryable: false });
+   });
++  it('treats an HTTP 401 as an ended session rather than a retryable setup failure', () => {
++    expect(residentSetupFailure({ status: 401, code: 'PGRST301' })).toMatchObject({ kind: 'session_expired', retryable: false });
++  });
++  it('preserves the setup RPC response status when its error object has no HTTP status', async () => {
++    const client = { rpc: () => ({ abortSignal: async () => ({ data: null, error: { code: 'PGRST301' }, status: 401 }) }) } as unknown as SupabaseClient<Database>;
++    await expect(getResidentAccountSetupStatus(client)).rejects.toMatchObject({ failure: { kind: 'session_expired', retryable: false } });
++  });
+   it('reads caller-only status and rejects malformed/error responses', async () => {
+     const rpc = vi.fn().mockReturnValue({ abortSignal: vi.fn().mockResolvedValue({ data: status, error: null }) });
+     const client = { rpc } as unknown as SupabaseClient<Database>;
+diff --git a/packages/shared/src/lib/resident-account-setup.ts b/packages/shared/src/lib/resident-account-setup.ts
+index d249afc3..bf9497f2 100644
+--- a/packages/shared/src/lib/resident-account-setup.ts
++++ b/packages/shared/src/lib/resident-account-setup.ts
+@@ -32,7 +32,7 @@ export type ResidentSetupFailure = {
+   retryable: boolean;
+ };
+ export function residentSetupFailure(error: { code?: string; status?: number; name?: string } | null | undefined): ResidentSetupFailure {
+-  if (['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'].includes(error?.code || '') || error?.name === 'AuthSessionMissingError')
++  if (error?.status === 401 || ['session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'].includes(error?.code || '') || error?.name === 'AuthSessionMissingError')
+     return { kind: 'session_expired', message: 'Your session has ended. Sign out and sign in again to continue setup.', retryable: false };
+   if (error?.status === 429 || ['over_email_send_rate_limit', 'over_request_rate_limit'].includes(error?.code || ''))
+     return { kind: 'rate_limit', message: 'Please wait before trying again.', retryable: true };
+@@ -59,8 +59,8 @@ export async function getResidentAccountSetupStatus(client: SupabaseClient<Datab
+   const controller = new AbortController();
+   const timer = setTimeout(() => controller.abort(), 10000);
+   try {
+-    const { data, error } = await client.rpc('get_resident_account_setup_status').abortSignal(controller.signal);
+-    if (error) throw new ResidentSetupStatusError(controller.signal.aborted ? { name: 'AbortError' } : error);
++    const { data, error, status } = await client.rpc('get_resident_account_setup_status').abortSignal(controller.signal);
++    if (error) throw new ResidentSetupStatusError(controller.signal.aborted ? { name: 'AbortError' } : { code: error.code, status });
+     const parsed = residentAccountSetupStatusSchema.safeParse(data);
+     if (!parsed.success) throw new ResidentSetupStatusError({ code: '55000' });
+     return parsed.data;
+diff --git a/packages/shared/src/lib/resident-auth.ts b/packages/shared/src/lib/resident-auth.ts
+index 55feafb9..6ae2b882 100644
+--- a/packages/shared/src/lib/resident-auth.ts
++++ b/packages/shared/src/lib/resident-auth.ts
+@@ -107,15 +107,35 @@ export async function needsResidentProfile(client: SupabaseClient<Database>, use
+   } finally { clearTimeout(timer); }
+ }
+ 
+-/** Configuration selects registration locality; no first-row tenant assignment. */
+-export async function registrationLocality(client: SupabaseClient<Database>) {
++export class RegistrationLocalityError extends Error {
++  constructor(readonly stage: 'locality' | 'boundary', readonly retryable: boolean) {
++    super(retryable
++      ? stage === 'locality' ? 'Unable to load registration details. Check your connection and retry.' : 'Unable to load the registration boundary. Check your connection and retry.'
++      : 'Registration details are not configured for this barangay. Please contact your barangay office.');
++    this.name = 'RegistrationLocalityError';
++  }
++}
++
++/** Existing residents retain their tenant; new registrations use the configured locality. */
++export async function registrationLocality(client: SupabaseClient<Database>, options: { barangayId?: string; signal?: AbortSignal } = {}) {
+   const controller = new AbortController();
+-  const timer = setTimeout(() => controller.abort(), 10000);
++  const signal = options.signal ?? controller.signal;
++  const timer = options.signal ? undefined : setTimeout(() => controller.abort(), 10000);
++  let stage: 'locality' | 'boundary' = 'locality';
+   try {
+-    const { data: locality, error } = await client.from('barangay_localities').select('*').eq('resident_registration_enabled', true).abortSignal(controller.signal).single();
+-    if (error || !locality) throw new Error('Registration locality unavailable. Please retry.');
+-    const { data: barangay, error: boundaryError } = await client.from('barangays').select('id, boundary').eq('id', locality.barangay_id).abortSignal(controller.signal).single();
+-    if (boundaryError || !barangay) throw new Error('Registration boundary unavailable. Please retry.');
++    if (signal.aborted) throw new RegistrationLocalityError(stage, true);
++    const query = client.from('barangay_localities').select('*');
++    const { data: locality, error } = await (options.barangayId
++      ? query.eq('barangay_id', options.barangayId)
++      : query.eq('resident_registration_enabled', true)).abortSignal(signal).maybeSingle();
++    if (error || !locality) throw new RegistrationLocalityError(stage, !!error && error.code !== 'PGRST116');
++    stage = 'boundary';
++    if (signal.aborted) throw new RegistrationLocalityError(stage, true);
++    const { data: barangay, error: boundaryError } = await client.from('barangays').select('id, boundary').eq('id', locality.barangay_id).abortSignal(signal).maybeSingle();
++    if (boundaryError || !barangay) throw new RegistrationLocalityError(stage, !!boundaryError && boundaryError.code !== 'PGRST116');
+     return { ...barangay, name: locality.display_name, city: locality.city, province: locality.province };
++  } catch (cause) {
++    if (cause instanceof RegistrationLocalityError) throw cause;
++    throw new RegistrationLocalityError(stage, true);
+   } finally { clearTimeout(timer); }
+ }

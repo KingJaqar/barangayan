@@ -1,0 +1,257 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/(app)/settings/profile.tsx, apps/resident-android-mobile/src/components/delete-account-modal.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          settings/
+            profile.tsx
+      components/
+        delete-account-modal.tsx</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/delete-account-modal.tsx">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+interface DeleteAccountModalProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  visible: boolean;
+  onClose: () =&gt; void;
+  /** Re-authenticates with the given password, then performs the deletion. Throws on failure. */
+  onConfirm: (password: string) =&gt; Promise&lt;void&gt;;
+}
+⋮----
+/** Re-authenticates with the given password, then performs the deletion. Throws on failure. */
+⋮----
+/**
+ * Password re-entry gate shown before &quot;Delete My Account&quot; actually runs.
+ *
+ * The account-deletion edge function only checks that the caller holds a
+ * valid session — a left-open or stolen session could otherwise permanently
+ * anonymize and ban the account with nothing but a tap on the earlier
+ * Alert.alert confirm. Requiring the current password here (same
+ * re-authenticate-before-mutating pattern as settings/change-password.tsx)
+ * makes this last, irreversible step deliberate.
+ */
+⋮----
+function handleClose()
+⋮----
+if (loading) return; // don&apos;t let a backdrop tap interrupt an in-flight deletion
+⋮----
+async function handleConfirm()
+⋮----
+// On success the caller (settings screen) closes this modal itself as
+// part of logging out — nothing further to do here.
+⋮----</file><file path="apps/resident-android-mobile/src/app/(app)/settings/profile.tsx">/**
+ * Resident profile: stacked editable details, grouped cards and family sheets.
+ * Photo uploads save immediately; profile and household edits use Save Changes.
+ */
+⋮----
+import {
+  EMAIL_REGEX,
+  EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  SEXES,
+  type EmploymentStatus,
+  type Sex,
+  type Json,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { HouseholdError, householdRequest, readHouseholdMembers, saveHouseholdMembers } from &apos;@/lib/household&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;@/components/birthday-calendar-modal&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PlaceholderPanel } from &apos;@/components/placeholder-panel&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { SettingsSheet } from &apos;@/components/settings-sheet&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import {
+  imageExtension,
+  pickImageAsset,
+  readImageBytes
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ─── Constants ────────────────────────────────────────────────────────────────
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Same rules/shape as Register&apos;s fieldStatus/validate* helpers (register.tsx) —
+// a red alert or green check appears below a field the moment its value becomes
+// invalid/valid, as-you-type. Empty required fields stay silent until a Save
+// Changes attempt populates fieldErrors below (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+function validateEmail(value: string): string | null
+⋮----
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+// ─── Types ────────────────────────────────────────────────────────────────────
+⋮----
+interface HouseholdMember {
+  id: string;          // client uuid for React keys
+  name: string;
+  relation: string;
+  role?: string | null;
+}
+⋮----
+id: string;          // client uuid for React keys
+⋮----
+function profileMember(value: Json): HouseholdMember | null
+⋮----
+// Retain optional draft fields; conditional saves compare the untouched raw snapshot.
+⋮----
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+⋮----
+function getInitials(name: string): string
+⋮----
+/**
+ * RFC-4122 v4 UUID. Household member ids are written into
+ * profiles.household_members (jsonb) and then mirrored by a DB trigger into
+ * the canonical household_members table, which has a real `uuid` primary
+ * key — a non-UUID client id makes that trigger&apos;s `::uuid` cast fail with
+ * &quot;invalid input syntax for type uuid&quot; and the whole profile save errors
+ * out. `crypto.randomUUID` isn&apos;t guaranteed available in the Hermes RN
+ * runtime, so build one from Math.random() instead — it only needs to be
+ * unique and UUID-shaped, not cryptographically random.
+ */
+function genId(): string
+⋮----
+/** Keep the saved ISO date untouched; display the reference&apos;s numeric date. */
+function fmtDate(iso: string | null): string
+⋮----
+// ─── Sub-components ───────────────────────────────────────────────────────────
+⋮----
+/** Red asterisk suffix for required-field labels — matches Register&apos;s RequiredMark. */
+function RequiredMark()
+⋮----
+/** Error (red alert) or success (green check) row shown below a field — shared by
+ * FieldRow and InlineFieldInput so both render the same treatment Register&apos;s
+ * Confirm Password field pioneered (see fieldStatus above). */
+function FieldStatusRow(
+⋮----
+/** A stacked field with a chevron or calendar — used for Sex / Employment
+ * Status / Date of Birth, which open a picker rather than edit inline. */
+⋮----
+/**
+ * A field edited directly in the display form — no tap-to-open bottom sheet.
+ * Used for the fields residents are expected to correct most often (name parts,
+ * address parts, mobile number); the value is written straight into screen state
+ * on every keystroke and persisted by the batched &quot;Save Changes&quot; CTA like every
+ * other field on this screen.
+ */
+⋮----
+/** Household member list item */
+⋮----
+/** Section card wrapper */
+⋮----
+// ─── Toast ────────────────────────────────────────────────────────────────────
+⋮----
+// ─── Household Member Modal ───────────────────────────────────────────────────
+⋮----
+// Reopening an editor must reveal a saved choice beyond the first chips.
+⋮----
+onPress=
+⋮----
+
+⋮----
+// The bucket is public so getPublicUrl() works without auth tokens and
+// doesn&apos;t expire — safe to persist in the DB column.
+⋮----
+// Persist immediately; do NOT include this in handleSave() to avoid a
+// race condition where the user saves other fields before the upload
+// completes, which could overwrite avatar_url with null.
+⋮----
+// Bust the expo-image cache for this URL so the new photo appears instantly.
+⋮----
+// ── Save all changes ──────────────────────────────────────────────────────
+⋮----
+// Editing the email address invalidates whatever verification was
+// previously recorded for the old address — clear it so the &quot;Verified
+// Resident&quot; badge doesn&apos;t keep showing for an address nobody confirmed.
+⋮----
+// full_name is derived by the DB from these (migration 0081&apos;s
+// compose_profiles_display_fields trigger) — always sent together so the
+// trigger never partially recomposes it from a stale subset.
+⋮----
+// home_address is likewise derived from these three.
+⋮----
+// ── Guards ────────────────────────────────────────────────────────────────
+⋮----
+{/* ── ② Avatar ────────────────────────────────────────────────────── */}
+⋮----
+{/* Keep the camera badge outside the photo&apos;s clipping boundary. */}
+⋮----
+{/* Circle — photo or initials + upload spinner */}
+⋮----
+{/* Camera badge — sibling of circle, paints on top */}
+⋮----
+{/* ③ Name + badge */}
+⋮----
+{/* Read-only — this is profiles.barangay_id, assigned automatically at
+              registration (AGENTS.md §0), not a free-text address component. */}
+⋮----
+{/* ── ⑤ Household Information ──────────────────────────────────── */}
+⋮----
+&lt;Pressable onPress=
+⋮----
+&lt;MemberRow member=
+⋮----
+{/* ── Centered toast ────────────────────────────────────────────────── */}
+⋮----
+{/* ── Modals ────────────────────────────────────────────────────────── */}
+⋮----
+value=
+⋮----
+onSave=
+⋮----
+onSelect=</file></files></repomix>

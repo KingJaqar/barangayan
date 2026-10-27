@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FilterChips } from '@/components/filter-chips';
+import { CountBadge } from '@/components/count-badge';
 import { GuestAuthCallout } from '@/components/guest-auth-callout';
 import { MyIncidentsFeed, type StatusFilterKey, useStatusChips } from '@/components/reports/my-incidents-feed';
 import { ReadAction, ReportSourceState, reportStyles } from '@/components/reports/report-presentation';
@@ -21,11 +22,17 @@ export default function ReportsScreen() {
   const { resident } = useTheme();
   const [incidentFilter, setIncidentFilter] = useState<StatusFilterKey>('all');
   const chips = useStatusChips();
-  const { markResolvedRead, resolvedUnreadCount, readStateError, retryReadState } = useUnreadCounts();
+  const { activeReportsCount, markResolvedRead, resolvedUnreadCount, readStateError, retryReadState } = useUnreadCounts();
   const heading = segment === 'active' ? 'Active Reports' : segment === 'resolved' ? 'Resolved Reports' : 'My Incident Reports';
   return <View style={[styles.root, { backgroundColor: resident.card }]}>
     <View style={styles.tabs}>
-      <SegmentedControl variant="underline" presentation="resident" segments={[{ key: 'incident-reports', label: 'Incidents' }, { key: 'active', label: 'Active' }, { key: 'resolved', label: 'Resolved' }]} activeKey={segment}
+      <SegmentedControl variant="underline" presentation="resident" segments={[
+        { key: 'incident-reports', label: 'Incidents' },
+        { key: 'active', label: 'Active', accessibilityLabel: `Active, ${activeReportsCount} active reports`,
+          accessory: session ? <CountBadge count={activeReportsCount} background={resident.warning} foreground={resident.onWarning} presentation="resident" size={18} outlineWidth={0} /> : null },
+        { key: 'resolved', label: 'Resolved', accessibilityLabel: `Resolved, ${resolvedUnreadCount} unread resolved reports`,
+          accessory: session ? <CountBadge count={resolvedUnreadCount} background={resident.successSoft} foreground={resident.success} presentation="resident" size={18} outlineWidth={0} /> : null },
+      ]} activeKey={segment}
         onChange={(key: ReportsSegment) => { setIncidentFilter('all'); router.setParams({ tab: key }); }} />
     </View>
     {!session ? <GuestAuthCallout tabName="Incident Reports" message="You need to log in before you can submit an incident report or track your reports." showRegister={false} /> : <>

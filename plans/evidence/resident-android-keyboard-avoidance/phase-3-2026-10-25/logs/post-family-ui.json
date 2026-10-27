@@ -1,0 +1,11 @@
+{
+  "stage": "post-family",
+  "check": "ui",
+  "command": [
+    "node",
+    "tests/settings-profile-ui.mjs"
+  ],
+  "start": "2026-10-25T13:44:44.041Z",
+  "end": "2026-10-25T13:45:24.303Z",
+  "status": 0
+}

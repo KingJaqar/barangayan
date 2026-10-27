@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { AuthHeader } from '@/components/auth-header';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -17,24 +18,26 @@ type MessageTone = 'success' | 'info' | 'error';
 
 export default function EmailVerificationScreen() {
   const { session } = useAuth();
-  const { profile, isLoading, error, refetch } = useProfile();
+  // Only the first read blocks the form; a refresh keeps it (and its code entry) mounted.
+  const { profile, isInitialLoading, error, refetch } = useProfile();
   const theme = useTheme();
   const owner = session?.user.id;
   if (!owner) return null;
-  if (isLoading || error || profile?.id !== owner) {
+  if (isInitialLoading || error || profile?.id !== owner) {
     return <View style={{ flex: 1, backgroundColor: theme.resident.card }}><AuthHeader presentation="resident" title="Email Verification" />
       <View style={styles.content}><ThemedText themeColor="textSecondary">{error ?? 'Loading your profile…'}</ThemedText>
         {error ? <PrimaryButton presentation="resident" label="Retry" onPress={refetch} /> : null}</View></View>;
   }
   return <EmailVerificationForm key={`${owner}:${profile.email}`} owner={owner}
     email={session.user.email ?? ''} profileEmail={profile.email ?? ''}
-    verified={profile.email_verification_status === 'verified'} onVerified={refetch} />;
+    verified={profile.email_verification_status === 'verified'} onVerified={refetch} onRefresh={refetch} />;
 }
 
-function EmailVerificationForm({ owner, email, profileEmail, verified, onVerified }: {
-  owner: string; email: string; profileEmail: string; verified: boolean; onVerified: () => void;
+function EmailVerificationForm({ owner, email, profileEmail, verified, onVerified, onRefresh }: {
+  owner: string; email: string; profileEmail: string; verified: boolean; onVerified: () => void; onRefresh: () => Promise<void>;
 }) {
   const theme = useTheme();
+  const pull = usePullRefresh([onRefresh]);
   const insets = useSafeAreaInsets();
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
@@ -80,7 +83,9 @@ function EmailVerificationForm({ owner, email, profileEmail, verified, onVerifie
   return <View style={{ flex: 1, backgroundColor: theme.resident.card }}>
     <AuthHeader presentation="resident" title="Email Verification" />
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, 24) }]}>
+      <ScrollView keyboardShouldPersistTaps="handled"
+        refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+        contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, 24) }]}>
         <View style={styles.hero}>
           <View style={[styles.heroIcon, { backgroundColor: verified ? successTint : theme.resident.accentSoft }]}>
             <Ionicons name={verified ? 'checkmark-circle' : pending ? 'mail-unread-outline' : 'mail-outline'}

@@ -1,0 +1,46 @@
+X [ERROR] Multiple exports with the same name "Platform"
+
+    fixture:react-native:11:17:
+      11 │     export const Platform={...R.Platform,get OS(){return window.fi...
+         ╵                  ~~~~~~~~
+
+  The name "Platform" was originally exported here:
+
+    fixture:react-native:8:17:
+      8 │     export const Platform={...R.Platform,OS:'android',select:o=>o.a...
+        ╵                  ~~~~~~~~
+
+X [ERROR] The symbol "Platform" has already been declared
+
+    fixture:react-native:11:17:
+      11 │     export const Platform={...R.Platform,get OS(){return window.fi...
+         ╵                  ~~~~~~~~
+
+  The symbol "Platform" was originally declared here:
+
+    fixture:react-native:8:17:
+      8 │     export const Platform={...R.Platform,OS:'android',select:o=>o.a...
+        ╵                  ~~~~~~~~
+
+C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 2 errors:
+fixture:react-native:11:17: ERROR: Multiple exports with the same name "Platform"
+fixture:react-native:11:17: ERROR: The symbol "Platform" has already been declared
+    at failureErrorWithLog (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748:15)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1207:25
+    at runOnEndCallbacks (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1588:45)
+    at buildResponseToResult (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1205:7)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1232:16
+    at responseCallbacks.<computed> (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:884:9)
+    at handleIncomingPacket (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:939:12)
+    at Socket.readFromStdout (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:862:7)
+    at Socket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:559:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.13.1

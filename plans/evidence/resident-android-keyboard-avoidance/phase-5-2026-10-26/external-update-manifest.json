@@ -1,0 +1,15 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "a0452f7766a57a53f11973be92f54ff87feeff7f9f351052c516b1a155b47953",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "characters": 1082
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "characters": 5185
+    }
+  ],
+  "totalCharacters": 6410
+}

@@ -1,0 +1,23 @@
+{
+  "api": "32",
+  "bootId": "83af0d39-881d-4014-8b04-10c2043cd1cd",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "fontScale": "1.0",
+  "navigationSetting": "0",
+  "showImeWithHardware": "1",
+  "package": [
+    "versionCode=1 minSdk=24 targetSdk=36",
+    "versionName=1.0.0",
+    "firstInstallTime=2026-10-15 09:35:07",
+    "lastUpdateTime=2026-10-15 09:35:07"
+  ],
+  "imeVersion": [
+    "versionName=18.5.4.993608717-release-arm64-v8a"
+  ],
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "at": "2026-10-25T01:07:25.445Z",
+  "serial": "emulator-5554",
+  "nativeRevision": "Unknown; APK identity and loaded JS match are not release APK qualification",
+  "aliasNote": "Same boot ID and APK fingerprint as Phase 1; no new native binary built during Phase 2."
+}

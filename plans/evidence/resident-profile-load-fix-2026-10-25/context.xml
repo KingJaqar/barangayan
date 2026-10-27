@@ -1,0 +1,594 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, package.json, packages/shared/package.json, packages/shared/src/lib/resident-auth.ts, packages/shared/src/lib/resident-auth.test.ts, packages/shared/src/schemas/service-foundations.ts, apps/resident-android-mobile/package.json, apps/resident-android-mobile/src/components/resident-details-form.tsx, apps/resident-android-mobile/src/components/registration-map.tsx, apps/resident-android-mobile/src/app/complete-profile.tsx, apps/resident-android-mobile/src/app/account-setup.tsx, apps/resident-android-mobile/src/lib/setup-request.ts, apps/resident-android-mobile/src/hooks/use-profile.ts, apps/resident-web/AGENTS.md, apps/resident-web/CLAUDE.md, apps/resident-web/src/app/(auth)/register/register-form.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        account-setup.tsx
+        complete-profile.tsx
+      components/
+        registration-map.tsx
+        resident-details-form.tsx
+      hooks/
+        use-profile.ts
+      lib/
+        setup-request.ts
+    package.json
+  resident-web/
+    src/
+      app/
+        (auth)/
+          register/
+            register-form.tsx
+    AGENTS.md
+    CLAUDE.md
+packages/
+  shared/
+    src/
+      lib/
+        resident-auth.test.ts
+        resident-auth.ts
+      schemas/
+        service-foundations.ts
+    package.json
+AGENTS.md
+CLAUDE.md
+package.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/lib/setup-request.ts">export class SetupTimeout extends Error
+⋮----
+constructor()
+⋮----
+/** A watchdog ends the spinner, never the underlying operation&apos;s ownership.
+ * Even after timeout/unmount, a second mutation cannot race the first transport. */
+export class SetupRequestGate
+⋮----
+get busy()
+async run&lt;T&gt;(work: () =&gt; PromiseLike&lt;T&gt;, timeout = 30_000): Promise&lt;T&gt;
+⋮----
+// Shared by OTP, OAuth and password writes, including screens that have unmounted.
+⋮----
+/** Close the write boundary when its UI wait ends. A late preflight read must
+ * never begin a credential mutation after a watchdog has already returned. */
+export class SetupWriteBoundary
+⋮----
+get started()
+begin()
+close()
+⋮----
+export function resendSeconds(deadline: number, now = Date.now())
+export function readResendDeadline(value: string | null, now = Date.now())
+⋮----
+// A corrupt/future storage value must not indefinitely disable registration.
+⋮----
+export class SetupOwner
+⋮----
+invalidate()
+ticket()</file><file path="apps/resident-web/AGENTS.md">&lt;!-- BEGIN:nextjs-agent-rules --&gt;
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file&apos;s directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+&lt;!-- END:nextjs-agent-rules --&gt;</file><file path="apps/resident-web/CLAUDE.md">@AGENTS.md</file><file path="CLAUDE.md">@AGENTS.md</file><file path="apps/resident-android-mobile/src/app/complete-profile.tsx">import { safeResidentRedirect } from &apos;@barangayan/shared&apos;;
+import { useLocalSearchParams, useRouter, type Href } from &apos;expo-router&apos;;
+import { ResidentDetailsForm } from &apos;@/components/resident-details-form&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+export default function CompleteProfile()
+⋮----
+return &lt;ResidentDetailsForm key=
+⋮----
+// Optional password is handled by the root guard. Other accounts retain the
+// existing service continuation destination after fresh server status.</file><file path="apps/resident-android-mobile/src/components/resident-details-form.tsx">import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;./birthday-calendar-modal&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { RegistrationMap } from &apos;./registration-map&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, profileSetupRequests, SetupOwner, SetupTimeout } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** YYYY-MM-DD → &quot;August 8, 2000&quot; */
+function fmtDate(iso: string | null): string
+⋮----
+/** Red asterisk suffix for required-field labels that don&apos;t render through TextField
+ * (Sex / Date of Birth / Employment Status use their own chip/pressable labels). */
+function RequiredMark()
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a
+// field shows a red alert or a green check the moment its value becomes
+// invalid/valid — the same treatment the Confirm Password field already gave
+// the password-match check, generalized to every text field. Empty fields stay
+// silent until a submit attempt populates fieldErrors (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+/**
+ * Resolves a TextField&apos;s error/success pair for one field:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/**
+ * Section card wrapper — same shape as Settings &gt; Profile&apos;s SectionCard (rounded,
+ * bordered, backgroundElement fill) with an icon + title header, used to break the
+ * long registration form into scannable groups instead of one flat field list.
+ */
+export function FormSection({
+  icon,
+  title,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  children: React.ReactNode;
+})
+⋮----
+/**
+ * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
+ * has a `TextField` shape, and unlike SegmentedControl this never implies a default
+ * selection: with `active` unset, no chip renders as chosen.
+ */
+⋮----
+/** Registration and deferred completion share the restored form and validators. */
+⋮----
+const point = (value: Json | null | undefined) =&gt; value &amp;&amp; typeof value === &apos;object&apos; &amp;&amp; !Array.isArray(value) &amp;&amp; typeof value.lat === &apos;number&apos; &amp;&amp; typeof value.lng === &apos;number&apos; ?
+⋮----
+// Fresh profile belongs to this account/load attempt, not an offline context cache.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function handleSubmit()
+⋮----
+// A lost response may have committed. Reload/review before any repeat write.
+⋮----
+function leave(action: () =&gt; void)
+⋮----
+onPress=
+⋮----
+&lt;BirthdayCalendarModal visible=</file><file path="packages/shared/src/lib/resident-auth.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { androidCallbackCode, safeResidentRedirect, residentActionNeedsProfile, residentCompletionDestination, residentNamePrefill, residentProfileComplete } from &apos;./resident-auth&apos;;
+import { profileCompletionSchema } from &apos;../schemas/service-foundations&apos;;
+import type { Database } from &apos;../types/database&apos;;
+import { isPointInPolygon } from &apos;./point-in-polygon&apos;;
+import type { Polygon } from &apos;geojson&apos;;</file><file path="packages/shared/src/lib/resident-auth.ts">import type { SupabaseClient } from &apos;@supabase/supabase-js&apos;;
+import type { User } from &apos;@supabase/supabase-js&apos;;
+import type { Database } from &apos;../types/database&apos;;
+import { profileCompletionSchema } from &apos;../schemas/service-foundations&apos;;
+⋮----
+export class GoogleResidentProfileError extends Error
+⋮----
+constructor(readonly code: string | null)
+⋮----
+/** Provider data is only a call hint; the RPC verifies the Auth-managed identity. */
+export async function ensureGoogleResidentProfile(client: SupabaseClient&lt;Database&gt;, user: Pick&lt;User, &apos;app_metadata&apos; | &apos;identities&apos;&gt;): Promise&lt;void&gt;
+⋮----
+/** Editable name suggestions only; metadata never establishes residency or ID approval. */
+export function residentNamePrefill(
+  metadata: Record&lt;string, unknown&gt; | null | undefined,
+  profile?: Pick&lt;Database[&apos;public&apos;][&apos;Tables&apos;][&apos;profiles&apos;][&apos;Row&apos;], &apos;first_name&apos; | &apos;last_name&apos;&gt; | null,
+):
+⋮----
+const nameText = (value: unknown)
+⋮----
+// A display name has no guaranteed first/last structure; the resident confirms it.
+⋮----
+/** Public browsing is available before completion; only resident actions are gated. */
+export function residentActionNeedsProfile(pathname: string): boolean
+⋮----
+export function residentCompletionDestination(next: string | null): string
+⋮----
+export function safeResidentRedirect(value: string | null): string
+⋮----
+export function androidCallbackCode(value: string): string
+⋮----
+type ProfileCompletionOptions = { includeAdmin?: boolean };
+⋮----
+/** Resident-web warnings can check admin details without changing account setup routing. */
+export function residentProfileComplete(profile: Database[&apos;public&apos;][&apos;Tables&apos;][&apos;profiles&apos;][&apos;Row&apos;] | null, options: ProfileCompletionOptions =
+⋮----
+export async function needsResidentProfile(client: SupabaseClient&lt;Database&gt;, userId: string, options: ProfileCompletionOptions =
+⋮----
+/** Configuration selects registration locality; no first-row tenant assignment. */
+export async function registrationLocality(client: SupabaseClient&lt;Database&gt;)</file><file path="apps/resident-android-mobile/src/app/account-setup.tsx">import { Redirect, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { BackHandler, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AccountSetupStatus } from &apos;@/components/account-setup-status&apos;;
+import { EmergencyEntryLink } from &apos;@/components/emergency-entry-link&apos;;
+import { ResidentDetailsForm } from &apos;@/components/resident-details-form&apos;;
+import { ResidentPasswordStep, type ResidentPasswordDraft } from &apos;@/components/resident-password-step&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { authSetupRequests, profileSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+// In-memory drafts survive wizard back/forward, but never cross accounts. A resident held
+// in setup can still open the public evacuation centers (DRRM routing plan R6).
+⋮----
+const busy = ()
+function back()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function skip()
+async function savedDetails()
+async function savedPassword()
+⋮----
+&lt;ResidentDetailsForm key=
+⋮----
+&lt;ResidentPasswordStep key=
+⋮----
+onSignOut=</file><file path="apps/resident-android-mobile/src/components/registration-map.tsx">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { isPointInPolygon, reverseGeocode, type LatLng } from &apos;@barangayan/shared&apos;;
+import type { Polygon, MultiPolygon } from &apos;geojson&apos;;
+import { MapView } from &apos;./map-view&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+// Wait for pin movement to settle and discard responses for an older pin.
+⋮----
+async function detect()
+⋮----
+onMapReady=
+⋮----
+onPickerMoved=</file><file path="packages/shared/src/schemas/service-foundations.ts">import { z } from &apos;zod&apos;;
+import { EMPLOYMENT_STATUSES, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES } from &apos;./auth&apos;;
+⋮----
+const text = (max: number)
+const optionalText = (max: number)
+⋮----
+// Eleven categories; grouped procedures remain prose, avoiding invented step/person mappings.
+⋮----
+export type ServiceDocumentTypeInput = z.infer&lt;typeof serviceDocumentTypeSchema&gt;;
+⋮----
+export function submissionSchemaForCatalog(catalog: z.infer&lt;typeof serviceCatalogContractSchema&gt;)
+⋮----
+const issue = (path: (string | number)[], message: string) =&gt; ctx.addIssue(
+⋮----
+const has = (code: string)
+⋮----
+export type IdConfirmedDetails = z.infer&lt;typeof idConfirmedDetailsSchema&gt;;
+⋮----
+export type ServiceCatalogContract = z.infer&lt;typeof serviceCatalogContractSchema&gt;;
+export type ServiceSubmissionInput = z.infer&lt;typeof serviceSubmissionSchema&gt;;
+export type ProfileCompletionInput = z.infer&lt;typeof profileCompletionSchema&gt;;
+export type IdPublicationInput = z.infer&lt;typeof idPublicationSchema&gt;;
+export type IdReviewInput = z.infer&lt;typeof idReviewSchema&gt;;
+export type SlaTransitionInput = z.infer&lt;typeof slaTransitionSchema&gt;;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path="apps/resident-android-mobile/src/hooks/use-profile.ts">import { type Tables } from &apos;@barangayan/shared&apos;;
+import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef } from &apos;react&apos;;
+import { AppState } from &apos;react-native&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useRefreshResource } from &apos;@/hooks/use-refresh-resource&apos;;
+import { safeReadRetryDelay } from &apos;@/lib/setup-refresh&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export type Profile = Tables&lt;&apos;profiles&apos;&gt; &amp; {
+  barangays: (Pick&lt;Tables&lt;&apos;barangays&apos;&gt;, &apos;name&apos; | &apos;boundary&apos;&gt; &amp; {
+    barangay_localities: Pick&lt;Tables&lt;&apos;barangay_localities&apos;&gt;, &apos;display_name&apos; | &apos;city&apos; | &apos;province&apos;&gt; | null;
+  }) | null;
+};
+const cacheKey = (id: string) =&gt; `resident_profile_v2:$
+⋮----
+export async function clearProfileCache(userId?: string)
+⋮----
+interface ProfileRead { profile: Profile | null; serialized: string; error: string | null; }
+interface ProfileData { profile: Profile | null; refetch: () =&gt; void; }
+interface ProfileStatus { isLoading: boolean; isInitialLoading: boolean; isRefreshing: boolean; error: string | null; }
+⋮----
+function unverified(profile: Profile): Profile
+function retainProfile(previous: ProfileRead | undefined, next: ProfileRead): ProfileRead
+function retryWait(delay: number, signal: AbortSignal)
+⋮----
+const abort = () =&gt;
+⋮----
+export function ProfileProvider(
+⋮----
+// Serialize writes/removals so a late cache write cannot resurrect a signed-out account.
+⋮----
+} catch { /* Offline demographic cache is optional and never grants approval. */ }
+⋮----
+// Initial subscription joins the mount read; reconnection catches missed changes.
+⋮----
+// Keep legacy isLoading checks fail-closed throughout verification refreshes.
+⋮----
+export function useProfileData()
+export function useProfile()</file><file path="AGENTS.md"></file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;,
+    &quot;test:navigation&quot;: &quot;node tests/navigation-regressions.mjs&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file><file path="apps/resident-web/src/app/(auth)/register/register-form.tsx">import { GoogleButton } from &apos;@/components/auth/google-button&apos;;
+import { RegistrationMap } from &apos;@/components/auth/registration-map&apos;;
+⋮----
+import {
+  EMAIL_REGEX,
+  EMPLOYMENT_STATUSES,
+  EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  profileCompletionSchema,
+  serviceFoundationOperations,
+  registrationLocality,
+  residentNamePrefill,
+  safeResidentRedirect,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  PASSWORD_COMPLEXITY_REGEX,
+  registerSchema,
+  SEXES,
+  type EmploymentStatus,
+  type Sex,
+} from &apos;@barangayan/shared&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { AlertCircle, Briefcase, CheckCircle2, type LucideIcon, Lock, MapPinned, User } from &apos;lucide-react&apos;;
+import { useRouter } from &apos;next/navigation&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+⋮----
+import { Button } from &apos;@/components/ui/button&apos;;
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from &apos;@/components/ui/dialog&apos;;
+import { Input } from &apos;@/components/ui/input&apos;;
+import { Label } from &apos;@/components/ui/label&apos;;
+import { PasswordInput } from &apos;@/components/ui/password-input&apos;;
+import { useSignOut } from &apos;@/hooks/use-sign-out&apos;;
+import { AUTH_MESSAGES, authErrorCode, authFailureKind, isBreachedPassword, profileCompletionFailure } from &apos;@/lib/auth/auth-feedback&apos;;
+import { isIntentionalSignOut, signOutBrowser } from &apos;@/lib/auth/sign-out&apos;;
+import { notifyLoggedOut } from &apos;@/lib/auth/session-feedback&apos;;
+import { beginAttempt, eventId, notify, type OperationId } from &apos;@/lib/notify&apos;;
+import { createSupabaseBrowserClient } from &apos;@/lib/supabase/client&apos;;
+import { cn } from &apos;@/lib/utils&apos;;
+⋮----
+// Outcome copy. A request whose answer was lost may still have completed, so those
+// outcomes are &quot;couldn&apos;t confirm&quot;, never a definite failure.
+⋮----
+/** Red asterisk suffix for required-field labels — purely visual, mirrors the mobile
+ * Register screen&apos;s RequiredMark. Validation itself is still driven by registerSchema. */
+function RequiredMark()
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a field
+// shows a red alert or a green check the moment its value becomes invalid/valid —
+// the same treatment the Confirm Password field already gave the password-match
+// check, generalized to every field. Mirrors apps/resident-android-mobile&apos;s
+// register.tsx validators exactly so the two apps never drift apart.
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+function validateEmail(value: string): string | null
+function validatePassword(value: string): string | null
+⋮----
+/**
+ * Resolves a field&apos;s error/success pair:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/** Red-alert / green-check row rendered below a field, mirroring the &quot;Passwords
+ * match&quot; / &quot;Passwords don&apos;t match&quot; treatment generalized to every field. */
+function FieldStatus(
+⋮----
+function ChoiceChips&lt;T extends string&gt;({
+  field,
+  options,
+  labels,
+  active,
+  onChange,
+}: {
+  /** Form field name, so a failed submit can move focus to this group. */
+  field: string;
+  options: readonly T[];
+  labels: Record&lt;T, string&gt;;
+  active: T | null;
+onChange: (value: T)
+⋮----
+/** Form field name, so a failed submit can move focus to this group. */
+⋮----
+className=
+⋮----
+/** Compact section label used to break the long form into scannable groups without
+ * spending a full card/border per section. */
+function SectionHeading(
+⋮----
+// Visual order of the validated fields, so a failed submit focuses the first one.
+⋮----
+function focusFirstInvalid(errors: Record&lt;string, string&gt;)
+⋮----
+/**
+ * Migrated from apps/resident-android-mobile/src/app/(auth)/register.tsx — same
+ * structured field set (registerSchema in @barangayan/shared), same profile-fields-as-
+ * signup-metadata pattern (handle_new_user trigger creates profiles atomically), same
+ * advisory map check (never blocks registration), and the same live-validation / required-mark / green-check
+ * treatment as mobile&apos;s TextField (see fieldStatus/FieldStatus/RequiredMark above).
+ * Uses the browser Geolocation API in place of expo-location, and a native
+ * &lt;input type=&quot;date&quot;&gt; in place of the mobile calendar modal.
+ *
+ * Fields are grouped into labeled sections (Personal / Address / Employment /
+ * Security / Location) with tighter grids and gaps than a flat field list would use —
+ * this form has a lot of fields, and section grouping keeps it scannable without
+ * needing a multi-step wizard.
+ */
+export function RegisterForm(
+⋮----
+// Live status for every field with a format check — computed once per render so the
+// input&apos;s aria-invalid and the FieldStatus row below it never disagree.
+⋮----
+// Separate from the locality read, so retrying one never re-applies the other over
+// what the resident has already typed.
+⋮----
+async function handleSubmit(event: React.FormEvent)
+⋮----
+// Same account, so the outcome stays visible on the destination. Stay pending
+// until it replaces this screen.
+⋮----
+// Profile fields travel as signup metadata so the handle_new_user() database
+// trigger can create the profiles row atomically with the auth.users row.
+// full_name/home_address are not sent — migration 0081&apos;s
+// compose_profiles_display_fields() trigger derives both from these structured
+// fields.
+⋮----
+// The account exists from here on, whatever the local sign-out below reports.
+⋮----
+// Signup intentionally changes the guest session. Correlate its completion
+// before sign-out, so a failed sign-out can still report the created account.
+⋮----
+// Local scope only — clears this device&apos;s session without revoking tokens
+// elsewhere. The resident must go through Login explicitly afterward.
+⋮----
+// No answer came back, so the write may or may not have completed.
+⋮----
+function reportSignUpFailure(signUpError: unknown, attempt: OperationId)
+⋮----
+function goToLogin()
+⋮----
+{/* ── Personal Details ───────────────────────────────────────────── */}
+⋮----
+onChange=
+⋮----
+{/* ── Address ─────────────────────────────────────────────────────── */}
+⋮----
+{/* ── Security ────────────────────────────────────────────────────── */}
+⋮----
+&lt;p className=
+⋮----</file></files></repomix>

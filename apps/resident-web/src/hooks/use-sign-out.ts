@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { safeResidentRedirect } from '@barangayan/shared';
 
 import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 import { signOutBrowser } from '@/lib/auth/sign-out';
@@ -17,8 +18,9 @@ import { beginAttempt, notify } from '@/lib/notify';
  * to /login.
  *
  * `scope` defaults to this application's session, including its other browser tabs.
+ * `next` optionally preserves a safe in-app destination when switching accounts.
  */
-export function useSignOut(scope: 'global' | 'local' = 'local') {
+export function useSignOut(scope: 'global' | 'local' = 'local', next?: string) {
   const router = useRouter();
   const resetPreferences = useResetPreferencesOnLogout();
   const busy = useRef(false);
@@ -51,7 +53,7 @@ export function useSignOut(scope: 'global' | 'local' = 'local') {
       notifyLoggedOut();
     }
     // Stay pending until /login replaces this screen.
-    router.replace('/login');
+    router.replace(next ? `/login?next=${encodeURIComponent(safeResidentRedirect(next))}` : '/login');
     router.refresh();
   }
 

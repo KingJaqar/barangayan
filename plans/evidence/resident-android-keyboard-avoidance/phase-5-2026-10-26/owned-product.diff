@@ -1,0 +1,303 @@
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx b/apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx
+index 808cb233..e06e440b 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx
++++ b/apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx
+@@ -72,6 +72,57 @@ export function CentersContent({
+   const reducedMotion = useResidentReducedMotion(true);
+   const { fontId } = useFontPreference();
+   const isFocused = useIsFocused();
++  const { setSearchAvoidance, setActive: setMapHeaderActive } = useEmergencyMapHeader();
++  const [compactSearch, setCompactSearch] = useState(false);
++  const [searchReveal, setSearchReveal] = useState(0);
++  const revealSearch = useRef<() => void>(() => {});
++  const revealRevision = useRef(0);
++  const requestedHeaderRoom = useRef(false);
++  const avoidingSearch = Platform.OS === 'android' && searchExpanded && view === 'map' && isFocused;
++  useLayoutEffect(() => {
++    if (!avoidingSearch) { revealSearch.current = () => {}; return; }
++    let frame: number | null = null;
++    const invalidate = () => { ++revealRevision.current; };
++    const reveal = () => {
++      if (frame !== null) cancelAnimationFrame(frame);
++      const revision = ++revealRevision.current;
++      frame = requestAnimationFrame(() => {
++        frame = null;
++        const keyboard = Keyboard.metrics();
++        if (!keyboard) return;
++        searchInput.current?.measureInWindow((_x, y, _width, height) => {
++          if (revision !== revealRevision.current || height <= 0) return;
++          const bottom = y + height + searchReveal;
++          if (!compactSearch && bottom > keyboard.screenY) {
++            setCompactSearch(true);
++            if (resident) { requestedHeaderRoom.current = true; setSearchAvoidance(true); }
++          } else if (compactSearch) {
++            const next = Math.max(0, Math.ceil(bottom + Spacing.two - keyboard.screenY));
++            setSearchReveal(current => current === next ? current : next);
++          }
++        });
++      });
++    };
++    revealSearch.current = reveal;
++    reveal();
++    return () => { invalidate(); if (frame !== null) cancelAnimationFrame(frame); };
++  }, [avoidingSearch, compactSearch, resident, searchReveal, setSearchAvoidance]);
++  useEffect(() => {
++    if (!avoidingSearch) { setCompactSearch(false); setSearchReveal(0); return; }
++    const invalidate = () => { ++revealRevision.current; };
++    const restore = () => {
++      invalidate();
++      setCompactSearch(false); setSearchReveal(0);
++      if (requestedHeaderRoom.current) { requestedHeaderRoom.current = false; setSearchAvoidance(false); }
++    };
++    const show = Keyboard.addListener('keyboardDidShow', () => revealSearch.current());
++    const hide = Keyboard.addListener('keyboardDidHide', restore);
++    return () => {
++      invalidate();
++      show.remove(); hide.remove();
++      if (requestedHeaderRoom.current) { requestedHeaderRoom.current = false; setSearchAvoidance(false); }
++    };
++  }, [avoidingSearch, setSearchAvoidance]);
+   const foreground = useAppForeground();
+   const routeActive = isFocused && foreground;
+   const [mapMounted, setMapMounted] = useState(view === 'map');
+@@ -109,7 +160,6 @@ export function CentersContent({
+     return () => viewProgress.stopAnimation();
+   }, [view, transitionTo, viewProgress]);
+   const resetSearchIdle = useSearchInactivity(searchExpanded && view === 'map' && isFocused, collapseSearch);
+-  const { setActive: setMapHeaderActive } = useEmergencyMapHeader();
+   useFocusEffect(useCallback(() => {
+     if (!resident || view !== 'map') return;
+     setMapHeaderActive(true);
+@@ -424,7 +474,7 @@ export function CentersContent({
+       <Ionicons name="search-outline" size={20} color={searchQuery ? theme.resident.accentText : theme.resident.text} />
+     </Pressable>
+     {searchExpanded ? <>
+-      <TextInput ref={searchInput} autoFocus accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={resetSearchIdle} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
++      <TextInput ref={searchInput} autoFocus accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={() => { resetSearchIdle(); revealSearch.current(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+       {searchQuery ? <Pressable accessibilityRole="button" accessibilityLabel="Clear center search" onPress={() => { setSearchQuery(''); resetSearchIdle(); }} style={styles.action}><Ionicons name="close" size={18} color={theme.resident.text} /></Pressable> : null}
+     </> : null}
+   </View>;
+@@ -484,8 +534,8 @@ export function CentersContent({
+         </Pressable>)}
+       </View>
+     </NativeAnimated.ScrollView> : null}
+-    <View pointerEvents="box-none" style={styles.topControls} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setTopControlsHeight(current => current === height ? current : height); }}>
+-      {toolbar}
++    <View pointerEvents="box-none" style={[styles.topControls, avoidingSearch && searchReveal > 0 && { top: 12 - searchReveal }]} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setTopControlsHeight(current => current === height ? current : height); revealSearch.current(); }}>
++      {avoidingSearch && compactSearch ? null : toolbar}
+       {view === 'map' && searchExpanded ? centerSearch : null}
+     </View>
+     <Modal visible={confirmBlocking && isFocused && view === 'map'} transparent animationType="none" onRequestClose={() => setConfirmBlocking(false)}>
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/components/resident-header.tsx b/apps/resident-android-mobile/src/components/resident-header.tsx
+index c6efd3e4..2bd61dfd 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/components/resident-header.tsx
++++ b/apps/resident-android-mobile/src/components/resident-header.tsx
+@@ -35,7 +35,7 @@ export function ResidentHeader() {
+   const pathname = usePathname();
+   const enteringSearch = pathname === '/search';
+   const searching = enteringSearch || pathname === '/explore';
+-  const { active: emergencyMapActive } = useEmergencyMapHeader();
++  const { active: emergencyMapActive, searchAvoidance } = useEmergencyMapHeader();
+   const [mapSearch, setMapSearch] = useState(false);
+   const title = TITLES[pathname];
+   const theme = useTheme();
+@@ -100,8 +100,8 @@ export function ResidentHeader() {
+         <Image source={require('@/assets/logo/barangayan-logo-1024.png')}
+           style={styles.logo} contentFit="contain" accessibilityLabel="Barangayan" />
+         <ThemedText type="residentHeader" accessibilityRole="header"
+-          numberOfLines={pathname === '/announcements' ? 1 : undefined}
+-          adjustsFontSizeToFit={pathname === '/announcements'}
++          numberOfLines={pathname === '/announcements' || searchAvoidance ? 1 : undefined}
++          adjustsFontSizeToFit={pathname === '/announcements' || searchAvoidance}
+           minimumFontScale={0.6}
+           style={[styles.title, title && title.length > 14 ? styles.longTitle : undefined, { color: theme.resident.onAccent }]}>{title}</ThemedText>
+         <View onLayout={event => { const next = event.nativeEvent.layout.x; setSearchX(current => current === next ? current : next); }}>
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx b/apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx
+index 5e1d7f8b..b2ee4c04 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx
++++ b/apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx
+@@ -1,11 +1,12 @@
+ import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+ 
+-const EmergencyMapHeaderContext = createContext({ active: false, setActive: (_active: boolean) => {} });
++const EmergencyMapHeaderContext = createContext({ active: false, setActive: (_active: boolean) => {}, searchAvoidance: false, setSearchAvoidance: (_avoiding: boolean) => {} });
+ 
+ /** Limits the header's idle-collapse behavior to searches opened from Centers → Map. */
+ export function EmergencyMapHeaderProvider({ children }: { children: ReactNode }) {
+   const [active, setActive] = useState(false);
+-  const value = useMemo(() => ({ active, setActive }), [active]);
++  const [searchAvoidance, setSearchAvoidance] = useState(false);
++  const value = useMemo(() => ({ active, setActive, searchAvoidance, setSearchAvoidance }), [active, searchAvoidance]);
+   return <EmergencyMapHeaderContext.Provider value={value}>{children}</EmergencyMapHeaderContext.Provider>;
+ }
+ 
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx b/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+index e65790bb..957bf78d 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+@@ -18,6 +18,7 @@ import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+ import { HubContent } from '@/components/drrm/hub-content';
+ import { AlertsContent } from '@/components/drrm/alerts-content';
+ import { CentersContent } from '@/components/evacuation-centers-panel';
++import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+ import { useDeviceLocation } from '@/hooks/use-device-location';
+ import { SegmentedControl } from '@/components/segmented-control';
+ import { QrGuideContent } from '@/components/qr-guide-content';
+@@ -75,6 +76,7 @@ export default function EmergencyInfoScreen() {
+ 
+   const isHub = tab === 'hub';
+   const isCenters = tab === 'centers';
++  const { searchAvoidance } = useEmergencyMapHeader();
+   const isScan = tab === 'scan';
+   const isFamily = tab === 'family';
+   const isAlerts = tab === 'alerts';
+@@ -86,7 +88,7 @@ export default function EmergencyInfoScreen() {
+   return (
+       <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+         <View style={[styles.root, { backgroundColor: theme.background }]}>
+-      <SegmentedControl segments={TABS} activeKey={tab} onChange={setTab} variant="underline" />
++      {searchAvoidance ? null : <SegmentedControl segments={TABS} activeKey={tab} onChange={setTab} variant="underline" />}
+ 
+       {isCenters ? (
+         <Animated.View
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/app/(app)/maps/index.tsx b/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+index 853823a6..e14ed832 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+@@ -4,7 +4,7 @@ import * as Location from 'expo-location';
+ import { useFocusEffect } from 'expo-router';
+ import type { MultiPolygon, Polygon } from 'geojson';
+ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+-import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
++import { ActivityIndicator, Animated, AppState, Easing, Keyboard, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+ import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+ import { MapView, type MapViewHandle } from '@/components/map-view';
+@@ -66,6 +66,37 @@ export default function MapsScreen() {
+   const [mapAttempt, setMapAttempt] = useState(0);
+   const [mapHeight, setMapHeight] = useState(0);
+   const [topHeight, setTopHeight] = useState(0);
++  const incidentSearch = useRef<TextInput>(null);
++  const revealSearch = useRef<() => void>(() => {});
++  const [compactSearch, setCompactSearch] = useState(false);
++  const searchActive = Platform.OS === 'android' && focused && activeTab === 'incidents';
++  useEffect(() => {
++    if (!searchActive) { setCompactSearch(false); return; }
++    let revision = 0;
++    let frame: number | null = null;
++    const reveal = () => {
++      if (frame !== null) cancelAnimationFrame(frame);
++      const ticket = ++revision;
++      frame = requestAnimationFrame(() => {
++        frame = null;
++        const keyboard = Keyboard.metrics();
++        if (!keyboard) return;
++        incidentSearch.current?.measureInWindow((_x, y, _width, height) => {
++          if (ticket === revision && height > 0 && y + height > keyboard.screenY) setCompactSearch(true);
++        });
++      });
++    };
++    revealSearch.current = reveal;
++    const show = Keyboard.addListener('keyboardDidShow', reveal);
++    const hide = Keyboard.addListener('keyboardDidHide', () => { ++revision; setCompactSearch(false); });
++    reveal();
++    return () => {
++      ++revision;
++      if (frame !== null) cancelAnimationFrame(frame);
++      revealSearch.current = () => {};
++      show.remove(); hide.remove();
++    };
++  }, [searchActive]);
+   const [overlayHeight, setOverlayHeight] = useState(48);
+   // Keep the 44dp chevron above system navigation and all map controls above it.
+   const revealHiddenBottom = systemBottomInset + 12;
+@@ -226,7 +257,7 @@ export default function MapsScreen() {
+     </View>
+   </View>;
+   return <SafeAreaView edges={['left', 'right']} style={[styles.screen, { backgroundColor: resident.card }]}>
+-    <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" compact onChange={tab => { setActiveTab(tab); clearSelection(); }} />
++    {compactSearch ? null : <SegmentedControl segments={layers} activeKey={activeTab} variant="underline" compact onChange={tab => { setActiveTab(tab); clearSelection(); }} />}
+     <View style={styles.mapArea} onLayout={event => { const height = event.nativeEvent.layout.height; setMapHeight(current => current === height ? current : height); }}>
+       <View style={StyleSheet.absoluteFill} onTouchStart={() => setMapNavHidden(true)}>
+       <MapView key={mapAttempt} ref={map} markers={markers} kindColors={kindColors} boundary={boundary}
+@@ -243,10 +274,10 @@ export default function MapsScreen() {
+         }} onMapError={() => setMapError(true)} style={StyleSheet.absoluteFill} />
+       </View>
+       <ScrollView keyboardShouldPersistTaps="handled" style={[styles.top, mapHeight > 0 && { maxHeight: Math.max(48, mapHeight - overlayBottom - 112) }]}
+-        contentContainerStyle={styles.topContent} onLayout={event => { const height = event.nativeEvent.layout.height; setTopHeight(current => current === height ? current : height); }}>
++        contentContainerStyle={styles.topContent} onLayout={event => { const height = event.nativeEvent.layout.height; setTopHeight(current => current === height ? current : height); revealSearch.current(); }}>
+         <View style={[styles.search, { backgroundColor: resident.card, borderColor: resident.border }]}>
+           <Ionicons name="search-outline" size={20} color={resident.text} accessible={false} />
+-          <TextInput accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}
++          <TextInput ref={incidentSearch} onFocus={() => revealSearch.current()} accessibilityLabel={activeTab === 'incidents' ? 'Search incidents' : 'Evacuation search unavailable'}
+             style={[styles.searchInput, { color: resident.text, fontFamily }]} value={activeTab === 'incidents' ? searchQuery : ''}
+             onChangeText={query => { setSearchQuery(query); clearSelection(); }} editable={activeTab === 'incidents'}
+             placeholder={activeTab === 'incidents' ? 'Search locations...' : 'Incident search only'} placeholderTextColor={resident.muted} />
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/tests/drrm-centers-ui.mjs b/apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+index e636eaca..b59d2106 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/tests/drrm-centers-ui.mjs
++++ b/apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+@@ -35,7 +35,7 @@ const mocks={
+  '@/hooks/use-font-preference':`export const useFontPreference=()=>({fontId:window.fixture.font});`,
+  '@/hooks/use-resident-reduced-motion':`export const useResidentReducedMotion=()=>window.fixture.reduced;`,
+ };
+-mocks['react-native']+=`export const Keyboard={isVisible:()=>window.fixture.keyboard??false,addListener:(event,fn)=>{const listeners=(window.fixture.keyboardListeners??={})[event]??=new Set();listeners.add(fn);return{remove:()=>listeners.delete(fn)}},dismiss:()=>{window.fixture.keyboard=false;for(const fn of window.fixture.keyboardListeners?.keyboardDidHide??[])fn()}};`;
++mocks['react-native']+=`export const Keyboard={metrics:()=>window.fixture.keyboardFrame,isVisible:()=>window.fixture.keyboard??false,addListener:(event,fn)=>{const listeners=(window.fixture.keyboardListeners??={})[event]??=new Set();listeners.add(fn);return{remove:()=>listeners.delete(fn)}},dismiss:()=>{window.fixture.keyboard=false;window.fixture.keyboardFrame=undefined;for(const fn of window.fixture.keyboardListeners?.keyboardDidHide??[])fn()}};`;
+ mocks['react-native']=mocks['react-native'].replace('window.fixture.durations.push(o.duration);return A.timing','window.fixture.durations.push(o.duration);(window.fixture.nativeTimings??=[]).push({duration:o.duration,useNativeDriver:o.useNativeDriver,isInteraction:o.isInteraction});return A.timing');
+ mocks['react-native']=mocks['react-native'].replace('export const Animated={...A,timing:',`export const Animated={...A,View:React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...p},r)=><A.View {...p} ref={r} aria-hidden={accessibilityElementsHidden}/>),ScrollView:React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...p},r)=><A.ScrollView {...p} ref={r} aria-hidden={accessibilityElementsHidden}/>),timing:`);
+ await build({stdin:{contents:`import React,{useState}from'react';import{createRoot}from'react-dom/client';import{CentersContent}from'${root}/components/evacuation-centers-panel.tsx';import ResidentTabs from'${root}/components/app-tabs.tsx';import{FloatingTabLayoutProvider,useFloatingTabLayout}from'${root}/hooks/use-floating-tab-layout.tsx';import{useTheme}from'${root}/hooks/use-theme.ts';let generation=0;const root=createRoot(document.getElementById('root'));function Harness(){const[view,setView]=useState('list');const[nearest,setNearest]=useState(true);const theme=useTheme();const layout=useFloatingTabLayout();window.fixture.navHidden=layout.mapNavHidden;return <><div style={{display:'flex',flexDirection:'column',flex:1,minHeight:0,padding:'16px 24px',backgroundColor:theme.background}}><CentersContent resident={!window.fixture.public} theme={theme} centers={window.fixture.centers} isLoading={window.fixture.loading} error={window.fixture.error} refetch={()=>window.fixture.actions.push(['retry'])} view={view} onViewChange={setView} nearestFirst={nearest} onNearestToggle={setNearest} userPosition={window.fixture.location.origin} location={{state:window.fixture.location,locate:()=>window.fixture.actions.push(['locate']),cancel:()=>window.fixture.actions.push(['cancel']),confirm:()=>window.fixture.actions.push(['confirm']),reject:()=>window.fixture.actions.push(['reject']),openSettings:()=>window.fixture.actions.push(['settings'])}}/></div>{window.fixture.public?null:<ResidentTabs/>}</>};window.render=(remount=false)=>{if(remount)generation++;root.render(window.fixture.public?<Harness key={generation}/>:<FloatingTabLayoutProvider key={generation}><Harness/></FloatingTabLayoutProvider>)};window.render();`,resolveDir:app,loader:'tsx'},bundle:true,define:{global:'globalThis'},format:'iife',platform:'browser',outfile:path.join(out,'bundle.js'),jsx:'automatic',plugins:[{name:'adapters',setup(b){b.onResolve({filter:/.*/},a=>{if(Object.hasOwn(mocks,a.path))return{path:a.path,namespace:'adapter'};if(a.path.startsWith('@/'))return{path:path.join(app,'src',a.path.slice(2))+(fs.existsSync(path.join(app,'src',a.path.slice(2))+'.tsx')?'.tsx':'.ts')}});b.onLoad({filter:/.*/,namespace:'adapter'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:app}))}}]});
+@@ -120,6 +120,22 @@ try{
+  await page.getByRole('button',{name:'Expand center search, filter active',exact:true}).click();await page.getByRole('button',{name:'Clear center search'}).click();
+  await page.getByRole('button',{name:'Collapse center search',exact:true}).click();
+  passed.push('center search icon, 15-second idle collapse, key interaction resets deadline, query/filter survives collapse and immediate icon collapse');
++ await page.getByRole('button',{name:'Expand center search',exact:true}).click();
++ const originalSearch=await search.boundingBox();
++ await page.evaluate(screenY=>{window.fixture.keyboard=true;window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height+100);
++ await page.clock.runFor(200);
++ assert.equal(await viewToggle.count(),1,'visible search keeps the toolbar');
++ await page.evaluate(screenY=>{window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height-24);
++ await page.clock.runFor(300);
++ assert.equal(await viewToggle.count(),0,'obscured search releases the toolbar row');
++ const revealedSearch=await search.boundingBox();
++ assert(revealedSearch.height>=44&&revealedSearch.y+revealedSearch.height<=originalSearch.y+originalSearch.height-32,'complete editor clears the measured IME by 8dp');
++ await page.evaluate(()=>{window.fixture.keyboard=false;window.fixture.keyboardFrame=undefined;for(const fn of window.fixture.keyboardListeners.keyboardDidHide)fn()});
++ await page.clock.runFor(200);
++ assert.equal(await viewToggle.count(),1,'dismissal restores the toolbar');
++ const restoredSearch=await search.boundingBox();assert(Math.abs(restoredSearch.y-originalSearch.y)<=1,'dismissal restores original search geometry');
++ await page.getByRole('button',{name:'Collapse center search',exact:true}).click();
++ passed.push('measured IME: visible search stays unchanged; obscured search reveals a complete editor with clearance; dismissal restores toolbar and geometry');
+  await render({error:'Synthetic source unavailable'});await page.getByText('Synthetic source unavailable',{exact:true}).waitFor();await page.getByRole('button',{name:'Retry',exact:true}).click();assert.deepEqual(await page.evaluate(()=>window.fixture.actions.at(-1)),['retry']);await render({error:null});
+  passed.push('empty/search/error and retry stay visible without suppressing routing diagnostics');
+  await render({focused:false});await page.waitForFunction(()=>window.fixture.navHidden===false);assert.equal(await page.evaluate(()=>window.fixture.offlineActive),false);await render({focused:true});await page.waitForFunction(()=>window.fixture.navHidden===true);
+diff --git a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/tests/maps-presentation-ui.mjs b/apps/resident-android-mobile/tests/maps-presentation-ui.mjs
+index 0d145502..9f9d6079 100644
+--- a/tmp/resident-keyboard-phase5-20261026/resume-before/apps/resident-android-mobile/tests/maps-presentation-ui.mjs
++++ b/apps/resident-android-mobile/tests/maps-presentation-ui.mjs
+@@ -30,6 +30,7 @@ const mocks={
+  '@/hooks/use-profile':`export const useProfile=()=>({profile:window.fixture.profile});`,
+  '@/lib/supabase':`export const supabase={from(table){const filters={};const q={select(){return q},is(){return q},order(){return q},eq(k,v){filters[k]=v;return q},in(k,v){filters[k]=v;return q},ilike(k,v){filters[k]=v;return q},then(resolve,reject){window.fixture.queries.push({table,filters});let rows=window.fixture[table]??[];if(table==='incidents'){if(filters.category_id)rows=rows.filter(r=>filters.category_id.includes(r.category_id));if(filters.title)rows=rows.filter(r=>r.title.toLowerCase().includes(filters.title.replaceAll('%','').toLowerCase()))}return Promise.resolve({data:rows,error:window.fixture.failTable===table?{message:'Synthetic source unavailable'}:null}).then(resolve,reject)}};return q},channel(name){const ch={name,on(){return ch},subscribe(){window.fixture.channels.push(name);return ch}};return ch},removeChannel(ch){window.fixture.channels=window.fixture.channels.filter(n=>n!==ch.name);return Promise.resolve()}};`,
+ };
++mocks['react-native']+=`export const Keyboard={metrics:()=>window.fixture.keyboardFrame,addListener:(event,fn)=>{const listeners=(window.fixture.keyboardListeners??={})[event]??=new Set();listeners.add(fn);return{remove:()=>listeners.delete(fn)}}};`;
+ await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import{FloatingTabLayoutProvider}from'@/hooks/use-floating-tab-layout';import Maps from '${root}/app/(app)/maps/index.tsx';import{MapView}from'${root}/components/map-view.tsx';let generation=0;const root=createRoot(document.getElementById('root'));window.render=(remount=false)=>{if(remount)generation++;root.render(window.fixture.wrapper?<MapView key={generation} {...window.fixture.wrapper} onMarkerTap={id=>window.fixture.callbacks.push(['marker',id])} onMapTap={window.fixture.routing?pos=>window.fixture.callbacks.push(['route',pos]):null} onBackgroundTap={()=>window.fixture.callbacks.push(['background'])} onPickerMoved={pos=>window.fixture.callbacks.push(['picker',pos])} onPickerRejected={pos=>window.fixture.callbacks.push(['rejected',pos])}/>:<FloatingTabLayoutProvider><Maps key={generation}/></FloatingTabLayoutProvider>)};window.render();`,resolveDir:app,loader:'tsx'},bundle:true,define:{global:'globalThis'},format:'iife',platform:'browser',outfile:path.join(out,'bundle.js'),jsx:'automatic',plugins:[{name:'adapters',setup(b){b.onResolve({filter:/.*/},a=>{if(Object.hasOwn(mocks,a.path))return{path:a.path,namespace:'adapter'};if(a.path.startsWith('@/'))return{path:path.join(app,'src',a.path.slice(2))+ (fs.existsSync(path.join(app,'src',a.path.slice(2))+'.tsx')?'.tsx':'.ts')}});b.onLoad({filter:/.*/,namespace:'adapter'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:app}))}}]});
+ const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE??'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'});const page=await browser.newPage({viewport:{width:400,height:760}});const diagnostics=[];const passed=[];
+ page.on('pageerror',e=>diagnostics.push(e.message));page.on('console',m=>{if(['warning','error'].includes(m.type()))diagnostics.push(m.text())});
+@@ -101,6 +102,19 @@ try{
+  await page.getByRole('button',{name:'Show bottom tabs',exact:true}).waitFor();
+  await page.getByRole('tab',{name:'Incidents',exact:true}).click();assert.equal(await page.getByRole('textbox',{name:'Search incidents'}).inputValue(),'first');
+  passed.push('multi-select/filter visibility retains predicates; incident search preserved through layer switch; truthful unavailable center search');
++ const search=page.getByRole('textbox',{name:'Search incidents'});
++ const originalSearch=await search.boundingBox();
++ await page.evaluate(screenY=>{window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height+100);
++ await page.waitForTimeout(100);
++ assert.equal(await page.getByRole('tab',{name:'Incidents',exact:true}).count(),1,'visible search retains layers');
++ await page.evaluate(screenY=>{window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height-16);
++ await page.getByRole('tab',{name:'Incidents',exact:true}).waitFor({state:'detached'});
++ const revealedSearch=await search.boundingBox();assert(revealedSearch.height>=originalSearch.height-1&&revealedSearch.y+revealedSearch.height<=originalSearch.y+originalSearch.height-24,'complete search clears measured keyboard');
++ await page.evaluate(()=>{window.fixture.keyboardFrame=undefined;for(const fn of window.fixture.keyboardListeners.keyboardDidHide)fn()});
++ await page.getByRole('tab',{name:'Incidents',exact:true}).waitFor();
++ assert(Math.abs((await search.boundingBox()).y-originalSearch.y)<=1,'dismissal restores search geometry');
++ assert.equal(await search.inputValue(),'first','draft survives measured avoidance');
++ passed.push('measured keyboard obstruction releases layer row only when needed; full editor and draft retained; dismissal restores layers and geometry');
+  await render({mode:'dark',accent:'#ffffff',font:'georgia'});await page.getByRole('button',{name:'Zoom in',exact:true}).waitFor();
+  const before=await frame().evaluate(()=>({center:map.getCenter(),zoom:map.getZoom()}));const count=await page.evaluate(()=>window.fixture.queries.length);
+  await render({accent:'#000000',inset:100});await page.waitForTimeout(300);

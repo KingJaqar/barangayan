@@ -1,0 +1,107 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "0a99de12035ad8ccfdd200805b9bb1387d703a9f0d08fe3439492559e93c8d55",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/drrm.tsx",
+      "characters": 82
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/explore.tsx",
+      "characters": 2649
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "characters": 1089
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx",
+      "characters": 272
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-search-inactivity.ts",
+      "characters": 220
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-search-session.ts",
+      "characters": 1178
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/floating-tab-inset.ts",
+      "characters": 324
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-session.mjs",
+      "characters": 456
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-submit.mjs",
+      "characters": 1147
+    },
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "characters": 165
+    },
+    {
+      "path": "CLAUDE.md",
+      "characters": 12
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/search.tsx",
+      "characters": 709
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+      "characters": 975
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-resident-search.tsx",
+      "characters": 1550
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "characters": 469
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "characters": 351
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-search-lifecycle.mjs",
+      "characters": 67
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "characters": 615
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "characters": 5185
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "characters": 1783
+    },
+    {
+      "path": "AGENTS.md",
+      "characters": 2
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "characters": 2123
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "characters": 1296
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "characters": 2126
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "characters": 2131
+    }
+  ],
+  "totalCharacters": 28498
+}

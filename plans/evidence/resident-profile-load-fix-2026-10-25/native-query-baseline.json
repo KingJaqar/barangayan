@@ -1,0 +1,20 @@
+{
+  "profile": {
+    "status": 200,
+    "error": null,
+    "hasData": true
+  },
+  "profileRole": "admin",
+  "profileDeleted": false,
+  "locality": {
+    "status": 200,
+    "error": null,
+    "hasData": true
+  },
+  "boundary": {
+    "status": 200,
+    "error": null,
+    "hasData": true
+  },
+  "profileLocalityMatches": true
+}

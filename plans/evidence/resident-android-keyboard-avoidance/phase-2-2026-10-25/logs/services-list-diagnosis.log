@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Error: strict mode violation: getByText('No payment required', { exact: true }) resolved to 2 elements:
+    1) <div dir="auto" class="css-146c3p1 r-b88u0q r-13awgt0 r-1grwqd5 r-1cwl3u0">No payment required</div> aka getByRole('button', { name: 'Free legacy service' })
+    2) <div dir="auto" class="css-146c3p1 r-b88u0q r-13awgt0 r-1grwqd5 r-1cwl3u0">No payment required</div> aka getByRole('button', { name: 'Issuance of Barangay' })
+
+Call log:
+  - waiting for getByText('No payment required', { exact: true }) to be visible
+
+    at C:\Users\User\barangayan\apps\resident-android-mobile\tests\services-lists-ui.mjs:68:64 {
+  log: [
+    "  - waiting for getByText('No payment required', { exact: true }) to be visible"
+  ]
+}
+
+Node.js v24.13.1

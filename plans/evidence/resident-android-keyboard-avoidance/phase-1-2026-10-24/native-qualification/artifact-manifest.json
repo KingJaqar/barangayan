@@ -1,0 +1,86 @@
+[
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/candidate-identities.json",
+    "sha256": "d8536753ba6124108e46f209bbaeb812395c03a92940f05e0a949ec181beabd5"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/closure.json",
+    "sha256": "630b2e42eae4091ded5efc7ee129d54b1b1dab4a24d6dbb213fac20231bbd409"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/environment.json",
+    "sha256": "c819dca5e3214abb7b8f65edc3d9db5b073af256c5bf12790cceeeb9284ac109"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/final-source-identity.json",
+    "sha256": "a35f7d7c476f2311fe6e9eeb14432bb582464fcff5c14e97af305b646cff05f6"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/initial-phase1-verification.json",
+    "sha256": "8fe334df83bde4ee7e55e07408e7072227b246adefdd711f9a3494dd110e547a"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/local-layout-experiments.patch",
+    "sha256": "645a622ce02d1270f2349a0f4726cba34bdff15291477b3f967b1e681b958387"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/local-owners.xml",
+    "sha256": "6358284be5836cf4d05ed093a1ee1b13620512399d6b1c3a9ce2152fd76c8f7e"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/lint-baseline.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/lint-candidates.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/repomix.log",
+    "sha256": "472bb889e697de3361e14112e8b8a9b2f6f79a0d2d3f30444266b247808e0b3c"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/typecheck-baseline.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/typecheck-candidates.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/unit-baseline-single-worker.log",
+    "sha256": "0c8f33647934ec5f826a8952f37d59ea2461387de099ef0e58d0374901b71b58"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/logs/unit-baseline.log",
+    "sha256": "9e995c2d9a29c81e87915bf9cb0aae278e83f2629ea1a398775d4ade47121f6f"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/packet-manifest.json",
+    "sha256": "38d4391bc7bd9dcfd247e784cbc069d002dc15c4605f3af5342b676960975e44"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/report.md",
+    "sha256": "5052df2e66e7ed3cb8cdb4bd70ee79fa6af0510bf2b8a541397a0079462a628e"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/results.json",
+    "sha256": "8979d437a0b9478ee70610495064f51130140b2958ef2b8a698d0c1c1ae93188"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/native-qualification/source-manifest.json",
+    "sha256": "d2fbdfec8071bc4677c51061347ef2db4d770c0310ce7653067c371172095ce9"
+  },
+  {
+    "path": "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+    "sha256": "d5d8b49cd06a61fc0028df5a11b4aaa247d7141575728f7db6612aba0e0ab931"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/context-index.md",
+    "sha256": "7bcb7593bb569feb164181c196e210491798b5b8a5a80e55dfba1ccd55bba03e"
+  },
+  {
+    "path": "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/verification.json",
+    "sha256": "4935b28fe55d1f1556b5688517150a331fe7c403f0bbd1c5300137b4ed7a1cbd"
+  }
+]

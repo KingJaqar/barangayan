@@ -1,0 +1,113 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "60847a072f429bf82848b0297f286f68b3d1b8a9eb24f9f70a51b7646c5b37a1",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/app.config.js",
+      "characters": 163
+    },
+    {
+      "path": "CLAUDE.md",
+      "characters": 10
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "characters": 983
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "characters": 1378
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "characters": 883
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "characters": 486
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "characters": 3840
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "characters": 1694
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx",
+      "characters": 178
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "characters": 1076
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "characters": 2757
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "characters": 1208
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "characters": 1304
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx",
+      "characters": 138
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "characters": 2177
+    },
+    {
+      "path": "AGENTS.md",
+      "characters": 0
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "characters": 1508
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "characters": 1335
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "characters": 2121
+    },
+    {
+      "path": "package.json",
+      "characters": 408
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "characters": 1294
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "characters": 3971
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "characters": 2401
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "characters": 1477
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "characters": 2378
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "characters": 7095
+    }
+  ],
+  "missing": [],
+  "omissions": "Empty root AGENTS.md omitted by Repomix; confirmed 0 bytes. Compression bodies verified in original source.",
+  "totalCharacters": 43921
+}

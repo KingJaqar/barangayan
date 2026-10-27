@@ -1,0 +1,14 @@
+{
+  "mode": "restore",
+  "size": "Physical size: 1080x1920\r\n",
+  "density": "Physical density: 480\r\n",
+  "font": "1.0\r\n",
+  "navigation": "0\r\n",
+  "overlays": [
+    "[ ] com.android.internal.systemui.navbar.gestural_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.threebutton\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.gestural\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_narrow_back\r"
+  ]
+}

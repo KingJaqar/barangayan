@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/routing-pack-builder.test.ts (25 tests) 330ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 198ms
+ ✓ src/lib/flood-shadow.test.ts (57 tests) 63ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 44ms
+ ✓ src/lib/format.test.ts (17 tests) 42ms
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 34ms
+ ✓ src/schemas/household-attendance.test.ts (25 tests) 32ms
+ ✓ src/lib/device-location.test.ts (29 tests) 30ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 27ms
+ ✓ src/lib/registration-locality.test.ts (10 tests) 21ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 18ms
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 19ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 17ms
+ ✓ src/lib/resident-account-setup.test.ts (17 tests) 20ms
+ ✓ src/lib/evacuation-route-service.test.ts (44 tests) 19ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 18ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 16ms
+ ✓ src/lib/service-catalog.test.ts (10 tests) 15ms
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 15ms
+ ✓ src/lib/flood-validation.test.ts (12 tests) 16ms
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 12ms
+ ✓ src/lib/attendance-request.test.ts (3 tests) 11ms
+ ✓ src/lib/service-request-validation.test.ts (12 tests) 11ms
+ ✓ src/lib/model-activation.test.ts (12 tests) 11ms
+ ✓ src/schemas/routing-conditions.test.ts (11 tests) 10ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 9ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 9ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 8ms
+ ✓ src/schemas/staff.test.ts (9 tests) 8ms
+ ✓ src/lib/model-exclusions.test.ts (10 tests) 8ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 8ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 9ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 7ms
+ ✓ src/schemas/payment.test.ts (9 tests) 7ms
+ ✓ src/schemas/drive-registration-result.test.ts (5 tests) 7ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 6ms
+ ✓ src/lib/haversine.test.ts (4 tests) 5ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 4ms
+
+ Test Files  38 passed (38)
+      Tests  586 passed (586)
+   Start at  09:50:42
+   Duration  23.20s (transform 1.13s, setup 0ms, collect 3.59s, tests 1.15s, environment 9ms, prepare 7.93s)
+

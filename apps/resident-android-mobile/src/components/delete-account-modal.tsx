@@ -91,7 +91,7 @@ export function DeleteAccountModal({ visible, onClose, onConfirm, presentation =
   const sheet = (
         <Pressable accessible={resident ? false : undefined} accessibilityViewIsModal={resident || undefined} style={[styles.sheet, { backgroundColor: theme.background }, resident && { backgroundColor: theme.resident.card, borderRadius: 24, paddingHorizontal: 24, paddingTop: 24, paddingBottom: 24, gap: 0 }]} onPress={(e) => e.stopPropagation()}>
           {!resident ? <View style={styles.handle} /> : null}
-          <ThemedText type="smallBold" style={[styles.title, resident && styles.residentTitle]}>
+          <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, resident && styles.residentTitle]}>
             Confirm Your Password
           </ThemedText>
           <ThemedText type="small" themeColor="textSecondary" style={[styles.subtitle, resident && { color: theme.resident.muted }, resident && styles.residentSubtitle]}>
@@ -121,7 +121,7 @@ export function DeleteAccountModal({ visible, onClose, onConfirm, presentation =
   );
   return (
     <Modal visible={resident ? mounted : visible} transparent animationType={resident ? 'none' : 'fade'} onRequestClose={handleClose}>
-      {resident ? <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+      {resident ? <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined} style={{ flex: 1 }}>
         <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: theme.resident.scrim, opacity: progress }]}><Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Cancel account deletion" onPress={handleClose} /></Animated.View>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
           <Pressable accessible={false} onPress={handleClose} style={{ flex: 1, justifyContent: 'center', padding: 32 }}>

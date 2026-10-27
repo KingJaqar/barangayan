@@ -1,0 +1,1914 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/app.config.js, apps/resident-android-mobile/app.json, apps/resident-android-mobile/eas.json, apps/resident-android-mobile/package.json, apps/resident-android-mobile/src/app/(app)/_layout.tsx, apps/resident-android-mobile/src/app/(app)/health/register.tsx, apps/resident-android-mobile/src/app/(app)/maps/index.tsx, apps/resident-android-mobile/src/app/(app)/reports/new.tsx, apps/resident-android-mobile/src/app/(app)/services/request/?documentId?.tsx, apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx, apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx, apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx, apps/resident-android-mobile/src/app/(app)/settings/profile.tsx, apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx, apps/resident-android-mobile/src/app/(auth)/_layout.tsx, apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx, apps/resident-android-mobile/src/app/(auth)/login.tsx, apps/resident-android-mobile/src/app/(auth)/otp.tsx, apps/resident-android-mobile/src/app/(auth)/register.tsx, apps/resident-android-mobile/src/app/(auth)/reset-password.tsx, apps/resident-android-mobile/src/app/_layout.tsx, apps/resident-android-mobile/src/app/account-setup.tsx, apps/resident-android-mobile/src/app/complete-profile.tsx, apps/resident-android-mobile/src/components/app-tabs.tsx, apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx, apps/resident-android-mobile/src/components/delete-account-modal.tsx, apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx, apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx, apps/resident-android-mobile/src/components/family-content.tsx, apps/resident-android-mobile/src/components/family-member-modal.tsx, apps/resident-android-mobile/src/components/password-recovery-screen.tsx, apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx, apps/resident-android-mobile/src/components/resident-details-form.tsx, apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/resident-password-step.tsx, apps/resident-android-mobile/src/components/services/charter-request-form.tsx, apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx, apps/resident-android-mobile/src/components/settings-sheet.tsx, apps/resident-android-mobile/src/components/text-field.tsx, apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx, apps/resident-android-mobile/src/lib/floating-tab-inset.ts, apps/resident-android-mobile/tsconfig.json, apps/resident-android-mobile/vitest.config.ts, package.json
+- Files matching these patterns are excluded: **/.env*, **/node_modules/**, **/repomix-output.xml, **/tmp/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          health/
+            register.tsx
+          maps/
+            index.tsx
+          reports/
+            new.tsx
+          services/
+            request/
+              [documentId].tsx
+          settings/
+            change-password.tsx
+            email-verification.tsx
+            location-verification.tsx
+            profile.tsx
+            valid-id.tsx
+          _layout.tsx
+        (auth)/
+          _layout.tsx
+          forgot-password.tsx
+          login.tsx
+          otp.tsx
+          register.tsx
+          reset-password.tsx
+        _layout.tsx
+        account-setup.tsx
+        complete-profile.tsx
+      components/
+        drrm/
+          scan-family-sheet.tsx
+        reports/
+          location-picker-modal.tsx
+        services/
+          charter-request-form.tsx
+          resident-payment-screen.tsx
+        app-tabs.tsx
+        custom-accent-color-modal.tsx
+        delete-account-modal.tsx
+        evacuation-centers-panel.tsx
+        family-content.tsx
+        family-member-modal.tsx
+        password-recovery-screen.tsx
+        resident-details-form.tsx
+        resident-header.tsx
+        resident-password-step.tsx
+        settings-sheet.tsx
+        text-field.tsx
+      hooks/
+        use-floating-tab-layout.tsx
+      lib/
+        floating-tab-inset.ts
+    app.config.js
+    app.json
+    eas.json
+    package.json
+    tsconfig.json
+    vitest.config.ts
+AGENTS.md
+CLAUDE.md
+package.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/health/register.tsx">import {
+  driveRegistrationSchema,
+  residentDriveRegistrationResultSchema,
+  type ResidentDriveRegistrationResult,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  Animated,
+  Easing,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  View,
+} from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { Avatar } from &apos;@/components/avatar&apos;;
+import {
+  HealthDriveSummary,
+  HealthFact,
+  HealthPanel,
+  HealthSheet,
+  HealthStatus,
+  healthDate,
+  healthTime,
+} from &apos;@/components/health/health-presentation&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import type { MedicalDrive } from &apos;@/hooks/use-medical-drives&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type Dose = (typeof DOSES)[number];
+type Member = { id: string; name: string; relation: string; role?: string | null };
+⋮----
+function computeAge(value: string | null | undefined)
+⋮----
+setWidth((old)
+⋮----
+onPress=
+⋮----
+onSelect(member.id);
+onClose();
+⋮----
+Drive schedule:</file><file path="apps/resident-android-mobile/src/app/(app)/maps/index.tsx">import type { LatLng } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { useFocusEffect } from &apos;expo-router&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useCallback, useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Animated, AppState, Easing, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import Reanimated, { useAnimatedStyle } from &apos;react-native-reanimated&apos;;
+import { MapView, type MapViewHandle } from &apos;@/components/map-view&apos;;
+import { MapSelectionOverlay, type MapPlace } from &apos;@/components/maps/map-selection-overlay&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useIncidentCategories } from &apos;@/hooks/use-incident-categories&apos;;
+import { useIncidents } from &apos;@/hooks/use-incidents&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { isMapPosition } from &apos;@/lib/map-presentation&apos;;
+⋮----
+type MapTab = &apos;incidents&apos; | &apos;evacuation&apos;;
+type PermissionStatus = Location.LocationPermissionResponse[&apos;status&apos;];
+⋮----
+export default function MapsScreen()
+⋮----
+// Leave room for the reveal button and map attribution beneath the controls.
+⋮----
+const owns = ()
+⋮----
+// Preserve automatic acquisition for granted permission and foreground permission rechecks.
+⋮----
+async function check(initial: boolean)
+⋮----
+function clearSelection()
+⋮----
+}} onBackgroundTap=
+⋮----
+}} onMapError=
+⋮----
+onPress=</file><file path="apps/resident-android-mobile/src/app/(app)/reports/new.tsx">import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ReportSourceState, useReportTone } from &apos;@/components/reports/report-presentation&apos;;
+import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+/**
+ * Submit Incident Report screen — reached by tapping the FAB on My Incident Reports.
+ *
+ * Flow (mirrors the service_request form pattern from request/[documentId].tsx):
+ *   1. Resident picks category, writes title + description, optionally attaches photos.
+ *   2. Photos are uploaded to the `incident-photos` Storage bucket BEFORE the DB row is
+ *      created, because residents have no UPDATE policy on incidents (same constraint as
+ *      id-documents on service_requests). Uploaded paths are public URLs.
+ *   3. Location uses the existing GPS/centroid fallback and boundary-constrained picker.
+ *   4. On success the user is replaced back to the Reports index so the new card
+ *      appears immediately (Realtime subscription on useMyIncidents fires).
+ */
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { incidentReportSchema, reverseGeocode } from &apos;@barangayan/shared&apos;;
+import { Image } from &apos;expo-image&apos;;
+⋮----
+import { useRouter } from &apos;expo-router&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { FeedbackModal } from &apos;@/components/reports/feedback-modal&apos;;
+import { LocationPickerModal } from &apos;@/components/reports/location-picker-modal&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useIncidentCategories } from &apos;@/hooks/use-incident-categories&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useWasteZones } from &apos;@/hooks/use-waste-zones&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import {
+  type PickedImage,
+  imageExtension,
+  isWithinSizeLimit,
+  pickImageAsset,
+  readImageBytes,
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+/** Matches the `incident-photos` bucket&apos;s file_size_limit (migration 0025). */
+⋮----
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+⋮----
+/** Compute the arithmetic centroid of a GeoJSON Polygon&apos;s outer ring. */
+function polygonCentroid(boundary: unknown):
+⋮----
+// ─── Photo thumbnail ──────────────────────────────────────────────────────────
+⋮----
+// ─── Category picker ──────────────────────────────────────────────────────────
+⋮----
+// ─── Screen ───────────────────────────────────────────────────────────────────
+⋮----
+function IncidentFormField({ label, value, onChangeText, limit, placeholder, required = false, multiline = false, disabled, helper }: {
+label: string; value: string; onChangeText: (value: string)
+⋮----
+const theme = useTheme();
+const insets = useSafeAreaInsets();
+⋮----
+// The resident&apos;s barangay boundary — passed to the location picker so residents can
+// only pin a spot inside it (mirrors the Maps tab / registration geofencing pattern).
+⋮----
+// Form state
+⋮----
+// Reverse-geocoded (or resident-corrected, via the picker) address for `location`.
+⋮----
+// ── Location: try GPS first, fall back to barangay centroid ──────────────
+⋮----
+// GPS failed — fall through to centroid
+⋮----
+// Centroid from boundary (set after profile loads)
+⋮----
+// When profile loads after the effect ran, resolve centroid if GPS was denied.
+⋮----
+// Auto-fetch a human-readable address for whatever location is currently set, as long
+// as one isn&apos;t already known — the location picker supplies its own address directly
+// (possibly resident-corrected), so this only fires for the initial GPS/centroid fix
+// and retries if that fetch failed (address stays &apos;&apos;).
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+// ── Photo picker ──────────────────────────────────────────────────────────
+⋮----
+// ── Upload a single photo, return its storage path + public URL ────────────
+⋮----
+// ── Submit ────────────────────────────────────────────────────────────────
+⋮----
+// Validate form
+⋮----
+photoUrls: [],         // photos aren&apos;t URLs yet — validated count separately
+⋮----
+// Upload photos first (no resident UPDATE policy on incidents).
+⋮----
+// Insert incident row.
+⋮----
+// Roll back the freshly uploaded photos since the DB write failed —
+// otherwise they&apos;re orphaned in storage forever, owned by no incident.
+⋮----
+// Success — surface the centered confirmation; navigation happens once it&apos;s
+// dismissed (see handleSuccessDismiss). Realtime will update the list.
+⋮----
+/** Fires once the success pop-up is dismissed (auto or manual) — returns the resident
+   * to the Reports index, same destination `handleSubmit` used to navigate to directly. */
+⋮----
+{/* ── Zone (trash/dumping reports only) ── */}
+⋮----
+onPress=
+⋮----
+
+⋮----
+onConfirm=
+⋮----
+{/* ── Footer CTA ── */}
+⋮----
+{/* ── Centered feedback pop-ups ── */}</file><file path="apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx">import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+import { catalogContract, residentServiceError, ResidentSubmissionAttempt } from &apos;@barangayan/shared&apos;;
+import { CharterRequestForm } from &apos;@/components/services/charter-request-form&apos;;
+import { formatCentavosAsPHP, requestFormSchema, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { PlaceholderPanel } from &apos;@/components/placeholder-panel&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { SkeletonBlock } from &apos;@/components/services/skeleton&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import {
+  displayName,
+  imageExtension,
+  isWithinSizeLimit,
+  pickImageAsset,
+  readImageBytes,
+  type PickedImage,
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type DocumentType = Tables&lt;&apos;document_types&apos;&gt;;
+⋮----
+/** Shimmer stand-in for the loading state, shaped like the form below it. Rendered only
+ * while `doc === undefined` — same early-return slot `PlaceholderPanel` used to occupy. */
+⋮----
+// S0-8: uploads the picked ID image to Storage *before* the service_requests insert
+// and returns its path. Must happen first — residents have no UPDATE/DELETE policy on
+// service_requests (see 0002&apos;s &quot;no client update/delete policy&quot; comment), so there&apos;s
+// no way to patch the path in after the fact or roll back a row left without one.
+⋮----
+/* Loading skeleton */</file><file path="apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx">import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { ActionSuccessModal } from &apos;@/components/services/action-success-modal&apos;;
+import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ResidentPasswordStep, type ResidentPasswordDraft } from &apos;@/components/resident-password-step&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { clearGoogleReauthentication, googleReauthentication } from &apos;@/lib/google-auth&apos;;
+import { passwordMode, type ReauthenticationState } from &apos;@/lib/sensitive-auth&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Mirrors the Register screen&apos;s as-you-type treatment (register.tsx&apos;s fieldStatus/
+// validatePassword) — a red alert or green check appears below New Password the
+// moment its value becomes invalid/valid, instead of waiting for Update Password
+// to be pressed. Empty fields stay silent until a submit attempt populates
+// fieldErrors (the &quot;required&quot; message).
+function validateNewPassword(value: string): string | null
+⋮----
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/** Centered, auto-dismissing confirmation used after the password update succeeds. */
+function ResultPopup({
+  visible,
+  onDismiss,
+  title = &apos;Password Updated&apos;,
+  subtitle = &apos;Your password has been changed successfully.&apos;,
+}: {
+  visible: boolean;
+onDismiss: ()
+⋮----
+// Mode comes from the server-maintained password state: true → change with the
+// current password; null (unknown history) → manage, never &quot;not set&quot;; false → first
+// password, unlocked only by fresh same-account Google authentication.
+⋮----
+// Stay on first-password setup for this user after its own success refreshes the
+// status to passwordSet=true, so its confirmation can finish returning to Settings.
+⋮----
+// The status row below is the single place that reports a mismatch in real time —
+// same treatment as Register&apos;s Confirm Password field. Keep any other Confirm
+// Password validation message, but avoid duplicating the schema&apos;s mismatch message
+// directly under the field after submission.
+⋮----
+function handleForgotPassword()
+⋮----
+// Enable the existing login recovery stack before leaving the signed-in screen.
+⋮----
+async function handleUpdate()
+⋮----
+// Supabase&apos;s updateUser() doesn&apos;t check the old password — re-authenticate first so a
+// stolen/left-open session can&apos;t silently take over the account by setting a new one.
+⋮----
+// The server observer records this write; refresh so Settings labels follow.
+⋮----
+/** First password from Settings for a passwordless Google resident. The write is
+ * unlocked only by a completed same-user `set_password` Google attempt whose
+ * Auth-recorded oauth sign-in is within the application window; it is rechecked
+ * right before updateUser and consumed afterwards (or when the resident leaves). */
+⋮----
+function leave()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+onSaved=
+⋮----
+await refreshCompletion();
+setShowSuccess(true);
+⋮----
+onSkip=
+onBack=
+⋮----
+onDismiss=</file><file path="apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { residentEmailVerification } from &apos;@barangayan/shared&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type MessageTone = &apos;success&apos; | &apos;info&apos; | &apos;error&apos;;
+⋮----
+export default function EmailVerificationScreen()
+⋮----
+async function submit(action: &apos;send&apos; | &apos;verify&apos;)
+⋮----
+{/* Full address, wrapped rather than truncated so residents can check every character. */}
+⋮----
+onChangeText=
+⋮----
+disabled=</file><file path="apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx">/**
+ * Settings &gt; Location Verification.
+ *
+ * A full-screen map (centered on the resident&apos;s barangay — Ampid I, San Mateo for this
+ * pilot — with its boundary outlined) where the resident drags a pin to their exact
+ * home location and saves it. Reuses the same MapView + boundary-constrained picker
+ * mode already built for Incident Reports&apos; &quot;pin your location&quot; flow
+ * (components/reports/location-picker-modal.tsx / components/map-view.tsx) — dragging
+ * or tapping outside the boundary is rejected and the pin snaps back. Also reuses that
+ * flow&apos;s reverse-geocode-then-editable-address pattern (reverseGeocode) so the pin&apos;s
+ * address shows as readable text, not just coordinates, and the resident can correct it.
+ *
+ * Persists to profiles.verified_location (jsonb {lat,lng}) + verified_location_address
+ * (text, migration 0091) + location_verified_at (migration 0090). This is a
+ * resident-initiated, self-reported confirmation — distinct from
+ * profiles.registration_location (0078), the one-time best-effort GPS fix captured
+ * automatically at signup for admin review.
+ */
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { LatLng } from &apos;@barangayan/shared&apos;;
+import { reverseGeocode, isPointInPolygon } from &apos;@barangayan/shared&apos;;
+⋮----
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { AMPID_I_SAN_MATEO_CENTER, MapView } from &apos;@/components/map-view&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { isMapPosition } from &apos;@/lib/map-presentation&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// True once a geocode attempt has finished with no result — distinguishes &quot;still
+// detecting&quot; from &quot;detection failed, please type it in&quot; so an empty field after
+// loading doesn&apos;t just look broken.
+⋮----
+async function fetchAddressFor(pos: LatLng)
+⋮----
+// Ignore stale responses from a since-superseded pin placement.
+⋮----
+// Seed the pin: the resident&apos;s previously-saved location if there is one (with its
+// previously-saved address, so a re-visit doesn&apos;t re-geocode for no reason), otherwise
+// try a live GPS fix — auto-detecting its address — falling back to the barangay&apos;s
+// default center if that fails (permission denied, GPS unavailable, or an emulator
+// with no fix).
+⋮----
+const isCurrent = ()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+/** &quot;Detect Your Location&quot; button — a manual, explicit re-run of the same GPS fix the
+   * screen tries automatically on first load (see the seed effect above), for a resident
+   * who wants to re-center on their current device location instead of dragging the pin
+   * by hand (e.g. after the pin drifted while adjusting the address, or on a return visit
+   * where the previously-saved pin no longer matches where they&apos;re standing). Moves the
+   * pin and re-detects its address exactly like a drag/tap does. Unlike the silent
+   * first-load fallback, a failure here is a direct result of this tap, so it&apos;s reported
+   * with an alert rather than silently falling back to the barangay&apos;s default center.
+   */
+async function handleDetectLocation()
+⋮----
+function handlePickerMoved(pos: LatLng)
+⋮----
+function handlePickerRejected()
+⋮----
+async function handleSave()
+⋮----
+// Freeze the address paired with this pin while its existing save is pending.
+⋮----
+onMapError=</file><file path="apps/resident-android-mobile/src/app/(app)/settings/profile.tsx">/**
+ * Resident profile: stacked editable details, grouped cards and family sheets.
+ * Photo uploads save immediately; profile and household edits use Save Changes.
+ */
+⋮----
+import {
+  EMAIL_REGEX,
+  EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  SEXES,
+  type EmploymentStatus,
+  type Sex,
+  type Json,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { HouseholdError, householdRequest, readHouseholdMembers, saveHouseholdMembers } from &apos;@/lib/household&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;@/components/birthday-calendar-modal&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PlaceholderPanel } from &apos;@/components/placeholder-panel&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { SettingsSheet } from &apos;@/components/settings-sheet&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import {
+  imageExtension,
+  pickImageAsset,
+  readImageBytes
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// ─── Constants ────────────────────────────────────────────────────────────────
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Same rules/shape as Register&apos;s fieldStatus/validate* helpers (register.tsx) —
+// a red alert or green check appears below a field the moment its value becomes
+// invalid/valid, as-you-type. Empty required fields stay silent until a Save
+// Changes attempt populates fieldErrors below (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+function validateEmail(value: string): string | null
+⋮----
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+// ─── Types ────────────────────────────────────────────────────────────────────
+⋮----
+interface HouseholdMember {
+  id: string;          // client uuid for React keys
+  name: string;
+  relation: string;
+  role?: string | null;
+}
+⋮----
+id: string;          // client uuid for React keys
+⋮----
+function profileMember(value: Json): HouseholdMember | null
+⋮----
+// Retain optional draft fields; conditional saves compare the untouched raw snapshot.
+⋮----
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+⋮----
+function getInitials(name: string): string
+⋮----
+/**
+ * RFC-4122 v4 UUID. Household member ids are written into
+ * profiles.household_members (jsonb) and then mirrored by a DB trigger into
+ * the canonical household_members table, which has a real `uuid` primary
+ * key — a non-UUID client id makes that trigger&apos;s `::uuid` cast fail with
+ * &quot;invalid input syntax for type uuid&quot; and the whole profile save errors
+ * out. `crypto.randomUUID` isn&apos;t guaranteed available in the Hermes RN
+ * runtime, so build one from Math.random() instead — it only needs to be
+ * unique and UUID-shaped, not cryptographically random.
+ */
+function genId(): string
+⋮----
+/** Keep the saved ISO date untouched; display the reference&apos;s numeric date. */
+function fmtDate(iso: string | null): string
+⋮----
+// ─── Sub-components ───────────────────────────────────────────────────────────
+⋮----
+/** Red asterisk suffix for required-field labels — matches Register&apos;s RequiredMark. */
+function RequiredMark()
+⋮----
+/** Error (red alert) or success (green check) row shown below a field — shared by
+ * FieldRow and InlineFieldInput so both render the same treatment Register&apos;s
+ * Confirm Password field pioneered (see fieldStatus above). */
+function FieldStatusRow(
+⋮----
+/** A stacked field with a chevron or calendar — used for Sex / Employment
+ * Status / Date of Birth, which open a picker rather than edit inline. */
+⋮----
+/**
+ * A field edited directly in the display form — no tap-to-open bottom sheet.
+ * Used for the fields residents are expected to correct most often (name parts,
+ * address parts, mobile number); the value is written straight into screen state
+ * on every keystroke and persisted by the batched &quot;Save Changes&quot; CTA like every
+ * other field on this screen.
+ */
+⋮----
+/** Household member list item */
+⋮----
+/** Section card wrapper */
+⋮----
+// ─── Toast ────────────────────────────────────────────────────────────────────
+⋮----
+// ─── Household Member Modal ───────────────────────────────────────────────────
+⋮----
+// Reopening an editor must reveal a saved choice beyond the first chips.
+⋮----
+onPress=
+⋮----
+
+⋮----
+// The bucket is public so getPublicUrl() works without auth tokens and
+// doesn&apos;t expire — safe to persist in the DB column.
+⋮----
+// Persist immediately; do NOT include this in handleSave() to avoid a
+// race condition where the user saves other fields before the upload
+// completes, which could overwrite avatar_url with null.
+⋮----
+// Bust the expo-image cache for this URL so the new photo appears instantly.
+⋮----
+// ── Save all changes ──────────────────────────────────────────────────────
+⋮----
+// Editing the email address invalidates whatever verification was
+// previously recorded for the old address — clear it so the &quot;Verified
+// Resident&quot; badge doesn&apos;t keep showing for an address nobody confirmed.
+⋮----
+// full_name is derived by the DB from these (migration 0081&apos;s
+// compose_profiles_display_fields trigger) — always sent together so the
+// trigger never partially recomposes it from a stale subset.
+⋮----
+// home_address is likewise derived from these three.
+⋮----
+// ── Guards ────────────────────────────────────────────────────────────────
+⋮----
+{/* ── ② Avatar ────────────────────────────────────────────────────── */}
+⋮----
+{/* Keep the camera badge outside the photo&apos;s clipping boundary. */}
+⋮----
+{/* Circle — photo or initials + upload spinner */}
+⋮----
+{/* Camera badge — sibling of circle, paints on top */}
+⋮----
+{/* ③ Name + badge */}
+⋮----
+{/* Read-only — this is profiles.barangay_id, assigned automatically at
+              registration (AGENTS.md §0), not a free-text address component. */}
+⋮----
+{/* ── ⑤ Household Information ──────────────────────────────────── */}
+⋮----
+&lt;Pressable onPress=
+⋮----
+&lt;MemberRow member=
+⋮----
+{/* ── Centered toast ────────────────────────────────────────────────── */}
+⋮----
+{/* ── Modals ────────────────────────────────────────────────────────── */}
+⋮----
+value=
+⋮----
+onSave=
+⋮----
+onSelect=</file><file path="apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx">import { idConfirmedDetailsSchema, idVerificationState, ID_TYPES, OTHER_ID_TYPE_PREFIX, publishIdEvidence, type IdConfirmedDetails } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { CameraView, useCameraPermissions } from &apos;expo-camera&apos;;
+import { randomUUID } from &apos;expo-crypto&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { BirthdayWheelModal } from &apos;@/components/birthday-wheel-modal&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { RecoveryError, recoveryStyles, StepFlowScreen } from &apos;@/components/password-recovery-screen&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { SettingsSheet } from &apos;@/components/settings-sheet&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { ACCEPTED_IMAGE_MIME_TYPES, imageExtension, pickImageAsset, readImageBytes, type PickedImage } from &apos;@/lib/image-upload&apos;;
+import { extractIdDetails } from &apos;@/lib/valid-id&apos;;
+import { idPhotoBytes } from &apos;@/lib/id-photo-bytes&apos;;
+import { birthdayLabel } from &apos;@/lib/birthday-wheel&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+export default function ValidIdScreen()
+⋮----
+const current = (userId: string)
+⋮----
+function goBack()
+⋮----
+// Back handling follows the current step and camera state.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function readDetails(path: string, userId: string)
+⋮----
+async function providePhoto(picked: PickedImage, capturedBytes?: Uint8Array)
+⋮----
+async function choosePhoto()
+⋮----
+async function openCamera()
+⋮----
+async function takePhoto()
+⋮----
+async function retryReading()
+⋮----
+function continueFlow()
+⋮----
+async function submit()
+⋮----
+setStep(1); setIdType(&apos;&apos;); setOtherIdType(&apos;&apos;); setPhoto(null); setDetails(EMPTY_DETAILS);
+setDetailsReady(false); setFieldErrors(
+publication.current = null; setSubmitted(false); setReplacing(true);
+⋮----
+&lt;PhotoAction label=
+⋮----
+&lt;PhotoAction label=&quot;Try reading the photo again&quot; icon=&quot;refresh-outline&quot; onPress=
+&lt;PhotoAction label=&quot;Enter details manually&quot; icon=&quot;create-outline&quot; onPress=
+⋮----</file><file path="apps/resident-android-mobile/src/app/(app)/_layout.tsx">import { View } from &apos;react-native&apos;;
+import { StatusBar } from &apos;expo-status-bar&apos;;
+import AppTabs from &apos;@/components/app-tabs&apos;;
+import { ResidentHeader } from &apos;@/components/resident-header&apos;;
+import { UnreadCountsProvider } from &apos;@/hooks/use-unread-counts&apos;;
+import { ResidentSearchProvider } from &apos;@/hooks/use-resident-search&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { FloatingTabLayoutProvider } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { EmergencyMapHeaderProvider } from &apos;@/hooks/use-emergency-map-header&apos;;
+⋮----
+export default function AppLayout()</file><file path="apps/resident-android-mobile/src/app/(auth)/_layout.tsx">import { Stack, useRouter, useSegments } from &apos;expo-router&apos;;
+import { useCallback, useEffect } from &apos;react&apos;;
+import { Alert, BackHandler } from &apos;react-native&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+⋮----
+// Mounted for signed-out users and password recovery — see the root _layout.tsx.
+// Blank titles + native back button, approximating the design file&apos;s
+// minimal back-chevron header without a bespoke header component.
+⋮----
+const recoveryOptions = (title: string) =&gt; (
+⋮----
+{/* login/register render their own AuthHeader (green bar + back chevron) —
+          the native Stack header would otherwise stack a second header above it. */}</file><file path="apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx">import { useRouter } from &apos;expo-router&apos;;
+import { useState } from &apos;react&apos;;
+import { View } from &apos;react-native&apos;;
+⋮----
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryError, recoveryStyles } from &apos;@/components/password-recovery-screen&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+import { recoveryErrorMessage } from &apos;@/lib/password-recovery&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+async function handleSend()
+⋮----
+// Not signInWithOtp — that sends Supabase&apos;s magic-link template. Password recovery
+// (and the mailer_templates_recovery_content template customized to show the code)
+// is resetPasswordForEmail, paired with verifyOtp({ type: &apos;recovery&apos;, ... }).
+⋮----
+// Keep the recovery stack reachable while verifyOtp establishes a session.</file><file path="apps/resident-android-mobile/src/app/(auth)/login.tsx">import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { Link, useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { GuestBrowseButton } from &apos;@/components/guest-browse-button&apos;;
+import { LogoutToast } from &apos;@/components/logout-toast&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { authSetupRequests, SetupTimeout, SetupOwner } from &apos;@/lib/setup-request&apos;;
+import { residentEmailStepSchema } from &apos;@barangayan/shared&apos;;
+import { loginErrorMessage } from &apos;@/lib/login-error&apos;;
+⋮----
+type LoginParams = {
+  /** Prefills the email field when coming from the registration flow. */
+  email?: string;
+};
+⋮----
+/** Prefills the email field when coming from the registration flow. */
+⋮----
+async function handleLogin()
+⋮----
+// No explicit navigation needed — the session update flows into AuthProvider and
+// Stack.Protected in the root layout routes into (app) automatically.</file><file path="apps/resident-android-mobile/src/app/(auth)/otp.tsx">import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { Pressable, View } from &apos;react-native&apos;;
+⋮----
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryCodeInput, RecoveryError, recoveryStyles } from &apos;@/components/password-recovery-screen&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+import { recoveryErrorMessage } from &apos;@/lib/password-recovery&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+type OtpParams = {
+  // Only &apos;recovery&apos; is supported now — signup OTP was removed when email
+  // confirmation was disabled (migration 0012 / register.tsx refactor).
+  type: &apos;recovery&apos;;
+  email: string;
+};
+⋮----
+// Only &apos;recovery&apos; is supported now — signup OTP was removed when email
+// confirmation was disabled (migration 0012 / register.tsx refactor).
+⋮----
+// Password-recovery OTP screen. The signup branch was removed: with Confirm Email
+// disabled in the hosted project, signUp() creates a live session immediately, so
+// signup OTP is neither sent nor needed. Profile creation now happens via a database
+// trigger (handle_new_user) — see migration 0012 and register.tsx.
+export default function OtpScreen()
+⋮----
+async function handleVerify()
+⋮----
+async function handleResend()</file><file path="apps/resident-android-mobile/src/app/(auth)/register.tsx">import { EMAIL_OTP_REGISTRATION_METADATA, residentEmailStepSchema, residentCodeStepSchema, residentSetupFailure } from &apos;@barangayan/shared&apos;;
+import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, AppState, BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;@/components/auth-header&apos;;
+import { GoogleButton } from &apos;@/components/google-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, SetupOwner, SetupTimeout, RESEND_DEADLINE_KEY, resendSeconds, readResendDeadline } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** Only email/code live here. A verified session moves into server-owned setup. */
+⋮----
+function back()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function send()
+⋮----
+if (cause instanceof SetupTimeout) setStep(&apos;code&apos;); // Delivery can still have happened.
+⋮----
+async function verify()
+⋮----
+// AuthProvider/Stack.Protected owns navigation; retain the verified session.
+⋮----
+function openLogin()
+⋮----
+const theme = useTheme();</file><file path="apps/resident-android-mobile/src/app/(auth)/reset-password.tsx">import { newPasswordSchema } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useState } from &apos;react&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryError, recoveryStyles } from &apos;@/components/password-recovery-screen&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { passwordRecovery } from &apos;@/lib/supabase&apos;;
+import { recoveryErrorMessage } from &apos;@/lib/password-recovery&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+async function handleUpdate()
+⋮----
+// The verified recovery session is now a normal login.</file><file path="apps/resident-android-mobile/src/app/_layout.tsx">import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname, useRouter } from &apos;expo-router&apos;;
+⋮----
+import { useFonts } from &apos;expo-font&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+⋮----
+import { AnimatedSplashOverlay } from &apos;@/components/animated-icon&apos;;
+import { AuthProvider, useAuth } from &apos;@/hooks/use-auth&apos;;
+import {
+  NotificationPreferencesProvider,
+  useNotificationPreferences,
+} from &apos;@/hooks/use-notification-preferences&apos;;
+import { useNotificationRealtime } from &apos;@/hooks/use-notification-realtime&apos;;
+import { FontPreferenceProvider } from &apos;@/hooks/use-font-preference&apos;;
+import { ProfileProvider, useProfile } from &apos;@/hooks/use-profile&apos;;
+import { SafeAreaProvider } from &apos;react-native-safe-area-context&apos;;
+import { ThemePreferenceProvider, useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+import { registerPushToken } from &apos;@/lib/push-notifications&apos;;
+import { View } from &apos;react-native&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { EmergencyEntryLink } from &apos;@/components/emergency-entry-link&apos;;
+import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from &apos;@/lib/setup-navigation&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export default function RootLayout()
+⋮----
+{/* ProfileProvider sits inside AuthProvider so it can access the session for its
+          initial fetch, and outside ThemePreferenceProvider / ThemedRoot so every screen
+          in the tree shares one cached profile — avatar updates propagate immediately. */}
+⋮----
+{/* Needs both session (AuthProvider) and profile (ProfileProvider), and must stay
+          outside ThemePreferenceProvider since it has no dependency on theme state. */}
+⋮----
+{/* Needs session/profile (via useAuth/useProfile inside), so it has to nest under
+          AuthProvider — everything below, including React Navigation&apos;s own DarkTheme/
+          DefaultTheme, resolves through this instead of the raw OS scheme, so &quot;App
+          Theme&quot; in Settings is genuinely app-wide, not just our own ThemedView/ThemedText
+          components. */}
+⋮----
+{/* Font style, same session-scoping rules as accent color — needs profile/session,
+          nests wherever in this tree as long as it&apos;s above ThemedText&apos;s consumers. */}
+⋮----
+/**
+ * Keeps the push-notification delivery engine alive for the whole app session: registers
+ * this device&apos;s token whenever a real session exists and push is enabled, and opens the
+ * realtime channels that turn DB events into local notifications. Renders nothing of its
+ * own — purely a side-effect wrapper around the two notification hooks.
+ */
+function NotificationProvider(
+⋮----
+function ThemedRoot()
+⋮----
+// Session restoration can wait on a token refresh while offline. After this long the splash
+// lifts so the public evacuation-centers entry is reachable (DRRM routing plan R6).
+⋮----
+// Gates (app) vs (auth) on real Supabase session state — Expo Router&apos;s current
+// recommended auth pattern (Stack.Protected), not a manual redirect effect. The splash
+// overlay stays up until the initial session check resolves, so the app never flashes
+// signed-out content before we actually know the answer.
+function SplashGatedNavigator()
+⋮----
+/** Route-sensitive restoration chrome stays outside the stable navigation subtree. */
+function RestorationOverlay()
+⋮----
+// The public emergency screen is never covered by the splash or the restoration error.
+⋮----
+// Other/malformed links use the existing Router handling.
+⋮----
+// Android may restore the previous task route on process death, and a cold start
+// into the existing task starts Expo Router at the root. Hand the actual native
+// callback to its existing validated, deduplicated handler.
+⋮----
+// Recovery retains its own auth stack; resident setup comes from fresh server
+// state and creation origin, including after a cold restart or token refresh.
+⋮----
+// Deliberately NOT symmetric (authReachable is not just &quot;!appReachable&quot;). Guest
+// browsing (&quot;I&apos;ll Sign In Later&quot;) needs (app) reachable with no session, AND (auth)
+// to stay reachable too (a guest has no session, so `!session` already covers this —
+// isGuest doesn&apos;t need to appear in this half at all). That&apos;s what keeps the existing
+// auto-redirect behavior intact: the moment a guest actually logs in, session becomes
+// truthy, authReachable flips to false while (auth)/login is the active route, and
+// Stack.Protected redirects them into (app) automatically — same mechanism the
+// Recovery flow already relies on, no extra plumbing needed. If this were written as
+// `!appReachable` instead, isGuest would make (auth) permanently unreachable the
+// instant guest mode starts, breaking guest -&gt; login entirely.
+⋮----
+{/* Unconditionally reachable — it only redirects into whichever of (app)/(auth) is
+          actually reachable below, so it doesn&apos;t need its own guard. */}
+⋮----
+{/* Public emergency entry: outside every guard, so emergency access never depends on
+          authentication (DRRM routing plan R6, invariant 9). */}</file><file path="apps/resident-android-mobile/src/app/account-setup.tsx">import { Redirect, useRouter } from &apos;expo-router&apos;;
+import { useEffect, useState } from &apos;react&apos;;
+import { BackHandler, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AccountSetupStatus } from &apos;@/components/account-setup-status&apos;;
+import { EmergencyEntryLink } from &apos;@/components/emergency-entry-link&apos;;
+import { ResidentDetailsForm } from &apos;@/components/resident-details-form&apos;;
+import { ResidentPasswordStep, type ResidentPasswordDraft } from &apos;@/components/resident-password-step&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { authSetupRequests, profileSetupRequests } from &apos;@/lib/setup-request&apos;;
+⋮----
+// In-memory drafts survive wizard back/forward, but never cross accounts. A resident held
+// in setup can still open the public evacuation centers (DRRM routing plan R6).
+⋮----
+const busy = ()
+function back()
+⋮----
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function skip()
+async function savedDetails()
+async function savedPassword()
+⋮----
+&lt;ResidentDetailsForm key=
+⋮----
+&lt;ResidentPasswordStep key=
+⋮----
+onSignOut=</file><file path="apps/resident-android-mobile/src/app/complete-profile.tsx">import { safeResidentRedirect } from &apos;@barangayan/shared&apos;;
+import { useLocalSearchParams, useRouter, type Href } from &apos;expo-router&apos;;
+import { ResidentDetailsForm } from &apos;@/components/resident-details-form&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+export default function CompleteProfile()
+⋮----
+return &lt;ResidentDetailsForm key=
+⋮----
+// Optional password is handled by the root guard. Other accounts retain the
+// existing service continuation destination after fresh server status.</file><file path="apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx">import { useState, type ReactNode } from &apos;react&apos;;
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useDrrmSheetMotion } from &apos;@/hooks/use-drrm-sheet-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** The three DRRM sheets share only presentation; callers retain all action/state ownership. */
+⋮----
+const close = () =&gt;</file><file path="apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { isPointInPolygon, reverseGeocode, type LatLng } from &apos;@barangayan/shared&apos;;
+⋮----
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { Animated, ActivityIndicator, KeyboardAvoidingView, Modal, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { MapView, type MapViewHandle } from &apos;@/components/map-view&apos;;
+import { isMapPosition } from &apos;@/lib/map-presentation&apos;;
+import { ReportMapControls } from &apos;@/components/reports/report-map-controls&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ReportSourceState } from &apos;@/components/reports/report-presentation&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useReportModalMotion } from &apos;@/hooks/use-report-modal-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface LocationPickerResult { position: LatLng; address: string | null }
+interface LocationPickerModalProps {
+  visible: boolean; initialPosition: LatLng | null; initialAddress?: string | null;
+  boundary: Polygon | MultiPolygon | null; barangayName?: string | null;
+  onCancel: () =&gt; void; onConfirm: (result: LocationPickerResult) =&gt; void;
+}
+export function LocationPickerModal(props: LocationPickerModalProps)
+⋮----
+async function locate()
+⋮----
+onPickerMoved=
+onPickerRejected=
+⋮----
+&lt;ReportMapControls onZoomIn=
+
+⋮----
+value=
+⋮----
+&lt;PrimaryButton presentation=&quot;resident&quot; label=&quot;Use This Location&quot; disabled=</file><file path="apps/resident-android-mobile/src/components/services/charter-request-form.tsx">import {
+  residentServiceError,
+  catalogContract,
+  createRequestKey,
+  idVerificationMessages,
+  idVerificationState,
+  ResidentSubmissionAttempt,
+  servicePriceLabel,
+  serviceRequestFieldErrors,
+  submissionSchemaForCatalog,
+  supportingAttachmentMetadata,
+  uploadSupportingEvidence,
+  type ServiceSubmissionInput,
+  type Tables,
+  type ServiceRequestField,
+} from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  View,
+  type LayoutChangeEvent,
+} from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { PurposeSheet } from &apos;@/components/services/purpose-sheet&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { pickSupportingFile, type SupportingFile } from &apos;@/lib/supporting-upload&apos;;
+⋮----
+type Requirement = ServiceSubmissionInput[&apos;attachments&apos;][number][&apos;requirementCode&apos;];
+⋮----
+const locate = (field: ServiceRequestField, event: LayoutChangeEvent) =&gt;
+⋮----
+async function pick(code: Requirement)
+async function submit()
+⋮----
+&lt;View onLayout=
+⋮----
+setFiles((previous) =&gt;
+⋮----
+
+⋮----
+&lt;Field label=&quot;Explain your purpose&quot; value=
+⋮----
+&lt;Field label=&quot;Business name&quot; value=
+&lt;Field label=&quot;Establishment address&quot; value=
+⋮----
+HOA certification may support or establish residency. Document fee:
+⋮----
+setRenter(value);
+if (!value)
+⋮----
+&lt;Field label=&quot;Record/document reference&quot; value=
+&lt;Field label=&quot;Number of copies&quot; value=
+&lt;Field label=&quot;Total pages across all copies&quot; value=
+⋮----
+Fee:</file><file path="apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx">import { formatCentavosAsPHP, requestFee, requestFeeLabel, type Tables } from &apos;@barangayan/shared&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { PaymentMethodRow } from &apos;@/components/services/payment-method-row&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+type Request = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: { name: string; fee_centavos: number; service_kind: string | null } | null;
+  payments: { status: string; document_fee_centavos: number | null; amount_centavos: number }[];
+};
+function paymentErrorMessage(failure: unknown, fallback: string): string
+⋮----
+async function startQr()
+⋮----
+async function savePages()</file><file path="apps/resident-android-mobile/src/components/app-tabs.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Tabs, usePathname } from &apos;expo-router&apos;;
+import type { BottomTabBarProps } from &apos;expo-router/js-tabs&apos;;
+import { useEffect, useState, type ReactNode } from &apos;react&apos;;
+import { Platform, Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { CountBadge } from &apos;@/components/count-badge&apos;;
+import { DrrmTabIcon } from &apos;@/components/drrm-tab-icon&apos;;
+import { HomeTabIcon } from &apos;@/components/home-tab-icon&apos;;
+import { ServicesTabIcon } from &apos;@/components/services-tab-icon&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { NavigationDiagnosticScreen } from &apos;@/components/navigation-diagnostic-screen&apos;;
+import { beginDiagnosticNavigation, diagnosticRoute, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from &apos;@/lib/navigation-diagnostics&apos;;
+⋮----
+screenListeners=
+⋮----
+// Switching Android tabs should replace the scene in place. Crossfading
+// different layouts briefly overlays the outgoing content under the new
+// header and makes the screen appear to jump. The bar indicator still slides.
+⋮----
+const theme = useTheme();
+const insets = useSafeAreaInsets();
+const floatingInset = useFloatingTabInset(true);
+const pathname = usePathname();
+⋮----
+{/* Root screens scroll beneath the bar and reserve clearance for their controls. */}
+⋮----
+const diagnosticId = navigationDiagnosticsAvailable ? beginDiagnosticNavigation(tab.name) : undefined;
+const event = navigation.emit(
+if (navigationDiagnosticsAvailable) recordNavigationDiagnostic(&apos;listeners-end&apos;, tab.name,</file><file path="apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx">import { useEffect, useState } from &apos;react&apos;;
+import { StyleSheet, TextInput, View } from &apos;react-native&apos;;
+⋮----
+import { ColorPicker } from &apos;@/components/color-picker&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { SettingsSheet } from &apos;@/components/settings-sheet&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { getResidentTheme } from &apos;@/constants/resident-theme&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { DEFAULT_ACCENT_COLOR, isValidHexColor, MAX_CUSTOM_COLORS, useThemePreference } from &apos;@/hooks/use-theme-preference&apos;;
+⋮----
+interface CustomAccentColorModalProps {
+  visible: boolean;
+  onClose: () =&gt; void;
+  onSave: (color: string) =&gt; boolean;
+  atLimit: boolean;
+  initialColor: string;
+}
+⋮----
+export function CustomAccentColorModal(
+⋮----
+function handleSave()</file><file path="apps/resident-android-mobile/src/components/delete-account-modal.tsx">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Animated, Easing, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+⋮----
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+interface DeleteAccountModalProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  visible: boolean;
+  onClose: () =&gt; void;
+  /** Re-authenticates with the given password, then performs the deletion. Throws on failure. */
+  onConfirm: (password: string) =&gt; Promise&lt;void&gt;;
+}
+⋮----
+/** Re-authenticates with the given password, then performs the deletion. Throws on failure. */
+⋮----
+/**
+ * Password re-entry gate shown before &quot;Delete My Account&quot; actually runs.
+ *
+ * The account-deletion edge function only checks that the caller holds a
+ * valid session — a left-open or stolen session could otherwise permanently
+ * anonymize and ban the account with nothing but a tap on the earlier
+ * Alert.alert confirm. Requiring the current password here (same
+ * re-authenticate-before-mutating pattern as settings/change-password.tsx)
+ * makes this last, irreversible step deliberate.
+ */
+⋮----
+function handleClose()
+⋮----
+if (loading) return; // don&apos;t let a backdrop tap interrupt an in-flight deletion
+⋮----
+async function handleConfirm()
+⋮----
+// On success the caller (settings screen) closes this modal itself as
+// part of logging out — nothing further to do here.
+⋮----</file><file path="apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { useFocusEffect, useIsFocused } from &apos;expo-router&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useFloatingTabLayout } from &apos;@/hooks/use-floating-tab-layout&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { MapSelectionOverlay, type MapPlace } from &apos;@/components/maps/map-selection-overlay&apos;;
+import Animated, { useAnimatedStyle } from &apos;react-native-reanimated&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useEvacuationCenters } from &apos;@/hooks/use-evacuation-centers&apos;;
+import { useAmpid1Boundary } from &apos;@/hooks/use-ampid1-boundary&apos;;
+import { EvacuationCenterCard } from &apos;@/components/evacuation-center-card&apos;;
+import { CenterDetailCard } from &apos;@/components/center-detail-card&apos;;
+import { LocationStatusCard } from &apos;@/components/location-status-card&apos;;
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from &apos;@/components/map-view&apos;;
+import { useDeviceLocation } from &apos;@/hooks/use-device-location&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { OfflineRouteCard } from &apos;@/components/offline-route-card&apos;;
+import { RoadMarkCard } from &apos;@/components/road-mark-card&apos;;
+import { useResidentRoute } from &apos;@/hooks/use-resident-route&apos;;
+import { useOfflineRouting } from &apos;@/hooks/use-offline-routing&apos;;
+import { useAppForeground } from &apos;@/hooks/use-app-foreground&apos;;
+import { nearestEdge } from &apos;@/lib/offline-routing&apos;;
+import type { LatLng, LocationAction, MapLngLat, MapMarker } from &apos;@barangayan/shared&apos;;
+import type { AttachmentCandidate, RoutingEdge } from &apos;@barangayan/shared/src/lib/evacuation-routing&apos;;
+import { useNetInfo } from &apos;@react-native-community/netinfo&apos;;
+import { useEmergencyMapHeader } from &apos;@/hooks/use-emergency-map-header&apos;;
+import { useSearchInactivity } from &apos;@/hooks/use-search-inactivity&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+⋮----
+export function CentersContent({
+  theme,
+  centers: fetchedCenters,
+  isLoading,
+  error,
+  refetch,
+  view,
+  onViewChange,
+  nearestFirst,
+  onNearestToggle,
+  userPosition,
+  location,
+  onFitAll,
+  resident = false,
+}: {
+  theme: ReturnType&lt;typeof useTheme&gt;;
+  centers: ReturnType&lt;typeof useEvacuationCenters&gt;[&apos;centers&apos;];
+  isLoading: boolean;
+  error: string | null;
+refetch: ()
+⋮----
+const collapseSearch = () =&gt;
+⋮----
+// Retain the outgoing list until the first map is ready, avoiding an empty frame.
+⋮----
+const complete = () =&gt;
+⋮----
+// Walking routes are computed on this phone from the installed routing pack, verified
+// closures and the resident&apos;s own blocked roads (DRRM routing plan R6), so they work
+// offline. A route that cannot be computed is explained in words and never drawn as a
+// straight line (invariant 7).
+⋮----
+// Online tiles only when the internet is known to be reachable; offline, the pack&apos;s vector
+// roads are the basemap and no tile requests are made.
+⋮----
+// A street chosen from the attachment chooser belongs to one origin revision and graph.
+⋮----
+// Only the route to the selected center is drawn; the automatic run exists to rank the list, and
+// a result still on screen for a previous selection is never shown for the new one.
+⋮----
+const handleChooseSegment = (candidate: AttachmentCandidate) =&gt;
+⋮----
+// Walking distance replaces the straight-line estimate once a route result ranks the centers.
+// A center the result cannot reach shows no distance rather than a misleading straight line.
+⋮----
+// Layout/theme changes update clearance without replaying camera movement.
+⋮----
+// Ages shown in the status card are refreshed once a minute.
+⋮----
+// Marking a road as blocked on this phone (local avoidance).
+⋮----
+const closeMarking = () =&gt;
+const handleMapTap = (position: LatLng) =&gt;
+const handleConfirmMark = () =&gt;
+const handleRemoveMark = (recordId: string) =&gt;
+⋮----
+const selectCenter = (center: ReturnType&lt;typeof useEvacuationCenters&gt;[&apos;centers&apos;][number]) =&gt;
+const handleMarkerTap = (id: string) =&gt;
+const dismissCenter = ()
+const handleShowAll = () =&gt;
+const handleResetMap = () =&gt;
+// &quot;Locate me&quot; updates the shared controller (marker + routing origin), not just the
+// viewport. The map follows the result of an explicit request only.
+⋮----
+const handleLocateMe = () =&gt;
+⋮----
+const handleLocationAction = (action: LocationAction) =&gt;
+⋮----
+// Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+⋮----
+if (marking) closeMarking();
+else if (resident)
+⋮----
+
+⋮----
+&lt;TextInput ref=</file><file path="apps/resident-android-mobile/src/components/family-content.tsx">import { useEffect, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useIsFocused } from &apos;expo-router&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { DrrmSourceState } from &apos;@/components/drrm/presentation&apos;;
+import { HouseholdCode } from &apos;@/components/drrm/household-code&apos;;
+import { FamilyMemberModal, type ProfileHouseholdMemberInput } from &apos;@/components/family-member-modal&apos;;
+import { HouseholdQrModal } from &apos;@/components/household-qr-modal&apos;;
+import { useProfileHouseholdMembers } from &apos;@/hooks/use-profile-household-members&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useHouseholdAttendance } from &apos;@/hooks/use-household-attendance&apos;;
+import { attendanceTime } from &apos;@/lib/household&apos;;
+import type { HouseholdAttendance } from &apos;@barangayan/shared&apos;;
+⋮----
+// Account changes discard presentation state; no member or code crosses accounts.
+⋮----
+function refresh()
+⋮----
+&lt;HouseholdCode size=
+⋮----</file><file path="apps/resident-android-mobile/src/components/family-member-modal.tsx">import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, View } from &apos;react-native&apos;;
+import { ScanFamilySheet } from &apos;@/components/drrm/scan-family-sheet&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export type ProfileHouseholdMemberInput = { id?: string; name: string; relation: string; role: string };
+⋮----
+export function FamilyMemberModal({ visible, initial, onClose, onSave, onDelete, saveError, needsReload = false, onReload }: {
+visible: boolean; initial: ProfileHouseholdMemberInput | null; onClose: ()
+⋮----
+async function submit(remove = false)
+⋮----
+
+⋮----
+&lt;PrimaryButton presentation=&quot;resident&quot; compact variant=&quot;destructive&quot; label=&quot;Confirm Remove&quot; loading=
+⋮----
+&lt;PrimaryButton presentation=&quot;resident&quot; compact variant=&quot;secondary&quot; label=&quot;Keep Member&quot; disabled=
+⋮----
+&lt;View style=</file><file path="apps/resident-android-mobile/src/components/password-recovery-screen.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { ActivityIndicator, Animated, Easing, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+⋮----
+export function PasswordRecoveryScreen({ step, title, description, children }: {
+  step: 1 | 2 | 3;
+  title: string;
+  description: string;
+  children: ReactNode;
+})
+⋮----
+/** One autofill/paste-capable input, presented as six cells. Screen readers read
+ * the input once; the visual cells never become six separate focus targets. */
+⋮----
+onChangeText=
+⋮----
+onBlur=
+⋮----
+{/* Paint the cells above the native input instead of relying on a transparent
+            text color, which Android can replace with its default while editing.
+            Touches still reach the one input; its accessibility/autofill stay intact. */}
+⋮----
+borderColor: focused &amp;&amp; index === Math.min(value.length, 5) ? theme.primary : theme.backgroundSelected,</file><file path="apps/resident-android-mobile/src/components/resident-details-form.tsx">import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;./birthday-calendar-modal&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { RegistrationMap } from &apos;./registration-map&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, profileSetupRequests, SetupOwner, SetupTimeout } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** YYYY-MM-DD → &quot;August 8, 2000&quot; */
+function fmtDate(iso: string | null): string
+⋮----
+/** Red asterisk suffix for required-field labels that don&apos;t render through TextField
+ * (Sex / Date of Birth / Employment Status use their own chip/pressable labels). */
+function RequiredMark()
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a
+// field shows a red alert or a green check the moment its value becomes
+// invalid/valid — the same treatment the Confirm Password field already gave
+// the password-match check, generalized to every text field. Empty fields stay
+// silent until a submit attempt populates fieldErrors (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+/**
+ * Resolves a TextField&apos;s error/success pair for one field:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/**
+ * Section card wrapper — same shape as Settings &gt; Profile&apos;s SectionCard (rounded,
+ * bordered, backgroundElement fill) with an icon + title header, used to break the
+ * long registration form into scannable groups instead of one flat field list.
+ */
+export function FormSection({
+  icon,
+  title,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  children: React.ReactNode;
+})
+⋮----
+/**
+ * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
+ * has a `TextField` shape, and unlike SegmentedControl this never implies a default
+ * selection: with `active` unset, no chip renders as chosen.
+ */
+⋮----
+/** Registration and deferred completion share the restored form and validators. */
+⋮----
+const point = (value: Json | null | undefined) =&gt; value &amp;&amp; typeof value === &apos;object&apos; &amp;&amp; !Array.isArray(value) &amp;&amp; typeof value.lat === &apos;number&apos; &amp;&amp; typeof value.lng === &apos;number&apos; ?
+⋮----
+// Fresh profile belongs to this account/load attempt, not an offline context cache.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function handleSubmit()
+⋮----
+// A lost response may have committed. Reload/review before any repeat write.
+⋮----
+function leave(action: () =&gt; void)
+⋮----
+onPress=
+⋮----
+&lt;BirthdayCalendarModal visible=</file><file path="apps/resident-android-mobile/src/components/resident-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { router, usePathname } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { NotificationBell } from &apos;@/components/notification-bell&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useSearchDraft } from &apos;@/hooks/use-resident-search&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+import { useEmergencyMapHeader } from &apos;@/hooks/use-emergency-map-header&apos;;
+import { useSearchInactivity } from &apos;@/hooks/use-search-inactivity&apos;;
+import { isSearchableQuery } from &apos;@/lib/resident-search&apos;;
+⋮----
+/** Stays mounted across navigation so the expanding search keeps its input. */
+⋮----
+// A frame can run after Explore has committed but before this effect&apos;s cleanup; focusing there would reopen editing.
+⋮----
+const closeSearch = () =&gt;
+⋮----
+// Android Back takes the header&apos;s Back path, so leaving search also clears the submitted session.
+⋮----
+
+// Explore&apos;s field is the way back to editing: focusing it reopens the entry with the submitted query.
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =&gt;</file><file path="apps/resident-android-mobile/src/components/resident-password-step.tsx">import { residentPasswordStepSchema, getResidentAccountSetupStatus, residentSetupFailure } from &apos;@barangayan/shared&apos;;
+import { createClient } from &apos;@supabase/supabase-js&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ScrollView, View } from &apos;react-native&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { FormSection } from &apos;./resident-details-form&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, SetupOwner, SetupTimeout, SetupWriteBoundary } from &apos;@/lib/setup-request&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+import { useRouter } from &apos;expo-router&apos;;
+⋮----
+/** First-time creation only. Known/unknown existing credentials use Manage Password. */
+export type ResidentPasswordDraft = { password: string; confirmPassword: string; uncertain: boolean };
+/** `settings` is first-password setup from Settings: no sign-out/skip wording, and
+ * `beforeWrite` must re-prove fresh same-user authentication right before the write. */
+⋮----
+const setPassword = (value: string) =&gt; onDraftChange(
+const setConfirmPassword = (value: string) =&gt; onDraftChange(
+⋮----
+async function save(checkOnly = false)
+⋮----
+// Independent, non-persisting client: checking a lost write cannot switch
+// the app&apos;s session or count passwordSet=true as proof of this password.
+⋮----
+// A timeout/transport error can follow a successful commit. Never blindly
+// repeat updateUser: require the exact entered credential or recovery.</file><file path="apps/resident-android-mobile/src/components/settings-sheet.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useState, type ReactNode } from &apos;react&apos;;
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useReportModalMotion } from &apos;@/hooks/use-report-modal-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+/** Shared presentation for the color, profile-option and local household editors. */
+⋮----
+onLayout=
+⋮----</file><file path="apps/resident-android-mobile/src/components/text-field.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { Pressable, StyleSheet, TextInput, type TextInputProps, View } from &apos;react-native&apos;;
+⋮----
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { ResidentLayout } from &apos;@/constants/resident-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+⋮----
+export interface TextFieldProps extends TextInputProps {
+  presentation?: &apos;default&apos; | &apos;resident&apos;;
+  appearance?: &apos;default&apos; | &apos;requestForm&apos;;
+  label?: string;
+  error?: string;
+  /** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+  success?: string;
+  /** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+  required?: boolean;
+  /** Enables an in-field control for revealing or masking password text. */
+  passwordVisibility?: {
+    visible: boolean;
+    onToggle: () =&gt; void;
+  };
+}
+⋮----
+/** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen&apos;s existing &quot;Passwords match&quot;
+   * indicator, generalized to every field. Ignored while `error` is set. */
+⋮----
+/** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that&apos;s still driven by the schema / live field checks). */
+⋮----
+/** Enables an in-field control for revealing or masking password text. */
+⋮----
+export function TextField({
+  label,
+  error,
+  success,
+  required,
+  style,
+  passwordVisibility,
+  secureTextEntry,
+  presentation = &apos;default&apos;,
+  appearance = &apos;default&apos;,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps)
+⋮----
+function handlePasswordVisibilityToggle()
+⋮----
+// Tapping the affordance should not interrupt typing or dismiss the keyboard.
+⋮----
+onBlur=
+⋮----</file><file path="apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx">import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from &apos;react&apos;;
+import { Keyboard } from &apos;react-native&apos;;
+import { usePathname } from &apos;expo-router&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { floatingTabInset } from &apos;@/lib/floating-tab-inset&apos;;
+import { cancelAnimation, Easing, useSharedValue, withTiming, type SharedValue } from &apos;react-native-reanimated&apos;;
+import { useResidentReducedMotion } from &apos;./use-resident-reduced-motion&apos;;
+⋮----
+/** One shell-owned measurement and keyboard subscription for the bar and its consumers. */
+export function FloatingTabLayoutProvider(
+⋮----
+/** Only this small adapter observes the full pathname; consumers receive scalar changes. */
+function FloatingTabClearance(
+⋮----
+return &lt;ClearanceContext.Provider value=
+&lt;VisibleBarClearanceContext.Provider value=
+⋮----
+export function useFloatingTabClearance(ignoreMapHide: boolean)
+⋮----
+export function useFloatingTabLayout()</file><file path="apps/resident-android-mobile/src/lib/floating-tab-inset.ts">/** Scalar clearance shared by the shell adapter; root-to-root navigation keeps its value. */
+export function floatingTabInset({ pathname, bottom, barHeight, keyboardVisible, mapNavHidden }: {
+  pathname: string; bottom: number; barHeight: number; keyboardVisible: boolean; mapNavHidden: boolean;
+}, ignoreMapHide = false)</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = (</file><file path="apps/resident-android-mobile/app.json">{
+  &quot;expo&quot;: {
+    &quot;name&quot;: &quot;barangayan&quot;,
+    &quot;slug&quot;: &quot;barangayan&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;orientation&quot;: &quot;portrait&quot;,
+    &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+    &quot;scheme&quot;: &quot;barangayan&quot;,
+    &quot;userInterfaceStyle&quot;: &quot;automatic&quot;,
+    &quot;ios&quot;: {
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;infoPlist&quot;: {
+        &quot;NSCameraUsageDescription&quot;: &quot;Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in.&quot;
+      }
+    },
+    &quot;android&quot;: {
+      &quot;package&quot;: &quot;com.barangayan.resident&quot;,
+      &quot;versionCode&quot;: 6,
+      &quot;icon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+      &quot;predictiveBackGestureEnabled&quot;: false
+    },
+    &quot;web&quot;: {
+      &quot;output&quot;: &quot;single&quot;,
+      &quot;favicon&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;
+    },
+    &quot;plugins&quot;: [
+      &quot;expo-router&quot;,
+      [
+        &quot;expo-splash-screen&quot;,
+        {
+          &quot;backgroundColor&quot;: &quot;#0F6E5B&quot;,
+          &quot;image&quot;: &quot;./assets/logo/barangayan-logo-1024.png&quot;,
+          &quot;imageWidth&quot;: 76,
+          &quot;resizeMode&quot;: &quot;contain&quot;
+        }
+      ]
+    ],
+    &quot;experiments&quot;: {
+      &quot;typedRoutes&quot;: true,
+      &quot;reactCompiler&quot;: true
+    },
+    &quot;extra&quot;: {
+      &quot;router&quot;: {},
+      &quot;eas&quot;: {
+        &quot;projectId&quot;: &quot;3ff53b52-c50e-4bdb-811a-ccd94cd74f54&quot;
+      }
+    },
+    &quot;owner&quot;: &quot;alex123superman&quot;
+  }
+}</file><file path="apps/resident-android-mobile/eas.json">{
+  &quot;cli&quot;: {
+    &quot;version&quot;: &quot;&gt;= 24.12.1&quot;,
+    &quot;appVersionSource&quot;: &quot;local&quot;
+  },
+  &quot;build&quot;: {
+    &quot;preview&quot;: {
+      &quot;distribution&quot;: &quot;internal&quot;,
+      &quot;environment&quot;: &quot;preview&quot;,
+      &quot;android&quot;: {
+        &quot;buildType&quot;: &quot;apk&quot;
+      }
+    }
+  }
+}</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;,
+    &quot;test:navigation&quot;: &quot;node tests/navigation-regressions.mjs&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/tsconfig.json">{
+  &quot;extends&quot;: &quot;expo/tsconfig.base&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [
+        &quot;./src/*&quot;
+      ],
+      &quot;@/assets/*&quot;: [
+        &quot;./assets/*&quot;
+      ]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;.expo/types/**/*.ts&quot;,
+    &quot;expo-env.d.ts&quot;
+  ]
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="AGENTS.md"></file><file path="CLAUDE.md">@AGENTS.md</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file></files></repomix>

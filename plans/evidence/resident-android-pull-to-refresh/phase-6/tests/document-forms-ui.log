@@ -1,0 +1,11 @@
+{
+  "passed": [
+    "Guide preserves all charter content/stored numbering, independent accordions, null personnel and four widths with dark/custom accent/font",
+    "Current form validates intentionally, keeps drafts through refresh, handles picker cancel/error, removes renter evidence and submits once",
+    "Business/DTI, residency, general and full-range CTC fields remain available",
+    "Legacy image branch submits one upload/attempt and retains payment destination",
+    "Guide keeps verification and guest login gates/destinations"
+  ],
+  "errors": [],
+  "native": false
+}

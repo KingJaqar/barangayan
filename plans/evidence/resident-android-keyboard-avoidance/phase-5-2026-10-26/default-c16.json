@@ -1,0 +1,213 @@
+{
+  "at": "2026-10-26T11:46:32.237Z",
+  "status": "pass stated subset",
+  "config": "default",
+  "observations": [
+    {
+      "tag": "default-c16-focus",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "Search locations...",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-typed",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-start",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-end",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-middle",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-filters-closed",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-filters-open",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-c16-return",
+      "label": "Search incidents",
+      "bounds": [
+        159,
+        415,
+        885,
+        520
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "open": {
+        "tag": "default-c16-reopen-1",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          415,
+          885,
+          520
+        ],
+        "imeTop": 1167,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          375,
+          1080,
+          1920
+        ],
+        [
+          0,
+          375,
+          1080,
+          1920
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "default-c16-reopen-2",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          415,
+          885,
+          520
+        ],
+        "imeTop": 1167,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          375,
+          1080,
+          1920
+        ],
+        [
+          0,
+          375,
+          1080,
+          1920
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "default-c16-reopen-3",
+        "label": "Search incidents",
+        "bounds": [
+          159,
+          415,
+          885,
+          520
+        ],
+        "imeTop": 1167,
+        "text": "Search locations...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          375,
+          1080,
+          1920
+        ],
+        [
+          0,
+          375,
+          1080,
+          1920
+        ]
+      ]
+    }
+  ],
+  "checks": [
+    "focus",
+    "start/middle/end caret",
+    "filter toggle while typing",
+    "disabled evacuation lookalike",
+    "query retained on incident return",
+    "three dismiss/reopen cycles with WebView bounds restored"
+  ],
+  "remaining": [
+    "touch paste/selection",
+    "selected incident marker",
+    "actual map camera identity"
+  ]
+}

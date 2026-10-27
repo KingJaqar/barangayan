@@ -1,0 +1,162 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/resident-details-form.tsx, apps/resident-android-mobile/src/app/(app)/services/request/*.tsx
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          services/
+            request/
+              [documentId].tsx
+      components/
+        resident-details-form.tsx</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/resident-details-form.tsx">import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, residentDetailsStepSchema, registrationLocality, RegistrationLocalityError, ResidentSetupStatusError, residentNamePrefill, MOBILE_NUMBER_REGEX, NAME_REGEX, SEXES, type EmploymentStatus, type Sex, type Tables, type Json } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { MultiPolygon, Polygon } from &apos;geojson&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView, useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+import { AuthHeader } from &apos;./auth-header&apos;;
+import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from &apos;./birthday-calendar-modal&apos;;
+import { PrimaryButton } from &apos;./primary-button&apos;;
+import { RegistrationMap } from &apos;./registration-map&apos;;
+import { TextField } from &apos;./text-field&apos;;
+import { ThemedText } from &apos;./themed-text&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { authSetupRequests, profileSetupRequests, SetupOwner, SetupTimeout } from &apos;@/lib/setup-request&apos;;
+⋮----
+/** YYYY-MM-DD → &quot;August 8, 2000&quot; */
+function fmtDate(iso: string | null): string
+⋮----
+/** Red asterisk suffix for required-field labels that don&apos;t render through TextField
+ * (Sex / Date of Birth / Employment Status use their own chip/pressable labels). */
+function RequiredMark()
+⋮----
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a
+// field shows a red alert or a green check the moment its value becomes
+// invalid/valid — the same treatment the Confirm Password field already gave
+// the password-match check, generalized to every text field. Empty fields stay
+// silent until a submit attempt populates fieldErrors (the &quot;required&quot; message).
+function validateName(value: string): string | null
+function validateMobileNumber(value: string): string | null
+/**
+ * Resolves a TextField&apos;s error/success pair for one field:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) =&gt; string | null,
+  successMessage = &apos; &apos;,
+):
+⋮----
+/**
+ * Section card wrapper — same shape as Settings &gt; Profile&apos;s SectionCard (rounded,
+ * bordered, backgroundElement fill) with an icon + title header, used to break the
+ * long registration form into scannable groups instead of one flat field list.
+ */
+export function FormSection({
+  icon,
+  title,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  children: React.ReactNode;
+})
+⋮----
+/**
+ * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
+ * has a `TextField` shape, and unlike SegmentedControl this never implies a default
+ * selection: with `active` unset, no chip renders as chosen.
+ */
+⋮----
+/** Registration and deferred completion share the restored form and validators. */
+⋮----
+const load = async () =&gt;
+⋮----
+const point = (value: Json | null | undefined) =&gt; value &amp;&amp; typeof value === &apos;object&apos; &amp;&amp; !Array.isArray(value) &amp;&amp; typeof value.lat === &apos;number&apos; &amp;&amp; typeof value.lng === &apos;number&apos; ?
+⋮----
+// Fresh profile belongs to this account/load attempt, not an offline context cache.
+// eslint-disable-next-line react-hooks/exhaustive-deps
+⋮----
+async function handleSubmit()
+⋮----
+// A lost response may have committed. Reload/review before any repeat write.
+⋮----
+function leave(action: () =&gt; void)
+⋮----
+onPress=
+⋮----
+&lt;BirthdayCalendarModal visible=</file><file path="apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx">import { ResidentActionGate } from &apos;@/components/resident-action-gate&apos;;
+import { catalogContract, residentServiceError, ResidentSubmissionAttempt } from &apos;@barangayan/shared&apos;;
+import { CharterRequestForm } from &apos;@/components/services/charter-request-form&apos;;
+import { formatCentavosAsPHP, requestFormSchema, type Tables } from &apos;@barangayan/shared&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { PlaceholderPanel } from &apos;@/components/placeholder-panel&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { Card } from &apos;@/components/card&apos;;
+import { SkeletonBlock } from &apos;@/components/services/skeleton&apos;;
+import { ServiceScreenHeader } from &apos;@/components/services/service-screen-header&apos;;
+import { ServiceErrorToast } from &apos;@/components/services/service-error-toast&apos;;
+import { TextField } from &apos;@/components/text-field&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { ThemedView } from &apos;@/components/themed-view&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import {
+  displayName,
+  imageExtension,
+  isWithinSizeLimit,
+  pickImageAsset,
+  readImageBytes,
+  type PickedImage,
+} from &apos;@/lib/image-upload&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+type DocumentType = Tables&lt;&apos;document_types&apos;&gt;;
+⋮----
+/** Shimmer stand-in for the loading state, shaped like the form below it. Rendered only
+ * while `doc === undefined` — same early-return slot `PlaceholderPanel` used to occupy. */
+⋮----
+// S0-8: uploads the picked ID image to Storage *before* the service_requests insert
+// and returns its path. Must happen first — residents have no UPDATE/DELETE policy on
+// service_requests (see 0002&apos;s &quot;no client update/delete policy&quot; comment), so there&apos;s
+// no way to patch the path in after the fact or roll back a row left without one.
+⋮----
+/* Loading skeleton */</file></files></repomix>

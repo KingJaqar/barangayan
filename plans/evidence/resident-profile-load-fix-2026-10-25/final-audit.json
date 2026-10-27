@@ -1,0 +1,158 @@
+{
+  "owned": [
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "sha256": "aa46701c7394089a68fa5bc5d1c727b94863801d72b0e3e287a7b9a684e17edf",
+      "bytes": 25602,
+      "newFile": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "sha256": "68d05b9a01002aa2b2c5b9e392835788b2d87c297012b185268fbf5d4230154f",
+      "bytes": 7910,
+      "newFile": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.ts",
+      "sha256": "4ea0e04db9324d7cf4a3940603b309995dbefd214ac6a7181f6b726ff8f88b5c",
+      "bytes": 8089,
+      "newFile": false
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.test.ts",
+      "sha256": "b018a0536683fd110aafa21d15378225035000af78354769ed57e9ea77b4a57a",
+      "bytes": 7684,
+      "newFile": false
+    },
+    {
+      "path": "packages/shared/src/lib/registration-locality.test.ts",
+      "sha256": "e0158ecfbb7be4bd43af914477b98887fa3ef8dca16ced6dfe47bb5e3ad182b9",
+      "bytes": 5563,
+      "newFile": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-details-loading-ui.mjs",
+      "sha256": "d73f04f70cadd12a6664ccfee209abde429c210e178fc8a29af04ab2794ce089",
+      "bytes": 12540,
+      "newFile": true
+    }
+  ],
+  "preserved": [
+    {
+      "path": "AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "package.json",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/schemas/service-foundations.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/registration-map.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/account-setup.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/setup-request.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-web/src/app/(auth)/register/register-form.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/maps-presentation-ui.mjs",
+      "unchanged": true
+    }
+  ],
+  "originalInputs": 27,
+  "unchangedOtherInputs": 25,
+  "planChangesConfinedToPhase2": true,
+  "packetIdentitiesVerified": true,
+  "diffCheck": "pass",
+  "sharedTypes": {
+    "baseline": 6,
+    "current": 6,
+    "new": 0
+  },
+  "uiGroups": 6,
+  "notes": [
+    "Account-setup originals recovered from HEAD after initially Git-clean status; other snapshots captured before edits.",
+    "New untracked tests are represented by hashes and source; tracked owned diff saved separately.",
+    "No dependency, remote data/account/config, commit, push or deployment change."
+  ]
+}

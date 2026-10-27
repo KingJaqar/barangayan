@@ -1,0 +1,13 @@
+{
+  "stage": "resume-baseline",
+  "check": "lint",
+  "command": [
+    "node",
+    "../../node_modules/eslint/bin/eslint.js",
+    "src",
+    "--no-cache"
+  ],
+  "start": "2026-10-26T12:49:56.842Z",
+  "end": "2026-10-26T12:51:00.885Z",
+  "status": 0
+}

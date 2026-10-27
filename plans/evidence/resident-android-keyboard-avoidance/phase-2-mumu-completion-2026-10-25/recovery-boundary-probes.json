@@ -1,0 +1,115 @@
+{
+  "state": "Boundary probes only; no OTP send, verify or password update. Normal header Back cancels recovery and preserves the session.",
+  "results": [
+    {
+      "id": "B05",
+      "state": "signed-in read-only boundary",
+      "readOnly": true
+    },
+    {
+      "id": "B07",
+      "label": "New password",
+      "configuration": "recovery-boundary",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "restoration": "Restore original value in place",
+      "states": [
+        {
+          "name": "recovery-boundary-B07-focus",
+          "editor": [
+            72,
+            921,
+            1008,
+            1089
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1920
+          ],
+          "keyboardTop": 1167,
+          "clearance": 78,
+          "focused": true
+        },
+        {
+          "name": "recovery-boundary-B07-paste",
+          "editor": [
+            72,
+            921,
+            1008,
+            1089
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1920
+          ],
+          "keyboardTop": 1167,
+          "clearance": 78,
+          "focused": true
+        },
+        {
+          "name": "recovery-boundary-B07-selection",
+          "editor": [
+            72,
+            921,
+            1008,
+            1089
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1920
+          ],
+          "keyboardTop": 1167,
+          "clearance": 78,
+          "focused": true
+        },
+        {
+          "name": "recovery-boundary-B07-reopen-1",
+          "editor": [
+            72,
+            921,
+            1008,
+            1089
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1920
+          ],
+          "keyboardTop": 1167,
+          "clearance": 78,
+          "focused": true
+        },
+        {
+          "name": "recovery-boundary-B07-reopen-2",
+          "editor": [
+            72,
+            921,
+            1008,
+            1089
+          ],
+          "viewport": [
+            0,
+            219,
+            1080,
+            1920
+          ],
+          "keyboardTop": 1167,
+          "clearance": 78,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "submitted": false
+}

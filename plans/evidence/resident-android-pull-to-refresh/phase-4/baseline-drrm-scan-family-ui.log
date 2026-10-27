@@ -1,0 +1,18 @@
+{
+  "passed": [
+    "managed guide content survives refresh error, offline badge and real Retry",
+    "denied/permanent permission recovery, settings, schema-invalid scan and close",
+    "wrong-barangay rejection and repeated native callbacks cause zero attendance or blanket writes",
+    "camera mount-error retry, two background cycles and focus-loss release",
+    "permission API exception remains recoverable after attendance cutover",
+    "stable validated QR, alphabetical picker, selected payload, share failure/cancel and denied/failed/successful gallery adapters",
+    "center loading/empty/error/Retry retains truthful QR disabled state",
+    "holder-only household, authoritative arrival and departure, Manila timestamps and explicit refresh",
+    "conditional add/rename, exact expected snapshot, stale-editor feedback/reload, busy double-save/close protection",
+    "active removal guard, read/status errors and retry, local data-only normal/enlarged QR, stable idle counts and bounded focus/resume refresh",
+    "all ten offered fonts keep form reachable; malformed JSON blocks editing; account switch clears prior members",
+    "interrupted slide exit reopens without stale unmount or position jump; picker uses opacity only",
+    "320/360/400/412 light/dark/extreme accents/serif overflow; five sheet cycles; reduced motion <=100ms; resource cleanup"
+  ],
+  "errors": []
+}

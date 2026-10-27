@@ -1,0 +1,11 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "b6298c078810a8a9d6fe557fc03f0673dd6a9b68bd2351bd3c4e07dea1a59efa",
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/settings-sheet.tsx",
+      "characters": 5199
+    }
+  ],
+  "totalCharacters": 5267
+}

@@ -1,0 +1,235 @@
+{
+  "at": "2026-10-26T13:28:45.048Z",
+  "status": "pass stated subset",
+  "config": "compact-font",
+  "route": "drrm",
+  "observations": [
+    {
+      "tag": "compact-font-c17-drrm-focus",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-typed",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-native-cut",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-native-paste",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-start",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-end",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-middle",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-reopen-active",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-map-return",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        897,
+        768
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-c17-drrm-clear",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        636,
+        1029,
+        768
+      ],
+      "imeTop": 927,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "open": {
+        "tag": "compact-font-c17-drrm-cycle-1",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "compact-font-c17-drrm-cycle-2",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    },
+    {
+      "open": {
+        "tag": "compact-font-c17-drrm-cycle-3",
+        "label": "Search evacuation centers",
+        "bounds": [
+          183,
+          636,
+          1029,
+          768
+        ],
+        "imeTop": 927,
+        "text": "Search 7 evacuation centers...",
+        "focused": "true"
+      },
+      "mapBounds": [
+        [
+          0,
+          441,
+          1080,
+          1680
+        ],
+        [
+          0,
+          441,
+          1080,
+          1680
+        ]
+      ]
+    }
+  ],
+  "listEditorAbsent": true,
+  "oneEditor": true,
+  "remaining": [
+    "touch paste/selection",
+    "selected center/route overlay",
+    "idle-collapse timing",
+    "actual map camera identity"
+  ]
+}

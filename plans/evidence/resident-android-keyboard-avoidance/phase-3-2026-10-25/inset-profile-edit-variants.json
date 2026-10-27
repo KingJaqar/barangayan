@@ -1,0 +1,262 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "results": [
+    {
+      "config": "compact-large-font",
+      "cycles": [
+        {
+          "cycle": 1,
+          "geometry": {
+            "editor": [
+              60,
+              445,
+              1020,
+              609
+            ],
+            "viewport": [
+              0,
+              138,
+              1080,
+              927
+            ],
+            "keyboardTop": 927,
+            "clearance": 318
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                60,
+                571,
+                368,
+                843
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                404,
+                571,
+                1020,
+                743
+              ]
+            }
+          ],
+          "restored": true
+        },
+        {
+          "cycle": 2,
+          "geometry": {
+            "editor": [
+              60,
+              445,
+              1020,
+              609
+            ],
+            "viewport": [
+              0,
+              138,
+              1080,
+              927
+            ],
+            "keyboardTop": 927,
+            "clearance": 318
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                60,
+                571,
+                368,
+                843
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                404,
+                571,
+                1020,
+                743
+              ]
+            }
+          ],
+          "restored": true
+        },
+        {
+          "cycle": 3,
+          "geometry": {
+            "editor": [
+              60,
+              445,
+              1020,
+              609
+            ],
+            "viewport": [
+              0,
+              138,
+              1080,
+              927
+            ],
+            "keyboardTop": 927,
+            "clearance": 318
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                60,
+                571,
+                368,
+                843
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                404,
+                571,
+                1020,
+                743
+              ]
+            }
+          ],
+          "restored": true
+        }
+      ],
+      "saved": false,
+      "localUpdateReopen": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "config": "compact-large-display-gesture",
+      "cycles": [
+        {
+          "cycle": 1,
+          "geometry": {
+            "editor": [
+              68,
+              500,
+              1013,
+              686
+            ],
+            "viewport": [
+              0,
+              156,
+              1080,
+              887
+            ],
+            "keyboardTop": 887,
+            "clearance": 201
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                68,
+                590,
+                369,
+                887
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                410,
+                590,
+                1013,
+                784
+              ]
+            }
+          ],
+          "restored": true
+        },
+        {
+          "cycle": 2,
+          "geometry": {
+            "editor": [
+              68,
+              383,
+              1013,
+              569
+            ],
+            "viewport": [
+              0,
+              156,
+              1080,
+              887
+            ],
+            "keyboardTop": 887,
+            "clearance": 318
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                68,
+                487,
+                369,
+                793
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                410,
+                487,
+                1013,
+                681
+              ]
+            }
+          ],
+          "restored": true
+        },
+        {
+          "cycle": 3,
+          "geometry": {
+            "editor": [
+              68,
+              383,
+              1013,
+              569
+            ],
+            "viewport": [
+              0,
+              156,
+              1080,
+              887
+            ],
+            "keyboardTop": 887,
+            "clearance": 318
+          },
+          "actions": [
+            {
+              "label": "Remove",
+              "bounds": [
+                68,
+                487,
+                369,
+                793
+              ]
+            },
+            {
+              "label": "Update",
+              "bounds": [
+                410,
+                487,
+                1013,
+                681
+              ]
+            }
+          ],
+          "restored": true
+        }
+      ],
+      "saved": false,
+      "localUpdateReopen": true,
+      "status": "pass for stated subset"
+    }
+  ],
+  "finalProfileClean": true
+}

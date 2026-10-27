@@ -1,0 +1,83 @@
+{
+  "tag": "compact-large-font-A09-emergency",
+  "label": "Full Name",
+  "before": {
+    "editor": [
+      48,
+      684,
+      1032,
+      828
+    ],
+    "viewport": [
+      0,
+      570,
+      1080,
+      1456
+    ],
+    "keyboardTop": null,
+    "clearance": null
+  },
+  "focus": {
+    "editor": [
+      48,
+      414,
+      1032,
+      558
+    ],
+    "viewport": [
+      0,
+      300,
+      1080,
+      703
+    ],
+    "keyboardTop": 927,
+    "clearance": 369
+  },
+  "actions": [
+    {
+      "action": "Add Member",
+      "bounds": [
+        48,
+        742,
+        1032,
+        879
+      ]
+    }
+  ],
+  "typing": true,
+  "syntheticTextRestored": true,
+  "cycles": 1,
+  "restored": [
+    {
+      "editor": [
+        48,
+        684,
+        1032,
+        828
+      ],
+      "viewport": [
+        0,
+        570,
+        1080,
+        1456
+      ],
+      "keyboardTop": 927,
+      "clearance": 99
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792935552952.181,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792935552952.181,
+      "classification": "existing push-notification path"
+    }
+  ],
+  "scope": "Native focus, typing, action reachability and restoration; paste/selection/error variants recorded separately"
+}

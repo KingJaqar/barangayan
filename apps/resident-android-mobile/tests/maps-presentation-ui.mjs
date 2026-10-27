@@ -14,7 +14,7 @@ const mocks={
  '@/global.css':'',
  'react-native':`import {Animated as A,Platform as P,View as V,Pressable as B,AppState as S} from 'react-native-web';import React,{useEffect} from 'react';export * from 'react-native-web';export const Platform={...P,OS:'android'};export const View=React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...p},r)=><V {...p} ref={r} aria-hidden={accessibilityElementsHidden}/>);export const Pressable=React.forwardRef(({accessibilityState:s,...p},r)=><B {...p} ref={r} aria-checked={s?.checked} aria-selected={s?.selected} aria-expanded={s?.expanded} aria-busy={s?.busy} aria-disabled={s?.disabled}/>);export const AppState={...S,addEventListener:(event,fn)=>{window.fixture.appListeners.add(fn);return{remove:()=>window.fixture.appListeners.delete(fn)}}};export const Animated={...A,timing:(v,o)=>{window.fixture.durations.push(o.duration);return A.timing(v,{...o,useNativeDriver:false})}};`,
  'react-native-webview':`import React,{useEffect,useImperativeHandle,useMemo,useRef} from 'react';import {View} from 'react-native';export const WebView=React.forwardRef(({source,onMessage,style},ref)=>{const frame=useRef(null);const receive=useRef(onMessage);receive.current=onMessage;const html=useMemo(()=>source.html.replace('<head>','<head><script>window.ReactNativeWebView={postMessage(data){parent.postMessage({mapMessage:data},"*")}};<'+ '/script>'),[source.html]);useImperativeHandle(ref,()=>({injectJavaScript:js=>frame.current?.contentWindow.eval(js)}));useEffect(()=>{const fn=e=>{if(e.source===frame.current?.contentWindow&&e.data?.mapMessage){window.fixture.messages.push(JSON.parse(e.data.mapMessage));receive.current({nativeEvent:{data:e.data.mapMessage}})}};window.addEventListener('message',fn);return()=>window.removeEventListener('message',fn)},[]);return <View style={style}><iframe title="Synthetic native WebView" ref={frame} srcDoc={html} style={{border:0,position:'absolute',width:'100%',height:'100%'}}/></View>});`,
- 'react-native-safe-area-context':`import React from 'react';import {View} from 'react-native';export const SafeAreaView=({edges,...p})=><View {...p}/>;`,
+ 'react-native-safe-area-context':`import React from 'react';import {View} from 'react-native';export const useSafeAreaInsets=()=>({top:0,bottom:window.fixture.systemBottom??0,left:0,right:0});export const SafeAreaView=({edges,...p})=><View {...p}/>;`,
  'react-native-reanimated':`import {View,Easing} from 'react-native';import {useRef} from 'react';export default {View};export const useSharedValue=v=>useRef({value:v}).current;export const useAnimatedStyle=f=>f();export const withTiming=v=>v;export const withSpring=v=>v;export const cancelAnimation=()=>{};export {Easing};`,
  '@expo/vector-icons':`import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size,flexShrink:0}}/>;Ionicons.glyphMap={'alert-circle-outline':1};`,
  '@barangayan/shared':`export * from '${shared}/lib/point-in-polygon.ts';export * from '${shared}/lib/haversine.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';`,
@@ -30,6 +30,7 @@ const mocks={
  '@/hooks/use-profile':`export const useProfile=()=>({profile:window.fixture.profile});`,
  '@/lib/supabase':`export const supabase={from(table){const filters={};const q={select(){return q},is(){return q},order(){return q},eq(k,v){filters[k]=v;return q},in(k,v){filters[k]=v;return q},ilike(k,v){filters[k]=v;return q},then(resolve,reject){window.fixture.queries.push({table,filters});let rows=window.fixture[table]??[];if(table==='incidents'){if(filters.category_id)rows=rows.filter(r=>filters.category_id.includes(r.category_id));if(filters.title)rows=rows.filter(r=>r.title.toLowerCase().includes(filters.title.replaceAll('%','').toLowerCase()))}return Promise.resolve({data:rows,error:window.fixture.failTable===table?{message:'Synthetic source unavailable'}:null}).then(resolve,reject)}};return q},channel(name){const ch={name,on(){return ch},subscribe(){window.fixture.channels.push(name);return ch}};return ch},removeChannel(ch){window.fixture.channels=window.fixture.channels.filter(n=>n!==ch.name);return Promise.resolve()}};`,
 };
+mocks['react-native']+=`export const Keyboard={metrics:()=>window.fixture.keyboardFrame,addListener:(event,fn)=>{const listeners=(window.fixture.keyboardListeners??={})[event]??=new Set();listeners.add(fn);return{remove:()=>listeners.delete(fn)}}};`;
 await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import{FloatingTabLayoutProvider}from'@/hooks/use-floating-tab-layout';import Maps from '${root}/app/(app)/maps/index.tsx';import{MapView}from'${root}/components/map-view.tsx';let generation=0;const root=createRoot(document.getElementById('root'));window.render=(remount=false)=>{if(remount)generation++;root.render(window.fixture.wrapper?<MapView key={generation} {...window.fixture.wrapper} onMarkerTap={id=>window.fixture.callbacks.push(['marker',id])} onMapTap={window.fixture.routing?pos=>window.fixture.callbacks.push(['route',pos]):null} onBackgroundTap={()=>window.fixture.callbacks.push(['background'])} onPickerMoved={pos=>window.fixture.callbacks.push(['picker',pos])} onPickerRejected={pos=>window.fixture.callbacks.push(['rejected',pos])}/>:<FloatingTabLayoutProvider><Maps key={generation}/></FloatingTabLayoutProvider>)};window.render();`,resolveDir:app,loader:'tsx'},bundle:true,define:{global:'globalThis'},format:'iife',platform:'browser',outfile:path.join(out,'bundle.js'),jsx:'automatic',plugins:[{name:'adapters',setup(b){b.onResolve({filter:/.*/},a=>{if(Object.hasOwn(mocks,a.path))return{path:a.path,namespace:'adapter'};if(a.path.startsWith('@/'))return{path:path.join(app,'src',a.path.slice(2))+ (fs.existsSync(path.join(app,'src',a.path.slice(2))+'.tsx')?'.tsx':'.ts')}});b.onLoad({filter:/.*/,namespace:'adapter'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:app}))}}]});
 const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE??'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'});const page=await browser.newPage({viewport:{width:400,height:760}});const diagnostics=[];const passed=[];
 page.on('pageerror',e=>diagnostics.push(e.message));page.on('console',m=>{if(['warning','error'].includes(m.type()))diagnostics.push(m.text())});
@@ -45,13 +46,26 @@ try{
  await frame().locator('[title="Synthetic first incident"]').waitFor();
  assert.equal(await page.evaluate(()=>window.fixture.navHidden),true);
  const hiddenReveal=await page.getByRole('button',{name:'Show bottom tabs',exact:true}).boundingBox();
- assert(Math.abs(page.viewportSize().height-hiddenReveal.y-hiddenReveal.height-10)<=1);
+ assert(Math.abs(page.viewportSize().height-hiddenReveal.y-hiddenReveal.height-12)<=1);
  const hiddenControls=await page.getByRole('button',{name:'Zoom in',exact:true}).boundingBox();
  await page.getByRole('button',{name:'Show bottom tabs',exact:true}).click();
  assert.equal(await page.evaluate(()=>window.fixture.navHidden),false);
  const visibleControls=await page.getByRole('button',{name:'Zoom in',exact:true}).boundingBox();
  assert(visibleControls.y<hiddenControls.y);
  await page.getByRole('button',{name:'Hide bottom tabs',exact:true}).click();
+ for(const systemBottom of [0,24,48]){
+  await render({systemBottom,inset:80+systemBottom});
+  const reveal=await page.getByRole('button',{name:'Show bottom tabs',exact:true}).boundingBox();
+  assert(Math.abs(page.viewportSize().height-reveal.y-reveal.height-systemBottom-12)<=1);
+  for(const label of ['Show bottom tabs','Hide bottom tabs']){
+   const chevron=await page.getByRole('button',{name:label,exact:true}).boundingBox();
+   const zoom=await page.getByRole('button',{name:'Zoom in',exact:true}).boundingBox();
+   assert(zoom.y+zoom.height+12<=chevron.y,'map controls stay above the chevron');
+   await page.getByRole('button',{name:label,exact:true}).click();
+  }
+ }
+ await render({systemBottom:0,inset:80});
+ passed.push('0/24/48dp system navigation insets: chevron clears navigation by 12dp; map controls stay clear with tabs hidden and visible');
  await page.getByRole('button',{name:'Show bottom tabs',exact:true}).click();
  await frame().evaluate(()=>map.fire('click',{latlng:L.latLng(14.68,121.12)}));
  await page.getByRole('button',{name:'Show bottom tabs',exact:true}).waitFor();
@@ -88,6 +102,19 @@ try{
  await page.getByRole('button',{name:'Show bottom tabs',exact:true}).waitFor();
  await page.getByRole('tab',{name:'Incidents',exact:true}).click();assert.equal(await page.getByRole('textbox',{name:'Search incidents'}).inputValue(),'first');
  passed.push('multi-select/filter visibility retains predicates; incident search preserved through layer switch; truthful unavailable center search');
+ const search=page.getByRole('textbox',{name:'Search incidents'});
+ const originalSearch=await search.boundingBox();
+ await page.evaluate(screenY=>{window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height+100);
+ await page.waitForTimeout(100);
+ assert.equal(await page.getByRole('tab',{name:'Incidents',exact:true}).count(),1,'visible search retains layers');
+ await page.evaluate(screenY=>{window.fixture.keyboardFrame={screenY};for(const fn of window.fixture.keyboardListeners.keyboardDidShow)fn()},originalSearch.y+originalSearch.height-16);
+ await page.getByRole('tab',{name:'Incidents',exact:true}).waitFor({state:'detached'});
+ const revealedSearch=await search.boundingBox();assert(revealedSearch.height>=originalSearch.height-1&&revealedSearch.y+revealedSearch.height<=originalSearch.y+originalSearch.height-24,'complete search clears measured keyboard');
+ await page.evaluate(()=>{window.fixture.keyboardFrame=undefined;for(const fn of window.fixture.keyboardListeners.keyboardDidHide)fn()});
+ await page.getByRole('tab',{name:'Incidents',exact:true}).waitFor();
+ assert(Math.abs((await search.boundingBox()).y-originalSearch.y)<=1,'dismissal restores search geometry');
+ assert.equal(await search.inputValue(),'first','draft survives measured avoidance');
+ passed.push('measured keyboard obstruction releases layer row only when needed; full editor and draft retained; dismissal restores layers and geometry');
  await render({mode:'dark',accent:'#ffffff',font:'georgia'});await page.getByRole('button',{name:'Zoom in',exact:true}).waitFor();
  const before=await frame().evaluate(()=>({center:map.getCenter(),zoom:map.getZoom()}));const count=await page.evaluate(()=>window.fixture.queries.length);
  await render({accent:'#000000',inset:100});await page.waitForTimeout(300);

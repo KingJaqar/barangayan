@@ -5,6 +5,7 @@ import { useFocusEffect, useIsFocused } from 'expo-router';
 import { getMobileFontFamily } from '@/constants/fonts';
 import { useFontPreference } from '@/hooks/use-font-preference';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
@@ -71,6 +72,57 @@ export function CentersContent({
   const reducedMotion = useResidentReducedMotion(true);
   const { fontId } = useFontPreference();
   const isFocused = useIsFocused();
+  const { setSearchAvoidance, setActive: setMapHeaderActive } = useEmergencyMapHeader();
+  const [compactSearch, setCompactSearch] = useState(false);
+  const [searchReveal, setSearchReveal] = useState(0);
+  const revealSearch = useRef<() => void>(() => {});
+  const revealRevision = useRef(0);
+  const requestedHeaderRoom = useRef(false);
+  const avoidingSearch = Platform.OS === 'android' && searchExpanded && view === 'map' && isFocused;
+  useLayoutEffect(() => {
+    if (!avoidingSearch) { revealSearch.current = () => {}; return; }
+    let frame: number | null = null;
+    const invalidate = () => { ++revealRevision.current; };
+    const reveal = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      const revision = ++revealRevision.current;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const keyboard = Keyboard.metrics();
+        if (!keyboard) return;
+        searchInput.current?.measureInWindow((_x, y, _width, height) => {
+          if (revision !== revealRevision.current || height <= 0) return;
+          const bottom = y + height + searchReveal;
+          if (!compactSearch && bottom > keyboard.screenY) {
+            setCompactSearch(true);
+            if (resident) { requestedHeaderRoom.current = true; setSearchAvoidance(true); }
+          } else if (compactSearch) {
+            const next = Math.max(0, Math.ceil(bottom + Spacing.two - keyboard.screenY));
+            setSearchReveal(current => current === next ? current : next);
+          }
+        });
+      });
+    };
+    revealSearch.current = reveal;
+    reveal();
+    return () => { invalidate(); if (frame !== null) cancelAnimationFrame(frame); };
+  }, [avoidingSearch, compactSearch, resident, searchReveal, setSearchAvoidance]);
+  useEffect(() => {
+    if (!avoidingSearch) { setCompactSearch(false); setSearchReveal(0); return; }
+    const invalidate = () => { ++revealRevision.current; };
+    const restore = () => {
+      invalidate();
+      setCompactSearch(false); setSearchReveal(0);
+      if (requestedHeaderRoom.current) { requestedHeaderRoom.current = false; setSearchAvoidance(false); }
+    };
+    const show = Keyboard.addListener('keyboardDidShow', () => revealSearch.current());
+    const hide = Keyboard.addListener('keyboardDidHide', restore);
+    return () => {
+      invalidate();
+      show.remove(); hide.remove();
+      if (requestedHeaderRoom.current) { requestedHeaderRoom.current = false; setSearchAvoidance(false); }
+    };
+  }, [avoidingSearch, setSearchAvoidance]);
   const foreground = useAppForeground();
   const routeActive = isFocused && foreground;
   const [mapMounted, setMapMounted] = useState(view === 'map');
@@ -108,19 +160,22 @@ export function CentersContent({
     return () => viewProgress.stopAnimation();
   }, [view, transitionTo, viewProgress]);
   const resetSearchIdle = useSearchInactivity(searchExpanded && view === 'map' && isFocused, collapseSearch);
-  const { setActive: setMapHeaderActive } = useEmergencyMapHeader();
   useFocusEffect(useCallback(() => {
     if (!resident || view !== 'map') return;
     setMapHeaderActive(true);
     return () => setMapHeaderActive(false);
   }, [resident, view, setMapHeaderActive]));
   const fullTabInset = useFloatingTabInset(true);
+  const { bottom: systemBottomInset } = useSafeAreaInsets();
   const { mapNavHidden, setMapNavHidden, mapNavProgress } = useFloatingTabLayout();
-  const navVisibleBottom = resident ? Math.max(48, fullTabInset + 12) : 12;
-  const navHiddenBottom = resident ? 48 : 12;
+  // Reserve a separate row for the 44dp chevron above Android system navigation.
+  const revealHiddenBottom = systemBottomInset + 12;
+  const revealVisibleBottom = Math.max(revealHiddenBottom, fullTabInset - 4);
+  const navVisibleBottom = resident ? revealVisibleBottom + 44 + 16 : 12;
+  const navHiddenBottom = resident ? revealHiddenBottom + 44 + 16 : 12;
   const navBottom = resident && !mapNavHidden ? navVisibleBottom : navHiddenBottom;
   const overlayMotion = useAnimatedStyle(() => ({ bottom: resident ? navVisibleBottom + (navHiddenBottom - navVisibleBottom) * (mapNavProgress?.value ?? 0) : 12 }));
-  const revealMotion = useAnimatedStyle(() => ({ bottom: 10 + (1 - (mapNavProgress?.value ?? 0)) * Math.max(0, fullTabInset - 14) }));
+  const revealMotion = useAnimatedStyle(() => ({ bottom: revealVisibleBottom + (revealHiddenBottom - revealVisibleBottom) * (mapNavProgress?.value ?? 0) }));
   useFocusEffect(useCallback(() => {
     if (!resident || view !== 'map') return;
     setMapNavHidden(true);
@@ -419,7 +474,7 @@ export function CentersContent({
       <Ionicons name="search-outline" size={20} color={searchQuery ? theme.resident.accentText : theme.resident.text} />
     </Pressable>
     {searchExpanded ? <>
-      <TextInput ref={searchInput} autoFocus accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={resetSearchIdle} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+      <TextInput ref={searchInput} autoFocus accessibilityLabel="Search evacuation centers" value={searchQuery} onChangeText={value => { setSearchQuery(value); resetSearchIdle(); }} onFocus={() => { resetSearchIdle(); revealSearch.current(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle} placeholder={`Search ${centers.length} evacuation centers...`} placeholderTextColor={theme.resident.muted} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
       {searchQuery ? <Pressable accessibilityRole="button" accessibilityLabel="Clear center search" onPress={() => { setSearchQuery(''); resetSearchIdle(); }} style={styles.action}><Ionicons name="close" size={18} color={theme.resident.text} /></Pressable> : null}
     </> : null}
   </View>;
@@ -479,14 +534,14 @@ export function CentersContent({
         </Pressable>)}
       </View>
     </NativeAnimated.ScrollView> : null}
-    <View pointerEvents="box-none" style={styles.topControls} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setTopControlsHeight(current => current === height ? current : height); }}>
-      {toolbar}
+    <View pointerEvents="box-none" style={[styles.topControls, avoidingSearch && searchReveal > 0 && { top: 12 - searchReveal }]} onLayout={e => { const height = Math.ceil(e.nativeEvent.layout.height); setTopControlsHeight(current => current === height ? current : height); revealSearch.current(); }}>
+      {avoidingSearch && compactSearch ? null : toolbar}
       {view === 'map' && searchExpanded ? centerSearch : null}
     </View>
     <Modal visible={confirmBlocking && isFocused && view === 'map'} transparent animationType="none" onRequestClose={() => setConfirmBlocking(false)}>
       <View style={[styles.confirmBackdrop, { backgroundColor: theme.resident.scrim }]}>
         <View accessibilityViewIsModal style={[styles.confirmCard, { backgroundColor: theme.resident.card, borderColor: theme.resident.border }]}>
-          <ThemedText type="heading" accessibilityRole="header">Block a road?</ThemedText>
+          <ThemedText type="residentHeader" accessibilityRole="header" style={{ fontSize: 20, lineHeight: 26 }}>Block a road?</ThemedText>
           <ThemedText type="small">Continue to choose a road you cannot pass. Blocked roads will be avoided by routes on this phone.</ThemedText>
           <View style={styles.confirmActions}>
             <View style={styles.confirmAction}><PrimaryButton presentation="resident" label="Cancel" variant="secondary" onPress={() => setConfirmBlocking(false)} /></View>

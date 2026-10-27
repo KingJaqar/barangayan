@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo, useState, useEffect, useRef, type ComponentProps } from 'react';
+import { useMemo, useState, useEffect, useRef, type ComponentProps, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -19,6 +19,8 @@ import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 export interface SegmentOption<Key extends string> {
   key: Key;
   label: string;
+  accessory?: ReactNode;
+  accessibilityLabel?: string;
   icon?: ComponentProps<typeof Ionicons>['name'];
 }
 
@@ -67,7 +69,7 @@ function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, 
   return <View accessibilityRole="tablist" style={[styles.underlineContainer, { borderBottomColor: theme.resident.border }]}>
     {segments.map(segment => {
       const selected = segment.key === activeKey;
-      return <Pressable key={segment.key} accessibilityRole="tab" accessibilityLabel={segment.label}
+      return <Pressable key={segment.key} accessibilityRole="tab" accessibilityLabel={segment.accessibilityLabel ?? segment.label}
         accessibilityState={{ selected }} onPress={() => onChange(segment.key)}
         onLayout={event => {
           const { x: nextX, width: nextWidth } = event.nativeEvent.layout;
@@ -75,7 +77,10 @@ function UnderlineSegments<Key extends string>({ segments, activeKey, onChange, 
             ? current : { ...current, [segment.key]: { x: nextX, width: nextWidth } });
         }}
         style={[styles.underlineTab, compact && styles.compactUnderlineTab, sizing === 'equal' ? styles.equalTab : styles.contentTab]}>
-        <ThemedText type="smallBold" style={[styles.underlineLabel, { color: selected ? theme.resident.text : theme.resident.muted }]}>{segment.label}</ThemedText>
+        <View style={styles.underlineContent}>
+          <ThemedText type="smallBold" style={[styles.underlineLabel, { color: selected ? theme.resident.text : theme.resident.muted }]}>{segment.label}</ThemedText>
+          {segment.accessory}
+        </View>
       </Pressable>;
     })}
     {valid && active ? <Animated.View style={[styles.underline, { pointerEvents: 'none', backgroundColor: theme.resident.accentText }, indicator]} /> : null}
@@ -212,6 +217,7 @@ const styles = StyleSheet.create({
   equalTab: { flex: 1 },
   contentTab: { minWidth: 48, paddingHorizontal: 8 },
   underlineLabel: { fontSize: 15, lineHeight: 22, textAlign: 'center' },
+  underlineContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
   underline: { position: 'absolute', left: 0, bottom: -1, height: 3, borderTopLeftRadius: 2, borderTopRightRadius: 2 },
   container: {
     flexDirection: 'row',

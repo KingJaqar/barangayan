@@ -33,6 +33,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
         type === 'heading' && styles.heading,
         type === 'body' && styles.body,
         style,
+        // Screen and modal header typography stays fixed across font preferences and local styles.
         type === 'residentHeader' && styles.residentHeader,
       ]}
       {...rest}

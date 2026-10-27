@@ -1,0 +1,8 @@
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/maps/index.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/profile.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/components/password-recovery-screen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/components/services/charter-request-form.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/tests/maps-presentation-ui.mjs', LF will be replaced by CRLF the next time Git touches it

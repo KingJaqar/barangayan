@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-26T13:23:28.419Z",
+  "status": "pass submit/edit/clear/back and exact origin",
+  "origin": "announcements",
+  "config": "compact-font",
+  "observations": [
+    {
+      "tag": "compact-font-lifecycle-announcements-entry",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        679,
+        222
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-lifecycle-announcements-submitted",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        912,
+        222
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "false"
+    },
+    {
+      "tag": "compact-font-lifecycle-announcements-edit",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        679,
+        222
+      ],
+      "imeTop": 927,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "compact-font-lifecycle-announcements-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        811,
+        222
+      ],
+      "imeTop": 927,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ],
+  "syntheticRecentRemoved": true
+}

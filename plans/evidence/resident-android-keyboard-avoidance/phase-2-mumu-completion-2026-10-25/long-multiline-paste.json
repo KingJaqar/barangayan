@@ -1,0 +1,69 @@
+{
+  "results": [
+    {
+      "kind": "legacy",
+      "id": "C13",
+      "label": "Purpose of Request",
+      "lines": 12,
+      "characterCount": 143,
+      "nativeStartMiddleEndInsertion": false,
+      "caretEvidence": "long-multiline.json corresponding kind/id",
+      "multilinePaste": {
+        "passed": true,
+        "method": "Pixel-verified native Select all / Copy / End / Select all / Delete (empty asserted) / Paste; exact 12-line value restored"
+      },
+      "states": [
+        {
+          "name": "paste-legacy-C13-end",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "paste-legacy-C13-result",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792921083669.754,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792921083669.754,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "monitoringError": null,
+      "visualCaretVerification": "pending screenshot inspection"
+    }
+  ]
+}

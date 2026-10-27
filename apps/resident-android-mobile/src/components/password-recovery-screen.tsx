@@ -14,7 +14,11 @@ export function PasswordRecoveryScreen({ step, title, description, children }: {
   description: string;
   children: ReactNode;
 }) {
-  return <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
+  const content = <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
+  if (Platform.OS === 'android') {
+    return <KeyboardAvoidingView style={styles.screen} behavior="height">{content}</KeyboardAvoidingView>;
+  }
+  return content;
 }
 
 export function StepFlowScreen({ step, totalSteps, flowLabel, title, description, children, presentation = 'default', compact = false }: {

@@ -1,8 +1,9 @@
 import { Stack } from 'expo-router';
+import { Fonts } from '@/constants/theme';
 
 export default function HomeLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="requests/[requestId]"

@@ -1,0 +1,873 @@
+{
+  "results": [
+    {
+      "kind": "legacy",
+      "id": "C13",
+      "label": "Purpose of Request",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-legacy-C13-end",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-legacy-C13-start",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-legacy-C13-middle",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-legacy-C13-edited-end",
+          "editor": [
+            111,
+            240,
+            969,
+            858
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            858
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918405536.585,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918405536.585,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "business",
+      "id": "B25",
+      "label": "Explain your purpose",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-business-B25-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B25-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B25-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B25-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918499959.546,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918499959.546,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "business",
+      "id": "B26",
+      "label": "Business name",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-business-B26-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B26-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B26-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B26-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918635167.564,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918635167.564,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "business",
+      "id": "B27",
+      "label": "Establishment address",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-business-B27-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B27-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B27-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B27-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918743265.544,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918743265.544,
+          "classification": "existing push-notification path"
+        },
+        {
+          "kind": "warning",
+          "at": 1792918752097.559,
+          "classification": "unclassified"
+        }
+      ],
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "ctc",
+      "id": "B28",
+      "label": "Record/document reference",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-ctc-B28-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B28-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B28-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B28-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918867434.985,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792918867434.985,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "business",
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-business-B31-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B31-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B31-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-business-B31-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            896
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            896
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919243604.167,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919243604.167,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "monitoringError": null,
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "ctc",
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-ctc-B31-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B31-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B31-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-ctc-B31-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919580977.436,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919580977.436,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "monitoringError": null,
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "indigency",
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-indigency-B31-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-indigency-B31-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-indigency-B31-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-indigency-B31-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919746537.232,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919746537.232,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "monitoringError": null,
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    },
+    {
+      "kind": "job-seeker",
+      "id": "B31",
+      "label": "Additional notes (optional)",
+      "lines": 12,
+      "characterCount": 146,
+      "nativeStartMiddleEndInsertion": true,
+      "multilinePaste": {
+        "passed": false,
+        "reason": "Native Select all action unavailable"
+      },
+      "states": [
+        {
+          "name": "long-job-seeker-B31-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-job-seeker-B31-start",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-job-seeker-B31-middle",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        },
+        {
+          "name": "long-job-seeker-B31-edited-end",
+          "editor": [
+            60,
+            240,
+            1020,
+            942
+          ],
+          "viewport": [
+            0,
+            240,
+            1080,
+            942
+          ],
+          "keyboardTop": 1167
+        }
+      ],
+      "discarded": true,
+      "navigation": "Document guide Request → form → Back to document → guide Request; fresh draft verified",
+      "initialIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919905227.484,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "finalIssues": [
+        {
+          "kind": "warning",
+          "at": 1792919905227.484,
+          "classification": "existing push-notification path"
+        },
+        {
+          "kind": "warning",
+          "at": 1792920024755.357,
+          "classification": "existing push-notification path"
+        }
+      ],
+      "monitoringError": null,
+      "visualCaretVerification": "Reviewed all four captured positions in the corresponding caret contact sheet: first line/Z marker, middle line/M marker, final line/E marker visible above fixed footer/IME; text access and footer retained"
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import { randomUUID } from 'expo-crypto';
 import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthHeader } from '@/components/auth-header';
@@ -13,6 +13,7 @@ import { BirthdayWheelModal } from '@/components/birthday-wheel-modal';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { RecoveryError, recoveryStyles, StepFlowScreen } from '@/components/password-recovery-screen';
 import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { SettingsSheet } from '@/components/settings-sheet';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
@@ -52,6 +53,7 @@ function ValidIdScreenContent() {
   const reduced = useResidentReducedMotion(true);
   const { session } = useAuth();
   const { profile, isLoading, error: profileError, refetch } = useProfile();
+  const pull = usePullRefresh([refetch]);
   const [step, setStep] = useState(1);
   const [idType, setIdType] = useState<string>('');
   const [otherIdType, setOtherIdType] = useState('');
@@ -212,7 +214,8 @@ function ValidIdScreenContent() {
     return <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
       <AuthHeader presentation="resident" title="Valid ID" onBack={goBack} />
       <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-        <ScrollView contentContainerStyle={styles.statusContent}>
+        <ScrollView contentContainerStyle={styles.statusContent}
+          refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
           <View style={styles.statusBody}>
             {showConfirmation ? <View style={[styles.confirmation, { borderColor: theme.resident.border, backgroundColor: verified ? theme.resident.successSoft : theme.resident.warningSoft }]} accessibilityLiveRegion="polite">
               <Ionicons name={verified ? "checkmark-circle-outline" : "time-outline"} size={20} color={statusColor} />
@@ -239,8 +242,10 @@ function ValidIdScreenContent() {
     </View>;
   }
   const intro = STEPS[step - 1] ?? STEPS[0];
+  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
+  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
   return (
-    <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+    <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.resident.card }]}>
       <AuthHeader presentation="resident" title="Valid ID" onBack={goBack} />
       <StepFlowScreen presentation="resident" compact step={step} totalSteps={4} flowLabel="Valid ID submission" title={intro.title} description={intro.description}>
         <View style={styles.form}>
@@ -314,7 +319,7 @@ function ValidIdScreenContent() {
           <View style={styles.cameraControls}><ThemedText>Fit the front of your ID inside the photo.</ThemedText><PrimaryButton presentation="resident" label="Take photo" loading={capturing} disabled={!cameraReady} onPress={() => { void takePhoto(); }} /><PhotoAction label="Cancel" icon="close-outline" disabled={capturing} onPress={() => setCameraOpen(false)} /></View>
         </View>
       </Modal>
-    </View>
+    </FormContainer>
   );
 }
 

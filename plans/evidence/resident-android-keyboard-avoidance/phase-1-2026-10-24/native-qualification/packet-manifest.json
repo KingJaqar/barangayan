@@ -1,0 +1,26 @@
+{
+  "repomix": "1.18.1",
+  "sha256": "6358284be5836cf4d05ed093a1ee1b13620512399d6b1c3a9ce2152fd76c8f7e",
+  "chars": 8981,
+  "entries": [
+    {
+      "path": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "chars": 1714,
+      "range": [
+        0,
+        1714
+      ]
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "chars": 7095,
+      "range": [
+        0,
+        7095
+      ]
+    }
+  ],
+  "missing": [],
+  "security": "Default checks retained; inspect generation log",
+  "supersedes": "Adds the two previously unselected local owners; shared packet remains unchanged and reusable"
+}

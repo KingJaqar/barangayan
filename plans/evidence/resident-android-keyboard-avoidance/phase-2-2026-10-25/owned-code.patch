@@ -1,0 +1,103 @@
+diff --git a/apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx b/apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx
+index eacef68b..738caff9 100644
+--- a/apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx
+@@ -210,7 +210,7 @@ function ChangeOrManagePassword() {
+             ) : null}
+           </View>
+         ) : (
+-          <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
++          <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
+             <ScrollView contentContainerStyle={[styles.content, styles.passwordContent]} keyboardShouldPersistTaps="handled">
+               <View
+                 style={[
+diff --git a/apps/resident-android-mobile/src/app/(app)/settings/profile.tsx b/apps/resident-android-mobile/src/app/(app)/settings/profile.tsx
+index 9d0eef35..f87a4837 100644
+--- a/apps/resident-android-mobile/src/app/(app)/settings/profile.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/settings/profile.tsx
+@@ -21,6 +21,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
+ import {
+   ActivityIndicator,
+   Alert,
++  KeyboardAvoidingView,
++  Platform,
+   Pressable,
+   ScrollView,
+   StyleSheet,
+@@ -938,10 +940,12 @@ function ProfileScreenContent() {
+   if (!profile) return <View style={{ flex: 1, padding: 20, backgroundColor: theme.background }}><PlaceholderPanel label={profileError ?? 'Profile unavailable'} /><PrimaryButton presentation="resident" label="Retry profile" onPress={refetch} /></View>;
+ 
+   const isVerified  = emailVerificationStatus === 'verified';
++  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
++  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
+ 
+   return (
+     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
+-      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
++      <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.resident.card }]}>
+ 
+       <View style={{ backgroundColor: theme.resident.accent, paddingTop: insets.top }}>
+         <View style={styles.header}>
+@@ -1165,6 +1169,7 @@ function ProfileScreenContent() {
+ 
+       {/* ── Centered toast ────────────────────────────────────────────────── */}
+       {toast && <Toast message={toast.message} type={toast.type} />}
++      </FormContainer>
+ 
+       {/* ── Modals ────────────────────────────────────────────────────────── */}
+       <BirthdayCalendarModal
+@@ -1223,7 +1228,6 @@ function ProfileScreenContent() {
+           clearFieldError('employmentStatus');
+         }}
+       />
+-    </View>
+     </SafeAreaView>
+   );
+ }
+diff --git a/apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx b/apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx
+index 41387ea9..2b3de4b1 100644
+--- a/apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx
+@@ -5,7 +5,7 @@ import { randomUUID } from 'expo-crypto';
+ import { Image } from 'expo-image';
+ import { useFocusEffect, useRouter } from 'expo-router';
+ import { useCallback, useEffect, useRef, useState } from 'react';
+-import { ActivityIndicator, BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
++import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+ import { AuthHeader } from '@/components/auth-header';
+@@ -239,8 +239,10 @@ function ValidIdScreenContent() {
+     </View>;
+   }
+   const intro = STEPS[step - 1] ?? STEPS[0];
++  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
++  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
+   return (
+-    <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
++    <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.resident.card }]}>
+       <AuthHeader presentation="resident" title="Valid ID" onBack={goBack} />
+       <StepFlowScreen presentation="resident" compact step={step} totalSteps={4} flowLabel="Valid ID submission" title={intro.title} description={intro.description}>
+         <View style={styles.form}>
+@@ -314,7 +316,7 @@ function ValidIdScreenContent() {
+           <View style={styles.cameraControls}><ThemedText>Fit the front of your ID inside the photo.</ThemedText><PrimaryButton presentation="resident" label="Take photo" loading={capturing} disabled={!cameraReady} onPress={() => { void takePhoto(); }} /><PhotoAction label="Cancel" icon="close-outline" disabled={capturing} onPress={() => setCameraOpen(false)} /></View>
+         </View>
+       </Modal>
+-    </View>
++    </FormContainer>
+   );
+ }
+ 
+diff --git a/apps/resident-android-mobile/src/components/services/charter-request-form.tsx b/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
+index d0276625..453eff9a 100644
+--- a/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
++++ b/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
+@@ -324,7 +324,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+   return (
+     <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.resident.card }}>
+       <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
+-      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
++      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
+         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+           <View style={styles.hero}>
+             <ThemedText type="subtitle" style={styles.heroTitle}>

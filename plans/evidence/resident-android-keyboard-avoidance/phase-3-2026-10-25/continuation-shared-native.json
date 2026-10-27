@@ -1,0 +1,16 @@
+{
+  "results": [
+    {
+      "case": "household-qr-slide",
+      "closeBounds": [
+        900,
+        918,
+        1032,
+        1050
+      ],
+      "viewport": "1080x1920 / font1.0",
+      "opened": true
+    }
+  ],
+  "error": "Expected unique enabled control Show QR code, found 0"
+}

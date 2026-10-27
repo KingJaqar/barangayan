@@ -1,0 +1,14 @@
+{
+  "stage": "post-color",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-26T01:16:18.601Z",
+  "end": "2026-10-26T01:16:51.678Z",
+  "status": 0
+}

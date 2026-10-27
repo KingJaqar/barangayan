@@ -2,6 +2,7 @@
 
 import { CheckCircle2, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { beginAttempt, notify } from '@/lib/notify';
 
@@ -9,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { driveTypeConfig, useMedicalDrives, type MedicalDrive } from '@/hooks/use-medical-drives';
+import { healthRegistrationFailure } from '@/lib/health-registration-feedback';
+import { RegistrationAccountNotice } from './registration-account-notice';
 
 interface HouseholdMember {
   id: string;
@@ -83,6 +86,8 @@ export function ApplicantForm({
   const [consented, setConsented] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [accountBlocked, setAccountBlocked] = useState(false);
+  const [checkRegistrations, setCheckRegistrations] = useState(false);
   const [result, setResult] = useState<{ applicant_number: string } | null>(null);
   const busy = useRef(false);
   const mounted = useRef(true);
@@ -122,6 +127,7 @@ export function ApplicantForm({
       return;
     }
     setSubmitError(null);
+    setCheckRegistrations(false);
     setSubmitting(true);
     busy.current = true;
     try {
@@ -135,13 +141,13 @@ export function ApplicantForm({
       notify.success(`Registration confirmed. Applicant number: ${res.applicant_number}.`, { id: attempt });
       if (mounted.current) setResult({ applicant_number: res.applicant_number });
     } catch (e: unknown) {
-      // Only structured database rejection proves the write failed. A missing or
-      // malformed response may follow a successful registration; never invite duplicates.
-      const code = e && typeof e === 'object' && 'code' in e ? e.code : null;
-      const rejected = typeof code === 'string' && /^(22|23|28|42|P0)/.test(code);
-      const message = rejected ? "Couldn't complete your registration. Review the message below." : "We couldn't confirm your registration. Check My Registrations before trying again.";
-      notify[rejected ? 'error' : 'warning'](message, { id: attempt });
-      if (mounted.current) setSubmitError(rejected ? 'Registration could not be accepted. Review your age, consent and drive availability before trying again.' : message);
+      const failure = healthRegistrationFailure(e);
+      notify[failure.kind === 'unconfirmed' ? 'warning' : 'error'](failure.message, { id: attempt });
+      if (mounted.current) {
+        setSubmitError(failure.message);
+        setCheckRegistrations(!!failure.checkRegistrations);
+        setAccountBlocked(failure.kind === 'account');
+      }
     } finally {
       busy.current = false;
       if (mounted.current) setSubmitting(false);
@@ -152,6 +158,8 @@ export function ApplicantForm({
     () => [{ type: 'self' }, ...householdMembers.map((member) => ({ type: 'member' as const, member }))],
     [householdMembers],
   );
+
+  if (accountBlocked) return <RegistrationAccountNotice next={`/health/register/${drive.id}`} onClose={onDone} />;
 
   if (result) {
     return (
@@ -314,7 +322,9 @@ export function ApplicantForm({
         </label>
       </div>
 
-      {submitError ? <div id="health-registration-error" className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{submitError}</div> : null}
+      {submitError ? <div id="health-registration-error" role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{submitError}
+        {checkRegistrations ? <Link className="mt-2 block font-semibold underline" href="/health/my-registrations">Open My Registrations</Link> : null}
+      </div> : null}
 
       <Button size="lg" loading={submitting} disabled={isFull} onClick={handleSubmit}>
         {isFull ? 'No Slots Available' : 'Submit Registration'}

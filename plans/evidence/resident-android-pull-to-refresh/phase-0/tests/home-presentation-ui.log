@@ -1,0 +1,27 @@
+X [ERROR] No loader is configured for ".png" files: assets/images/services-icon.png
+
+    src/components/services-tab-icon.tsx:5:32:
+      5 │ ...rn <Image source={require('../../assets/images/services-icon.png')}
+        ╵                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 1 error:
+src/components/services-tab-icon.tsx:5:32: ERROR: No loader is configured for ".png" files: assets/images/services-icon.png
+    at failureErrorWithLog (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1748:15)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1207:25
+    at runOnEndCallbacks (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1588:45)
+    at buildResponseToResult (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1205:7)
+    at C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:1232:16
+    at responseCallbacks.<computed> (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:884:9)
+    at handleIncomingPacket (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:939:12)
+    at Socket.readFromStdout (C:\Users\User\barangayan\node_modules\esbuild\lib\main.js:862:7)
+    at Socket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:559:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.13.1

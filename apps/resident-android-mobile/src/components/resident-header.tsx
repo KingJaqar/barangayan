@@ -35,7 +35,7 @@ export function ResidentHeader() {
   const pathname = usePathname();
   const enteringSearch = pathname === '/search';
   const searching = enteringSearch || pathname === '/explore';
-  const { active: emergencyMapActive } = useEmergencyMapHeader();
+  const { active: emergencyMapActive, searchAvoidance } = useEmergencyMapHeader();
   const [mapSearch, setMapSearch] = useState(false);
   const title = TITLES[pathname];
   const theme = useTheme();
@@ -100,8 +100,8 @@ export function ResidentHeader() {
         <Image source={require('@/assets/logo/barangayan-logo-1024.png')}
           style={styles.logo} contentFit="contain" accessibilityLabel="Barangayan" />
         <ThemedText type="residentHeader" accessibilityRole="header"
-          numberOfLines={pathname === '/announcements' ? 1 : undefined}
-          adjustsFontSizeToFit={pathname === '/announcements'}
+          numberOfLines={pathname === '/announcements' || searchAvoidance ? 1 : undefined}
+          adjustsFontSizeToFit={pathname === '/announcements' || searchAvoidance}
           minimumFontScale={0.6}
           style={[styles.title, title && title.length > 14 ? styles.longTitle : undefined, { color: theme.resident.onAccent }]}>{title}</ThemedText>
         <View onLayout={event => { const next = event.nativeEvent.layout.x; setSearchX(current => current === next ? current : next); }}>

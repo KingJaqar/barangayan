@@ -4,6 +4,7 @@ import type { FilterChip } from '@/components/filter-chips';
 import { IncidentCard } from '@/components/reports/incident-card';
 import { PrimaryButton } from '@/components/primary-button';
 import { ReportSourceState } from '@/components/reports/report-presentation';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
 import { INCIDENT_STATUSES, INCIDENT_STATUS_META, type IncidentStatus } from '@/constants/incident-status';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
@@ -24,11 +25,13 @@ export function MyIncidentsFeed({ status, activeFilter = 'all', emptyLabel = 'Yo
   const { resident } = useTheme();
   const bottom = useFloatingTabInset();
   const { incidents, hasMore, isLoading, fetching, error, refetch, loadMore } = useMyIncidents({ status: status ?? (activeFilter !== 'all' ? activeFilter : undefined) });
+  const pull = usePullRefresh([refetch]);
   const empty = activeFilter === 'all' ? emptyLabel : `No ${INCIDENT_STATUS_META[activeFilter].label.toLowerCase()} incident reports.`;
   return <View style={{ flex: 1 }}>
     {isLoading ? <ReportSourceState message="Loading your reports…" /> : error && incidents.length === 0 ?
       <ReportSourceState message="Your reports could not be loaded. Please try again." retry={refetch} /> :
       <FlatList data={incidents} keyExtractor={item => item.id} showsVerticalScrollIndicator={false}
+        refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
         contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: bottom + 96 }}
         ListEmptyComponent={<ReportSourceState message={empty} />}
         ListFooterComponent={<View style={{ gap: 12, paddingTop: 12 }}>

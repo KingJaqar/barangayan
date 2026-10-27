@@ -1,0 +1,8 @@
+drrm-hub-alerts-ui exit 0
+drrm-scan-family-ui exit 0
+resident-search-explore exit 0
+resident-search-session exit 0
+resident-search-submit exit 0
+resident-shell-lifecycle exit 0
+drrm-centers-ui exit 0
+tsc exit 0

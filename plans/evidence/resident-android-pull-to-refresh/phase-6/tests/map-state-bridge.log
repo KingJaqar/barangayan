@@ -1,0 +1,1 @@
+{"baseline":false,"results":{"equalContentAfterTenRenders":{"SET_MARKERS":1,"SET_BOUNDARY":1,"SET_PRESENTATION":1},"sentWhileReloading":0,"readyCallbacksAfterReload":2,"scopeReplacementDuringReload":"empty latest scope replayed; thirty equal updates send nothing; next owner sends markers and boundary once"},"issues":[]}

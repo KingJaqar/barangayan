@@ -1,0 +1,55 @@
+{
+  "selectors": [
+    "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+    "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+    "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+    "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+    "apps/resident-android-mobile/src/components/auth-header.tsx",
+    "apps/resident-android-mobile/src/components/services/service-screen-header.tsx"
+  ],
+  "sourceHashes": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "sha256": "ff5269cdce6a6b93ee9d4de23a6e711e5a89929a78deac7355b3076890abc124"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "08bb36034f029319bf60ffcd679920ad7cf2483eea4cbe514c3c2e14fd9f7cb7"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "sha256": "7eac34ccb6d54650ca2e91e606ccb51f0ed02c2f4b951b28614575568c70d69b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/auth-header.tsx",
+      "sha256": "52dbf823aaf28f02dfc1302cc3ea48d7f27f4f9d655bf01b08edf215ea835ef6"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/service-screen-header.tsx",
+      "sha256": "5dd6bb1f50f8b80ca0888847736725f4318c7f67cfa4a18c5f153ba660d173a4"
+    }
+  ],
+  "testIdentities": [
+    {
+      "path": "apps/resident-android-mobile/tests/settings-profile-ui.mjs",
+      "sha256": "6d89ecbd258e44c49bc77c981d38c306f970362b4f0d4d30b79144a399d3fa9a"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "sha256": "144fdb4e96d5e893a57b2ee594bba919b07425f4cc5cad97b942d8bb6d99da01"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/document-forms-ui.mjs",
+      "sha256": "8520d5d9baa20199b5b00ca3ba36135d5a572e1d843b96102ef363378d5fe9ac"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-document-presentation-ui.mjs",
+      "sha256": "567ad4d22e9eb732ee04480cce4105c9b6db4044d2b57080f4f21c9b1abd68b8"
+    }
+  ],
+  "analysis": "Missing header contracts plus final changed owners. Tests read/exercised separately; their source identities are retained. No unrelated application sources or credentials."
+}

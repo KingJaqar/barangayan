@@ -2,29 +2,33 @@ import { AgencySlaStatus } from './agency-sla-status';
 import { Ionicons } from '@expo/vector-icons';
 import {
   estimateLabel,
+  formatCentavosAsPHP,
+  formatDate,
   getResidentRequestStatus,
   progressFraction,
-  RESIDENT_STATUS_LABEL,
+  requestFee,
   type ResidentRequestStatus,
   type Tables,
 } from '@barangayan/shared';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
-import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
-import { SegmentedControl } from '@/components/segmented-control';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
 import { ServiceListLink, ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
+import { ServicesFilterChips } from '@/components/services/services-filter-chips';
 import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { ThemedText } from '@/components/themed-text';
 import { DocumentIcon } from '@/components/document-icon';
+import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
 import { getDocumentIcon } from '@/constants/document-icons';
 import { useAuth } from '@/hooks/use-auth';
 import { useHistoryPages } from '@/hooks/use-history-pages';
+import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { supabase } from '@/lib/supabase';
@@ -32,57 +36,215 @@ import { HISTORY_PAGE_SIZE, historyBefore } from '@/lib/history-resource';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
 type ServiceRequest = Pick<Tables<'service_requests'>,
-  'id' | 'reference_number' | 'status' | 'payment_status' | 'created_at' | 'timing_model'> & {
-  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours'> | null;
+  'id' | 'reference_number' | 'status' | 'payment_status' | 'payment_method' | 'created_at' | 'updated_at' | 'timing_model' | 'sla_state'
+  | 'contract_version' | 'fee_assessment_state' | 'assessed_amount_centavos' | 'legacy_fee_centavos'> & {
+  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
 };
-
-interface RequestStatusConfig {
-  icon: keyof typeof Ionicons.glyphMap;
-  color: string;
-  background: string;
-}
 
 type Filter = 'all' | 'active' | 'pickup' | 'history';
 type ActiveSubFilter = 'all' | 'pending_payment' | 'paid' | 'processing';
 
-function RequestFilterChip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
-  const { resident } = useTheme();
-  const reducedMotion = useResidentReducedMotion(true);
-  const [pressed, setPressed] = useState(false);
-  const color = selected ? (pressed ? resident.accentPressed : resident.accent) : (pressed ? resident.pressed : resident.surface);
-  const fill = useSharedValue(color);
-  useEffect(() => {
-    fill.value = reducedMotion ? color : withTiming(color, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
-    return () => cancelAnimation(fill);
-  }, [color, fill, reducedMotion]);
-  const feedback = useAnimatedStyle(() => ({ backgroundColor: fill.value }));
-  return <Pressable accessibilityRole="tab" accessibilityLabel={label} accessibilityState={{ selected }} onPress={onPress}
-    onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} style={styles.chipHit}>
-    <Animated.View style={[styles.chip, { borderColor: selected && resident.accentNeedsOutline ? resident.controlBorder : 'transparent' }, feedback]}>
-      <ThemedText type="smallBold" style={[styles.chipLabel, { color: selected ? (pressed ? resident.onAccentPressed : resident.onAccent) : resident.text }]}>{label}</ThemedText>
-    </Animated.View>
-  </Pressable>;
+/** Live chip numbers; one lightweight status-only query, independent of the selected filter. */
+interface RequestCounts { active: number; pickup: number; history: number; pending_payment: number; paid: number; processing: number }
+
+/** Resident-facing label of the one status pill. Shorter than the shared long form on purpose. */
+const PILL_LABEL: Record<ResidentRequestStatus, string> = {
+  pending_payment: 'Pending Payment',
+  paid: 'Paid',
+  processing: 'Processing',
+  ready_for_pickup: 'Ready for Pickup',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+};
+
+interface Pill { label: string; icon: keyof typeof Ionicons.glyphMap; color: string; background: string }
+
+/** The single decision a card has to communicate: what the resident should do now. */
+interface NextStep {
+  /** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+  text?: string;
+  /** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+  urgent: boolean;
+  payAmount?: number;
+  /** Where "Pay now" leads. */
+  payHref?: string;
+  estimate?: 'agency' | 'legacy';
 }
 
-/** Scrollable filters with compact underline tabs for the active status row. */
-function FilterChips<Key extends string>({
-  options,
-  activeKey,
-  onChange,
-  compact = false,
-}: {
-  options: { key: Key; label: string }[];
-  activeKey: Key;
-  onChange: (key: Key) => void;
-  compact?: boolean;
-}) {
-  if (compact) return <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.statusTabs}>
-    <SegmentedControl segments={options} activeKey={activeKey} onChange={onChange} sizing="content" variant="underline" presentation="resident" />
-  </ScrollView>;
+const isOpen = (status: ResidentRequestStatus) => status === 'pending_payment' || status === 'paid' || status === 'processing';
+
+function nextStep(request: ServiceRequest, status: ResidentRequestStatus): NextStep {
+  const date = formatDate(request.updated_at);
+  if (status === 'cancelled') return { text: `Cancelled ${date}`, urgent: false };
+  if (status === 'completed') return { text: `Completed ${date}`, urgent: false };
+  if (status === 'ready_for_pickup') return { text: 'Ready. Collect it at the barangay hall.', urgent: false };
+  if (status === 'pending_payment') {
+    const amount = requestFee(request, request.document_types?.fee_centavos ?? 0);
+    if (amount === null) {
+      return request.fee_assessment_state === 'page_count_required'
+        ? { text: 'Enter the total pages to continue', urgent: true }
+        : { text: 'Fee is assessed when you pick it up', urgent: false };
+    }
+    if (amount <= 0) return { text: 'Waiting for staff to accept', urgent: false };
+    if (request.payment_method === 'pickup') return { text: `Pay ${formatCentavosAsPHP(amount)} when you collect it`, urgent: false };
+    const qr = request.payment_method === 'qrph' && PAYMENT_SETTLEMENT_READY && amount >= 100;
+    return {
+      text: `Pay ${formatCentavosAsPHP(amount)} to continue`, urgent: true, payAmount: amount,
+      payHref: qr ? `/services/payment/qrph/${request.id}` : `/services/payment/${request.id}`,
+    };
+  }
+  if (request.sla_state === 'paused') return { text: 'Requirements needed. Open to review.', urgent: true };
+  return { urgent: false, estimate: request.timing_model === 'agency_minutes_v1' ? 'agency' : 'legacy' };
+}
+
+function displayPill(status: ResidentRequestStatus, step: NextStep, resident: ReturnType<typeof useTheme>['resident']): Pill {
+  if (isOpen(status) && status !== 'pending_payment' && step.urgent) {
+    return { label: 'Requirements Needed', icon: 'alert-circle-outline', color: resident.warning, background: resident.warningSoft };
+  }
+  const config: Record<ResidentRequestStatus, Omit<Pill, 'label'>> = {
+    pending_payment: { icon: 'time-outline', color: resident.warning, background: resident.warningSoft },
+    paid: { icon: 'checkmark-circle-outline', color: resident.success, background: resident.successSoft },
+    processing: { icon: 'sync-outline', color: resident.info, background: resident.infoSoft },
+    ready_for_pickup: { icon: 'storefront-outline', color: resident.success, background: resident.successSoft },
+    completed: { icon: 'checkmark-circle-outline', color: resident.success, background: resident.successSoft },
+    cancelled: { icon: 'close-circle-outline', color: resident.danger, background: resident.dangerSoft },
+  };
+  return { label: PILL_LABEL[status], ...config[status] };
+}
+
+/** Needs-action first, then other open requests, then pickup, then the rest; newest first inside each band. */
+function sortRequests(requests: ServiceRequest[]): ServiceRequest[] {
+  const band = (request: ServiceRequest) => {
+    const status = getResidentRequestStatus(request.status, request.payment_status);
+    if (isOpen(status)) return nextStep(request, status).urgent ? 0 : 1;
+    return status === 'ready_for_pickup' ? 2 : 3;
+  };
+  return requests.map((request, index) => ({ request, index, band: band(request) }))
+    .sort((a, b) => a.band - b.band || a.index - b.index).map(item => item.request);
+}
+
+function RequestRow({ request, divider }: { request: ServiceRequest; divider: boolean }) {
+  const theme = useTheme();
+  const router = useRouter();
+  const status = getResidentRequestStatus(request.status, request.payment_status);
+  const step = nextStep(request, status);
+  const pill = displayPill(status, step, theme.resident);
+  const name = request.document_types?.name ?? 'Document Request';
+  const targetHours = request.document_types?.processing_target_hours ?? 24;
   return (
-    <ScrollableChevronRow label="request filters" contentContainerStyle={styles.chipRow}>
-      {options.map(option => <RequestFilterChip key={option.key} label={option.label} selected={option.key === activeKey} onPress={() => onChange(option.key)} />)}
-    </ScrollableChevronRow>
+    <ServiceListLink href={`/services/requests/${request.id}`} label={name} divider={divider} style={styles.requestRow}>
+      <View style={[serviceListStyles.icon, styles.requestIcon, { backgroundColor: theme.resident.accent, borderColor: theme.resident.controlBorder, borderWidth: theme.resident.accentNeedsOutline ? 1 : 0 }]}>
+        <DocumentIcon name={getDocumentIcon(request.document_types?.name ?? '')} size={20} color={theme.resident.onAccent} accessible={false} />
+      </View>
+      <View style={serviceListStyles.info}>
+        <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={[serviceListStyles.title, styles.requestTitle]}>{name}</ThemedText>
+        <View style={styles.metaRow}>
+          <ThemedText type="small" themeColor="textSecondary" accessibilityLabel={`Request ID ${request.reference_number}`} style={styles.refText}>#{request.reference_number}</ThemedText>
+          <View style={[styles.pill, { backgroundColor: pill.background }]}>
+            <Ionicons name={pill.icon} size={13} color={pill.color} accessible={false} />
+            <ThemedText type="smallBold" style={[styles.statusLabel, { color: pill.color }]}>{pill.label}</ThemedText>
+          </View>
+        </View>
+        {step.text ? (
+          <View style={styles.stepRow}>
+            <ThemedText type="small" themeColor={step.urgent ? undefined : 'textSecondary'}
+              style={[styles.detailText, styles.stepLine, step.urgent && { color: theme.resident.warning, fontWeight: '700' }]}>
+              {step.text}
+            </ThemedText>
+            {step.payHref ? (
+              <PrimaryButton presentation="resident" compact label="Pay now"
+                accessibilityLabel={`Pay ${formatCentavosAsPHP(step.payAmount ?? 0)} for ${name}`}
+                onPress={() => router.push(step.payHref as never)} />
+            ) : null}
+          </View>
+        ) : step.estimate === 'agency' ? (
+          <View style={styles.stepText}><AgencySlaStatus requestId={request.id} compact /></View>
+        ) : step.estimate === 'legacy' ? (
+          <View style={[styles.progressRow, styles.stepText]}>
+            <ProgressBar presentation="resident" color={pill.color}
+              fraction={progressFraction(request.status, request.created_at, targetHours)} />
+            <ThemedText type="small" themeColor="textSecondary" style={styles.detailText}>{estimateLabel(request.created_at, targetHours)}</ThemedText>
+          </View>
+        ) : null}
+      </View>
+      <Ionicons name="chevron-forward" size={16} color={theme.resident.muted} style={styles.requestChevron} accessible={false} />
+    </ServiceListLink>
+  );
+}
+
+/**
+ * Fade-and-collapse section for the "All" view. Opacity and height animate together, so the
+ * sections below glide instead of jumping. Pure shared-value animation (no entering/exiting props).
+ */
+function RequestSection({ title, count, children }: { title: string; count: number; children: ReactNode }) {
+  const { resident } = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const [open, setOpen] = useState(true);
+  // Content stays mounted until the collapse finishes, then drops out of layout.
+  const [mounted, setMounted] = useState(true);
+  const fade = useSharedValue(1);
+  const turn = useSharedValue(0);
+  // -1 = natural height; once measured it tracks the content so a collapse has a start value.
+  const height = useSharedValue(-1);
+  const contentHeight = useRef(0);
+  const busyUntil = useRef(0);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+    cancelAnimation(fade);
+    cancelAnimation(turn);
+    cancelAnimation(height);
+  }, [fade, turn, height]);
+  const content = useAnimatedStyle(() => height.value < 0
+    ? { opacity: fade.value }
+    : { opacity: fade.value, height: height.value, overflow: 'hidden' });
+  const chevron = useAnimatedStyle(() => ({ transform: [{ rotate: `${turn.value * 180}deg` }] }));
+  const easing = Easing.bezier(0.23, 1, 0.32, 1);
+  const DURATION = 240;
+
+  function measured(next: number) {
+    contentHeight.current = next;
+    // Follow content changes while settled open; never fight a running animation.
+    if (open && Date.now() >= busyUntil.current) height.value = next;
+  }
+
+  function toggle() {
+    if (timer.current) clearTimeout(timer.current);
+    const next = !open;
+    setOpen(next);
+    busyUntil.current = Date.now() + (reducedMotion ? 0 : DURATION);
+    turn.value = reducedMotion ? Number(!next) : withTiming(Number(!next), { duration: 200, easing });
+    if (next) {
+      setMounted(true);
+      fade.value = reducedMotion ? 1 : withTiming(1, { duration: DURATION, easing });
+      height.value = reducedMotion ? contentHeight.current : withTiming(contentHeight.current, { duration: DURATION, easing });
+    } else {
+      // Collapsing from an unmeasured (natural) height would snap; pin it to the measured one first.
+      if (height.value < 0) height.value = contentHeight.current;
+      fade.value = reducedMotion ? 0 : withTiming(0, { duration: DURATION * 0.7, easing });
+      height.value = reducedMotion ? 0 : withTiming(0, { duration: DURATION, easing });
+      timer.current = setTimeout(() => setMounted(false), reducedMotion ? 0 : DURATION);
+    }
+  }
+
+  return (
+    <View style={styles.section}>
+      <Pressable accessibilityRole="button" accessibilityLabel={`${title}, ${count}`} accessibilityState={{ expanded: open }}
+        onPress={toggle} style={styles.sectionHeader}>
+        <ThemedText type="smallBold" style={styles.sectionTitle}>{title}</ThemedText>
+        <View style={[styles.sectionCount, { backgroundColor: resident.accentSoft }]}>
+          <ThemedText type="smallBold" style={[styles.sectionCountText, { color: resident.accentText }]}>{count}</ThemedText>
+        </View>
+        <Animated.View style={chevron}>
+          <Ionicons name="chevron-up" size={18} color={resident.muted} accessible={false} />
+        </Animated.View>
+      </Pressable>
+      {mounted ? (
+        <Animated.View style={content} pointerEvents={open ? 'auto' : 'none'}>
+          <View onLayout={event => measured(event.nativeEvent.layout.height)}>{children}</View>
+        </Animated.View>
+      ) : null}
+    </View>
   );
 }
 
@@ -99,6 +261,7 @@ export function RequestsList({
   const userId = session?.user.id;
   const [filter, setFilter] = useState<Filter>('all');
   const [activeSubFilter, setActiveSubFilter] = useState<ActiveSubFilter>('all');
+  const [counts, setCounts] = useState<RequestCounts | null>(null);
   // Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
   // already-subscribed channel when this list is mounted twice (or remounted before the
   // async removeChannel() finishes), and .on() then throws.
@@ -115,10 +278,12 @@ export function RequestsList({
   const load = useCallback(async (signal: AbortSignal, after: ServiceRequest | undefined, count: boolean) => {
     if (!userId) return { rows: [], total: 0 };
     let query = supabase.from('service_requests')
-      .select('id, reference_number, status, payment_status, created_at, timing_model, document_types(name, processing_target_hours)', count ? { count: 'exact' } : undefined)
+      .select('id, reference_number, status, payment_status, payment_method, created_at, updated_at, timing_model, sla_state, contract_version, fee_assessment_state, assessed_amount_centavos, legacy_fee_centavos, document_types(name, processing_target_hours, fee_centavos)', count ? { count: 'exact' } : undefined)
       .eq('resident_id', userId)
       .order('created_at', { ascending: false }).order('id', { ascending: false })
       .limit(HISTORY_PAGE_SIZE).abortSignal(signal);
+    // "All" is the open-work overview (the five sections); finished requests live under History.
+    if (filter === 'all') query = query.in('status', ['submitted', 'in_progress', 'ready_for_pickup']);
     if (filter === 'pickup') query = query.eq('status', 'ready_for_pickup');
     if (filter === 'history') query = query.in('status', ['completed', 'cancelled']);
     if (filter === 'active') {
@@ -137,8 +302,26 @@ export function RequestsList({
   }, [userId, filter, activeSubFilter]);
   const history = useHistoryPages(JSON.stringify([userId, filter, activeSubFilter]), load, 'Could not load your requests. Reconnect and retry.');
   const { refresh, invalidate } = history;
-  const filtered = history.data?.rows ?? [];
-  useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
+  const rows = history.data?.rows ?? [];
+  const filtered = sortRequests(rows);
+
+  const loadCounts = useCallback(async () => {
+    if (!userId) return;
+    const { data, error } = await supabase.from('service_requests').select('status, payment_status').eq('resident_id', userId).limit(1000);
+    if (error || !data) return; // keep the last known numbers rather than flashing them away
+    const next: RequestCounts = { active: 0, pickup: 0, history: 0, pending_payment: 0, paid: 0, processing: 0 };
+    for (const row of data) {
+      const status = getResidentRequestStatus(row.status, row.payment_status);
+      if (status === 'ready_for_pickup') next.pickup++;
+      else if (status === 'completed' || status === 'cancelled') next.history++;
+      else { next.active++; next[status]++; }
+    }
+    setCounts(next);
+  }, [userId]);
+  const refreshAll = useCallback(async () => { await Promise.all([refresh(), loadCounts()]); }, [refresh, loadCounts]);
+  useFocusEffect(useCallback(() => { void refreshAll(); }, [refreshAll]));
+  const { refetch: refetchProfile } = useProfile();
+  const pull = usePullRefresh([refreshAll, refetchProfile]);
   useEffect(() => {
     if (!userId) return;
     let active = true;
@@ -149,33 +332,18 @@ export function RequestsList({
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'service_requests', filter: `resident_id=eq.${userId}` },
-        () => { if (active) void invalidate(); },
+        () => { if (active) { void invalidate(); void loadCounts(); } },
       )
       .subscribe(status => {
         if (!active || status !== 'SUBSCRIBED') return;
-        if (subscribed) void invalidate(); else void refresh();
+        if (subscribed) { void invalidate(); void loadCounts(); } else void refresh();
         subscribed = true;
       });
     return () => {
       active = false;
       supabase.removeChannel(channel);
     };
-  }, [userId, instanceId, refresh, invalidate]);
-
-  // Keyed one-for-one with ResidentRequestStatus (not the raw service_requests.status
-  // enum) — a 'submitted' request always resolves to either pending_payment or paid
-  // before it gets here, so there's no separate 'submitted'/'in_progress' entry.
-  function statusConfig(status: ResidentRequestStatus): RequestStatusConfig {
-    const config: Record<ResidentRequestStatus, RequestStatusConfig> = {
-      pending_payment: { icon: 'time-outline', color: theme.resident.muted, background: theme.resident.surface },
-      paid: { icon: 'checkmark-circle-outline', color: theme.resident.success, background: theme.resident.successSoft },
-      processing: { icon: 'sync-outline', color: theme.resident.info, background: theme.resident.infoSoft },
-      ready_for_pickup: { icon: 'storefront-outline', color: theme.resident.success, background: theme.resident.successSoft },
-      completed: { icon: 'checkmark-circle-outline', color: theme.resident.success, background: theme.resident.successSoft },
-      cancelled: { icon: 'close-circle-outline', color: theme.resident.danger, background: theme.resident.dangerSoft },
-    };
-    return config[status];
-  }
+  }, [userId, instanceId, refresh, invalidate, loadCounts]);
 
   if (!session) {
     return (
@@ -188,34 +356,52 @@ export function RequestsList({
     );
   }
 
+  const statusOf = (request: ServiceRequest) => getResidentRequestStatus(request.status, request.payment_status);
+  const allSections: { key: string; title: string; rows: ServiceRequest[] }[] = [
+    { key: 'active', title: 'Active Requests', rows: filtered.filter(request => isOpen(statusOf(request))) },
+    { key: 'pickup', title: 'Pickup Requests', rows: filtered.filter(request => statusOf(request) === 'ready_for_pickup') },
+    { key: 'pending', title: 'Pending Payment', rows: filtered.filter(request => statusOf(request) === 'pending_payment') },
+    { key: 'paid', title: 'Paid', rows: filtered.filter(request => statusOf(request) === 'paid') },
+    { key: 'processing', title: 'Processing', rows: filtered.filter(request => statusOf(request) === 'processing') },
+  ];
+  const sections = allSections.filter(section => section.rows.length > 0);
+
+  const renderRows = (list: ServiceRequest[]) => (
+    <ServicesPanel>
+      {list.map((request, index) => <RequestRow key={request.id} request={request} divider={index > 0} />)}
+    </ServicesPanel>
+  );
+
   return (
     // Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
     <ScrollView
       stickyHeaderIndices={[1]}
       showsVerticalScrollIndicator={false}
+      refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
       contentContainerStyle={contentContainerStyle}>
       <View>{header}</View>
       {/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
       <View style={[styles.filters, { backgroundColor: theme.resident.card }]}>
-        <FilterChips
+        <ServicesFilterChips
+          label="request filters"
           options={[
             { key: 'all', label: 'All' },
-            { key: 'active', label: 'Active' },
-            { key: 'pickup', label: 'Pickup' },
-            { key: 'history', label: 'History' },
+            { key: 'active', label: 'Active', count: counts?.active, badge: theme.accentOrange },
+            { key: 'pickup', label: 'Pickup', count: counts?.pickup, badge: theme.accentGreen },
+            { key: 'history', label: 'History', count: counts?.history },
           ]}
           activeKey={filter}
           onChange={handleFilterChange}
         />
 
         {filter === 'active' ? (
-          <FilterChips
+          <ServicesFilterChips
             compact
             options={[
-              { key: 'all', label: 'All' },
-              { key: 'pending_payment', label: 'Pending Payment' },
-              { key: 'paid', label: 'Paid' },
-              { key: 'processing', label: 'Processing' },
+              { key: 'all', label: 'All', count: counts?.active },
+              { key: 'pending_payment', label: 'Pending Payment', count: counts?.pending_payment },
+              { key: 'paid', label: 'Paid', count: counts?.paid },
+              { key: 'processing', label: 'Processing', count: counts?.processing },
             ]}
             activeKey={activeSubFilter}
             onChange={setActiveSubFilter}
@@ -230,88 +416,19 @@ export function RequestsList({
       ) : filtered.length === 0 ? (
         <ServicesEmptyState
           icon="file-tray-outline"
-          title="No requests here yet"
-          message="Requests you submit will show up in this filter."
+          title={filter === 'all' ? 'Nothing open right now' : 'No requests here yet'}
+          message={filter === 'all' ? 'Completed and cancelled requests are under History.' : 'Requests you submit will show up in this filter.'}
         />
-      ) : (
+      ) : filter === 'all' ? (
         <View style={styles.list}>
-          <ServicesPanel>
-            {filtered.map((request, index) => {
-              const residentStatus = getResidentRequestStatus(request.status, request.payment_status);
-              const config = statusConfig(residentStatus);
-              const statusBadge = (<View
-                      style={[
-                        styles.pill,
-                        { backgroundColor: config.background },
-                      ]}>
-                      <Ionicons
-                        name={config.icon}
-                        size={14}
-                        color={config.color}
-                        accessible={false}
-                      />
-                      <ThemedText
-                        type="smallBold"
-                        style={[styles.statusLabel, { color: config.color }]}>
-                        {RESIDENT_STATUS_LABEL[residentStatus]}
-                      </ThemedText>
-                    </View>);
-              return (
-                <ServiceListLink key={request.id} href={`/services/requests/${request.id}`} label={request.document_types?.name ?? 'Document Request'} divider={index > 0} style={styles.requestRow}>
-                  <View style={[serviceListStyles.icon, styles.requestIcon, { backgroundColor: theme.resident.accent, borderColor: theme.resident.controlBorder, borderWidth: theme.resident.accentNeedsOutline ? 1 : 0 }]}>
-                    <DocumentIcon
-                      name={getDocumentIcon(request.document_types?.name ?? '')}
-                      size={20}
-                      color={theme.resident.onAccent}
-                      accessible={false}
-                    />
-                  </View>
-                  <View style={serviceListStyles.info}>
-                    <ThemedText type="smallBold" numberOfLines={2} ellipsizeMode="tail" style={[serviceListStyles.title, styles.requestTitle]}>
-                      {request.document_types?.name ?? 'Document Request'}
-                    </ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary" style={serviceListStyles.meta}>
-                      Req ID: #{request.reference_number}
-                    </ThemedText>
-                    {request.timing_model !== 'agency_minutes_v1' ? <ThemedText type="small" style={styles.detailText}>Previous timing model</ThemedText> : null}
-                    {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} compact footer={statusBadge} /> : request.status !== 'cancelled' ? (
-                      <View style={styles.progressRow}>
-                        <ProgressBar
-                          presentation="resident"
-                          fraction={progressFraction(
-                            request.status,
-                            request.created_at,
-                            request.document_types?.processing_target_hours ?? 24,
-                          )}
-                          color={config.color}
-                        />
-                        <ThemedText
-                          type="small"
-                          themeColor={request.status === 'completed' ? undefined : 'textSecondary'}
-                          style={[styles.detailText,
-                            request.status === 'completed'
-                              ? { color: theme.resident.success, fontWeight: '700' }
-                              : undefined
-                          ]}>
-                          {request.status === 'completed'
-                            ? '100%'
-                            : request.status === 'ready_for_pickup'
-                              ? 'Ready for pickup'
-                              : estimateLabel(
-                                request.created_at,
-                                request.document_types?.processing_target_hours ?? 24,
-                              )}
-                        </ThemedText>
-                      </View>
-                    ) : null}
-                  </View>
-                  <Ionicons name="chevron-forward" size={16} color={theme.resident.muted} style={styles.requestChevron} accessible={false} />
-
-                </ServiceListLink>
-              );
-            })}
-          </ServicesPanel>
+          {sections.map(section => (
+            <RequestSection key={section.key} title={section.title} count={section.rows.length}>
+              {renderRows(section.rows)}
+            </RequestSection>
+          ))}
         </View>
+      ) : (
+        <View style={styles.list}>{renderRows(filtered)}</View>
       )}
       {history.data && history.error ? <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} /> : null}
       {history.data?.hasMore ? <View style={styles.list}><PrimaryButton presentation="resident" variant="secondary" label="Load older requests"
@@ -323,19 +440,23 @@ export function RequestsList({
 const styles = StyleSheet.create({
   guest: { padding: 20 },
   filters: { paddingTop: 4, paddingBottom: 8 },
-  chipRow: { paddingHorizontal: 20, paddingVertical: 4, alignItems: 'center', gap: 8 },
-  chipHit: { minHeight: 44, justifyContent: 'center' },
-  chip: { minHeight: 32, paddingHorizontal: 16, paddingVertical: 6, borderRadius: 100, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  chipLabel: { fontSize: 13.5, lineHeight: 20 },
-  statusTabs: { marginHorizontal: 20 },
   list: { paddingHorizontal: 20 },
-  requestRow: { gap: 10, paddingHorizontal: 12, paddingVertical: 10, minHeight: 72 },
+  section: { marginBottom: 12 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44, paddingVertical: 4 },
+  sectionTitle: { flex: 1, fontSize: 15, lineHeight: 20 },
+  sectionCount: { minWidth: 24, paddingHorizontal: 8, paddingVertical: 1, borderRadius: 100, alignItems: 'center' },
+  sectionCountText: { fontSize: 12, lineHeight: 18 },
+  requestRow: { gap: 10, paddingHorizontal: 12, paddingVertical: 8, minHeight: 60 },
   requestIcon: { width: 36, height: 36, borderRadius: 10 },
   requestTitle: { fontSize: 14, lineHeight: 18 },
   requestChevron: { alignSelf: 'center', flexShrink: 0 },
   detailText: { fontSize: 12.5, lineHeight: 16 },
-  pill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 100, alignSelf: 'flex-end', maxWidth: '100%' },
-  statusFooter: { width: '100%', alignItems: 'flex-end' },
+  stepText: { marginTop: 3 },
+  stepRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 2 },
+  stepLine: { flex: 1 },
+  metaRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 2, marginTop: 2 },
+  refText: { fontSize: 12.5, lineHeight: 16 },
+  pill: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 1, borderRadius: 100, maxWidth: '100%' },
   statusLabel: { fontSize: 12, lineHeight: 16, flexShrink: 1 },
-  progressRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 2 },
+  progressRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 },
 });

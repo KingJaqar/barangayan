@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export function ServiceScreenHeader({
@@ -39,7 +39,7 @@ export function ServiceScreenHeader({
           <Ionicons name={backIcon} size={24} color={presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary} />
         </Pressable>
         <View style={[styles.headerContent, compact && styles.compactContent]}>
-          <ThemedText accessibilityRole="header" numberOfLines={singleLine ? 1 : undefined} adjustsFontSizeToFit={singleLine} type={presentation === 'resident' ? 'residentHeader' : 'default'} style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
+          <ThemedText accessibilityRole="header" numberOfLines={singleLine ? 1 : undefined} adjustsFontSizeToFit={singleLine} type="residentHeader" style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
             {title}
           </ThemedText>
         </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   balance: { width: 44 },
-  headerTitle: { fontSize: 21, lineHeight: 26, textAlign: 'center', fontFamily: Fonts.gideonRoman },
+  headerTitle: { fontSize: 21, lineHeight: 26, textAlign: 'center' },
   compactContent: { paddingHorizontal: Spacing.one },
   compactTitle: { fontSize: 21, lineHeight: 26, textAlign: 'center' },
 });

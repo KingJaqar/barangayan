@@ -1,0 +1,12 @@
+diff --git a/tmp/resident-keyboard-phase4-20261026/before/apps/resident-android-mobile/tests/verification-sensitive-ui.mjs b/apps/resident-android-mobile/tests/verification-sensitive-ui.mjs
+index 0c134dcf..5a983cb9 100644
+--- a/tmp/resident-keyboard-phase4-20261026/before/apps/resident-android-mobile/tests/verification-sensitive-ui.mjs
++++ b/apps/resident-android-mobile/tests/verification-sensitive-ui.mjs
+@@ -36,6 +36,7 @@ const mocks = {
+   'expo-location': `export const Accuracy={Balanced:3};export const requestForegroundPermissionsAsync=async()=>({status:window.fixture.gpsPermission});export const getCurrentPositionAsync=async()=>{window.fixture.gpsCalls++;if(window.fixture.gpsError)throw new Error('unavailable');return {coords:window.fixture.gps}};`,
+   '@/hooks/use-auth': `export const useAuth=()=>window.fixture.auth;`,
+   '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,isLoading:window.fixture.loading,isInitialLoading:window.fixture.loading,error:window.fixture.profileError,refetch:()=>{window.fixture.refetches++;window.renderFixture()}});`,
++  '@/hooks/use-floating-tab-layout': `export const useFloatingTabLayout=()=>({keyboardVisible:window.fixture.keyboardVisible??false});`,
+   '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.font});`,
+   '@/hooks/use-theme': `import {Colors} from '${src}/constants/theme';import {getResidentTheme} from '${src}/constants/resident-theme';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
+   '@/components/resident-details-form': `import React from 'react';import {View} from 'react-native';export const FormSection=({children})=><View>{children}</View>;`,

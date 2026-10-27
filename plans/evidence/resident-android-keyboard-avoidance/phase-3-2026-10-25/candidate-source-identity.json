@@ -1,0 +1,300 @@
+{
+  "at": "2026-10-25T13:12:15.466Z",
+  "package": "com.barangayan.resident.dev",
+  "nativeRevision": "unknown; retained installed APK fingerprint from Phase 0, native binary not rebuilt",
+  "requested": 29,
+  "results": [
+    {
+      "name": "src/app/(app)/reports/new.tsx",
+      "moduleId": 2442,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4",
+      "loadedFactorySha256": "189207591ebee3abd64c065093b2d31fa65bae13817dd86d9133197cb22a2554",
+      "currentFactorySha256": "189207591ebee3abd64c065093b2d31fa65bae13817dd86d9133197cb22a2554"
+    },
+    {
+      "name": "src/components/reports/location-picker-modal.tsx",
+      "moduleId": 2443,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "06b289a6762438aa93ae119ccbf55fdd6723194692f9562f115935a007abcff9",
+      "loadedFactorySha256": "2c65390ea9e69093a876587489fd7ca0812d908a6faa749aac56780ba7f0563a",
+      "currentFactorySha256": "2c65390ea9e69093a876587489fd7ca0812d908a6faa749aac56780ba7f0563a"
+    },
+    {
+      "name": "src/app/(app)/settings/location-verification.tsx",
+      "moduleId": 2681,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "d46d9c0e5e828102995a3619b6272e8b410622bc22e0fd9f5dfbe9754d7ed04e",
+      "loadedFactorySha256": "77f23db89b4008abf1ddb59850152af1645666d0e171fa3a14d9ccaebe45d69c",
+      "currentFactorySha256": "77f23db89b4008abf1ddb59850152af1645666d0e171fa3a14d9ccaebe45d69c"
+    },
+    {
+      "name": "src/app/(app)/health/register.tsx",
+      "moduleId": 2392,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802",
+      "loadedFactorySha256": "bb4353a907db2c8f0d34afbd2a9599a1d73585b24342b0ef31ad91def38f50c1",
+      "currentFactorySha256": "bb4353a907db2c8f0d34afbd2a9599a1d73585b24342b0ef31ad91def38f50c1"
+    },
+    {
+      "name": "src/app/(app)/settings/profile.tsx",
+      "moduleId": 2682,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "2591a58d95c0b3ca791cdca2a47168fd98a00158bff58441d43fd64c9aad4523",
+      "loadedFactorySha256": "d76f8bba932f3ec41bef1c7c7584d445f284d916dfb0fdc857627552f7f9b162",
+      "currentFactorySha256": "d76f8bba932f3ec41bef1c7c7584d445f284d916dfb0fdc857627552f7f9b162"
+    },
+    {
+      "name": "src/components/family-member-modal.tsx",
+      "moduleId": 2279,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "loadedFactorySha256": "f698fad30ceb54ce584dc6c5672b3f46c0fcf3040e9121c722bdd081134a16df",
+      "currentFactorySha256": "f698fad30ceb54ce584dc6c5672b3f46c0fcf3040e9121c722bdd081134a16df"
+    },
+    {
+      "name": "src/components/custom-accent-color-modal.tsx",
+      "moduleId": 2607,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47",
+      "loadedFactorySha256": "22f55851a582112566adfc42f768dc836ac57b66443ef71398bef84a1574e01e",
+      "currentFactorySha256": "22f55851a582112566adfc42f768dc836ac57b66443ef71398bef84a1574e01e"
+    },
+    {
+      "name": "src/app/(auth)/login.tsx",
+      "moduleId": 2696,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3",
+      "loadedFactorySha256": "ee4a06bc95c6e0ba065d8f0b6449646819d7d1a0cf4e6ead0f6fad937031bebb",
+      "currentFactorySha256": "ee4a06bc95c6e0ba065d8f0b6449646819d7d1a0cf4e6ead0f6fad937031bebb"
+    },
+    {
+      "name": "src/app/(auth)/register.tsx",
+      "moduleId": 2704,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627",
+      "loadedFactorySha256": "8e4fd077af275d8f8e691317b19a32112373cb359ae4263389b83e3f52b730d1",
+      "currentFactorySha256": "8e4fd077af275d8f8e691317b19a32112373cb359ae4263389b83e3f52b730d1"
+    },
+    {
+      "name": "src/app/(auth)/forgot-password.tsx",
+      "moduleId": 2695,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "2dc66b3bb3f31bbce8e2cebf4d8d144750208f75781d74e6626bdfab9c8926a2",
+      "loadedFactorySha256": "1ad28b752885a960198be7f70ff3aaf6a865b2c2cb70d965548c7b7a20c12c20",
+      "currentFactorySha256": "1ad28b752885a960198be7f70ff3aaf6a865b2c2cb70d965548c7b7a20c12c20"
+    },
+    {
+      "name": "src/app/(auth)/otp.tsx",
+      "moduleId": 2699,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8786234c44200d2173b6089b4f6187fe0c085f07c9760c190c046cecdcd332c1",
+      "loadedFactorySha256": "62bda4b783586052655e7b04195142f0f09b7628b0a4d328c0ce2e9f5a379482",
+      "currentFactorySha256": "62bda4b783586052655e7b04195142f0f09b7628b0a4d328c0ce2e9f5a379482"
+    },
+    {
+      "name": "src/app/(auth)/reset-password.tsx",
+      "moduleId": 2705,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040",
+      "loadedFactorySha256": "0cb495f238b1bd89cbc95ea2d27bd2271a8b5e9ca9cc1afece420569df234213",
+      "currentFactorySha256": "0cb495f238b1bd89cbc95ea2d27bd2271a8b5e9ca9cc1afece420569df234213"
+    },
+    {
+      "name": "src/components/resident-details-form.tsx",
+      "moduleId": 2598,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "loadedFactorySha256": "0cdf32093b54178a3f569aeb0ffa87d57c9f0227a00a60e43093922b2b8b4e78",
+      "currentFactorySha256": "0cdf32093b54178a3f569aeb0ffa87d57c9f0227a00a60e43093922b2b8b4e78"
+    },
+    {
+      "name": "src/app/(app)/settings/change-password.tsx",
+      "moduleId": 2592,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "loadedFactorySha256": "4250e958f1f4632fac33f690ff5a0825df3bb02a076bad892b552e9745d7ebcd",
+      "currentFactorySha256": "4250e958f1f4632fac33f690ff5a0825df3bb02a076bad892b552e9745d7ebcd"
+    },
+    {
+      "name": "src/app/(app)/settings/email-verification.tsx",
+      "moduleId": 2601,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "fe76fa5b25537505c1f0093e5da3bb14e36875e71da85772b902dc7f3f621bfd",
+      "loadedFactorySha256": "34cb63b1bd16903607baaad9dd9013bb07d230bed0772a97aa2863b01f22e9bb",
+      "currentFactorySha256": "34cb63b1bd16903607baaad9dd9013bb07d230bed0772a97aa2863b01f22e9bb"
+    },
+    {
+      "name": "src/app/(app)/settings/valid-id.tsx",
+      "moduleId": 2685,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "loadedFactorySha256": "9360e54f3b3f1461ae767dd5559e4fd8ae1f7edc730208c72724737e73c96981",
+      "currentFactorySha256": "9360e54f3b3f1461ae767dd5559e4fd8ae1f7edc730208c72724737e73c96981"
+    },
+    {
+      "name": "src/components/services/charter-request-form.tsx",
+      "moduleId": 2478,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "loadedFactorySha256": "8d14e2f9821737de0ae6e4d11566f798d87407099a389f0948d69e64c40c1cd8",
+      "currentFactorySha256": "8d14e2f9821737de0ae6e4d11566f798d87407099a389f0948d69e64c40c1cd8"
+    },
+    {
+      "name": "src/components/delete-account-modal.tsx",
+      "moduleId": 2611,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "393ce16174bd75f95539fb0a416e6011843d28e8034f865c7140828930636d5f",
+      "loadedFactorySha256": "bce19dd459d77b3d3310be11997c62c12977c8df217ade827c42e427d96f5df3",
+      "currentFactorySha256": "bce19dd459d77b3d3310be11997c62c12977c8df217ade827c42e427d96f5df3"
+    },
+    {
+      "name": "src/components/resident-password-step.tsx",
+      "moduleId": 2597,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150",
+      "loadedFactorySha256": "95ada2c1140725b26abfaca9e9b83c670ef43bf8959bd142e3ac947c4934e846",
+      "currentFactorySha256": "95ada2c1140725b26abfaca9e9b83c670ef43bf8959bd142e3ac947c4934e846"
+    },
+    {
+      "name": "src/app/(app)/services/request/[documentId].tsx",
+      "moduleId": 2477,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "2c8e4dc3fe575811aad2540e37994dcb817cf0e61aed88fec3b8a277e25e87b7",
+      "loadedFactorySha256": "e9f9c91fd99c812c99e2d3173b82a47eca114a4707ef6356e441e250befb851d",
+      "currentFactorySha256": "e9f9c91fd99c812c99e2d3173b82a47eca114a4707ef6356e441e250befb851d"
+    },
+    {
+      "name": "src/components/services/resident-payment-screen.tsx",
+      "moduleId": 2463,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "90920ec8b76825908925ab0bc3a9e71423a2d92b4431f1cd10b33df960a7f04a",
+      "loadedFactorySha256": "2c3ad27dffee5ea3845e88bc6eb1f8647aadba57b66bb47f0461921ed573a0a1",
+      "currentFactorySha256": "2c3ad27dffee5ea3845e88bc6eb1f8647aadba57b66bb47f0461921ed573a0a1"
+    },
+    {
+      "name": "src/components/resident-header.tsx",
+      "moduleId": 2040,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "da0537942e0ba7949ef1f5ca221953d37228d9e2240e4508fd5cd0b4992f234c",
+      "loadedFactorySha256": "267550c3d5e590a6e80a8695f23599591664921b748a9cead0da551a6ccb1723",
+      "currentFactorySha256": "267550c3d5e590a6e80a8695f23599591664921b748a9cead0da551a6ccb1723"
+    },
+    {
+      "name": "src/app/(app)/maps/index.tsx",
+      "moduleId": 2425,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8e7cf026f15e65b99632fc32b7e777065ae0a55d174eaa1046f4e1983f130827",
+      "loadedFactorySha256": "352c9e6f4dd4eba430b7c79b114c19a8ee355872dc838b808111df9125e6cace",
+      "currentFactorySha256": "352c9e6f4dd4eba430b7c79b114c19a8ee355872dc838b808111df9125e6cace"
+    },
+    {
+      "name": "src/components/evacuation-centers-panel.tsx",
+      "moduleId": 2300,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "9a85c5576a68036e8fbddcba45a5eda64bc2d1fe7a823d04f1807df31f67f3c2",
+      "loadedFactorySha256": "a4126353d0a6a9e80787dba96474287c334ceb2d1aa244e0c1f8d1bf4a822da6",
+      "currentFactorySha256": "a4126353d0a6a9e80787dba96474287c334ceb2d1aa244e0c1f8d1bf4a822da6"
+    },
+    {
+      "name": "src/components/text-field.tsx",
+      "moduleId": 2282,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "6716c3119f0bc7fd72eefe4ef190b83b339b910c81baad90821ab03107aaac86",
+      "loadedFactorySha256": "500f7844205964a681938a5f99dd2a379f143fe5ec23be7ca0358b25cac6aa01",
+      "currentFactorySha256": "500f7844205964a681938a5f99dd2a379f143fe5ec23be7ca0358b25cac6aa01"
+    },
+    {
+      "name": "src/components/settings-sheet.tsx",
+      "moduleId": 2610,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "8ad3ce3714feeaa889eb73ae9d886de189b12601f2d357f1b46c791136469ab7",
+      "loadedFactorySha256": "e8b231b344a94e5c93a4dfa3bd4cc90780ac3849960778fc527ae46cad7e4d98",
+      "currentFactorySha256": "e8b231b344a94e5c93a4dfa3bd4cc90780ac3849960778fc527ae46cad7e4d98"
+    },
+    {
+      "name": "src/components/drrm/scan-family-sheet.tsx",
+      "moduleId": 2280,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "5290cf154cfca3990269f4d2366947dfe88d9ee75cc48110cacc3dedfa39c1c1",
+      "loadedFactorySha256": "146d707c9882467a0803bc9ebdbf8b4f0ebbe022ae61e3b4103e372d64054f11",
+      "currentFactorySha256": "146d707c9882467a0803bc9ebdbf8b4f0ebbe022ae61e3b4103e372d64054f11"
+    },
+    {
+      "name": "src/components/password-recovery-screen.tsx",
+      "moduleId": 2687,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "a5e02a239a9f014be4b67a5e20489307873946a1e306fd9d0c51b76c9f6018c9",
+      "loadedFactorySha256": "67b47b831a0984ead2bac5748c194aa7f1f4c2cc44c77ddc31814b1ba5aff367",
+      "currentFactorySha256": "67b47b831a0984ead2bac5748c194aa7f1f4c2cc44c77ddc31814b1ba5aff367"
+    },
+    {
+      "name": "src/app/(app)/_layout.tsx",
+      "moduleId": 748,
+      "initialized": true,
+      "factoryMatches": true,
+      "sourceMatches": true,
+      "sourceSha256": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+      "loadedFactorySha256": "0758fde18d8c71dd1ca3004b67a3329d1c20687d3263a17db173376efff75846",
+      "currentFactorySha256": "0758fde18d8c71dd1ca3004b67a3329d1c20687d3263a17db173376efff75846"
+    }
+  ],
+  "passed": true,
+  "consoleWarningsOrErrors": 1
+}

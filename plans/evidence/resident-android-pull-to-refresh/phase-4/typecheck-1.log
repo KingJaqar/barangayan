@@ -1,0 +1,4 @@
+src/hooks/use-emergency-guidelines.ts(114,42): error TS2322: Type '() => PromiseLike<void>' is not assignable to type '() => Promise<void>'.
+  Type 'PromiseLike<void>' is missing the following properties from type 'Promise<void>': catch, finally, [Symbol.toStringTag]
+src/hooks/use-emergency-hotlines.ts(114,40): error TS2322: Type '() => PromiseLike<void>' is not assignable to type '() => Promise<void>'.
+  Type 'PromiseLike<void>' is missing the following properties from type 'Promise<void>': catch, finally, [Symbol.toStringTag]

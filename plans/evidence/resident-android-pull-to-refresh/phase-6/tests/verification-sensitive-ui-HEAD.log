@@ -1,0 +1,23 @@
+﻿node : node:internal/modules/run_main:107
+At line:1 char:884
++ ... tive-ui') { node "tests\$t.mjs" *> "C:\Users\User\barangayan\plans\ev ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (node:internal/modules/run_main:107:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 8000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: 'Detect Your Location', exact: true })[22m
+
+    at C:\Users\User\barangayan\tmp\resident-pull-refresh-20261025\head-wt\apps\resident-android-mobile\tests\verificat
+ion-sensitive-ui.mjs:200:80 {
+  log: [
+    "  - waiting for getByRole('button', { name: 'Detect Your Location', exact: true })"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

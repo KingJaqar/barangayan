@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "port": 8081,
+      "servedSourceMatches": true,
+      "sourceSha256": "17d0fb743ffd3c41c3c13ecdda72eb30f1f5a068372a63df63273f00dd7fd516",
+      "hasEditingConstraint": true
+    }
+  ],
+  "prefs": [
+    {
+      "file": "expo.modules.devlauncher.session.xml",
+      "keys": [
+        "session_secret"
+      ],
+      "localAddresses": []
+    },
+    {
+      "file": "com.barangayan.resident.dev_preferences.xml",
+      "keys": [
+        "inspector_debug"
+      ],
+      "localAddresses": []
+    }
+  ],
+  "workingSourceSha256": "17d0fb743ffd3c41c3c13ecdda72eb30f1f5a068372a63df63273f00dd7fd516",
+  "limitation": "Served-source identity is not loaded-runtime factory identity."
+}

@@ -1,0 +1,63 @@
+diff --git a/tmp/resident-keyboard-phase4-20261026/before/apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx b/apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx
+index ae20090c..11d028d2 100644
+--- a/tmp/resident-keyboard-phase4-20261026/before/apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx
+@@ -33,6 +33,7 @@ import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+ import { TextField } from '@/components/text-field';
+ import { ThemedText } from '@/components/themed-text';
+ import { useAuth } from '@/hooks/use-auth';
++import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+ import { useProfile } from '@/hooks/use-profile';
+ import { useTheme } from '@/hooks/use-theme';
+ import { isMapPosition } from '@/lib/map-presentation';
+@@ -48,6 +49,7 @@ function LocationVerificationContent() {
+   const theme = useTheme();
+   const { session } = useAuth();
+   const { profile, isLoading, isInitialLoading, error: profileError, refetch } = useProfile();
++  const { keyboardVisible } = useFloatingTabLayout();
+   const pull = usePullRefresh([refetch]);
+ 
+   const boundary = (profile?.barangays?.boundary as unknown as Polygon | MultiPolygon | null) ?? null;
+@@ -218,6 +220,11 @@ function LocationVerificationContent() {
+ 
+   // A refresh keeps the map and pin mounted; saving stays blocked while `isLoading`.
+   const unavailable = isInitialLoading || !!profileError || profile?.id !== session?.user.id;
++  const editingAddress = Platform.OS === 'android' && keyboardVisible && detailsExpanded;
++  const footer = <View style={[styles.footer, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 24) }]}>
++    <PrimaryButton presentation="resident" label={saved ? 'Location Saved ✓' : 'Save My Location'} onPress={handleSave} loading={saving}
++      disabled={!position || !boundary || (position !== null && boundary !== null && !isPointInPolygon(position, boundary))} />
++  </View>;
+   return (
+     <SafeAreaView edges={['left', 'right']} style={[styles.root, { backgroundColor: theme.resident.card }]}>
+       <AuthHeader presentation="resident" title="Location Verification" />
+@@ -225,7 +232,7 @@ function LocationVerificationContent() {
+         <ThemedText accessibilityLiveRegion="polite" themeColor="textSecondary">{profileError ?? 'Loading your saved location…'}</ThemedText>
+         {profileError ? <PrimaryButton presentation="resident" label="Retry" onPress={refetch} /> : null}
+       </View> : <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+-        <View style={[styles.mapArea, !detailsExpanded && styles.mapAreaExpanded]}>
++        <View style={editingAddress ? styles.mapAreaEditing : [styles.mapArea, !detailsExpanded && styles.mapAreaExpanded]}>
+           <MapView key={mapAttempt} markers={[]} boundary={boundary}
+             picker={{ enabled: !saving, position }} onPickerMoved={handlePickerMoved} onPickerRejected={handlePickerRejected}
+             onMapError={() => setMapError(true)} zoomControlTop={70} style={StyleSheet.absoluteFill} />
+@@ -299,11 +306,9 @@ function LocationVerificationContent() {
+               {locating ? 'Detecting location…' : 'Detect Your Location'}
+             </ThemedText>
+           </Pressable>
++          {editingAddress ? footer : null}
+         </ScrollView> : null}
+-        <View style={[styles.footer, { backgroundColor: theme.resident.card, borderColor: theme.resident.border, paddingBottom: Math.max(insets.bottom, 24) }]}>
+-          <PrimaryButton presentation="resident" label={saved ? 'Location Saved ✓' : 'Save My Location'} onPress={handleSave} loading={saving}
+-            disabled={!position || !boundary || (position !== null && boundary !== null && !isPointInPolygon(position, boundary))} />
+-        </View>
++        {editingAddress ? null : footer}
+       </KeyboardAvoidingView>}
+     </SafeAreaView>
+   );
+@@ -312,6 +317,7 @@ function LocationVerificationContent() {
+ const styles = StyleSheet.create({
+   root: { flex: 1 },
+   mapArea: { flexBasis: '42%', flexShrink: 1, minHeight: 120 },
++  mapAreaEditing: { height: 0, overflow: 'hidden' },
+   mapAreaExpanded: { flex: 1, flexBasis: 0 },
+   detailsToggle: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 20, paddingVertical: 8, borderTopWidth: 1 },
+   detailsToggleLabel: { fontSize: 12, lineHeight: 18 },

@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-25T06:13:22.520Z",
+  "serial": "emulator-5554",
+  "otherDeviceExcluded": true,
+  "model": "SM-S918U",
+  "api": "32",
+  "bootId": "83af0d39-881d-4014-8b04-10c2043cd1cd",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "fontScale": "1.0",
+  "navigationMode": "0",
+  "defaultIme": "com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME",
+  "showImeWithHardware": "1",
+  "package": [
+    "versionCode=1 minSdk=24 targetSdk=36",
+    "versionName=1.0.0",
+    "lastUpdateTime=2026-10-15 09:35:07"
+  ],
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "navbarOverlays": [
+    "[ ] com.android.internal.systemui.navbar.gestural_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.threebutton\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.gestural\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_narrow_back\r"
+  ],
+  "gboardDisplay": {
+    "originalShowOnScreenKeyboard": false,
+    "testSetting": true,
+    "evidence": "Native Gboard Physical keyboard settings screenshot; Android secure switch was already1"
+  },
+  "nativeRevision": "Unknown; installed APK fingerprint and loaded source are development-client evidence, not native release build qualification"
+}

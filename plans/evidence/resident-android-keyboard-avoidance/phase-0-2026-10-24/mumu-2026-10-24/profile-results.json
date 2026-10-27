@@ -1,0 +1,131 @@
+{
+  "seen": [
+    "First Name",
+    "Middle Name",
+    "Last Name",
+    "Suffix",
+    "Email",
+    "Mobile Number",
+    "House No.",
+    "Street"
+  ],
+  "results": [
+    {
+      "id": "C03",
+      "label": "First Name",
+      "inputBounds": [
+        111,
+        860,
+        969,
+        944
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visible; remaining protocol unverified",
+      "clearanceDp": 74.33333333333333
+    },
+    {
+      "id": "C04",
+      "label": "Middle Name",
+      "inputBounds": [
+        111,
+        1094,
+        969,
+        1178
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -3.6666666666666665
+    },
+    {
+      "id": "C05",
+      "label": "Last Name",
+      "inputBounds": [
+        111,
+        1328,
+        969,
+        1412
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -81.66666666666667
+    },
+    {
+      "id": "C06",
+      "label": "Suffix",
+      "inputBounds": [
+        111,
+        1562,
+        969,
+        1646
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -159.66666666666666
+    },
+    {
+      "id": "C07",
+      "label": "Occupation",
+      "result": "conditional input not present"
+    },
+    {
+      "id": "C08",
+      "label": "Email",
+      "inputBounds": [
+        111,
+        1546,
+        969,
+        1630
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -154.33333333333334
+    },
+    {
+      "id": "C09",
+      "label": "Mobile Number",
+      "inputBounds": [
+        111,
+        1405,
+        969,
+        1489
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -107.33333333333333
+    },
+    {
+      "id": "C10",
+      "label": "House No.",
+      "inputBounds": [
+        111,
+        1438,
+        969,
+        1522
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -118.33333333333333
+    },
+    {
+      "id": "C11",
+      "label": "Street",
+      "inputBounds": [
+        111,
+        1593,
+        969,
+        1677
+      ],
+      "keyboardTop": 1167,
+      "shown": true,
+      "result": "focus visibility failure",
+      "clearanceDp": -170
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/tests/verification-sensitive-ui.mjs",
+      "sha256": "144fdb4e96d5e893a57b2ee594bba919b07425f4cc5cad97b942d8bb6d99da01",
+      "bytes": 27714
+    }
+  ],
+  "reason": "Added existing browser adapter to the scoped recovery follow-up; snapshot taken before its one-line API boundary update."
+}

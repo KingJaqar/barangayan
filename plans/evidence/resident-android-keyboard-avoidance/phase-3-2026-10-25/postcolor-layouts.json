@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-26 Asia/Manila",
+  "planned": [
+    [
+      "restore",
+      [
+        "A10"
+      ]
+    ],
+    [
+      "compact-large-font",
+      [
+        "A10"
+      ]
+    ],
+    [
+      "compact-large-display-gesture",
+      [
+        "A10"
+      ]
+    ]
+  ],
+  "results": [
+    {
+      "configuration": "restore",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          318,
+          961,
+          930,
+          1095
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          1167
+        ],
+        "keyboardTop": 1167,
+        "clearance": 72
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            72,
+            949,
+            522,
+            1107
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            558,
+            949,
+            1008,
+            1101
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-font",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "focus": {
+        "editor": [
+          318,
+          701,
+          930,
+          855
+        ],
+        "viewport": [
+          0,
+          144,
+          1080,
+          927
+        ],
+        "keyboardTop": 927,
+        "clearance": 72
+      },
+      "actions": [
+        {
+          "name": "Cancel",
+          "bounds": [
+            72,
+            689,
+            522,
+            867
+          ]
+        },
+        {
+          "name": "Save Color",
+          "bounds": [
+            558,
+            689,
+            1008,
+            861
+          ]
+        }
+      ],
+      "viewportRestored": true,
+      "status": "pass for stated subset"
+    },
+    {
+      "configuration": "compact-large-display-gesture",
+      "case": "A10",
+      "attempts": 1,
+      "scope": "Lower-field navigation corrected before first actual focus test",
+      "status": "incomplete",
+      "error": "Actual modal scroller missing"
+    }
+  ],
+  "fullProtocol": false
+}

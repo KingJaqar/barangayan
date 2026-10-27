@@ -107,15 +107,35 @@ export async function needsResidentProfile(client: SupabaseClient<Database>, use
   } finally { clearTimeout(timer); }
 }
 
-/** Configuration selects registration locality; no first-row tenant assignment. */
-export async function registrationLocality(client: SupabaseClient<Database>) {
+export class RegistrationLocalityError extends Error {
+  constructor(readonly stage: 'locality' | 'boundary', readonly retryable: boolean) {
+    super(retryable
+      ? stage === 'locality' ? 'Unable to load registration details. Check your connection and retry.' : 'Unable to load the registration boundary. Check your connection and retry.'
+      : 'Registration details are not configured for this barangay. Please contact your barangay office.');
+    this.name = 'RegistrationLocalityError';
+  }
+}
+
+/** Existing residents retain their tenant; new registrations use the configured locality. */
+export async function registrationLocality(client: SupabaseClient<Database>, options: { barangayId?: string; signal?: AbortSignal } = {}) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 10000);
+  const signal = options.signal ?? controller.signal;
+  const timer = options.signal ? undefined : setTimeout(() => controller.abort(), 10000);
+  let stage: 'locality' | 'boundary' = 'locality';
   try {
-    const { data: locality, error } = await client.from('barangay_localities').select('*').eq('resident_registration_enabled', true).abortSignal(controller.signal).single();
-    if (error || !locality) throw new Error('Registration locality unavailable. Please retry.');
-    const { data: barangay, error: boundaryError } = await client.from('barangays').select('id, boundary').eq('id', locality.barangay_id).abortSignal(controller.signal).single();
-    if (boundaryError || !barangay) throw new Error('Registration boundary unavailable. Please retry.');
+    if (signal.aborted) throw new RegistrationLocalityError(stage, true);
+    const query = client.from('barangay_localities').select('*');
+    const { data: locality, error } = await (options.barangayId
+      ? query.eq('barangay_id', options.barangayId)
+      : query.eq('resident_registration_enabled', true)).abortSignal(signal).maybeSingle();
+    if (error || !locality) throw new RegistrationLocalityError(stage, !!error && error.code !== 'PGRST116');
+    stage = 'boundary';
+    if (signal.aborted) throw new RegistrationLocalityError(stage, true);
+    const { data: barangay, error: boundaryError } = await client.from('barangays').select('id, boundary').eq('id', locality.barangay_id).abortSignal(signal).maybeSingle();
+    if (boundaryError || !barangay) throw new RegistrationLocalityError(stage, !!boundaryError && boundaryError.code !== 'PGRST116');
     return { ...barangay, name: locality.display_name, city: locality.city, province: locality.province };
+  } catch (cause) {
+    if (cause instanceof RegistrationLocalityError) throw cause;
+    throw new RegistrationLocalityError(stage, true);
   } finally { clearTimeout(timer); }
 }

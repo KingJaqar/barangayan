@@ -1,0 +1,7 @@
+{
+  "tag": "compact-large-font",
+  "states": [],
+  "submitted": false,
+  "status": "fail",
+  "error": "Command failed: adb -s emulator-5554 shell uiautomator dump /sdcard/keyboard-phase2-10864-16.xml\n"
+}

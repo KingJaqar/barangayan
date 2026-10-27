@@ -1,0 +1,115 @@
+{
+  "completedDate": "2026-10-25 Asia/Manila",
+  "phaseStatus": "Complete",
+  "branch": "No shared adaptation required; existing local owners qualified",
+  "baseline": {
+    "typecheck": {
+      "status": "pass",
+      "exit": 0,
+      "command": "node ../../node_modules/typescript/bin/tsc --noEmit --pretty false",
+      "log": "native-qualification/logs/typecheck-baseline.log"
+    },
+    "lint": {
+      "status": "pass",
+      "exit": 0,
+      "command": "node ../../node_modules/eslint/bin/eslint.js src --no-cache",
+      "log": "native-qualification/logs/lint-baseline.log"
+    },
+    "initialUnit": {
+      "status": "environment failure before candidate edits",
+      "exit": 1,
+      "reason": "Parallel workers failed VirtualAlloc; no test assertion failure reported",
+      "log": "native-qualification/logs/unit-baseline.log"
+    },
+    "unit": {
+      "status": "pass",
+      "exit": 0,
+      "files": 32,
+      "tests": 335,
+      "command": "node ../../node_modules/vitest/vitest.mjs run --reporter=dot --maxWorkers=1 --minWorkers=1",
+      "log": "native-qualification/logs/unit-baseline-single-worker.log"
+    },
+    "export": {
+      "status": "Earlier Phase 1 Android JS/Hermes export passed on the same restored application source identities",
+      "log": "logs/export-baseline.log",
+      "warning": "Pre-existing NO_COLOR/FORCE_COLOR tooling warning; not a native APK build"
+    }
+  },
+  "candidateChecks": {
+    "typecheck": {
+      "status": "pass",
+      "exit": 0,
+      "log": "native-qualification/logs/typecheck-candidates.log"
+    },
+    "lint": {
+      "status": "pass",
+      "exit": 0,
+      "command": "node ../../node_modules/eslint/bin/eslint.js 'src/app/(app)/settings/profile.tsx' src/components/delete-account-modal.tsx --no-cache",
+      "log": "native-qualification/logs/lint-candidates.log"
+    },
+    "native": "Profile C04/C05/C11 representatives and C03 visible-field no-jump; B32 resident password dialog: pass for the scoped local-mechanism qualification",
+    "restoration": "Both temporary candidate files restored byte-for-byte; candidate patch retained for review, not applied as a later-phase implementation"
+  },
+  "native": {
+    "status": "Phase 1 qualification passed on MuMu API32/Gboard/default font",
+    "profileCycles": 3,
+    "deletionCycles": 3,
+    "sourceModulesMatchedAfterRestore": 29,
+    "unchangedOwnerSmoke": [
+      "C15 header search",
+      "A08 Profile family SettingsSheet, three cycles"
+    ],
+    "console": "No new sampled warning/error/exception event in the monitored flows; historical buffered warnings retained",
+    "cleanup": "Synthetic name character/password erased, no domain submission, dialogs closed, Profile Save disabled, Home/IME hidden",
+    "evidence": "native-qualification/results.json"
+  },
+  "repomix": {
+    "version": "1.18.1",
+    "sharedPacket": "Existing 12 entries reused after hash validation",
+    "supplement": "native-qualification/local-owners.xml",
+    "files": 2,
+    "decodedCharsRead": 8981,
+    "continuationsPending": 0,
+    "estimatedTokens": 2722,
+    "security": "Default scan clean; no unexplained omissions",
+    "resourceFailure": "Initial PowerShell redirection failed to allocate its module before packing; a Node file descriptor avoided that shell allocation. Successful generation log retained."
+  },
+  "acceptance": {
+    "representativeMechanism": "met: native local-owner prototypes corrected representative overlap; explicit skip-shared-edits branch selected",
+    "visibleInputNoJump": "met in tested states: First Name rectangle unchanged on focus switch",
+    "noDuplicateGap": "met in tested states: Profile body/footer and modal dimensions restored on every measured cycle",
+    "retainedConsumers": "met for Phase 1 scope: shared source unchanged; representative unchanged search/family geometry smokes passed; no full-protocol pass inferred",
+    "iosPaths": "met at source level: no application change retained. Native iOS smoke not run and not claimed; required when later shared fixes are applied",
+    "optionalHelperContract": "not applicable: no new helper selected or implemented"
+  },
+  "remaining": [
+    "Permanent Profile W3 fix and its full acceptance in Phase 2",
+    "Permanent Delete Account W8 fix and presentation/busy/error acceptance in Phase 3",
+    "Full field/consumer/release-device/font/navigation/IME and applicable native iOS matrix in later phases",
+    "Native APK source revision/release qualification"
+  ],
+  "reviewInterruption": "An emulator command was not executed when automatic approval review hit an account usage limit. User continuation retried through normal approval; access then succeeded. No bypass used.",
+  "checkReuse": "Final application/config/dependency bytes equal the pre-experiment baseline. Baseline checks remain applicable after restoration; candidate type/lint and native comparisons provide separate evidence. No redundant final app rerun or export claimed.",
+  "closure": {
+    "at": "2026-10-25T00:28:04.453Z",
+    "phaseStatus": "Complete",
+    "branch": "No shared adaptation required",
+    "baselineInputs": 67,
+    "ownedInputChanges": [
+      "plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md",
+      "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/context-index.md",
+      "plans/evidence/resident-android-keyboard-avoidance/phase-1-2026-10-24/verification.json"
+    ],
+    "applicationSourceRestoredByteExact": true,
+    "userTrackedDiffIdentical": true,
+    "indexIdentical": true,
+    "otherPlanSectionsIdentical": true,
+    "selectedHeaderStatusReferenceUpdated": true,
+    "finalLoadedSourceMatches": 29,
+    "nativeQualificationPass": true,
+    "finalHomeKeyboardHidden": true,
+    "noDomainSubmissions": true,
+    "newDependencies": 0,
+    "limits": "No permanent W3/W8 fix, full field/release matrix or native iOS acceptance inferred"
+  }
+}

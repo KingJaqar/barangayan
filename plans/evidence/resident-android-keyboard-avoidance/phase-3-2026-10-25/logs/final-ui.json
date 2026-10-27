@@ -1,0 +1,11 @@
+{
+  "stage": "final",
+  "check": "ui",
+  "command": [
+    "node",
+    "tests/settings-profile-ui.mjs"
+  ],
+  "start": "2026-10-25T13:08:41.141Z",
+  "end": "2026-10-25T13:09:20.706Z",
+  "status": 0
+}

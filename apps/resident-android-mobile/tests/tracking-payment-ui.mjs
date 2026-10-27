@@ -28,7 +28,8 @@ const mocks = {
     export const Image=React.forwardRef(({contentFit,...p},ref)=><I {...p} ref={ref} resizeMode={contentFit??p.resizeMode}/>);
     export const Animated={...A,timing:(v,o)=>{window.fixture.motions.push(o.duration);return A.timing(v,{...o,useNativeDriver:false})},loop:()=>{let active=false;return {start(){if(!active){window.fixture.loops++;active=true}},stop(){if(active){window.fixture.loops--;active=false}}}}};
     export const AppState={currentState:'active',addEventListener(name,fn){window.fixture.appListeners.push(fn);return {remove(){window.fixture.appListeners=window.fixture.appListeners.filter(x=>x!==fn)}}}};
-    export const Alert={alert:(title,message,buttons)=>{window.fixture.alerts.push({title,message});window.fixture.alertButtons=buttons??[]}};`,
+    export const Alert={alert:(title,message,buttons)=>{window.fixture.alerts.push({title,message});window.fixture.alertButtons=buttons??[]}};
+    export const RefreshControl=({children,style,...props})=>{const ref=React.useRef(props);ref.current=props;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
   '@barangayan/shared': `export * from '${shared}/lib/format.ts';export * from '${shared}/lib/service-catalog.ts';export * from '${shared}/lib/agency-sla.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {DEFAULT_FONT_ID,FONT_OPTIONS} from '${shared}/constants/theme-fonts.ts';`,
   'expo-router': `import {useEffect} from 'react';const router={push:v=>window.fixture.routes.push(v),replace:v=>window.fixture.routes.push(v),back:()=>window.fixture.routes.push('back')};export const useRouter=()=>router;export const useIsFocused=()=>true;export const useLocalSearchParams=()=>({requestId:'synthetic-request'});export const useFocusEffect=fn=>useEffect(()=>{const close=fn();window.fixture.blur=close;window.fixture.focus=fn;return close},[fn]);`,
   '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'synthetic-resident'}}});`,
@@ -37,7 +38,7 @@ const mocks = {
   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reduced;`,
   '@/constants/payment': `export let PAYMENT_SETTLEMENT_READY=true;window.fixture.setSettlement=v=>PAYMENT_SETTLEMENT_READY=v;`,
   '@/lib/supabase': `export const supabase={
-    from(table){const q={select(columns){q.columns=columns;return q},eq(){return q},order(){return q},limit(){return q},single(){window.fixture.queries.push(table);return Promise.resolve({data:window.fixture.queryError?null:window.fixture.request,error:window.fixture.queryError?{message:'Synthetic load failure'}:null})},maybeSingle(){return Promise.resolve({data:window.fixture.receiptError?null:table==='payments'?(q.columns?.includes('service_requests!inner')?window.fixture.receipt:window.fixture.pendingPayment):null,error:window.fixture.receiptError?{}:null})}};return q},
+    from(table){const q={select(columns){q.columns=columns;return q},eq(){return q},order(){return q},limit(){return q},single(){window.fixture.queries.push(table);return Promise.resolve({data:window.fixture.queryError?null:structuredClone(window.fixture.request),error:window.fixture.queryError?{message:'Synthetic load failure'}:null})},maybeSingle(){if(!q.columns?.includes('service_requests!inner'))window.fixture.pendingReads++;return Promise.resolve({data:window.fixture.receiptError?null:table==='payments'?(q.columns?.includes('service_requests!inner')?window.fixture.receipt:window.fixture.pendingPayment):null,error:window.fixture.receiptError?{}:null})}};return q},
     rpc(name,args){if(name==='service_request_sla_tracking')return {abortSignal:()=>Promise.resolve({data:{request:window.fixture.request,pauses:window.fixture.slaPauses??[],evaluated_at:window.fixture.slaAt??'2026-10-19T00:15:00Z'},error:window.fixture.slaError?{}:null})};window.fixture.mutations.push({name,args});const result=()=>({data:null,error:window.fixture.rpcError?{message:'Synthetic action failed'}:null});return window.fixture.hold?new Promise(resolve=>window.fixture.waiting.push(()=>resolve(result()))):Promise.resolve(result())},
     functions:{invoke(name,args){const f=window.fixture;f.calls.push({name,args});if(name==='create-payment-source')return Promise.resolve({data:f.provider,error:null});if(name==='cancel-payment')return f.hold?new Promise(resolve=>f.waiting.push(()=>resolve({data:{status:f.cancelStatus},error:null}))):Promise.resolve({data:{status:f.cancelStatus},error:null});return Promise.resolve({data:{status:'pending'},error:null})}},
     channel(){const channel={on(event,filter,fn){window.fixture.channels.push({channel,filter,fn});return channel},subscribe(){return channel}};return channel},removeChannel(channel){window.fixture.channels=window.fixture.channels.filter(x=>x.channel!==channel);return Promise.resolve('ok')}
@@ -77,7 +78,7 @@ try {
   page.on('pageerror', e=>errors.push(e.message));
   page.on('console', m=>{if(['error','warning'].includes(m.type()))errors.push(m.text())});
   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
-  await page.evaluate(()=>{window.fixture={screen:'method',mode:'light',accent:'#0F6E5B',fontId:'system',reduced:true,pickup:false,hold:false,waiting:[],mutations:[],queries:[],routes:[],calls:[],channels:[],appListeners:[],loops:0,motions:[],alerts:[],cancelStatus:'cancelled',visible:true,request:{id:'synthetic-request',reference_number:'SYNTHETIC-ONLY',created_at:'2026-10-19T00:00:00Z',status:'submitted',payment_status:'unpaid',payment_method:null,contract_version:2,fee_assessment_state:'assessed',assessed_amount_centavos:10000,document_types:{name:'Synthetic certificate with a long document name',fee_centavos:10000,service_kind:'indigency',processing_target_hours:24},payments:[],status_history:[],supporting_details:{},purpose_label:'Synthetic purpose',timing_model:'legacy'},provider:{paymentId:'synthetic-payment',paymentIntentId:'synthetic-intent',qrImageUrl:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1cAAAAASUVORK5CYII=',expiresAt:Date.now()+600000,documentFeeCentavos:10000,amountCentavos:10000}}});
+  await page.evaluate(()=>{window.fixture={screen:'method',mode:'light',accent:'#0F6E5B',fontId:'system',reduced:true,pickup:false,hold:false,waiting:[],mutations:[],queries:[],pendingReads:0,routes:[],calls:[],channels:[],appListeners:[],loops:0,motions:[],alerts:[],cancelStatus:'cancelled',visible:true,request:{id:'synthetic-request',reference_number:'SYNTHETIC-ONLY',created_at:'2026-10-19T00:00:00Z',status:'submitted',payment_status:'unpaid',payment_method:null,contract_version:2,fee_assessment_state:'assessed',assessed_amount_centavos:10000,document_types:{name:'Synthetic certificate with a long document name',fee_centavos:10000,service_kind:'indigency',processing_target_hours:24},payments:[],status_history:[],supporting_details:{},purpose_label:'Synthetic purpose',timing_model:'legacy'},provider:{paymentId:'synthetic-payment',paymentIntentId:'synthetic-intent',qrImageUrl:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1cAAAAASUVORK5CYII=',expiresAt:Date.now()+600000,documentFeeCentavos:10000,amountCentavos:10000}}});
   await page.addScriptTag({path:path.join(out,'bundle.js')});
   const render=async patch=>{await page.evaluate(p=>{Object.assign(window.fixture,p);window.render()},patch)};
   await render({});
@@ -128,6 +129,21 @@ try {
   await page.getByText('Total turnaround',{exact:true}).waitFor();
   assert.equal(await page.getByText(/NaN/).count(),0);
   passed.push('tracking timing panel renders all three authoritative SLA values');
+  const reads=()=>page.evaluate(()=>({request:window.fixture.queries.length,pending:window.fixture.pendingReads,channels:window.fixture.channels.length}));
+  const pull=async()=>{await page.evaluate(()=>[...window.pullControls][0].current.onRefresh());await page.waitForFunction(()=>![...window.pullControls][0].current.refreshing)};
+  assert.equal(await page.evaluate(()=>window.pullControls.size),1,'tracking mounts one pull scroller');
+  const beforePull=await reads();
+  await page.evaluate(()=>{window.fixture.request.reference_number='PULLED-REF'});
+  await pull();
+  await page.getByText('Ref #PULLED-REF').waitFor();
+  assert.deepEqual(await reads(),{request:beforePull.request+1,pending:beforePull.pending+1,channels:beforePull.channels},'a pull re-reads the request and the pending payment once and opens no channel');
+  await page.evaluate(()=>{window.fixture.request.reference_number='SYNTHETIC-ONLY';window.fixture.queryError=true});
+  await pull();
+  assert.equal(await page.getByText('Ref #PULLED-REF').count(),1,'a failed pull keeps the content');
+  assert.equal(await page.getByRole('alert').filter({hasText:'Could not load this request'}).count(),0,'a failed pull adds no error view');
+  assert.equal(await page.getByRole('button',{name:'Retry request',exact:true}).count(),0);
+  await page.evaluate(()=>{window.fixture.queryError=false});
+  passed.push('tracking pull re-reads request and pending payment once, shows new data, and keeps the screen through a failed pull');
   const trackingBaseline=await page.evaluate(()=>structuredClone(window.fixture.request));
   // The presentation keeps exact timing and request information available while
   // avoiding second-by-second clock labels in the overview.
@@ -234,6 +250,15 @@ try {
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   }
   passed.push('long content fits 320/360/400/412 widths in dark/extreme accent');
+  await render({screen:'method',pickup:false});
+  await page.getByRole('button',{name:/Pay at Pickup\./}).waitFor();
+  assert.equal(await page.evaluate(()=>window.pullControls.size),1,'payment mounts one pull scroller');
+  const paymentReads=await page.evaluate(()=>window.fixture.queries.length);
+  await page.evaluate(()=>{window.fixture.request.document_types.name='Pulled certificate';[...window.pullControls][0].current.onRefresh()});
+  await page.waitForFunction(()=>![...window.pullControls][0].current.refreshing);
+  await page.getByText('Pulled certificate',{exact:true}).waitFor();
+  assert.equal(await page.evaluate(()=>window.fixture.queries.length),paymentReads+1,'a payment pull re-reads the request once');
+  passed.push('payment pull re-reads the request once and shows new data');
   assert.deepEqual(errors,[]);
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({passed,errors},null,2));
   console.log(JSON.stringify({passed,errors},null,2));

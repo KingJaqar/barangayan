@@ -14,7 +14,7 @@ export function useEmergencyGuidelines(barangayId: string | null): {
   guidelines: EmergencyGuideline[];
   isLoading: boolean;
   error: string | null;
-  refetch: () => void;
+  refetch: () => PromiseLike<void>;
   isOffline: boolean;
 } {
   const [guidelines, setGuidelines] = useState<EmergencyGuideline[]>([]);
@@ -42,7 +42,7 @@ export function useEmergencyGuidelines(barangayId: string | null): {
       query = query.eq('barangay_id', barangayId);
     }
 
-    query.then(({ data, error: qErr }) => {
+    return query.then(({ data, error: qErr }) => {
       if (cancelledRef.current) return;
       if (qErr) {
         setError(qErr.message);

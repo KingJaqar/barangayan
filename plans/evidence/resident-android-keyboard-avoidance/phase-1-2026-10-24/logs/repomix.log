@@ -1,0 +1,165 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{bf710ba2-b97b-400a-86c7-a543b9cadbb7}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Collecting files...
+
+[K[1A
+[K[?25l⠸ Processing files...
+
+[K[1A
+[K[?25l⠼ Processing files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Processing files...
+
+[K[1A
+[K[?25l⠙ Processing files...
+
+[K[1A
+[K[?25l⠹ Processing files...
+
+[K[1A
+[K[?25l⠸ Processing files...
+
+[K[1A
+[K[?25l⠼ Processing files...
+
+[K[1A
+[K[?25l⠴ Processing files...
+
+[K[1A
+[K[?25l⠦ Processing files...
+
+[K[1A
+[K[?25l⠧ Processing files...
+
+[K[1A
+[K[?25l⠇ Processing files...
+
+[K[1A
+[K[?25l⠏ Processing files...
+
+[K[1A
+[K[?25l⠋ Processing files...
+
+[K[1A
+[K[?25l⠙ Processing files...
+
+[K[1A
+[K[?25l⠹ Processing files...
+
+[K[1A
+[K[?25l⠸ Processing files...
+
+[K[1A
+[K[?25l⠼ Running security check... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠴ Running security check... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠦ Running security check... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠧ Running security check... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠇ Processing file... (1/12) apps/resident-android-mobile/src/components/drrm/scan-family-sheet.tsx
+
+[K[1A
+[K[?25l⠏ Processing file... (6/12) apps/resident-android-mobile/src/lib/floating-tab-inset.ts
+
+[K[1A
+[K[?25l⠋ Processing file... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠙ Processing file... (12/12) CLAUDE.md
+
+[K[1A
+[K[?25l⠹ Writing output file...
+
+[K[1A
+[K[?25l⠸ Calculating metrics... (12/12) apps/resident-android-mobile/app.json
+
+[K[1A
+[K[?25l✔ Packing completed successfully!
+[?25h
+📈 Top 5 Files by Token Count:
+──────────────────────────────
+1.  apps/resident-android-mobile/package.json (761 tokens, 2,121 chars, 17.2%)
+2.  apps/resident-android-mobile/src/components/text-field.tsx (508 tokens, 2,177 chars, 11.5%)
+3.  apps/resident-android-mobile/app.json (372 tokens, 1,294 chars, 8.4%)
+4.  apps/resident-android-mobile/src/components/password-recovery-screen.tsx (309 tokens, 1,304 chars, 7%)
+5.  apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx (216 tokens, 973 chars, 4.9%)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+
+📊 Pack Summary:
+────────────────
+  Total Files: 12 files
+ Total Tokens: 4,417 tokens
+  Total Chars: 16,006 chars
+       Output: plans\evidence\resident-android-keyboard-avoidance\phase-1-2026-10-24\context.xml
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com

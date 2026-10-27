@@ -1,0 +1,13 @@
+{
+  "packet": "plans/evidence/resident-android-keyboard-avoidance/phase-2-2026-10-25/context.xml",
+  "packetSha256": "60847a072f429bf82848b0297f286f68b3d1b8a9eb24f9f70a51b7646c5b37a1",
+  "entry": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+  "sourceSha256": "6d34635c47f6bf5327cbe69c92d37b5a2c792fe607c8be01c49a61056190e015",
+  "characters": 2684,
+  "range": [
+    0,
+    2684
+  ],
+  "continuation": null,
+  "note": "Reused historical compressed packet against preserved before-source identity; original bodies verified separately before the edit"
+}

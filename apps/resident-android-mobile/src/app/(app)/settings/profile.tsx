@@ -21,6 +21,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -29,7 +31,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
+import { BirthdayWheelModal } from '@/components/birthday-wheel-modal';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
@@ -938,17 +940,19 @@ function ProfileScreenContent() {
   if (!profile) return <View style={{ flex: 1, padding: 20, backgroundColor: theme.background }}><PlaceholderPanel label={profileError ?? 'Profile unavailable'} /><PrimaryButton presentation="resident" label="Retry profile" onPress={refetch} /></View>;
 
   const isVerified  = emailVerificationStatus === 'verified';
+  const FormContainer = Platform.OS === 'android' ? KeyboardAvoidingView : View;
+  const keyboardProps = Platform.OS === 'android' ? { behavior: 'height' as const } : {};
 
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.resident.accent }]}>
-      <View style={[styles.root, { backgroundColor: theme.resident.card }]}>
+      <FormContainer {...keyboardProps} style={[styles.root, { backgroundColor: theme.resident.card }]}>
 
       <View style={{ backgroundColor: theme.resident.accent, paddingTop: insets.top }}>
         <View style={styles.header}>
           <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={({ pressed }) => [styles.backButton, pressed && { backgroundColor: theme.resident.accentPressed }]}>
             <Ionicons name="chevron-back" size={24} color={theme.resident.onAccent} />
           </Pressable>
-          <ThemedText accessibilityRole="header" style={[styles.headerTitle, { color: theme.resident.onAccent }]}>Profile</ThemedText>
+          <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.headerTitle, { color: theme.resident.onAccent }]}>Profile</ThemedText>
           <View style={styles.headerBalance} />
         </View>
       </View>
@@ -1165,15 +1169,16 @@ function ProfileScreenContent() {
 
       {/* ── Centered toast ────────────────────────────────────────────────── */}
       {toast && <Toast message={toast.message} type={toast.type} />}
+      </FormContainer>
 
       {/* ── Modals ────────────────────────────────────────────────────────── */}
-      <BirthdayCalendarModal
-        presentation="resident"
+      <BirthdayWheelModal
+        presentation="profile"
         visible={showBirthPicker}
-        value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
+        value={birthDateIso ?? ''}
         onClose={() => setShowBirthPicker(false)}
-        onSave={(date) => {
-          setBirthDateIso(dateToIso(date));
+        onConfirm={(date) => {
+          setBirthDateIso(date);
           setShowBirthPicker(false);
           clearFieldError('birthDate');
         }}
@@ -1223,7 +1228,6 @@ function ProfileScreenContent() {
           clearFieldError('employmentStatus');
         }}
       />
-    </View>
     </SafeAreaView>
   );
 }

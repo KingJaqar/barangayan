@@ -1,5 +1,5 @@
 import { ANNOUNCEMENT_CATEGORIES, type AnnouncementCategory, type Tables } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 
 import { supabase } from '@/lib/supabase';
@@ -20,6 +20,7 @@ export function useAnnouncements(category: AnnouncementCategory | 'all') {
   const [retry, setRetry] = useState(0);
   const key = JSON.stringify([category, session?.user.id, retry]);
   const [settled, setSettled] = useState<{ key: string; items: Announcement[]; error: string | null } | null>(null);
+  const pull = useRef<(() => Promise<void>) | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,7 +37,8 @@ export function useAnnouncements(category: AnnouncementCategory | 'all') {
       return q;
     }
 
-    async function load() {
+    // `quiet` is only passed by the pull-to-refresh wrapper below; a failed pull keeps what is on screen.
+    async function load(quiet = false) {
       controller?.abort();
       const requestController = new AbortController();
       controller = requestController;
@@ -47,10 +49,11 @@ export function useAnnouncements(category: AnnouncementCategory | 'all') {
         if (error) throw error;
         if (!cancelled && ticket === sequence) setSettled({ key, items: data ?? [], error: null });
       } catch {
-        if (!cancelled && ticket === sequence) setSettled({ key, items: [], error: 'Announcements could not be loaded. Please try again.' });
+        if (!quiet && !cancelled && ticket === sequence) setSettled({ key, items: [], error: 'Announcements could not be loaded. Please try again.' });
       } finally { clearTimeout(timeout); }
     }
     void load();
+    pull.current = () => load(true);
 
     const channel = supabase
       .channel(uniqueChannelName(`announcements:${category}`))
@@ -61,11 +64,12 @@ export function useAnnouncements(category: AnnouncementCategory | 'all') {
 
     return () => {
       cancelled = true;
+      pull.current = null;
       controller?.abort();
       supabase.removeChannel(channel);
     };
   }, [category, key]);
 
   const result = settled?.key === key ? settled : null;
-  return { items: result?.items ?? [], loading: !result, error: result?.error ?? null, retry: () => setRetry(value => value + 1) };
+  return { items: result?.items ?? [], loading: !result, error: result?.error ?? null, retry: () => setRetry(value => value + 1), refresh: () => pull.current?.() };
 }

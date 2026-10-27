@@ -1,6 +1,6 @@
 import { AGENCY_SLA_LABEL, calculateAgencySla, projectSlaTime, formatSlaDuration } from '@barangayan/shared';
 import { useIsFocused } from 'expo-router';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
@@ -15,7 +15,7 @@ import { useAppForeground } from '@/hooks/use-app-foreground';
 import { useVisibleClock } from '@/hooks/use-visible-clock';
 import { readAgencySlaSnapshot, type AgencySlaSnapshot } from '@/lib/agency-sla-snapshot';
 
-interface Props { requestId: string; compact?: boolean; footer?: ReactNode }
+interface Props { requestId: string; compact?: boolean }
 
 export function AgencySlaStatus(props: Props) {
   const { session } = useAuth();
@@ -23,7 +23,7 @@ export function AgencySlaStatus(props: Props) {
   return <OwnedAgencySlaStatus key={`${userId}:${props.requestId}`} {...props} signedIn={userId !== null} />;
 }
 
-function OwnedAgencySlaStatus({ requestId, compact = false, footer, signedIn }: Props & { signedIn: boolean }) {
+function OwnedAgencySlaStatus({ requestId, compact = false, signedIn }: Props & { signedIn: boolean }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const focused = useIsFocused();
@@ -61,10 +61,10 @@ function OwnedAgencySlaStatus({ requestId, compact = false, footer, signedIn }: 
   useEffect(() => {
     if (visible && navigationDiagnosticsAvailable) recordNavigationDiagnostic('sla-tick', compact ? 'sla-compact' : 'sla-full');
   }, [tick, visible, compact]);
-  if (error) return <View><ThemedText style={compact ? styles.compactText : undefined} accessibilityRole="alert">{error}</ThemedText>{!compact ? <Pressable style={{ minHeight:48, padding:12 }} accessibilityRole="button" onPress={() => setRetry(v=>v+1)}><ThemedText>Retry</ThemedText></Pressable> : null}{compact ? footer : null}</View>;
-  if (!snapshot) return <View><ThemedText style={compact ? styles.compactText : undefined}>Loading processing clock…</ThemedText>{compact ? footer : null}</View>;
+  if (error) return <View><ThemedText style={compact ? styles.compactText : undefined} accessibilityRole="alert">{error}</ThemedText>{!compact ? <Pressable style={{ minHeight:48, padding:12 }} accessibilityRole="button" onPress={() => setRetry(v=>v+1)}><ThemedText>Retry</ThemedText></Pressable> : null}</View>;
+  if (!snapshot) return <View><ThemedText style={compact ? styles.compactText : undefined}>Loading processing clock…</ThemedText></View>;
   const r = snapshot.request;
-  if (r.timing_model !== 'agency_minutes_v1') return <View><ThemedText type="small" style={compact ? styles.compactText : undefined}>Previous timing model · original processing estimate retained</ThemedText>{compact ? footer : null}</View>;
+  if (r.timing_model !== 'agency_minutes_v1') return compact ? null : <View><ThemedText type="small">Previous timing model · original processing estimate retained</ThemedText></View>;
   const value = calculateAgencySla(r, snapshot.pauses, projectSlaTime(snapshot.evaluated_at, Math.max(0,tick-snapshot.receivedAt)));
   const warning = value.position === 'near_target' || value.position === 'overdue' || value.position === 'completed_beyond';
   const cancelled = value.position === 'cancelled';
@@ -138,20 +138,14 @@ function OwnedAgencySlaStatus({ requestId, compact = false, footer, signedIn }: 
       {snapshot.pauses.map((p, i) => <ThemedText style={[styles.caption, { color: resident.muted }]} key={`${p.started_at}:${i}`}>{p.reason} · {new Date(p.started_at).toLocaleString()} → {p.resumed_at ? new Date(p.resumed_at).toLocaleString() : 'Waiting'}</ThemedText>)}
     </TrackingReveal> : null}
   </View>;
-  return <View style={styles.compact}>
-    <ThemedText type="smallBold" style={styles.compactText}>{AGENCY_SLA_LABEL[value.position]}</ThemedText>
-    {value.waitingReason ? <ThemedText type="small" style={styles.compactText}>Waiting for resident: {value.waitingReason} · SLA position retained</ThemedText> : null}
-    <View style={styles.badgeRow}>
-      <View accessible accessibilityLabel={`Agency processing: ${formatSlaDuration(value.agencySeconds)} of ${r.target_minutes_snapshot} minutes target`}
-        style={[styles.clockBadge, { backgroundColor: resident.surface }]}>
-        <Ionicons name="time-outline" size={14} color={resident.muted} accessible={false} />
-        <ThemedText type="smallBold" style={[styles.compactText, styles.clockText, { color: resident.text }]}>
-          {`${Math.floor(value.agencySeconds / 3600).toString().padStart(2, '0')}:${Math.floor((value.agencySeconds % 3600) / 60).toString().padStart(2, '0')}:${Math.floor(value.agencySeconds % 60).toString().padStart(2, '0')}`}
-        </ThemedText>
-      </View>
-      {footer}
-    </View>
-  </View>;
+  const remaining = value.targetSeconds - value.agencySeconds;
+  // One short estimate line; the list card owns status and next action. Never a ticking 00:00:00.
+  const estimate = !r.accepted_at
+    ? (value.targetSeconds > 0 ? `Est. ${trackingDuration(value.targetSeconds)} once accepted` : 'Estimate unavailable')
+    : remaining >= 60 ? `Est. ${trackingDuration(remaining)} left`
+    : remaining > 0 ? 'Est. under 1 min left' : 'Past estimated time';
+  return <ThemedText type="small" themeColor="textSecondary" style={styles.compactText}
+    accessibilityLabel={`Agency processing: ${formatSlaDuration(value.agencySeconds)} of ${r.target_minutes_snapshot} minutes target. ${estimate}`}>{estimate}</ThemedText>;
 }
 
 const styles = StyleSheet.create({
@@ -179,9 +173,5 @@ const styles = StyleSheet.create({
   timingDetails: { borderTopWidth: 1, padding: 14, gap: 10 },
   exactRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 4 },
   exactValue: { fontSize: 12, lineHeight: 17, fontWeight: '600', flexShrink: 1 },
-  compact: { gap: 3, paddingTop: 2 },
   compactText: { fontSize: 12.5, lineHeight: 16 },
-  badgeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6, flexWrap: 'wrap' },
-  clockBadge: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 5, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 100 },
-  clockText: { fontVariant: ['tabular-nums'] },
 });

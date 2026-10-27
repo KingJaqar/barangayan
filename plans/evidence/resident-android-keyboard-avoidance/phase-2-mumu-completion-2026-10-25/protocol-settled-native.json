@@ -1,0 +1,167 @@
+{
+  "results": [
+    {
+      "id": "C03",
+      "label": "First Name",
+      "configuration": "settled-native",
+      "initialFocus": true,
+      "typing": true,
+      "nativeSelectionAndCopyPaste": true,
+      "caretInsertion": true,
+      "dismissalCycles": 3,
+      "originalValueRestored": true,
+      "states": [
+        {
+          "name": "settled-native-C03-focus",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "settled-native-C03-paste",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "settled-native-C03-selection",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "settled-native-C03-reopen-1",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        },
+        {
+          "name": "settled-native-C03-reopen-2",
+          "editor": [
+            111,
+            840,
+            969,
+            924
+          ],
+          "viewport": [
+            0,
+            264,
+            1080,
+            924
+          ],
+          "keyboardTop": 1167,
+          "clearance": 243,
+          "focused": true
+        }
+      ]
+    }
+  ],
+  "initialIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ],
+  "finalIssues": [
+    {
+      "kind": "warning",
+      "at": 1792893306104.083
+    },
+    {
+      "kind": "warning",
+      "at": 1792893664767.483
+    },
+    {
+      "kind": "warning",
+      "at": 1792897152831.43
+    },
+    {
+      "kind": "warning",
+      "at": 1792900352475.145
+    },
+    {
+      "kind": "warning",
+      "at": 1792900639382.218
+    },
+    {
+      "kind": "warning",
+      "at": 1792904126809.918
+    },
+    {
+      "kind": "warning",
+      "at": 1792906051546.245
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+refresh-ownership exit=1 secs=62
+settings-profile-ui exit=0 secs=35
+home-presentation-ui exit=0 secs=10
+health-presentation-ui exit=0 secs=18
+help-legal-about-ui exit=0 secs=27
+services-lists-ui exit=1 secs=3
+reports-announcements-ui exit=0 secs=12
+services-tab-stability exit=0 secs=3
+DONE

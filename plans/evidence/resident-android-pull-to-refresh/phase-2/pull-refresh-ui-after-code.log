@@ -1,0 +1,15 @@
+{
+  "passed": [
+    "Overlapping pulls run once; the spinner holds until every handler settles, then the next pull runs again",
+    "A throwing, rejecting or non-promise handler counts as done without blocking siblings or raising an unhandled rejection",
+    "A stuck handler ends the spinner at the 20 s ceiling; settled flights clear their timer and a stale flight cannot end a newer one",
+    "A child registers once per mount, runs its latest handler, and stops refreshing after it unmounts",
+    "A new handler array every render never re-registers, refreshes or adds commits; onRefresh identity is stable and idle time stays quiet",
+    "useRegisterPullRefresh outside a PullRefreshScope does nothing",
+    "Spinner and circle follow the active theme and accent; ScrollView-injected style and children reach the control",
+    "Unmounting during a pull clears the ceiling timer; late settlement is harmless"
+  ],
+  "errors": [],
+  "ceilingMs": 20000,
+  "scope": "Real primitive with deferred handlers and a recording native control; no gesture or device claim"
+}

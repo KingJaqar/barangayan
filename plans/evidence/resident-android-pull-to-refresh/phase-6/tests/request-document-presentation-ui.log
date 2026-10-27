@@ -1,0 +1,12 @@
+{
+  "passed": [
+    "Light reference composition: 108×72 ID beside details; text-only 44dp Edit action",
+    "Full-width purpose selector, purpose-sheet selection, borderless notes group and multiline notes",
+    "Existing refresh, drafts, picker cancellation, renter evidence and one-attempt submission behavior preserved",
+    "320/360/400/412 widths and dark/extreme account accent retain reachable controls",
+    "Business/DTI, job seeker, CTC large inputs and general-service fields preserved",
+    "Legacy guides retain every stored requirement without overflow; empty lists omit the panel; v2 keeps its charter checklist"
+  ],
+  "errors": [],
+  "native": false
+}

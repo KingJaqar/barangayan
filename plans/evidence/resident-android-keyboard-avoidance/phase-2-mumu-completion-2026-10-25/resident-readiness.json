@@ -1,0 +1,60 @@
+{
+  "signedIn": true,
+  "profile": {
+    "status": 200,
+    "error": null
+  },
+  "role": "resident",
+  "emailVerified": false,
+  "setup": {
+    "status": 200,
+    "error": null
+  },
+  "setupState": {
+    "passwordSet": null,
+    "profileComplete": true,
+    "hasGoogleIdentity": false,
+    "registrationOrigin": "legacy"
+  },
+  "catalog": {
+    "status": 200,
+    "error": null
+  },
+  "documents": [
+    {
+      "id": "5e2485cb-9241-4e06-a23e-cc768147f400",
+      "name": "Certificate of Residency",
+      "kind": null,
+      "contractVersion": 1
+    },
+    {
+      "id": "0aa4affc-9ad6-4e83-a9c6-1f6792064cc6",
+      "name": "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)",
+      "kind": "certified_true_copy",
+      "contractVersion": 2
+    },
+    {
+      "id": "ae69e222-fdeb-4973-bb87-ce4b78fc9d57",
+      "name": "Issuance of Barangay Clearance for Business Establishments",
+      "kind": "business",
+      "contractVersion": 2
+    },
+    {
+      "id": "7659317d-b963-4971-b95d-62c23b8b714e",
+      "name": "Certificate of Indigency",
+      "kind": "indigency",
+      "contractVersion": 2
+    },
+    {
+      "id": "f05a188f-3aa3-414d-89fd-097ca2af2efd",
+      "name": "First Time Job Seeker",
+      "kind": "first_time_job_seeker",
+      "contractVersion": 2
+    }
+  ],
+  "requests": {
+    "status": 200,
+    "error": null
+  },
+  "pageCountRequests": []
+}

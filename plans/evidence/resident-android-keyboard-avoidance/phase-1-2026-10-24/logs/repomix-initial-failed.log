@@ -1,0 +1,18 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{16ef1b8c-ea7e-4e61-ac11-b69815737900}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l✖ Error during packing
+[?25h
+
+For detailed debug information, use the --verbose flag
+✖ Target path does not exist: C:\Users\User\barangayan\xml
+
+Need help?
+• File an issue on GitHub: https://github.com/yamadashy/repomix/issues
+• Join our Discord community: https://discord.gg/wNYzTwZFku

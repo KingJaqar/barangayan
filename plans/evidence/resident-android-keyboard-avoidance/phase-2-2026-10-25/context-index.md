@@ -1,0 +1,48 @@
+# Phase 2 context index
+
+25 October 2026, Asia/Manila. Scope: W1–W5 only. Native/release gaps are unresolved, never passes.
+
+## Central workflow and checklist
+
+Git baseline → ripgrep discovery → Reader validation → scoped Repomix → bounded XML analysis → original-source verification. Preserve existing user work and security/readonly guards; one accommodation owner per surface; explicit Android scope; no speculative wrappers, dependencies or shared focus helper. No commits, external writes or domain submissions.
+
+- [x] Read root AGENTS.md (0 bytes), CLAUDE.md (reference to AGENTS); ancestor search found no other rules; no nested applicable rules under apps/resident-android-mobile or plans. No repository conflict.
+- [x] Read overall plan, full Phase 2 and section 9 protocol. Phase 0 inventory/ledger and Phase 1 measured report/context inspected; current source hashes match prior application source. Phase 1 prototypes were restored. Dependency is the qualified local mechanism, not an existing shipped fix.
+- [x] Snapshot 67 nonsecret inputs and binary/staged patches/status under tmp/resident-keyboard-phase2-20261025/before. Four existing Maps/Centers/UI-test edits are user-owned. No secrets or runtime personal data in context XML.
+- [x] Confirm W1–W5 files, actual pickup path services/payment/pickup/[requestId].tsx, component owners and consumers through ripgrep. Repowise unused; no index freshness assumed.
+- [x] Generate pinned cached Repomix 1.18.1 XML, security scan clean, 26/26 intended entries including empty AGENTS. Packet identity/selectors/source hashes in manifests. Read all 43,921 decoded characters in ranges [0,11000), [11000,22000), [22000,33000), [33000,43921); bounded final supplement [38000,43921) recovered a tool-output truncation. 13,825 tool-estimated tokens is not measured model usage or savings.
+- [x] Resolve compression gaps from originals: Profile imports, InlineFieldInput267–323, form guards/root933–1004, all fields1018–1140, footer/modals1158–1255; W1 login65–132/register95–140; recovery wrapper20–76; W2 password80–110; W4 form205–290; W5 Field48–100, charter320–362/406–505, legacy184–254, payment125–224. Prior unchanged source/consumer identities retained; inspect remaining originals as required by new native evidence.
+- [x] Read Expo57 index/config/router and keyboard guide; RN0.86 ScrollView/KAV/Keyboard docs. Config defaults to resize; measured current window is adjustResize. KAV height is supported; iOS automatic keyboard insets cannot fix Android.
+- [x] Finished baseline checks before product edits, native before/candidate comparisons for all four changed owners, owned-diff review and affected final checks. Full field/consumer/device acceptance remains pending as recorded below.
+
+## Initial requirement classification
+
+| Package | Code classification before edits | Action / evidence gate |
+|---|---|---|
+| W1 B01–B08/B20–B24 | Partially done: existing local/StepFlow wrappers and bounded scroll chain; native protocols not verified | Retain unless real branch fails. Account verified; do not send OTP, upload ID, or weaken guards to create a branch. |
+| W2 B09–B16/C01–C02 | Partially done: shared forms and draft/security guards exist; native acceptance unverified | Preserve setup/first-password gates. No hypothetical KAV addition. |
+| W3 C03–C12 | Not started: Profile root View still leaves scroll/footer under IME; seven prior failures, C05 reproduced this session | Android local height owner enclosing header/body/save, separate native Modal remains outside geometry ownership. Validate each reachable field and no-jump/restoration. |
+| W4 B17–B19 | Partially done: existing iOS KAV and ScrollView; native acceptance unverified | Test real existing-password branch without credential submission. |
+| W5 B25–B31/C13–C14 | Partially done: charter ref/layout/scroll/footer, independent legacy/payment scroll owners exist; native acceptance unverified | Exercise available real documents/requests; retain unresolved conditional branches explicitly. |
+
+## Verified baseline and questions
+
+Typecheck exit0; 335 tests/32 files pass (single worker). Broad installed ESLint exit1:62 errors/4 warnings in pre-existing scripts/UI tests/generated router types; no source failure reported. Navigation suite running. Source-only lint and Android export baseline pending. Native API32 MuMuPlayer active, Gboard, adjustResize; C05 y1328–1412 and Save y1716–1872 versus IME top1167. Original scroll [0,264,1080,1677]. Source identity and candidate checks remain required.
+
+No source/plan discrepancy requiring a scope change. Historical OTP comments claim signup OTP removed, but current register code implements email/code steps; use current source, preserve both. Active configured City is locked; fallback requires an authorized existing development account without locality. Device matrix, native iOS and conditional-account coverage remain questions to resolve or record explicitly.
+
+## Final verified context and acceptance
+
+Four product owners changed: Profile root/Modal boundary, password-management wrapper, Valid ID full form root, charter wrapper. Shared StepFlowScreen was restored byte-for-byte after a failed nested-coordinate experiment; TextField/sheets/config/dependencies remain unchanged. The final6-entry owner/header supplement supersedes the four changed entries of the historical26-entry baseline packet. All17,817 decoded supplement characters read in [0,11000), [11000,17817); six actual/intended entries, clean security scan, no unexplained omission. Tool estimate5,248 tokens is not model usage or measured savings. Original changed root/header/footer/Modal source and RN0.86 frame calculations resolve compressed bodies. Test source identities are in supplement-inputs.json; existing affected assertions were read/executed directly rather than re-packing unrelated fixture bodies.
+
+Final TypeScript/source ESLint/Android JS-Hermes export pass. Baseline/candidate335 tests/32 files pass; unchanged final library bytes keep those results applicable. Settings/Profile browser passes; final affected verification6 groups and document forms/request presentation5/6 groups pass. Broad baseline lint62 errors/4 warnings remains outside source. Baseline navigation14/15 passes; isolated Services-list diagnosis identifies duplicate fee text. Full verification location timeout reproduces with baseline snapshot substitutions; affected ID/email/password groups pass. Full logs are retained. No new production test or dependency was added for declarative geometry changes.
+
+Native results:16 field definitions (C03–C11, B17–B19, B21, B26/B27/B31) have measured subsets; **0 full-protocol passes**. All four changed owners have representative before overlap/after visible evidence and tested3-cycle restoration. Profile visible no-jump, real validation growth, Occupation on/off with local selection restored, password eye refocus and lower-field samples pass. B17 initial focus stays in-place/visible; B17–B19 actual native mode is Manage existing/unknown history, not separately qualified known-password mode. Family sheet3-cycle/header explicit-focus smokes pass after clean reload. Final29/29 source identities match; unchanged installed API32 APK fingerprint qualified again, native source revision still unknown.
+
+Two push-token warnings before reload and one buffered warning afterwards have the same existing class at push-notifications.ts:82. Monitored form/smoke sessions show no new keyboard-related issue class; no global zero-warning assertion. The pre-existing color-environment export warning also remains.
+
+Failed harness observations were excluded: initial Occupation traversal lacked top reset and swiped with IME open; exact synthetic suffix was removed, unique successful UI dumps enforced, bounded top reset/keyboard-hidden traversal then passed. First search smoke had no active focus; corrected test explicitly focused the existing editor and passed. These are test harness corrections, not evidence of new application bugs. Native temporary text/choices were cleared, Profile Save disabled, no domain submission/upload/mail action occurred, final Home/IME hidden.
+
+All45 Phase 2 definitions and497 device-consumer rows are retained in the new scoped result-or-gap ledger; global/other-phase ledgers and original user inputs are untouched. Initial requirement classifications now resolve as W1 partially implemented (B21), W2 unresolved/no edits (real profile/locality load error), W3 implemented/9 definitions sampled, W4 implemented/3 definitions sampled, W5 implemented/3 business definitions sampled. Every package still has full-protocol/device/consumer gaps. Phase remains **Partially complete**; exact manual steps and acceptance statuses are in report.md/verification.json. No repository conflict; overall pre-execution header/next-order prose remains historical because only selected Phase 2 status/progress was authorized for editing.
+
+Versioned reference pages read: [Expo57 index](https://docs.expo.dev/versions/v57.0.0/), [Expo57 config](https://docs.expo.dev/versions/v57.0.0/config/app/), [Expo57 Router](https://docs.expo.dev/versions/v57.0.0/sdk/router/), [Expo keyboard guide](https://docs.expo.dev/guides/keyboard-handling/), RN0.86 [KAV](https://reactnative.dev/docs/0.86/keyboardavoidingview), [ScrollView](https://reactnative.dev/docs/0.86/scrollview), [Keyboard](https://reactnative.dev/docs/0.86/keyboard), [View](https://reactnative.dev/docs/0.86/view), [LayoutEvent](https://reactnative.dev/docs/0.86/layoutevent). No guessed universal offset, keyboard padding or global mode switch retained.

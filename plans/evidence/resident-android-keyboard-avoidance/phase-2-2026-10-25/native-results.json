@@ -1,0 +1,526 @@
+{
+  "configuration": "MuMuPlayer API32 / 1080x1920 / 480dpi / font1.0 / Gboard; environment.json",
+  "observedDefinitions": 16,
+  "fullProtocolPasses": 0,
+  "observations": {
+    "C03": {
+      "at": "2026-10-25T00:44:30.175Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-visible-first.json",
+      "sourceSha256": "b717e17ed100c530f0257d9545b907fd74d85035e16d01c8abfaa0a63e49138c",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-visible-first.png",
+      "editorBoundsPx": [
+        111,
+        372,
+        969,
+        456
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C04": {
+      "at": "2026-10-25T00:44:36.024Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-switch-middle.json",
+      "sourceSha256": "c6aa69a8cde80a1464462077bd5c182ba3ded5b3efc52a1d0d586051185c6994",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-switch-middle.png",
+      "editorBoundsPx": [
+        111,
+        606,
+        969,
+        690
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C05": {
+      "at": "2026-10-25T00:44:05.794Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-candidate-focus.json",
+      "sourceSha256": "ca7c0bb284a24a7f05f43ef6b46b548e34ceef322bdfaa1e8bab295873ab9828",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-candidate-focus.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C06": {
+      "at": "2026-10-25T00:45:23.827Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-C06-focused.json",
+      "sourceSha256": "c9432ddedbaa0943a1d0f21c54d961727d09e351eb87ed1756cf7ecf4da1f0b9",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-C06-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C07": {
+      "at": "2026-10-25T01:11:46.894Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/occupation-final-focused.json",
+      "sourceSha256": "87a3410bdbe4f4e8356821de3d592696197c5490f45e86f6de84473b9f7fa23e",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/occupation-final-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C08": {
+      "at": "2026-10-25T00:45:45.957Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-C08-focused.json",
+      "sourceSha256": "cc12797e9d012873f951cc7475b34ac56c7da54c7ce38f2370f32b9411ddcc0f",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-C08-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C09": {
+      "at": "2026-10-25T00:46:05.014Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-C09-focused.json",
+      "sourceSha256": "7953fe5c480e721fd0a1442f64b1691e869874e510531297d706d61f58d89b8d",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-C09-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C10": {
+      "at": "2026-10-25T00:46:17.749Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-C10-focused.json",
+      "sourceSha256": "df8121635dc8eee3c30550c2d65dff22ab55bbd8e8131d0de3a25143248121e1",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-C10-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "C11": {
+      "at": "2026-10-25T00:46:36.147Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-C11-focused.json",
+      "sourceSha256": "b59e1e30fd131f7163f2071915d2e9a3d3e9adf3f70c0cc7d0d262cac7a15eda",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-C11-focused.png",
+      "editorBoundsPx": [
+        111,
+        840,
+        969,
+        924
+      ],
+      "scrollBoundsPx": [
+        0,
+        264,
+        1080,
+        924
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "B17": {
+      "at": "2026-10-25T01:13:40.514Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/current-password-focused.json",
+      "sourceSha256": "6fb40100e9d5c97b51f5a5368ce3375efeb3623843b13cc8605f99be3731ef6f",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/current-password-focused.png",
+      "editorBoundsPx": [
+        48,
+        666,
+        1032,
+        810
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        1080
+      ],
+      "keyboardTopPx": 1080,
+      "focused": true,
+      "imeShown": true
+    },
+    "B18": {
+      "at": "2026-10-25T00:47:42.949Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/password-candidate-new.json",
+      "sourceSha256": "0c675362348f097f11b4bbf554ea3794eb3bd14b12758ed89f02e908caf5e021",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/password-candidate-new.png",
+      "editorBoundsPx": [
+        48,
+        936,
+        1032,
+        1080
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        1080
+      ],
+      "keyboardTopPx": 1080,
+      "focused": true,
+      "imeShown": true
+    },
+    "B19": {
+      "at": "2026-10-25T00:48:50.338Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/password-confirm-switch.json",
+      "sourceSha256": "75d7baa977afd7953094bb3702a09ba2a971a84144dd00ec4cb07c131cc39a9b",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/password-confirm-switch.png",
+      "editorBoundsPx": [
+        48,
+        921,
+        1032,
+        1065
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        1080
+      ],
+      "keyboardTopPx": 1080,
+      "focused": true,
+      "imeShown": true
+    },
+    "B21": {
+      "at": "2026-10-25T00:59:38.757Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/id-candidate-focused.json",
+      "sourceSha256": "4b08148d7bd21137f12ffa6f88256482a223b9d131393c1ccaadfbb95380f40c",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/id-candidate-focused.png",
+      "editorBoundsPx": [
+        48,
+        999,
+        1032,
+        1167
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        1167
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "B26": {
+      "at": "2026-10-25T01:03:54.117Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/charter-B26-focused.json",
+      "sourceSha256": "2f09d22d99e685dba9321025734f4ea1af773e6d4eda5e206683c3ff5a5188cb",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/charter-B26-focused.png",
+      "editorBoundsPx": [
+        60,
+        752,
+        1020,
+        896
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        896
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "B27": {
+      "at": "2026-10-25T01:04:36.923Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/charter-B27-focused.json",
+      "sourceSha256": "df12b048e98180fe2ee0c5ccbc8c419492b6c5123d58cd8054b45eed45103b4d",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/charter-B27-focused.png",
+      "editorBoundsPx": [
+        60,
+        752,
+        1020,
+        896
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        896
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    },
+    "B31": {
+      "at": "2026-10-25T01:05:24.705Z",
+      "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/charter-B31-focused.json",
+      "sourceSha256": "252e891399f89f17b7b7036f955438d3d69ab7d341970e7862f67a611d75b38b",
+      "screenshot": "tmp/resident-keyboard-phase2-20261025/native/charter-B31-focused.png",
+      "editorBoundsPx": [
+        60,
+        614,
+        1020,
+        896
+      ],
+      "scrollBoundsPx": [
+        0,
+        240,
+        1080,
+        896
+      ],
+      "keyboardTopPx": 1167,
+      "focused": true,
+      "imeShown": true
+    }
+  },
+  "comparisons": [
+    {
+      "owner": "Profile",
+      "before": {
+        "at": "2026-10-25T00:38:33.387Z",
+        "sourceCapture": "tmp/resident-keyboard-phase1-native-20261024/native/phase2-profile-before-focus.json",
+        "sourceSha256": "a89486d7a7e8bffaf002017c0e9dbfbde77166f31af52b425e025ac709d2f759",
+        "screenshot": "tmp/resident-keyboard-phase1-native-20261024/native/phase2-profile-before-focus.png",
+        "editorBoundsPx": [
+          111,
+          1328,
+          969,
+          1412
+        ],
+        "scrollBoundsPx": [
+          0,
+          264,
+          1080,
+          1677
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      },
+      "after": {
+        "at": "2026-10-25T00:44:05.794Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/profile-candidate-focus.json",
+        "sourceSha256": "ca7c0bb284a24a7f05f43ef6b46b548e34ceef322bdfaa1e8bab295873ab9828",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/profile-candidate-focus.png",
+        "editorBoundsPx": [
+          111,
+          840,
+          969,
+          924
+        ],
+        "scrollBoundsPx": [
+          0,
+          264,
+          1080,
+          924
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      }
+    },
+    {
+      "owner": "Password management",
+      "before": {
+        "at": "2026-10-25T00:41:33.893Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/password-new-before.json",
+        "sourceSha256": "1d8331027e9cc0d4c23685696966b56ae9e33fb3749266863eaba67cef2846d3",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/password-new-before.png",
+        "editorBoundsPx": [
+          48,
+          1099,
+          1032,
+          1243
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          1920
+        ],
+        "keyboardTopPx": 1080,
+        "focused": true,
+        "imeShown": true
+      },
+      "after": {
+        "at": "2026-10-25T00:47:42.949Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/password-candidate-new.json",
+        "sourceSha256": "0c675362348f097f11b4bbf554ea3794eb3bd14b12758ed89f02e908caf5e021",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/password-candidate-new.png",
+        "editorBoundsPx": [
+          48,
+          936,
+          1032,
+          1080
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          1080
+        ],
+        "keyboardTopPx": 1080,
+        "focused": true,
+        "imeShown": true
+      }
+    },
+    {
+      "owner": "Valid ID",
+      "before": {
+        "at": "2026-10-25T00:56:22.848Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/id-other-focused.json",
+        "sourceSha256": "caa6dc701f02e3aef3b50b757b5b6fb872efe975d6da490af5f07553f0a4dcdf",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/id-other-focused.png",
+        "editorBoundsPx": [
+          48,
+          1266,
+          1032,
+          1434
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          1920
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      },
+      "after": {
+        "at": "2026-10-25T00:59:38.757Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/id-candidate-focused.json",
+        "sourceSha256": "4b08148d7bd21137f12ffa6f88256482a223b9d131393c1ccaadfbb95380f40c",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/id-candidate-focused.png",
+        "editorBoundsPx": [
+          48,
+          999,
+          1032,
+          1167
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          1167
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      }
+    },
+    {
+      "owner": "Charter request",
+      "before": {
+        "at": "2026-10-25T01:02:15.257Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/business-name-before-focused.json",
+        "sourceSha256": "10e7fed435deb377fcc5e12e05e0faaf67f10e343eb84880308315770d1cabaf",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/business-name-before-focused.png",
+        "editorBoundsPx": [
+          60,
+          1505,
+          1020,
+          1649
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          1649
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      },
+      "after": {
+        "at": "2026-10-25T01:03:54.117Z",
+        "sourceCapture": "tmp/resident-keyboard-phase2-20261025/native/charter-B26-focused.json",
+        "sourceSha256": "2f09d22d99e685dba9321025734f4ea1af773e6d4eda5e206683c3ff5a5188cb",
+        "screenshot": "tmp/resident-keyboard-phase2-20261025/native/charter-B26-focused.png",
+        "editorBoundsPx": [
+          60,
+          752,
+          1020,
+          896
+        ],
+        "scrollBoundsPx": [
+          0,
+          240,
+          1080,
+          896
+        ],
+        "keyboardTopPx": 1167,
+        "focused": true,
+        "imeShown": true
+      }
+    }
+  ],
+  "limits": "These are measured focus/typing/restoration subsets, not release or complete per-field passes. B17-B19 observed Manage existing/unknown-history form; explicit known-password mode remains a separate gap."
+}

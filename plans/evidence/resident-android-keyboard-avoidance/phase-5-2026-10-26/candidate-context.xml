@@ -1,0 +1,294 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where content has been compressed (code blocks are separated by ⋮---- delimiter).
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx, apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx, apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx, apps/resident-android-mobile/tests/drrm-centers-ui.mjs
+- Files matching these patterns are excluded: **/.env*, **/repomix-output.xml
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been compressed - code blocks are separated by ⋮---- delimiter
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            emergency-info/
+              index.tsx
+      components/
+        evacuation-centers-panel.tsx
+        resident-header.tsx
+      hooks/
+        use-emergency-map-header.tsx
+    tests/
+      drrm-centers-ui.mjs
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx">
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+⋮----
+/** Limits the header's idle-collapse behavior to searches opened from Centers → Map. */
+export function EmergencyMapHeaderProvider(
+⋮----
+export const useEmergencyMapHeader = ()
+</file>
+
+<file path="apps/resident-android-mobile/tests/drrm-centers-ui.mjs">
+// Real Centers, shell, native wrapper and bundled Leaflet. Location/routing/native
+// adapters are synthetic; this is supplementary evidence, never Android qualification.
+⋮----
+// Shared values notify subscribers; timings are recorded, not native frame measurements.
+⋮----
+await build(
+⋮----
+const render=async(values,remount=false)=>
+const frame=()
+⋮----
+// Let the last 500ms Leaflet flight finish before replacing the browser clock.
+⋮----
+const transitionCount=()
+</file>
+
+<file path="apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Animated as NativeAnimated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useFocusEffect, useIsFocused } from 'expo-router';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { MapSelectionOverlay, type MapPlace } from '@/components/maps/map-selection-overlay';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+⋮----
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { useAmpid1Boundary } from '@/hooks/use-ampid1-boundary';
+import { EvacuationCenterCard } from '@/components/evacuation-center-card';
+import { CenterDetailCard } from '@/components/center-detail-card';
+import { LocationStatusCard } from '@/components/location-status-card';
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from '@/components/map-view';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { SegmentedControl } from '@/components/segmented-control';
+import { OfflineRouteCard } from '@/components/offline-route-card';
+import { RoadMarkCard } from '@/components/road-mark-card';
+import { useResidentRoute } from '@/hooks/use-resident-route';
+import { useOfflineRouting } from '@/hooks/use-offline-routing';
+import { useAppForeground } from '@/hooks/use-app-foreground';
+import { nearestEdge } from '@/lib/offline-routing';
+import type { LatLng, LocationAction, MapLngLat, MapMarker } from '@barangayan/shared';
+import type { AttachmentCandidate, RoutingEdge } from '@barangayan/shared/src/lib/evacuation-routing';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { PrimaryButton } from '@/components/primary-button';
+import { Spacing } from '@/constants/theme';
+⋮----
+export function CentersContent({
+  theme,
+  centers: fetchedCenters,
+  isLoading,
+  error,
+  refetch,
+  view,
+  onViewChange,
+  nearestFirst,
+  onNearestToggle,
+  userPosition,
+  location,
+  onFitAll,
+  resident = false,
+}: {
+  theme: ReturnType<typeof useTheme>;
+  centers: ReturnType<typeof useEvacuationCenters>['centers'];
+  isLoading: boolean;
+  error: string | null;
+refetch: ()
+⋮----
+const collapseSearch = () =>
+⋮----
+const invalidate = () =>
+const reveal = () =>
+⋮----
+const restore = () =>
+⋮----
+// Retain the outgoing list until the first map is ready, avoiding an empty frame.
+⋮----
+const complete = () =>
+⋮----
+// Reserve a separate row for the 44dp chevron above Android system navigation.
+⋮----
+// Walking routes are computed on this phone from the installed routing pack, verified
+// closures and the resident's own blocked roads (DRRM routing plan R6), so they work
+// offline. A route that cannot be computed is explained in words and never drawn as a
+// straight line (invariant 7).
+⋮----
+// Online tiles only when the internet is known to be reachable; offline, the pack's vector
+// roads are the basemap and no tile requests are made.
+⋮----
+// A street chosen from the attachment chooser belongs to one origin revision and graph.
+⋮----
+// Only the route to the selected center is drawn; the automatic run exists to rank the list, and
+// a result still on screen for a previous selection is never shown for the new one.
+⋮----
+const handleChooseSegment = (candidate: AttachmentCandidate) =>
+⋮----
+// Walking distance replaces the straight-line estimate once a route result ranks the centers.
+// A center the result cannot reach shows no distance rather than a misleading straight line.
+⋮----
+// Layout/theme changes update clearance without replaying camera movement.
+⋮----
+// Ages shown in the status card are refreshed once a minute.
+⋮----
+// Marking a road as blocked on this phone (local avoidance).
+⋮----
+const closeMarking = () =>
+const handleMapTap = (position: LatLng) =>
+const handleConfirmMark = () =>
+const handleRemoveMark = (recordId: string) =>
+⋮----
+const selectCenter = (center: ReturnType<typeof useEvacuationCenters>['centers'][number]) =>
+const handleMarkerTap = (id: string) =>
+const dismissCenter = ()
+const handleShowAll = () =>
+const handleResetMap = () =>
+// "Locate me" updates the shared controller (marker + routing origin), not just the
+// viewport. The map follows the result of an explicit request only.
+⋮----
+const handleLocateMe = () =>
+⋮----
+const handleLocationAction = (action: LocationAction) =>
+⋮----
+// Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+⋮----
+if (marking) closeMarking();
+else if (resident)
+⋮----
+
+⋮----
+<TextInput ref=
+</file>
+
+<file path="apps/resident-android-mobile/src/components/resident-header.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { router, usePathname } from 'expo-router';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+⋮----
+import { NotificationBell } from '@/components/notification-bell';
+import { ThemedText } from '@/components/themed-text';
+import { useSearchDraft } from '@/hooks/use-resident-search';
+import { useTheme } from '@/hooks/use-theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { isSearchableQuery } from '@/lib/resident-search';
+⋮----
+/** Stays mounted across navigation so the expanding search keeps its input. */
+⋮----
+// A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
+⋮----
+const closeSearch = () =>
+⋮----
+// Android Back takes the header's Back path, so leaving search also clears the submitted session.
+⋮----
+
+// Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =>
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx">
+import { useEffect, useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { FadeIn } from 'react-native-reanimated';
+⋮----
+import { useIsFocused, useLocalSearchParams } from 'expo-router';
+⋮----
+import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/hooks/use-auth';
+import { GuestAuthCallout } from '@/components/guest-auth-callout';
+import { FamilyContent } from '@/components/family-content';
+import { useEmergencyGuidelines } from '@/hooks/use-emergency-guidelines';
+import { useEmergencyHotlines } from '@/hooks/use-emergency-hotlines';
+import { useEmergencyAnnouncements } from '@/hooks/use-emergency-announcements';
+import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { HubContent } from '@/components/drrm/hub-content';
+import { AlertsContent } from '@/components/drrm/alerts-content';
+import { CentersContent } from '@/components/evacuation-centers-panel';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useDeviceLocation } from '@/hooks/use-device-location';
+import { SegmentedControl } from '@/components/segmented-control';
+import { QrGuideContent } from '@/components/qr-guide-content';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+import type { LatLng } from '@barangayan/shared';
+⋮----
+type EmergencyInfoTab = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
+⋮----
+function isEmergencyInfoTab(value: unknown): value is EmergencyInfoTab
+⋮----
+// The confirmed origin (never the map viewport) is the position used for sorting and
+// routing. Acquisition runs only while the Centers tab is shown.
+⋮----
+// Sync when navigated back into this screen with a different `tab` param
+// (e.g. tapping a different Maps DRRM card while this screen stays mounted).
+⋮----
+// Hub and Alerts sources live here; Scan and Family register their own while mounted. Centers has no control.
+</file>
+
+</files>

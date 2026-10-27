@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 /**
@@ -31,7 +31,7 @@ export function AuthHeader({ title, onBack, presentation = 'default' }: { title:
         <Ionicons name="chevron-back" size={26} color="#fff" />
       </Pressable>
       <View style={styles.headerContent}>
-        <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>{title}</ThemedText>
+        <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.headerTitle, { color: theme.onPrimary }]}>{title}</ThemedText>
       </View>
     </View>
   );
@@ -56,5 +56,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+  headerTitle: { fontSize: 20, lineHeight: 24 },
 });

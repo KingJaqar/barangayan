@@ -1,0 +1,14 @@
+{
+  "stage": "post-family",
+  "check": "type",
+  "command": [
+    "node",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--pretty",
+    "false"
+  ],
+  "start": "2026-10-25T13:44:01.888Z",
+  "end": "2026-10-25T13:44:28.338Z",
+  "status": 0
+}

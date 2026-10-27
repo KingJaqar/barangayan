@@ -1,0 +1,15 @@
+{
+  "stage": "resume-baseline",
+  "check": "unit",
+  "command": [
+    "node",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "--reporter=dot",
+    "--maxWorkers=1",
+    "--minWorkers=1"
+  ],
+  "start": "2026-10-26T12:49:56.842Z",
+  "end": "2026-10-26T12:50:23.816Z",
+  "status": 0
+}
