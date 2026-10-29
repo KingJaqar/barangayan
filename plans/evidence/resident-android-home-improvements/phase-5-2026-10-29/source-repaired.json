@@ -1,0 +1,38 @@
+[
+  {
+    "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/resident-header.tsx",
+    "beforeSha256": "f5178ee837995cbe0b53ccd09cf4a8b1ac5a29d9a86be24a74f7c7381095b6f1",
+    "sha256": "4963ecc1fd2d9b9f08c7d86f5727399d70a0f75d0655dad4e25eda7422fbb435"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/announcement-modal.tsx",
+    "beforeSha256": "8ac1c8ffc0679c34a94feaa1bcc06bbce0e16b2296bc2ad023dd5c8afcf39187",
+    "sha256": "73e097b3dd618889166e1d3636ee4b77c2ead3e962fa680e9e444ddf9ce99862"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/request-summary-sheet.tsx",
+    "beforeSha256": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8",
+    "sha256": "e94c4d7683c3cbe33aa559ed32e06e9cec3b2afa0f288af4ecaea2284bf69e58"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/home.tsx",
+    "beforeSha256": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef",
+    "sha256": "c213b04207c19256f8d8a72ac19e0d92c467e25b1f9b83dbd7b2ac81823fba30"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/resident-shell-lifecycle.mjs",
+    "beforeSha256": "6fb3c49de63b28d2a42fefce94d28b743a40e25db4f35f6b46d183882833b5f9",
+    "sha256": "c6de8ba8b1ffa70bc0c0d91bc73192108a043d6ec517c584ccbc9b28a2488b13"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/resident-theme.test.ts",
+    "before": "tmp/resident-home-phase5-20261029/repair-before/resident-theme.test.ts",
+    "beforeSha256": "1004951068c358a29ac4e1148ec0d8fa560fae36874846fff73e8200622ba8d6",
+    "sha256": "a793481f84c8d86138624711168e9e00b79de14283d3690c593319f1b90ae752"
+  }
+]

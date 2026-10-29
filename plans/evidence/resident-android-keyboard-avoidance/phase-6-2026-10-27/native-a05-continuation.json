@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-27 Asia/Manila",
+  "auditId": "A05",
+  "status": "pass stated default caret/paste/action/restoration subsets; full acceptance unresolved",
+  "sourceIdentity": "owners-source-identity.json",
+  "configuration": "1080x1920 /480dpi /font1.0 /Gboard",
+  "method": "ADB plus visually observed Gboard Text editing controls and native screenshot review",
+  "caret": {
+    "start": {
+      "exactInsertion": true,
+      "capture": "a05-touch-start"
+    },
+    "middle": {
+      "line": 6,
+      "exactInsertion": true,
+      "capture": "a05-touch-middle"
+    },
+    "end": {
+      "exactInsertion": true,
+      "capture": "a05-touch-end"
+    },
+    "activeLinesVisuallyReviewedAboveIme": true
+  },
+  "nativeSelectionAndPaste": {
+    "selectAllObserved": true,
+    "cutEmptyVerified": true,
+    "gboardClipboardChipPasteExact": true,
+    "characters": 296,
+    "capture": "a05-touch-paste"
+  },
+  "restoration": "native-a05-cycles.json: three cycles with the same long draft and full Save action reachable; no Save activation",
+  "initialMapComparison": {
+    "initial": [
+      0,
+      240,
+      1080,
+      846
+    ],
+    "sameDraftSettled": [
+      0,
+      240,
+      1080,
+      600
+    ],
+    "emptyAfterCleanup": [
+      0,
+      240,
+      1080,
+      600
+    ],
+    "emptyCollapseReopen": [
+      0,
+      240,
+      1080,
+      600
+    ],
+    "emptyKeyboardCycle": [
+      0,
+      240,
+      1080,
+      600
+    ],
+    "status": "Unresolved initial-to-settled difference; later same-state comparisons stable. No causal fix or historical41px closure inferred."
+  },
+  "cleanup": {
+    "originalEmptyAddressRestored": true,
+    "noDomainSave": true
+  },
+  "failedMethods": [
+    "Hardware-arrow attempt moved focus to Go back; not a caret pass.",
+    "First paste tap used a panel that changed after Cut; diagnosed from fresh screenshot, then actual clipboard chip restored exact text.",
+    "One temporary driver imported native instead of drive for hidden(); corrected, no product change."
+  ],
+  "rawEvidence": "Private ignored native captures; no account text/screenshots in public packet"
+}

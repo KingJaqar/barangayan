@@ -1,0 +1,1333 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/package.json, apps/resident-android-mobile/src/app/(app)/home/index.tsx, apps/resident-android-mobile/src/components/home/home-action.tsx, apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx, apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx, apps/resident-android-mobile/src/lib/home-request.ts, apps/resident-android-mobile/src/lib/home-request.test.ts, apps/resident-android-mobile/tests/home-presentation-ui.mjs, packages/shared/src/lib/home-request-priority.ts, supabase/migrations/0148_resident_home_request_priority.sql
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            index.tsx
+      components/
+        home/
+          home-action.tsx
+          request-summary-sheet.tsx
+        scrollable-chevron-row.tsx
+      lib/
+        home-request.test.ts
+        home-request.ts
+    tests/
+      home-presentation-ui.mjs
+    package.json
+packages/
+  shared/
+    src/
+      lib/
+        home-request-priority.ts
+supabase/
+  migrations/
+    0148_resident_home_request_priority.sql
+AGENTS.md
+CLAUDE.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="packages/shared/src/lib/home-request-priority.ts">
+import type { Tables } from '../types/database';
+
+export type HomeRequestAction = 'collect' | 'enter_pages' | 'review_requirements' | 'choose_payment' | 'pay';
+
+/** Read-only projection from resident_home_requests; no resident ID is accepted by the RPC. */
+export type HomeRequestRow = Pick<Tables<'service_requests'>,
+  'id' | 'reference_number' | 'status' | 'payment_status' | 'payment_method' | 'created_at' |
+  'updated_at' | 'status_history' | 'cancelled_at' | 'contract_version' | 'fee_assessment_state' |
+  'assessed_amount_centavos' | 'legacy_fee_centavos' | 'sla_state'> & {
+    document_name: string | null;
+    service_kind: string | null;
+    resolved_fee_centavos: number | null;
+    next_action: HomeRequestAction | null;
+  };
+
+/** Keep in parity with migration 0148. Capability ranks presentation only; it never authorizes payment. */
+export function homeRequestAttention(request: Pick<HomeRequestRow,
+  'status' | 'payment_status' | 'payment_method' | 'fee_assessment_state' | 'sla_state' | 'resolved_fee_centavos'>,
+  qrphSettlementReady: boolean,
+): HomeRequestAction | null {
+  if (!['submitted', 'in_progress', 'ready_for_pickup'].includes(request.status)) return null;
+  if (request.status === 'ready_for_pickup') return 'collect';
+  if (request.fee_assessment_state === 'page_count_required' && request.payment_status === 'pending') return 'enter_pages';
+  if (request.sla_state === 'paused') return 'review_requirements';
+  const fee = request.resolved_fee_centavos;
+  if (['paid', 'waived', 'refunded'].includes(request.payment_status) || fee === null || !Number.isFinite(fee) || fee <= 0) return null;
+  if (request.payment_method === null) return 'choose_payment';
+  if (request.payment_method === 'qrph' && qrphSettlementReady && fee >= 100) return 'pay';
+  return null;
+}
+</file>
+
+<file path="supabase/migrations/0148_resident_home_request_priority.sql">
+-- Additive, read-only Home contract. Deploy before the Phase 3 Home consumer.
+-- The caller supplies only a presentation capability, never a resident or a limit.
+-- Existing RLS and owner visibility (including retired catalog/legacy rows) apply.
+create function public.resident_home_requests(p_qrph_settlement_ready boolean default false)
+returns table (
+  id uuid, reference_number text, status text, payment_status text, payment_method text,
+  created_at timestamptz, updated_at timestamptz, status_history jsonb, cancelled_at timestamptz,
+  contract_version integer, fee_assessment_state text, assessed_amount_centavos integer,
+  legacy_fee_centavos integer, sla_state text, document_name text, service_kind text,
+  resolved_fee_centavos integer, next_action text
+)
+language sql stable security invoker
+set search_path = ''
+as $$
+  with eligible as (
+    select r.id, r.reference_number, r.status, r.payment_status, r.payment_method,
+      r.created_at, r.updated_at, r.status_history, r.cancelled_at, r.contract_version,
+      r.fee_assessment_state, r.assessed_amount_centavos, r.legacy_fee_centavos, r.sla_state,
+      d.name as document_name, d.service_kind,
+      -- requestFee parity: ledger, then v2 assessment, otherwise legacy snapshot/catalog.
+      -- Missing catalog metadata is unknown, never an invented zero fee.
+      coalesce(p.document_fee_centavos, p.amount_centavos,
+        case when r.contract_version = 2 then r.assessed_amount_centavos
+          else coalesce(r.legacy_fee_centavos, d.fee_centavos) end) as resolved_fee_centavos
+    from public.service_requests r
+    left join public.document_types d on d.id = r.document_type_id
+    left join lateral (
+      select payment.document_fee_centavos, payment.amount_centavos
+      from public.payments payment
+      where payment.service_request_id = r.id
+      order by (payment.status = 'paid') desc, payment.created_at desc nulls last, payment.id desc
+      limit 1
+    ) p on true
+    where r.resident_id = (select auth.uid())
+  ), actionable as (
+    select eligible.*,
+      -- Keep in parity with homeRequestAttention. No mutation/payment permission is granted.
+      case
+        when status not in ('submitted', 'in_progress', 'ready_for_pickup') then null
+        when status = 'ready_for_pickup' then 'collect'
+        when fee_assessment_state = 'page_count_required' and payment_status = 'pending' then 'enter_pages'
+        when sla_state = 'paused' then 'review_requirements'
+        when payment_status in ('paid', 'waived', 'refunded') or resolved_fee_centavos is null or resolved_fee_centavos <= 0 then null
+        when payment_method is null then 'choose_payment'
+        when payment_method = 'qrph' and p_qrph_settlement_ready is true and resolved_fee_centavos >= 100 then 'pay'
+        else null
+      end as next_action
+    from eligible
+  )
+  select * from actionable
+  order by case
+    when next_action is not null then 0
+    when status in ('submitted', 'in_progress', 'ready_for_pickup') then 1
+    when status = 'completed' then 2
+    when status = 'cancelled' then 3
+    else 4 end,
+    updated_at desc nulls last, id desc
+  limit 3;
+$$;
+
+revoke all on function public.resident_home_requests(boolean) from public, anon, authenticated;
+grant execute on function public.resident_home_requests(boolean) to authenticated;
+comment on function public.resident_home_requests(boolean) is
+  'At most three owner-visible Home requests: attention, active, completed, cancelled, unknown; updated_at/id descending. Paid ledger first, then newest created_at/id. QR capability affects rank only.';
+</file>
+
+<file path="apps/resident-android-mobile/src/components/home/home-action.tsx">
+import { useEffect, useState, type Ref } from 'react';
+import { Pressable, type PressableProps, type View } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/** Home cards/tiles share finite press feedback; routing stays in their existing owner. */
+export function HomeAction({ reducedMotion, pressScale = 0.98, pressableRef, style, onPressIn, onPressOut, ...props }: Omit<PressableProps, 'style'> & {
+  reducedMotion: boolean;
+  pressScale?: number;
+  pressableRef?: Ref<View>;
+  style?: PressableProps['style'];
+}) {
+  const scale = useSharedValue(1);
+  const [pressed, setPressed] = useState(false);
+  useEffect(() => {
+    if (reducedMotion) scale.value = 1;
+    return () => cancelAnimation(scale);
+  }, [reducedMotion, scale]);
+  const feedback = useAnimatedStyle(() => ({ transform: [{ scale: reducedMotion ? 1 : scale.value }] }));
+  function animate(value: number) {
+    scale.value = reducedMotion ? 1 : withTiming(value, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+  }
+  return <AnimatedPressable {...props} ref={pressableRef} accessibilityRole="button"
+    style={[typeof style === 'function' ? style({ pressed, hovered: false }) : style, feedback]}
+    onPressIn={event => { setPressed(true); animate(pressScale); onPressIn?.(event); }}
+    onPressOut={event => { setPressed(false); animate(1); onPressOut?.(event); }} />;
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/home-request.test.ts">
+import { describe, expect, it } from 'vitest';
+import { homeRequestSummary, homeTimestamp } from './home-request';
+
+const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+
+describe('Home loaded-data summary', () => {
+  it('uses the real submission date and leaves missing reached dates unavailable', () => {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe('Processing');
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+    ]);
+  });
+
+  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp('invalid')).toBe('Date unavailable');
+  });
+
+  it('does not claim a cancelled request completed all steps', () => {
+    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe('Cancelled');
+    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe('Not recorded');
+  });
+
+  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+    for (const payment_status of ['paid', 'waived']) {
+      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+    }
+    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+  });
+
+});
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/home-request.ts">
+import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
+
+export type HomeRequest = Tables<'service_requests'> & {
+  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+};
+
+const STEPS = [
+  { status: 'submitted', label: 'Submitted' },
+  { status: 'in_progress', label: 'Processing' },
+  { status: 'ready_for_pickup', label: 'Ready for pickup' },
+  { status: 'completed', label: 'Completed' },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
+  const stepIndex = STEPS.findIndex(step => step.status === request.status);
+  const cancelled = request.status === 'cancelled';
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) => {
+    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+      && item.status === step.status && validDate(item.at));
+    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
+<file path="apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+
+/** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
+export function RequestSummarySheet({ request, visible, reducedMotion, onClose, onDismiss, onViewFull }: {
+  request: HomeRequest;
+  visible: boolean;
+  reducedMotion: boolean;
+  onClose: () => void;
+  onDismiss: () => void;
+  onViewFull: () => void;
+}) {
+  const { resident } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const [mounted, setMounted] = useState(visible);
+  const [sheetHeight, setSheetHeight] = useState(0);
+  const progress = useRef(new Animated.Value(0)).current;
+  const scrim = useRef(new Animated.Value(0)).current;
+  const shown = useRef(visible);
+  const dismissPending = useRef(false);
+  const entryFocused = useRef(false);
+  const closeTarget = useRef<View>(null);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  const summary = homeRequestSummary(request);
+
+  useEffect(() => {
+    if (visible && !mounted) { setMounted(true); return; }
+    if (!visible && !shown.current) return;
+    if (!sheetHeight) {
+      if (!visible) { shown.current = false; dismissPending.current = true; setMounted(false); }
+      return;
+    }
+    if (visible) { shown.current = true; dismissPending.current = false; }
+    let active = true;
+    const animation = Animated.parallel([
+      Animated.timing(progress, { toValue: Number(visible), duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+      Animated.timing(scrim, { toValue: Number(visible), duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+    ]);
+    animation.start(({ finished }) => {
+      if (!active || !finished) return;
+      if (visible && !entryFocused.current && closeTarget.current) {
+        entryFocused.current = true;
+        AccessibilityInfo.sendAccessibilityEvent(closeTarget.current, 'focus');
+      }
+      if (finished && !visible) {
+        shown.current = false;
+        dismissPending.current = true;
+        entryFocused.current = false;
+        setMounted(false);
+        setSheetHeight(0);
+      }
+    });
+    return () => { active = false; animation.stop(); };
+  }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
+
+  useEffect(() => {
+    if (!mounted && !visible && dismissPending.current) {
+      dismissPending.current = false;
+      dismiss.current();
+    }
+  }, [mounted, visible]);
+
+  return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent
+    onRequestClose={onClose}>
+    <View style={styles.root}>
+      <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}>
+        <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss request summary" onPress={onClose} />
+      </Animated.View>
+      <Animated.View accessibilityViewIsModal onLayout={event => {
+        const measured = event.nativeEvent.layout.height;
+        setSheetHeight(previous => previous === measured ? previous : measured);
+      }} style={[styles.sheet, {
+        backgroundColor: resident.card, maxHeight: height * 0.92, paddingBottom: Math.max(32, insets.bottom + 16),
+        opacity: reducedMotion ? progress : 1,
+        transform: [{ translateY: reducedMotion ? 0 : progress.interpolate({ inputRange: [0, 1], outputRange: [sheetHeight || height, 0] }) }],
+      }]}>
+        <View accessible={false} style={[styles.handle, { backgroundColor: resident.border }]} />
+        <Pressable ref={closeTarget} hitSlop={4} accessibilityRole="button" accessibilityLabel="Close request summary" onPress={onClose}
+          style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
+          <Ionicons name="close" size={18} color={resident.text} accessible={false} />
+        </Pressable>
+        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View style={styles.titleGroup}>
+            <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
+            <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
+          </View>
+        </View>
+        <View style={styles.timeline}>
+          {summary.stepIndex <= 0 ? <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.statusLabel}</ThemedText> : null}
+          {summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
+            <View style={styles.indicator} accessible={false} importantForAccessibility="no-hide-descendants">
+              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
+                {step.current ? <View style={[styles.currentDot, { backgroundColor: resident.accentText }]} />
+                  : step.reached ? <Ionicons name="checkmark" size={14} color={resident.onAccent} /> : null}
+              </View>
+              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.border }]} /> : null}
+            </View>
+            <View style={styles.stepBody}>
+              <ThemedText accessibilityLabel={step.current ? `${step.label}, current stage` : step.label}
+                style={[styles.stepLabel, { color: step.reached ? resident.text : resident.muted, fontWeight: step.current ? '700' : step.reached ? '600' : '500' }]}>{step.label}</ThemedText>
+              <ThemedText style={[styles.date, { color: resident.muted }]}>{step.date ? homeTimestamp(step.date) : step.detail}</ThemedText>
+            </View>
+          </View>)}
+        </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <PrimaryButton presentation="resident" label="View full request" disabled={!visible} onPress={onViewFull} />
+        </View>
+      </Animated.View>
+    </View>
+  </Modal>;
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 20, paddingTop: 12, flexShrink: 1 },
+  handle: { width: 40, height: 4, borderRadius: 2, alignSelf: 'center' },
+  header: { flexDirection: 'row', alignItems: 'flex-start', paddingRight: 48 },
+  titleGroup: { flex: 1, minWidth: 0 },
+  category: { fontSize: 12.5, lineHeight: 18.75 },
+  title: { fontSize: 19, lineHeight: 26.125, fontWeight: '800', marginTop: 2 },
+  reference: { fontSize: 13, lineHeight: 19.5, marginTop: 4 },
+  close: { position: 'absolute', top: 32, right: 20, zIndex: 1, elevation: 4, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  body: { flexShrink: 1, marginTop: 16 },
+  timeline: { gap: 0, marginTop: 24, paddingRight: 48 },
+  status: { fontSize: 12.5, lineHeight: 18, fontWeight: '600', marginBottom: 16 },
+  step: { flexDirection: 'row', gap: 14 },
+  indicator: { width: 24, alignItems: 'center' },
+  dot: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  currentDot: { width: 8, height: 8, borderRadius: 4 },
+  line: { width: 2, flex: 1, minHeight: 24 },
+  stepBody: { flex: 1, paddingBottom: 20, marginTop: -2 },
+  stepLabel: { fontSize: 14.5, lineHeight: 21.75 },
+  date: { fontSize: 12.5, lineHeight: 18.75 },
+  footer: { marginTop: 8 },
+});
+</file>
+
+<file path="apps/resident-android-mobile/tests/home-presentation-ui.mjs">
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { verifyRequestTrackingNavigation } from './request-tracking-navigation.mjs';
+
+const app = path.resolve(import.meta.dirname, '..');
+const require = createRequire(path.join(app, 'package.json'));
+const { build } = require('esbuild');
+const { chromium } = require('playwright');
+const root = path.join(app, 'src').replaceAll('\\', '/');
+const shared = path.resolve(app, '../../packages/shared/src').replaceAll('\\', '/');
+const out = process.env.TEST_ARTIFACTS_DIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'resident-home-'));
+fs.mkdirSync(out, { recursive: true });
+const workspaceOnly = process.env.RESIDENT_HOME_TEST_VFS === '1';
+
+// Optional workspace-only reads avoid the native bundler's Windows ancestor-directory
+// enumeration. Package resolution still uses the installed versions; no permission is broadened.
+function resolveFixtureSource(args) {
+  let file;
+  if (args.path.startsWith('@/')) file = path.join(app, 'src', args.path.slice(2));
+  else if (path.isAbsolute(args.path)) file = args.path;
+  else if (args.path.startsWith('.')) file = path.resolve(path.dirname(args.importer), args.path);
+  else {
+    const owner = path.isAbsolute(args.importer) ? args.importer : path.join(app, 'package.json');
+    file = (args.path === 'react' || args.path.startsWith('react/') || args.path.startsWith('react-dom'))
+      ? require.resolve(args.path) : createRequire(owner).resolve(args.path);
+  }
+  const candidates = [file, ...['.ts', '.tsx', '.js', '.jsx', '.json', '/index.ts', '/index.tsx', '/index.js'].map(extension => file + extension)];
+  const found = candidates.find(candidate => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+  if (!found) throw new Error(`Fixture source not found: ${args.path}`);
+  const resolved = fs.realpathSync(found);
+  if (!resolved.toLowerCase().startsWith(path.resolve(app, '../..').toLowerCase() + path.sep)) throw new Error(`Fixture source outside workspace: ${resolved}`);
+  return { path: resolved, namespace: 'workspace-source' };
+}
+
+// Render the actual Home, summary, controls, text, theme and status logic. Only platform,
+// preferences, navigation and network are synthetic adapters; this is not native qualification.
+const mocks = {
+  'react-native': `import React from 'react';import {Animated as WebAnimated,View as WebView,Pressable as WebPressable,Image as WebImage} from 'react-native-web';export * from 'react-native-web';
+    export const Image=React.forwardRef(({source,contentFit,...props},ref)=><WebImage {...props} ref={ref} source={typeof source==='string'?{uri:source}:source} resizeMode={contentFit??props.resizeMode}/>);
+    export const Animated={...WebAnimated,View:React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...props},ref)=><WebAnimated.View {...props} ref={ref} aria-hidden={accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'||undefined}/>),timing:(value,options)=>{window.fixture.motions.push({to:options.toValue,duration:options.duration});return WebAnimated.timing(value,{...options,useNativeDriver:false});}};
+    export const View=React.forwardRef(({accessibilityElementsHidden,importantForAccessibility,...props},ref)=><WebView {...props} ref={ref} aria-hidden={accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'||undefined}/>);
+    export const Pressable=React.forwardRef(({accessibilityState,...props},ref)=><WebPressable {...props} ref={ref} aria-busy={accessibilityState?.busy}/>);
+    export const AppState={addEventListener:(event,callback)=>{window.fixture.listeners.add(callback);return {remove:()=>window.fixture.listeners.delete(callback)}}};
+    export const AccessibilityInfo={sendAccessibilityEvent:(target,event)=>window.fixture.focusEvents.push(event)};
+    export const RefreshControl=({children,style,...props})=>{const ref=React.useRef(props);ref.current=props;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
+  '@barangayan/shared': `export * from '${shared}/lib/request-status.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
+  'expo-router': `import React,{useEffect} from 'react';export const useRouter=()=>({push:href=>window.fixture.routes.push(href)});export const useFocusEffect=fn=>useEffect(()=>window.fixture.focused?fn():undefined,[fn,window.fixture.focused]);export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
+  '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:window.fixture.needsCompletion});`,
+  '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,refetch:()=>{window.fixture.profileRefetches+=1;return Promise.resolve()}});`,
+  '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.fontId});`,
+  '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
+  '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reducedMotion;`,
+  '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+  '@/lib/supabase': `export const supabase={from(table){const query={table,select(columns){query.columns=columns;return query},eq(column,value){query.filter=[column,value];return query},order(column,options){query.order=[column,options];return query},limit(count){query.limit=count;return query},then(done,fail){const f=window.fixture;f.queries.push({table,columns:query.columns,filter:query.filter,limit:query.limit,order:query.order});const data=structuredClone((table==='announcements'?f.announcements:f.requests.filter(item=>item.resident_id===query.filter?.[1])).slice(0,query.limit));const error=f.fail[table]?{}:null;return new Promise((resolve,reject)=>{const settle=()=>f.reject[table]?reject(Error('Synthetic transport error')):resolve({data:error?null:data,error});if(f.hold)f.waiting.push(settle);else settle();}).then(done,fail);}};return query;}};`,
+  'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View,createAnimatedComponent:component=>component};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
+  '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size,flexShrink:0}}/>;`,
+  'expo-image': `export {Image} from 'react-native';`,
+  'react-native-svg': `import React from 'react';export default function Svg({accessible,...props}){return <svg {...props}/>;}export const Path=props=><path {...props}/>;`,
+  'react-native-safe-area-context': `export {View as SafeAreaView} from 'react-native';export const useSafeAreaInsets=()=>({top:0,bottom:0,left:0,right:0});`,
+};
+
+await build({
+  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Home from '${root}/app/(app)/home/index.tsx';
+    const requests=['submitted','in_progress','ready_for_pickup'].map((status,index)=>({id:'request-'+index,resident_id:'synthetic-resident',reference_number:'SYNTHETIC-'+index,status,payment_status:index===0?'unpaid':'paid',created_at:'2026-10-18T01:00:00Z',status_history:index===1?[{status:'in_progress',at:'2026-10-19T02:00:00Z'}]:null,document_types:{name:index===2?'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)':'Service '+index}}));
+    window.fixture={session:{user:{id:'synthetic-resident'}},profile:{full_name:'Test Resident',avatar_url:null,barangays:{name:'Synthetic barangay'}},needsCompletion:false,requests,announcements:[{id:'news',title:'Synthetic community advisory with a long title for full text coverage',category:'general',published_at:'2026-10-18T02:00:00Z'}],mode:'light',accent:'#0F6E5B',fontId:'system',reducedMotion:true,focused:true,listeners:new Set(),motions:[],focusEvents:[],queries:[],routes:[],profileRefetches:0,fail:{},reject:{},hold:false,waiting:[]};
+    const root=createRoot(document.getElementById('root'));let generation=0;window.renderHome=()=>root.render(<Home key={generation}/>);window.resetHome=()=>{generation++;window.renderHome();};window.unmountHome=()=>root.render(null);window.renderHome();`, resolveDir: app, loader: 'tsx' },
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
+  define: { __DEV__: 'false', global: 'globalThis', 'process.env.NODE_ENV': '"production"' },
+  ...(workspaceOnly ? { tsconfigRaw: { compilerOptions: { jsx: 'react-jsx' } } } : {}),
+  plugins: [{ name: 'fixtures', setup(b) {
+    b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : workspaceOnly ? resolveFixtureSource(args) : undefined);
+    b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
+    if (workspaceOnly) b.onLoad({ filter: /.*/, namespace: 'workspace-source' }, args => {
+      const extension = path.extname(args.path);
+      const loader = extension === '.tsx' ? 'tsx' : extension === '.ts' ? 'ts' : extension === '.json' ? 'json' : extension === '.css' ? 'empty' : /\.(png|jpe?g|webp)$/.test(extension) ? 'dataurl' : 'jsx';
+      return { contents: loader === 'empty' ? '' : fs.readFileSync(args.path), loader, resolveDir: path.dirname(args.path) };
+    });
+  } }],
+});
+
+const options = { headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE };
+if (!options.executablePath && !fs.existsSync(chromium.executablePath())) options.channel = 'chrome';
+const browser = await chromium.launch(options);
+const passed = [];
+const errors = [];
+let page;
+try {
+  page = await browser.newPage({ viewport: { width: 360, height: 640 } });
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
+  await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+  const cards = () => page.getByRole('button', { name: /reference SYNTHETIC-/ });
+  const right = () => page.getByRole('button', { name: 'Scroll requests right', exact: true });
+  const left = () => page.getByRole('button', { name: 'Scroll requests left', exact: true });
+  const close = () => page.getByRole('button', { name: 'Close request summary', exact: true });
+  await cards().first().waitFor();
+  assert.equal(await cards().count(), 3);
+  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
+  ]);
+  await right().waitFor();
+  assert.equal(await left().count(), 0);
+  await right().click();
+  await left().waitFor();
+  await right().click();
+  await right().waitFor({ state: 'detached' });
+  await left().click();
+  await right().waitFor();
+  assert.equal(await page.getByRole('button', { name: /Scroll announcements/ }).count(), 0);
+  passed.push('Actual latest-three/latest-one query shapes and measured chevrons at both boundaries');
+
+  const pulling = () => page.evaluate(() => [...window.pullControls][0].current.refreshing);
+  const pullHome = async () => { await page.evaluate(() => [...window.pullControls][0].current.onRefresh()); await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing); };
+  assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'Home mounts one pull scroller');
+  await page.evaluate(() => { window.fixture.queries = []; });
+  await pullHome();
+  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
+  ]);
+  assert.equal(await page.evaluate(() => window.fixture.profileRefetches), 1);
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.requests[0].document_types.name = 'Pulled service'; window.fixture.announcements[0].title = 'Pulled advisory'; });
+  await pullHome();
+  await page.getByText('Pulled service', { exact: true }).waitFor();
+  await page.getByText('Pulled advisory', { exact: true }).waitFor();
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.fail = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.fail = {}; window.fixture.reject = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.reject = {}; });
+  assert.equal(await cards().count(), 3);
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 1);
+  assert.equal(await page.getByText(/could not be loaded/).count(), 0, 'a failed pull keeps the cards and adds no error state');
+  await page.evaluate(() => { window.fixture.hold = true; window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+  await page.evaluate(() => { const control = [...window.pullControls][0].current; control.onRefresh(); control.onRefresh(); });
+  await page.waitForFunction(() => window.fixture.waiting.length === 2);
+  assert.equal(await pulling(), true);
+  assert.deepEqual(await page.evaluate(() => [window.fixture.queries.length, window.fixture.profileRefetches]), [2, 1], 'a second pull during a flight starts nothing');
+  await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  await page.getByText('No requests yet').waitFor();
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 0, 'a pull started for the previous account never writes after a switch');
+  await page.evaluate(() => { window.fixture.hold = true; });
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(() => window.fixture.waiting.length >= 1);
+  await page.evaluate(() => window.unmountHome());
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.evaluate(() => {
+    window.fixture.session = { user: { id: 'synthetic-resident' } }; window.fixture.requests[0].document_types.name = 'Service 0';
+    window.fixture.announcements[0].title = 'Synthetic community advisory with a long title for full text coverage';
+    window.fixture.queries = []; window.fixture.waiting = []; window.resetHome();
+  });
+  await cards().first().waitFor();
+  await page.evaluate(() => { window.fixture.queries = []; });
+  passed.push('Pulling Home reloads announcements, requests and profile together, shows new data, keeps cards through failed pulls, runs one flight, ignores a previous account and unmounted pull');
+
+  await cards().nth(1).click();
+  await close().waitFor();
+  await page.getByRole('dialog').getByLabel('Processing, current stage', { exact: true }).waitFor();
+  assert.equal(await page.getByText('Pending', { exact: true }).count(), 2);
+  await page.screenshot({ path: path.join(out, 'summary-light.png') });
+  await close().click();
+  await close().waitFor({ state: 'detached' });
+  const queries = await page.evaluate(() => window.fixture.queries.length);
+  for (let cycle = 0; cycle < 5; cycle++) {
+    await cards().first().click();
+    await close().waitFor();
+    await page.getByRole('button', { name: 'Dismiss request summary', exact: true }).click({ position: { x: 5, y: 5 } });
+    await close().waitFor({ state: 'detached' });
+  }
+  await cards().first().click();
+  await close().waitFor();
+  await page.keyboard.press('Escape');
+  await close().waitFor({ state: 'detached' });
+  await cards().first().click();
+  await page.getByRole('button', { name: 'View full request', exact: true }).click();
+  await close().waitFor({ state: 'detached' });
+  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/home/requests/request-0');
+  passed.push(...verifyRequestTrackingNavigation(await page.evaluate(() => window.fixture.routes.at(-1))));
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+  assert.equal(await page.evaluate(() => window.fixture.listeners.size), 1);
+  assert.ok(await page.evaluate(() => window.fixture.focusEvents.length > 1), 'Close returns accessibility focus to a request');
+  passed.push('Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries');
+
+  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0,'Home has no greeting');
+  for (const [name,route] of [['Services',{pathname:'/services',params:{segment:'documents'}}],['Reports','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests',{pathname:'/services',params:{segment:'requests'}}],['View all announcements','/announcements']]) {
+    await page.getByRole('button', { name, exact: true }).click();
+    assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), route);
+  }
+  await page.getByRole('button', { name: /^Read announcement:/ }).click();
+  assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), {pathname:'/announcements',params:{announcementId:'news'}});
+  for (const [width,mode,accent,fontId] of [[320,'dark','#ffffff','georgia'],[400,'light','#2563eb','system'],[360,'dark','#c2410c','tahoma'],[412,'light','#000000','times-new-roman']]) {
+    await page.setViewportSize({width,height:640});
+    await page.evaluate(values => {Object.assign(window.fixture,values);window.renderHome();}, {mode,accent,fontId});
+    assert.equal(await cards().count(), 3);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({path:path.join(out,`home-${width}-${mode}.png`)});
+  }
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+  passed.push('Five quick actions, See all/news destinations and 320/360/400/412 theme/font/extreme-accent layouts without reloads');
+
+  await page.evaluate(() => {
+    window.fixture.requests=window.fixture.requests.slice(0,1);
+    window.fixture.requests[0].status='cancelled';
+    window.resetHome();
+  });
+  await cards().first().waitFor();
+  assert.equal(await cards().count(),1);
+  await right().waitFor({state:'detached'});
+  assert.equal(await left().count(),0);
+  await cards().first().click();
+  await close().waitFor();
+  await page.getByRole('dialog').getByText('Cancelled',{exact:true}).waitFor();
+  assert.equal(await page.getByText('Not recorded',{exact:true}).count(),3);
+  await close().click();
+  await close().waitFor({state:'detached'});
+  // Use real web Animated at normal durations to exercise cancellation and reopen ownership.
+  await page.evaluate(() => {window.fixture.reducedMotion=false;window.renderHome();});
+  await cards().first().click();
+  await close().waitFor();
+  await page.evaluate(() => {for(const listener of window.fixture.listeners)listener('background');});
+  await close().waitFor({state:'detached'});
+  const focusEventsAfterBackground=await page.evaluate(() => window.fixture.focusEvents.length);
+  await page.evaluate(() => {for(const listener of window.fixture.listeners)listener('active');});
+  await cards().first().click();
+  await close().waitFor();
+  await page.evaluate(() => {window.fixture.mode='light';window.fixture.fontId='georgia';window.renderHome();});
+  await close().click();
+  await close().waitFor({state:'detached'});
+  assert.ok(await page.evaluate(() => window.fixture.focusEvents.length) > focusEventsAfterBackground);
+  const motionDurations=await page.evaluate(() => window.fixture.motions.map(item=>item.duration));
+  assert.ok(motionDurations.includes(280) && motionDurations.includes(200) && motionDurations.includes(100));
+  passed.push('Single-card no-overflow/cancelled history and normal/reduced sheet targets, background close and theme change while open');
+
+  await page.setViewportSize({width:320,height:320});
+  await page.evaluate(() => {window.fixture.requests[0].document_types.name='Long document title '.repeat(12);window.resetHome();});
+  await cards().first().click();
+  await close().waitFor();
+  const fullAction=page.getByRole('button',{name:'View full request',exact:true});
+  await page.waitForFunction(() => {
+    const controls=[...document.querySelectorAll('[role="button"]')].filter(node=>node.getAttribute('aria-label')==='Close request summary'||node.textContent==='View full request');
+    return controls.length===2 && controls.every(node=>{const bounds=node.getBoundingClientRect();return bounds.top>=0&&bounds.bottom<=innerHeight;});
+  },null,{timeout:2000});
+  await page.screenshot({path:path.join(out,'summary-short-long-title.png')});
+  for(const control of [close(),fullAction]) {
+    const bounds=await control.boundingBox();
+    assert.ok(bounds && bounds.y>=0 && bounds.y+bounds.height<=320,'Summary controls stay reachable on short screens with long titles');
+  }
+  await fullAction.click();
+  await close().waitFor({state:'detached'});
+  await page.setViewportSize({width:360,height:640});
+  passed.push('Short 320px viewport and long summary title retain reachable Close and full-tracking controls');
+
+  await page.evaluate(() => { window.fixture.needsCompletion=true;window.renderHome(); });
+  await page.getByText(/Complete your profile before requesting/).waitFor();
+  await page.evaluate(() => {window.fixture.requests=[];window.fixture.announcements=[];window.resetHome();});
+  await page.getByText('No requests yet',{exact:true}).waitFor();
+  await page.getByText('No announcements yet.',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'Request a document',exact:true}).click();
+  assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)),{pathname:'/services',params:{segment:'documents'}});
+  assert.equal(await right().count(), 0);
+  await page.evaluate(() => {window.fixture.session=null;window.resetHome();});
+  await page.getByText('Log in to see your requests.',{exact:true}).waitFor();
+  assert.equal(await cards().count(), 0);
+  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0);
+  for (const login of await page.getByRole('button',{name:'Log in',exact:true}).all()) {
+    await login.click();
+    assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)),'/(auth)/login');
+    const bounds=await login.boundingBox();
+    assert.ok(bounds.width>=48 && bounds.height>=48,'Both Home sign-in controls retain 48dp targets');
+  }
+  passed.push('Profile-completion, authenticated empty and guest states');
+
+  await page.evaluate(() => {window.fixture.session={user:{id:'synthetic-resident'}};window.fixture.fail={service_requests:true,announcements:true};window.resetHome();});
+  await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).waitFor();
+  await page.getByText('Announcements could not be loaded. Please try again.',{exact:true}).waitFor();
+  await page.evaluate(() => {window.fixture.fail={};});
+  // The first response removes its own retry control; resolve the remaining control afresh.
+  await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+  await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+  await page.getByText('No announcements yet.',{exact:true}).waitFor();
+  await page.getByText('No requests yet',{exact:true}).waitFor();
+  await page.evaluate(() => {window.fixture.reject={service_requests:true};window.resetHome();});
+  await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).waitFor();
+  passed.push('Visible database/transport failures and explicit independent retry recovery');
+
+  await page.evaluate(() => {window.fixture.reject={};window.fixture.hold=true;window.fixture.requests=[{id:'stale',resident_id:'synthetic-resident',reference_number:'STALE',status:'submitted',payment_status:'unpaid',created_at:'2026-10-18T00:00:00Z',status_history:null,document_types:{name:'Stale private request'}}];window.resetHome();});
+  await page.getByText('Loading your requests…',{exact:true}).waitFor();
+  await page.evaluate(() => {window.fixture.session={user:{id:'different-resident'}};window.renderHome();});
+  await page.waitForFunction(() => window.fixture.waiting.length===3);
+  await page.evaluate(() => {window.fixture.hold=false;window.fixture.waiting.splice(0).forEach(resolve=>resolve());});
+  await page.getByText('No requests yet',{exact:true}).waitFor();
+  assert.equal(await page.getByText('Stale private request',{exact:true}).count(),0);
+  await page.evaluate(() => {window.fixture.focused=false;window.renderHome();});
+  await page.waitForFunction(() => window.fixture.listeners.size===0);
+  await page.evaluate(() => window.unmountHome());
+  assert.equal(await page.evaluate(() => window.fixture.listeners.size),0);
+  assert.deepEqual(errors,[]);
+  passed.push('Loading state, late previous-account response isolation, focus/unmount listener cleanup and no console warnings/errors');
+  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({passed,errors,native:false},null,2));
+  console.log(JSON.stringify({passed,errors,out},null,2));
+} catch (error) {
+  fs.writeFileSync(path.join(out,'failure-console.json'),JSON.stringify(errors,null,2));
+  if(page)await page.screenshot({path:path.join(out,'failure.png')});
+  throw error;
+} finally {await browser.close();}
+</file>
+
+<file path="apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx">
+import { Children, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+
+import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { horizontalScrollEdges, horizontalScrollTarget } from '@/lib/horizontal-scroll';
+
+interface ScrollableChevronRowProps {
+  children: ReactNode;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  /** Opt-in interactive controls; existing Settings rows keep their current presentation. */
+  label?: string;
+  /** Home shelves snap by the measured first card plus their gap. */
+  snapToItems?: boolean;
+  /** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
+  reveal?: { x: number; width: number };
+}
+
+/**
+ * Horizontal ScrollView wrapper that shows a filled chevron badge on whichever edge still
+ * has content to scroll to — used by the Settings screen's App Theme accent-color swatches
+ * and Font Style chips so both rows signal "there's more here" the same way. The badges are
+ * solid (theme.primary background, white icon, drop shadow) rather than bare icons so
+ * they read clearly over any swatch/chip color underneath.
+ */
+export function ScrollableChevronRow(props: ScrollableChevronRowProps) {
+  return props.label ? <InteractiveChevronRow {...props} label={props.label} /> : <PassiveChevronRow {...props} />;
+}
+
+function InteractiveChevronRow({ children, contentContainerStyle, label, snapToItems = false, reveal }: ScrollableChevronRowProps & { label: string }) {
+  const { resident } = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const scroll = useRef<ScrollView>(null);
+  const metrics = useRef({ offset: 0, width: 0, content: 0, first: 0, firstX: 0 });
+  useEffect(() => {
+    if (!reveal) return;
+    const { offset, width, content, firstX } = metrics.current;
+    // Leave room for the 44 dp edge chevrons so the revealed range is never drawn under one.
+    const start = firstX + reveal.x - 44;
+    const end = firstX + reveal.x + reveal.width + 44;
+    const target = start < offset ? start : end > offset + width ? end - width : offset;
+    if (target !== offset) scroll.current?.scrollTo({ x: Math.max(0, Math.min(Math.max(0, content - width), target)), animated: !reducedMotion });
+  }, [reveal, reducedMotion]);
+  const [edges, setEdges] = useState({ left: false, right: false });
+  const [itemWidth, setItemWidth] = useState(0);
+  const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
+  const itemGap = typeof gap === 'number' ? gap : 0;
+  function update() {
+    const { offset, width, content } = metrics.current;
+    const { left, right } = horizontalScrollEdges(offset, width, content);
+    setEdges(current => current.left === left && current.right === right ? current : { left, right });
+  }
+  function advance(direction: number) {
+    const step = metrics.current.first + itemGap;
+    scroll.current?.scrollTo({ x: horizontalScrollTarget(metrics.current.offset, metrics.current.width, metrics.current.content, step, direction), animated: !reducedMotion });
+  }
+  return <View style={styles.wrap}>
+    <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={contentContainerStyle}
+      snapToInterval={snapToItems && itemWidth > 0 ? itemWidth + itemGap : undefined}
+      decelerationRate={snapToItems ? 'fast' : 'normal'}
+      onScroll={event => { metrics.current.offset = event.nativeEvent.contentOffset.x; update(); }} scrollEventThrottle={16}
+      onContentSizeChange={width => { metrics.current.content = width; update(); }}
+      onLayout={event => { metrics.current.width = event.nativeEvent.layout.width; update(); }}>
+      {Children.map(children, (child, index) => <View onLayout={index === 0 ? event => {
+        const width = event.nativeEvent.layout.width;
+        metrics.current.first = width;
+        metrics.current.firstX = event.nativeEvent.layout.x;
+        if (snapToItems) setItemWidth(previous => previous === width ? previous : width);
+      } : undefined}>{child}</View>)}
+    </ScrollView>
+    {(['left', 'right'] as const).map(side => snapToItems ? <ShelfChevron key={side} side={side} visible={edges[side]} label={label}
+      reducedMotion={reducedMotion} onPress={() => advance(side === 'left' ? -1 : 1)} /> : edges[side] ? <Pressable key={side} accessibilityRole="button"
+      accessibilityLabel={`Scroll ${label} ${side}`} onPress={() => advance(side === 'left' ? -1 : 1)}
+      style={[styles.arrowHit, side === 'left' ? { left: 4 } : { right: 4 }]}>
+      <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
+        <Ionicons name={side === 'left' ? 'chevron-back' : 'chevron-forward'} size={16} color={resident.text} accessible={false} />
+      </View>
+    </Pressable> : null)}
+  </View>;
+}
+
+/** Home keeps the reference's 200ms edge fade without leaving hidden touch/focus targets. */
+function ShelfChevron({ side, visible, label, reducedMotion, onPress }: {
+  side: 'left' | 'right'; visible: boolean; label: string; reducedMotion: boolean; onPress: () => void;
+}) {
+  const { resident } = useTheme();
+  const opacity = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const animation = Animated.timing(opacity, { toValue: Number(visible), duration: reducedMotion ? 100 : 200,
+      easing: Easing.bezier(0, 0, 0.58, 1), useNativeDriver: true });
+    animation.start();
+    return () => animation.stop();
+  }, [visible, reducedMotion, opacity]);
+  return <Animated.View pointerEvents={visible ? 'auto' : 'none'} accessibilityElementsHidden={!visible}
+    importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+    style={[styles.arrowHit, side === 'left' ? { left: 2 } : { right: 2 }, { opacity }]}>
+    <Pressable disabled={!visible} accessibilityRole="button" accessibilityLabel={`Scroll ${label} ${side}`} onPress={onPress}
+      style={styles.arrowButton}>
+      <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
+        <Ionicons name={side === 'left' ? 'chevron-back' : 'chevron-forward'} size={16} color={resident.text} accessible={false} />
+      </View>
+    </Pressable>
+  </Animated.View>;
+}
+
+function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevronRowProps) {
+  const theme = useTheme();
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const contentWidth = useRef(0);
+  const layoutWidth = useRef(0);
+
+  function updateScrollState(offsetX: number) {
+    setCanScrollLeft(offsetX > 4);
+    setCanScrollRight(offsetX < contentWidth.current - layoutWidth.current - 4);
+  }
+
+  function handleScroll(event: { nativeEvent: { contentOffset: { x: number } } }) {
+    updateScrollState(event.nativeEvent.contentOffset.x);
+  }
+
+  function handleContentSizeChange(width: number) {
+    contentWidth.current = width;
+    updateScrollState(0);
+  }
+
+  function handleLayout(event: { nativeEvent: { layout: { width: number } } }) {
+    layoutWidth.current = event.nativeEvent.layout.width;
+    updateScrollState(0);
+  }
+
+  return (
+    <View style={styles.wrap}>
+      {canScrollLeft ? (
+        <View style={[styles.chevron, styles.chevronLeft, { backgroundColor: theme.primary }]} pointerEvents="none">
+          <Ionicons name="chevron-back" size={18} color="#ffffff" />
+        </View>
+      ) : null}
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={contentContainerStyle}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        onContentSizeChange={handleContentSizeChange}
+        onLayout={handleLayout}>
+        {children}
+      </ScrollView>
+
+      {canScrollRight ? (
+        <View style={[styles.chevron, styles.chevronRight, { backgroundColor: theme.primary }]} pointerEvents="none">
+          <Ionicons name="chevron-forward" size={18} color="#ffffff" />
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  arrowButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  arrowHit: { position: 'absolute', zIndex: 1, elevation: 4, top: '50%', marginTop: -22, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  arrowFace: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center', elevation: 3, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
+  wrap: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  chevron: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -14,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+  },
+  chevronLeft: {
+    left: -6,
+  },
+  chevronRight: {
+    right: -6,
+  },
+});
+</file>
+
+<file path="AGENTS.md">
+
+</file>
+
+<file path="apps/resident-android-mobile/package.json">
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/home/index.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import type { Tables } from '@barangayan/shared';
+import { Image } from 'expo-image';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Avatar } from '@/components/avatar';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+import { ServicesTabIcon } from '@/components/services-tab-icon';
+import { HomeAction } from '@/components/home/home-action';
+import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { ThemedText } from '@/components/themed-text';
+import { DocumentIcon } from '@/components/document-icon';
+import { getDocumentIcon } from '@/constants/document-icons';
+import { MaxContentWidth } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+import { supabase } from '@/lib/supabase';
+
+type Announcement = Tables<'announcements'>;
+const QUICK_ACTIONS = [
+  { label: 'Services', description: 'Browse documents and services', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+  { label: 'Reports', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+  { label: 'Emergency', description: 'Emergency information', href: '/drrm', icon: 'drrm', tone: 'danger', foreground: 'onDanger' },
+  { label: 'Maps', description: 'Open barangay maps', href: '/maps', icon: 'location-outline', tone: 'info', foreground: 'onInfo' },
+  { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
+] as const;
+
+export default function HomeScreen() {
+  const { session } = useAuth();
+  const userId = session?.user.id ?? null;
+  const { profile, refetch: refetchProfile } = useProfile();
+  const { resident } = useTheme();
+  const router = useRouter();
+  const bottomTabInset = useFloatingTabInset();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { width, fontScale } = useWindowDimensions();
+  const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
+  const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+  const [requestRetry, setRequestRetry] = useState(0);
+  const [announcementRetry, setAnnouncementRetry] = useState(0);
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const requestKey = JSON.stringify([userId, requestRetry]);
+  const [requestResult, setRequestResult] = useState<{ key: string; items: HomeRequest[]; error: string | null } | null>(null);
+  const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<HomeRequest | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const pendingTracking = useRef<string | null>(null);
+  const homeActive = useRef(true);
+  const requestTargets = useRef(new Map<string, View>());
+  // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
+  const pullNews = useRef<(() => Promise<void>) | null>(null);
+  const pullRequests = useRef<(() => Promise<void>) | null>(null);
+  const pull = usePullRefresh([() => pullNews.current?.(), () => pullRequests.current?.(), refetchProfile]);
+
+  useEffect(() => {
+    let active = true;
+    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
+    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
+    fetchLatest()
+      .then(({ data, error }) => {
+        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
+      });
+    pullNews.current = () => fetchLatest().then(({ data, error }) => {
+      if (!error && active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullNews.current = null; };
+  }, [announcementRetry]);
+
+  useEffect(() => {
+    if (!userId) return;
+    let active = true;
+    // Preserve the existing authenticated resident scope and latest-three limit.
+    const fetchRecent = () => Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
+      .order('created_at', { ascending: false }).limit(3));
+    fetchRecent()
+      .then(({ data, error }) => {
+        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
+      });
+    pullRequests.current = () => fetchRecent().then(({ data, error }) => {
+      if (!error && active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullRequests.current = null; };
+  }, [userId, requestKey]);
+
+  useEffect(() => {
+    pendingTracking.current = null;
+    setSheetOpen(false);
+    setSelectedRequest(null);
+  }, [userId]);
+
+  useFocusEffect(useCallback(() => {
+    homeActive.current = true;
+    const listener = AppState.addEventListener('change', state => {
+      homeActive.current = state === 'active';
+      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); }
+    });
+    return () => { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
+  }, []));
+
+  const requests = requestResult?.key === requestKey ? requestResult : null;
+  const news = newsResult?.retry === announcementRetry ? newsResult : null;
+  const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
+  const announcement = news?.item;
+  const announcementTone = announcement?.category === 'emergency' ? resident.danger
+    : announcement?.category === 'health' ? resident.rose : resident.accentText;
+
+  function closeSheet() { pendingTracking.current = null; setSheetOpen(false); }
+  function afterDismiss() {
+    const id = pendingTracking.current;
+    pendingTracking.current = null;
+    if (!homeActive.current) return;
+    // Keep tracking in Home's stack so Back removes it without changing Services.
+    if (id && selected?.id === id) router.push(`/home/requests/${id}`);
+    else {
+      const target = selected ? requestTargets.current.get(selected.id) : null;
+      if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, 'focus'); }
+    }
+  }
+
+  return <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: resident.card }]}>
+    <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+      refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
+      <View style={styles.inset}><ProfileCompletionBanner /></View>
+      <View style={styles.identitySection}>
+        {userId ? <View style={styles.identity}>
+          <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} />
+          <View style={styles.locationGroup}>
+            <Ionicons name="location-outline" size={16} color={resident.accentText} accessible={false} />
+            <ThemedText style={[styles.location, { color: resident.text }]}>{profile?.barangays?.name ?? 'Barangayan'}</ThemedText>
+          </View>
+        </View> : <HomeAction reducedMotion={reducedMotion} hitSlop={4} accessibilityLabel="Log in" onPress={() => router.push('/(auth)/login')} style={styles.identity}>
+          <Avatar icon="person" size={36} foregroundColor={resident.onAccent} />
+          <ThemedText style={[styles.location, { color: resident.text }]}>Log in</ThemedText>
+        </HomeAction>}
+      </View>
+      <View style={styles.quickActions}>
+        {QUICK_ACTIONS.map(action => <HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+          accessibilityLabel={action.label} accessibilityHint={action.description}
+          onPress={() => router.push(action.href === '/services' ? { pathname: '/services', params: { segment: 'documents' } } : action.href)}
+          style={[styles.quickAction, { width: `${100 / actionColumns}%` }]}>
+          <View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === 'accent' && resident.accentNeedsOutline ? 1 : 0 }]}>
+            {action.href === '/services'
+              ? <ServicesTabIcon size={24} color={resident[action.foreground]} />
+              : action.icon === 'drrm'
+              ? <DrrmTabIcon size={24} color={resident[action.foreground]} />
+              : <Ionicons name={action.icon} size={24} color={resident[action.foreground]} accessible={false} />}
+          </View>
+          <ThemedText style={[styles.quickLabel, { color: resident.text }]}>{action.label}</ThemedText>
+        </HomeAction>)}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push({ pathname: '/services', params: { segment: 'requests' } })} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!userId ? <HomeListState label="Log in to see your requests." action={{ label: 'Log in', onPress: () => router.push('/(auth)/login') }} />
+          : !requests ? <HomeListState loading label="Loading your requests…" />
+          : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
+          : requests.items.length === 0 ? <HomeListState label="No requests yet" action={{ label: 'Request a document', onPress: () => router.push({ pathname: '/services', params: { segment: 'documents' } }) }} />
+          : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
+            {requests.items.map(request => {
+              const summary = homeRequestSummary(request);
+              const title = request.document_types?.name ?? 'Document request';
+              return <HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                <View style={styles.requestTop}>
+                  <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
+                    <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
+                  </View>
+                  <View style={styles.requestInfo}>
+                    <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{title}</ThemedText>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>#{request.reference_number}</ThemedText>
+                  </View>
+                </View>
+                <View style={styles.requestProgress}>
+                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+                  </View>
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                </View>
+              </HomeAction>;
+            })}
+          </ScrollableChevronRow>}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Around the barangay</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Latest announcements</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all announcements" onPress={() => router.push('/announcements')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!news ? <HomeListState loading label="Loading announcements…" />
+          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+          : announcement ? <View style={styles.shelf}>
+            <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+              style={({ pressed }) => [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+              <View style={styles.newsMeta}>
+                <View style={styles.categoryGroup}>
+                  <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                </View>
+                <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+              </View>
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? <ThemedText style={[styles.reference, { color: resident.muted }]}>Announcement image unavailable.</ThemedText>
+                : <Image source={{ uri: announcement.image_url }} contentFit="cover" style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                : null}
+              <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+            </HomeAction>
+          </View> : <HomeListState label="No announcements yet." />}
+      </View>
+    </ScrollView>
+    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+  </SafeAreaView>;
+}
+
+function HomeListState({ label, loading = false, onRetry, action }: { label: string; loading?: boolean; onRetry?: () => void; action?: { label: string; onPress: () => void } }) {
+  const { resident } = useTheme();
+  return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+    {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+    <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+    {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+    {action ? <PrimaryButton presentation="resident" variant="secondary" label={action.label} onPress={action.onPress} /> : null}
+  </View>;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingVertical: 16 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 16, rowGap: 8 },
+  quickAction: { alignItems: 'center', paddingVertical: 4, gap: 8, minWidth: 0, minHeight: 48 },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+  section: { marginBottom: 16 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 48, minWidth: 48, alignItems: 'flex-end', justifyContent: 'center' },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: 'row', gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: 'auto', paddingTop: 10 },
+  segments: { flexDirection: 'row', gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: '600' },
+  newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  categoryGroup: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: 'right', flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: '700', textTransform: 'capitalize', flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});
+</file>
+
+</files>

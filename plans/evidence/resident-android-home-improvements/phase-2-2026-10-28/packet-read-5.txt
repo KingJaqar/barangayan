@@ -1,0 +1,165 @@
+ * Includes the measured bar, 12dp bottom offset, top gap and Android safe area.
+ */
+export function useFloatingTabInset(ignoreMapHide = false) {
+  return useFloatingTabClearance(ignoreMapHide);
+}
+PATH: apps/resident-android-mobile/src/lib/home-request.test.ts
+import { describe, expect, it } from 'vitest';
+import { homeGreeting, homeRequestSummary, homeTimestamp } from './home-request';
+
+const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+
+describe('Home loaded-data summary', () => {
+  it('uses the real submission date and leaves missing reached dates unavailable', () => {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe('Processing');
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+    ]);
+  });
+
+  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp('invalid')).toBe('Date unavailable');
+  });
+
+  it('does not claim a cancelled request completed all steps', () => {
+    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe('Cancelled');
+    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe('Not recorded');
+  });
+
+  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+    for (const payment_status of ['paid', 'waived']) {
+      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+    }
+    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+  });
+
+  it('changes greeting at noon and evening boundaries', () => {
+    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual(['Good morning', 'Good morning', 'Good afternoon', 'Good afternoon', 'Good evening', 'Good evening']);
+  });
+});
+PATH: apps/resident-android-mobile/src/lib/home-request.ts
+import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
+
+export type HomeRequest = Tables<'service_requests'> & {
+  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+};
+
+const STEPS = [
+  { status: 'submitted', label: 'Submitted' },
+  { status: 'in_progress', label: 'Processing' },
+  { status: 'ready_for_pickup', label: 'Ready for pickup' },
+  { status: 'completed', label: 'Completed' },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
+  const stepIndex = STEPS.findIndex(step => step.status === request.status);
+  const cancelled = request.status === 'cancelled';
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) => {
+    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+      && item.status === step.status && validDate(item.at));
+    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeGreeting(hour: number) {
+  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+PATH: apps/resident-android-mobile/tests/services-tab-stability.mjs
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+
+const app = path.resolve(import.meta.dirname, '..');
+const require = createRequire(path.join(app, 'package.json'));
+const { build } = require('esbuild');
+const { chromium } = require('playwright');
+const root = path.join(app, 'src').replaceAll('\\', '/');
+const shared = path.resolve(app, '../../packages/shared/src/lib/service-catalog.ts').replaceAll('\\', '/');
+const out = process.env.TEST_ARTIFACTS_DIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'resident-tab-stability-'));
+fs.mkdirSync(out, { recursive: true });
+
+// Render the real Services screen and shared verification rules. Only data hooks,
+// navigation and the document feeds are fixtures; layout uses React Native Web.
+const mocks = {
+  // Exercise selection even when native tab layout reports an unusable x coordinate.
+  'react-native': `import React from 'react';import {Pressable as WebPressable} from 'react-native-web';export * from 'react-native-web';export const Pressable=React.forwardRef(({accessibilityState,onLayout,...props},ref)=><WebPressable {...props} ref={ref} aria-selected={accessibilityState?.selected} onLayout={onLayout?event=>onLayout({nativeEvent:{layout:{...event.nativeEvent.layout,x:0}}}):undefined}/>);`,
+  'expo-router': `import React from 'react';export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>React.useEffect(fn,[fn]);`,
+  '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
+  '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
+  '@/hooks/use-profile': `export const useProfile=()=>({...window.profileState,refetch:()=>{window.profileRefetches=(window.profileRefetches??0)+1;window.profileState.refetch()}});`,
+  '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
+  '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+  'react-native-reanimated': `import React,{useRef,useReducer} from 'react';import {View} from 'react-native';export default {View};export const useSharedValue=initial=>{const [,render]=useReducer(n=>n+1,0);const ref=useRef(null);if(!ref.current){let value=initial;ref.current={get value(){return value},set value(next){if(!Object.is(value,next)){value=next;render()}}}}return ref.current};export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
+  '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+  '@/components/profile-completion-banner': `export const ProfileCompletionBanner=()=>null;`,
+  '@/constants/theme': `export const Spacing={one:4,two:8,three:16,four:24,five:32};export const Colors={light:{accentRed:'#93000A'}};`,
+  '@/components/themed-text': `import React from 'react';import {Text} from 'react-native';export const ThemedText=({type,themeColor,style,...props})=><Text {...props} style={[{fontSize:type?.startsWith('small')?14:16,lineHeight:type?.startsWith('small')?20:24,fontWeight:type==='smallBold'?700:500},style]}/>;`,
+  '@/components/services/documents-list': `import React from 'react';import {View,Text} from 'react-native';export const DocumentsList=({verification})=> <View testID="document-list" style={{height:600,padding:16}}><Text>Available documents</Text>{verification}</View>;`,
+  '@/components/services/services-list-presentation': `export const ServicesNewRequestButton=()=>null;`,
+  '@/components/services/logs-list': `export const LogsList=()=>null;`,
+  '@/components/services/requests-list': `export const RequestsList=()=>null;`,
+  '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size}}/>;`,
+  'react-native-safe-area-context': `export {View as SafeAreaView} from 'react-native';`,
+};
+
+await build({
+  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));window.renderServices=()=>root.render(<Services/>);window.renderServices();`, resolveDir: app, loader: 'tsx' },
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.png': 'dataurl' },
+  define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
+  plugins: [{ name: 'fixtures', setup(b) {
+    b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : args.path === 'react-native' ? { path: require.resolve('react-native-web') } : undefined);
+    b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
+  } }],
+});
+
+const browserOptions = { headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE };
+if (!browserOptions.executablePath && !fs.existsSync(chromium.executablePath())) browserOptions.channel = 'chrome';
+const browser = await chromium.launch(browserOptions);
+const errors = [];
+try {
+  const page = await browser.newPage({ viewport: { width: 360, height: 640 } });
+  page.on('pageerror', error => errors.push(error.message));
+  await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+  const documents = page.getByTestId('document-list');
+  await page.getByRole('button',{name:'Show ID verification status',exact:true}).waitFor();
+  const before = await documents.boundingBox();
+  assert.equal(await page.evaluate(() => window.profileRefetches ?? 0), 0, 'Services uses the provider-owned profile on focus');
+
+  async function assertIndicator(name) {
+    const tab = page.getByRole('tab', { name, exact: true });
+    assert.equal(await tab.getAttribute('aria-selected'), 'true');
+    c

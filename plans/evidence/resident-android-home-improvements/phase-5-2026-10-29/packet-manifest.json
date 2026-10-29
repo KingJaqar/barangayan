@@ -1,0 +1,123 @@
+{
+  "version": "1.18.1",
+  "omissions": [],
+  "compression": false,
+  "security": "No suspicious files detected",
+  "entries": [
+    {
+      "chars": 24581,
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "ranges": [
+        {
+          "end": 11000,
+          "chunk": 1,
+          "start": 0
+        },
+        {
+          "end": 22000,
+          "chunk": 2,
+          "start": 11000
+        },
+        {
+          "end": 24581,
+          "chunk": 3,
+          "start": 22000
+        }
+      ],
+      "sha256": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef",
+      "sourceLines": 314
+    },
+    {
+      "chars": 9719,
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "ranges": [
+        {
+          "end": 9719,
+          "chunk": 4,
+          "start": 0
+        }
+      ],
+      "sha256": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8",
+      "sourceLines": 166
+    },
+    {
+      "chars": 13404,
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "ranges": [
+        {
+          "end": 10418,
+          "chunk": 5,
+          "start": 0
+        },
+        {
+          "end": 13404,
+          "chunk": 6,
+          "start": 10418
+        }
+      ],
+      "sha256": "f5178ee837995cbe0b53ccd09cf4a8b1ac5a29d9a86be24a74f7c7381095b6f1",
+      "sourceLines": 237
+    },
+    {
+      "chars": 3857,
+      "path": "apps/resident-android-mobile/src/constants/resident-theme.ts",
+      "ranges": [
+        {
+          "end": 3857,
+          "chunk": 7,
+          "start": 0
+        }
+      ],
+      "sha256": "f0b782a76c8b5964ef628bf1a7671aa392a2696d4ba2565a5fe3d30c18ab64b1",
+      "sourceLines": 94
+    },
+    {
+      "chars": 4394,
+      "path": "apps/resident-android-mobile/src/hooks/use-home-announcements.ts",
+      "ranges": [
+        {
+          "end": 4394,
+          "chunk": 8,
+          "start": 0
+        }
+      ],
+      "sha256": "44afcb1c3fac45efd7ee99df9dd085395ef57629ca963d5d36fc083210981955",
+      "sourceLines": 65
+    },
+    {
+      "chars": 3468,
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "ranges": [
+        {
+          "end": 3468,
+          "chunk": 9,
+          "start": 0
+        }
+      ],
+      "sha256": "09dc2ec001ea74e10fcbd7108b48c1d0e943879557700092d0ba85918f781cb1",
+      "sourceLines": 89
+    },
+    {
+      "chars": 0,
+      "path": "AGENTS.md",
+      "ranges": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceLines": 0
+    },
+    {
+      "chars": 10,
+      "path": "CLAUDE.md",
+      "ranges": [
+        {
+          "end": 10,
+          "chunk": 10,
+          "start": 0
+        }
+      ],
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "sourceLines": 1
+    }
+  ],
+  "packetSha256": "8e18eee7d043a51b9ac1fcfd571b1117e2010315a00c91ab86ed8dad3fbcfabf",
+  "readerStatus": "All entries fully read; ten bounded nonempty extractions plus explicit empty AGENTS read"
+}

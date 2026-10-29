@@ -1,0 +1,19 @@
+{
+  "id": "home-unit",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "src/lib/home-request.test.ts",
+    "src/lib/refresh-resource.test.ts",
+    "src/lib/home-announcement.test.ts"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-29T07:21:05.088Z",
+  "end": "2026-10-29T07:21:21.449Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-home-unit.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-home-unit"
+}

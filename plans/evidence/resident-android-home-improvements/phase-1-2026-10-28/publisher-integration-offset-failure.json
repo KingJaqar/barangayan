@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "invalid ordering rejected before write",
+    "double create writes once with actual audit, UTC expiry and one insert fanout"
+  ],
+  "errors": [],
+  "expectedDiagnostics": [],
+  "limitations": [
+    "Synthetic local session/connection/routing adapters; actual publisher, Supabase JS, audit action, PostgreSQL RLS and event triggers. No production login or hosted access."
+  ],
+  "browser": "156.0.8078.48"
+}

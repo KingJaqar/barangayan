@@ -1,0 +1,11 @@
+{
+  "name": "resident-search-session",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/resident-search-session.mjs"
+  ],
+  "start": "2026-10-27T02:02:38.551Z",
+  "end": "2026-10-27T02:02:58.252Z",
+  "status": 0
+}

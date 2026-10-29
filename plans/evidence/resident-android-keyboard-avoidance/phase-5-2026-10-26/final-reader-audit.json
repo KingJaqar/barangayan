@@ -1,0 +1,17 @@
+[
+  {
+    "metadata": "monitor.json",
+    "readerPid": 19228,
+    "ownedReaderActive": false
+  },
+  {
+    "metadata": "final-monitor.json",
+    "readerPid": 9900,
+    "ownedReaderActive": false
+  },
+  {
+    "metadata": "final-resume-monitor.json",
+    "readerPid": 18568,
+    "ownedReaderActive": false
+  }
+]

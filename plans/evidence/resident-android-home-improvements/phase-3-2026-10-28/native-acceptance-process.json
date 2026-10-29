@@ -1,0 +1,6 @@
+{
+  "pid": 51808,
+  "start": "2026-10-28T10:20:58.444Z",
+  "deadlineMs": 2700000,
+  "diagnosis": "Standalone fixture inherited original workspace serverRoot; now both roots point to the fixture. No product change."
+}

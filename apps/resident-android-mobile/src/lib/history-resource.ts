@@ -7,7 +7,7 @@ export type LoadHistoryPage<T> = (signal: AbortSignal, after: T | undefined, cou
 
 /** Descending timestamp/UUID cursor. Validate before interpolating PostgREST syntax;
  * retain sub-millisecond timestamp precision rather than rounding through Date. */
-export function historyBefore(column: 'created_at' | 'updated_at', timestamp: string, id: string): string {
+export function historyBefore(column: 'created_at' | 'updated_at' | 'published_at',timestamp: string, id: string): string {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp)
     || !Number.isFinite(Date.parse(timestamp))
     || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {

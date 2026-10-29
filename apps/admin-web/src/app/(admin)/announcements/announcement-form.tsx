@@ -7,12 +7,13 @@ import styles from '@/components/admin/content-forms.module.css';
 
 import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { announcementDateTimeIso } from '@/lib/announcement-datetime';
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -27,13 +28,17 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
   const [category, setCategory] = useState<string>('general');
   const [imageUrl, setImageUrl] = useState('');
   const [publishedAt, setPublishedAt] = useState('');
+  const [alertExpiresAt, setAlertExpiresAt] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const saving = useRef(false);
 
   async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (saving.current) return;
+    saving.current = true;
     const toastAttempt = beginAttempt('handleSubmit');
     try {
-      event.preventDefault();
       setError(null);
 
       const result = announcementSchema.safeParse({
@@ -42,7 +47,8 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
         detailed_description: detailedDescription || undefined,
         category,
         image_url: imageUrl || undefined,
-        published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
+        published_at: publishedAt ? announcementDateTimeIso(publishedAt) ?? publishedAt : new Date().toISOString(),
+        alert_expires_at: alertExpiresAt ? announcementDateTimeIso(alertExpiresAt) ?? alertExpiresAt : null,
       });
 
       if (!result.success) {
@@ -53,33 +59,37 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
 
       setSubmitting(true);
       const supabase = createSupabaseBrowserClient();
-      const { error: insertError } = await supabase.from('announcements').insert({
+      const { data: created, error: insertError } = await supabase.from('announcements').insert({
         barangay_id: barangayId,
         title: result.data.title,
         body: result.data.body,
         detailed_description: result.data.detailed_description || null,
         category: result.data.category,
         image_url: result.data.image_url || null,
-        published_at: result.data.published_at ?? new Date().toISOString(),
-      });
+        published_at: result.data.published_at,
+        alert_expires_at: result.data.alert_expires_at ?? null,
+      }).select('id').single();
       setSubmitting(false);
 
-      if (insertError) {
-        setError(insertError.message);
-        toast.error(`Failed to create announcement: ${insertError.message}`, { id: toastAttempt });
+      if (insertError || !created) {
+        const message = insertError?.message ?? 'The announcement could not be saved. Refresh and try again.';
+        setError(message);
+        toast.error(`Failed to create announcement: ${message}`, { id: toastAttempt });
         return;
       }
 
       logAdminAction({
         action: 'create',
         entityType: 'announcement',
+        entityId: created.id,
         entityLabel: result.data.title,
         metadata: {
           title: result.data.title,
           body: result.data.body,
           detailed_description: result.data.detailed_description ?? null,
           category: result.data.category,
-          published_at: result.data.published_at ?? null,
+          published_at: result.data.published_at,
+          alert_expires_at: result.data.alert_expires_at ?? null,
         },
       }).catch(() => {});
 
@@ -89,16 +99,18 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
       setCategory('general');
       setImageUrl('');
       setPublishedAt('');
+      setAlertExpiresAt('');
       toast.success(`Announcement published.`, { id: toastAttempt });
       router.refresh();
 
     } catch {
+      setError('The action could not be confirmed. Refresh the record before trying again.');
       toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
-    } finally { setSubmitting(false); }
+    } finally { saving.current = false; setSubmitting(false); }
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+    <form onSubmit={handleSubmit} aria-busy={submitting} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
       <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Title</span>
         <input
@@ -154,6 +166,13 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
           value={publishedAt}
           onChange={(e) => setPublishedAt(e.target.value)}
         />
+      </label>
+
+      <label className="sm:col-span-2 text-sm">
+        <span className={labelClass}>Advisory expires at (optional)</span>
+        <input type="datetime-local" step="0.001" className={inputClass} value={alertExpiresAt}
+          onChange={(event) => setAlertExpiresAt(event.target.value)} disabled={submitting} />
+        <span className={labelClass}>Emergency advisories only. Uses your local time. Leave blank for an ordinary feed post.</span>
       </label>
 
       <div className={styles.groupHeading}><h3>Media</h3></div>

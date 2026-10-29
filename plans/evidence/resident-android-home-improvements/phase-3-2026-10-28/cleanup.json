@@ -1,0 +1,15 @@
+{
+  "time": "2026-10-28T12:52:11.4372674Z",
+  "remainingProcesses": [],
+  "temporaryListeners": [],
+  "api": "exited",
+  "reversals": [
+    "host-12 tcp:8087 tcp:8087",
+    "host-12 tcp:8088 tcp:8088",
+    ""
+  ],
+  "density": "Physical density: 480",
+  "fontScale": "null",
+  "motion": "0.5",
+  "night": "Night mode: yes"
+}

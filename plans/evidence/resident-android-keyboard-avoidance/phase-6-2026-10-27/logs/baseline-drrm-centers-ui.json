@@ -1,0 +1,11 @@
+{
+  "name": "drrm-centers-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/drrm-centers-ui.mjs"
+  ],
+  "start": "2026-10-27T02:04:01.315Z",
+  "end": "2026-10-27T02:04:22.742Z",
+  "status": 0
+}

@@ -1,0 +1,200 @@
+}
+
+export { ANNOUNCEMENT_CATEGORY_META };
+END FILE: apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts
+FILE: apps/resident-android-mobile/src/lib/emergency-cache.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const CACHE_PREFIX = 'emergency_cache_';
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+function keyFor(tag: string): string {
+  return `${CACHE_PREFIX}${tag}`;
+}
+
+export async function getCachedData<T>(tag: string): Promise<T | null> {
+  try {
+    const raw = await AsyncStorage.getItem(keyFor(tag));
+    if (!raw) return null;
+    const entry: CacheEntry<T> = JSON.parse(raw);
+    if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+      await AsyncStorage.removeItem(keyFor(tag));
+      return null;
+    }
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function setCachedData<T>(tag: string, data: T): Promise<void> {
+  try {
+    const entry: CacheEntry<T> = { data, timestamp: Date.now() };
+    await AsyncStorage.setItem(keyFor(tag), JSON.stringify(entry));
+  } catch {
+    // Storage full or unavailable — non-blocking
+  }
+}
+END FILE: apps/resident-android-mobile/src/lib/emergency-cache.ts
+FILE: apps/resident-android-mobile/src/lib/home-request.test.ts
+import { describe, expect, it } from 'vitest';
+import { homeGreeting, homeRequestSummary, homeTimestamp } from './home-request';
+
+const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+
+describe('Home loaded-data summary', () => {
+  it('uses the real submission date and leaves missing reached dates unavailable', () => {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe('Processing');
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+    ]);
+  });
+
+  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp('invalid')).toBe('Date unavailable');
+  });
+
+  it('does not claim a cancelled request completed all steps', () => {
+    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe('Cancelled');
+    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe('Not recorded');
+  });
+
+  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+    for (const payment_status of ['paid', 'waived']) {
+      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+    }
+    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+  });
+
+  it('changes greeting at noon and evening boundaries', () => {
+    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual(['Good morning', 'Good morning', 'Good afternoon', 'Good afternoon', 'Good evening', 'Good evening']);
+  });
+});
+END FILE: apps/resident-android-mobile/src/lib/home-request.test.ts
+FILE: apps/resident-android-mobile/src/lib/home-request.ts
+import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
+
+export type HomeRequest = Tables<'service_requests'> & {
+  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+};
+
+const STEPS = [
+  { status: 'submitted', label: 'Submitted' },
+  { status: 'in_progress', label: 'Processing' },
+  { status: 'ready_for_pickup', label: 'Ready for pickup' },
+  { status: 'completed', label: 'Completed' },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
+  const stepIndex = STEPS.findIndex(step => step.status === request.status);
+  const cancelled = request.status === 'cancelled';
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) => {
+    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+      && item.status === step.status && validDate(item.at));
+    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeGreeting(hour: number) {
+  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+END FILE: apps/resident-android-mobile/src/lib/home-request.ts
+FILE: apps/resident-android-mobile/package.json
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",

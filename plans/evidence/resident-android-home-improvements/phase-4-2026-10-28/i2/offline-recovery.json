@@ -1,0 +1,13 @@
+{
+  "pass": true,
+  "networkBefore": {
+    "wifi": "1",
+    "data": "1"
+  },
+  "networkAfter": {
+    "wifi": "1",
+    "data": "1"
+  },
+  "explicitRetry": true,
+  "deviceNetworkRestored": true
+}

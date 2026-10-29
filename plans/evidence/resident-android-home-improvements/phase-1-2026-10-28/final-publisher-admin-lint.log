@@ -1,0 +1,9 @@
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-admin-search.ts
+  43:6  warning  React Hook useEffect has a missing dependency: 'revision'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-barangay-settings.ts
+  169:14  warning  'cause' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 2 problems (0 errors, 2 warnings)
+

@@ -1,0 +1,199 @@
+  }
+  return <AnimatedPressable {...props} ref={pressableRef} accessibilityRole="button"
+    style={[typeof style === 'function' ? style({ pressed, hovered: false }) : style, feedback]}
+    onPressIn={event => { setPressed(true); animate(pressScale); onPressIn?.(event); }}
+    onPressOut={event => { setPressed(false); animate(1); onPressOut?.(event); }} />;
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/home-request.test.ts">
+import { describe, expect, it } from 'vitest';
+import { homeRequestSummary, homeTimestamp } from './home-request';
+
+const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+
+describe('Home loaded-data summary', () => {
+  it('uses the real submission date and leaves missing reached dates unavailable', () => {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe('Processing');
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+    ]);
+  });
+
+  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp('invalid')).toBe('Date unavailable');
+  });
+
+  it('does not claim a cancelled request completed all steps', () => {
+    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe('Cancelled');
+    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe('Not recorded');
+  });
+
+  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+    for (const payment_status of ['paid', 'waived']) {
+      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+    }
+    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+  });
+
+});
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/home-request.ts">
+import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
+
+export type HomeRequest = Tables<'service_requests'> & {
+  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+};
+
+const STEPS = [
+  { status: 'submitted', label: 'Submitted' },
+  { status: 'in_progress', label: 'Processing' },
+  { status: 'ready_for_pickup', label: 'Ready for pickup' },
+  { status: 'completed', label: 'Completed' },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
+  const stepIndex = STEPS.findIndex(step => step.status === request.status);
+  const cancelled = request.status === 'cancelled';
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) => {
+    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+      && item.status === step.status && validDate(item.at));
+    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
+<file path="apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+
+/** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
+export function RequestSummarySheet({ request, visible, reducedMotion, onClose, onDismiss, onViewFull }: {
+  request: HomeRequest;
+  visible: boolean;
+  reducedMotion: boolean;
+  onClose: () => void;
+  onDismiss: () => void;
+  onViewFull: () => void;
+}) {
+  const { resident } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const [mounted, setMounted] = useState(visible);
+  const [sheetHeight, setSheetHeight] = useState(0);
+  const progress = useRef(new Animated.Value(0)).current;
+  const scrim = useRef(new Animated.Value(0)).current;
+  const shown = useRef(visible);
+  const dismissPending = useRef(false);
+  const entryFocused = useRef(false);
+  const closeTarget = useRef<View>(null);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  const summary = homeRequestSummary(request);
+
+  useEffect(() => {
+    if (visible && !mounted) { setMounted(true); return; }
+    if (!visible && !shown.current) return;
+    if (!sheetHeight) {
+      if (!visible) { shown.current = false; dismissPending.current = true; setMounted(false); }
+      return;
+    }
+    if (visible) { shown.current = true; dismissPending.current = false; }
+    let active = true;
+    const animation = Animated.parallel([
+      Animated.timing(progress, { toValue: Number(visible), duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+      Animated.timing(scrim, { toValue: Number(visible), duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+    ]);
+    animation.start(({ finished }) => {
+      if (!active || !finished) return;
+      if (visible && !entryFocused.current && closeTarget.current) {
+        entryFocused.current = true;
+        AccessibilityInfo.sendAccessibilityEvent(closeTarget.current, 'focus');
+      }
+      if (finished && !visible) {
+        shown.current = false;
+        dismissPending.current = true;
+        entryFocused.current = false;
+        setMounted(false);
+        setSheetHeight(0);
+      }
+    });
+    return () => { active = false; animation.stop(); };
+  }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
+
+  useEffect(() => {
+    if (!mounted && !visible && dismissPending.current) {
+      dismissPending.current = false;
+      dismiss.current();
+    }
+  }, [mounted, visible]);
+
+  return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent
+    onRequestClose={onClose}>
+    <View style={styles.root}>
+      <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}>
+        <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss request summary" onPress={onClose} />
+      </Animated.View>
+      <Animated.View accessibilityViewIsModal onLayout={event => {
+        const measured = event.nativeEvent.layout.height;
+        setSheetHeight(previous => previous === measured ? previous : measured);
+      }} style={[styles.sheet, {
+        backgroundColor: resident.card, maxHeight: height * 0.92, paddingBottom: Math.max(32, insets.bottom + 16),
+        opacity: reducedMotion ? progress : 1,
+        transform: [{ translateY: reducedMotion ? 0 : progress.interpolate({ inputRange: [0, 1], outputRange: [sheetHeight || height, 0] }) }],
+      }]}>
+        <View accessible={false} style={[styles.handle, { backgroundColor: resident.border }]} />
+        <Pressable ref={closeTarget} hitSlop={4} accessibilityRole="button" accessibilityLabel="Close request summary" onPress={onClose}
+          style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
+          <Ionicons name="close" size={18} color={resident.text} accessible={false} />
+        </Pressable>
+        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View style={styles.titleGroup}>
+            <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
+            <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
+          </View>

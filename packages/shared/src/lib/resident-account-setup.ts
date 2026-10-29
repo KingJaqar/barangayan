@@ -20,6 +20,9 @@ export const residentAccountSetupStatusSchema = z.object({
   profileComplete: z.boolean(),
   passwordSet: z.boolean().nullable(),
   hasGoogleIdentity: z.boolean(),
+  /** True once the resident has any ID submission on file. Absent until the status RPC reports it, so a client
+   * running ahead of the database never requires ID capture. */
+  idSubmitted: z.boolean().optional(),
 }).strict();
 export type ResidentAccountSetupStatus = z.infer<typeof residentAccountSetupStatusSchema>;
 export type ResidentEmailStepInput = z.infer<typeof residentEmailStepSchema>;
@@ -74,7 +77,7 @@ export type ResidentSetupIntent = 'sign_in' | 'email_signup' | 'google_signup' |
 export type ResidentSetupLoad = { state: 'loading' } | { state: 'error'; failure: ResidentSetupFailure } | { state: 'ready'; status: ResidentAccountSetupStatus };
 export type ResidentSetupRoute =
   | { destination: 'restoring' | 'status_loading' | 'status_error' | 'recovery' | 'existing_access' | 'login' | 'email' | 'code' | 'home' | 'settings_profile' | 'manage_password' }
-  | { destination: 'details' | 'password'; required: boolean; returnTo: 'home' | 'settings' };
+  | { destination: 'details' | 'password' | 'id_verification'; required: boolean; returnTo: 'home' | 'settings' };
 export type ResidentSetupRoutingInput = {
   session: 'restoring' | 'signed_out' | 'authenticated';
   intent: ResidentSetupIntent;
@@ -99,6 +102,9 @@ export function residentSetupRoute(input: ResidentSetupRoutingInput): ResidentSe
   // Linking Google, guest flags and Settings intent cannot erase email-origin setup.
   if (status.registrationOrigin === 'email_otp') {
     if (!status.profileComplete) return { destination: 'details', required: true, returnTo: 'home' };
+    // Proof of residency belongs to registration only: a resident whose password is already set (or unresolved legacy)
+    // is past setup and is gated per feature instead.
+    if (status.passwordSet === false && status.idSubmitted === false) return { destination: 'id_verification', required: true, returnTo: 'home' };
     if (status.passwordSet === false) return { destination: 'password', required: true, returnTo: 'home' };
     if (status.passwordSet === null) return { destination: 'manage_password' };
   }

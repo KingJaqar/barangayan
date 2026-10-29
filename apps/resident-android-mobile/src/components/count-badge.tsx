@@ -29,7 +29,7 @@ export function CountBadge({ count, background, foreground, presentation = 'defa
         { backgroundColor: background },
         presentation === 'resident' && { height: size, minWidth: size, width: isOverflow ? undefined : size, borderRadius: size / 2, outlineWidth, outlineStyle: 'solid', outlineColor: theme.resident.surface },
       ]}>
-      {presentation === 'resident' ? <ThemedText style={[styles.label, { fontSize: 9.5 }, foreground ? { color: foreground } : undefined]} numberOfLines={1}>
+      {presentation === 'resident' ? <ThemedText style={[styles.label, { fontSize: 9.5 }, foreground ? { color: foreground } : undefined]} numberOfLines={1} maxFontSizeMultiplier={1.2}>
         {isOverflow ? '99+' : count}
       </ThemedText> : <Text style={styles.label} numberOfLines={1}>
         {isOverflow ? '99+' : count}

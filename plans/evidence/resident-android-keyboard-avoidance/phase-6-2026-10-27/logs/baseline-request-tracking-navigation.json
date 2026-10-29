@@ -1,0 +1,11 @@
+{
+  "name": "request-tracking-navigation",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/request-tracking-navigation.mjs"
+  ],
+  "start": "2026-10-27T02:03:27.734Z",
+  "end": "2026-10-27T02:03:27.885Z",
+  "status": 0
+}

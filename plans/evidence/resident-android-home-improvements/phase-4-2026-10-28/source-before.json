@@ -1,0 +1,27 @@
+[
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "snapshot": "tmp/resident-home-phase4-20261028/before/home.tsx",
+    "sha256": "cb8ab230a8943e174169e1aa511ac8a831737d01cfddffde4c49959ebe51905d"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "snapshot": "tmp/resident-home-phase4-20261028/before/home-presentation-ui.mjs",
+    "sha256": "75416d7261574ab3ce0aa1be9cf546e7fb31ceb07d0719d7c526e02f9f56c177"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/reports/announcement-card.tsx",
+    "snapshot": "tmp/resident-home-phase4-20261028/before/announcement-card.tsx",
+    "sha256": "4d61bd71bc7de26827930ccb0c8033d6d33c0973a0709e52d26cbcec5884135a"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+    "snapshot": "tmp/resident-home-phase4-20261028/before/announcement-modal.tsx",
+    "sha256": "75dc50a5302c24544f478ff5a26233459ef7af429e8665d58ffefddaa4da0627"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "snapshot": "tmp/resident-home-phase4-20261028/before/request-summary-sheet.tsx",
+    "sha256": "aae30028ea21faba2e1c122a2aef959a5d8927d49b7b16a297c1d2ada963b4ef"
+  }
+]

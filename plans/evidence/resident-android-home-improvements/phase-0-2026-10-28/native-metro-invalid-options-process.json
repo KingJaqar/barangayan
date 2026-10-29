@@ -1,0 +1,22 @@
+{
+  "pid": 64360,
+  "start": "2026-10-28T04:53:58.918Z",
+  "deadlineMs": 1200000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "start",
+    "--dev-client",
+    "--localhost",
+    "--offline",
+    "--port",
+    "8087",
+    "--max-workers",
+    "2"
+  ],
+  "backend": "http://127.0.0.1:54321",
+  "credential": "existing local storage ANON_KEY read in memory only; role anon checked",
+  "apk": "com.barangayan.resident.dev",
+  "approval": "User: yes install anything necessary; local native baseline only"
+}

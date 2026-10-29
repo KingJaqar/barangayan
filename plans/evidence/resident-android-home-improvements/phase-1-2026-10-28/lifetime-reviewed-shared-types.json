@@ -1,0 +1,15 @@
+{
+  "id": "shared-types",
+  "cwd": "packages/shared",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "deadline": 300000,
+  "start": "2026-10-28T06:23:22.004Z",
+  "end": "2026-10-28T06:23:31.614Z",
+  "code": 2,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-shared-types.log"
+}

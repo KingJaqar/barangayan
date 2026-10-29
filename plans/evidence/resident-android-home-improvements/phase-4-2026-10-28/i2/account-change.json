@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "firstAccount": "b3000000-0000-4000-8000-000000000001",
+  "secondAccount": "b3000000-0000-4000-8000-000000000002",
+  "firstReference": "REQ-2026-00025",
+  "secondReference": "REQ-2026-00002",
+  "logoutRealAuth": true,
+  "guestOldDataCleared": true,
+  "realPasswordSignIn": true,
+  "lateReplyIgnored": true,
+  "savedPreferences": {
+    "theme": "dark",
+    "accent": "#7C3AED",
+    "font": "georgia"
+  }
+}

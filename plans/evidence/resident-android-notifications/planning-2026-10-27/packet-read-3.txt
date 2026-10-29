@@ -1,0 +1,129 @@
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+FILE apps/resident-android-mobile/vitest.config.ts
+import { defineConfig } from 'vitest/config';
+FILE apps/resident-ios-mobile/src/features/notifications/model.ts
+import type { IconName } from '@expo/ui';
+import type { Href } from 'expo-router';
+import { z } from 'zod';
+import type { InboxItem } from '../../data/resident-api';
+⋮----
+/**
+ * The notification kinds the server creates (migration 0135) with the resident-facing wording of their phone-alert switch.
+ * A kind this version does not know still shows in the inbox, as a plain entry.
+ */
+⋮----
+export type NotificationKind = (typeof NOTIFICATION_KINDS)[number]['kind'];
+⋮----
+export function kindPresentation(kind: string):
+⋮----
+/** A switch is on unless the resident turned it off. */
+export function kindEnabled(kinds: Readonly<Record<string, boolean>>, kind: NotificationKind): boolean
+⋮----
+/** A versioned reference to a record. It never holds a URL, a path or a snapshot of the record. */
+export type Destination = z.infer<typeof destinationSchema>;
+⋮----
+/** Null for anything that is not exactly `{ v: 1, kind, id }` with an allowlisted kind and a UUID. */
+export function parseDestination(input: unknown): Destination | null
+⋮----
+/** The screen a destination opens. The screen itself re-reads the record, so authorization is never decided here. */
+export function destinationHref(destination: Destination): Href
+⋮----
+export const openLabel = (destination: Destination): string
+⋮----
+/** What an inbox row needs to render; `destination` is null when this version cannot open it. */
+export type InboxEntry = { id: string; kind: string; title: string; body: string; destination: Destination | null; createdAt: string; read: boolean };
+export function inboxEntry(item: InboxItem): InboxEntry
+⋮----
+/** The payload the sender attaches to a push: the destination reference and the inbox row it belongs to. Nothing else is trusted. */
+export function parsePushData(input: unknown):
+⋮----
+/** The detail line of an inbox entry point: its own unread count, never mixed with the Reports signals. */
+export function inboxDetail(count: number | null): string
+FILE supabase/functions/send-notifications/worker.ts
+// The notification sender's logic (Resident iOS Phase 17, P17-T02), kept free of Deno and
+// network globals so the same code runs in the Edge Function and in the repository's tests.
+//
+// One run: claim due outbox rows (the database applies each resident's preferences at that
+// moment), send them to Expo Push in batches, record the tickets, check the receipts that
+// are due, purge expired rows and report operational counts. Nothing here logs or returns a
+// push token, a ticket id or message text.
+⋮----
+/** Expo accepts at most 100 messages per send request and 1000 ids per receipts request. */
+⋮----
+/** A message not delivered within a day is no longer news (the database also skips such rows). */
+⋮----
+export type RpcResult = { data: unknown; error: { message: string } | null };
+export type Rpc = (name: string, args?: Record<string, unknown>) => Promise<RpcResult>;
+export type Fetcher = (url: string, init: { method: 'POST'; headers: Record<string, string>; body: string; signal: AbortSignal }) => Promise<{ status: number; json(): Promise<unknown> }>;
+⋮----
+export type WorkerDeps = {
+  rpc: Rpc;
+  fetch: Fetcher;
+  /** Optional Expo access token (enhanced push security). */
+  accessToken?: string;
+  sleep?: (ms: number) => Promise<void>;
+};
+⋮----
+/** Optional Expo access token (enhanced push security). */
+⋮----
+export type Claimed = { outbox_id: string; inbox_id: string; kind: string; title: string; body: string; destination: { v: number; kind: string; id: string }; tokens: string[]; attempt: number };
+type Ticket = { token: string; status: 'ok' | 'error'; id?: string; error?: string };
+⋮----
+export type RunSummary = {
+  claimed: number;
+  sent: number;
+  retried: number;
+  dead: number;
+  skipped: number;
+  receiptsChecked: number;
+  receiptsRecorded: number;
+  purged: { inbox: number; outbox: number; events: number } | null;
+  health: Record<string, number> | null;
+  errors: string[];
+};
+⋮----
+const isRecord = (value: unknown): value is Record<string, unknown>
+⋮----
+export function parseClaimed(data: unknown): Claimed[]
+⋮----
+/** The push payload: generic text and a versioned reference. `data` carries no record content. */
+export function buildMessage(row: Claimed, token: string)
+⋮----
+async function postJson(deps: WorkerDeps, url: string, payload: unknown): Promise<
+⋮----
+// Only rate limiting and server errors are worth repeating; a 4xx means the request itself is wrong.
+⋮----
+type ProviderTicket = { status: 'ok'; id: string } | { status: 'error'; error: string };
+⋮----
+function parseTickets(body: unknown, expected: number): ProviderTicket[] | null
+⋮----
+async function call(deps: WorkerDeps, name: string, args: Record<string, unknown> =
+⋮----
+export async function runWorker(deps: WorkerDeps): Promise<RunSummary>
+⋮----
+const note = (error: unknown) =>
+const tally = (state: unknown) =>
+FILE package.json
+{
+  "name": "barangayan",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.12.2": true
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=@barangayan/mobile",
+    "web": "npm run dev --workspace=@barangayan/web",
+    "lint": "expo lint"
+  }
+}

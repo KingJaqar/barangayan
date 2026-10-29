@@ -1,0 +1,31 @@
+{
+  "pass": true,
+  "deviceEpoch": 1793242768,
+  "backgroundWaitMs": 19000,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A53.310Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:58:14.728Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:58:14.730Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A53.311Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A59%3A53.311Z&offset=0&limit=100",
+      "time": "2026-10-29T02:58:14.731Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:58:14.732Z",
+      "status": 200
+    }
+  ]
+}

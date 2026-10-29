@@ -1,0 +1,92 @@
+[
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:18:20.164Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:18:20.225Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:21:08.813Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:21:09.322Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:21:09.325Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:21:52.441Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:21:53.033Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:21:53.035Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:22:56.465Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:22:57.073Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:22:57.079Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:25:50.268Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:25:50.820Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:25:50.824Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:33:57.171Z",
+    "status": 200
+  }
+]

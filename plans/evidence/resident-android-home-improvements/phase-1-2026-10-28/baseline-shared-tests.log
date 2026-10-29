@@ -1,0 +1,48 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 25ms
+ ✓ src/lib/attendance-request.test.ts (3 tests) 19ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 18ms
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 47ms
+ ✓ src/lib/device-location.test.ts (29 tests) 54ms
+ ✓ src/lib/model-activation.test.ts (12 tests) 19ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 14ms
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 23ms
+ ✓ src/schemas/household-attendance.test.ts (25 tests) 57ms
+ ✓ src/lib/format.test.ts (17 tests) 107ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 15ms
+ ✓ src/schemas/routing-conditions.test.ts (11 tests) 23ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 16ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 75ms
+ ✓ src/lib/flood-shadow.test.ts (57 tests) 152ms
+ ✓ src/lib/flood-validation.test.ts (12 tests) 28ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 15ms
+ ✓ src/lib/registration-locality.test.ts (10 tests) 37ms
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 35ms
+ ✓ src/lib/evacuation-route-service.test.ts (44 tests) 36ms
+ ✓ src/lib/service-catalog.test.ts (10 tests) 30ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 38ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 99ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 561ms
+ ✓ src/lib/routing-pack-builder.test.ts (25 tests) 745ms
+   ✓ coverage buffer > stays within 6 m of the exact 150 m buffer  600ms
+ ✓ src/schemas/staff.test.ts (9 tests) 14ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 26ms
+ ✓ src/lib/service-request-validation.test.ts (12 tests) 21ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 38ms
+ ✓ src/lib/resident-account-setup.test.ts (20 tests) 40ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 35ms
+ ✓ src/lib/haversine.test.ts (4 tests) 9ms
+ ✓ src/lib/model-exclusions.test.ts (10 tests) 14ms
+ ✓ src/schemas/drive-registration-result.test.ts (5 tests) 12ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 12ms
+ ✓ src/schemas/payment.test.ts (9 tests) 12ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 6ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 15ms
+
+ Test Files  38 passed (38)
+      Tests  589 passed (589)
+   Start at  13:37:34
+   Duration  7.43s (transform 17.93s, setup 0ms, collect 55.93s, tests 2.54s, environment 15ms, prepare 42.84s)
+

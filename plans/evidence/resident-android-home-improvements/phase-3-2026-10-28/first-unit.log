@@ -1,0 +1,28 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/refresh-resource.test.ts (9 tests) 125ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/home-request.test.ts [ src/lib/home-request.test.ts ]
+Error: Cannot find package '@/constants/payment' imported from 'C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/home-request.ts'
+ ❯ src/lib/home-request.ts:3:1
+      1| import { homeRequestAttention, type HomeRequestAction, type HomeReques…
+      2| 
+      3| import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
+       | ^
+      4| 
+      5| export type HomeRequest = HomeRequestRow;
+
+Caused by: Error: Failed to load url @/constants/payment (resolved id: @/constants/payment) in C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/home-request.ts. Does the file exist?
+ ❯ loadAndTransform ../../node_modules/vite/dist/node/chunks/config.js:22739:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  9 passed (9)
+   Start at  17:59:11
+   Duration  4.08s (transform 1.42s, setup 0ms, collect 225ms, tests 125ms, environment 0ms, prepare 604ms)
+

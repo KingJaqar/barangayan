@@ -12,10 +12,11 @@ const out =
   process.env.TEST_ARTIFACTS_DIR ??
   path.resolve(app, '../../tmp/resident-android-magicpatterns-phase-12-20261020/ui');
 fs.mkdirSync(out, { recursive: true });
+const calendarOnly = process.env.TEST_HEALTH_CALENDAR_ONLY === '1';
 // Actual Health routes, medical hook, schemas, theme and motion. Only data/native APIs are synthetic.
 const mocks = {
   'react-native': `import React from 'react';import * as R from 'react-native-web';export * from 'react-native-web';
-    const clean=({accessibilityViewIsModal,pointerEvents,style,...p})=>({...p,style:[style,pointerEvents?{pointerEvents}:null]});
+    const clean=({accessibilityViewIsModal,accessibilityElementsHidden,importantForAccessibility,pointerEvents,style,...p})=>({...p,'aria-hidden':accessibilityElementsHidden||importantForAccessibility==='no-hide-descendants'?true:p['aria-hidden'],style:[style,pointerEvents?{pointerEvents}:null]});
     export const View=React.forwardRef((p,r)=><R.View {...clean(p)} ref={r}/>);
     export const Animated={...R.Animated,View:React.forwardRef((p,r)=><R.Animated.View {...clean(p)} ref={r}/>),timing:(v,o)=>{window.fixture.durations.push(o.duration);return R.Animated.timing(v,{...o,useNativeDriver:false})}};
     export const KeyboardAvoidingView=({behavior,...p})=><View {...p}/>;
@@ -29,7 +30,12 @@ const mocks = {
   'expo-router': `import React from 'react';export const useIsFocused=()=>true;export const useFocusEffect=fn=>{const [focused,setFocused]=React.useState(true);React.useEffect(()=>{const listener=e=>setFocused(e.detail);window.addEventListener('health-focus',listener);return()=>window.removeEventListener('health-focus',listener)},[]);React.useEffect(()=>focused?fn():undefined,[fn,focused])};export const useLocalSearchParams=()=>window.fixture.params;export const usePathname=()=>'/health/register';export const router={back:()=>window.fixture.routes.push('back'),push:r=>window.fixture.routes.push(r),replace:r=>window.fixture.routes.push(r),setParams:p=>Object.assign(window.fixture.params,p)};export const useRouter=()=>router;`,
   'react-native-safe-area-context': `import {View} from 'react-native';export const SafeAreaView=View;const insets={top:0,left:0,right:0,bottom:0};export const useSafeAreaInsets=()=>insets;`,
   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({name,size})=><View aria-hidden="true" data-icon={name} style={{width:size,height:size,flexShrink:0}}/>;Ionicons.glyphMap={};`,
-  'react-native-reanimated': `import {useRef} from 'react';import {View,Easing} from 'react-native';export default {View};export const useSharedValue=v=>useRef({value:v}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=v=>v;export const withSpring=v=>v;export const cancelAnimation=()=>{};export {Easing};`,
+  // Reactive final-state adapter: validates layout/state, not native frame timing.
+  'react-native-reanimated': `import {useRef,useState,useLayoutEffect} from 'react';import {View,Easing} from 'react-native';
+    const listeners=new Set();export default {View};
+    export const useSharedValue=initial=>{const ref=useRef();if(!ref.current){let value=initial;ref.current={get value(){return value},set value(next){if(next===value)return;value=next;listeners.forEach(fn=>fn())}}}return ref.current};
+    export const useAnimatedStyle=fn=>{const [,render]=useState(0);useLayoutEffect(()=>{const update=()=>render(v=>v+1);listeners.add(update);update();return()=>listeners.delete(update)},[]);return fn()};
+    export const withTiming=(v,o)=>{(window.fixture.uiAnimations??=[]).push(o.duration);return v};export const withSpring=v=>v;export const cancelAnimation=()=>{};export {Easing};`,
   '@/hooks/use-theme-preference': `export const useThemePreference=()=>({scheme:window.fixture.mode,accentColor:window.fixture.accent});`,
   '@/hooks/use-font-preference': `export const useFontPreference=()=>({fontId:window.fixture.font});`,
   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>100;`,
@@ -108,6 +114,77 @@ try {
       },
       { patch, reset },
     );
+  if (calendarOnly) {
+    await page.getByText('Synthetic Dental Drive', { exact: true }).waitFor();
+    const picker = page.getByRole('button', { name: /Open month and year picker/ });
+    await button('Expand to full month calendar').waitFor();
+    await button('Next week').click();
+    await page.waitForTimeout(300);
+    const retainedWeek = await picker.getAttribute('aria-label');
+    await picker.evaluate(node => { window.calendarToolbar = node; });
+    await page.waitForTimeout(100);
+    const reads = await page.evaluate(() => window.fixture.reads.length);
+    const shown = await button('Hide calendar').boundingBox();
+    await button('Hide calendar').click();
+    await picker.waitFor({ state: 'hidden' });
+    assert.equal(await page.getByRole('button', { name: 'Next week', exact: true }).count(), 0);
+    const hidden = await button('Show calendar').boundingBox();
+    assert.ok(shown.y - hidden.y > 80, 'hiding releases calendar space');
+    assert.ok(hidden.y < 70, 'hidden calendar leaves no extra gap above filters');
+    await button('Show calendar').click();
+    await picker.waitFor();
+    assert.equal(await picker.getAttribute('aria-label'), retainedWeek);
+    assert.equal(await picker.evaluate(node => node === window.calendarToolbar), true);
+    const restored = await button('Hide calendar').boundingBox();
+    assert.ok(Math.abs(shown.y - restored.y) <= 1, 'reopening restores the exact layout');
+    assert.equal(await page.evaluate(() => window.fixture.reads.length), reads);
+    passed.push('hide/show retains the browsed week and mounted toolbar, releases space, hides controls from accessibility and makes no data requests');
+
+    await button('Expand to full month calendar').click();
+    await button('Next month').waitFor();
+    await button('Next month').click();
+    const retainedMonth = await picker.getAttribute('aria-label');
+    await button('Hide calendar').click();
+    await button('Show calendar').click();
+    await button('Collapse to week view').waitFor();
+    assert.equal(await picker.getAttribute('aria-label'), retainedMonth);
+    for (let i = 0; i < 12; i++) {
+      await page.getByRole('button', { name: /^(Hide|Show) calendar$/ }).evaluate(node => node.click());
+    }
+    await button('Hide calendar').waitFor();
+    await button('Collapse to week view').waitFor();
+    for (let i = 0; i < 12; i++) {
+      await page.getByRole('button', { name: /^(Expand to full month calendar|Collapse to week view)$/ }).evaluate(node => node.click());
+    }
+    await button('Collapse to week view').waitFor();
+    await button('Collapse to week view').click();
+    await button('Next week').waitFor();
+    passed.push('month mode and browsed month survive hide/show; repeated visibility and week/month toggles settle on the requested state');
+
+    for (const width of [320, 400]) {
+      await page.setViewportSize({ width, height: 740 });
+      await render({ mode: 'dark', accent: '#ffff00', font: 'georgia' });
+      await button('Expand to full month calendar').click();
+      await button('Collapse to week view').waitFor();
+      await button('Hide calendar').click();
+      await button('Show calendar').click();
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      await page.screenshot({ path: path.join(out, `calendar-${width}.png`) });
+      await button('Collapse to week view').click();
+    }
+    passed.push('retained calendar fits compact widths with dark mode, serif font and custom accent');
+
+    await page.evaluate(() => window.fixture.listeners.forEach(fn => fn(true)));
+    await page.waitForTimeout(50);
+    const animations = await page.evaluate(() => window.fixture.uiAnimations.length);
+    await button('Hide calendar').click();
+    await button('Show calendar').click();
+    await button('Expand to full month calendar').click();
+    await button('Collapse to week view').click();
+    assert.equal(await page.evaluate(() => window.fixture.uiAnimations.length), animations);
+    await button('Next week').waitFor();
+    passed.push('reduced motion applies hide/show and week/month changes immediately without starting animations');
+  } else {
   await page.getByText('Synthetic Dental Drive', { exact: true }).waitFor();
   await page.getByText('Synthetic Dental Drive', { exact: true }).evaluate(node => { window.retainedDriveNode=node; });
   await page.evaluate(() => { window.fixture.holdReads=true;window.dispatchEvent(new CustomEvent('health-focus',{detail:false})); });
@@ -469,6 +546,7 @@ try {
   passed.push(
     'compact short-height dark/serif/extreme-accent form; reduced-motion picker Back cycles; channel ownership after navigation',
   );
+  }
   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ passed, errors }, null, 2));
   assert.deepEqual(errors, []);
   console.log(JSON.stringify({ passed, errors }, null, 2));

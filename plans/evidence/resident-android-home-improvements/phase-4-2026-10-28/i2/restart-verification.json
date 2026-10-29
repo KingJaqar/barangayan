@@ -1,0 +1,122 @@
+{
+  "recorded": "2026-10-29T07:14:55.503Z",
+  "pass": true,
+  "taskContainersAbsent": true,
+  "taskMetadataRemoved": [],
+  "originalServices": [
+    {
+      "name": "supabase_pg_meta_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "node --eval=\"fetch('http://127.0.0.1:8080/health').then((r) => {if (!r.ok) throw new Error(r.status)})\""
+      ]
+    },
+    {
+      "name": "supabase_storage_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "wget --no-verbose --tries=1 --spider http://127.0.0.1:5000/status"
+      ]
+    },
+    {
+      "name": "supabase_rest_barangayan",
+      "running": true,
+      "status": "running",
+      "health": null,
+      "healthCommand": null
+    },
+    {
+      "name": "supabase_realtime_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "curl -sSfL --head -o /dev/null -H Host:realtime-dev http://127.0.0.1:4000/api/ping"
+      ]
+    },
+    {
+      "name": "supabase_inbucket_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "/mailpit readyz"
+      ]
+    },
+    {
+      "name": "supabase_auth_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "wget --no-verbose --tries=1 --spider http://127.0.0.1:9999/health"
+      ]
+    },
+    {
+      "name": "supabase_kong_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "kong health"
+      ]
+    },
+    {
+      "name": "supabase_db_barangayan",
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "healthCommand": [
+        "CMD-SHELL",
+        "pg_isready -U postgres -h 127.0.0.1 -p 5432"
+      ]
+    }
+  ],
+  "syntheticDatabases": [
+    "resident_home_i2_20261028",
+    "resident_home_p4_20261028"
+  ],
+  "authHealth": "healthy",
+  "restHealth": "not configured",
+  "kongHealth": "healthy",
+  "ports": [
+    {
+      "port": 58470,
+      "listening": false,
+      "error": "ECONNREFUSED"
+    },
+    {
+      "port": 58471,
+      "listening": false,
+      "error": "ECONNREFUSED"
+    },
+    {
+      "port": 58472,
+      "listening": false,
+      "error": "ECONNREFUSED"
+    },
+    {
+      "port": 8099,
+      "listening": false,
+      "error": "ECONNREFUSED"
+    }
+  ],
+  "restHttp": {
+    "pass": true,
+    "status": 200,
+    "method": "GET",
+    "route": "/announcements?select=id&limit=0",
+    "source": "existing database container to existing REST service on local Docker network",
+    "returnsResidentRows": false
+  }
+}

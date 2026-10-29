@@ -1,0 +1,83 @@
+[
+  {
+    "id": "shared-types",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T06:23:22.004Z",
+    "end": "2026-10-28T06:23:31.614Z",
+    "code": 2,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-shared-types.log"
+  },
+  {
+    "id": "android-types",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T06:23:22.023Z",
+    "end": "2026-10-28T06:23:58.691Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-types.log"
+  },
+  {
+    "id": "android-lint",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T06:23:22.037Z",
+    "end": "2026-10-28T06:23:40.166Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-lint.log"
+  },
+  {
+    "id": "shared-tests",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T06:23:22.050Z",
+    "end": "2026-10-28T06:23:31.218Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-shared-tests.log"
+  },
+  {
+    "id": "android-export",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase1-20261028/export-lifetime-reviewed"
+    ],
+    "deadline": 1200000,
+    "start": "2026-10-28T06:23:22.065Z",
+    "end": "2026-10-28T06:24:18.326Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-export.log"
+  }
+]

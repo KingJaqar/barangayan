@@ -1,0 +1,250 @@
+{
+  "at": "2026-10-27T02:30:23.461Z",
+  "configuration": "compact-font",
+  "route": "/complete-profile",
+  "scope": "Optional completion only; required account-setup and first-password branches remain separate",
+  "saved": false,
+  "fields": [
+    {
+      "id": "B09",
+      "label": "First Name",
+      "focus": {
+        "tag": "completion-compact-font-B09-focus",
+        "editor": [
+          123,
+          788,
+          528,
+          927
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B09-editing",
+        "editor": [
+          123,
+          788,
+          528,
+          927
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B10",
+      "label": "Last Name",
+      "focus": {
+        "tag": "completion-compact-font-B10-focus",
+        "editor": [
+          552,
+          788,
+          957,
+          927
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B10-editing",
+        "editor": [
+          552,
+          788,
+          957,
+          927
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B11",
+      "label": "Middle Name (optional)",
+      "focus": {
+        "tag": "completion-compact-font-B11-focus",
+        "editor": [
+          123,
+          643,
+          528,
+          782
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B11-editing",
+        "editor": [
+          123,
+          643,
+          528,
+          782
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B12",
+      "label": "Suffix (optional)",
+      "focus": {
+        "tag": "completion-compact-font-B12-focus",
+        "editor": [
+          552,
+          565,
+          957,
+          684
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B12-editing",
+        "editor": [
+          552,
+          565,
+          957,
+          704
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B13",
+      "label": "Mobile Number",
+      "focus": {
+        "tag": "completion-compact-font-B13-focus",
+        "editor": [
+          123,
+          699,
+          957,
+          838
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B13-editing",
+        "editor": [
+          123,
+          699,
+          957,
+          838
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": false,
+      "atMaxLength": true
+    },
+    {
+      "id": "B14",
+      "label": "House No.",
+      "focus": {
+        "tag": "completion-compact-font-B14-focus",
+        "editor": [
+          123,
+          762,
+          393,
+          901
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B14-editing",
+        "editor": [
+          123,
+          762,
+          393,
+          901
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B15",
+      "label": "Street",
+      "focus": {
+        "tag": "completion-compact-font-B15-focus",
+        "editor": [
+          417,
+          762,
+          957,
+          901
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B15-editing",
+        "editor": [
+          417,
+          762,
+          957,
+          901
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B16",
+      "label": "Occupation (optional)",
+      "focus": {
+        "tag": "completion-compact-font-B16-focus",
+        "editor": [
+          123,
+          483,
+          957,
+          622
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-compact-font-B16-editing",
+        "editor": [
+          123,
+          483,
+          957,
+          622
+        ],
+        "focused": true,
+        "imeTop": 927,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    }
+  ],
+  "status": "pass stated optional-completion focus/edit/status subset"
+}

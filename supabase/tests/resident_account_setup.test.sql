@@ -48,11 +48,15 @@ select ok(not has_table_privilege('authenticated','barangayan_private.resident_a
 select ok(not has_function_privilege('anon','public.get_resident_account_setup_status()','EXECUTE'),'Anonymous cannot execute status');
 set local role authenticated;
 select set_config('request.jwt.claim.sub','b6070000-0000-0000-0000-000000000002',true);
-select is(public.get_resident_account_setup_status(),'{"registrationOrigin":"legacy","profileComplete":false,"passwordSet":null,"hasGoogleIdentity":false}'::jsonb,'Caller status reports only four safe fields');
+select is(public.get_resident_account_setup_status(),'{"registrationOrigin":"legacy","profileComplete":false,"passwordSet":null,"hasGoogleIdentity":false,"idSubmitted":false}'::jsonb,'Caller status reports only five safe fields');
 select throws_ok($$select public.get_resident_account_setup_status('b6070000-0000-0000-0000-000000000001'::uuid)$$,'42883',null,'No other-user status argument exists');
 select throws_ok($$select * from barangayan_private.resident_account_lifecycle$$,'42501',null,'Private rows are inaccessible');
 select lives_ok($$select public.complete_resident_profile('{"firstName":"Legacy","lastName":"Resident","houseNo":"12","street":"Main","sex":"female","employmentStatus":"student","mobileNumber":"09171234567","birthDate":"2000-01-01"}')$$,'Profile-less OTP/legacy account uses existing tenant completion');
 select is(public.get_resident_account_setup_status()->'profileComplete','true'::jsonb,'Status agrees with completed profile');
+reset role;
+update public.profiles set id_verification_status='pending' where id='b6070000-0000-0000-0000-000000000002';
+set local role authenticated;
+select is(public.get_resident_account_setup_status()->'idSubmitted','true'::jsonb,'Any ID verification status counts as submitted');
 select is((select barangay_id::text from public.profiles where id=auth.uid()),'a6070000-0000-0000-0000-000000000001','Completion uses configured tenant');
 select set_config('request.jwt.claim.sub','b6070000-0000-0000-0000-000000000001',true);
 select is(public.get_resident_account_setup_status()->'hasGoogleIdentity','true'::jsonb,'Google state uses Auth identities');

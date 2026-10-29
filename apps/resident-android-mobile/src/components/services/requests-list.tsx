@@ -10,7 +10,7 @@ import {
   type ResidentRequestStatus,
   type Tables,
 } from '@barangayan/shared';
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -29,8 +29,8 @@ import { getDocumentIcon } from '@/constants/document-icons';
 import { useAuth } from '@/hooks/use-auth';
 import { useHistoryPages } from '@/hooks/use-history-pages';
 import { useProfile } from '@/hooks/use-profile';
-import { useTheme } from '@/hooks/use-theme';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 import { HISTORY_PAGE_SIZE, historyBefore } from '@/lib/history-resource';
 import { uniqueChannelName } from '@/lib/realtime-channel';
@@ -123,7 +123,14 @@ function sortRequests(requests: ServiceRequest[]): ServiceRequest[] {
     .sort((a, b) => a.band - b.band || a.index - b.index).map(item => item.request);
 }
 
-function RequestRow({ request, divider }: { request: ServiceRequest; divider: boolean }) {
+const RequestSectionVisibility = createContext(true);
+
+function RequestEstimate({ requestId }: { requestId: string }) {
+  const active = useContext(RequestSectionVisibility);
+  return <AgencySlaStatus requestId={requestId} compact active={active} />;
+}
+
+const RequestRow = memo(function RequestRow({ request, divider }: { request: ServiceRequest; divider: boolean }) {
   const theme = useTheme();
   const router = useRouter();
   const status = getResidentRequestStatus(request.status, request.payment_status);
@@ -158,7 +165,7 @@ function RequestRow({ request, divider }: { request: ServiceRequest; divider: bo
             ) : null}
           </View>
         ) : step.estimate === 'agency' ? (
-          <View style={styles.stepText}><AgencySlaStatus requestId={request.id} compact /></View>
+          <View style={styles.stepText}><RequestEstimate requestId={request.id} /></View>
         ) : step.estimate === 'legacy' ? (
           <View style={[styles.progressRow, styles.stepText]}>
             <ProgressBar presentation="resident" color={pill.color}
@@ -170,80 +177,56 @@ function RequestRow({ request, divider }: { request: ServiceRequest; divider: bo
       <Ionicons name="chevron-forward" size={16} color={theme.resident.muted} style={styles.requestChevron} accessible={false} />
     </ServiceListLink>
   );
+});
+
+/** Shared by section disclosure and filter changes; refreshes never restart it. */
+function useRequestMotion(expanded: boolean, transitionKey?: string) {
+  const reducedMotion = useResidentReducedMotion(true);
+  const progress = useSharedValue(1);
+  const previousKey = useRef(transitionKey);
+  useEffect(() => {
+    if (!reducedMotion && previousKey.current !== transitionKey) progress.value = 0;
+    previousKey.current = transitionKey;
+    progress.value = reducedMotion ? Number(expanded) : withTiming(Number(expanded), {
+      duration: 160, easing: Easing.out(Easing.cubic),
+    });
+    return () => cancelAnimation(progress);
+  }, [expanded, progress, reducedMotion, transitionKey]);
+  const appearance = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [{ translateY: -4 * (1 - progress.value) }],
+  }));
+  return { progress, appearance };
 }
 
-/**
- * Fade-and-collapse section for the "All" view. Opacity and height animate together, so the
- * sections below glide instead of jumping. Pure shared-value animation (no entering/exiting props).
- */
-function RequestSection({ title, count, children }: { title: string; count: number; children: ReactNode }) {
+/** Retained card layout stays independent of the animated viewport. */
+function RequestSection({ title, count, children, collapsible = true }: { title: string; count: number; children: ReactNode; collapsible?: boolean }) {
   const { resident } = useTheme();
-  const reducedMotion = useResidentReducedMotion(true);
   const [open, setOpen] = useState(true);
-  // Content stays mounted until the collapse finishes, then drops out of layout.
-  const [mounted, setMounted] = useState(true);
-  const fade = useSharedValue(1);
-  const turn = useSharedValue(0);
-  // -1 = natural height; once measured it tracks the content so a collapse has a start value.
-  const height = useSharedValue(-1);
-  const contentHeight = useRef(0);
-  const busyUntil = useRef(0);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-    cancelAnimation(fade);
-    cancelAnimation(turn);
-    cancelAnimation(height);
-  }, [fade, turn, height]);
-  const content = useAnimatedStyle(() => height.value < 0
-    ? { opacity: fade.value }
-    : { opacity: fade.value, height: height.value, overflow: 'hidden' });
-  const chevron = useAnimatedStyle(() => ({ transform: [{ rotate: `${turn.value * 180}deg` }] }));
-  const easing = Easing.bezier(0.23, 1, 0.32, 1);
-  const DURATION = 240;
-
-  function measured(next: number) {
-    contentHeight.current = next;
-    // Follow content changes while settled open; never fight a running animation.
-    if (open && Date.now() >= busyUntil.current) height.value = next;
-  }
-
-  function toggle() {
-    if (timer.current) clearTimeout(timer.current);
-    const next = !open;
-    setOpen(next);
-    busyUntil.current = Date.now() + (reducedMotion ? 0 : DURATION);
-    turn.value = reducedMotion ? Number(!next) : withTiming(Number(!next), { duration: 200, easing });
-    if (next) {
-      setMounted(true);
-      fade.value = reducedMotion ? 1 : withTiming(1, { duration: DURATION, easing });
-      height.value = reducedMotion ? contentHeight.current : withTiming(contentHeight.current, { duration: DURATION, easing });
-    } else {
-      // Collapsing from an unmeasured (natural) height would snap; pin it to the measured one first.
-      if (height.value < 0) height.value = contentHeight.current;
-      fade.value = reducedMotion ? 0 : withTiming(0, { duration: DURATION * 0.7, easing });
-      height.value = reducedMotion ? 0 : withTiming(0, { duration: DURATION, easing });
-      timer.current = setTimeout(() => setMounted(false), reducedMotion ? 0 : DURATION);
-    }
-  }
+  const expanded = !collapsible || open;
+  const contentHeight = useSharedValue(0);
+  const { progress, appearance } = useRequestMotion(expanded);
+  const size = useAnimatedStyle(() => ({ height: contentHeight.value * progress.value }));
 
   return (
     <View style={styles.section}>
-      <Pressable accessibilityRole="button" accessibilityLabel={`${title}, ${count}`} accessibilityState={{ expanded: open }}
-        onPress={toggle} style={styles.sectionHeader}>
+      {collapsible ? <Pressable accessibilityRole="button" accessibilityLabel={`${title}, ${count}`} accessibilityState={{ expanded: open }}
+        onPress={() => setOpen(value => !value)} style={styles.sectionHeader}>
         <ThemedText type="smallBold" style={styles.sectionTitle}>{title}</ThemedText>
         <View style={[styles.sectionCount, { backgroundColor: resident.accentSoft }]}>
           <ThemedText type="smallBold" style={[styles.sectionCountText, { color: resident.accentText }]}>{count}</ThemedText>
         </View>
-        <Animated.View style={chevron}>
-          <Ionicons name="chevron-up" size={18} color={resident.muted} accessible={false} />
+        <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={18} color={resident.muted} accessible={false} />
+      </Pressable> : null}
+      <RequestSectionVisibility.Provider value={expanded}>
+        <Animated.View style={[styles.sectionBody, size, appearance]} pointerEvents={expanded ? 'auto' : 'none'}
+          aria-hidden={!expanded} accessibilityElementsHidden={!expanded} importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}>
+          <View style={styles.sectionContent} onLayout={event => {
+            const next = event.nativeEvent.layout.height;
+            if (next > 0) contentHeight.value = next;
+          }}>{children}</View>
         </Animated.View>
-      </Pressable>
-      {mounted ? (
-        <Animated.View style={content} pointerEvents={open ? 'auto' : 'none'}>
-          <View onLayout={event => measured(event.nativeEvent.layout.height)}>{children}</View>
-        </Animated.View>
-      ) : null}
+      </RequestSectionVisibility.Provider>
     </View>
   );
 }
@@ -300,10 +283,18 @@ export function RequestsList({
     if (error) throw error;
     return { rows: data ?? [], total };
   }, [userId, filter, activeSubFilter]);
-  const history = useHistoryPages(JSON.stringify([userId, filter, activeSubFilter]), load, 'Could not load your requests. Reconnect and retry.');
+  const history = useHistoryPages(JSON.stringify([userId, filter, activeSubFilter]), load, 'Could not load your requests. Reconnect and retry.', userId ?? 'guest');
   const { refresh, invalidate } = history;
-  const rows = history.data?.rows ?? [];
-  const filtered = sortRequests(rows);
+  // A complete All window can paint narrower filters before their first read returns.
+  const overview = history.peek(JSON.stringify([userId, 'all', 'all']));
+  const warmRows = !history.data && filter !== 'history' && overview && !overview.hasMore ? overview.rows.filter(request => {
+    const status = getResidentRequestStatus(request.status, request.payment_status);
+    return filter === 'all' || (filter === 'pickup' ? status === 'ready_for_pickup'
+      : isOpen(status) && (activeSubFilter === 'all' || status === activeSubFilter));
+  }) : undefined;
+  const data = history.data ?? (warmRows ? { rows: warmRows, total: warmRows.length, hasMore: false } : undefined);
+  const filtered = useMemo(() => sortRequests(data?.rows ?? []), [data?.rows]);
+  const filterMotion = useRequestMotion(true, JSON.stringify([userId, filter, activeSubFilter, Boolean(data)]));
 
   const loadCounts = useCallback(async () => {
     if (!userId) return;
@@ -364,7 +355,7 @@ export function RequestsList({
     { key: 'paid', title: 'Paid', rows: filtered.filter(request => statusOf(request) === 'paid') },
     { key: 'processing', title: 'Processing', rows: filtered.filter(request => statusOf(request) === 'processing') },
   ];
-  const sections = allSections.filter(section => section.rows.length > 0);
+  const sections = allSections.filter(section => section.rows.length > 0 && (filter !== 'active' || section.key === 'active'));
 
   const renderRows = (list: ServiceRequest[]) => (
     <ServicesPanel>
@@ -398,10 +389,10 @@ export function RequestsList({
           <ServicesFilterChips
             compact
             options={[
-              { key: 'all', label: 'All', count: counts?.active },
-              { key: 'pending_payment', label: 'Pending Payment', count: counts?.pending_payment },
-              { key: 'paid', label: 'Paid', count: counts?.paid },
-              { key: 'processing', label: 'Processing', count: counts?.processing },
+              { key: 'all', label: 'All' },
+              { key: 'pending_payment', label: 'Pending Payment', icon: 'time-outline', count: counts?.pending_payment, badge: theme.accentOrange },
+              { key: 'paid', label: 'Paid', icon: 'checkmark-circle-outline', count: counts?.paid },
+              { key: 'processing', label: 'Processing', icon: 'sync-outline', count: counts?.processing },
             ]}
             activeKey={activeSubFilter}
             onChange={setActiveSubFilter}
@@ -409,30 +400,32 @@ export function RequestsList({
         ) : null}
       </View>
 
-      {history.error && !history.data ? (
-        <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} />
-      ) : history.loading ? (
-        <ServicesListSkeleton rows={3} />
-      ) : filtered.length === 0 ? (
-        <ServicesEmptyState
-          icon="file-tray-outline"
-          title={filter === 'all' ? 'Nothing open right now' : 'No requests here yet'}
-          message={filter === 'all' ? 'Completed and cancelled requests are under History.' : 'Requests you submit will show up in this filter.'}
-        />
-      ) : filter === 'all' ? (
-        <View style={styles.list}>
-          {sections.map(section => (
-            <RequestSection key={section.key} title={section.title} count={section.rows.length}>
-              {renderRows(section.rows)}
-            </RequestSection>
-          ))}
-        </View>
-      ) : (
-        <View style={styles.list}>{renderRows(filtered)}</View>
-      )}
-      {history.data && history.error ? <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} /> : null}
-      {history.data?.hasMore ? <View style={styles.list}><PrimaryButton presentation="resident" variant="secondary" label="Load older requests"
-        accessibilityLabel="Load older requests" loading={history.fetching} onPress={history.loadMore} /></View> : null}
+      <Animated.View testID="request-filter-content" style={filterMotion.appearance}>
+        {history.error && !data ? (
+          <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} />
+        ) : history.loading && !data ? (
+          <ServicesListSkeleton rows={3} />
+        ) : filtered.length === 0 ? (
+          <ServicesEmptyState
+            icon="file-tray-outline"
+            title={filter === 'all' ? 'Nothing open right now' : 'No requests here yet'}
+            message={filter === 'all' ? 'Completed and cancelled requests are under History.' : 'Requests you submit will show up in this filter.'}
+          />
+        ) : filter === 'all' || filter === 'active' ? (
+          <View style={styles.list}>
+            {sections.map(section => (
+              <RequestSection key={section.key} title={section.title} count={section.rows.length} collapsible={filter === 'all'}>
+                {renderRows(section.rows)}
+              </RequestSection>
+            ))}
+          </View>
+        ) : (
+          <View style={styles.list}>{renderRows(filtered)}</View>
+        )}
+        {data && history.error ? <ServicesErrorState message={history.error} retryLabel="Retry requests" onRetry={refresh} /> : null}
+        {data?.hasMore ? <View style={styles.list}><PrimaryButton presentation="resident" variant="secondary" label="Load older requests"
+          accessibilityLabel="Load older requests" loading={history.fetching} onPress={history.loadMore} /></View> : null}
+      </Animated.View>
     </ScrollView>
   );
 }
@@ -442,6 +435,8 @@ const styles = StyleSheet.create({
   filters: { paddingTop: 4, paddingBottom: 8 },
   list: { paddingHorizontal: 20 },
   section: { marginBottom: 12 },
+  sectionBody: { overflow: 'hidden' },
+  sectionContent: { position: 'absolute', top: 0, left: 0, right: 0 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44, paddingVertical: 4 },
   sectionTitle: { flex: 1, fontSize: 15, lineHeight: 20 },
   sectionCount: { minWidth: 24, paddingHorizontal: 8, paddingVertical: 1, borderRadius: 100, alignItems: 'center' },

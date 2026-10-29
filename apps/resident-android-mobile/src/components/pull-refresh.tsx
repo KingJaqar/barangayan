@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { RefreshControl, type RefreshControlProps } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 
-/** Above `useAnnouncements`' 12 s abort and below `RefreshResource`'s 30 s abort. */
+/** Below `RefreshResource`'s 30 s abort, so the spinner ends before a stuck read is abandoned. */
 export const PULL_REFRESH_CEILING_MS = 20_000;
 
 type PullRefreshHandler = () => unknown;

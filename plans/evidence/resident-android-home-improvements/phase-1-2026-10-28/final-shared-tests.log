@@ -1,0 +1,49 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/device-location.test.ts (29 tests) 45ms
+ ✓ src/lib/format.test.ts (17 tests) 55ms
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 37ms
+ ✓ src/lib/model-activation.test.ts (12 tests) 22ms
+ ✓ src/lib/attendance-request.test.ts (3 tests) 18ms
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 34ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 10ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 10ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 12ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 16ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 14ms
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 19ms
+ ✓ src/lib/flood-validation.test.ts (12 tests) 25ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 47ms
+ ✓ src/schemas/household-attendance.test.ts (25 tests) 45ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 30ms
+ ✓ src/lib/flood-shadow.test.ts (57 tests) 86ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 295ms
+ ✓ src/lib/routing-pack-builder.test.ts (25 tests) 540ms
+   ✓ coverage buffer > stays within 6 m of the exact 150 m buffer  412ms
+ ✓ src/schemas/routing-conditions.test.ts (11 tests) 21ms
+ ✓ src/lib/evacuation-route-service.test.ts (44 tests) 29ms
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 27ms
+ ✓ src/lib/registration-locality.test.ts (10 tests) 31ms
+ ✓ src/lib/service-catalog.test.ts (10 tests) 31ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 26ms
+ ✓ src/schemas/staff.test.ts (9 tests) 17ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 74ms
+ ✓ src/lib/service-request-validation.test.ts (12 tests) 19ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 32ms
+ ✓ src/lib/resident-account-setup.test.ts (20 tests) 37ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 34ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 7ms
+ ✓ src/lib/haversine.test.ts (4 tests) 8ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 11ms
+ ✓ src/schemas/drive-registration-result.test.ts (5 tests) 12ms
+ ✓ src/lib/model-exclusions.test.ts (10 tests) 15ms
+ ✓ src/schemas/payment.test.ts (9 tests) 13ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 13ms
+ ✓ src/lib/home-request-priority.test.ts (24 tests) 8ms
+
+ Test Files  39 passed (39)
+      Tests  613 passed (613)
+   Start at  13:47:11
+   Duration  5.84s (transform 13.17s, setup 0ms, collect 45.91s, tests 1.83s, environment 16ms, prepare 35.51s)
+

@@ -52,11 +52,11 @@ export function NotificationPreferencesProvider({ children }: { children: ReactN
       });
 
     if (value) {
-      registerPushToken().catch((error) =>
+      registerPushToken(session.user.id, { askPermission: true }).catch((error) =>
         console.warn('Failed to register push token:', error),
       );
     } else {
-      unregisterPushToken().catch((error) =>
+      unregisterPushToken(session.user.id).catch((error) =>
         console.warn('Failed to unregister push token:', error),
       );
     }

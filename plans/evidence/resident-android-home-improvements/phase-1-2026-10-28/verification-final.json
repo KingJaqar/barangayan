@@ -1,0 +1,179 @@
+{
+  "date": "2026-10-28T06:36:10.459Z",
+  "phase": "Phase 1 local implementation",
+  "status": "Complete",
+  "unexpectedChangedInputs": [],
+  "diagnostics": [
+    {
+      "name": "shared types",
+      "identical": true
+    },
+    {
+      "name": "Android lint",
+      "identical": false
+    },
+    {
+      "name": "Admin lint",
+      "identical": true
+    }
+  ],
+  "dependenciesUnchanged": true,
+  "adminConfigPreserved": true,
+  "checks": [
+    {
+      "id": "shared-types",
+      "code": 2,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-shared-types.log"
+    },
+    {
+      "id": "android-types",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-types.log"
+    },
+    {
+      "id": "android-lint",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-lint.log"
+    },
+    {
+      "id": "shared-tests",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-shared-tests.log"
+    },
+    {
+      "id": "android-export",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\lifetime-reviewed-android-export.log"
+    },
+    {
+      "id": "admin-types",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\phase1-final-admin-types.log"
+    },
+    {
+      "id": "admin-lint",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\phase1-final-admin-lint.log"
+    },
+    {
+      "id": "admin-tests",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\phase1-final-admin-tests.log"
+    },
+    {
+      "id": "admin-build",
+      "code": 0,
+      "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\phase1-final-admin-build.log"
+    }
+  ],
+  "owned": [
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "310accdfeb574e12868d4b669b4077eeed7bb48b00b626ab80d2589b3f18e02c",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "sha256": "409508f3430bb275c76e39a35299fce340153b60741a08521d77283950e534d9",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.ts",
+      "sha256": "3d7ee3da8487d600006c2f86919fea57b3f144121121809184a676f670f61944",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.test.ts",
+      "sha256": "341d8c78ce55ccb63d10f935ed35f2576897a702cc927b6e1df56f498ce6dde5",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.ts",
+      "sha256": "345751cb4c5c305f7dba45285dfa76bb97879ac1ff9af79cba865f088b2be6aa",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.test.ts",
+      "sha256": "1cf9e6ab4d790c7dc228c98197ceff14896c82502579d87f19ea1b599480bd87",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+      "sha256": "824650a286813cbdc6c671017d72a5ac9e84bf288fcb81f504b43b6ad21aebb5",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+      "sha256": "cfe7f54c462dbf3686fb407005ee6cb2470322baa5af5743369e49596f78566c",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/src/lib/announcement-datetime.ts",
+      "sha256": "aed68c40505f02a25f832aa7741cb86194f407a7681905d46b1ab54353b49fba",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/announcement-datetime.test.ts",
+      "sha256": "e8590bf12c171c991e9de7b1b5fdc826cd23fbea2b6aa627bda9e7a247cec0d3",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/tests/content-workspace/announcement-lifetime.jsx",
+      "sha256": "2f1c58cf9f70ff8a7dbe6ca8b289ab21754d87493894eae1102e71ee9f403086",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "apps/admin-web/tests/content-workspace/announcement-lifetime.mjs",
+      "sha256": "1531f6c963946028c499166f09974faef62585d9a9f8892cf556c3267fa424a9",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+      "sha256": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "supabase/migrations/0149_announcement_alert_expiry.sql",
+      "sha256": "818a85fa83feae27ca7729cd8e4b808a63544d7e174e086a75341e97e7a87031",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "supabase/tests/resident_home_requests.mjs",
+      "sha256": "0448a276bd4873338372c8d67b4f5e655ff0bac301c9f87afc5ddffec2637dac",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "supabase/tests/announcement_alert_lifetime.mjs",
+      "sha256": "131b3cc0172cb7d7b64f632d96af675c3c4cea2456870e1a1ca400d41d04e3f1",
+      "trailingWhitespace": []
+    },
+    {
+      "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+      "sha256": "49f03b18b1fb9ad96dc26cab5ed82ad7ea88d8b20927eff634460c6e9747a792",
+      "trailingWhitespace": [
+        3,
+        4
+      ]
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+      "sha256": "95e03763bbe76b5b856be0ba26c40c61ede9dfe452867b3c66983911a5a90593",
+      "trailingWhitespace": []
+    }
+  ],
+  "integration": true,
+  "visual": true,
+  "androidLint": {
+    "baseline": 3,
+    "final": 1,
+    "noNewWarnings": true,
+    "attributedImprovement": false
+  },
+  "postCleanupTypes": {
+    "end": "2026-10-28T06:35:48.5261288Z",
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\admin-web",
+    "exit": 0,
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "start": "2026-10-28T06:35:09.3640973Z"
+  }
+}

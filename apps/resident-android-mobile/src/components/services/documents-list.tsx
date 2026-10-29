@@ -1,6 +1,6 @@
 import { serviceListPriceLabel, serviceProcessingShortLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ServicesFilterChips } from '@/components/services/services-filter-chips';
@@ -38,7 +38,7 @@ function documentCategory(doc: DocumentType): Exclude<DocumentCategory, 'all'> |
 }
 
 /** Real document_types catalog for the resident's own barangay (RLS-scoped). */
-export function DocumentsList({ verification }: { verification?: ReactNode }) {
+export function DocumentsList() {
   const theme = useTheme();
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -113,11 +113,6 @@ export function DocumentsList({ verification }: { verification?: ReactNode }) {
 
   return (
     <View style={[serviceListStyles.list, styles.list]}>
-      <View style={styles.sectionHeader}>
-        <ThemedText type="heading" style={[serviceListStyles.heading, styles.heading]}>Available Documents</ThemedText>
-        {verification ? <View style={styles.headingMeta}>{verification}</View> : null}
-      </View>
-
       {categories.length > 0 ? (
         <View style={styles.categories}>
           <ServicesFilterChips label="document categories" activeKey={activeCategory} onChange={setCategory}
@@ -162,9 +157,6 @@ const styles = StyleSheet.create({
   list: { gap: 2 },
   // The chip row carries its own 20px inset, so cancel the list's padding.
   categories: { marginHorizontal: -20, marginBottom: 6 },
-  sectionHeader: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', columnGap: 4 },
-  heading: { textAlign: 'center', fontSize: 22, lineHeight: 28, letterSpacing: -0.4, flexShrink: 1 },
-  headingMeta: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 8 },
   documentRow: { paddingHorizontal: 12, paddingVertical: 10, gap: 10, minHeight: 72 },
   documentIcon: { width: 36, height: 36, borderRadius: 10 },
   documentTitle: { fontSize: 14, lineHeight: 18 },

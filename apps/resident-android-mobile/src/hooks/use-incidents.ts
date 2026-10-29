@@ -11,7 +11,7 @@ export type IncidentRow = Tables<'incidents'>;
  * MapMarker[] for direct consumption by the Leaflet WebView bridge.
  *
  * Subscribes to Realtime so newly submitted incidents appear on the map without a
- * manual refresh — mirrors the pattern used by use-announcements.ts.
+ * manual refresh — mirrors the pattern used by use-notification-hub.ts.
  *
  * Filtering is server-side (categoryIds and searchQuery are sent as PostgREST params)
  * so the payload stays small even when a barangay has many incidents.

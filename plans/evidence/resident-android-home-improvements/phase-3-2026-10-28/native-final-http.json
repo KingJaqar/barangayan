@@ -1,0 +1,14 @@
+[
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T10:16:46.251Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T10:16:46.266Z",
+    "status": 200
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "density": "Physical density: 480",
+  "fontScale": "null",
+  "wifi": "1",
+  "mobileData": "1",
+  "reverseBeforeCleanup": "host-22 tcp:8099 tcp:8099\r\nhost-22 tcp:58472 tcp:58472",
+  "originalAccountStorage": "Untouched: all fixture AsyncStorage keys used home-i2: namespace; package data was never cleared",
+  "originalApp": "Force stopped test bundle; device returned to launcher"
+}

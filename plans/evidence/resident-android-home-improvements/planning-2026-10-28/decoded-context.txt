@@ -1,0 +1,850 @@
+FILE: apps/admin-web/AGENTS.md
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
+END FILE: apps/admin-web/AGENTS.md
+
+FILE: apps/resident-android-mobile/src/app/(app)/home/index.tsx
+import { Ionicons } from '@expo/vector-icons';
+import type { Tables } from '@barangayan/shared';
+import { Image } from 'expo-image';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Avatar } from '@/components/avatar';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+import { ServicesTabIcon } from '@/components/services-tab-icon';
+import { GuestPrompt } from '@/components/guest-prompt';
+import { HomeAction } from '@/components/home/home-action';
+import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { ThemedText } from '@/components/themed-text';
+import { DocumentIcon } from '@/components/document-icon';
+import { getDocumentIcon } from '@/constants/document-icons';
+import { MaxContentWidth } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { homeGreeting, homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+import { supabase } from '@/lib/supabase';
+
+type Announcement = Tables<'announcements'>;
+const QUICK_ACTIONS = [
+  { label: 'Documents', description: 'Request a document', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+  { label: 'Report', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+  { label: 'Emergency', description: 'Emergency information', href: '/drrm', icon: 'drrm', tone: 'danger', foreground: 'onDanger' },
+  { label: 'Maps', description: 'Open barangay maps', href: '/maps', icon: 'location-outline', tone: 'info', foreground: 'onInfo' },
+  { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
+] as const;
+
+export default function HomeScreen() {
+  const { session } = useAuth();
+  const userId = session?.user.id ?? null;
+  const { profile, refetch: refetchProfile } = useProfile();
+  const { resident } = useTheme();
+  const router = useRouter();
+  const bottomTabInset = useFloatingTabInset();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { width, fontScale } = useWindowDimensions();
+  const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
+  const [requestRetry, setRequestRetry] = useState(0);
+  const [announcementRetry, setAnnouncementRetry] = useState(0);
+  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const requestKey = JSON.stringify([userId, requestRetry]);
+  const [requestResult, setRequestResult] = useState<{ key: string; items: HomeRequest[]; error: string | null } | null>(null);
+  const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<HomeRequest | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const pendingTracking = useRef<string | null>(null);
+  const homeActive = useRef(true);
+  const requestTargets = useRef(new Map<string, View>());
+  // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
+  const pullNews = useRef<(() => Promise<void>) | null>(null);
+  const pullRequests = useRef<(() => Promise<void>) | null>(null);
+  const pull = usePullRefresh([() => pullNews.current?.(), () => pullRequests.current?.(), refetchProfile]);
+
+  useEffect(() => {
+    let active = true;
+    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
+    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
+    fetchLatest()
+      .then(({ data, error }) => {
+        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
+      });
+    pullNews.current = () => fetchLatest().then(({ data, error }) => {
+      if (!error && active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullNews.current = null; };
+  }, [announcementRetry]);
+
+  useEffect(() => {
+    if (!userId) return;
+    let active = true;
+    // Preserve the existing authenticated resident scope and latest-three limit.
+    const fetchRecent = () => Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
+      .order('created_at', { ascending: false }).limit(3));
+    fetchRecent()
+      .then(({ data, error }) => {
+        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
+      }).catch(() => {
+        if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
+      });
+    pullRequests.current = () => fetchRecent().then(({ data, error }) => {
+      if (!error && active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
+    }).catch(() => undefined);
+    return () => { active = false; pullRequests.current = null; };
+  }, [userId, requestKey]);
+
+  useEffect(() => {
+    pendingTracking.current = null;
+    setSheetOpen(false);
+    setSelectedRequest(null);
+  }, [userId]);
+
+  useFocusEffect(useCallback(() => {
+    homeActive.current = true;
+    const listener = AppState.addEventListener('change', state => {
+      homeActive.current = state === 'active';
+      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); }
+    });
+    return () => { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
+  }, []));
+
+  const requests = requestResult?.key === requestKey ? requestResult : null;
+  const news = newsResult?.retry === announcementRetry ? newsResult : null;
+  const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
+  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || 'Resident';
+  const announcement = news?.item;
+  const announcementTone = announcement?.category === 'emergency' ? resident.danger
+    : announcement?.category === 'health' ? resident.rose : resident.accentText;
+
+  function closeSheet() { pendingTracking.current = null; setSheetOpen(false); }
+  function afterDismiss() {
+    const id = pendingTracking.current;
+    pendingTracking.current = null;
+    if (!homeActive.current) return;
+    // Keep tracking in Home's stack so Back removes it without changing Services.
+    if (id && selected?.id === id) router.push(`/home/requests/${id}`);
+    else {
+      const target = selected ? requestTargets.current.get(selected.id) : null;
+      if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, 'focus'); }
+    }
+  }
+
+  return <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: resident.card }]}>
+    <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+      refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
+      <View style={styles.inset}><ProfileCompletionBanner /></View>
+      <View style={styles.identitySection}>
+        {userId ? <View style={styles.identity}>
+          <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} />
+          <View style={styles.locationGroup}>
+            <Ionicons name="location-outline" size={16} color={resident.accentText} accessible={false} />
+            <ThemedText style={[styles.location, { color: resident.text }]}>{profile?.barangays?.name ?? 'Barangayan'}</ThemedText>
+          </View>
+        </View> : <HomeAction reducedMotion={reducedMotion} hitSlop={4} accessibilityLabel="Log in" onPress={() => router.push('/(auth)/login')} style={styles.identity}>
+          <Avatar icon="person" size={36} foregroundColor={resident.onAccent} />
+          <ThemedText style={[styles.location, { color: resident.text }]}>Log in</ThemedText>
+        </HomeAction>}
+        <ThemedText accessibilityRole="header" style={[styles.greeting, { color: resident.text }]}>{homeGreeting(new Date().getHours())}, {userId ? firstName : 'neighbor'}</ThemedText>
+      </View>
+      <View style={styles.quickActions}>
+        {QUICK_ACTIONS.map(action => <HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+          accessibilityLabel={action.label} accessibilityHint={action.description} onPress={() => router.push(action.href)} style={[styles.quickAction, compactActions && styles.compactAction]}>
+          <View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === 'accent' && resident.accentNeedsOutline ? 1 : 0 }]}>
+            {action.href === '/services'
+              ? <ServicesTabIcon size={24} color={resident[action.foreground]} />
+              : action.icon === 'drrm'
+              ? <DrrmTabIcon size={24} color={resident[action.foreground]} />
+              : <Ionicons name={action.icon} size={24} color={resident[action.foreground]} accessible={false} />}
+          </View>
+          <ThemedText style={[styles.quickLabel, { color: resident.text }]}>{action.label}</ThemedText>
+        </HomeAction>)}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push('/services')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!userId ? <View style={styles.inset}><GuestPrompt label="Log in to see your requests." /></View>
+          : !requests ? <HomeListState loading label="Loading your requests…" />
+          : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
+          : requests.items.length === 0 ? <HomeListState label="Your requests will appear here. Tap Documents to request a document." />
+          : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
+            {requests.items.map(request => {
+              const summary = homeRequestSummary(request);
+              const title = request.document_types?.name ?? 'Document request';
+              return <HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                <View style={styles.requestTop}>
+                  <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
+                    <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
+                  </View>
+                  <View style={styles.requestInfo}>
+                    <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{title}</ThemedText>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>#{request.reference_number}</ThemedText>
+                  </View>
+                </View>
+                <View style={styles.requestProgress}>
+                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+                  </View>
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                </View>
+              </HomeAction>;
+            })}
+          </ScrollableChevronRow>}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Around the barangay</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Latest announcements</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all announcements" onPress={() => router.push('/announcements')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!news ? <HomeListState loading label="Loading announcements…" />
+          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+          : announcement ? <View style={styles.shelf}>
+            <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+              style={({ pressed }) => [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+              <View style={styles.newsMeta}>
+                <View style={styles.categoryGroup}>
+                  <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                </View>
+                <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+              </View>
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? <ThemedText style={[styles.reference, { color: resident.muted }]}>Announcement image unavailable.</ThemedText>
+                : <Image source={{ uri: announcement.image_url }} contentFit="cover" style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                : null}
+              <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+            </HomeAction>
+          </View> : <HomeListState label="No announcements yet." />}
+      </View>
+    </ScrollView>
+    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+  </SafeAreaView>;
+}
+
+function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () => void }) {
+  const { resident } = useTheme();
+  return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+    {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+    <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+    {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+  </View>;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 36 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: '800', letterSpacing: -0.7 },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 28 },
+  quickAction: { flex: 1, alignItems: 'center', paddingVertical: 4, gap: 6, minWidth: 0 },
+  compactAction: { flex: 0, width: '33.333333%' },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+  section: { marginBottom: 28 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 44, justifyContent: 'flex-end' },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: 'row', gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: 'auto', paddingTop: 10 },
+  segments: { flexDirection: 'row', gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: '600' },
+  newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  categoryGroup: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: 'right', flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: '700', textTransform: 'capitalize', flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});
+END FILE: apps/resident-android-mobile/src/app/(app)/home/index.tsx
+
+FILE: apps/resident-android-mobile/src/app/(app)/services/index.tsx
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
+import { useProfile } from '@/hooks/use-profile';
+import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRef, useState } from 'react';
+import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { DocumentsList } from '@/components/services/documents-list';
+import { LogsList } from '@/components/services/logs-list';
+import { RequestsList } from '@/components/services/requests-list';
+import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
+import { ThemedText } from '@/components/themed-text';
+import { SegmentedControl } from '@/components/segmented-control';
+import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
+
+type ServicesSegment = 'documents' | 'requests' | 'logs';
+
+const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
+
+const TABS: { key: ServicesSegment; label: string }[] = [
+  { key: 'documents', label: 'Documents' },
+  { key: 'requests', label: 'Requests' },
+  { key: 'logs', label: 'Logs' },
+];
+
+// Documents/Requests/Logs — confirmed against the design file. Guests only ever see
+// Documents (real, guest-readable data per the 0005 migration's anon RLS policy) —
+// Requests/Logs require a real identity, so the control that would reach them isn't
+// rendered at all for a guest, rather than being reachable-but-gated.
+export default function ServicesScreen() {
+  const { session } = useAuth();
+  const router = useRouter();
+  const { profile, refetch, isLoading, error } = useProfile();
+  const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const bottomTabInset = useFloatingTabInset();
+  const pull = usePullRefresh([refetch]);
+
+  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
+  const initialSegment: ServicesSegment =
+    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+      ? (segmentParam as ServicesSegment)
+      : 'documents';
+
+  const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+  const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+  const verificationButton = useRef<View>(null);
+  const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+  const verifiedIcon = verified ? (
+    <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
+      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
+      onPress={event => {
+        event.stopPropagation();
+        verificationButton.current?.measureInWindow((x, y, _width, height) => setVerificationAnchor({ x, y: y + height + 6 }));
+      }}>
+      <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessible={false} />
+    </Pressable>
+  ) : undefined;
+  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab => tab.key === 'documents'
+    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
+
+  const statusBlock = (
+    <>
+      <ProfileCompletionBanner />
+      {session && (error || idVerificationState(profile) !== 'verified') ? (
+        <View
+          style={[
+            styles.verifyCard,
+            { backgroundColor: theme.resident.card, borderColor: theme.resident.border },
+          ]}>
+          <View style={styles.verifyHeader}>
+            <View style={[styles.verifyIcon, { backgroundColor: theme.resident.accentSoft }]}>
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
+            </View>
+            <ThemedText accessibilityRole="alert" style={styles.verifyText}>
+              {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
+            </ThemedText>
+          </View>
+          <PrimaryButton label="Verify Now" presentation="resident" onPress={() => router.push('/settings/valid-id')} />
+          {error ? <PrimaryButton label="Retry verification check" presentation="resident" variant="secondary" onPress={refetch} /> : null}
+        </View>
+      ) : null}
+    </>
+  );
+
+  return (
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
+        <View style={styles.controls}>
+          <SegmentedControl segments={tabs} activeKey={segment} onChange={next => { setVerificationAnchor(null); setSegment(next); }}
+            variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
+        </View>
+
+        {session && segment === 'requests' ? (
+          // RequestsList owns its scroller so its filter chips can stay pinned while the
+          // list scrolls; the banner/verification block scrolls away above them.
+          <RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} />
+        ) : (
+          <PullRefreshScope register={pull.register}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+              contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
+              {statusBlock}
+              {!session || segment === 'documents' ? <DocumentsList /> : null}
+              {session && segment === 'logs' && <LogsList />}
+            </ScrollView>
+          </PullRefreshScope>
+        )}
+
+      <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
+      </View>
+      <Modal transparent visible={verified && verificationAnchor !== null} animationType="none" statusBarTranslucent
+        onRequestClose={() => setVerificationAnchor(null)}>
+        <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss ID verification status"
+            onPress={() => setVerificationAnchor(null)} />
+          {verificationAnchor ? <View style={[styles.verificationPopover, {
+            top: verificationAnchor.y,
+            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
+            maxWidth: width - 32,
+            backgroundColor: theme.resident.card,
+            borderColor: theme.resident.border,
+          }]}>
+            <Ionicons name="shield-checkmark" size={20} color={theme.resident.accentText} accessible={false} />
+            <ThemedText type="smallBold" style={{ color: theme.resident.accentText, flexShrink: 1 }}>Valid ID verified</ThemedText>
+          </View> : null}
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+
+  contentWrapper: {
+    flex: 1,
+  },
+  controls: {
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingTop: 20,
+  },
+  documentsScrollContent: {
+    paddingTop: 6,
+  },
+  verifiedIcon: { width: 22, height: 22 },
+  verificationButton: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+  verificationPopover: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12,
+    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  verifyCard: {
+    marginHorizontal: 20,
+    marginBottom: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  verifyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  verifyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifyText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+  },
+});
+END FILE: apps/resident-android-mobile/src/app/(app)/services/index.tsx
+
+FILE: apps/resident-android-mobile/src/lib/emergency-cache.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const CACHE_PREFIX = 'emergency_cache_';
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+function keyFor(tag: string): string {
+  return `${CACHE_PREFIX}${tag}`;
+}
+
+export async function getCachedData<T>(tag: string): Promise<T | null> {
+  try {
+    const raw = await AsyncStorage.getItem(keyFor(tag));
+    if (!raw) return null;
+    const entry: CacheEntry<T> = JSON.parse(raw);
+    if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+      await AsyncStorage.removeItem(keyFor(tag));
+      return null;
+    }
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function setCachedData<T>(tag: string, data: T): Promise<void> {
+  try {
+    const entry: CacheEntry<T> = { data, timestamp: Date.now() };
+    await AsyncStorage.setItem(keyFor(tag), JSON.stringify(entry));
+  } catch {
+    // Storage full or unavailable — non-blocking
+  }
+}
+END FILE: apps/resident-android-mobile/src/lib/emergency-cache.ts
+
+FILE: apps/resident-android-mobile/src/lib/home-request.test.ts
+import { describe, expect, it } from 'vitest';
+import { homeGreeting, homeRequestSummary, homeTimestamp } from './home-request';
+
+const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+
+describe('Home loaded-data summary', () => {
+  it('uses the real submission date and leaves missing reached dates unavailable', () => {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe('Processing');
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+    ]);
+  });
+
+  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp('invalid')).toBe('Date unavailable');
+  });
+
+  it('does not claim a cancelled request completed all steps', () => {
+    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe('Cancelled');
+    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe('Not recorded');
+  });
+
+  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+    for (const payment_status of ['paid', 'waived']) {
+      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+    }
+    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+  });
+
+  it('changes greeting at noon and evening boundaries', () => {
+    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual(['Good morning', 'Good morning', 'Good afternoon', 'Good afternoon', 'Good evening', 'Good evening']);
+  });
+});
+END FILE: apps/resident-android-mobile/src/lib/home-request.test.ts
+
+FILE: apps/resident-android-mobile/src/lib/home-request.ts
+import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
+
+export type HomeRequest = Tables<'service_requests'> & {
+  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+};
+
+const STEPS = [
+  { status: 'submitted', label: 'Submitted' },
+  { status: 'in_progress', label: 'Processing' },
+  { status: 'ready_for_pickup', label: 'Ready for pickup' },
+  { status: 'completed', label: 'Completed' },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
+  const stepIndex = STEPS.findIndex(step => step.status === request.status);
+  const cancelled = request.status === 'cancelled';
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) => {
+    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+      && item.status === step.status && validDate(item.at));
+    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeGreeting(hour: number) {
+  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+END FILE: apps/resident-android-mobile/src/lib/home-request.ts
+
+FILE: apps/resident-android-mobile/package.json
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+END FILE: apps/resident-android-mobile/package.json
+
+FILE: apps/resident-android-mobile/vitest.config.ts
+import { defineConfig } from 'vitest/config';
+export default defineConfig({ test: { environment: 'node', include: ['src/lib/*.test.ts'] } });
+END FILE: apps/resident-android-mobile/vitest.config.ts
+
+FILE: packages/shared/src/schemas/announcement.test.ts
+import { describe, expect, it } from 'vitest';
+
+import { announcementSchema } from './announcement';
+
+describe('announcementSchema', () => {
+  it('parses a valid announcement', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Road Closure Notice',
+      body: 'Main street will be closed for repairs.',
+      category: 'general',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a missing title', () => {
+    const result = announcementSchema.safeParse({
+      title: '',
+      body: 'Body text',
+      category: 'general',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a missing body', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: '',
+      category: 'general',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an invalid category', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'not-a-real-category',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an invalid image_url', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      image_url: 'not-a-url',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts an empty string image_url', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      image_url: '',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a missing detailed_description', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a valid detailed_description', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      detailed_description: 'A much longer write-up with the full context residents need.',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a detailed_description over 5000 characters', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      detailed_description: 'a'.repeat(5001),
+    });
+    expect(result.success).toBe(false);
+  });
+});
+END FILE: packages/shared/src/schemas/announcement.test.ts
+
+FILE: packages/shared/src/schemas/announcement.ts
+import { z } from 'zod';
+
+export const announcementSchema = z.object({
+  title:                z.string().min(1, 'Title is required').max(200),
+  body:                 z.string().min(1, 'Body is required').max(2000),
+  // Expanded write-up shown in the resident app's Announcement Modal. Optional — falls
+  // back to `body` in the UI when omitted.
+  detailed_description: z.string().max(5000, 'Detailed description is too long').optional().or(z.literal('')),
+  category:             z.enum(['general', 'emergency', 'health', 'events']),
+  image_url:            z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  published_at:         z.string().datetime().optional(), // ISO string; defaults to now() on insert
+});
+
+export type AnnouncementFormValues = z.infer<typeof announcementSchema>;
+END FILE: packages/shared/src/schemas/announcement.ts
+
+FILE: packages/shared/package.json
+{
+  "name": "@barangayan/shared",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "build:routing-pack": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "@types/geojson": "^7946.0.14",
+    "vitest": "^3.0.0"
+  }
+}
+END FILE: packages/shared/package.json
+
+FILE: AGENTS.md
+
+END FILE: AGENTS.md
+

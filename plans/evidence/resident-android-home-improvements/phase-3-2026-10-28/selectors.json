@@ -1,0 +1,14 @@
+[
+  "AGENTS.md",
+  "CLAUDE.md",
+  "apps/resident-android-mobile/package.json",
+  "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+  "apps/resident-android-mobile/src/components/home/home-action.tsx",
+  "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+  "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+  "apps/resident-android-mobile/src/lib/home-request.ts",
+  "apps/resident-android-mobile/src/lib/home-request.test.ts",
+  "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+  "packages/shared/src/lib/home-request-priority.ts",
+  "supabase/migrations/0148_resident_home_request_priority.sql"
+]

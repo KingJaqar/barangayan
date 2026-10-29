@@ -1,0 +1,251 @@
+{
+  "at": "2026-10-27T02:17:48.347Z",
+  "route": "/complete-profile",
+  "scope": "Optional completion only; required account-setup and first-password branches remain separate",
+  "saved": false,
+  "fields": [
+    {
+      "id": "B09",
+      "label": "First Name",
+      "focus": {
+        "tag": "completion-B09-focus",
+        "editor": [
+          123,
+          882,
+          528,
+          1001
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B09-editing",
+        "editor": [
+          123,
+          882,
+          528,
+          1001
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B10",
+      "label": "Last Name",
+      "focus": {
+        "tag": "completion-B10-focus",
+        "editor": [
+          552,
+          882,
+          957,
+          1001
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B10-editing",
+        "editor": [
+          552,
+          882,
+          957,
+          1001
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B11",
+      "label": "Middle Name (optional)",
+      "focus": {
+        "tag": "completion-B11-focus",
+        "editor": [
+          123,
+          314,
+          528,
+          433
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B11-editing",
+        "editor": [
+          123,
+          314,
+          528,
+          433
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B12",
+      "label": "Suffix (optional)",
+      "focus": {
+        "tag": "completion-B12-focus",
+        "editor": [
+          552,
+          291,
+          957,
+          410
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B12-editing",
+        "editor": [
+          552,
+          291,
+          957,
+          410
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B13",
+      "label": "Mobile Number",
+      "focus": {
+        "tag": "completion-B13-focus",
+        "editor": [
+          123,
+          494,
+          957,
+          613
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B13-editing",
+        "editor": [
+          123,
+          494,
+          957,
+          613
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": false,
+      "atMaxLength": true
+    },
+    {
+      "id": "B14",
+      "label": "House No.",
+      "focus": {
+        "tag": "completion-B14-focus",
+        "editor": [
+          123,
+          1044,
+          393,
+          1163
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B14-editing",
+        "editor": [
+          123,
+          1044,
+          393,
+          1163
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B15",
+      "label": "Street",
+      "focus": {
+        "tag": "completion-B15-focus",
+        "editor": [
+          417,
+          1044,
+          957,
+          1163
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B15-editing",
+        "editor": [
+          417,
+          1044,
+          957,
+          1163
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B16",
+      "label": "Occupation (optional)",
+      "focus": {
+        "tag": "completion-B16-focus",
+        "editor": [
+          123,
+          964,
+          957,
+          1083
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-B16-editing",
+        "editor": [
+          123,
+          964,
+          957,
+          1083
+        ],
+        "focused": true,
+        "imeTop": 1167,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    }
+  ],
+  "status": "pass stated optional-completion focus/edit/status subset",
+  "configuration": "default",
+  "configurationEvidence": "Initial qualified environment1080x1920/480dpi/font1.0; these observations preceded the later matrix. Label added during final metadata review; observations unchanged."
+}

@@ -1,0 +1,22 @@
+{
+  "id": "export",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "export",
+    "--platform",
+    "android",
+    "--max-workers",
+    "2",
+    "--output-dir",
+    "../../tmp/resident-home-phase4-20261028/export-baseline"
+  ],
+  "deadline": 1200000,
+  "start": "2026-10-28T13:01:32.703Z",
+  "end": "2026-10-28T13:04:16.515Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\baseline-export.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\baseline-export"
+}

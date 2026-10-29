@@ -1,0 +1,11 @@
+{
+  "name": "resident-shell-lifecycle",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/resident-shell-lifecycle.mjs"
+  ],
+  "start": "2026-10-27T02:03:27.890Z",
+  "end": "2026-10-27T02:03:34.798Z",
+  "status": 0
+}

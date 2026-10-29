@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-27T01:22:11.999Z",
+  "status": "pass native paste/long horizontal caret and cleanup",
+  "config": "tall-font",
+  "kind": "header",
+  "route": "home",
+  "paste": [
+    {
+      "tag": "tall-font-long-paste-header-drrm-native-cut",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        811,
+        222
+      ],
+      "imeTop": 641,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-long-paste-header-drrm-native-paste",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        679,
+        222
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    }
+  ],
+  "longCharacterCount": 120,
+  "maximum": 120,
+  "imeSubmissionVerified": true,
+  "syntheticTextCleared": true,
+  "tagRouteSuffix": "drrm",
+  "metadataCorrection": "Header finisher always opens Home; incident finisher always opens Maps. Filename retains the historical default suffix."
+}

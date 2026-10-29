@@ -1,0 +1,19 @@
+{
+  "repomix_version": "1.18.1",
+  "xml_sha256": "e08b9b1a3f52d25ca672f4a20586d9a0dac661ba9c67194e9232b41504b36f2e",
+  "included": [
+    "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+    "apps/resident-android-mobile/src/constants/disclosure-motion.ts"
+  ],
+  "omissions": [],
+  "security": "Default security check retained; no reported security exclusion; both selectors included",
+  "decoded_chars": 5636,
+  "decoded_lines": 119,
+  "read_ranges": [
+    [
+      0,
+      5636
+    ]
+  ],
+  "supersedes": "Original packet requests-list.tsx entry only; other entries remain reusable"
+}

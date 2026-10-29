@@ -1,0 +1,270 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style.<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, packages/shared/src/index.ts, packages/shared/src/lib/service-catalog.ts, packages/shared/package.json, supabase/migrations/0143_residents_read_requested_document_types.sql
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style</notes></file_summary><directory_structure>packages/
+  shared/
+    src/
+      lib/
+        service-catalog.ts
+      index.ts
+    package.json
+supabase/
+  migrations/
+    0143_residents_read_requested_document_types.sql
+AGENTS.md
+CLAUDE.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="packages/shared/src/lib/service-catalog.ts">import { serviceCatalogContractSchema, serviceDocumentTypeSchema, type ServiceDocumentTypeInput } from &apos;../schemas/service-foundations&apos;;
+import type { Json, Tables } from &apos;../types/database&apos;;
+import { formatProcessingTime } from &apos;./format&apos;;
+
+export const charterSections = [
+  [&apos;officeDivision&apos;, &apos;Office/Division&apos;],
+  [&apos;classification&apos;, &apos;Classification&apos;],
+  [&apos;transactionType&apos;, &apos;Type of Transaction&apos;],
+  [&apos;whoMayAvail&apos;, &apos;Who May Avail&apos;],
+  [&apos;checklistOfRequirements&apos;, &apos;Checklist of Requirements&apos;],
+  [&apos;whereToSecureRequirements&apos;, &apos;Where to Secure the Requirements&apos;],
+  [&apos;clientSteps&apos;, &apos;Client Steps&apos;],
+  [&apos;agencyActions&apos;, &apos;Agency Actions&apos;],
+  [&apos;feesToBePaid&apos;, &apos;Fees to Be Paid&apos;],
+  [&apos;processingTime&apos;, &apos;Processing Time&apos;],
+  [&apos;personResponsible&apos;, &apos;Person Responsible&apos;],
+] as const;
+
+/** One validated mapping for create/edit. Legacy request contracts stay untouched. */
+export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput) {
+  const value = serviceDocumentTypeSchema.parse(input);
+  return {
+    name: value.name, description: value.description || null, contract_version: 2,
+    service_kind: value.catalog.serviceKind,
+    charter: {
+      ...value.catalog.charter,
+      feesToBePaid: value.catalog.pricingMode === &apos;assessment&apos; ? BUSINESS_FEE_DESCRIPTION
+        : value.catalog.serviceKind === &apos;general&apos; ? value.catalog.charter.feesToBePaid
+        : `₱${(value.feeCentavos / 100).toFixed(2)}${value.catalog.pricingMode === &apos;per_page&apos; ? &apos; per page&apos; : &apos;&apos;}`,
+    },
+    purposes: value.catalog.purposes, requirement_rules: value.catalog.requirementRules,
+    pricing_mode: value.catalog.pricingMode,
+    processing_target_minutes: value.catalog.processingTargetMinutes,
+    fee_centavos: value.catalog.pricingMode === &apos;assessment&apos; ? 0 : value.feeCentavos,
+    requirements: value.catalog.charter.checklistOfRequirements.split(&apos;\n&apos;).map(line =&gt; line.trim()).filter(Boolean),
+  };
+}
+
+export function catalogContract(row: Tables&lt;&apos;document_types&apos;&gt;) {
+  if (row.contract_version !== 2) return null;
+  return serviceCatalogContractSchema.parse({
+    serviceKind: row.service_kind,
+    charter: row.charter,
+    purposes: row.purposes,
+    requirementRules: row.requirement_rules,
+    pricingMode: row.pricing_mode,
+    processingTargetMinutes: row.processing_target_minutes,
+  });
+}
+
+export const BUSINESS_FEE_DESCRIPTION = &apos;See Attached Tax Code (depends on the kind of transaction)&apos;;
+
+export function servicePriceLabel(row: Tables&lt;&apos;document_types&apos;&gt;) {
+  if (row.pricing_mode === &apos;assessment&apos;) return BUSINESS_FEE_DESCRIPTION;
+  if (row.pricing_mode === &apos;per_page&apos;) return `₱${(row.fee_centavos / 100).toFixed(2)} per page`;
+  return row.fee_centavos === 0 ? &apos;No payment required&apos; : `₱${(row.fee_centavos / 100).toFixed(2)}`;
+}
+
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request: { fee_assessment_state: string }, amount: number | null) {
+  if (amount !== null) return `₱${(amount / 100).toFixed(2)}`;
+  return request.fee_assessment_state === &apos;page_count_required&apos;
+    ? &apos;₱10.00 per page — enter total pages to continue&apos;
+    : BUSINESS_FEE_DESCRIPTION;
+}
+
+/** Charter guidance only; elapsed tracking remains a separate timing contract. */
+export function serviceProcessingLabel(row: Tables&lt;&apos;document_types&apos;&gt;) {
+  return row.contract_version === 2
+    ? `${row.processing_target_minutes} minutes of agency processing`
+    : formatProcessingTime(row.processing_target_hours);
+}
+
+export function idVerificationState(
+  profile: Pick&lt;
+    Tables&lt;&apos;profiles&apos;&gt;,
+    &apos;id_verification_status&apos; | &apos;approved_id_submission_id&apos; | &apos;current_id_submission_id&apos; | &apos;id_repair_required&apos;
+  &gt; | null,
+) {
+  if (
+    profile?.id_verification_status === &apos;verified&apos; &amp;&amp;
+    profile.approved_id_submission_id &amp;&amp;
+    profile.approved_id_submission_id === profile.current_id_submission_id &amp;&amp;
+    !profile.id_repair_required
+  )
+    return &apos;verified&apos;;
+  if (profile?.id_verification_status === &apos;pending&apos;) return &apos;pending&apos;;
+  if (profile?.id_verification_status === &apos;verification_failed&apos; || profile?.id_repair_required)
+    return &apos;failed&apos;;
+  return &apos;missing&apos;;
+}
+
+export const idVerificationMessages = {
+  verified: &apos;Your approved profile ID will be reused for this request.&apos;,
+  pending: &apos;Your ID is awaiting verification. Requests are available after approval.&apos;,
+  failed: &apos;Your ID needs attention. Open your profile to review the reason and upload a valid ID.&apos;,
+  missing: &apos;Upload a valid ID in your profile and have it verified before requesting a document.&apos;,
+};
+
+export function submittedDetailLines(value: Json | null): [string, string][] {
+  if (!value || typeof value !== &apos;object&apos; || Array.isArray(value)) return [];
+  const labels = {
+    businessName: &apos;Business name&apos;,
+    establishmentAddress: &apos;Establishment address&apos;,
+    recordReference: &apos;Record/document reference&apos;,
+    copies: &apos;Number of copies&apos;,
+    totalPages: &apos;Total pages across all copies&apos;,
+  };
+  const lines: [string, string][] = [];
+  for (const [key, label] of Object.entries(labels))
+    if (value[key] !== undefined) lines.push([label, String(value[key])]);
+  if (typeof value.isRenter === &apos;boolean&apos;)
+    lines.push([&apos;Residency&apos;, value.isRenter ? &apos;Renter&apos; : &apos;Non-renter&apos;]);
+  if (value.personalAppearanceAcknowledged === true)
+    lines.push([&apos;Personal appearance&apos;, &apos;Requirement acknowledged&apos;]);
+  return lines;
+}
+
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
+export function requestFee(
+  request: Pick&lt;
+    Tables&lt;&apos;service_requests&apos;&gt;,
+    &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos;
+  &gt; &amp; { legacy_fee_centavos?: number | null },
+  legacyCatalogFee: number,
+  recordedPaymentFee?: number | null,
+) {
+  if (recordedPaymentFee != null) return recordedPaymentFee;
+  if (request.contract_version === 2)
+    return request.assessed_amount_centavos;
+  return request.legacy_fee_centavos ?? legacyCatalogFee;
+}
+
+/** List rows stay compact: a tax-code assessed fee reads &quot;Varies&quot; here, the full explanation lives on the detail screen. */
+export function serviceListPriceLabel(row: Tables&lt;&apos;document_types&apos;&gt;) {
+  return row.pricing_mode === &apos;assessment&apos; ? &apos;Varies&apos; : servicePriceLabel(row);
+}
+
+/** Compact turnaround for list rows (&quot;~15 min&quot;, &quot;~2 hr&quot;, &quot;Same day&quot;); the charter wording stays on the detail screen. */
+export function serviceProcessingShortLabel(row: Tables&lt;&apos;document_types&apos;&gt;) {
+  if (row.contract_version !== 2) return formatProcessingTime(row.processing_target_hours).replace(&apos;Same Day&apos;, &apos;Same day&apos;);
+  const minutes = row.processing_target_minutes;
+  if (minutes === null) return formatProcessingTime(row.processing_target_hours).replace(&apos;Same Day&apos;, &apos;Same day&apos;);
+  if (minutes &lt; 60) return `~${minutes} min`;
+  if (minutes &lt; 480) return `~${Math.ceil(minutes / 60)} hr`;
+  if (minutes &lt;= 1440) return &apos;Same day&apos;;
+  return `~${Math.ceil(minutes / 1440)} days`;
+}</file><file path="packages/shared/src/index.ts">export * from &apos;./types/domain&apos;;
+export * from &apos;./types/database&apos;;
+export * from &apos;./types/service-foundations&apos;;
+export * from &apos;./types/map-bridge&apos;;
+
+export * from &apos;./schemas/announcement&apos;;
+export * from &apos;./schemas/auth&apos;;
+export * from &apos;./schemas/emergency-information&apos;;
+export * from &apos;./schemas/faq&apos;;
+export * from &apos;./schemas/request-form&apos;;
+export * from &apos;./schemas/incident-report&apos;;
+export * from &apos;./schemas/incident-map&apos;;
+export * from &apos;./schemas/drive-registration&apos;;
+export * from &apos;./schemas/payment&apos;;
+export * from &apos;./schemas/document-type&apos;;
+export * from &apos;./schemas/service-foundations&apos;;
+export * from &apos;./lib/service-foundations&apos;;
+export * from &apos;./lib/id-evidence&apos;;
+export * from &apos;./schemas/evacuation-center&apos;;
+export * from &apos;./schemas/routing-conditions&apos;;
+export * from &apos;./schemas/emergency-qr&apos;;
+export * from &apos;./schemas/waste-management&apos;;
+export * from &apos;./schemas/household&apos;;
+export * from &apos;./schemas/household-attendance&apos;;
+export * from &apos;./schemas/staff&apos;;
+export * from &apos;./schemas/settings&apos;;
+export * from &apos;./schemas/admin-audit-log&apos;;
+export * from &apos;./schemas/site-content&apos;;
+export * from &apos;./schemas/about-us&apos;;
+
+export * from &apos;./constants/announcement-categories&apos;;
+export * from &apos;./constants/document-catalog-shape&apos;;
+export * from &apos;./constants/drive-types&apos;;
+export * from &apos;./constants/id-verification&apos;;
+export * from &apos;./constants/incident-categories&apos;;
+export * from &apos;./constants/official-roles&apos;;
+export * from &apos;./constants/priority-weights&apos;;
+export * from &apos;./constants/theme-colors&apos;;
+export * from &apos;./constants/theme-fonts&apos;;
+export * from &apos;./constants/waste-types&apos;;
+
+export * from &apos;./lib/supabase-client&apos;;
+export * from &apos;./lib/haversine&apos;;
+export * from &apos;./lib/point-in-polygon&apos;;
+export * from &apos;./lib/device-location&apos;;
+export * from &apos;./lib/resident-auth&apos;;
+export * from &apos;./lib/resident-account-setup&apos;;
+export * from &apos;./lib/resident-email-verification&apos;;
+export * from &apos;./lib/auth-fetch&apos;;
+export * from &apos;./lib/geocode&apos;;
+export * from &apos;./lib/format&apos;;
+export * from &apos;./lib/request-status&apos;;
+export * from &apos;./lib/service-tracking&apos;;
+export * from &apos;./lib/service-catalog&apos;;
+export * from &apos;./lib/resident-submission&apos;;
+export * from &apos;./lib/service-request-validation&apos;;
+export * from &apos;./lib/agency-sla&apos;;
+
+export * from &apos;./lib/attendance-request&apos;;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path="supabase/migrations/0143_residents_read_requested_document_types.sql">-- Residents could only read ACTIVE document types, so once an admin retired a service the
+-- embedded document_types(name) on that resident&apos;s own past requests came back null and
+-- Logs/Requests fell back to the generic &quot;Document Request&quot; title. Let a resident read the
+-- catalog rows their own requests point at, whether or not the type is still offered.
+-- Not applied to hosted; rehearse on a clone first.
+create policy &quot;residents can read document types of their own requests&quot;
+  on public.document_types for select
+  to authenticated
+  using (
+    exists (
+      select 1 from public.service_requests r
+      where r.document_type_id = document_types.id
+        and r.resident_id = (select auth.uid())
+    )
+  );</file><file path="AGENTS.md"></file><file path="CLAUDE.md">@AGENTS.md</file></files></repomix>

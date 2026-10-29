@@ -1,0 +1,227 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\planning-2026-10-28\\plan-before.md" b/plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md
+index 550ec2c2..5bd9514e 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\planning-2026-10-28\\plan-before.md"
++++ b/plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md
+@@ -1,8 +1,10 @@
+ # Resident Android home screen — implementation plan
+ 
+ Date: 28 October 2026 (Asia/Manila)  
+-Status: Planning complete; implementation and validation not started.  
+-Scope: The ten finalized home screen requirements in this chat. Android is the target shown in the supplied screenshots. Web and iOS changes are limited to compatibility with necessary shared contracts; their home screens are outside this plan.
++Status: Plan refined against the user's execution rules; product implementation, platform validation, and rollout have not started.  
++Scope: The ten finalized home screen requirements in this chat. Android is the target shown in the supplied screenshots. Web/iOS home redesigns are excluded. Shared-contract or existing admin publisher changes are conditional proposals requiring the approval described below.
++
++Planning record: [context index](evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md), [source identities](evidence/resident-android-home-improvements/planning-2026-10-28/source-manifest.json), and [packet manifest](evidence/resident-android-home-improvements/planning-2026-10-28/packet-manifest.json). These support the stated source reads, not runtime or deployment success.
+ 
+ ## 1. Intended result
+ 
+@@ -17,58 +19,71 @@ The screen presents content in this order:
+ 
+ Remove the greeting. Preserve the floating bottom navigation, existing destinations, themes, font preferences, reduced-motion behavior, pull-to-refresh, and request summary → tracking journey. Do not change notification badge semantics or redesign the announcements hub as part of this work.
+ 
++### 1.1 Scope and approval boundaries
++
++- The present task is to polish this plan. Only this plan and its planning evidence may change now. No product code, migration, dependencies, application data, test environments, or deployments are changed in this pass.
++- The ten requested Home behaviors are already specified. Routine choices that implement those behaviors within existing contracts do not require repeated confirmation. New product behavior, a data-model/API change, or work outside those requirements requires explicit user approval before acting.
++- The expiry field and publisher change (U01), and a new priority-query function if needed (U02), are proposals, not approved implementation. Prepare their exact contract, affected consumers, tests, compatibility behavior, and scope for review before asking. Do not create/apply a migration or change the publisher while that approval is pending. Continue independent, authorized work.
++- No new screens, alert hub, notification categories, badges, push delivery, schedulers, payment actions, general cache framework, cross-platform redesign, or unrelated cleanup. Multiple alerts use the requested banner area and existing details. Do not add an early-end button or new count/filter UI merely to complete this plan.
++- Follow existing patterns and dependencies. A new helper, component, or query function is justified only when required for complete behavior; avoid extraction for its own sake. Report related issues outside the scope without fixing them.
++- At the user's instruction, stop an approach after two failures with the same cause. Diagnose once, change approach or record the exact blocker; do not continue identical retries.
++
+ ## 2. What the source currently establishes
+ 
+ Read-only inspection used working files on 28 October 2026. Git HEAD was `9fe8add15b0a5b75f6c232e30679da869731a4ea`; the working tree also contains existing edits. HEAD alone does not identify those working files. Recheck affected files before implementation and preserve unrelated changes.
+ 
+ | Area | Observed behavior | Implementation consequence |
+ |---|---|---|
+-| Home screen | `apps/resident-android-mobile/src/app/(app)/home/index.tsx` renders the greeting, shortcuts, request shelf, and one announcement. | Main integration point; split into focused components only where useful. |
++| Home screen | `apps/resident-android-mobile/src/app/(app)/home/index.tsx` renders the greeting, shortcuts, request shelf, and one announcement. | Main integration point; extract only code needed to keep the requested behavior correct and maintainable. |
+ | Request selection | Home filters by resident, orders by creation date, and limits to three records. | Sorting those three locally cannot reveal an older request needing attention. Priority must be applied before the limit. |
+ | Request presentation | `src/lib/home-request.ts` supplies four delivery stages and payment-aware status labels. | Extend existing summary logic; preserve payment and delivery distinctions. |
+ | Request details | `src/components/home/request-summary-sheet.tsx` keeps full titles and routes through Home's tracking stack. | Retain full service names, dismissal behavior, Back behavior, and focus restoration. |
+-| Announcements | Home fetches the newest announcement only. `use-emergency-announcements.ts` fetches emergency-category records and uses a public emergency cache. | Fetch active advisories independently; an ordinary newer post must not hide an active advisory. |
+-| Alert lifetime | Inspected announcement types, schema, and announcement migrations have no active/expiry field. | Add a small lifecycle contract and publishing controls; category alone cannot establish an ongoing emergency. |
++| Announcements | Home fetches the newest announcement only. `use-emergency-announcements.ts` fetches emergency-category records and uses a shared emergency cache helper; its name does not establish public visibility. | Fetch active advisories independently; verify guest/resident access before reusing cached rows. |
++| Alert lifetime | Previously inspected announcement types/migrations and the rechecked schema have no established active/expiry contract. Live schema has not been queried. | Resolve U01 against current schema before any model change; category alone cannot establish an ongoing emergency. |
+ | Request metadata | Requests expose `updated_at`, `cancelled_at`, and `status_history`; fee and eligibility fields also exist. | Use recorded values and existing eligibility rules. Never infer a cancellation reason or payable fee from status alone. |
+ | Carousel | `src/components/scrollable-chevron-row.tsx` overlays controls and is shared with other screens. | Add an opt-in Home presentation or a Home-specific shelf; preserve other consumers. |
+ | Navigation | Shortcuts say Documents/Report/Emergency; tabs say Services/Reports/DRRM. | Align visible labels without renaming routes or rebuilding navigation. |
+ | Existing states | Home has guest, initial loading, empty, retry, and failed-refresh content-retention behavior. | Extend these rather than replacing them; add clear freshness and offline information. |
++| Services entry | `src/app/(app)/services/index.tsx` reads `segment` into an initial `useState`; later route-param changes are not handled in that component. | Home's Requests action needs a focused route-consumption fix if the mounted-screen test confirms it; do not reset Services on every focus. |
++| Cache metadata | `src/lib/emergency-cache.ts` stores a timestamp internally, drops entries older than 30 minutes, and returns data only. | Existing calls cannot display refresh time. Keep Home content in memory first; extend this helper only if actually needed and check its consumers. |
+ 
+ Paths beginning `src/` in this table are relative to `apps/resident-android-mobile/`.
+ 
+ Coordinate edits to shared announcement contracts and routes with `plans/Resident_Android_Notifications_and_Announcements_Implementation_Plan_2026_10_27.md`. Revalidate the actual source; that plan does not prove its proposed work is implemented.
+ 
+-## 3. Settled implementation decisions
++## 3. Implementation decisions and conditional proposals
++
++The following describes intended behavior. D-items are choices within the requested Home scope; U-items need the named prerequisite or approval. None establishes that a feature is already implemented or that a test passed.
+ 
+ ### Emergency advisories
+ 
+-- Proposed minimal field: nullable `alert_expires_at` on announcements, subject to the phase-0 schema check. Reuse an equivalent implemented contract if one has appeared; do not create competing lifecycle fields.
++- **U01 — proposal requiring data-model/publisher approval:** nullable `alert_expires_at timestamptz` on announcements, subject to the phase-0 schema check. Reuse an equivalent implemented contract if one has appeared; do not create competing lifecycle fields. The review package must confirm valid category/timestamp combinations, null/legacy behavior, publisher create/edit payloads, authorization, audit behavior, migration, and all affected shared consumers. This is a proposed field, not an existing column.
+ - A banner candidate must be an emergency announcement, visible to the current viewer under existing access rules, not deleted, already published, and have a recorded expiry later than the current time.
+ - New active advisories require an explicit expiry. Existing emergency posts with no expiry remain ordinary feed records until an authorized publisher explicitly activates them. Do not backfill them as active or expired from age alone.
+-- Add expiry/activation and early-end controls to the existing admin create/edit flow. Ending an active advisory records its end time through the same expiry contract. Validate timestamps and category combinations on the server as well as in the form; preserve authorized publisher boundaries and audit behavior.
++- If U01 is approved, add only the expiry input needed by the existing admin create/edit flow. A null expiry leaves an emergency-category post in the ordinary feed. Require a finite expiry after publication when activating an advisory, validate category/timestamp combinations on the server and in the form, and preserve publisher authorization and audit behavior. No new publisher screen or early-end operation is included.
+ - Expired records remain in the announcement feed with an **Expired** label. Compute expiry from timestamps; a scheduler is not required just to change the label or hide the banner.
+-- Reevaluate at the nearest expiry/publication boundary while Home is focused, after app resume, after refresh, and after relevant data changes. Clean up timers and listeners when inactive.
+-- With multiple active advisories, show the latest published advisory plus an accurate additional-alert count and a route to the remaining advisories. The detail action opens the existing announcement detail by ID. Never silently discard the others.
++- Reevaluate the next known expiry while Home is focused; revalidate on focus, app resume, refresh, and relevant data changes. Do not retrieve hidden scheduled posts merely to learn their publication times. Clean up timers and listeners when inactive.
++- With multiple active advisories, render them in the same banner area, newest publication first with an ID tie-breaker. Each **View advisory** action opens the existing detail by ID. Do not discard alerts because a newer non-emergency post exists, or add count badges, auto-rotation, filters, or a new destination.
+ - Cached advisory content must show its last successful refresh time. Recheck its recorded expiry locally and describe unverified content as last-known information rather than asserting that its current status has been confirmed.
+ 
+ ### Request ordering, titles, and progress
+ 
+ - Keep a maximum of three Home cards. Select from the full eligible resident dataset in this order: **requires resident action → other active → completed → cancelled**. Within each group, sort by last update descending, then a stable ID tie-breaker.
+-- Apply priority before limiting results, preferably in a small authenticated, security-invoker query function. Derive the resident from the authenticated session, preserve row-level access rules, and exclude deleted records. Do not download an unbounded history to sort on the device.
++- **U02 — retrieval proposal:** prefer existing query capabilities if they can express the complete priority ordering before limiting. If not, propose one authenticated, read-only security-invoker query function, with no caller-selected resident, fixed maximum three, stable ordering, owner/visibility checks, necessary title/fee fields only, and no mutations. Obtain approval before adding that API. Do not substitute an arbitrary latest-N window or download unbounded history. The phase-0 decision must record which approach is sufficient and why.
+ - Define attention using real tracking rules: collectible payment only after an actual positive assessed fee and supported payment flow, ready-for-pickup, and any other currently supported resident action verified in phase 0. A review in progress or unknown fee is not automatically an action request.
+-- Use one presentation contract for the query priority and UI next-action message, with parity cases verifying they agree. Do not create new review, payment, or submission workflows.
++- Use a single documented attention predicate for retrieval priority and the UI message, with parity tests if SQL and TypeScript must implement it separately. Reuse `requestFee` semantics: recorded payment amount, then the version-2 assessment, otherwise the legacy snapshot/catalog fee. Preserve existing settlement gates and payment-method behavior. Do not create new review, payment, or submission workflows.
+ - Use verified service identifiers or catalog metadata for short-title mappings. Start with known long titles, including **Business Barangay Clearance**. Unknown services retain their full title and wrap; do not shorten them by arbitrary word removal.
+ - Show short title, reference, status/progress, last update, and the next action when one exists. Tapping the card preserves the existing summary sheet and full-tracking route; no payment mutation occurs from Home.
+ - Retain the existing four delivery stages where the service uses them. Show **Step N of 4 · [delivery stage]**, with payment state separately where necessary. Confirm versioned/legacy service behavior rather than inventing additional steps.
+ - Cancelled cards have no progress bar or step count. Use recorded `cancelled_at`, then a valid cancellation history event if needed; display a resident-visible reason only when explicitly recorded and authorized. If missing, say **Cancellation date unavailable** and omit the reason.
+ - Unknown statuses show **Status unavailable**, without a fabricated step or action. Missing update timestamps show **Update time unavailable**.
+-- Rename the Home subtitle from “3 recent requests” to wording such as **3 requests shown**, since priority ordering is no longer strictly chronological. “See all” must open the existing Requests view; verify its tab-selection contract rather than assuming `/services` selects Requests.
++- Rename the Home subtitle from “3 recent requests” to **3 requests shown** (with correct singular/zero copy), since priority ordering is no longer strictly chronological. “See all” uses the existing `/services` destination with `segment=requests`. Verify first-entry and already-mounted cases; if needed, consume an explicit changed route segment once without overriding manual tab selection on ordinary refocus. The empty-state action uses `segment=documents`, subject to existing sign-in/setup/verification guards.
+ 
+ ### Layout, labels, and carousel
+ 
+ - Remove the greeting and its unused screen variables/styles. Remove `homeGreeting` and its test only if no other callers remain.
+ - Keep the profile/barangay row and profile-completion guidance. Begin with 16 dp between major sections and 8–12 dp within sections; tune after native review without reducing touch targets or readable font sizes.
+-- Use **Services, Reports, Emergency, Maps, Health** for matching shortcut/tab labels. Keep existing routes, tab count/order, and business behavior. Use **Emergency information** for the corresponding header/accessibility wording; explain DRRM within that destination if needed.
++- Use **Services, Reports, Emergency, Maps, Health** for matching shortcut/tab labels. Keep routes, tab count/order, destination content, and business behavior. Align accessible names; keep the existing emergency header unless a label mismatch actually prevents understanding. No additional DRRM explanatory UI is required by this task.
+ - Size request cards from the available viewport rather than a fixed width. At rest, one complete card must be readable, including at large font sizes. Allow vertical growth and wrapping rather than fixed-height clipping.
+ - Place previous/next controls and **1 of 3** below the shelf, outside card content. Preserve swiping. Disable unavailable directions; hide controls and position text for a single card. Position state must stay correct after swiping, resizing, refresh, or item removal.
+ - Maintain bottom padding using `useFloatingTabInset` so the final content and action can scroll completely above the floating bar.
+@@ -81,31 +96,81 @@ Coordinate edits to shared announcement contracts and routes with `plans/Residen
+ - Show **No requests yet** with **Request a document**, opening the verified request-entry destination. Keep guest sign-in guidance separate.
+ - Use the existing installed connectivity support for an explicit offline indication. A generic server error alone is not proof of offline status. Display **Last refreshed [time]** from the last successful fetch, not a record's modification timestamp.
+ - Retain already loaded data through failed refreshes and retry without blanking content. Use accessible placeholders for initial loads and one refresh operation at a time.
++- Keep effect dependencies stable. Abort or ignore superseded results; clean up timers, connectivity/AppState listeners, and any subscription on blur/unmount/scope change. Coalesce concurrent refresh triggers, handle rejected promises, and avoid per-render queries, automatic retry loops, or full-history fetches. Add Realtime ownership only if necessary for the alert behavior; reuse an existing suitable owner instead of duplicate subscriptions.
+ - Keep private request retention in memory by default. Scope all retained state by account and barangay; clear it on sign-out/account change and reject late results from the old scope. Show an offline-unavailable state after a cold start without private cached data. Reuse public caching only when its scope and visibility are valid; do not expose signed-in-only posts to guests.
+ - Replace sample records in release content through an explicit, reviewed content list. Keep synthetic test fixtures clearly separate. Do not hide records at runtime by filtering titles containing “Sample.” Real announcement copy must come from the publisher.
+ 
+ ## 4. Phased delivery
+ 
+-All phases are pending. This planning pass changes only this document; it runs no product tests, migrations, installs, or deployment actions.
++All product phases are pending. This revision changes this document and planning evidence only. No application lint, typecheck, build, product test, migration, install, emulator, Docker instance, or deployment was run; those checks are required when their corresponding implementation phase starts.
+ 
+ | Phase | Work and principal files | Completion gate |
+ |---|---|---|
+-| **0 — Baseline and contracts** | Capture affected working changes and native screenshots. Recheck Home, tracking/payment rules, request history reasons, feed visibility, admin publishing, and concurrent notification changes. Confirm existing tooling and record relevant baseline results. | Exact scope and field/query contracts are recorded; no unresolved guess about active alerts, request actions, ownership, or destinations remains. |
+-| **1 — Data prerequisites** | Implement alert lifetime in `packages/shared/src/types/database.ts`, `packages/shared/src/schemas/announcement.ts`, the admin announcement create/edit components, and a new migration. Implement priority-before-limit retrieval and supporting indexes only where justified. | Database and integration checks prove alert lifecycle, priority selection, validation, and authorized access, including an older attention-needed request outside the newest three. |
++| **0 — Baseline and contracts** | Capture affected working changes and MuMuPlayer screenshots. Recheck Home, tracking/payment rules, request history reasons, feed visibility, publisher inputs, and notification changes. Confirm tooling, record baseline results, and prepare U01/U02 review packages. | Source facts and unresolved approvals are explicit; request actions, ownership, destinations, and proposed contracts have evidence rather than guesses. Dependent changes wait for approval. |
++| **1 — Approved data prerequisites** | After U01/U02 approval where needed, implement only the approved alert contract and priority retrieval. Shared announcement types/schema and existing admin create/edit components change only as necessary. Add an index only if query evidence justifies it. | Isolated Docker database/integration checks prove lifetime validation, priority-before-limit and access controls, including an older attention-needed request outside the newest three. |
+ | **2 — Home structure and labels** | Update `src/app/(app)/home/index.tsx`, `src/components/app-tabs.tsx`, and `src/components/resident-header.tsx`. Remove greeting, tighten spacing, reserve the below-shortcuts advisory slot, and align labels. | Correct order, no blank greeting gap, profile retained, all five shortcuts reach the same destinations, and bottom content clears navigation. |
+-| **3 — Request cards and carousel** | Extend `src/lib/home-request.ts`, integrate the priority query, update Home cards and `request-summary-sheet.tsx` where required, and add a scoped shelf component or opt-in carousel presentation. | Concise/full-title behavior, correct priority, honest progress/cancellation, current index, readable cards, and unchanged summary/tracking Back behavior all pass. |
++| **3 — Request cards and carousel** | Extend `src/lib/home-request.ts`, integrate verified priority retrieval, update Home cards and `request-summary-sheet.tsx` only as required, and opt Home into unobstructed carousel controls. | Concise/full-title behavior, correct priority, honest progress/cancellation, current index, readable cards, and unchanged summary/tracking Back behavior all pass. |
+ | **4 — Alerts, previews, and resilience** | Connect the advisory banner, expand preview content, and extend Home data-loading hooks/state. Reuse existing emergency/feed helpers only after checking scope and lifecycle. Update announcement card/detail rendering where expiry labels are needed. | Active/expired/multiple alerts, preview/detail links, independent states, failed-refresh retention, freshness display, account switching, and offline behavior pass. |
+-| **5 — Accessibility, regression, and release readiness** | Run targeted checks and native review; fix issues, collect before/after evidence, and verify approved release content. | Every acceptance item below passes, or a concrete external dependency remains explicitly pending. Code completion, database rollout, and release-content approval are recorded separately. |
++| **5 — Accessibility, regression, and release readiness** | Run targeted checks and MuMuPlayer review; fix in-scope issues, collect before/after evidence, and verify reviewed release content. | Verified only when every applicable R1–R10 gate passes. A missing approval, environment, content, or test keeps its requirement pending; it is not an alternative passing condition. |
+ 
+ Dependency order: phase 0 → phase 1 → phases 2–3 → phase 4 → phase 5. Reversible layout preparation can proceed while data contracts are being verified, but dependent behavior is not complete until its real data path works.
+ 
++### 4.1 Central workflow — apply once per phase and reuse unchanged context
++
++**Git baseline → ripgrep discovery, assisted by Repowise when useful → Reader validation → scoped Repomix → Reader XML analysis → original-source verification.**
++
++Repository instructions and the user's requirements take precedence over this plan and generated tool guidance. Reducing redundant reads and repeated checks is an objective, not a measured savings claim or permission to skip acceptance coverage.
++
++1. **Git baseline.** Record HEAD, scoped status, staged/unstaged diffs, intended touch list, and ownership. Before editing, save actual working bytes or recoverable patches, including relevant tracked/untracked inputs. Record relevant ignored config/dependency identities without placing secrets in packets or public evidence. Do not reset, stash, clean, or overwrite unrelated work. Compare owned diffs and source identities at phase boundaries; revalidate only affected conclusions after concurrent edits.
++2. **Narrow discovery.** Read applicable instructions and locate confirmed files, symbols, callers, consumers, routes, contracts, tests, and config with `rg`. Batch independent queries and bound output. Recover missing relevant ranges if output truncates. Repowise is optional: use it only when it replaces a real repeated search, check its freshness against working-copy/new-file identities, and verify inferred relationships at source. No installation or freshness claim is assumed.
++3. **Reader validation.** Reader means bounded extraction using available file tools, not an assumed plugin. Check the compact context index, read ranges, source/dependency hashes, packet identity, and relevant relationships. Mark inputs unchanged/changed/missing/uncertain. A matching hash proves identity only; reuse an analysis only when its actual completed reads answer the question. Invalidate affected findings rather than repeating the entire audit.
++4. **Scoped Repomix.** Use the installed/cached **1.18.1**, confirmed in this planning revision, and recheck the version at execution entry. Reuse a verified packet where sufficient; otherwise create a small supplemental XML packet using confirmed exact selectors. Keep security checks/default exclusions enabled. Exclude credentials, private session data, generated dumps, builds, screenshots, and unrelated evidence. Record selectors, intended/actual files, source hashes, packet hash, version/options, security/generation result, omissions, and superseded context. Resolve unexplained omissions. Do not download a different version silently.
++5. **Bounded XML analysis.** Start with at most 12,000 decoded characters and 200 newline-delimited lines per extraction; continue across explicit half-open `[start,end)` boundaries. Record counts, entry paths, completed ranges, and missing continuations. Fully read each required entry before declaring its analysis complete. Reuse verified unchanged entries, read only changed/missing entries, and record concise requirement-linked findings and uncertainty. Tool token estimates are not measured model usage or savings.
++6. **Original-source verification and change.** Resolve compression gaps, omitted bodies, handlers, validation, effects, styles, cleanup, permissions, and version-sensitive APIs against actual current files/config and official version-matched documentation where needed. Run relevant existing baseline checks once before product editing. Implement the smallest complete authorized change, inspect owned diffs and every affected caller/consumer, remove superseded code and now-unused imports/exports/tests/assets, then rerun affected checks. Broaden only for shared behavior, diagnosed failures, or unresolved risk. Preserve full logs; do not rerun solely to recover output.
++
++If the pinned tool or an essential environment is unavailable, record the exact failed prerequisite and keep its gate pending. Do not claim a completed workflow step, substitute fake results, or broaden setup without authorization. Two same-cause failures trigger diagnosis/change of approach or an explicit blocker.
++
++### 4.2 Short phase checklists
++
++Each phase uses §4.1; these checklists supply its inputs and gates without duplicating that workflow.
++
++| Phase | Scope and prerequisites | Reusable context / baseline checks | Acceptance and exit checklist |
++|---|---|---|---|
++| **0** | Read-only contracts, routes, tool availability and ownership; no model or publisher edit. | F01–F08 and source manifest; Home/tracking/fee helpers, Services route, schema/policies, existing tests. Verify local versions and applicable instructions. Baseline only the checks attached to the intended edits. | Record U01/U02 proposals and approval status, supported request versions, current deployment uncertainty, exact commands and baseline diagnostics. MuMuPlayer screenshots when available; otherwise native baseline stays pending. |
++| **1** | Approved data/API scope; isolated Docker DB and existing admin context. | Revalidate only affected schema/types, policies, publisher create/edit consumers, request-fee inputs, and shared consumers. Read admin Next.js guidance before code. Baseline affected DB/schema/admin checks. | Confirm priority and action parity, malformed/legacy expiry handling, access rules, migration compatibility, and admin create/edit round trip in Brave. No hosted/shared mutation. R1–R3 data prerequisites verified before dependent completion. |
++| **2** | Authorized layout/label scope; phase-0 route contract. | Home/styles, tab/header consumers, Services segment handling and lifecycle tests. Reuse verified data contracts. Baseline Android typecheck/lint and affected route/UI checks once. | R4/R5/R7 and Home→Requests/Documents mounted/unmounted cases; no unintended tab resets. Remove unused greeting code after caller search. Preserve unrelated header/Services edits. |
++| **3** | Request query available, field/action semantics verified; phase 2 layout. | Home summary/card/sheet, shared fee/status helpers, carousel consumer list, navigation and Home fixtures. Baseline only newly affected checks. | R2/R3/R8; one full readable card, explicit action/progress, cancelled fallback, correct index after updates, touch/focus/Back behavior. No unused replaced Home carousel path. |
++| **4** | Approved expiry available and independent source/error contracts verified. | Existing announcement hooks, detail links, connectivity/cache ownership, refresh control and account scope. Reuse prior packets; supplement only changed entries. | R1/R6/R9; multiple/expired alerts, truthful freshness, retry retention, account change and late-result guards. Record zero duplicate refresh/retry storms or leaked listeners in relevant logs. |
++| **5** | Integrated source identity and passing affected checks from prior phases. | Acceptance ledger, saved diagnostics, owned diff, caller/consumer matrix, build configuration and existing platform harness. | Complete R1–R10 on the right platforms; lint/typecheck/relevant build/tests pass with no new warnings/errors. Verify no dead replacements. Keep missing publisher content, approval or deployment separately pending. Final file/decision/verification/out-of-scope report. |
++
++### 4.3 Compact execution records
++
++Maintain one `context-index.md` under `plans/evidence/resident-android-home-improvements/` with per-phase supplements. Each entry records: F/D/U/R ID; concise finding; actual path/symbol/line range; source and relevant dependency hashes; completed original/XML reads and continuations; packet identity; ownership; Repowise freshness if used; unresolved question and smallest next action; command/cwd/exit code/log/source identity; phase and gate status.
++
++Keep raw diagnostics separate from concise review notes. Update changed facts instead of copying full narratives. Use **Not started / In progress / Pending prerequisite / Verified**; Verified requires the phase's applicable gates to pass. Record implementation, database rollout, release content, and production validation as separate statuses.
++
++### 4.4 Decisions and unresolved prerequisites
++
++| ID | Decision or gap, with reason | Required next evidence / boundary |
++|---|---|---|
++| **D01** | Retain Home's three-card limit but apply priority before limit; sorting only the latest three misses older actionable work. | R2 plus U02's actual query decision. |
++| **D02** | Reuse existing request/detail/announcement destinations; add no new screens or payment actions. | Route tests including already-mounted Services and native Back. |
++| **D03** | Keep retained private Home requests in account/visibility-scoped memory. The task does not need a persistent private offline store. | R9 account change/cold-offline evidence; no global cache framework. |
++| **D04** | Limit carousel changes to a Home opt-in. Source discovery shows other consumers in Search, Maps, Settings, Reports, DRRM, and family/filter controls. | Record every actual caller and verify unchanged/default behavior when editing the shared implementation. |
++| **U01** | No established expiry contract was found in inspected source; live schema is unverified. A guessed age/category is insufficient to call an emergency active. | Recheck source/schema, prepare the precise additive field/publisher proposal, and obtain explicit data-model approval before that implementation. R1 remains pending while absent. |
++| **U02** | The current query cannot implement global priority. Whether existing filtering suffices for all payment/legacy cases needs verification. | Verify fee/payment joins and supported gates; choose existing bounded query or submit the minimal query-function proposal for approval. No implementation of an unapproved API. |
++| **U03** | Published/deleted/guest/barangay visibility and cache audience must be confirmed from effective policies, not helper names. | Inspect actual migration chain and isolated policy tests; preserve current authorized audience. A global visibility-policy change requires separate approval. |
++| **U04** | `segment` initializes Services state only once; mounted-screen route behavior is not runtime-verified. | Targeted Home entry tests. Fix only explicit Home route consumption if confirmed; preserve manual selection/refocus behavior. |
++| **U05** | Cancellation reason structure, supported request variants, legacy title mapping, and sample-content ownership require exact confirmation. | Inspect actual status-history writers/catalog IDs and authorized resident-readable fields; record unavailable values honestly. Publisher supplies approved replacement content. |
++| **U06** | MuMuPlayer, Docker, Brave, relevant build prerequisites and a target backend version have not been validated in this planning pass. | Verify only the environment needed by the phase; document exact missing prerequisite instead of claiming platform success. |
++
+ ## 5. Verification and acceptance
+ 
+ Extend existing behavioral coverage rather than adding tests for individual style values. The existing `tests/home-presentation-ui.mjs` hard-codes the old newest-three query and labels; update its fixtures to model real priority/expiry filtering rather than merely changing expected snapshots.
+ 
+ | Requirement | Required evidence |
+ |---|---|
+-| **R1 — Active emergency alerts** | A newer routine post cannot hide an older active advisory. Future, deleted, wrong-scope, expired, and lifetime-unknown records do not become active banners. Test expiry while focused, background/resume, early end, multiple alerts, and stale cached content. Expired announcements remain reachable in the feed with their label. |
++| **R1 — Active emergency alerts** | A newer routine post cannot hide an older active advisory. Future, deleted, wrong-scope, expired, and lifetime-unknown records do not become active banners. Test expiry while focused, background/resume, publisher edits through the approved existing form, multiple alerts, and stale cached content. Expired announcements remain reachable in the feed with their label. |
+ | **R2 — Scannable requests** | An older attention-needed request outranks three newer inactive requests. Verify cross-group and tie ordering, maximum three unique cards, reference/status/update/action content, known short titles, unknown long titles, and full names in details. |
+ | **R3 — Meaningful progress** | Test submitted paid/unpaid/waived, processing, ready, completed, cancelled, unknown status, malformed/missing history, and recorded cancellation reasons. Fee-not-assessed requests must not acquire a false payment action. |
+ | **R4 — No greeting** | Greeting is absent for both residents and guests; profile, barangay, completion guidance, and guest login remain usable. |
+@@ -124,17 +189,32 @@ Use these existing checks where affected, after confirming local tooling in phas
+ - `tests/reports-announcements-ui.mjs` and `tests/request-tracking-navigation.mjs` for shared announcement and tracking regressions.
+ - Existing navigation, floating-tab-layout, hidden-work, and resident-shell lifecycle checks when shared tab, carousel, or loading ownership changes.
+ - Database tests for priority-before-limit, fee/action parity, lifecycle validation, resident/guest/publisher visibility, and cross-account access. Test all supported request contract versions.
+-- Native Android review in the established emulator/device environment. Browser fixtures are useful but do not establish TalkBack behavior, native font layout, or native Back handling.
++- **MuMuPlayer is the main Android test device.** Use its actual installed build and record device, viewport/font settings, app/build identity and log capture. Browser fixtures do not establish TalkBack behavior, native font layout, touch geometry, or native Back handling.
++- **Docker is the isolated DB/backend environment.** Migration, permission and integration tests must use a disposable local database with synthetic data; never target shared or hosted records. Verify the connection target before applying migrations or test mutations.
++- **Brave is the Resident/Admin web test browser.** Browser automation is authorized. If an existing harness launches bundled Chromium, use its supported Brave executable configuration for relevant web checks and record the actual browser used. Do not label a Chromium-only fixture run as Brave or native evidence.
++
++### 5.1 Commands, builds, logs, and cleanup
++
++- Discover commands from the actual workspace package/config and installed tool help before execution. Android currently defines `lint` and `test:navigation`, but no `typecheck` or `build` script. Use the existing local TypeScript compiler/project and verified Expo/native build tooling rather than inventing npm scripts or downloading tools. Record the relevant build target and result; a browser fixture bundle is not an Android build.
++- Shared currently defines `test` with Vitest. Android's Vitest config includes `src/lib/*.test.ts`. Admin currently defines `typecheck`, `lint`, `build`, and focused test scripts. Run only the affected suites plus the relevant lint/typecheck/build; exact commands and baseline results belong in the context index. Read `apps/admin-web/AGENTS.md` and matching installed Next.js guidance before any admin code change.
++- A baseline warning/failure must be recorded with its original diagnostics and source identity. Fix all task-induced failures and new warnings/errors; do not hide diagnostics, weaken assertions, or declare a failed gate passed because the cause predates the task. Report any unrelated baseline issue separately and state whether it prevents acceptance.
++- Check logs for repeated queries, unhandled rejections, update-depth errors, retry storms, duplicate subscriptions, late updates after scope change, and leaked listeners/timers. Record ownership and shut down only task-started processes when no longer needed. Do not interrupt another chat's environment.
++- Before a phase exits, search all callers/consumers of changed symbols and inspect the complete owned diff. Remove replaced helpers, imports, exports, tests and assets only after confirming they have no remaining consumer. Preserve relevant historical evidence and unrelated work. No placeholder, stub, TODO, disabled test or half-connected data path counts as implementation.
++- Missing environments, content, approval or backend deployment are explicit pending gates. State the exact unverified behavior and why; no provisional implementation branch that silently suppresses required functionality qualifies as done.
+ 
+ Record commands, exit codes, source identity, limitations, and screenshot locations under `plans/evidence/resident-android-home-improvements/` during implementation. Run the affected baseline once, then rerun after relevant changes; broaden only for shared behavior, failures, or unresolved risks.
+ 
+ ## 6. Rollout and completion
+ 
+-1. Validate additive schema/query changes in the existing local/test workflow. Use the Supabase skill and current official documentation before implementing database changes; create migrations with the supported CLI workflow. Preserve access policies and avoid privileged query shortcuts.
+-2. Deliver compatible publisher/shared-contract changes before relying on new expiry data in Android. Verify ordinary announcement creation and editing still work for other supported clients.
++1. Resolve and obtain the required U01/U02 approval before implementing their proposed changes. Use the Supabase skill and current official documentation, verify local CLI capabilities, and validate approved schema/query changes in isolated Docker. Create migrations through the supported workflow. Preserve access policies and avoid privileged query shortcuts.
++2. Prepare compatible publisher/shared-contract changes before Android relies on new expiry data. Verify ordinary announcement creation/editing still works for affected clients. Environment deployment, hosted mutations and real-content replacement are separate from this planning authorization; perform only actions explicitly authorized for that environment.
+ 3. Verify the Android build against the actual schema/query version before release. A missing required backend contract is an integration failure, not an empty successful feed.
+ 4. Review legacy emergency posts individually. Only the publisher can determine which are ongoing and assign real expiry times. Leave unknown records unpromoted and record missing release content as pending rather than fabricating it.
+-5. Capture final native screenshots and the R1–R10 results. Report implemented behavior, checks passed, and remaining database/content/release dependencies distinctly.
++5. Capture final MuMuPlayer screenshots, relevant logs, and R1–R10 results. The final report lists changed files, verified behavior, exact check/build outcomes, decisions and reasons, approvals, anything unverified with its cause, and related out-of-scope findings. Distinguish code, database rollout, content review, and production validation statuses.
+ 6. If rollout causes a regression, revert the task-owned Android/publisher changes without undoing unrelated working edits. Prefer retaining harmless additive data fields over destructive schema rollback.
+ 
+-The work is complete when all ten requirements are implemented and verified, required backend contracts are available in the target environment, and release content has been reviewed. Planning or fixture-only success does not establish release readiness.
++The implementation is complete when all ten requirements work end to end on their required platforms, relevant lint/typecheck/build/tests pass, no task-induced console/log warnings or errors remain, and no superseded unused code remains. Release readiness additionally requires the approved backend contract in the target environment and reviewed real content. Planning, fixture-only success, or an unresolved prerequisite cannot be reported as completion.
++
++### 6.1 Explicit exclusions and follow-up reporting
++
++Notification unread-count redesign and the separate announcements-hub work remain outside this task. Do not repair other carousel consumers or unrelated Services/header behavior discovered during review. List a concrete related defect only if supported by evidence, with its impact and a follow-up recommendation; do not invent an issue to fill the report. No new unrelated defect was runtime-confirmed during this planning revision.

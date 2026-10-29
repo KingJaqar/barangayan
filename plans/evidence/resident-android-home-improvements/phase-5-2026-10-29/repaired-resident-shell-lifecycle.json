@@ -1,0 +1,15 @@
+{
+  "id": "resident-shell-lifecycle",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/resident-shell-lifecycle.mjs"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-29T08:18:20.120Z",
+  "end": "2026-10-29T08:18:27.509Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\repaired-resident-shell-lifecycle.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\repaired-resident-shell-lifecycle"
+}

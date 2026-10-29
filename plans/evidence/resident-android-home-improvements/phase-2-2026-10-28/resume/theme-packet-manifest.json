@@ -1,0 +1,14 @@
+{
+  "lines": 94,
+  "security": "No suspicious files detected",
+  "file": "apps/resident-android-mobile/src/constants/resident-theme.ts",
+  "packetSha256": "0F0D2DBF0F075104025A53108EE82AAA203F49A316F447D504A11F19AB93552D",
+  "chars": 3857,
+  "compressed": false,
+  "omissions": [],
+  "sourceSha256": "F0B782A76C8B5964EF628BF1A7671AA392A2696D4BA2565A5FE3D30C18AB64B1",
+  "start": 0,
+  "end": 3857,
+  "read": "Complete in this continuation; bounded whole entry, no compression gap",
+  "analysis": "Home text/icon/control palette roles verified against actual current account choices and110 contrast pairs."
+}

@@ -1,18 +1,20 @@
-import { Children, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Children, cloneElement, isValidElement, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/hooks/use-theme';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { horizontalScrollEdges, horizontalScrollTarget } from '@/lib/horizontal-scroll';
+import { ThemedText } from '@/components/themed-text';
 
 interface ScrollableChevronRowProps {
   children: ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   /** Opt-in interactive controls; existing Settings rows keep their current presentation. */
   label?: string;
-  /** Home shelves snap by the measured first card plus their gap. */
-  snapToItems?: boolean;
+  /** Home-only full-card pages, with controls below content. Other modes are unchanged. */
+  pageWidth?: number;
+  onIndexChange?: (index: number) => void;
   /** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
   reveal?: { x: number; width: number };
 }
@@ -25,10 +27,65 @@ interface ScrollableChevronRowProps {
  * they read clearly over any swatch/chip color underneath.
  */
 export function ScrollableChevronRow(props: ScrollableChevronRowProps) {
+  if (props.label && props.pageWidth !== undefined) {
+    // Geometry or membership changes restart at one complete card; ordinary refreshes retain position.
+    const identity = JSON.stringify([props.pageWidth, Children.toArray(props.children).map((child, index) => isValidElement(child) ? child.key : index)]);
+    return <PagedChevronRow key={identity} {...props} label={props.label} pageWidth={props.pageWidth} />;
+  }
   return props.label ? <InteractiveChevronRow {...props} label={props.label} /> : <PassiveChevronRow {...props} />;
 }
 
-function InteractiveChevronRow({ children, contentContainerStyle, label, snapToItems = false, reveal }: ScrollableChevronRowProps & { label: string }) {
+function PagedChevronRow({ children, contentContainerStyle, label, pageWidth, onIndexChange }: ScrollableChevronRowProps & { label: string; pageWidth: number }) {
+  const { resident } = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const scroll = useRef<ScrollView>(null);
+  const items = Children.toArray(children);
+  const [index, setIndex] = useState(0);
+  const currentIndex = useRef(0);
+  const pendingIndex = useRef<number | null>(null);
+  const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
+  const stride = pageWidth + (typeof gap === 'number' ? gap : 0);
+  useEffect(() => { onIndexChange?.(index); }, [index, onIndexChange]);
+  function advance(direction: number) {
+    const next = Math.max(0, Math.min(items.length - 1, (pendingIndex.current ?? currentIndex.current) + direction));
+    pendingIndex.current = next;
+    scroll.current?.scrollTo({ x: next * stride, animated: !reducedMotion });
+  }
+  return <View style={styles.wrap}>
+    <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false}
+      contentContainerStyle={contentContainerStyle} snapToInterval={stride} decelerationRate="fast"
+      onScrollBeginDrag={() => { pendingIndex.current = null; }}
+      onScroll={event => {
+        const offset = event.nativeEvent.contentOffset.x;
+        const next = Math.max(0, Math.min(items.length - 1, Math.round(offset / stride)));
+        currentIndex.current = next;
+        setIndex(next);
+        if (pendingIndex.current !== null && Math.abs(offset - pendingIndex.current * stride) < 1) pendingIndex.current = null;
+      }} scrollEventThrottle={16}>
+      {items.map((child, itemIndex) => <View key={isValidElement(child) ? child.key : itemIndex} style={{ width: pageWidth }}
+        accessibilityElementsHidden={itemIndex !== index} importantForAccessibility={itemIndex === index ? 'auto' : 'no-hide-descendants'}>
+        {isValidElement<PressableProps>(child) ? cloneElement(child, {
+          accessible: itemIndex === index, focusable: itemIndex === index, disabled: itemIndex !== index,
+          importantForAccessibility: itemIndex === index ? 'auto' : 'no-hide-descendants',
+          accessibilityElementsHidden: itemIndex !== index,
+        }) : child}
+      </View>)}
+    </ScrollView>
+    {items.length > 1 ? <View style={styles.pageControls}>
+      {([-1, 1] as const).map(direction => {
+        const disabled = direction < 0 ? index === 0 : index === items.length - 1;
+        return <Pressable key={direction} accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled}
+          accessibilityLabel={`Scroll ${label} ${direction < 0 ? 'left' : 'right'}`} onPress={() => advance(direction)}
+          style={({ pressed }) => [styles.pageButton, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.controlBorder }]}>
+          <Ionicons name={direction < 0 ? 'chevron-back' : 'chevron-forward'} size={20} color={disabled ? resident.muted : resident.text} accessible={false} />
+        </Pressable>;
+      })}
+      <ThemedText accessibilityLiveRegion="polite" style={[styles.position, { color: resident.text }]}>{index + 1} of {items.length}</ThemedText>
+    </View> : null}
+  </View>;
+}
+
+function InteractiveChevronRow({ children, contentContainerStyle, label, reveal }: ScrollableChevronRowProps & { label: string }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const scroll = useRef<ScrollView>(null);
@@ -43,7 +100,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
     if (target !== offset) scroll.current?.scrollTo({ x: Math.max(0, Math.min(Math.max(0, content - width), target)), animated: !reducedMotion });
   }, [reveal, reducedMotion]);
   const [edges, setEdges] = useState({ left: false, right: false });
-  const [itemWidth, setItemWidth] = useState(0);
   const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
   const itemGap = typeof gap === 'number' ? gap : 0;
   function update() {
@@ -57,8 +113,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
   }
   return <View style={styles.wrap}>
     <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={contentContainerStyle}
-      snapToInterval={snapToItems && itemWidth > 0 ? itemWidth + itemGap : undefined}
-      decelerationRate={snapToItems ? 'fast' : 'normal'}
       onScroll={event => { metrics.current.offset = event.nativeEvent.contentOffset.x; update(); }} scrollEventThrottle={16}
       onContentSizeChange={width => { metrics.current.content = width; update(); }}
       onLayout={event => { metrics.current.width = event.nativeEvent.layout.width; update(); }}>
@@ -66,11 +120,9 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
         const width = event.nativeEvent.layout.width;
         metrics.current.first = width;
         metrics.current.firstX = event.nativeEvent.layout.x;
-        if (snapToItems) setItemWidth(previous => previous === width ? previous : width);
       } : undefined}>{child}</View>)}
     </ScrollView>
-    {(['left', 'right'] as const).map(side => snapToItems ? <ShelfChevron key={side} side={side} visible={edges[side]} label={label}
-      reducedMotion={reducedMotion} onPress={() => advance(side === 'left' ? -1 : 1)} /> : edges[side] ? <Pressable key={side} accessibilityRole="button"
+    {(['left', 'right'] as const).map(side => edges[side] ? <Pressable key={side} accessibilityRole="button"
       accessibilityLabel={`Scroll ${label} ${side}`} onPress={() => advance(side === 'left' ? -1 : 1)}
       style={[styles.arrowHit, side === 'left' ? { left: 4 } : { right: 4 }]}>
       <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
@@ -78,30 +130,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
       </View>
     </Pressable> : null)}
   </View>;
-}
-
-/** Home keeps the reference's 200ms edge fade without leaving hidden touch/focus targets. */
-function ShelfChevron({ side, visible, label, reducedMotion, onPress }: {
-  side: 'left' | 'right'; visible: boolean; label: string; reducedMotion: boolean; onPress: () => void;
-}) {
-  const { resident } = useTheme();
-  const opacity = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    const animation = Animated.timing(opacity, { toValue: Number(visible), duration: reducedMotion ? 100 : 200,
-      easing: Easing.bezier(0, 0, 0.58, 1), useNativeDriver: true });
-    animation.start();
-    return () => animation.stop();
-  }, [visible, reducedMotion, opacity]);
-  return <Animated.View pointerEvents={visible ? 'auto' : 'none'} accessibilityElementsHidden={!visible}
-    importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
-    style={[styles.arrowHit, side === 'left' ? { left: 2 } : { right: 2 }, { opacity }]}>
-    <Pressable disabled={!visible} accessibilityRole="button" accessibilityLabel={`Scroll ${label} ${side}`} onPress={onPress}
-      style={styles.arrowButton}>
-      <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
-        <Ionicons name={side === 'left' ? 'chevron-back' : 'chevron-forward'} size={16} color={resident.text} accessible={false} />
-      </View>
-    </Pressable>
-  </Animated.View>;
 }
 
 function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevronRowProps) {
@@ -159,7 +187,9 @@ function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevro
 }
 
 const styles = StyleSheet.create({
-  arrowButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  pageControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, paddingHorizontal: 20 },
+  pageButton: { width: 48, height: 48, borderRadius: 24, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  position: { fontSize: 13, lineHeight: 20, flexShrink: 1 },
   arrowHit: { position: 'absolute', zIndex: 1, elevation: 4, top: '50%', marginTop: -22, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   arrowFace: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center', elevation: 3, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
   wrap: {

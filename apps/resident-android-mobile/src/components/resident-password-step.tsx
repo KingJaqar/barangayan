@@ -1,7 +1,7 @@
 import { residentPasswordStepSchema, getResidentAccountSetupStatus, residentSetupFailure } from '@barangayan/shared';
 import { createClient } from '@supabase/supabase-js';
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { AuthHeader } from './auth-header';
 import { FormSection } from './resident-details-form';
 import { PrimaryButton } from './primary-button';
@@ -33,6 +33,12 @@ export function ResidentPasswordStep({ required, draft, onDraftChange, onSaved, 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   useEffect(() => () => { owner.current.invalidate(); }, []);
+  const scrollRef = useRef<ScrollView>(null);
+  // Keep the password fields (and the submit button below them) above the keyboard.
+  useEffect(() => {
+    const sub = Keyboard.addListener('keyboardDidShow', () => { requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true })); });
+    return () => sub.remove();
+  }, []);
 
   async function save(checkOnly = false) {
     const parsed = residentPasswordStepSchema.safeParse({ password, confirmPassword });
@@ -86,22 +92,34 @@ export function ResidentPasswordStep({ required, draft, onDraftChange, onSaved, 
           <TextField presentation={presentation} label="Confirm Password" accessibilityLabel="Confirm Password" required value={confirmPassword} editable={!loading} onChangeText={setConfirmPassword} secureTextEntry={!confirmVisible} autoCapitalize="none" autoComplete="new-password" error={errors.confirmPassword} passwordVisibility={{ visible: confirmVisible, onToggle: () => setConfirmVisible(value => !value) }} />
           {!!password && !!confirmPassword && <ThemedText accessibilityLiveRegion="polite" themeColor={password === confirmPassword ? 'accentGreen' : 'accentRed'} style={resident ? { color: password === confirmPassword ? theme.resident.success : theme.resident.danger } : undefined}>{password === confirmPassword ? 'Passwords match' : "Passwords don't match"}</ThemedText>}
 </>;
+  const submitButton = <PrimaryButton presentation={presentation} label={uncertain ? 'Check whether this password was saved' : variant === 'settings' ? 'Set password' : required ? 'Create account' : 'Finish account setup'} loading={loading} onPress={() => { void save(uncertain); }} />;
+  const secondaryButtons = [
+    !required && !uncertain && <PrimaryButton key="skip" presentation={presentation} label={variant === 'settings' ? 'Cancel' : 'Skip for now'} variant="secondary" disabled={loading} onPress={onSkip} />,
+    error && <PrimaryButton key="recover" presentation={presentation} label="Recover password" variant="secondary" disabled={loading} onPress={() => {
+      if (authSetupRequests.busy) { setError('Please wait for the earlier request to finish before starting recovery.'); return; }
+      onDraftChange({ password: '', confirmPassword: '', uncertain: false }); setPasswordRecovery(true); router.replace('/(auth)/forgot-password');
+    }} />,
+    variant === 'setup' && <PrimaryButton key="signout" presentation={presentation} label="Sign out" variant="secondary" disabled={loading} onPress={() => { if (authSetupRequests.busy) setError('The earlier request is still finishing. Please wait before signing out.'); else void logout(); }} />,
+  ].filter(Boolean);
+  // Two short buttons share one row; the long "check" label or a third button stacks instead.
+  const sideBySide = !uncertain && secondaryButtons.length === 1;
+  const gap = resident ? 12 : 10;
   return <SafeAreaView style={{ flex: 1, backgroundColor: resident ? theme.resident.card : theme.primary }} edges={resident ? ['left', 'right', 'bottom'] : ['top', 'left', 'right']}>
     <View style={{ flex: 1, backgroundColor: resident ? theme.resident.card : theme.background }}>
       <AuthHeader presentation={presentation} title={variant === 'settings' ? 'Set Password' : 'Create Password'} onBack={onBack} />
-      <ScrollView contentContainerStyle={{ padding: resident ? 20 : 24, gap: resident ? 20 : 16 }} keyboardShouldPersistTaps="handled">
-        <ThemedText type="title" style={resident ? { fontSize: 22, lineHeight: 28 } : undefined}>Create your password</ThemedText>
-        <ThemedText themeColor="textSecondary">{variant === 'settings' ? 'Google confirmed it is you. Add a password to also sign in with your email; you can keep using Google.' : required ? 'Finish setting up your account so you can sign in with your email and password.' : 'You can add a password to also sign in with your email, or keep using Google.'}</ThemedText>
-        {resident ? <View style={{ gap: 20 }}>{securityFields}</View> : <FormSection icon="lock-closed-outline" title="Account Security">{securityFields}</FormSection>}
-        {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed" style={resident ? { color: theme.resident.danger } : undefined}>{error}</ThemedText>}
-        <PrimaryButton presentation={presentation} label={uncertain ? 'Check whether this password was saved' : variant === 'settings' ? 'Set password' : required ? 'Create account' : 'Finish account setup'} loading={loading} onPress={() => { void save(uncertain); }} />
-        {!required && !uncertain && <PrimaryButton presentation={presentation} label={variant === 'settings' ? 'Cancel' : 'Skip for now'} variant="secondary" disabled={loading} onPress={onSkip} />}
-        {error && <PrimaryButton presentation={presentation} label="Recover password" variant="secondary" disabled={loading} onPress={() => {
-          if (authSetupRequests.busy) { setError('Please wait for the earlier request to finish before starting recovery.'); return; }
-          onDraftChange({ password: '', confirmPassword: '', uncertain: false }); setPasswordRecovery(true); router.replace('/(auth)/forgot-password');
-        }} />}
-        {variant === 'setup' && <PrimaryButton presentation={presentation} label="Sign out" variant="secondary" disabled={loading} onPress={() => { if (authSetupRequests.busy) setError('The earlier request is still finishing. Please wait before signing out.'); else void logout(); }} />}
-      </ScrollView>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'android' ? 'height' : undefined}>
+        <ScrollView ref={scrollRef} contentContainerStyle={{ padding: 16, gap }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+          <View style={{ gap: 2 }}>
+            <ThemedText type="title" style={{ fontSize: 22, lineHeight: 28 }}>Create your password</ThemedText>
+            <ThemedText type="small" themeColor="textSecondary">{variant === 'settings' ? 'Google confirmed it is you. Add a password to also sign in with your email; you can keep using Google.' : required ? 'Finish setting up your account so you can sign in with your email and password.' : 'You can add a password to also sign in with your email, or keep using Google.'}</ThemedText>
+          </View>
+          {resident ? <View style={{ gap }}>{securityFields}</View> : <FormSection compact icon="lock-closed-outline" title="Account Security">{securityFields}</FormSection>}
+          {error && <ThemedText type="small" accessibilityLiveRegion="polite" themeColor="accentRed" style={resident ? { color: theme.resident.danger } : undefined}>{error}</ThemedText>}
+          {sideBySide
+            ? <View style={{ flexDirection: 'row', gap }}><View style={{ flex: 1 }}>{submitButton}</View><View style={{ flex: 1 }}>{secondaryButtons[0]}</View></View>
+            : <>{submitButton}{secondaryButtons}</>}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   </SafeAreaView>;
 }

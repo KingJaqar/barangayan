@@ -1,0 +1,867 @@
+{
+  "status": "Verified for Phase 2 local structure/labels/entry gates",
+  "date": "2026-10-28",
+  "talkBack": {
+    "status": "Waived",
+    "scope": "all phases",
+    "authority": "User instruction in this continuation; not a passing test"
+  },
+  "sourceInputsUnchanged": 16,
+  "productEditsThisContinuation": 0,
+  "existingAutomatedChecksReused": 8,
+  "nativeResidentLayouts": 6,
+  "nativeGuestLayoutsPreviouslyVerified": 6,
+  "routes": {
+    "results": [
+      {
+        "name": "resident-manual-logs",
+        "selected": "Logs"
+      },
+      {
+        "name": "resident-home-from-logs",
+        "selected": "Home"
+      },
+      {
+        "name": "resident-repeat-requests",
+        "selected": "Requests"
+      },
+      {
+        "name": "resident-manual-documents",
+        "selected": "Documents"
+      },
+      {
+        "name": "resident-back-from-documents",
+        "selected": "Home"
+      },
+      {
+        "name": "resident-repeat-requests-again",
+        "selected": "Requests"
+      },
+      {
+        "name": "resident-logs-before-refocus",
+        "selected": "Logs"
+      },
+      {
+        "name": "resident-home-before-refocus",
+        "selected": "Home"
+      },
+      {
+        "name": "resident-shortcut-documents",
+        "selected": "Documents"
+      },
+      {
+        "name": "resident-logs-manual-refocus",
+        "selected": "Logs"
+      },
+      {
+        "name": "resident-home-manual-refocus",
+        "selected": "Home"
+      },
+      {
+        "name": "resident-ordinary-services-refocus",
+        "selected": "Logs"
+      },
+      {
+        "name": "resident-empty-cta-documents",
+        "selected": "Documents"
+      }
+    ],
+    "backToHome": true,
+    "accountMutation": false,
+    "raw": "ignored resident-native artifacts"
+  },
+  "coldRequests": true,
+  "bottomClearance": {
+    "actionBottom": 605,
+    "cardBottom": 1461,
+    "tabTop": 1674
+  },
+  "reducedMotion": "Documents entry and Back exercised with Android transition animation scale0, confirmed against installed RN0.86 native API; original0.5 restored. No timing/performance claim.",
+  "currentAccountPreferences": {
+    "theme": "light",
+    "accent": "#0F6E5B",
+    "font": "System Default",
+    "changed": false
+  },
+  "contrast": {
+    "combinations": 10,
+    "pairs": 110,
+    "colors": [
+      {
+        "mode": "light",
+        "accent": "#0F6E5B",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 15.909984431773273
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.408789320592422
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 6.173293255740255
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 5.357919574371354
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 4.917677299839113
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 4.542224959605253
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 6.173293255740255
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 5.0655031917200235
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 5.210833785568098
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 5.190038602127883
+          }
+        ]
+      },
+      {
+        "mode": "light",
+        "accent": "#ffffff",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 15.909984431773273
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.408789320592422
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 4.952143998137194
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.952143998137194
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 4.917677299839113
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 4.542224959605253
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 21
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 5.0655031917200235
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 5.210833785568098
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 5.190038602127883
+          }
+        ]
+      },
+      {
+        "mode": "light",
+        "accent": "#000000",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 15.909984431773273
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.408789320592422
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 21
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 16.825958806652604
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 4.917677299839113
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 4.542224959605253
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 21
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 5.0655031917200235
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 5.210833785568098
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 5.190038602127883
+          }
+        ]
+      },
+      {
+        "mode": "light",
+        "accent": "#2563eb",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 15.909984431773273
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.408789320592422
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.512259690773846
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 4.917677299839113
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 4.542224959605253
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 5.168555560022562
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 5.0655031917200235
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 5.210833785568098
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 5.190038602127883
+          }
+        ]
+      },
+      {
+        "mode": "light",
+        "accent": "#c2410c",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 15.909984431773273
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.408789320592422
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.212316461666851
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.512384966604898
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 4.917677299839113
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 4.542224959605253
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 5.178415705888697
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 5.0655031917200235
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 5.210833785568098
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 5.197971598953718
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 5.190038602127883
+          }
+        ]
+      },
+      {
+        "mode": "dark",
+        "accent": "#0F6E5B",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 16.15595722501145
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 9.653882925184812
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.326159424060893
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.645544127286491
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 8.220714271870895
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 5.199307609295119
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 6.173293255740255
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 6.348747916050617
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 6.305412374375906
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 6.314830173794914
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 6.311472863448589
+          }
+        ]
+      },
+      {
+        "mode": "dark",
+        "accent": "#ffffff",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 16.15595722501145
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 9.653882925184812
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 17.613725296648717
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 10.047925863367745
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 8.220714271870895
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 5.199307609295119
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 21
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 6.348747916050617
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 6.305412374375906
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 6.314830173794914
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 6.311472863448589
+          }
+        ]
+      },
+      {
+        "mode": "dark",
+        "accent": "#000000",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 16.15595722501145
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 9.653882925184812
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.306857827669317
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 5.514650073152259
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 8.220714271870895
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 5.199307609295119
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 21
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 6.348747916050617
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 6.305412374375906
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 6.314830173794914
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 6.311472863448589
+          }
+        ]
+      },
+      {
+        "mode": "dark",
+        "accent": "#2563eb",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 16.15595722501145
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 9.653882925184812
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.296556379819624
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.518666958152931
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 8.220714271870895
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 5.199307609295119
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 5.168555560022562
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 6.348747916050617
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 6.305412374375906
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 6.314830173794914
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 6.311472863448589
+          }
+        ]
+      },
+      {
+        "mode": "dark",
+        "accent": "#c2410c",
+        "pairs": [
+          {
+            "foreground": "text",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 16.15595722501145
+          },
+          {
+            "foreground": "muted",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 9.653882925184812
+          },
+          {
+            "foreground": "accentText",
+            "background": "card",
+            "threshold": 4.5,
+            "contrast": 5.314737739318068
+          },
+          {
+            "foreground": "accentText",
+            "background": "accentSoft",
+            "threshold": 3,
+            "contrast": 4.600017993623373
+          },
+          {
+            "foreground": "muted",
+            "background": "surface",
+            "threshold": 3,
+            "contrast": 8.220714271870895
+          },
+          {
+            "foreground": "controlBorder",
+            "background": "card",
+            "threshold": 3,
+            "contrast": 5.199307609295119
+          },
+          {
+            "foreground": "onAccent",
+            "background": "accent",
+            "threshold": 3,
+            "contrast": 5.178415705888697
+          },
+          {
+            "foreground": "onWarning",
+            "background": "warning",
+            "threshold": 3,
+            "contrast": 6.348747916050617
+          },
+          {
+            "foreground": "onDanger",
+            "background": "danger",
+            "threshold": 3,
+            "contrast": 6.305412374375906
+          },
+          {
+            "foreground": "onInfo",
+            "background": "info",
+            "threshold": 3,
+            "contrast": 6.314830173794914
+          },
+          {
+            "foreground": "onRose",
+            "background": "rose",
+            "threshold": 3,
+            "contrast": 6.311472863448589
+          }
+        ]
+      }
+    ],
+    "note": "Actual existing palette output; native active preference observed read-only, other combinations verified in palette calculations and earlier Brave fixtures, not represented as native account preference changes."
+  },
+  "diagnostics": {
+    "before": {
+      "fatal": 0,
+      "jsErrors": 0,
+      "jsWarnings": 0,
+      "fabricMissingSurface": 13,
+      "leakChecker": 8,
+      "statusBar": 12
+    },
+    "after": {
+      "fatal": 0,
+      "jsErrors": 0,
+      "jsWarnings": 0,
+      "fabricMissingSurface": 10,
+      "leakChecker": 8,
+      "statusBar": 12
+    },
+    "newReactDiagnosticSignatures": [],
+    "note": "Matched activity-recreation matrix on same APK/account/current shared source, swapping only four task-owned before/after files. Existing Fabric diagnostics reproduced; no reduction attributed as product improvement."
+  },
+  "acceptance": {
+    "R4_phase2": "met",
+    "R5_phase2_structure_clearance": "met",
+    "R7_phase2": "met",
+    "R10_phase2_changed_controls": "met within recorded coverage; TalkBack waived",
+    "R5_overall": "pending Phase3/4 card and preview integration",
+    "R10_overall": "pending later phase integrated card/preview/font/focus coverage"
+  },
+  "remainingPhase2Work": [],
+  "outOfScope": [
+    "Existing fixed-width announcement metadata clipping; Phase4",
+    "Existing44dp shared header controls",
+    "Full request cards/progress/carousel/advisory integration in Phase3/4",
+    "Wider native account preference and incomplete-profile permutations at integrated acceptance; source/Brave preservation checked here"
+  ],
+  "cleanup": {
+    "reversals": [
+      "host-12 tcp:8106 tcp:8106",
+      "host-12 tcp:58420 tcp:58420",
+      ""
+    ],
+    "originalServers": [
+      48448,
+      43644
+    ],
+    "font": "null",
+    "animator": "null",
+    "window": "0.5",
+    "transition": "0.5",
+    "at": "2026-10-28T17:28:10.6109974+08:00",
+    "density": "Physical density: 480",
+    "appPid": "6533"
+  },
+  "rawEvidence": "Ignored local test output; no auth/session store copied or accessed"
+}

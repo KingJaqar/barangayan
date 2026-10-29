@@ -1,0 +1,38 @@
+[
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567"
+  },
+  {
+    "path": "apps/admin-web/CLAUDE.md",
+    "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+    "sha256": "71b050aeace82d7226b1f6b3c3ff19b099833af3da7a1d51703796234955e528"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+    "sha256": "f17add26aeb25e447a0c21fd8bc71fb0122f4b200742d30b6b563fc5937ebf40"
+  },
+  {
+    "path": "apps/admin-web/src/actions/admin-audit-actions.ts",
+    "sha256": "b0910645a7b04cbf833d00a709a92f1f547ff7bc1306cfa7821344e0fc9dec95"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.ts",
+    "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.test.ts",
+    "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3"
+  },
+  {
+    "path": "supabase/migrations/0011_announcements_admin_write.sql",
+    "sha256": "3b61ff73d3b9d31ee00cb4b294ec95c17e350164fb435fb6ba3ee3060857cdf6"
+  },
+  {
+    "path": "supabase/migrations/0019_fix_announcement_soft_delete.sql",
+    "sha256": "63bc0f5e090023388071c507982871634e9be343df8c13aeec65fb5f8d8b3f72"
+  }
+]

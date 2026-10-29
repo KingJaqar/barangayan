@@ -1,0 +1,6 @@
+AGENTS.md
+CLAUDE.md
+packages/shared/src/index.ts
+packages/shared/src/lib/service-catalog.ts
+packages/shared/package.json
+supabase/migrations/0143_residents_read_requested_document_types.sql

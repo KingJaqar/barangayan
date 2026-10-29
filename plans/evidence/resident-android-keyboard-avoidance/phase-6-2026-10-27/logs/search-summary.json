@@ -1,0 +1,79 @@
+[
+  {
+    "name": "resident-search-session",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-search-session.mjs"
+    ],
+    "start": "2026-10-27T02:02:38.551Z",
+    "end": "2026-10-27T02:02:58.252Z",
+    "status": 0
+  },
+  {
+    "name": "resident-search-submit",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-search-submit.mjs"
+    ],
+    "start": "2026-10-27T02:02:58.261Z",
+    "end": "2026-10-27T02:03:04.948Z",
+    "status": 0
+  },
+  {
+    "name": "resident-search-lifecycle",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-search-lifecycle.mjs"
+    ],
+    "start": "2026-10-27T02:03:04.952Z",
+    "end": "2026-10-27T02:03:12.777Z",
+    "status": 0
+  },
+  {
+    "name": "resident-search-explore",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-search-explore.mjs"
+    ],
+    "start": "2026-10-27T02:03:12.781Z",
+    "end": "2026-10-27T02:03:27.773Z",
+    "status": 0
+  },
+  {
+    "name": "resident-search-history-ui",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-search-history-ui.mjs"
+    ],
+    "start": "2026-10-27T02:03:27.778Z",
+    "end": "2026-10-27T02:03:35.067Z",
+    "status": 0
+  },
+  {
+    "name": "maps-presentation-ui",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/maps-presentation-ui.mjs"
+    ],
+    "start": "2026-10-27T02:03:35.072Z",
+    "end": "2026-10-27T02:04:01.312Z",
+    "status": 0
+  },
+  {
+    "name": "drrm-centers-ui",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/drrm-centers-ui.mjs"
+    ],
+    "start": "2026-10-27T02:04:01.315Z",
+    "end": "2026-10-27T02:04:22.742Z",
+    "status": 0
+  }
+]

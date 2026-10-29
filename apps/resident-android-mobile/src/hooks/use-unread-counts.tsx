@@ -2,6 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 
 import { useAuth } from '@/hooks/use-auth';
 import { useRefreshResource } from '@/hooks/use-refresh-resource';
+import { REALTIME_BURST_MS, coalesce } from '@/lib/burst';
+import { loadHubSummary, loadUnreadAnnouncementIds, markScopeRead as markScopeReadRemote, setInboxRead } from '@/lib/notification-hub-data';
+import { totalUnread, type HubView } from '@/lib/notification-hub';
 import { supabase } from '@/lib/supabase';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
@@ -13,8 +16,8 @@ interface UnreadCountsValue {
   activeReportsCount: number;
   /** The resident's own resolved incidents they haven't acknowledged yet. */
   resolvedUnreadCount: number;
-  /** Announcements for the resident's barangay they haven't acknowledged yet. Also
-   * drives the Home screen bell — same number, same source of truth. */
+  /** Everything unread in the Announcements hub: barangay announcements plus Account and System
+   * notifications, counted by the server (`notification_hub_summary`). Drives the header bell. */
   announcementsUnreadCount: number;
   /** Ids of announcements not yet marked read by this resident — lets a single
    * AnnouncementCard check its own read state without a separate query. */
@@ -26,9 +29,10 @@ interface UnreadCountsValue {
   markIncidentRead: (incidentId: string) => Promise<void>;
   /** Marks a single resolved incident unread again — the per-card "mark as unread" icon. */
   markIncidentUnread: (incidentId: string) => Promise<void>;
-  /** Marks every currently-unread announcement as read (bulk — shared by the
-   * Announcements screen's button and the shared header bell it clears). */
-  markAnnouncementsRead: () => Promise<void>;
+  /** Marks every unread item of a hub view/chip read in one server snapshot (announcements and inbox rows together). */
+  markHubScopeRead: (view: HubView, chip: string) => Promise<void>;
+  /** Marks one Account/System inbox row read or unread again; only its read marker changes. */
+  markInboxRead: (notificationId: string, read: boolean) => Promise<void>;
   /** Marks a single announcement read — the per-card "mark as read" icon. */
   markAnnouncementRead: (announcementId: string) => Promise<void>;
   /** Marks a single announcement unread again — the per-card "mark as unread" icon. */
@@ -45,7 +49,8 @@ const UnreadCountsContext = createContext<UnreadCountsValue>({
   markResolvedRead: async () => {},
   markIncidentRead: async () => {},
   markIncidentUnread: async () => {},
-  markAnnouncementsRead: async () => {},
+  markHubScopeRead: async () => {},
+  markInboxRead: async () => {},
   markAnnouncementRead: async () => {},
   markAnnouncementUnread: async () => {},
 });
@@ -60,9 +65,7 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
 
-  const [announcementsUnreadCount, setAnnouncementsUnreadCount] = useState(0);
-  // Announcement ids not yet marked read by this resident — kept around so
-  // markAnnouncementsRead() knows exactly which ids to upsert without a second round-trip.
+  // Announcement ids not yet marked read by this resident — each announcement row checks its own state here.
   const [unreadAnnouncementIds, setUnreadAnnouncementIds] = useState<string[]>([]);
   const [announcementCountsError, setAnnouncementCountsError] = useState(false);
 
@@ -84,32 +87,32 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   const activeReportsCount = incidentCounts.data?.active ?? 0;
   const resolvedUnreadCount = incidentCounts.data?.resolved ?? 0;
 
+  const loadHubUnread = useCallback(async (signal: AbortSignal) => {
+    if (!userId) return null;
+    return totalUnread(await loadHubSummary(signal, 'all', 'all'));
+  }, [userId]);
+  const hubUnread = useRefreshResource(userId ?? 'guest', loadHubUnread, 'Could not refresh notification counts.');
+  const refetchHubUnread = hubUnread.invalidate;
+  const announcementsUnreadCount = hubUnread.data ?? 0;
+
   const refetchAnnouncementCounts = useCallback(() => {
     setAnnouncementCountsError(false);
+    void refetchHubUnread();
     if (!userId) {
-      setAnnouncementsUnreadCount(0);
       setUnreadAnnouncementIds([]);
       return;
     }
-    Promise.all([
-      supabase.from('announcements').select('id').is('deleted_at', null),
-      supabase.from('announcement_reads').select('announcement_id').eq('resident_id', userId),
-    ]).then(([{ data: announcements, error: announcementsError }, { data: reads, error: readsError }]) => {
-      if (announcementsError || readsError) { setAnnouncementCountsError(true); return; }
-      const readIds = new Set((reads ?? []).map((r) => r.announcement_id));
-      const unreadIds = (announcements ?? [])
-        .map((a) => a.id)
-        .filter((id) => !readIds.has(id));
-      setUnreadAnnouncementIds(unreadIds);
-      setAnnouncementsUnreadCount(unreadIds.length);
-    }, () => setAnnouncementCountsError(true));
-  }, [userId]);
+    loadUnreadAnnouncementIds(userId).then(setUnreadAnnouncementIds, () => setAnnouncementCountsError(true));
+  }, [userId, refetchHubUnread]);
 
   useEffect(() => {
     refetchIncidentCounts();
     refetchAnnouncementCounts();
 
     if (!userId) return;
+
+    // A bulk read reports one event per changed row; recount once per burst.
+    const countsChanged = coalesce(refetchAnnouncementCounts, REALTIME_BURST_MS);
 
     const channels = [
       supabase
@@ -119,11 +122,14 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
           { event: '*', schema: 'public', table: 'incidents', filter: `reporter_id=eq.${userId}` },
           refetchIncidentCounts,
         )
+        // Realtime drops DELETE events on filtered subscriptions, so a permanent delete needs an
+        // unfiltered listener (payload carries only the id); recount on any delete.
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'incidents' }, refetchIncidentCounts)
         .subscribe(),
 
       supabase
         .channel(uniqueChannelName(`unread-counts:announcements`))
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, refetchAnnouncementCounts)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, countsChanged.call)
         .subscribe(),
 
       supabase
@@ -131,12 +137,22 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
         .on(
           'postgres_changes',
           { event: '*', schema: 'public', table: 'announcement_reads', filter: `resident_id=eq.${userId}` },
-          refetchAnnouncementCounts,
+          countsChanged.call,
+        )
+        .subscribe(),
+
+      supabase
+        .channel(uniqueChannelName(`unread-counts:notification-inbox:${userId}`))
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'notification_inbox', filter: `recipient_id=eq.${userId}` },
+          countsChanged.call,
         )
         .subscribe(),
     ];
 
     return () => {
+      countsChanged.cancel();
       channels.forEach((channel) => supabase.removeChannel(channel));
     };
   }, [userId, refetchIncidentCounts, refetchAnnouncementCounts]);
@@ -186,20 +202,19 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
     [userId, refetchIncidentCounts],
   );
 
-  const markAnnouncementsRead = useCallback(async () => {
-    if (!userId || unreadAnnouncementIds.length === 0) return;
-    const { error } = await supabase
-      .from('announcement_reads')
-      .upsert(
-        unreadAnnouncementIds.map((announcement_id) => ({ resident_id: userId, announcement_id })),
-        { onConflict: 'resident_id,announcement_id' },
-      );
-    if (error) throw new Error('Read status could not be saved.');
-    refetchAnnouncementCounts();
-  }, [userId, unreadAnnouncementIds, refetchAnnouncementCounts]);
+  // The count is re-read even when the write fails, so an ambiguous failure shows the server's actual state.
+  const markHubScopeRead = useCallback(async (view: HubView, chip: string) => {
+    if (!userId) return;
+    try { await markScopeReadRemote(view, chip); } finally { refetchAnnouncementCounts(); }
+  }, [userId, refetchAnnouncementCounts]);
 
-  // Single-item counterparts of the bulk actions above — the "mark as read" / "mark as
-  // unread" icons on each AnnouncementCard. Both just upsert/delete the one
+  const markInboxRead = useCallback(async (notificationId: string, read: boolean) => {
+    if (!userId) return;
+    try { await setInboxRead(notificationId, userId, read); } finally { refetchAnnouncementCounts(); }
+  }, [userId, refetchAnnouncementCounts]);
+
+  // Single-item counterparts of the bulk action above — the "mark as read" / "mark as
+  // unread" icons on each announcement row. Both just upsert/delete the one
   // announcement_reads row for this resident + announcement; RLS already scopes writes
   // to the caller's own resident_id (0080_reports_unread_counts.sql).
   const markAnnouncementRead = useCallback(
@@ -234,7 +249,7 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
   return (
     <UnreadCountsContext.Provider
       value={{
-        readStateError: !!incidentCounts.error || announcementCountsError,
+        readStateError: !!incidentCounts.error || announcementCountsError || !!hubUnread.error,
         retryReadState: () => { refetchIncidentCounts(); refetchAnnouncementCounts(); },
         activeReportsCount,
         resolvedUnreadCount,
@@ -243,7 +258,8 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
         markResolvedRead,
         markIncidentRead,
         markIncidentUnread,
-        markAnnouncementsRead,
+        markHubScopeRead,
+        markInboxRead,
         markAnnouncementRead,
         markAnnouncementUnread,
       }}>

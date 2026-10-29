@@ -1,0 +1,41 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  [
+    [
+      'announcements',
+      1,
+      undefined,
+...
+      'announcements',
++     null,
+-     undefined,
+      [
+        'category',
+        'emergency'
+      ],
+      '*'
+
+    at file:///C:/Users/User/barangayan/apps/resident-android-mobile/tests/home-presentation-ui.mjs:105:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    [ 'announcements', 1, undefined, '*' ],
+    [ 'announcements', null, [ 'category', 'emergency' ], '*' ],
+    [ 'service_requests', undefined, undefined, undefined ]
+  ],
+  expected: [
+    [ 'announcements', 1, undefined, '*' ],
+    [ 'announcements', undefined, [ 'category', 'emergency' ], '*' ],
+    [ 'service_requests', undefined, undefined, undefined ]
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

@@ -1,0 +1,12 @@
+Networking has been disabled
+Starting project at C:\Users\User\barangayan\apps\resident-android-mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8087
+
+Logs for your project will appear below.
+Android Bundled 3681ms node_modules\expo-router\entry.js (2737 modules)

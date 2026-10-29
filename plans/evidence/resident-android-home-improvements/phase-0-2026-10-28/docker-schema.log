@@ -1,0 +1,78 @@
+BEGIN
+SET
+SET
+                                   version                                    
+------------------------------------------------------------------------------
+ PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit
+(1 row)
+
+     column_name      |        data_type         | is_nullable 
+----------------------+--------------------------+-------------
+ id                   | uuid                     | NO
+ barangay_id          | uuid                     | NO
+ title                | text                     | NO
+ body                 | text                     | NO
+ category             | text                     | NO
+ image_url            | text                     | YES
+ published_at         | timestamp with time zone | NO
+ created_by           | uuid                     | YES
+ created_at           | timestamp with time zone | NO
+ deleted_at           | timestamp with time zone | YES
+ detailed_description | text                     | YES
+(11 rows)
+
+     tablename      |                          policyname                           |      roles      |  cmd   |                                                                               qual                                                                                |                                   with_check                                   
+--------------------+---------------------------------------------------------------+-----------------+--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------
+ announcement_reads | residents manage own announcement reads                       | {authenticated} | ALL    | (resident_id = auth.uid())                                                                                                                                        | (resident_id = auth.uid())
+ announcements      | admins can manage announcements in their barangay             | {authenticated} | ALL    | ((barangay_id = current_barangay_id()) AND ("current_role"() = 'admin'::text))                                                                                    | ((barangay_id = current_barangay_id()) AND ("current_role"() = 'admin'::text))
+ announcements      | guests can read all announcements                             | {anon}          | SELECT | (deleted_at IS NULL)                                                                                                                                              | 
+ announcements      | incomplete accounts browse announcements                      | {authenticated} | SELECT | ((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND (deleted_at IS NULL))                               | 
+ announcements      | residents can read announcements from their barangay          | {authenticated} | SELECT | ((barangay_id = current_barangay_id()) AND (deleted_at IS NULL))                                                                                                  | 
+ document_types     | admins can manage document types in their barangay            | {authenticated} | ALL    | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))                                                                                    | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))
+ document_types     | anyone can read active document types                         | {anon}          | SELECT | (is_active = true)                                                                                                                                                | 
+ document_types     | incomplete accounts browse active documents                   | {authenticated} | SELECT | ((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND is_active AND (deleted_at IS NULL))                 | 
+ document_types     | residents can read their own barangay's active document types | {authenticated} | SELECT | ((barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (is_active = true))                                                                   | 
+ payments           | active admins delete payments                                 | {authenticated} | DELETE | ((( SELECT "current_role"() AS "current_role") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (EXISTS ( SELECT 1+| 
+                    |                                                               |                 |        |    FROM profiles a                                                                                                                                               +| 
+                    |                                                               |                 |        |   WHERE ((a.id = ( SELECT auth.uid() AS uid)) AND (a.deleted_at IS NULL)))))                                                                                      | 
+ payments           | admins can create payments in their barangay                  | {authenticated} | INSERT |                                                                                                                                                                   | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))
+ payments           | admins can read all payments in their barangay                | {authenticated} | SELECT | ((( SELECT "current_role"() AS "current_role") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))                       | 
+ payments           | admins can update payments in their barangay                  | {authenticated} | UPDATE | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))                                                                                    | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))
+ payments           | residents can read payments on their own requests             | {authenticated} | SELECT | (EXISTS ( SELECT 1                                                                                                                                               +| 
+                    |                                                               |                 |        |    FROM service_requests sr                                                                                                                                      +| 
+                    |                                                               |                 |        |   WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid()))))                                                                               | 
+ service_requests   | active admins delete requests                                 | {authenticated} | DELETE | ((( SELECT "current_role"() AS "current_role") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (EXISTS ( SELECT 1+| 
+                    |                                                               |                 |        |    FROM profiles a                                                                                                                                               +| 
+                    |                                                               |                 |        |   WHERE ((a.id = ( SELECT auth.uid() AS uid)) AND (a.deleted_at IS NULL)))))                                                                                      | 
+ service_requests   | admins can create requests in their barangay                  | {authenticated} | INSERT |                                                                                                                                                                   | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))
+ service_requests   | admins can read all requests in their barangay                | {authenticated} | SELECT | ((( SELECT "current_role"() AS "current_role") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))                       | 
+ service_requests   | admins can update requests in their barangay                  | {authenticated} | UPDATE | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))                                                                                    | (("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))
+ service_requests   | residents can create their own service requests               | {authenticated} | INSERT |                                                                                                                                                                   | ((resident_id = auth.uid()) AND (barangay_id = current_barangay_id()))
+ service_requests   | residents can read their own service requests                 | {authenticated} | SELECT | (resident_id = auth.uid())                                                                                                                                        | 
+(20 rows)
+
+ event_object_table |              trigger_name              | action_timing | event_manipulation |                               action_statement                                
+--------------------+----------------------------------------+---------------+--------------------+-------------------------------------------------------------------------------
+ service_requests   | a0_require_complete_profile            | BEFORE        | INSERT             | EXECUTE FUNCTION barangayan_private.require_complete_profile_for_submission()
+ service_requests   | a_guard_request_foundations            | BEFORE        | INSERT             | EXECUTE FUNCTION barangayan_private.guard_request_foundations()
+ service_requests   | a_guard_request_foundations            | BEFORE        | UPDATE             | EXECUTE FUNCTION barangayan_private.guard_request_foundations()
+ service_requests   | guard_service_request_completion       | BEFORE        | UPDATE             | EXECUTE FUNCTION guard_request_completion()
+ service_requests   | set_service_requests_updated_at        | BEFORE        | UPDATE             | EXECUTE FUNCTION set_updated_at()
+ service_requests   | track_service_requests_status          | BEFORE        | UPDATE             | EXECUTE FUNCTION track_service_request_status()
+ service_requests   | track_service_requests_status          | BEFORE        | INSERT             | EXECUTE FUNCTION track_service_request_status()
+ service_requests   | zz_preserve_catalog_snapshot_timestamp | BEFORE        | UPDATE             | EXECUTE FUNCTION barangayan_private.preserve_catalog_snapshot_timestamp()
+(8 rows)
+
+ version |                   name                   
+---------+------------------------------------------
+ 0117    | admin_request_row_workflows
+ 0116    | admin_incident_withdrawal
+ 0115    | admin_record_lifecycle
+ 0114    | routing_rate_limits
+ 0113    | routing_conditions
+ 0112    | admin_reference_index_writer_permissions
+ 0111    | admin_table_browse_read_performance
+ 0110    | admin_table_browse_projections
+(8 rows)
+
+ROLLBACK

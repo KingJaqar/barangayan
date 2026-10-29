@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/resident-theme.test.ts (52 tests) 82ms
+
+ Test Files  1 passed (1)
+      Tests  52 passed (52)
+   Start at  16:21:11
+   Duration  2.10s (transform 149ms, setup 0ms, collect 174ms, tests 82ms, environment 0ms, prepare 351ms)
+

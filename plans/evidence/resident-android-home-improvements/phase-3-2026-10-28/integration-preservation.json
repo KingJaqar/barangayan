@@ -1,0 +1,7 @@
+{
+  "time": "2026-10-28T12:33:57.228Z",
+  "status": 200,
+  "selectedProjectionUnchanged": true,
+  "rows": 3,
+  "method": "Final actual RPC response compared with pre-native recorded response; no claim about unselected row digests"
+}

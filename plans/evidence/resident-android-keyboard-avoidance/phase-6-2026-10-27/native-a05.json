@@ -1,0 +1,108 @@
+{
+  "at": "2026-10-27T02:05:48.156Z",
+  "auditId": "A05",
+  "route": "/settings/location-verification",
+  "observations": [
+    {
+      "tag": "a05-settled-before",
+      "editor": [
+        60,
+        1265,
+        1020,
+        1409
+      ],
+      "map": [
+        0,
+        240,
+        1080,
+        846
+      ],
+      "body": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "action": [
+        60,
+        1690,
+        1020,
+        1848
+      ],
+      "keyboardTop": null,
+      "ime": false
+    },
+    {
+      "tag": "a05-settled-confirm",
+      "editor": [
+        60,
+        1265,
+        1020,
+        1409
+      ],
+      "map": [
+        0,
+        240,
+        1080,
+        846
+      ],
+      "body": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "action": [
+        60,
+        1690,
+        1020,
+        1848
+      ],
+      "keyboardTop": null,
+      "ime": false
+    },
+    {
+      "tag": "a05-initial-focus",
+      "editor": [
+        60,
+        660,
+        1020,
+        804
+      ],
+      "body": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "action": [
+        120,
+        1155,
+        960,
+        1167
+      ],
+      "keyboardTop": 1167,
+      "ime": true
+    },
+    {
+      "tag": "a05-long-end",
+      "editor": [
+        60,
+        372,
+        1020,
+        1167
+      ],
+      "body": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "keyboardTop": 1167,
+      "ime": true
+    }
+  ],
+  "saved": false,
+  "status": "failed attempt",
+  "error": "Expected one focused editor"
+}

@@ -9,13 +9,14 @@ import styles from '@/components/admin/content-workspace.module.css';
 
 import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { announcementDateTimeInput, announcementDateTimeIso } from '@/lib/announcement-datetime';
 
 type Announcement = Tables<'announcements'>;
 
@@ -42,6 +43,8 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
   const [detailedDescription, setDetailedDescription] = useState(announcement.detailed_description ?? '');
   const [category, setCategory] = useState(announcement.category);
   const [imageUrl, setImageUrl] = useState(announcement.image_url ?? '');
+  const [alertExpiresAt, setAlertExpiresAt] = useState(announcementDateTimeInput(announcement.alert_expires_at));
+  const saving = useRef(false);
 
   function startEdit() {
     setTitle(announcement.title);
@@ -49,14 +52,17 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
     setDetailedDescription(announcement.detailed_description ?? '');
     setCategory(announcement.category);
     setImageUrl(announcement.image_url ?? '');
+    setAlertExpiresAt(announcementDateTimeInput(announcement.alert_expires_at));
     setError(null);
     setIsEditing(true);
   }
 
   async function handleSave(event: React.FormEvent) {
+    event.preventDefault();
+    if (saving.current) return;
+    saving.current = true;
     const toastAttempt = beginAttempt('handleSave');
     try {
-      event.preventDefault();
       setError(null);
 
       const result = announcementSchema.safeParse({
@@ -65,6 +71,10 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
         detailed_description: detailedDescription || undefined,
         category,
         image_url: imageUrl || undefined,
+        published_at: alertExpiresAt ? announcement.published_at : undefined,
+        alert_expires_at: alertExpiresAt === announcementDateTimeInput(announcement.alert_expires_at)
+          ? announcement.alert_expires_at ?? null
+          : alertExpiresAt ? announcementDateTimeIso(alertExpiresAt) ?? alertExpiresAt : null,
       });
 
       if (!result.success) {
@@ -75,7 +85,7 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
 
       setSubmitting(true);
       const supabase = createSupabaseBrowserClient();
-      const { error: updateError } = await supabase
+      const { data: saved, error: updateError } = await supabase
         .from('announcements')
         .update({
           title: result.data.title,
@@ -83,13 +93,15 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
           detailed_description: result.data.detailed_description || null,
           category: result.data.category,
           image_url: result.data.image_url || null,
+          alert_expires_at: result.data.alert_expires_at ?? null,
         })
-        .eq('id', announcement.id);
+        .eq('id', announcement.id).select('id').maybeSingle();
       setSubmitting(false);
 
-      if (updateError) {
-        setError(updateError.message);
-        toast.error(`Failed to save: ${updateError.message}`, { id: toastAttempt });
+      if (updateError || !saved) {
+        const message = updateError?.message ?? 'This announcement is unavailable or you no longer have permission to edit it.';
+        setError(message);
+        toast.error(`Failed to save: ${message}`, { id: toastAttempt });
         return;
       }
 
@@ -104,12 +116,14 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
             body: announcement.body,
             detailed_description: announcement.detailed_description,
             category: announcement.category,
+            alert_expires_at: announcement.alert_expires_at,
           },
           after: {
             title: result.data.title,
             body: result.data.body,
             detailed_description: result.data.detailed_description || null,
             category: result.data.category,
+            alert_expires_at: result.data.alert_expires_at ?? null,
           },
         },
       }).catch(() => {});
@@ -119,8 +133,9 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       router.refresh();
 
     } catch {
+      setError('The action could not be confirmed. Refresh the record before trying again.');
       toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
-    } finally { setSubmitting(false); }
+    } finally { saving.current = false; setSubmitting(false); }
   }
 
   async function archive() {
@@ -189,6 +204,13 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
                 placeholder="https://…"
                 type="url"
               />
+            </label>
+
+            <label className={editStyles.full}>
+              <span className={labelClass}>Advisory expires at (optional)</span>
+              <input type="datetime-local" step="0.001" className={inputClass} value={alertExpiresAt}
+                onChange={(event) => setAlertExpiresAt(event.target.value)} />
+              <span className={labelClass}>Emergency advisories only. Uses your local time. Clear this before choosing another category.</span>
             </label>
 
             <label className={editStyles.full}>

@@ -1,0 +1,18 @@
+{
+  "pid": 65440,
+  "device": "127.0.0.1:16416",
+  "database": "resident_home_i2_20261028",
+  "port": 8099,
+  "proxy": 58472,
+  "containers": [
+    "resident_home_i2_rest",
+    "resident_home_i2_auth"
+  ],
+  "sourceRoutes": 61,
+  "adapters": [
+    "Full production app route tree/AuthProvider/login/profile/preferences/unread/detail/tracking/components",
+    "Connection to disposable localhost backend; all AsyncStorage keys prefixed home-i2:",
+    "Realtime channels and external push registration disabled in fixture; I2 does not qualify live/push delivery"
+  ],
+  "deadlineMs": 3600000
+}

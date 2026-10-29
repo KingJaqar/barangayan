@@ -1,0 +1,96 @@
+[
+  {
+    "id": "typecheck",
+    "deadline": 300000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ]
+  },
+  {
+    "id": "lint",
+    "deadline": 300000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ]
+  },
+  {
+    "id": "home-unit",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/lib/home-request.test.ts"
+    ]
+  },
+  {
+    "id": "schema-unit",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\packages\\shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/schemas/announcement.test.ts"
+    ]
+  },
+  {
+    "id": "home-ui",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/home-presentation-ui.mjs"
+    ]
+  },
+  {
+    "id": "reports-ui",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/reports-announcements-ui.mjs"
+    ]
+  },
+  {
+    "id": "navigation",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/request-tracking-navigation.mjs"
+    ]
+  },
+  {
+    "id": "services-entry",
+    "deadline": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/services-tab-stability.mjs"
+    ]
+  },
+  {
+    "id": "android-export",
+    "deadline": 1200000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase0-20261028/android-export"
+    ]
+  }
+]

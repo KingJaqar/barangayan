@@ -1,0 +1,240 @@
+{
+  "mode": "after",
+  "start": 1793177627,
+  "end": 1793177666,
+  "pid": "3596",
+  "results": [
+    {
+      "name": "resident-after-480-1",
+      "dpi": 480,
+      "font": 1,
+      "widthDp": 360,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        },
+        {
+          "label": "Reports",
+          "widthDp": 67,
+          "heightDp": 90
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        },
+        {
+          "label": "Maps",
+          "widthDp": 67,
+          "heightDp": 90
+        },
+        {
+          "label": "Health",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        }
+      ],
+      "minTabWidthDp": 53.666666666666664,
+      "screenshotSha256": "1d2b292f505a2a09e660b56f84bcdaa7c4a12950b19d3ee53f1beab7306fe1d8"
+    },
+    {
+      "name": "resident-after-480-1.3",
+      "dpi": 480,
+      "font": 1.3,
+      "widthDp": 360,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Reports",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Maps",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Health",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        }
+      ],
+      "minTabWidthDp": 53.666666666666664,
+      "screenshotSha256": "b298a13d270db90d9d51ad01b52a4904329afb19bd4bf7ff9b97cf9657406c9c"
+    },
+    {
+      "name": "resident-after-540-1",
+      "dpi": 540,
+      "font": 1,
+      "widthDp": 320,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Reports",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 98.37037037037037,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Maps",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Health",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        }
+      ],
+      "minTabWidthDp": 48.2962962962963,
+      "screenshotSha256": "9e1284b2b96d8c01aa749978a83664ba3dc0740a6dbe35a360417d5834fffe9e"
+    },
+    {
+      "name": "resident-after-540-1.3",
+      "dpi": 540,
+      "font": 1.3,
+      "widthDp": 320,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Reports",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 98.37037037037037,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Maps",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Health",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        }
+      ],
+      "minTabWidthDp": 48.2962962962963,
+      "screenshotSha256": "2c42e9cb0b6251c24f1560f824163f7fea45b7c7c257e0a146c7afa9c045e99d"
+    },
+    {
+      "name": "resident-after-420-1",
+      "dpi": 420,
+      "font": 1,
+      "widthDp": 411.42857142857144,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Reports",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 77.71428571428571,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Maps",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Health",
+          "widthDp": 77.71428571428571,
+          "heightDp": 90.28571428571429
+        }
+      ],
+      "minTabWidthDp": 62.095238095238095,
+      "screenshotSha256": "066c5c441022b236d90714624316b1829f7d14620c199fd8a59b040aa5a4eca2"
+    },
+    {
+      "name": "resident-after-420-1.3",
+      "dpi": 420,
+      "font": 1.3,
+      "widthDp": 411.42857142857144,
+      "greeting": false,
+      "authenticated": true,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Reports",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Maps",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Health",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        }
+      ],
+      "minTabWidthDp": 62.095238095238095,
+      "screenshotSha256": "08f6cdd925e80e163b202f09615fb9ef16bce25ed1f585d03c22d4fd12fb68ce"
+    }
+  ],
+  "diagnostics": {
+    "fatal": 0,
+    "jsErrors": 0,
+    "jsWarnings": 0,
+    "fabricMissingSurface": 10,
+    "leakChecker": 8,
+    "statusBar": 12
+  },
+  "rawIgnored": true,
+  "note": "One bounded matched matrix; density/font changes only, no account preferences changed."
+}

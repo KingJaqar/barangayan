@@ -5,9 +5,9 @@ import { useProfile } from '@/hooks/use-profile';
 import { PrimaryButton } from '@/components/primary-button';
 import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
+import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DocumentsList } from '@/components/services/documents-list';
@@ -22,7 +22,9 @@ import { useTheme } from '@/hooks/use-theme';
 
 type ServicesSegment = 'documents' | 'requests' | 'logs';
 
-const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
+function isServicesSegment(value: unknown): value is ServicesSegment {
+  return value === 'documents' || value === 'requests' || value === 'logs';
+}
 
 const TABS: { key: ServicesSegment; label: string }[] = [
   { key: 'documents', label: 'Documents' },
@@ -39,31 +41,43 @@ export default function ServicesScreen() {
   const router = useRouter();
   const { profile, refetch, isLoading, error } = useProfile();
   const theme = useTheme();
+  const { width } = useWindowDimensions();
   const bottomTabInset = useFloatingTabInset();
   const pull = usePullRefresh([refetch]);
 
-  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
+  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string | string[] }>();
   const initialSegment: ServicesSegment =
-    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
-      ? (segmentParam as ServicesSegment)
+    session && isServicesSegment(segmentParam)
+      ? segmentParam
       : 'documents';
 
   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
-  const [verificationCollapsed, setVerificationCollapsed] = useState(false);
-
-  const verifiedChip = session && !error && idVerificationState(profile) === 'verified' ? (
-    <Pressable accessibilityRole="button" accessibilityLabel={verificationCollapsed ? 'Show ID verification status' : 'Collapse ID verification status'}
-      accessibilityState={{ expanded: !verificationCollapsed }} onPress={() => setVerificationCollapsed(value => !value)} style={styles.verificationToggle}>
-      {verificationCollapsed ? <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessibilityLabel="Valid ID verified" /> : (
-        <View style={[styles.verifiedChip, { backgroundColor: theme.resident.accentSoft }]}>
-          <ThemedText type="smallBold" style={[styles.verifiedLabel, { color: theme.resident.accentText }]}>
-            {isLoading ? 'Checking ID verification…' : 'Valid ID Verified'}
-          </ThemedText>
-          <Ionicons name="close" size={16} color={theme.resident.accentText} accessible={false} />
-        </View>
-      )}
+  const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+  const verificationButton = useRef<View>(null);
+  const signedIn = Boolean(session);
+  useFocusEffect(useCallback(() => {
+    if (segmentParam === undefined) return;
+    if (isServicesSegment(segmentParam)) {
+      setVerificationAnchor(null);
+      setSegment(signedIn ? segmentParam : 'documents');
+    }
+    // Consume the entry once. Manual selection and normal tab refocus then stay intact,
+    // while another Home entry can request even the same segment again.
+    router.setParams({ segment: undefined });
+  }, [router, segmentParam, signedIn]));
+  const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+  const verifiedIcon = verified ? (
+    <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
+      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
+      onPress={event => {
+        event.stopPropagation();
+        verificationButton.current?.measureInWindow((x, y, _width, height) => setVerificationAnchor({ x, y: y + height + 6 }));
+      }}>
+      <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessible={false} />
     </Pressable>
-  ) : null;
+  ) : undefined;
+  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab => tab.key === 'documents'
+    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
 
   const statusBlock = (
     <>
@@ -93,7 +107,7 @@ export default function ServicesScreen() {
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
         <View style={styles.controls}>
-          <SegmentedControl segments={session ? TABS : TABS.slice(0, 1)} activeKey={segment} onChange={setSegment}
+          <SegmentedControl segments={tabs} activeKey={segment} onChange={next => { setVerificationAnchor(null); setSegment(next); }}
             variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
         </View>
 
@@ -108,7 +122,7 @@ export default function ServicesScreen() {
               refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
               contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
               {statusBlock}
-              {!session || segment === 'documents' ? <DocumentsList verification={verifiedChip} /> : null}
+              {!session || segment === 'documents' ? <DocumentsList /> : null}
               {session && segment === 'logs' && <LogsList />}
             </ScrollView>
           </PullRefreshScope>
@@ -116,6 +130,23 @@ export default function ServicesScreen() {
 
       <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
       </View>
+      <Modal transparent visible={verified && verificationAnchor !== null} animationType="none" statusBarTranslucent
+        onRequestClose={() => setVerificationAnchor(null)}>
+        <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss ID verification status"
+            onPress={() => setVerificationAnchor(null)} />
+          {verificationAnchor ? <View style={[styles.verificationPopover, {
+            top: verificationAnchor.y,
+            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
+            maxWidth: width - 32,
+            backgroundColor: theme.resident.card,
+            borderColor: theme.resident.border,
+          }]}>
+            <Ionicons name="shield-checkmark" size={20} color={theme.resident.accentText} accessible={false} />
+            <ThemedText type="smallBold" style={{ color: theme.resident.accentText, flexShrink: 1 }}>Valid ID verified</ThemedText>
+          </View> : null}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -137,18 +168,10 @@ const styles = StyleSheet.create({
   documentsScrollContent: {
     paddingTop: 6,
   },
-  verifiedChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-  },
-  verifiedIcon: { width: 44, height: 44 },
-  verifiedLabel: { fontSize: 12, lineHeight: 16 },
-  verificationToggle: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', alignSelf: 'flex-start' },
+  verifiedIcon: { width: 22, height: 22 },
+  verificationButton: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+  verificationPopover: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12,
+    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
   verifyCard: {
     marginHorizontal: 20,
     marginBottom: Spacing.three,

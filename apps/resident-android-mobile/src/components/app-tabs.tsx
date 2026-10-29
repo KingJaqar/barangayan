@@ -22,7 +22,7 @@ import { beginDiagnosticNavigation, diagnosticRoute, navigationDiagnosticsAvaila
 const TABS = [
   { name: 'home', label: 'Home', icon: 'home' },
   { name: 'services', label: 'Services', icon: 'clipboard' },
-  { name: 'drrm', label: 'DRRM' },
+  { name: 'drrm', label: 'Emergency' },
   { name: 'maps', label: 'Maps', icon: 'location' },
   { name: 'health', label: 'Health', icon: 'heart' },
   { name: 'reports', label: 'Reports', icon: 'warning' },
@@ -66,7 +66,8 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const barMotion = useAnimatedStyle(() => ({ transform: [{ translateY: mapRoute ? (mapNavProgress?.value ?? 0) * (barHeight + Math.max(insets.bottom, 12) + 8) : 0 }] }));
   const reducedMotion = useResidentReducedMotion(true);
   const [width, setWidth] = useState(0);
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, width: windowWidth } = useWindowDimensions();
+  const sidePadding = windowWidth - insets.left - insets.right < 326 ? 8 : 12;
   const { fontId } = useFontPreference();
   const measurementKey = `${fontId}:${fontScale}`;
   const [labelMeasurements, setLabelMeasurements] = useState<{ key: string; widths: number[] }>({ key: '', widths: [] });
@@ -94,8 +95,8 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
     backgroundColor: 'transparent',
     position: 'absolute', bottom: 0, left: 0, right: 0,
     paddingBottom: Math.max(insets.bottom, 12),
-    paddingLeft: 12 + insets.left,
-    paddingRight: 12 + insets.right,
+    paddingLeft: sidePadding + insets.left,
+    paddingRight: sidePadding + insets.right,
     paddingTop: 8,
   }, barMotion]}>
     {/* Root screens scroll beneath the bar and reserve clearance for their controls. */}

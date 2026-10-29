@@ -1,0 +1,90 @@
+[
+  {
+    "name": "refresh-ownership",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/refresh-ownership.mjs"
+    ],
+    "start": "2026-10-27T02:02:38.518Z",
+    "end": "2026-10-27T02:02:47.026Z",
+    "status": 0
+  },
+  {
+    "name": "hidden-work-ownership",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/hidden-work-ownership.mjs"
+    ],
+    "start": "2026-10-27T02:02:47.034Z",
+    "end": "2026-10-27T02:03:20.258Z",
+    "status": 1
+  },
+  {
+    "name": "map-state-bridge",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/map-state-bridge.mjs"
+    ],
+    "start": "2026-10-27T02:03:20.262Z",
+    "end": "2026-10-27T02:03:26.761Z",
+    "status": 0
+  },
+  {
+    "name": "root-navigation-isolation",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/root-navigation-isolation.mjs"
+    ],
+    "start": "2026-10-27T02:03:26.765Z",
+    "end": "2026-10-27T02:03:27.729Z",
+    "status": 1
+  },
+  {
+    "name": "request-tracking-navigation",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/request-tracking-navigation.mjs"
+    ],
+    "start": "2026-10-27T02:03:27.734Z",
+    "end": "2026-10-27T02:03:27.885Z",
+    "status": 0
+  },
+  {
+    "name": "resident-shell-lifecycle",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/resident-shell-lifecycle.mjs"
+    ],
+    "start": "2026-10-27T02:03:27.890Z",
+    "end": "2026-10-27T02:03:34.798Z",
+    "status": 0
+  },
+  {
+    "name": "services-tab-stability",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/services-tab-stability.mjs"
+    ],
+    "start": "2026-10-27T02:03:34.803Z",
+    "end": "2026-10-27T02:03:41.516Z",
+    "status": 0
+  },
+  {
+    "name": "services-lists-ui",
+    "stage": "baseline",
+    "command": [
+      "node",
+      "tests/services-lists-ui.mjs"
+    ],
+    "start": "2026-10-27T02:03:41.521Z",
+    "end": "2026-10-27T02:03:54.458Z",
+    "status": 0
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "shared-types",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:37:28.342Z",
+    "end": "2026-10-28T05:37:39.321Z",
+    "code": 2,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-shared-types.log"
+  },
+  {
+    "id": "android-types",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:37:28.362Z",
+    "end": "2026-10-28T05:38:08.456Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-android-types.log"
+  },
+  {
+    "id": "android-lint",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:37:28.372Z",
+    "end": "2026-10-28T05:38:05.505Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-android-lint.log"
+  },
+  {
+    "id": "shared-tests",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T05:37:28.390Z",
+    "end": "2026-10-28T05:37:42.315Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-shared-tests.log"
+  },
+  {
+    "id": "android-export",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase1-20261028/export-baseline"
+    ],
+    "deadline": 1200000,
+    "start": "2026-10-28T05:37:28.407Z",
+    "end": "2026-10-28T05:39:10.969Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-android-export.log"
+  }
+]

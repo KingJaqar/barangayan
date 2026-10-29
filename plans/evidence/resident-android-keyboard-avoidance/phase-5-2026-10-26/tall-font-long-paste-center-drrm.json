@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-27T01:23:28.962Z",
+  "status": "pass native paste/long horizontal caret and cleanup",
+  "config": "tall-font",
+  "kind": "center",
+  "route": "drrm",
+  "paste": [
+    {
+      "tag": "tall-font-long-paste-center-drrm-native-cut",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        279,
+        1029,
+        411
+      ],
+      "imeTop": 641,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "tall-font-long-paste-center-drrm-native-paste",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        279,
+        897,
+        411
+      ],
+      "imeTop": 641,
+      "text": "zzphasefive",
+      "focused": "true"
+    }
+  ],
+  "longCharacterCount": 162,
+  "maximum": null,
+  "imeSubmissionVerified": false,
+  "syntheticTextCleared": true
+}

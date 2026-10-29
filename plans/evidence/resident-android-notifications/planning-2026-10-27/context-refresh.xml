@@ -1,0 +1,144 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/components/services/requests-list.tsx, apps/resident-android-mobile/src/constants/disclosure-motion.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      components/
+        services/
+          requests-list.tsx
+      constants/
+        disclosure-motion.ts</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/components/services/requests-list.tsx">import { AgencySlaStatus } from &apos;./agency-sla-status&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import {
+  estimateLabel,
+  formatCentavosAsPHP,
+  formatDate,
+  getResidentRequestStatus,
+  progressFraction,
+  requestFee,
+  type ResidentRequestStatus,
+  type Tables,
+} from &apos;@barangayan/shared&apos;;
+import { useCallback, useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { Animated, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from &apos;react-native&apos;;
+⋮----
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { PullRefreshControl, usePullRefresh } from &apos;@/components/pull-refresh&apos;;
+import { ServiceListLink, ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { ServicesFilterChips } from &apos;@/components/services/services-filter-chips&apos;;
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from &apos;@/components/services/services-list-states&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { disclosureMotion } from &apos;@/constants/disclosure-motion&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useHistoryPages } from &apos;@/hooks/use-history-pages&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { HISTORY_PAGE_SIZE, historyBefore } from &apos;@/lib/history-resource&apos;;
+import { uniqueChannelName } from &apos;@/lib/realtime-channel&apos;;
+⋮----
+type ServiceRequest = Pick&lt;Tables&lt;&apos;service_requests&apos;&gt;,
+  &apos;id&apos; | &apos;reference_number&apos; | &apos;status&apos; | &apos;payment_status&apos; | &apos;payment_method&apos; | &apos;created_at&apos; | &apos;updated_at&apos; | &apos;timing_model&apos; | &apos;sla_state&apos;
+  | &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos; | &apos;legacy_fee_centavos&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;processing_target_hours&apos; | &apos;fee_centavos&apos;&gt; | null;
+};
+⋮----
+type Filter = &apos;all&apos; | &apos;active&apos; | &apos;pickup&apos; | &apos;history&apos;;
+type ActiveSubFilter = &apos;all&apos; | &apos;pending_payment&apos; | &apos;paid&apos; | &apos;processing&apos;;
+⋮----
+/** Live chip numbers; one lightweight status-only query, independent of the selected filter. */
+interface RequestCounts { active: number; pickup: number; history: number; pending_payment: number; paid: number; processing: number }
+⋮----
+/** Resident-facing label of the one status pill. Shorter than the shared long form on purpose. */
+⋮----
+interface Pill { label: string; icon: keyof typeof Ionicons.glyphMap; color: string; background: string }
+⋮----
+/** The single decision a card has to communicate: what the resident should do now. */
+interface NextStep {
+  /** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+  text?: string;
+  /** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+  urgent: boolean;
+  payAmount?: number;
+  /** Where &quot;Pay now&quot; leads. */
+  payHref?: string;
+  estimate?: &apos;agency&apos; | &apos;legacy&apos;;
+}
+⋮----
+/** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+⋮----
+/** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+⋮----
+/** Where &quot;Pay now&quot; leads. */
+⋮----
+const isOpen = (status: ResidentRequestStatus)
+⋮----
+function nextStep(request: ServiceRequest, status: ResidentRequestStatus): NextStep
+⋮----
+function displayPill(status: ResidentRequestStatus, step: NextStep, resident: ReturnType&lt;typeof useTheme&gt;[&apos;resident&apos;]): Pill
+⋮----
+/** Needs-action first, then other open requests, then pickup, then the rest; newest first inside each band. */
+function sortRequests(requests: ServiceRequest[]): ServiceRequest[]
+⋮----
+const band = (request: ServiceRequest) =&gt;
+⋮----
+function RequestRow(
+⋮----
+&lt;DocumentIcon name=
+⋮----
+onPress=
+⋮----
+/** Health calendar motion, with natural height whenever the section is open. */
+⋮----
+function toggle()
+⋮----
+/** Actionable profile guidance scrolls away, leaving the filter chips pinned. */
+⋮----
+// Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
+// already-subscribed channel when this list is mounted twice (or remounted before the
+// async removeChannel() finishes), and .on() then throws.
+⋮----
+// The sub-filter row only makes sense inside &quot;Active&quot; — reset it whenever the resident
+// navigates to a different top-level filter, so it doesn&apos;t silently stay narrowed the
+// next time they come back to &quot;Active&quot;.
+function handleFilterChange(next: Filter)
+⋮----
+// &quot;All&quot; is the open-work overview (the five sections); finished requests live under History.
+⋮----
+if (error || !data) return; // keep the last known numbers rather than flashing them away
+⋮----
+const statusOf = (request: ServiceRequest)
+⋮----
+// Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
+⋮----
+{/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
+⋮----
+&lt;View style=</file><file path="apps/resident-android-mobile/src/constants/disclosure-motion.ts">import { Easing } from &apos;react-native&apos;;
+⋮----
+/** Shared by the Health calendar and Services request sections. */</file></files></repomix>

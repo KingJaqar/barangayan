@@ -69,6 +69,19 @@ export type NotificationInboxRow = {
   id: string; event_id: string; recipient_id: string; kind: string; title: string; body: string;
   destination: Json; created_at: string; read_at: string | null;
 }
+/** Migration 0145: the columns a resident may read of a published System notice (operator fields are not granted). */
+export type SystemNoticeRow = {
+  id: string; subtype: 'service_status' | 'app_update' | 'policy'; title: string; body: string;
+  state: 'published' | 'resolved' | 'cancelled'; starts_at: string | null; ends_at: string | null; expires_at: string | null;
+  action: 'services' | 'reports' | 'health' | 'maps' | 'emergency_info' | 'email_verification' | 'terms_privacy' | null;
+  policy_key: 'privacy_policy' | 'terms_of_service' | null; policy_effective_on: string | null; app_version_code: number | null;
+  revision: number; published_at: string; resolved_at: string | null; cancelled_at: string | null; updated_at: string;
+}
+/** One row per source of `notification_hub_summary`; null means not available to the caller, never zero. */
+export type NotificationHubSummaryRow = {
+  source: 'barangay' | 'account' | 'system'; total: number | null; unread: number | null; scope_total: number | null; scope_unread: number | null;
+}
+export type NotificationInboxPageRow = Pick<NotificationInboxRow, 'id' | 'kind' | 'title' | 'body' | 'destination' | 'created_at' | 'read_at'> & { filter: string | null };
 /** Foundation tables are written exclusively through controlled operations. */
 type ReadOnlyTable<Row, Relationships extends { foreignKeyName: string; columns: string[]; isOneToOne: boolean; referencedRelation: string; referencedColumns: string[] }[] = []> = { Row: Row; Insert: never; Update: never; Relationships: Relationships };
 export type FoundationTables = {
@@ -77,6 +90,8 @@ export type FoundationTables = {
     Row: NotificationInboxRow; Insert: never; Update: { read_at?: string | null };
     Relationships: [{ foreignKeyName: 'notification_inbox_recipient_id_fkey'; columns: ['recipient_id']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
   };
+  // Migration 0145: residents read published notices of their barangay; only service_role writes.
+  system_notices: ReadOnlyTable<SystemNoticeRow>;
   notification_preferences: ReadOnlyTable<{ user_id: string; kinds: Json; updated_at: string }, [
     { foreignKeyName: 'notification_preferences_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] },
   ]>;
@@ -108,6 +123,12 @@ export type FoundationTables = {
 type FoundationOperation = { Args: { p_input: Json }; Returns: string };
 export type FoundationFunctions = ResidentAccountSetupFunctions & {
   incomplete_profile_browsing_barangay: { Args: Record<string, never>; Returns: string | null };
+  notification_hub_summary: { Args: { p_view?: string; p_filter?: string }; Returns: NotificationHubSummaryRow[] };
+  notification_inbox_page: {
+    Args: { p_source: 'account' | 'system'; p_view?: string; p_filter?: string; p_before_created_at?: string; p_before_id?: string; p_limit?: number };
+    Returns: NotificationInboxPageRow[];
+  };
+  notification_mark_scope_read: { Args: { p_view?: string; p_filter?: string }; Returns: { announcements_marked: number; notifications_marked: number }[] };
   service_request_sla_tracking: { Args: { p_request_id: string }; Returns: Json };
   service_request_sla_metrics: { Args: { p_request_id: string; p_at?: string }; Returns: Json };
   service_sla_report_rows: { Args: Record<string, never>; Returns: Json };

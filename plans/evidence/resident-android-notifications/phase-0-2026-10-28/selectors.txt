@@ -1,0 +1,8 @@
+supabase/migrations/0135_resident_notifications.sql
+supabase/migrations/0118_resident_front_id_submission.sql
+supabase/migrations/0109_invalidate_changed_profile_email_verification.sql
+supabase/migrations/0122_resident_apple_account_setup.sql
+supabase/functions/send-notifications/index.ts
+packages/shared/src/types/service-foundations.ts
+packages/shared/src/lib/request-status.ts
+supabase/tests/resident_ios_phase17_notifications.test.sql

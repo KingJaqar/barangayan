@@ -1,0 +1,11 @@
+{
+  "name": "services-tab-stability",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/services-tab-stability.mjs"
+  ],
+  "start": "2026-10-27T02:03:34.803Z",
+  "end": "2026-10-27T02:03:41.516Z",
+  "status": 0
+}

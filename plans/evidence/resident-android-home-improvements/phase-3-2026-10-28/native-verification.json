@@ -1,0 +1,233 @@
+{
+  "time": "2026-10-28T12:27:07.427Z",
+  "native": true,
+  "serial": "127.0.0.1:16416",
+  "instance": "Android Device test 2 / instance1, mapping retained from Phase2",
+  "apk": "existing com.barangayan.resident.dev",
+  "backend": "resident_home_p3_20261028, local Docker PostgreSQL17.6/PostgREST14.5",
+  "matrix": [
+    {
+      "name": "native-acceptance-home",
+      "widthDp": 360,
+      "font": 1,
+      "card": [
+        60,
+        738,
+        1020,
+        1280
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    },
+    {
+      "name": "native-320-default-scrolled",
+      "widthDp": 320,
+      "font": 1,
+      "card": [
+        68,
+        498,
+        1013,
+        1171
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    },
+    {
+      "name": "native-320-large-scrolled",
+      "widthDp": 320,
+      "font": 1.3,
+      "card": [
+        68,
+        407,
+        1013,
+        1299
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    },
+    {
+      "name": "native-360-large-scrolled",
+      "widthDp": 360,
+      "font": 1.3,
+      "card": [
+        60,
+        442,
+        1020,
+        1169
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    },
+    {
+      "name": "native-412-large",
+      "widthDp": 411.42857142857144,
+      "font": 1.3,
+      "card": [
+        53,
+        969,
+        1028,
+        1602
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    },
+    {
+      "name": "native-412-default-light",
+      "widthDp": 411.42857142857144,
+      "font": 1,
+      "card": [
+        53,
+        647,
+        1028,
+        1125
+      ],
+      "controlDp": [
+        [
+          48,
+          48
+        ],
+        [
+          48,
+          48
+        ]
+      ],
+      "inactiveTargets": [
+        {
+          "focusable": "false",
+          "enabled": "false"
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    "actual owner RPC → older Business Clearance → full-title summary → same-ID real tracking → Android Back to Home at2of3",
+    "native next1→2, swipe2→3, previous3→2; index agrees and edges disabled",
+    "320dp/large long-title summary: controls reachable; Android Back closes to Home",
+    "reduced motion transition scale0: next button and summary/Back; source hook mapping previously verified"
+  ],
+  "logs": [
+    {
+      "name": "native-flow-logcat.log",
+      "fatal": 0,
+      "jsErrors": 0,
+      "jsWarnings": 0,
+      "leakChecker": 0,
+      "missingSurface": 0
+    },
+    {
+      "name": "native-resumed-logcat.log",
+      "fatal": 0,
+      "jsErrors": 0,
+      "jsWarnings": 0,
+      "leakChecker": 3,
+      "missingSurface": 9
+    }
+  ],
+  "talkBack": "waived globally by plan4.1",
+  "boundaries": [
+    "Synthetic owner/profile/preference providers and separate ExpoRoot test entry; no real account/session/preference write",
+    "Production Home/helper/summary/carousel/tracking/native navigation and actual Docker requests used",
+    "Realtime transport stubbed only in test fixture, no claim of live update delivery",
+    "Existing floating-bar integration, full auth/account-change and full R9/R10/I2 remain Phase4/5 gates"
+  ],
+  "status": "Native Phase3 local request/card/control gates passed",
+  "frameworkDiagnosticReference": {
+    "beforePath": "tmp/resident-home-phase2-20261028/resident-native/before-matrix-logcat.log",
+    "comparison": "Known pre-Phase2 APK framework signature reference, not a matched Phase3 count/performance comparison",
+    "startupReference": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-app-logcat-final.log",
+    "baselineSignatures": 70,
+    "currentSignatures": 69,
+    "newSignatures": []
+  },
+  "finalDismissalSupplement": {
+    "source": "source-final.json",
+    "browserFocus": {
+      "actualDOM": true,
+      "visibleCard": true,
+      "removedCardSeeAll": true,
+      "log": "focus-reviewed-ui.log"
+    },
+    "native": [
+      "native-focus-close-back",
+      "native-focus-tracking-loaded",
+      "native-focus-tracking-back"
+    ],
+    "log": "native-focus-logcat.log",
+    "counts": {
+      "fatal": 0,
+      "jsErrors": 0,
+      "jsWarnings": 0
+    },
+    "geometry": "Previous six layouts reused unchanged; last code edit only defers dismissal callback one cancellable frame"
+  }
+}

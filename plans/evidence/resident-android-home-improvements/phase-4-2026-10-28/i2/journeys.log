@@ -1,0 +1,32 @@
+--------- beginning of main
+10-28 21:41:26.778 15750 15750 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 177.87039 ms
+10-28 21:42:50.315 15750 15750 D CompatibilityChangeReporter: Compat change id reported: 163400105; UID 10060; state: ENABLED
+10-28 21:42:50.316 15750 15750 D InputMethodManager: showSoftInput() view=com.facebook.react.views.textinput.ReactEditText{ac63751 VFED..CL. .F.P..ID 105,309-975,441 #2a4 aid=1073741825} flags=0 reason=SHOW_SOFT_INPUT
+10-28 21:42:50.409 15750 15750 D InputMethodManager: showSoftInput() view=com.facebook.react.views.textinput.ReactEditText{ac63751 VFED..CL. .F...... 105,309-975,441 #2a4 aid=1073741825} flags=0 reason=SHOW_SOFT_INPUT
+10-28 21:42:50.421 15750 15750 D InsetsController: show(ime(), fromIme=true)
+10-28 21:42:50.484 15750 15750 D InsetsController: show(ime(), fromIme=true)
+10-28 21:43:13.957 15750 15750 D InputMethodManager: showSoftInput() view=com.facebook.react.views.textinput.ReactEditText{89f35cd VFED..CL. .F.P..ID 105,537-975,669 #2ae aid=1073741826} flags=0 reason=SHOW_SOFT_INPUT
+10-28 21:43:14.012 15750 15750 D InsetsController: show(ime(), fromIme=true)
+10-28 21:43:14.012 15750 15750 D InsetsController: show(ime(), fromIme=true)
+10-28 21:43:14.075 15750 15750 D InputMethodManager: showSoftInput() view=com.facebook.react.views.textinput.ReactEditText{89f35cd VFED..CL. .F...... 105,537-975,669 #2ae aid=1073741826} flags=0 reason=SHOW_SOFT_INPUT
+10-28 21:43:14.078 15750 15750 D InsetsController: show(ime(), fromIme=true)
+10-28 21:43:54.589 15750 15838 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 21:45:44.211 15750 15750 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 60.134063 ms
+10-28 21:45:45.202 15750 15838 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 21:45:45.629 15750 15770 I an.resident.de: Background young concurrent copying GC freed 474859(17MB) AllocSpace objects, 32(4628KB) LOS objects, 36% free, 31MB/50MB, paused 95us,24us total 219.142ms
+10-28 21:45:45.688 15750 15750 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 284.151643 ms
+10-28 21:45:46.221 15750 15750 W an.resident.de: Accessing hidden field Landroid/widget/HorizontalScrollView;->mScroller:Landroid/widget/OverScroller; (unsupported, reflection, allowed)
+10-28 21:46:43.743 15750 15750 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+10-28 21:46:43.745 15750 15750 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 21:46:43.747 15750 15750 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 21:46:44.425 15750 15750 D an.resident.de: Features: 0 0 0
+10-28 21:46:44.426 15750 15750 E an.resident.de: vulkan version is 4211013
+10-28 21:46:44.429 15750 15821 I ReactNativeJNI: Memory warning (pressure level: TRIM_MEMORY_UI_HIDDEN) received by JS VM, ignoring because it's non-severe
+10-28 21:46:48.066 15750 15750 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 21:46:48.069 15750 15750 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 21:46:48.088 15750 15804 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 21:46:48.096 15750 16473 D an.resident.de: Features: 0 0 0
+10-28 21:46:48.096 15750 16473 E an.resident.de: vulkan version is 4211013
+10-28 21:46:48.097 15750 16473 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 21:46:48.099 15750 16473 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 21:46:49.553 15750 15838 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.

@@ -1,0 +1,7 @@
+{
+  "pid": 56968,
+  "parentPid": 2652,
+  "start": "2026-10-28T12:15:43.880Z",
+  "deadlineMs": 2700000,
+  "reason": "Resume only unfinished native matrix after account usage interruption; source and automated checks reused unchanged"
+}

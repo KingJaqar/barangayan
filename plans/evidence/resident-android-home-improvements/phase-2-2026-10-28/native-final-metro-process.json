@@ -1,0 +1,17 @@
+{
+  "pid": 61196,
+  "start": "2026-10-28T07:26:59.415Z",
+  "deadlineMs": 1200000,
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "start",
+    "--dev-client",
+    "--offline",
+    "--port",
+    "8087",
+    "--max-workers",
+    "2"
+  ],
+  "backend": "local Docker anon only; no credentials saved"
+}

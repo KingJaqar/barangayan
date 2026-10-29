@@ -1,0 +1,72 @@
+{
+  "repomix_version": "1.18.1",
+  "executable": "C:/Users/User/AppData/Roaming/npm/repomix (matches npx cache e34444800c30a7c5)",
+  "options": "--include <8 selectors> --style xml --parsable-style --no-git-sort-by-changes; default security/exclusions; no compression (SQL bodies needed verbatim)",
+  "xml_sha256": "4ea917a0bd34c5194b53b58c5461bfe6b82953725712d7de8e20ebbaf3e1678e",
+  "xml_chars": 117753,
+  "xml_lines": 1379,
+  "security": "No suspicious files detected",
+  "tool_token_estimate": 30726,
+  "included": [
+    "supabase/migrations/0135_resident_notifications.sql",
+    "supabase/migrations/0118_resident_front_id_submission.sql",
+    "supabase/migrations/0109_invalidate_changed_profile_email_verification.sql",
+    "supabase/migrations/0122_resident_apple_account_setup.sql",
+    "supabase/functions/send-notifications/index.ts",
+    "packages/shared/src/types/service-foundations.ts",
+    "packages/shared/src/lib/request-status.ts",
+    "supabase/tests/resident_ios_phase17_notifications.test.sql"
+  ],
+  "omissions": [],
+  "line_chunks_read": [
+    [
+      38,
+      215
+    ],
+    [
+      218,
+      364
+    ],
+    [
+      365,
+      464
+    ],
+    [
+      465,
+      554
+    ],
+    [
+      555,
+      724
+    ],
+    [
+      725,
+      889
+    ],
+    [
+      890,
+      1045
+    ]
+  ],
+  "partial_entries": [
+    {
+      "path": "supabase/tests/resident_ios_phase17_notifications.test.sql",
+      "xml_lines": [
+        1045,
+        1379
+      ],
+      "read": "header/fixtures lines 1-25 of original + assertion inventory (121 plan; 93 is, 18 throws_ok, 9 lives_ok, 1 ok); assertion bodies deliberately not read in phase 0 — the suite is a baseline input executed in full (121/121)"
+    }
+  ],
+  "not_packed_read_from_original": [
+    "0095 review_id_submission (effective def via clone pg_get_functiondef)",
+    "0096:25-45,105-116",
+    "transition_service_request_sla/review_service_request/complete_resident_profile_fields effective defs (clone)",
+    "requests-list.tsx:183-232",
+    "verify-resident-email/index.ts:43-56",
+    "refund-payment/index.ts:109-215 (grep lines)",
+    "paymongo-webhook/index.ts:146-188 (grep lines)",
+    "terms-privacy.tsx:13-15",
+    "profile.tsx:885-910"
+  ]
+}

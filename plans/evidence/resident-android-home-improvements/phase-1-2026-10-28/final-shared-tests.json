@@ -1,0 +1,15 @@
+{
+  "id": "shared-tests",
+  "cwd": "packages/shared",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/vitest/vitest.mjs",
+    "run"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-28T05:47:09.844Z",
+  "end": "2026-10-28T05:47:17.393Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-shared-tests.log"
+}

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "shared-types",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:47:09.803Z",
+    "end": "2026-10-28T05:47:17.113Z",
+    "code": 2,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-shared-types.log"
+  },
+  {
+    "id": "android-types",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:47:09.823Z",
+    "end": "2026-10-28T05:47:34.498Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-android-types.log"
+  },
+  {
+    "id": "android-lint",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T05:47:09.832Z",
+    "end": "2026-10-28T05:47:25.253Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-android-lint.log"
+  },
+  {
+    "id": "shared-tests",
+    "cwd": "packages/shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T05:47:09.844Z",
+    "end": "2026-10-28T05:47:17.393Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-shared-tests.log"
+  },
+  {
+    "id": "android-export",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase1-20261028/export-final"
+    ],
+    "deadline": 1200000,
+    "start": "2026-10-28T05:47:09.896Z",
+    "end": "2026-10-28T05:47:48.849Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\final-android-export.log"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "id": "reports-ui",
+  "start": "2026-10-28T04:21:49.636Z",
+  "end": "2026-10-28T04:22:29.949Z",
+  "code": 1,
+  "signal": null,
+  "deadlineMs": 600000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/reports-announcements-ui.mjs"
+  ],
+  "log": "reports-ui.log",
+  "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\reports-ui"
+}

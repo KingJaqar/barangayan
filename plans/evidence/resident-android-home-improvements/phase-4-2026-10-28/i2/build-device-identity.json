@@ -1,0 +1,19 @@
+{
+  "instance": "Android Device test 2 / index 1",
+  "originalSerial": "127.0.0.1:16416",
+  "recoveredSerial": "127.0.0.1:16417",
+  "sameVm": "47f28a8a-6dfc-162e-1000-000000000001",
+  "android": "12",
+  "sdk": "32",
+  "package": "com.barangayan.resident.dev",
+  "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+  "apkPath": "/data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/base.apk",
+  "versionLines": [
+    "versionCode=1 minSdk=24 targetSdk=36",
+    "versionName=1.0.0"
+  ],
+  "density": "Physical density: 480",
+  "font": "1.0",
+  "wifi": "1",
+  "mobileData": "1"
+}

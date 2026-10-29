@@ -1,0 +1,26 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "CLAUDE.md",
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c"
+  },
+  {
+    "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+    "sha256": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a"
+  },
+  {
+    "path": "supabase/migrations/0149_announcement_alert_expiry.sql",
+    "sha256": "818a85fa83feae27ca7729cd8e4b808a63544d7e174e086a75341e97e7a87031"
+  }
+]

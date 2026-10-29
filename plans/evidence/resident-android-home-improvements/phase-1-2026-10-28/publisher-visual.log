@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.evaluate: Error: strict mode violation: getByRole('dialog', { name: 'Edit announcement', exact: true }).locator('section') resolved to 2 elements:
+    1) <section data-visible="true" class="content_edit_dialog_panel ">…</section> aka locator('section').filter({ hasText: 'Edit announcementSynthetic' })
+    2) <section tabindex="-1" aria-live="polite" aria-atomic="false" aria-relevant="additions text" aria-label="Notifications alt+T"></section> aka getByRole('region', { name: 'Notifications alt+T' })
+
+Call log:
+  - waiting for getByRole('dialog', { name: 'Edit announcement', exact: true }).locator('section')
+
+    at C:\Users\User\barangayan\apps\admin-web\tests\content-workspace\announcement-lifetime.mjs:90:55 {
+  log: [
+    "  - waiting for getByRole('dialog', { name: 'Edit announcement', exact: true }).locator('section')"
+  ]
+}
+
+Node.js v24.13.1

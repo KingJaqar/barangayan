@@ -1,0 +1,23 @@
+{
+  "chunks": [
+    {
+      "characters": 8627,
+      "lines": 195,
+      "path": "packet-read-1.txt"
+    },
+    {
+      "characters": 2010,
+      "lines": 67,
+      "path": "packet-read-2.txt"
+    }
+  ],
+  "included": [
+    "packages/shared/src/lib/service-catalog.ts",
+    "packages/shared/src/index.ts",
+    "packages/shared/package.json",
+    "supabase/migrations/0143_residents_read_requested_document_types.sql",
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "hash": "A57BC8134E9EE4487C0E3EFFE28202527991157E1875AD8824F321D74B59C21E"
+}

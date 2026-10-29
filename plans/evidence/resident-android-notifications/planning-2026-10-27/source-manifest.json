@@ -1,0 +1,119 @@
+{
+  "head": "9fe8add15b0a5b75f6c232e30679da869731a4ea",
+  "scope": "Planning baseline only; no application edits or application acceptance runs.",
+  "snapshot_path": "C:\\Users\\User\\barangayan\\tmp\\resident-notifications-plan-20261027\\before",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "lines": 0,
+      "working_copy_status": ""
+    },
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+      "bytes": 410,
+      "lines": 20,
+      "working_copy_status": ""
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "bytes": 667658,
+      "lines": 17907,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "bytes": 2122,
+      "lines": 67,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+      "bytes": 142,
+      "lines": 2,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+      "sha256": "4b01f1b6d2a6f755b2c1df22208007879e3bcab50a69af96d1ec90f08468f35f",
+      "bytes": 2594,
+      "lines": 38,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "sha256": "ff59712bd4343c53fbd6598fc55a4771ae5e4dd3585309130faec258ee1e62df",
+      "bytes": 11190,
+      "lines": 257,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "sha256": "c65486c755cbd1789303138dc35d963e7e65373fc1c000ea6aae03f79d1eda2b",
+      "bytes": 4928,
+      "lines": 134,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-realtime.ts",
+      "sha256": "762ef057ca5111957f9d515a0396492243ff2c94b95926fc966ec4144f423cdb",
+      "bytes": 3975,
+      "lines": 105,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "sha256": "c5c7d3629d40942109495f5832cc2c858e540c7f40b0f2c98efa1e01a0a11bd7",
+      "bytes": 13255,
+      "lines": 236,
+      "working_copy_status": "M apps/resident-android-mobile/src/components/resident-header.tsx"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "sha256": "e316a735e9913d1bd5dad51a794affa50bad7da1a14b6c376a77baadbcee4b93",
+      "bytes": 23103,
+      "lines": 443,
+      "working_copy_status": "M apps/resident-android-mobile/src/components/services/requests-list.tsx"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/notifications/model.ts",
+      "sha256": "34a2598e7d9bcdb21389fd024b86c8c82d45593f0ec96fd409f497a4d431e1a6",
+      "bytes": 5040,
+      "lines": 79,
+      "working_copy_status": ""
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/data/schemas.ts",
+      "sha256": "86175584cc991910c4177ae5280ad746c8bc140b67be791e7df2ade5b53566e7",
+      "bytes": 18787,
+      "lines": 335,
+      "working_copy_status": ""
+    },
+    {
+      "path": "supabase/migrations/0135_resident_notifications.sql",
+      "sha256": "c4cd5186f959cefe88e49b29dd22f55969cef7ab84bcc65621aaabf1912c5980",
+      "bytes": 31048,
+      "lines": 491,
+      "working_copy_status": ""
+    },
+    {
+      "path": "supabase/functions/send-notifications/worker.ts",
+      "sha256": "3c0362dec73dff27e7b7966202cde93989cf82dcb368ef184f310abbbde750d0",
+      "bytes": 10802,
+      "lines": 206,
+      "working_copy_status": ""
+    },
+    {
+      "path": "plans/Resident_Android_Account_System_Notifications_and_Announcements_Redesign_Breakdown_2026_10_27.md",
+      "sha256": "400faeda249f6172ae8f9e4074ea1d61882d85a4d026f27b476dffcaa690db0d",
+      "bytes": 101880,
+      "lines": 598,
+      "working_copy_status": "?? plans/Resident_Android_Account_System_Notifications_and_Announcements_Redesign_Breakdown_2026_10_27.md"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "checked": "2026-10-29T03:17:53.159Z",
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef",
+      "bytes": 24593,
+      "lines": 315,
+      "currentSha256": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-home-announcements.ts",
+      "sha256": "44afcb1c3fac45efd7ee99df9dd085395ef57629ca963d5d36fc083210981955",
+      "bytes": 4395,
+      "lines": 66,
+      "currentSha256": "44afcb1c3fac45efd7ee99df9dd085395ef57629ca963d5d36fc083210981955"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-advisory-expired.ts",
+      "sha256": "6d5fd58b43e74a577bc464174bb1eb8151842782905f39e3f2cea66223239bc0",
+      "bytes": 1203,
+      "lines": 26,
+      "currentSha256": "6d5fd58b43e74a577bc464174bb1eb8151842782905f39e3f2cea66223239bc0"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-announcement.ts",
+      "sha256": "e23f872f4ef5eada364c7893b5be319326352313fef577707760e02adb257e72",
+      "bytes": 1515,
+      "lines": 30,
+      "currentSha256": "e23f872f4ef5eada364c7893b5be319326352313fef577707760e02adb257e72"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-announcement.test.ts",
+      "sha256": "65213e2bc72e44081f8afa589de76dafe0a03a4543bfb0eadf7ee2cb8051ef4f",
+      "bytes": 1951,
+      "lines": 30,
+      "currentSha256": "65213e2bc72e44081f8afa589de76dafe0a03a4543bfb0eadf7ee2cb8051ef4f"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcement-card.tsx",
+      "sha256": "fc0af6eeb846ef08668d59e7d56a77fd2525a60d55ca1ff7a58137c898d27748",
+      "bytes": 1620,
+      "lines": 23,
+      "currentSha256": "fc0af6eeb846ef08668d59e7d56a77fd2525a60d55ca1ff7a58137c898d27748"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+      "sha256": "8ac1c8ffc0679c34a94feaa1bcc06bbce0e16b2296bc2ad023dd5c8afcf39187",
+      "bytes": 5372,
+      "lines": 69,
+      "currentSha256": "8ac1c8ffc0679c34a94feaa1bcc06bbce0e16b2296bc2ad023dd5c8afcf39187"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "sha256": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8",
+      "bytes": 9720,
+      "lines": 167,
+      "currentSha256": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "sha256": "fe4246f81a969e0e0d6779c87e34bfac5a11a462ac175acc5f3ee362de958369",
+      "bytes": 37026,
+      "lines": 407,
+      "currentSha256": "fe4246f81a969e0e0d6779c87e34bfac5a11a462ac175acc5f3ee362de958369"
+    }
+  ]
+}

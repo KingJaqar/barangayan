@@ -1,0 +1,276 @@
+--------- beginning of main
+10-28 15:30:49.400 19547 19561 I an.resident.de: JIT allocated 54KB for compiled code of void android.view.View.<init>(android.content.Context, android.util.AttributeSet, int, int)
+10-28 15:30:50.325 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:30:50.325 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:30:50.751 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 171.006928 ms
+10-28 15:30:56.603 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:30:56.616 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:30:56.577 19547 19547 I an.resident.dev: type=1400 audit(0.0:13701): avc: denied { call } for scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:init:s0 tclass=binder permissive=1 app=com.barangayan.resident.dev
+10-28 15:30:56.597 19547 19547 I an.resident.dev: type=1400 audit(0.0:13702): avc: denied { sendto } for path="/dev/socket/logdw" scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:init:s0 tclass=unix_dgram_socket permissive=1 app=com.barangayan.resident.dev
+10-28 15:30:56.689 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:30:56.689 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:30:56.689 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:30:56.689 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:30:56.692 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":11,"initialProps":{},"fabric":true}
+10-28 15:30:56.710 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:30:56.713 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:30:56.799 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:30:56.819 19547 19780 D an.resident.de: Features: 0 0 0
+10-28 15:30:56.819 19547 19780 E an.resident.de: vulkan version is 4211013
+10-28 15:30:56.820 19547 19780 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:30:56.826 19547 19780 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:30:56.845 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 1): Schedule
+10-28 15:30:56.845 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 1)
+10-28 15:30:56.845 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 1): Execute
+10-28 15:30:56.845 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [1]
+10-28 15:30:56.856 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:30:56.858 19547 19547 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.RootViewManager
+10-28 15:30:56.869 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [1].
+10-28 15:30:56.870 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [1].
+10-28 15:30:56.877 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 1 is not found
+10-28 15:30:56.881 19547 19547 E unknown:SurfaceMountingManager: Surface [1] was stopped on SurfaceMountingManager.
+10-28 15:30:56.899 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:30:56.902 19547 19662 I ReactNativeJNI: instanceHandle is null, event of type topLayout will be dropped
+10-28 15:30:57.134 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 53.009274 ms
+10-28 15:30:57.153 19547 19662 I ReactNativeJNI: instanceHandle is null, event of type topTransitionProgress will be dropped
+10-28 15:30:57.260 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 66.61154599999999 ms
+10-28 15:30:57.262 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 62.701653 ms
+10-28 15:31:24.629 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:31:24.862 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 91.94949199999999 ms
+10-28 15:31:38.899 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:31:38.900 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:31:38.964 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:31:38.964 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:31:38.964 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:31:38.964 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:31:38.965 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":21,"initialProps":{},"fabric":true}
+10-28 15:31:38.984 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:31:38.989 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:31:39.078 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.090 19547 19898 D an.resident.de: Features: 0 0 0
+10-28 15:31:39.090 19547 19898 E an.resident.de: vulkan version is 4211013
+10-28 15:31:39.091 19547 19898 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.098 19547 19898 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.103 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 11): Schedule
+10-28 15:31:39.103 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 11)
+10-28 15:31:39.103 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:31:39.114 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 11): Execute
+10-28 15:31:39.114 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [11]
+10-28 15:31:39.140 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.154 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:31:39.154 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.155 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:31:39.203 19547 19569 D an.resident.de: Features: 0 0 0
+10-28 15:31:39.203 19547 19569 E an.resident.de: vulkan version is 4211013
+10-28 15:31:39.223 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:31:39.223 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:31:39.226 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:31:39.226 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:31:39.249 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:31:39.253 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:31:39.269 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 1 has leaked 243 components out of 261
+10-28 15:31:39.280 19547 19547 E unknown:SurfaceMountingManager: Surface [11] was stopped on SurfaceMountingManager.
+10-28 15:31:39.283 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 21): Schedule
+10-28 15:31:39.284 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 21)
+10-28 15:31:39.284 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:31:39.284 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 21): Execute
+10-28 15:31:39.284 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [21]
+10-28 15:31:39.284 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [11].
+10-28 15:31:39.329 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [21].
+10-28 15:31:39.372 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.389 19547 19908 D an.resident.de: Features: 0 0 0
+10-28 15:31:39.389 19547 19908 E an.resident.de: vulkan version is 4211013
+10-28 15:31:39.391 19547 19908 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.393 19547 19908 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:31:39.416 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 11 is not found
+10-28 15:31:39.416 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 21 is not found
+10-28 15:31:39.419 19547 19547 E unknown:SurfaceMountingManager: Surface [21] was stopped on SurfaceMountingManager.
+10-28 15:31:39.437 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:31:39.464 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":31,"initialProps":{},"fabric":true}
+10-28 15:31:39.535 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 11 has leaked 255 components out of 258
+10-28 15:31:39.855 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 107.603088 ms
+10-28 15:31:39.989 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 53.513774 ms
+10-28 15:31:39.991 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 50.019349999999996 ms
+10-28 15:43:42.665 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:43:42.890 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 114.211539 ms
+10-28 15:43:48.004 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:43:48.005 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:43:48.059 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:43:48.059 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:43:48.060 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:43:48.060 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:43:48.062 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":41,"initialProps":{},"fabric":true}
+10-28 15:43:48.076 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:43:48.078 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:43:48.267 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:43:48.286 19547 20014 D an.resident.de: Features: 0 0 0
+10-28 15:43:48.286 19547 20014 E an.resident.de: vulkan version is 4211013
+10-28 15:43:48.288 19547 20014 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:43:48.291 19547 20014 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:43:48.297 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 31): Schedule
+10-28 15:43:48.297 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 31)
+10-28 15:43:48.298 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:43:48.298 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 31): Execute
+10-28 15:43:48.298 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [31]
+10-28 15:43:48.350 19547 19547 E unknown:SurfaceMountingManager: Surface [31] was stopped on SurfaceMountingManager.
+10-28 15:43:48.354 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [31].
+10-28 15:43:48.355 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 31 is not found
+10-28 15:43:48.499 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 21 has leaked 5 components out of 5
+10-28 15:43:48.499 19547 19662 I ReactNativeJNI: instanceHandle is null, event of type topLayout will be dropped
+10-28 15:43:48.526 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:43:48.687 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 20.91659 ms
+10-28 15:43:48.818 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 56.061966 ms
+10-28 15:43:51.374 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:43:51.519 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 89.587189 ms
+10-28 15:44:19.357 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:44:19.359 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:44:19.414 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:44:19.414 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:44:19.415 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:44:19.415 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:44:19.416 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":51,"initialProps":{},"fabric":true}
+10-28 15:44:19.428 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:44:19.431 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:44:19.511 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.524 19547 20093 D an.resident.de: Features: 0 0 0
+10-28 15:44:19.524 19547 20093 E an.resident.de: vulkan version is 4211013
+10-28 15:44:19.528 19547 20093 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.538 19547 20093 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.542 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 41): Schedule
+10-28 15:44:19.542 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 41)
+10-28 15:44:19.542 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:44:19.543 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 41): Execute
+10-28 15:44:19.543 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [41]
+10-28 15:44:19.568 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.575 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.575 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:44:19.577 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:44:19.619 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:44:19.619 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:44:19.620 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:44:19.620 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:44:19.632 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:44:19.635 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:44:19.649 19547 19547 E unknown:SurfaceMountingManager: Surface [41] was stopped on SurfaceMountingManager.
+10-28 15:44:19.651 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [41].
+10-28 15:44:19.651 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 31 has leaked 268 components out of 271
+10-28 15:44:19.711 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.729 19547 20101 D an.resident.de: Features: 0 0 0
+10-28 15:44:19.729 19547 20101 E an.resident.de: vulkan version is 4211013
+10-28 15:44:19.733 19547 20101 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.738 19547 20101 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:19.739 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 41 is not found
+10-28 15:44:19.740 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 51): Schedule
+10-28 15:44:19.740 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 51)
+10-28 15:44:19.740 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:44:19.740 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 51): Execute
+10-28 15:44:19.740 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [51]
+10-28 15:44:19.744 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [51].
+10-28 15:44:19.746 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 51 is not found
+10-28 15:44:19.747 19547 19547 E unknown:SurfaceMountingManager: Surface [51] was stopped on SurfaceMountingManager.
+10-28 15:44:19.747 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:44:19.766 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":61,"initialProps":{},"fabric":true}
+10-28 15:44:19.836 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 41 has leaked 255 components out of 258
+10-28 15:44:20.043 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 41.637451 ms
+10-28 15:44:20.150 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 51.514629 ms
+10-28 15:44:40.170 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:44:40.306 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 77.462092 ms
+10-28 15:44:45.550 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-28 15:44:45.552 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-28 15:44:45.612 19547 19547 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 15:44:45.612 19547 19547 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 15:44:45.612 19547 19626 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 15:44:45.612 19547 19626 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 15:44:45.613 19547 19662 I ReactNativeJS: Running "main" with {"rootTag":71,"initialProps":{},"fabric":true}
+10-28 15:44:45.628 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 15:44:45.629 19547 19547 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 15:44:45.705 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:45.721 19547 20176 D an.resident.de: Features: 0 0 0
+10-28 15:44:45.721 19547 20176 E an.resident.de: vulkan version is 4211013
+10-28 15:44:45.723 19547 20176 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:45.724 19547 20176 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:44:45.736 19547 19547 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 61): Schedule
+10-28 15:44:45.736 19547 19547 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 61)
+10-28 15:44:45.736 19547 19547 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-28 15:44:45.737 19547 19626 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 61): Execute
+10-28 15:44:45.737 19547 19626 E unknown:SurfaceMountingManager: Stopping surface [61]
+10-28 15:44:45.764 19547 19547 E unknown:SurfaceMountingManager: Surface [61] was stopped on SurfaceMountingManager.
+10-28 15:44:45.765 19547 19547 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [61].
+10-28 15:44:45.765 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 61 is not found
+10-28 15:44:45.869 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 51 has leaked 5 components out of 5
+10-28 15:44:45.902 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:44:46.100 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 35.240106 ms
+10-28 15:44:46.164 19547 19662 I ReactNativeJNI: instanceHandle is null, event of type topDetached will be dropped
+10-28 15:44:46.181 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 37.317054 ms
+10-28 15:45:21.544 19547 19663 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 15:45:21.675 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 78.28663999999999 ms
+10-28 15:46:05.131 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 72.857187 ms
+10-28 15:46:09.209 19547 19547 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 33.132967 ms
+10-28 15:46:10.578 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 61 is not found
+10-28 15:46:13.588 19547 19547 V WebViewChromiumAwInit: Binding Chromium to main looper Looper (main, tid 2) {e60ad38}
+10-28 15:46:13.695 19547 20388 D cr_ChildProcLH: [ChildProcessLauncherHelperImpl.java:584] Create a new ChildConnectionAllocator with package name = com.android.webview, sandboxed = true
+10-28 15:46:13.704 19547 19547 D cr_BrowserStartup: [BrowserStartupControllerImpl.java:437] Initializing chromium process, singleProcess=false
+10-28 15:46:13.871 19547 19547 V cr_A11yState: [AccessibilityState.java:294] Enabled accessibility services list updated.
+10-28 15:46:13.871 19547 19547 V cr_A11yState: [AccessibilityState.java:313] Informing listeners of changes.
+10-28 15:46:14.137 19547 19662 W ExpoModulesCore: Introspectable data is missing for class expo.modules.location.records.LocationTaskOptions. Falling back to reflection-based conversion, which may have performance implications. To fix this, ensure that the Record class is properly annotated with expo.modules.kotlin.types.Introspectable and that the necessary metadata is available at runtime.
+10-28 15:46:14.291 19547 20411 W an.resident.de: Accessing hidden method Landroid/media/AudioManager;->getOutputLatency(I)I (unsupported, reflection, allowed)
+10-28 15:46:14.297 19547 20411 W cr_media: BLUETOOTH_CONNECT permission is missing.
+10-28 15:46:14.301 19547 20411 W cr_media: registerBluetoothIntentsIfNeeded: Requires BLUETOOTH permission
+10-28 15:46:14.303 19547 20443 D an.resident.de: Features: 0 0 0
+10-28 15:46:14.303 19547 20443 E an.resident.de: vulkan version is 4211013
+10-28 15:46:14.317 19547 20388 D cr_ChildProcLH: [ChildProcessLauncherHelperImpl.java:287] Connection likely not created from app zygote
+10-28 15:46:14.317 19547 20388 D cr_ChildProcLauncher: [ChildProcessLauncher.java:250] on connect callback, pid=20389
+10-28 15:46:14.385 19547 19547 W an.resident.de: Accessing hidden field Landroid/widget/HorizontalScrollView;->mScroller:Landroid/widget/OverScroller; (unsupported, reflection, allowed)
+10-28 15:46:23.059 19547 19562 I an.resident.de: Background concurrent copying GC freed 503309(18MB) AllocSpace objects, 12(5936KB) LOS objects, 46% free, 27MB/51MB, paused 52us,22us total 116.843ms
+10-28 15:46:23.157 19547 19547 I an.resident.dev: type=1400 audit(0.0:13977): avc: denied { map } for path="/system/framework/framework-res.apk" dev="sda6" ino=2312 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=file permissive=1 app=com.barangayan.resident.dev
+10-28 15:47:51.765 19547 19602 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:47:51.774 19547 20664 D an.resident.de: Features: 0 0 0
+10-28 15:47:51.774 19547 20664 E an.resident.de: vulkan version is 4211013
+10-28 15:47:51.776 19547 20664 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:47:51.777 19547 20664 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 15:47:51.767 19547 19547 I RenderThread: type=1400 audit(0.0:14020): avc: denied { search } for name="/" dev="sda6" ino=2 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=dir permissive=1 app=com.barangayan.resident.dev
+10-28 15:47:51.767 19547 19547 I RenderThread: type=1400 audit(0.0:14021): avc: denied { open } for path="/system/etc/mumu-configs/currentApp" dev="sdc3" ino=4850139 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:system_data_file:s0 tclass=file permissive=1 app=com.barangayan.resident.dev
+10-28 15:47:51.767 19547 19547 I RenderThread: type=1400 audit(0.0:14022): avc: denied { open } for path="/dev/vaddress" dev="tmpfs" ino=9726 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1 app=com.barangayan.resident.dev
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: Error occurred, shutting down websocket connection: Websocket exception
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: java.io.EOFException
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okio.RealBufferedSource.require(RealBufferedSource.kt:225)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okio.RealBufferedSource.readByte(RealBufferedSource.kt:235)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.WebSocketReader.readHeader(WebSocketReader.kt:119)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.WebSocketReader.processNextFrame(WebSocketReader.kt:102)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.RealWebSocket.loopReader(RealWebSocket.kt:293)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.RealWebSocket$connect$1.onResponse(RealWebSocket.kt:195)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-28 15:48:37.448 19547 19629 E unknown:ReconnectingWebSocket: 	at java.lang.Thread.run(Thread.java:920)
+10-28 15:48:37.448 19547 19629 W unknown:ReconnectingWebSocket: Couldn't connect to "ws://127.0.0.1:8087/message?device=ASUS_AI2201_A%20-%2012%20-%20API%2032&app=com.barangayan.resident.dev&clientid=DevLauncherBridgelessDevSupportManager", will silently retry
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: Error occurred, shutting down websocket connection: Websocket exception
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: java.io.EOFException
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okio.RealBufferedSource.require(RealBufferedSource.kt:225)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okio.RealBufferedSource.readByte(RealBufferedSource.kt:235)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.WebSocketReader.readHeader(WebSocketReader.kt:119)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.WebSocketReader.processNextFrame(WebSocketReader.kt:102)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.RealWebSocket.loopReader(RealWebSocket.kt:293)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.ws.RealWebSocket$connect$1.onResponse(RealWebSocket.kt:195)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-28 15:48:37.448 19547 19627 E unknown:ReconnectingWebSocket: 	at java.lang.Thread.run(Thread.java:920)
+10-28 15:48:37.448 19547 19627 W unknown:ReconnectingWebSocket: Couldn't connect to "ws://127.0.0.1:8087/inspector/network", will silently retry
+10-28 15:48:37.451 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception <Unknown error>
+10-28 15:48:37.451 19547 19547 W ReactNativeJNI: Couldn't connect to packager, will silently retry
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: Cannot connect to Expo CLI.
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: 
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: Try the following to fix the issue:
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: - Ensure that Expo dev server is running and available on the same network
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: - Ensure that your device/emulator is connected to your machine and has USB debugging enabled - run 'adb devices' to see a list of connected devices
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: - If you're on a physical device connected to the same machine, run 'adb reverse tcp:8081 tcp:8081' to forward requests from your device
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: 
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: URL: 127.0.0.1:8087
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: 
+10-28 15:48:37.981 19547 19662 W ReactNativeJS: Error: undefined
+10-28 15:48:45.490 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception unexpected end of stream on http://127.0.0.1:8087/...
+10-28 15:48:51.523 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception unexpected end of stream on http://127.0.0.1:8087/...
+10-28 15:49:01.588 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception unexpected end of stream on http://127.0.0.1:8087/...
+10-28 15:49:19.673 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception unexpected end of stream on http://127.0.0.1:8087/...
+10-28 15:49:53.879 19547 19547 I ReactNativeJNI: Error occurred, shutting down websocket connection: WebSocket exception unexpected end of stream on http://127.0.0.1:8087/...

@@ -1,0 +1,373 @@
+ACTIVITY com.barangayan.resident.dev/.MainActivity 42913d3 pid=14903
+    Local Activity 7e9a9b5 State:
+      mResumed=true mStopped=false mFinished=false
+      mIsInMultiWindowMode=false mIsInPictureInPictureMode=false
+      mChangingConfigurations=false
+      mCurrentConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      mLoadersStarted=true
+      Active Fragments in 47db1a5:
+        #0: ReportFragment{43197a #0 androidx.lifecycle.LifecycleDispatcher.report_fragment_tag}
+          mFragmentId=#0 mContainerId=#0 mTag=androidx.lifecycle.LifecycleDispatcher.report_fragment_tag
+          mState=5 mIndex=0 mWho=android:fragment:0 mBackStackNesting=0
+          mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+          mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+          mRetainInstance=false mRetaining=false mUserVisibleHint=true
+          mFragmentManager=FragmentManager{47db1a5 in HostCallbacks{cb1352b}}
+          mHost=android.app.Activity$HostCallbacks@cb1352b
+          Child FragmentManager{fe8ed88 in ReportFragment{43197a}}:
+            FragmentManager misc state:
+              mHost=android.app.Activity$HostCallbacks@cb1352b
+              mContainer=android.app.Fragment$1@dbcc321
+              mParent=ReportFragment{43197a #0 androidx.lifecycle.LifecycleDispatcher.report_fragment_tag}
+              mCurState=5 mStateSaved=false mDestroyed=false
+      Added Fragments:
+        #0: ReportFragment{43197a #0 androidx.lifecycle.LifecycleDispatcher.report_fragment_tag}
+      FragmentManager misc state:
+        mHost=android.app.Activity$HostCallbacks@cb1352b
+        mContainer=android.app.Activity$HostCallbacks@cb1352b
+        mCurState=5 mStateSaved=false mDestroyed=false
+    ViewRoot:
+      mAdded=true
+      mRemoved=false
+      mStopped=false
+      mPausedForTransition=false
+      mConsumeBatchedInputScheduled=false
+      mConsumeBatchedInputImmediatelyScheduled=false
+      mPendingInputEventCount=0
+      mProcessInputEventsScheduled=false
+      mTraversalScheduled=false
+      mIsAmbientMode=false
+      mUnbufferedInputSource=0
+      mAttachInfo=       AttachInfo:
+        mHasWindowFocus=true
+        mWindowVisibility=0
+        mInTouchMode=true
+        mUnbufferedDispatchRequested=false
+      android.view.ViewRootImpl$NativePreImeInputStage: mQueueLength=0
+      android.view.ViewRootImpl$ImeInputStage: mQueueLength=0
+      android.view.ViewRootImpl$NativePostImeInputStage: mQueueLength=0
+      android.view.ViewRootImpl$WindowInputEventReceiver
+       mInputChannel: 8d52a4b com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (client)
+       mSeqMap: {}
+       mReceiverPtr:
+        mInputConsumer:
+          mResampleTouch = false
+          mChannel = 8d52a4b com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity (client)
+          mMsgDeferred: false
+          Batches:
+              <empty>
+          mSeqChains:
+              <empty>
+          mConsumeTimes:
+              <empty>
+          
+        mBatchedInputEventPending: false
+        mOutboundQueue:
+          <empty>
+        
+    Choreographer:
+      mFrameScheduled=true
+      mLastFrameTime=4054867 (45 ms ago)
+    InsetsController:
+      InsetsState
+        mDisplayFrame=Rect(0, 0 - 1080, 1920)
+        mDisplayCutout=DisplayCutout{insets=Rect(0, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=0 displayHeight=0 density={0.0} cutoutSpec={} rotation={0} scale={0.0}}}}
+        mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=0, center=Point(0, 0)}, RoundedCorner{position=TopRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomLeft, radius=0, center=Point(0, 0)}]}
+        mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(792, 0 - 1038, 72) rotation=0}
+          InsetsSource type=ITYPE_STATUS_BAR frame=[0,0][1080,72] visible=true
+          InsetsSource type=ITYPE_TOP_MANDATORY_GESTURES frame=[0,0][1080,72] visible=true
+          InsetsSource type=ITYPE_TOP_TAPPABLE_ELEMENT frame=[0,0][1080,72] visible=true
+          InsetsSource type=ITYPE_IME frame=[0,0][0,0] visible=false
+    View Hierarchy:
+      DecorView@c3c22d1[MainActivity]
+        android.widget.LinearLayout{b2918ae V.E...... ........ 0,0-1080,1920}
+          android.view.ViewStub{9595346 G.E...... ......I. 0,0-0,0 #10201b3 android:id/action_mode_bar_stub}
+          android.widget.FrameLayout{a98b64f V.E...... ........ 0,0-1080,1920}
+            androidx.appcompat.widget.FitWindowsLinearLayout{aabe1dc V.E...... ........ 0,0-1080,1920 #7f090042 app:id/action_bar_root}
+              androidx.appcompat.widget.ViewStubCompat{8bf907 G.E...... ......I. 0,0-0,0 #7f09004d app:id/action_mode_bar_stub}
+              androidx.appcompat.widget.ContentFrameLayout{62862e5 V.E...... ........ 0,0-1080,1920 #1020002 android:id/content}
+                expo.modules.devmenu.DevMenuFragment$Companion$createFragmentHost$layout$1{f7211ba V.E...... ........ 0,0-1080,1920 #1}
+                  com.facebook.react.runtime.ReactSurfaceView{ad44217 V.E...... ........ 0,0-1080,1920 #1}
+                    com.th3rdwave.safeareacontext.SafeAreaProvider{f814861 V.E...... ........ 0,0-1080,1920 #a}
+                      com.th3rdwave.safeareacontext.SafeAreaProvider{a1f8f86 V.E...... ........ 0,0-1080,1920 #2c}
+                        com.swmansion.rnscreens.ScreenStack{ee75d0f V.E...... ........ 0,0-1080,1920 #24}
+                          com.swmansion.rnscreens.stack.views.ScreensCoordinatorLayout{4f2f4b1 V.E...... ........ 0,0-1080,1920}
+                            com.swmansion.rnscreens.Screen{f14680f V.E...... ........ 0,0-1080,1920 #1f8}
+                              com.swmansion.rnscreens.ScreenContentWrapper{fe1796e V.E...... ........ 0,0-1080,1920 #1f4}
+                                com.facebook.react.views.view.ReactViewGroup{c3574fe V.E...... ........ 0,0-1080,240 #b2}
+                                com.facebook.react.views.view.ReactViewGroup{9cd7f4 V.E...... ........ 48,90-1056,222 #a4}
+                                  expo.modules.image.ExpoImageViewWrapper{be9d5c7 V.E...... ........ 0,12-108,120 #7a}
+                                    android.widget.FrameLayout{5c5ab06 V.E...... ........ 0,0-108,108}
+                                      expo.modules.image.ExpoImageView{3e35a34 G.ED..... ......I. 0,0-0,0}
+                                      expo.modules.image.ExpoImageView{2c8a1e1 V.ED..... ........ 0,0-108,108}
+                                  com.facebook.react.views.text.ReactTextView{8b2416f V.ED..... ........ 144,24-612,108 #7e}
+                                  com.facebook.react.views.view.ReactViewGroup{581705d VFE...C.. ........ 612,0-744,132 #84}
+                                    com.facebook.react.views.text.ReactTextView{2e5deac V.ED..... ........ 33,31-99,100 #82}
+                                  com.facebook.react.views.view.ReactViewGroup{6a40763 VFE...C.. ........ 744,0-876,132 #96}
+                                    com.facebook.react.views.view.ReactViewGroup{e817192 V.E...... ........ 6,6-126,126 #94}
+                                      com.facebook.react.views.view.ReactViewGroup{74c7b1d V.E...... ........ 0,0-120,120 #88}
+                                      com.facebook.react.views.view.ReactViewGroup{ac06775 V.E...... ........ 0,0-120,120 #8a}
+                                      com.facebook.react.views.text.ReactTextView{d475dd2 V.ED..... ........ 27,27-93,93 #8e}
+                                  com.facebook.react.views.view.ReactViewGroup{9c114de VFE...C.. ........ 876,0-1008,132 #a2}
+                                    com.facebook.react.views.view.ReactViewGroup{c3aac19 V.E...... ........ 6,6-126,126 #a0}
+                                      com.facebook.react.views.view.ReactViewGroup{7a97f60 V.E...... ........ 0,0-120,120 #98}
+                                      com.facebook.react.views.view.ReactViewGroup{cefe30a V.E...... ........ 0,0-120,120 #9a}
+                                      com.facebook.react.views.text.ReactTextView{e5a6668 V.ED..... ........ 24,23-96,97 #9e}
+                                com.facebook.react.views.view.ReactViewGroup{a5ad2c V.E...... ........ 12,90-1044,222 #ae}
+                                  com.facebook.react.views.view.ReactViewGroup{985cdf V.E...... ........ 648,0-780,132 #ac}
+                                    com.facebook.react.views.view.ReactViewGroup{6dc645f V.E...... ........ 0,6-132,126 #a6}
+                                    com.facebook.react.views.text.ReactTextView{4fbff7e V.ED..... ........ 42,38-96,94 #aa}
+                                com.swmansion.rnscreens.ScreenContainer{6c0287d V.E...... ........ 0,240-1080,1920 #164}
+                                  com.swmansion.rnscreens.ScreenFragment$ScreensFrameLayout{f6288e9 V.E...... ........ 0,0-1080,1680}
+                                    com.swmansion.rnscreens.Screen{668d70 V.E...... ........ 0,0-1080,1680 #162}
+                                      com.facebook.react.views.view.ReactViewGroup{eb343b3 V.E...... ........ 0,0-1080,1680 #160}
+                                        com.swmansion.rnscreens.ScreenStack{3e64d96 V.E...... ........ 0,0-1080,1680 #15a}
+                                          com.swmansion.rnscreens.stack.views.ScreensCoordinatorLayout{eb1ad22 V.E...... ........ 0,0-1080,1680}
+                                            com.swmansion.rnscreens.Screen{a853a71 V.E...... ........ 0,0-1080,1680 #158}
+                                              com.swmansion.rnscreens.ScreenContentWrapper{9567018 V.E...... ........ 0,0-1080,1680 #154}
+                                                com.th3rdwave.safeareacontext.SafeAreaView{5cfe7fb V.E...... ........ 0,0-1080,1680 #152}
+                                                  com.facebook.react.views.swiperefresh.ReactSwipeRefreshLayout{fd4958a V.ED..... ........ 0,0-1080,1680 #150}
+                                                    com.facebook.react.views.scroll.ReactScrollView{d5653f5 VFED.V... ........ 0,0-1080,1680 #14e}
+                                                      com.facebook.react.views.view.ReactViewGroup{61d8c20 V.E...... ........ 0,0-1080,2143 #14c}
+                                                        com.facebook.react.views.view.ReactViewGroup{1283998 VFE...C.. ........ 60,60-1020,168 #c0}
+                                                          com.facebook.react.views.view.ReactViewGroup{8651ea3 V.E...... ........ 0,0-108,108 #ba}
+                                                            com.facebook.react.views.text.ReactTextView{33d05f1 V.ED..... ........ 27,26-81,82 #b8}
+                                                          com.facebook.react.views.text.ReactTextView{775e5a0 V.ED..... ........ 138,24-254,84 #be}
+                                                        com.facebook.react.views.text.ReactTextView{12d1b03 V.ED..... ........ 60,204-1020,309 #c8}
+                                                        com.facebook.react.views.view.ReactViewGroup{2e9b559 VFE...C.. ........ 36,369-238,633 #d4}
+                                                          com.facebook.react.views.view.ReactViewGroup{23125d6 V.E...... ........ 17,12-185,180 #ce}
+                                                          ReactImageView{holder=DraweeHolder{controllerAttached=true, holderAttached=true, drawableVisible=true, events=[ON_SET_HIERARCHY, ON_DRAWABLE_HIDE, ON_SET_CONTROLLER, ON_DRAWABLE_SHOW, ON_HOLDER_ATTACH, ON_ATTACH_CONTROLLER, ON_DRAWABLE_HIDE, ON_DETACH_CONTROLLER, ON_DRAWABLE_SHOW, ON_ATTACH_CONTROLLER, ON_DRAWABLE_HIDE, ON_DETACH_CONTROLLER, ON_DRAWABLE_SHOW, ON_ATTACH_CONTROLLER, ON_DRAWABLE_HIDE, ON_DETACH_CONTROLLER, ON_DRAWABLE_SHOW, ON_ATTACH_CONTROLLER]}}
+                                                          com.facebook.react.views.text.ReactTextView{8335744 V.ED..... ........ 0,198-202,252 #d2}
+                                                        com.facebook.react.views.view.ReactViewGroup{e99851e VFE...C.. ........ 238,369-439,633 #e0}
+                                                          com.facebook.react.views.view.ReactViewGroup{50b102d V.E...... ........ 17,12-185,180 #da}
+                                                          com.facebook.react.views.text.ReactTextView{471c962 V.ED..... ........ 65,59-137,133 #d8}
+                                                          com.facebook.react.views.text.ReactTextView{39acaf3 V.ED..... ........ 0,198-203,252 #de}
+                                                        com.facebook.react.views.view.ReactViewGroup{12101ff VFE...C.. ........ 439,369-641,633 #f0}
+                                                          com.facebook.react.views.view.ReactViewGroup{db0a3b0 V.E...... ........ 17,12-185,180 #ea}
+                                                          com.horcrux.svg.SvgView{358229 V.ED..... ........ 65,60-137,132 #e8}
+                                                            com.horcrux.svg.GroupView{3e3bbcc V.E...... ........ 0,0-0,0 #e6}
+                                                              com.horcrux.svg.PathView{a0d234f V.E...... ........ 3,6-67,70 #e2}
+                                                              com.horcrux.svg.PathView{6744adc V.E...... ........ 35,4-69,38 #e4}
+                                                          com.facebook.react.views.text.ReactTextView{92719ae V.ED..... ........ 0,198-202,252 #ee}
+                                                        com.facebook.react.views.view.ReactViewGroup{6f74e15 VFE...C.. ........ 641,369-842,633 #fc}
+                                                          com.facebook.react.views.view.ReactViewGroup{7b17e5 V.E...... ........ 17,12-185,180 #f6}
+                                                          com.facebook.react.views.text.ReactTextView{5cf22ba V.ED..... ........ 65,59-137,133 #f4}
+                                                          com.facebook.react.views.text.ReactTextView{a54d52a V.ED..... ........ 0,198-203,252 #fa}
+                                                        com.facebook.react.views.view.ReactViewGroup{78dbf1b VFE...C.. ........ 842,369-1044,633 #108}
+                                                          com.facebook.react.views.view.ReactViewGroup{ba2a56b V.E...... ........ 17,12-185,180 #102}
+                                                          com.facebook.react.views.text.ReactTextView{e6938c8 V.ED..... ........ 65,59-137,133 #100}
+                                                          com.facebook.react.views.text.ReactTextView{176c8b8 V.ED..... ........ 0,198-202,252 #106}
+                                                        com.facebook.react.views.text.ReactTextView{70bb691 V.ED..... ........ 60,717-846,796 #10e}
+                                                        com.facebook.react.views.text.ReactTextView{6c319f6 V.ED..... ........ 60,802-846,861 #112}
+                                                        com.facebook.react.views.view.ReactViewGroup{d3f31f7 VFE...C.. ........ 894,729-1020,861 #11a}
+                                                          com.facebook.react.views.text.ReactTextView{4ca4d61 V.ED..... ........ 0,72-126,132 #118}
+                                                        com.facebook.react.views.view.ReactViewGroup{12bb864 V.E...... ........ 60,897-1020,1167 #128}
+                                                        com.facebook.react.views.text.ReactTextView{3242acd V.ED..... ........ 108,945-627,1005 #120}
+                                                        com.facebook.react.views.view.ReactViewGroup{2fedf82 VFE...C.. ........ 108,1029-223,1119 #126}
+                                                          com.facebook.react.views.text.ReactTextView{7bcb086 V.ED..... ........ 0,0-115,90 #124}
+                                                        com.facebook.react.views.text.ReactTextView{f2af693 V.ED..... ........ 60,1251-846,1330 #130}
+                                                        com.facebook.react.views.text.ReactTextView{51df6d0 V.ED..... ........ 60,1336-846,1395 #134}
+                                                        com.facebook.react.views.view.ReactViewGroup{3d5a6c9 VFE...C.. ........ 894,1263-1020,1395 #13c}
+                                                          com.facebook.react.views.text.ReactTextView{6c42d47 V.ED..... ........ 0,72-126,132 #13a}
+                                                        com.facebook.react.views.view.ReactViewGroup{8e14f23 VFE...C.. ........ 60,1431-756,1687 #230}
+                                                          com.facebook.react.views.view.ReactViewGroup{203e74d V.E...... ........ 39,56-57,74 #21e}
+                                                          com.facebook.react.views.text.ReactTextView{b4c0052 V.ED..... ........ 75,39-197,91 #222}
+                                                          com.facebook.react.views.text.ReactTextView{afb47aa V.ED..... ........ 302,39-657,91 #228}
+                                                          com.facebook.react.views.text.ReactTextView{9fa96e4 V.ED..... ........ 39,109-657,217 #22e}
+                                                    androidx.swiperefreshlayout.widget.CircleImageView{33f71ce G.ED..... ......ID 480,-120-600,0}
+                                              com.swmansion.rnscreens.ScreenStackHeaderConfig{d0ce77b V.E...... ........ 0,0-1080,0 #156}
+                                            com.google.android.material.appbar.AppBarLayout{74e75c4 V.E...... ........ 0,0-1080,0}
+                                com.facebook.react.views.view.ReactViewGroup{a0468ef V.E...... ........ 0,1644-1080,1920 #1ee}
+                                  com.facebook.react.views.view.ReactViewGroup{33d1974 V.E...... ........ 36,24-1044,240 #1ec}
+                                    com.facebook.react.views.view.ReactViewGroup{27d5e9d V.E...... ........ 3,3-612,51 #17e}
+                                      com.facebook.react.views.text.ReactTextView{3b3affc V.ED..... ........ 0,0-89,48 #168}
+                                      com.facebook.react.views.text.ReactTextView{c08e685 V.ED..... ........ 89,0-217,48 #16c}
+                                      com.facebook.react.views.text.ReactTextView{5e4dcda V.ED..... ........ 217,0-310,48 #170}
+                                      com.facebook.react.views.text.ReactTextView{858a50b V.ED..... ........ 310,0-393,48 #174}
+                                      com.facebook.react.views.text.ReactTextView{189cfe8 V.ED..... ........ 393,0-491,48 #178}
+                                      com.facebook.react.views.text.ReactTextView{a766601 V.ED..... ........ 491,0-609,48 #17c}
+                                    com.facebook.react.views.view.ReactViewGroup{d43eca6 V.E...... ........ 24,24-185,192 #180}
+                                    com.facebook.react.views.view.ReactViewGroup{66a86e7 VFE...C.. ..S..... 21,21-182,195 #194}
+                                      com.facebook.react.views.view.ReactViewGroup{ca34f12 V.E...... ........ 45,24-117,96 #192}
+                                        com.facebook.react.views.view.ReactViewGroup{e200294 V.E...... ........ 0,0-72,72 #188}
+                                          com.horcrux.svg.SvgView{7e34a5e V.ED..... ........ 0,0-72,72 #186}
+                                            com.horcrux.svg.GroupView{f237e3f V.E...... ........ 0,0-0,0 #184}
+                                              com.horcrux.svg.PathView{64e230c V.E...... ........ 6,6-66,66 #182}
+                                        com.facebook.react.views.view.ReactViewGroup{6e2613d V.E...... ........ 0,0-72,72 #190}
+                                          com.horcrux.svg.SvgView{dcc58e0 V.ED..... ........ 0,0-72,72 #18e}
+                                            com.horcrux.svg.GroupView{564799 V.E...... ........ 0,0-0,0 #18c}
+                                              com.horcrux.svg.PathView{a322d32 V.E...... ........ 6,6-66,66 #18a}
+                                      com.facebook.react.views.text.ReactTextView{d8c56e3 V.ED..... ........ 36,102-125,150 #1fe}
+                                    com.facebook.react.views.view.ReactViewGroup{7ceaa83 VFE...C.. ........ 182,21-343,195 #1a0}
+                                      com.facebook.react.views.view.ReactViewGroup{53ac455 V.E...... ........ 45,24-117,96 #19e}
+                                        com.facebook.react.views.view.ReactViewGroup{f44b400 V.E...... ........ 0,0-72,72 #198}
+                                          ReactImageView{holder=DraweeHolder{controllerAttached=true, holderAttached=true, drawableVisible=true, events=[ON_SET_HIERARCHY, ON_DRAWABLE_HIDE, ON_SET_CONTROLLER, ON_DRAWABLE_SHOW, ON_HOLDER_ATTACH, ON_ATTACH_CONTROLLER, ON_DRAWABLE_HIDE, ON_DETACH_CONTROLLER, ON_DRAWABLE_SHOW, ON_ATTACH_CONTROLLER]}}
+                                        com.facebook.react.views.view.ReactViewGroup{718d439 V.E...... ........ 0,0-72,72 #19c}
+                                          ReactImageView{holder=DraweeHolder{controllerAttached=true, holderAttached=true, drawableVisible=true, events=[ON_SET_HIERARCHY, ON_DRAWABLE_HIDE, ON_SET_CONTROLLER, ON_DRAWABLE_SHOW, ON_HOLDER_ATTACH, ON_ATTACH_CONTROLLER, ON_DRAWABLE_HIDE, ON_DETACH_CONTROLLER, ON_DRAWABLE_SHOW, ON_ATTACH_CONTROLLER]}}
+                                      com.facebook.react.views.text.ReactTextView{95ae6a V.ED..... ........ 17,102-144,150 #204}
+                                    com.facebook.react.views.view.ReactViewGroup{351ea7e VFE...C.. ........ 343,21-504,195 #1b8}
+                                      com.facebook.react.views.view.ReactViewGroup{6b050d1 V.E...... ........ 45,24-117,96 #1b6}
+                                        com.facebook.react.views.view.ReactViewGroup{ac76bdf V.E...... ........ 0,0-72,72 #1aa}
+                                          com.horcrux.svg.SvgView{313c7a4 V.ED..... ........ 0,0-72,72 #1a8}
+                                            com.horcrux.svg.GroupView{741102c V.E...... ........ 0,0-0,0 #1a6}
+                                              com.horcrux.svg.PathView{318290d V.E...... ........ 3,6-67,70 #1a2}
+                                              com.horcrux.svg.PathView{ad9a0c2 V.E...... ........ 35,4-69,38 #1a4}
+                                        com.facebook.react.views.view.ReactViewGroup{7a97af5 V.E...... ........ 0,0-72,72 #1b4}
+                                          com.horcrux.svg.SvgView{90cf637 V.ED..... ........ 0,0-72,72 #1b2}
+                                            com.horcrux.svg.GroupView{51e308a V.E...... ........ 0,0-0,0 #1b0}
+                                              com.horcrux.svg.PathView{560e6fb V.E...... ........ 3,6-67,70 #1ac}
+                                              com.horcrux.svg.PathView{1c50318 V.E...... ........ 35,4-69,38 #1ae}
+                                      com.facebook.react.views.text.ReactTextView{4584736 V.ED..... ........ 34,102-126,150 #20a}
+                                    com.facebook.react.views.view.ReactViewGroup{463d171 VFE...C.. ........ 504,21-665,195 #1c8}
+                                      com.facebook.react.views.view.ReactViewGroup{5b0bed3 V.E...... ........ 45,24-117,96 #1c6}
+                                        com.facebook.react.views.view.ReactViewGroup{6b6cb56 V.E...... ........ 0,0-72,72 #1be}
+                                          com.facebook.react.views.text.ReactTextView{3ab4909 V.ED..... ........ 0,0-72,72 #1bc}
+                                        com.facebook.react.views.view.ReactViewGroup{84cf7d7 V.E...... ........ 0,0-72,72 #1c4}
+                                          com.facebook.react.views.text.ReactTextView{625070e V.ED..... ........ 0,0-72,72 #1c2}
+                                      com.facebook.react.views.text.ReactTextView{97ba10 V.ED..... ........ 39,102-122,150 #210}
+                                    com.facebook.react.views.view.ReactViewGroup{39338c4 VFE...C.. ........ 665,21-826,195 #1d8}
+                                      com.facebook.react.views.view.ReactViewGroup{8be752f V.E...... ........ 45,24-117,96 #1d6}
+                                        com.facebook.react.views.view.ReactViewGroup{2366cc5 V.E...... ........ 0,0-72,72 #1ce}
+                                          com.facebook.react.views.text.ReactTextView{c9313ad V.ED..... ........ 0,0-72,72 #1cc}
+                                        com.facebook.react.views.view.ReactViewGroup{f6c46e2 V.E...... ........ 0,0-72,72 #1d4}
+                                          com.facebook.react.views.text.ReactTextView{bae861a V.ED..... ........ 0,0-72,72 #1d2}
+                                      com.facebook.react.views.text.ReactTextView{226673c V.ED..... ........ 32,102-129,150 #216}
+                                    com.facebook.react.views.view.ReactViewGroup{37f3a73 VFE...C.. ........ 826,21-987,195 #1ea}
+                                      com.facebook.react.views.view.ReactViewGroup{847354b V.E...... ........ 45,24-117,96 #1e8}
+                                        com.facebook.react.views.view.ReactViewGroup{8ed1d30 V.E...... ........ 0,0-72,72 #1de}
+                                          com.facebook.react.views.text.ReactTextView{e961041 V.ED..... ........ 0,0-72,72 #1dc}
+                                        com.facebook.react.views.view.ReactViewGroup{efa3da9 V.E...... ........ 0,0-72,72 #1e4}
+                                          com.facebook.react.views.text.ReactTextView{21ee9e6 V.ED..... ........ 0,0-72,72 #1e2}
+                                        com.facebook.react.views.view.ReactViewGroup{90bef2e V.E...... ........ 42,-24-42,-24 #1e6}
+                                      com.facebook.react.views.text.ReactTextView{b90bb28 V.ED..... ........ 22,102-139,150 #21c}
+                              com.swmansion.rnscreens.ScreenStackHeaderConfig{f81f8b9 V.E...... ........ 0,0-1080,0 #1f6}
+                            com.google.android.material.appbar.AppBarLayout{6ee8056 V.E...... ........ 0,0-1080,0}
+                    com.facebook.react.views.view.ReactViewGroup{4033fc8 V.E...... ........ 0,0-1080,1920 #6}
+                      com.facebook.react.views.debuggingoverlay.DebuggingOverlay{8890acf V.ED..... ........ 0,0-1080,1920 #4}
+                  android.widget.LinearLayout{4d4686b V.E...... ........ 0,0-1080,1920}
+                    androidx.compose.ui.platform.ComposeView{ebedc5c V.E...... ........ 0,0-1080,1920}
+                      androidx.compose.ui.platform.AndroidComposeView{8cbc3d5 VFED..... ........ 0,0-1080,1920 aid=1073741824}
+                        androidx.compose.ui.platform.AndroidViewsHandler{9900b65 V.E...... ......ID 0,0-1080,1920}
+    Looper (main, tid 2) {aebd03a}
+      Message 0: { when=+1s827ms callback=com.facebook.react.packagerconnection.ReconnectingWebSocket$$ExternalSyntheticLambda0 target=android.os.Handler }
+      (Total messages: 1, polling=false, quitting=false)
+    AutofillManager:
+      sessionId: 2147483647
+      state: UNKNOWN
+      context: com.barangayan.resident.dev.MainActivity@7e9a9b5
+      service client: null
+      client: com.barangayan.resident.dev.MainActivity@7e9a9b5 (android.os.BinderProxy@de9d49a)
+      enabled: false
+      enabledAugmentedOnly: false
+      hasService: true
+      hasCallback: false
+      onInvisibleCalled false
+      last autofilled data: null
+      id of last fill UI shown: null
+      tracked views: null
+      fillable ids: null
+      entered ids: null
+      save trigger id: null
+      save on finish(): false
+      options: logLvl=0, compatMode=false, augmented=false, appDisabledExpiration=0
+      compat mode enabled: false
+      debug: false verbose: false
+    Autofill Compat Mode: false
+    No ContentCaptureManager
+    No UiTranslationController
+    ResourcesManager:
+      total apks: 3
+      resources: 3
+      resource impls: 2
+    Local FragmentActivity 7e9a9b5 State:
+      mCreated=true mResumed=true mStopped=false    Active Fragments:
+    DevMenuFragment{6b584eb} (3edc5c1b-1c90-46a5-bcee-f87470543563 id=0x1 tag=ExpoDevMenuFragment)
+        mFragmentId=#1 mContainerId=#1 mTag=ExpoDevMenuFragment
+        mState=7 mWho=3edc5c1b-1c90-46a5-bcee-f87470543563 mBackStackNesting=0
+        mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{28b6248 in HostCallbacks{8faf8e1}}}
+        mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+        mPopDirection=false
+        mContainer=expo.modules.devmenu.DevMenuFragment$Companion$createFragmentHost$layout$1{f7211ba V.E...... ........ 0,0-1080,1920 #1}
+        mView=android.widget.LinearLayout{4d4686b V.E...... ........ 0,0-1080,1920}
+        Child FragmentManager{9b6b606 in DevMenuFragment{6b584eb}}}:
+          Back Stack Index: 0
+          FragmentManager misc state:
+            mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+            mContainer=androidx.fragment.app.Fragment$5@ce584c7
+            mParent=DevMenuFragment{6b584eb} (3edc5c1b-1c90-46a5-bcee-f87470543563 id=0x1 tag=ExpoDevMenuFragment)
+            mCurState=7 mStateSaved=false mStopped=false mDestroyed=false
+    ScreenStackFragment{788936a} (14b6f444-69b5-4b1f-bb2f-fd6801a694f7 id=0x24)
+        mFragmentId=#24 mContainerId=#24 mTag=null
+        mState=7 mWho=14b6f444-69b5-4b1f-bb2f-fd6801a694f7 mBackStackNesting=0
+        mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=true
+        mRetainInstance=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{28b6248 in HostCallbacks{8faf8e1}}}
+        mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+        mPopDirection=false
+        mContainer=com.swmansion.rnscreens.ScreenStack{ee75d0f V.E...... ........ 0,0-1080,1920 #24}
+        mView=com.swmansion.rnscreens.stack.views.ScreensCoordinatorLayout{4f2f4b1 V.E...... ........ 0,0-1080,1920}
+        Child FragmentManager{5185af4 in ScreenStackFragment{788936a}}}:
+          Active Fragments:
+          ScreenFragment{954c43c} (d82a36d5-1ffc-47b9-b5f5-74116fafc093 id=0x164)
+              mFragmentId=#164 mContainerId=#164 mTag=null
+              mState=7 mWho=d82a36d5-1ffc-47b9-b5f5-74116fafc093 mBackStackNesting=0
+              mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+              mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+              mRetainInstance=false mUserVisibleHint=true
+              mFragmentManager=FragmentManager{5185af4 in ScreenStackFragment{788936a}}}
+              mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+              mParentFragment=ScreenStackFragment{788936a} (14b6f444-69b5-4b1f-bb2f-fd6801a694f7 id=0x24)
+              mPopDirection=false
+              mContainer=com.swmansion.rnscreens.ScreenContainer{6c0287d V.E...... ........ 0,240-1080,1920 #164}
+              mView=com.swmansion.rnscreens.ScreenFragment$ScreensFrameLayout{f6288e9 V.E...... ........ 0,0-1080,1680}
+              Child FragmentManager{3cd421d in ScreenFragment{954c43c}}}:
+                Active Fragments:
+                ScreenStackFragment{62bcf79} (76218363-b673-4519-981d-4bdf61b08360 id=0x15a)
+                    mFragmentId=#15a mContainerId=#15a mTag=null
+                    mState=7 mWho=76218363-b673-4519-981d-4bdf61b08360 mBackStackNesting=0
+                    mAdded=true mRemoving=false mFromLayout=false mInLayout=false
+                    mHidden=false mDetached=false mMenuVisible=true mHasMenu=true
+                    mRetainInstance=false mUserVisibleHint=true
+                    mFragmentManager=FragmentManager{3cd421d in ScreenFragment{954c43c}}}
+                    mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+                    mParentFragment=ScreenFragment{954c43c} (d82a36d5-1ffc-47b9-b5f5-74116fafc093 id=0x164)
+                    mPopDirection=false
+                    getEnterAnim=2130772035
+                    getExitAnim=2130772035
+                    mContainer=com.swmansion.rnscreens.ScreenStack{3e64d96 V.E...... ........ 0,0-1080,1680 #15a}
+                    mView=com.swmansion.rnscreens.stack.views.ScreensCoordinatorLayout{eb1ad22 V.E...... ........ 0,0-1080,1680}
+                    Child FragmentManager{7f82c92 in ScreenStackFragment{62bcf79}}}:
+                      Back Stack Index: 0
+                      FragmentManager misc state:
+                        mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+                        mContainer=androidx.fragment.app.Fragment$5@d2ba663
+                        mParent=ScreenStackFragment{62bcf79} (76218363-b673-4519-981d-4bdf61b08360 id=0x15a)
+                        mCurState=7 mStateSaved=false mStopped=false mDestroyed=false
+                Added Fragments:
+                  #0: ScreenStackFragment{62bcf79} (76218363-b673-4519-981d-4bdf61b08360 id=0x15a)
+                Back Stack Index: 0
+                FragmentManager misc state:
+                  mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+                  mContainer=androidx.fragment.app.Fragment$5@bda3260
+                  mParent=ScreenFragment{954c43c} (d82a36d5-1ffc-47b9-b5f5-74116fafc093 id=0x164)
+                  mCurState=7 mStateSaved=false mStopped=false mDestroyed=false
+          Added Fragments:
+            #0: ScreenFragment{954c43c} (d82a36d5-1ffc-47b9-b5f5-74116fafc093 id=0x164)
+          Back Stack Index: 0
+          FragmentManager misc state:
+            mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+            mContainer=androidx.fragment.app.Fragment$5@d80e319
+            mParent=ScreenStackFragment{788936a} (14b6f444-69b5-4b1f-bb2f-fd6801a694f7 id=0x24)
+            mCurState=7 mStateSaved=false mStopped=false mDestroyed=false
+    Added Fragments:
+      #0: DevMenuFragment{6b584eb} (3edc5c1b-1c90-46a5-bcee-f87470543563 id=0x1 tag=ExpoDevMenuFragment)
+      #1: ScreenStackFragment{788936a} (14b6f444-69b5-4b1f-bb2f-fd6801a694f7 id=0x24)
+    Back Stack Index: 0
+    FragmentManager misc state:
+      mHost=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+      mContainer=androidx.fragment.app.FragmentActivity$HostCallbacks@8faf8e1
+      mCurState=7 mStateSaved=false mStopped=false mDestroyed=false

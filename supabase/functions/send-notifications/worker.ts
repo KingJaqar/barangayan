@@ -12,6 +12,8 @@ export const EXPO_RECEIPTS_URL = 'https://exp.host/--/api/v2/push/getReceipts';
 export const SEND_BATCH = 100;
 export const RECEIPT_BATCH = 1000;
 const CLAIM_LIMIT = 100;
+/** System notices published and delivered per run; the database also caps a call at 100 and resumes from its cursor. */
+const NOTICE_LIMIT = 100;
 const RECEIPT_LIMIT = 300;
 /** A message not delivered within a day is no longer news (the database also skips such rows). */
 const TTL_SECONDS = 86_400;
@@ -31,7 +33,12 @@ export type WorkerDeps = {
   sleep?: (ms: number) => Promise<void>;
 };
 
-export type Claimed = { outbox_id: string; inbox_id: string; kind: string; title: string; body: string; destination: { v: number; kind: string; id: string }; tokens: string[]; attempt: number };
+/** What a notification is about: version 1 is a record reference; version 2 is a System notice or an Account screen. Never a URL. */
+export type Destination =
+  | { v: 1; kind: string; id: string }
+  | { v: 2; kind: 'notice'; id: string }
+  | { v: 2; kind: 'account'; screen: string };
+export type Claimed = { outbox_id: string; inbox_id: string; kind: string; title: string; body: string; destination: Destination; tokens: string[]; attempt: number };
 type Ticket = { token: string; status: 'ok' | 'error'; id?: string; error?: string };
 
 export type RunSummary = {
@@ -44,11 +51,23 @@ export type RunSummary = {
   receiptsRecorded: number;
   purged: { inbox: number; outbox: number; events: number } | null;
   health: Record<string, number> | null;
+  /** The due-notice step: notices published, inbox rows written and notices still waiting. Null when it returned nothing usable. */
+  notices: { published: number; delivered: number; pending: number } | null;
   errors: string[];
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+/** Mirrors valid_notification_destination (migration 0145) and the Android parser. */
+const ACCOUNT_SCREENS = ['settings', 'profile', 'valid_id', 'email_verification', 'change_password'];
+
+function parseDestination(destination: Record<string, unknown>): Destination | null {
+  if (destination.v === 1 && typeof destination.kind === 'string' && typeof destination.id === 'string') return { v: 1, kind: destination.kind, id: destination.id };
+  if (destination.v !== 2 || Object.keys(destination).length !== 3) return null;
+  if (destination.kind === 'notice' && typeof destination.id === 'string' && UUID.test(destination.id)) return { v: 2, kind: 'notice', id: destination.id };
+  if (destination.kind === 'account' && typeof destination.screen === 'string' && ACCOUNT_SCREENS.includes(destination.screen)) return { v: 2, kind: 'account', screen: destination.screen };
+  return null;
+}
 
 export function parseClaimed(data: unknown): Claimed[] {
   if (!Array.isArray(data)) throw new Error('claim_malformed');
@@ -57,10 +76,11 @@ export function parseClaimed(data: unknown): Claimed[] {
     const destination = row.destination;
     if (typeof row.outbox_id !== 'string' || !UUID.test(row.outbox_id) || typeof row.inbox_id !== 'string' || !UUID.test(row.inbox_id)
       || typeof row.kind !== 'string' || typeof row.title !== 'string' || typeof row.body !== 'string'
-      || !isRecord(destination) || destination.v !== 1 || typeof destination.kind !== 'string' || typeof destination.id !== 'string'
-      || !Array.isArray(row.tokens) || !row.tokens.length || !row.tokens.every((token) => typeof token === 'string')
+      || !isRecord(destination) || !Array.isArray(row.tokens) || !row.tokens.length || !row.tokens.every((token) => typeof token === 'string')
       || typeof row.attempt !== 'number') throw new Error('claim_malformed');
-    return { outbox_id: row.outbox_id, inbox_id: row.inbox_id, kind: row.kind, title: row.title, body: row.body, destination: { v: 1, kind: destination.kind, id: destination.id }, tokens: row.tokens as string[], attempt: row.attempt };
+    const parsed = parseDestination(destination);
+    if (!parsed) throw new Error('claim_malformed');
+    return { outbox_id: row.outbox_id, inbox_id: row.inbox_id, kind: row.kind, title: row.title, body: row.body, destination: parsed, tokens: row.tokens as string[], attempt: row.attempt };
   });
 }
 
@@ -72,7 +92,7 @@ export function buildMessage(row: Claimed, token: string) {
     body: row.body,
     sound: 'default',
     ttl: TTL_SECONDS,
-    data: { v: 1, kind: row.destination.kind, id: row.destination.id, inbox: row.inbox_id },
+    data: { ...row.destination, inbox: row.inbox_id },
   };
 }
 
@@ -126,7 +146,7 @@ async function call(deps: WorkerDeps, name: string, args: Record<string, unknown
 }
 
 export async function runWorker(deps: WorkerDeps): Promise<RunSummary> {
-  const summary: RunSummary = { claimed: 0, sent: 0, retried: 0, dead: 0, skipped: 0, receiptsChecked: 0, receiptsRecorded: 0, purged: null, health: null, errors: [] };
+  const summary: RunSummary = { claimed: 0, sent: 0, retried: 0, dead: 0, skipped: 0, receiptsChecked: 0, receiptsRecorded: 0, purged: null, health: null, notices: null, errors: [] };
   const note = (error: unknown) => { summary.errors.push(error instanceof Error ? error.message.slice(0, 80) : 'unknown'); };
   const tally = (state: unknown) => {
     if (state === 'sent') summary.sent++;
@@ -134,6 +154,14 @@ export async function runWorker(deps: WorkerDeps): Promise<RunSummary> {
     else if (state === 'dead') summary.dead++;
     else summary.retried++;
   };
+
+  // Publish due scheduled notices and deliver pending revisions first, so their alerts are claimable in this same run.
+  // A failure here must not hold back the alerts that are already due.
+  try {
+    const due = await call(deps, 'notification_publish_due_notices', { p_limit: NOTICE_LIMIT });
+    const row = Array.isArray(due) ? due[0] : due;
+    if (isRecord(row)) summary.notices = { published: Number(row.published) || 0, delivered: Number(row.delivered) || 0, pending: Number(row.pending_notices) || 0 };
+  } catch (error) { note(error); }
 
   try {
     const rows = parseClaimed(await call(deps, 'notification_worker_claim', { p_limit: CLAIM_LIMIT }));

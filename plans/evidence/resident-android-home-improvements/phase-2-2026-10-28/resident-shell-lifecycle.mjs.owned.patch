@@ -1,0 +1,13 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\resident-shell-lifecycle.mjs" b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+index 2a9f0537..e763aae0 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\resident-shell-lifecycle.mjs"
++++ b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+@@ -60,7 +60,7 @@ try {
+   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+   const primary = page.getByRole('tablist', { name: 'Primary navigation' });
+   await primary.waitFor();
+-  for (const name of ['Services', 'DRRM', 'Maps', 'Health', 'Reports', 'Home']) {
++  for (const name of ['Services', 'Emergency', 'Maps', 'Health', 'Reports', 'Home']) {
+     await primary.getByRole('tab', { name: new RegExp(`^${name}(,|$)`) }).click();
+     await page.waitForFunction(name => [...document.querySelectorAll('[role="tab"]')].some(tab => tab.getAttribute('aria-label')?.startsWith(name) && tab.getAttribute('aria-selected') === 'true'), name);
+     assert.equal(await primary.getByRole('tab', { selected: true }).count(), 1);

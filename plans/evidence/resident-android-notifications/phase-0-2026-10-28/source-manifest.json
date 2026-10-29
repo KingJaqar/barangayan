@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-28",
+  "head": "9fe8add15b0a5b75f6c232e30679da869731a4ea",
+  "private_baseline": "tmp/resident-notifications-phase0-20261028/before/ (git-status.txt, unstaged-relevant.patch, staged.patch [empty], plan copy)",
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+      "sha256": "4b01f1b6d2a6f755b2c1df22208007879e3bcab50a69af96d1ec90f08468f35f",
+      "bytes": 2594,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "sha256": "ff59712bd4343c53fbd6598fc55a4771ae5e4dd3585309130faec258ee1e62df",
+      "bytes": 11190,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "sha256": "c65486c755cbd1789303138dc35d963e7e65373fc1c000ea6aae03f79d1eda2b",
+      "bytes": 4928,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-realtime.ts",
+      "sha256": "762ef057ca5111957f9d515a0396492243ff2c94b95926fc966ec4144f423cdb",
+      "bytes": 3975,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "sha256": "c5c7d3629d40942109495f5832cc2c858e540c7f40b0f2c98efa1e01a0a11bd7",
+      "bytes": 13255,
+      "working_copy_status": "M"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "sha256": "9f4a1616cde828d457959a0aa34563632b3c45785006218b0f061ba7140d38b7",
+      "bytes": 25230,
+      "working_copy_status": "M"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/constants/disclosure-motion.ts",
+      "sha256": "6d93a1cda73703da0cc20b3ec90f231e67a1d89ba2971859fa094b75bbf5c3ad",
+      "bytes": 379,
+      "working_copy_status": "??"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "bytes": 60033,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "bytes": 25630,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/terms-privacy.tsx",
+      "sha256": "51e0eff3f4066a4f1cfd105615a35e91b344143176ddf6b5fe4857abae50e935",
+      "bytes": 2700,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "sha256": "9a48e7211bdd81beb52816a753d4b6db2a6c88bdc070b3ae9ea099628eeba336",
+      "bytes": 32180,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/migrations/0096_phase2_trusted_evidence_locality.sql",
+      "sha256": "1649afefb5bd9497c8e4fb8c472fb933b91a81e985e04f661b0a5bcfb8bf97ff",
+      "bytes": 7767,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/functions/send-notifications/worker.ts",
+      "sha256": "3c0362dec73dff27e7b7966202cde93989cf82dcb368ef184f310abbbde750d0",
+      "bytes": 10802,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/functions/verify-resident-email/index.ts",
+      "sha256": "9f7c119e929f25ff999e23a76719ea867c5fbb9dbf065875cf4d3442b71dadf6",
+      "bytes": 3238,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/functions/refund-payment/index.ts",
+      "sha256": "7343ecd92cff1c8e3c68562d6ab822829198c968fdbe6833f2e6c7285430dc34",
+      "bytes": 10951,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/functions/paymongo-webhook/index.ts",
+      "sha256": "edaf069ad0f23bfee6fd48b7cbc01d67e670320676e86e2e116f4759414a3c4c",
+      "bytes": 7766,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/config.toml",
+      "sha256": "5a23277a8f8768d83cf6274bd877dc703e71a76d7b5e7ee76ed64464447c6820",
+      "bytes": 17934,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/migrations/0135_resident_notifications.sql",
+      "sha256": "c4cd5186f959cefe88e49b29dd22f55969cef7ab84bcc65621aaabf1912c5980",
+      "bytes": 31048,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/migrations/0118_resident_front_id_submission.sql",
+      "sha256": "f063101a9257d45b0111b043e200d325ccf94f4ff49ba169c2045ca88a93c337",
+      "bytes": 6530,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/migrations/0109_invalidate_changed_profile_email_verification.sql",
+      "sha256": "04d00b2129d1beff8f5bbddaacf9af0b1d78aa5ac8a4dadb70b43fd4c3bf090a",
+      "bytes": 994,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/migrations/0122_resident_apple_account_setup.sql",
+      "sha256": "b67fd9ce4f4c1956e86d8f2f76904d33517876ae9eef253980ce708029de4989",
+      "bytes": 13372,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/functions/send-notifications/index.ts",
+      "sha256": "da050500cf1c06285d030af4ac0334ca4366c736b0e737a059e76709eec8c6be",
+      "bytes": 2661,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "packages/shared/src/types/service-foundations.ts",
+      "sha256": "7428359b27777acf7bea92e5d59502a6ddd06541f1673225b5100564601bd8da",
+      "bytes": 7466,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "packages/shared/src/lib/request-status.ts",
+      "sha256": "1222c4f0680faf10e427865a4dae9d3223823bd7efae27d9191a83f880bf5aee",
+      "bytes": 1144,
+      "working_copy_status": "clean"
+    },
+    {
+      "path": "supabase/tests/resident_ios_phase17_notifications.test.sql",
+      "sha256": "117f12b22019628d33f83ed951f314a7b05bb460fbf469e59cb1e84e2d72dfc2",
+      "bytes": 37739,
+      "working_copy_status": "clean"
+    }
+  ]
+}

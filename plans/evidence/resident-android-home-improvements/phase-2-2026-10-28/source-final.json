@@ -1,0 +1,110 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "CLAUDE.md",
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "bytes": 11,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+    "bytes": 2122,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "sha256": "7b0b99fc93f4c6f1a5f79fcc95df72d85c44279141576c439c7436c7f124570c",
+    "bytes": 20854,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "sha256": "a0103ee2c2fe045bf28a37e6b0d6450f8bec2c88cfa6c47899190d8f8d1f9136",
+    "bytes": 9499,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "sha256": "ef0aa0664dbd7f143b88f94b622063e8c2d1583f58b9b9e5400d64fd5b28f0b5",
+    "bytes": 12527,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+    "sha256": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+    "bytes": 1523,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/guest-prompt.tsx",
+    "sha256": "ccb2b4c7b52208471d9ea1bd85109d694f471f103edb4c563cc0143d077ef76e",
+    "bytes": 937,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+    "sha256": "eef671aed57cb3269c37b8b7b112169606112e1c8761c555de3b252e801143fa",
+    "bytes": 722,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+    "sha256": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b",
+    "bytes": 411,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+    "sha256": "9a8b2e66a1f32b833776f28983d6bb4426366778a5c9bc53cb6eb579a6328bb8",
+    "bytes": 2166,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "sha256": "12a74c504a6471ea04befad97aacebbc9f8b3f528f69e48162c44c26d289a47e",
+    "bytes": 2423,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "sha256": "0de66d8405ee84399cf80a3d4a49146e4a533729e31e5f38f7637866aa68f109",
+    "bytes": 14023,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "bytes": 667658,
+    "changedSinceBaseline": false
+  },
+  {
+    "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "sha256": "2f1028b893116f505d3d7093a0a5881ebe97f981884743323cfc3ea4bff12eac",
+    "bytes": 58970,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "sha256": "f85fc605648ce85aa32a9b012f83f3ce427dac66d1010c3d9d7d73d5bb41cf11",
+    "bytes": 31335,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "sha256": "efeceec3a7e5d011d430e976ea527b9d40940aecd4f66011fbdeab77e8214c25",
+    "bytes": 26672,
+    "changedSinceBaseline": true
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+    "sha256": "6fb3c49de63b28d2a42fefce94d28b743a40e25db4f35f6b46d183882833b5f9",
+    "bytes": 15489,
+    "changedSinceBaseline": true
+  }
+]

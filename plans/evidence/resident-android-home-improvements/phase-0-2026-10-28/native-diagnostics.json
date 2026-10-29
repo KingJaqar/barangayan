@@ -1,0 +1,21 @@
+{
+  "appPid": 14903,
+  "window": {
+    "first": "10-28 12:56:33.334",
+    "last": "10-28 12:57:44.278"
+  },
+  "fatalExceptionCount": 0,
+  "reactNativeJS": [
+    "10-28 12:56:43.887 14903 14989 I ReactNativeJS: Running \"main\" with {\"rootTag\":1,\"initialProps\":{},\"fabric\":true}"
+  ],
+  "observedStartupSoftException": [
+    "10-28 12:56:37.504 14903 14903 E unknown:ReactHost: Unhandled SoftException",
+    "10-28 12:56:37.504 14903 14903 E unknown:ReactHost: com.facebook.react.bridge.ReactNoCrashSoftException: raiseSoftException(onWindowFocusChange(hasFocus = \"true\")): Tried to access onWindowFocusChange while context is not ready"
+  ],
+  "statusBarWarnings": [
+    "10-28 12:57:43.882 14903 14990 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.",
+    "10-28 12:57:43.882 14903 14990 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge."
+  ],
+  "otherErrorAndWarningCount": 191,
+  "note": "Native baseline diagnostics, not a claim of zero warnings. Existing source unchanged; no Android product changes or fixes."
+}

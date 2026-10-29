@@ -1,0 +1,652 @@
+ M apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx
+ M apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx
+ M apps/resident-android-mobile/app.json
+ M apps/resident-android-mobile/src/app/(app)/announcements.tsx
+ M apps/resident-android-mobile/src/app/(app)/health/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/home/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/services/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx
+ M apps/resident-android-mobile/src/app/_layout.tsx
+ M apps/resident-android-mobile/src/app/account-setup.tsx
+ M apps/resident-android-mobile/src/components/app-tabs.tsx
+ M apps/resident-android-mobile/src/components/count-badge.tsx
+ M apps/resident-android-mobile/src/components/notification-bell.tsx
+ M apps/resident-android-mobile/src/components/pull-refresh.tsx
+ M apps/resident-android-mobile/src/components/reports/announcement-card.tsx
+ D apps/resident-android-mobile/src/components/reports/announcements-feed.tsx
+ M apps/resident-android-mobile/src/components/resident-header.tsx
+ M apps/resident-android-mobile/src/components/segmented-control.tsx
+ M apps/resident-android-mobile/src/components/services/agency-sla-status.tsx
+ M apps/resident-android-mobile/src/components/services/documents-list.tsx
+ M apps/resident-android-mobile/src/components/services/requests-list.tsx
+ M apps/resident-android-mobile/src/components/services/services-filter-chips.tsx
+ D apps/resident-android-mobile/src/hooks/use-announcements.ts
+ M apps/resident-android-mobile/src/hooks/use-history-pages.ts
+ M apps/resident-android-mobile/src/hooks/use-incidents.ts
+ M apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx
+ M apps/resident-android-mobile/src/hooks/use-notification-realtime.ts
+ M apps/resident-android-mobile/src/hooks/use-unread-counts.tsx
+ M apps/resident-android-mobile/src/lib/history-resource.ts
+ M apps/resident-android-mobile/src/lib/home-request.test.ts
+ M apps/resident-android-mobile/src/lib/home-request.ts
+ M apps/resident-android-mobile/src/lib/notification-templates.ts
+ M apps/resident-android-mobile/src/lib/push-notifications.ts
+ M apps/resident-android-mobile/src/lib/setup-navigation.test.ts
+ M apps/resident-android-mobile/tests/health-presentation-ui.mjs
+ M apps/resident-android-mobile/tests/hidden-work-ownership.mjs
+ M apps/resident-android-mobile/tests/home-presentation-ui.mjs
+ M apps/resident-android-mobile/tests/pull-refresh-settings-ui.mjs
+ M apps/resident-android-mobile/tests/reports-announcements-ui.mjs
+ M apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+ M apps/resident-android-mobile/tests/root-navigation-isolation.mjs
+ M apps/resident-android-mobile/tests/services-lists-ui.mjs
+ M apps/resident-android-mobile/tests/services-tab-stability.mjs
+ M apps/resident-android-mobile/tests/verification-sensitive-ui.mjs
+ M apps/resident-ios-mobile/tests/notification-worker.test.ts
+ M apps/resident-ios-mobile/tests/notifications.test.ts
+ M packages/shared/src/constants/id-verification.ts
+ M packages/shared/src/index.ts
+ M packages/shared/src/lib/id-evidence.test.ts
+ M packages/shared/src/lib/id-evidence.ts
+ M packages/shared/src/lib/resident-account-setup.test.ts
+ M packages/shared/src/lib/resident-account-setup.ts
+ M packages/shared/src/schemas/announcement.test.ts
+ M packages/shared/src/schemas/announcement.ts
+ M packages/shared/src/types/database.ts
+ M packages/shared/src/types/service-foundations.ts
+ M plans/Resident_Android_Keyboard_Avoidance_Implementation_Plan_2026_10_24.md
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/c16-camera-diagnosis.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/compact-font-c17-drrm.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/compact-font-c17-emergency-centers.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/compact-font-c17-home-emergency-info.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/compact-font-long-paste-incident-drrm.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/context-index.md
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/ledger.md
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/preservation-audit.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/report.md
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/tall-font-c16.json
+ M plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/verification.json
+ M supabase/functions/send-notifications/worker.ts
+ M supabase/tests/resident_account_setup.test.sql
+ M supabase/tests/resident_apple_account_setup.test.sql
+ M supabase/tests/resident_front_id_submission.test.sql
+ M supabase/tests/service_foundations.test.sql
+ D tmp/pdfs/resident-screen-01.png
+ D tmp/pdfs/resident-screen-02.png
+ D tmp/pdfs/resident-screen-03.png
+ D tmp/pdfs/resident-screen-04.png
+ D tmp/pdfs/resident-screen-05.png
+ D tmp/pdfs/resident-screen-06.png
+ D tmp/pdfs/resident-screen-07.png
+ D tmp/pdfs/resident-screen-08.png
+ D tmp/pdfs/resident-screen-09.png
+ D tmp/pdfs/resident-screen-10.png
+ D tmp/pdfs/resident-screen-11.png
+ D tmp/pdfs/resident-screen-12.png
+ D tmp/pdfs/resident-screen-13.png
+ D tmp/pdfs/resident-screen-14.png
+ D tmp/pdfs/resident-screen-15.png
+ D tmp/pdfs/resident-screen-16.png
+ D tmp/pdfs/resident-screen-17.png
+ D tmp/pdfs/resident-screen-18.png
+ D tmp/pdfs/resident-screen-19.png
+ D tmp/pdfs/resident-screen-20.png
+ D tmp/pdfs/resident-screen-21.png
+ D tmp/pdfs/resident-screen-22.png
+ D tmp/pdfs/resident-screen-23.png
+ D tmp/pdfs/resident-screen-24.png
+ D tmp/pdfs/resident-screen-25.png
+ D tmp/pdfs/resident-screen-26.png
+ D tmp/pdfs/resident-screen-27.png
+ D tmp/pdfs/resident-screen-28.png
+ D tmp/pdfs/resident-screen-29.png
+ D tmp/pdfs/resident-screen-30.png
+ D tmp/pdfs/resident-screen-31.png
+ D tmp/pdfs/resident-screen-32.png
+ D tmp/pdfs/resident-screen-33.png
+ D tmp/pdfs/resident-screen-34.png
+ D tmp/pdfs/resident-screen-35.png
+ D tmp/pdfs/resident-screen-36.png
+ D tmp/pdfs/resident-screen-37.png
+ D tmp/pdfs/resident-screen-38.png
+ D tmp/pdfs/resident-screen-39.png
+ D tmp/pdfs/resident-screen-40.png
+ D tmp/pdfs/resident-screen-41.png
+ D tmp/pdfs/resident-screen-42.png
+ D tmp/pdfs/resident-screen-43.png
+ D tmp/pdfs/resident-screen-44.png
+ D tmp/pdfs/resident-screen-45.png
+ D tmp/pdfs/resident-screen-46.png
+ D tmp/pdfs/resident-screen-47.png
+ D tmp/pdfs/resident-screen-48.png
+ D tmp/pdfs/resident-screen-49.png
+ D tmp/pdfs/resident-screen-50.png
+ D tmp/pdfs/resident-screen-51.png
+ D tmp/pdfs/resident-screen-52.png
+ D tmp/pdfs/resident-screen-53.png
+ D tmp/pdfs/resident-screen-54.png
+ D tmp/pdfs/resident-screen-55.png
+ D tmp/pdfs/resident-screen-56.png
+ D tmp/pdfs/resident-screen-57.png
+ D tmp/pdfs/resident-screen-58.png
+ D tmp/pdfs/resident-screen-59.png
+ D tmp/pdfs/resident-screen-60.png
+ D tmp/pdfs/resident-screen-61.png
+ D tmp/pdfs/resident-screen-62.png
+?? apps/admin-web/src/lib/announcement-datetime.ts
+?? apps/admin-web/tests/content-workspace/announcement-lifetime.jsx
+?? apps/admin-web/tests/content-workspace/announcement-lifetime.mjs
+?? apps/admin-web/tests/table-browse/announcement-datetime.test.ts
+?? apps/resident-android-mobile/repomix-output.xml
+?? apps/resident-android-mobile/src/components/notification-tap-handler.tsx
+?? apps/resident-android-mobile/src/components/notifications/
+?? apps/resident-android-mobile/src/components/resident-id-capture-step.tsx
+?? apps/resident-android-mobile/src/constants/disclosure-motion.ts
+?? apps/resident-android-mobile/src/hooks/use-id-resubmit-limit.ts
+?? apps/resident-android-mobile/src/hooks/use-notification-hub.ts
+?? apps/resident-android-mobile/src/hooks/use-push-registration.ts
+?? apps/resident-android-mobile/src/lib/burst.test.ts
+?? apps/resident-android-mobile/src/lib/burst.ts
+?? apps/resident-android-mobile/src/lib/id-resubmit-limit.test.ts
+?? apps/resident-android-mobile/src/lib/id-resubmit-limit.ts
+?? apps/resident-android-mobile/src/lib/notification-hub-data.ts
+?? apps/resident-android-mobile/src/lib/notification-hub.test.ts
+?? apps/resident-android-mobile/src/lib/notification-hub.ts
+?? apps/resident-android-mobile/src/lib/notification-tap.test.ts
+?? apps/resident-android-mobile/src/lib/notification-tap.ts
+?? apps/resident-android-mobile/src/lib/push-registration.test.ts
+?? apps/resident-android-mobile/src/lib/push-registration.ts
+?? apps/resident-android-mobile/src/repomix-output.xml
+?? apps/resident-android-mobile/tests/notification-hub-i2.mjs
+?? apps/resident-android-mobile/tests/notification-hub-ui.mjs
+?? apps/resident-android-mobile/tests/notification-tap-ui.mjs
+?? packages/shared/src/lib/home-request-priority.test.ts
+?? packages/shared/src/lib/home-request-priority.ts
+?? plans/Resident_Android_Account_System_Notifications_and_Announcements_Redesign_Breakdown_2026_10_27.md
+?? plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md
+?? plans/Resident_Android_Notifications_and_Announcements_Implementation_Plan_2026_10_27.md
+?? plans/Resident_Registration_Proof_of_Residency_Implementation_Plan_2026_10_28.md
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-00/android-export-temp/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-00/temporary/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-00/web-export/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-05/android-export-temp/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-05/temporary/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-05/web-export-unrestricted/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-05/web-export/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-00/android-export-temp/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-00/temporary/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-00/web-export-unrestricted/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-05/android-export-temp/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-05/temporary/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-05/web-export-unrestricted/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-06-refresh/android-export-temp/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-06-refresh/temporary/
+?? plans/evidence/resident-android-bloat-audit/execution/2026-10-14-095352-remaining/dc-06-refresh/web-export-unrestricted/
+?? plans/evidence/resident-android-home-improvements/
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/default-candidate-c16.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/default-geometry-candidate-c17-drrm.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/default-geometry-candidate-c17-emergency-centers.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/default-geometry-candidate-c17-home-emergency-info.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-added-contracts-source-identity.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-cleanup.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-current-source-identity.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-home-state.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-native-c15-home.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-native-console-summary.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/final-reader-audit.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/gboard-restoration.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/tall-font-geometry-candidate-c17-emergency-centers.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/tall-font-long-paste-center-drrm.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/tall-font-long-paste-center-emergency-centers.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-5-2026-10-26/tall-font-long-paste-header-drrm.json
+?? plans/evidence/resident-android-keyboard-avoidance/phase-6-2026-10-27/
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/before/status.txt
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/native/automated-color-baseline.mp4
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/native/manual-baseline.mp4
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-000.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-001.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-002.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-003.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-004.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-005.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-006.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-007.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-008.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-009.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-010.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-011.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-012.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-013.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-014.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-015.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-016.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-017.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-018.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-019.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-020.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-021.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-022.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/01-custom-color-open/frame-023.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-000.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-001.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-002.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-003.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-004.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-005.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-006.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-007.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-008.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-009.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-010.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-011.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-012.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-013.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-014.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-015.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-016.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-017.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-018.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-019.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-020.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-021.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-022.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/02-custom-color-cancel/frame-023.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-000.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-001.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-002.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-003.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-004.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-005.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-006.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-007.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-008.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-009.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-010.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-011.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-012.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-013.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-014.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-015.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-016.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-017.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-018.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-019.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-020.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-021.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-022.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/03-logout-dialog-open/frame-023.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-000.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-001.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-002.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-003.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-004.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-005.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-006.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-007.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-008.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-009.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-010.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-011.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-012.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-013.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-014.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-015.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-016.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-017.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-018.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-019.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-020.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-021.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-022.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/04-logout-dialog-cancel/frame-023.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-000.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-001.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-002.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-003.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-004.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-005.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-006.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-007.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-008.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-009.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-010.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-011.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-012.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-013.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-014.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-015.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-016.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-017.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-018.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-019.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-020.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-021.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-022.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/reference/05-font-inter-select/frame-023.jpg
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/normal-motion.mp4
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/performance-baseline-verified/trace.json
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/performance-baseline/trace.json
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/performance-candidate-repeat/trace.json
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/performance-candidate-verified/trace.json
+?? plans/evidence/resident-android-magicpatterns-phase-1/2026-10-19/native-resume/reduced-motion.mp4
+?? plans/evidence/resident-android-notifications/
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/build/
+?? repomix-output.xml
+?? supabase/migrations/0145_notification_hub_contracts.sql
+?? supabase/migrations/0146_notification_hub_producers.sql
+?? supabase/migrations/0147_resident_setup_id_submitted.sql
+?? supabase/migrations/0148_resident_home_request_priority.sql
+?? supabase/migrations/0149_announcement_alert_expiry.sql
+?? supabase/migrations/0150_id_resubmission_rate_limit.sql
+?? supabase/tests/announcement_alert_lifetime.mjs
+?? supabase/tests/notification_hub_concurrency.mjs
+?? supabase/tests/notification_transport_i1.mjs
+?? supabase/tests/resident_android_notification_hub.test.sql
+?? supabase/tests/resident_android_notification_producers.test.sql
+?? supabase/tests/resident_home_requests.mjs
+?? tmp/admin-profile-activation-local-server.log
+?? tmp/admin-profile-baseline-build.log
+?? tmp/admin-profile-baseline-lint.log
+?? tmp/admin-profile-baseline-tests.log
+?? tmp/admin-profile-baseline-typecheck-serial.log
+?? tmp/admin-profile-baseline-typecheck.log
+?? tmp/admin-profile-build-webpack.log
+?? tmp/admin-profile-build.log
+?? tmp/admin-profile-db-rehearsal.sql
+?? tmp/admin-profile-hosted-association-probe.cjs
+?? tmp/admin-profile-hosted-session-probe.cjs
+?? tmp/admin-profile-lint-2.log
+?? tmp/admin-profile-lint-3.log
+?? tmp/admin-profile-lint-4.log
+?? tmp/admin-profile-lint-5.log
+?? tmp/admin-profile-lint.log
+?? tmp/admin-profile-stale-callback-type.ts.disabled
+?? tmp/admin-profile-tests-2.log
+?? tmp/admin-profile-tests.log
+?? tmp/admin-profile-typecheck-2.log
+?? tmp/admin-profile-typecheck-3.log
+?? tmp/admin-profile-typecheck-4.log
+?? tmp/admin-profile-typecheck-5.log
+?? tmp/admin-profile-typecheck.log
+?? tmp/admin-profile-typegen.log
+?? tmp/admin-request-status-fix/
+?? tmp/android-payment-compact.cjs
+?? tmp/announcement-heading-compact/
+?? tmp/announcement-info-compact/
+?? tmp/announcements-compact-20261022/
+?? tmp/attendance-0139-recovery-20261022/
+?? tmp/bottom-tab-label-fit/
+?? tmp/centers-map-address-20261022/
+?? tmp/centers-map-compact-20261022/
+?? tmp/centers-map-header-20261022/
+?? tmp/centers-map-selected-20261022/
+?? tmp/centers-map-single-row-20261022/
+?? tmp/centers-stable-switch-20261022/
+?? tmp/centers-view-fade-refined-20261022/
+?? tmp/centers-view-motion-20261022/
+?? tmp/compact-drrm.cjs
+?? tmp/compact-service-baseline.cjs
+?? tmp/compact-service-presentation.cjs
+?? tmp/content-edit-dialog-checks/
+?? tmp/content-edit-inspect.cjs
+?? tmp/content-edit-motion-after.json
+?? tmp/content-edit-motion-after.mjs
+?? tmp/content-edit-motion-baseline.json
+?? tmp/content-edit-motion-trace.json
+?? tmp/content-edit-motion-trace.mjs
+?? tmp/content-edit-motion.mjs
+?? tmp/content-edit-narrow.png
+?? tmp/content-edit-wide.png
+?? tmp/document-fee-db-check.cjs
+?? tmp/document-fee-db-check.log
+?? tmp/document-fee-db/
+?? tmp/document-fee-generate.cjs
+?? tmp/document-fee-test-generate.cjs
+?? tmp/document-fee-ui-result.json
+?? tmp/document-fee-ui.mjs
+?? tmp/document-fee-verification-db/
+?? tmp/documents-heading-removed-tests/
+?? tmp/drrm-before.png
+?? tmp/drrm-compact/
+?? tmp/drrm-motion-native/
+?? tmp/expo-guide-artifacts/
+?? tmp/family-attendance-discovery.txt
+?? tmp/family-attendance-phase0-20261021/
+?? tmp/family-attendance-phase1-20261021/
+?? tmp/family-attendance-phase2-01a15e7f-bcd0/
+?? tmp/family-attendance-phase2-20261021/
+?? tmp/family-attendance-phase3-20261022/
+?? tmp/family-attendance-phase4-20261022/
+?? tmp/family-plan-polish-20261021/
+?? tmp/family-web-phase0-20261021/
+?? tmp/family-web-phase1-20261021/
+?? tmp/family-web-phase2-20261021/
+?? tmp/family-web-phase3-20261022/
+?? tmp/family-web-phase4-20261022/
+?? tmp/family-web-plan-20261021/
+?? tmp/family-web-plan-polish-20261021/
+?? tmp/header-typography-20261026/
+?? tmp/health-baseline-motion-tests/
+?? tmp/health-calendar-motion/
+?? tmp/health-compact-ui/
+?? tmp/health-shared-motion-tests/
+?? tmp/id-status-admin-dev-error.log
+?? tmp/id-status-admin-dev.log
+?? tmp/keyboard-phase1-initial-status.txt
+?? tmp/map-chevron-safe-area/
+?? tmp/maps-auto-hide-ui/
+?? tmp/maps-compact-ui/
+?? tmp/metro-cache/
+?? tmp/metro-file-map-expo-19420280dd7d19fcd335d6695049837f-4ce28d7aa924c1957d5c68542b517318
+?? tmp/node-compile-cache/
+?? tmp/pending-id-summary-browser.log
+?? tmp/pending-id-summary-final-browser.log
+?? tmp/phase1-profile-consumers.txt
+?? tmp/prepare-admin-profile-release.cjs
+?? tmp/profile-birthday-wheel-20261026/
+?? tmp/profile-reference-ui/
+?? tmp/qr-scanner-fixed.png
+?? tmp/qr-sheet-fixed.png
+?? tmp/qr-sheet-scrolled-fixed.png
+?? tmp/read-service-screen-copy.cjs
+?? tmp/repomix-source-inventory.txt
+?? tmp/reports-alignment-check.mjs
+?? tmp/reports-alignment/
+?? tmp/request-all-cause-diagnosis/
+?? tmp/request-editor-test-fix-20261022/
+?? tmp/request-filter-cache-tests/
+?? tmp/request-filter-motion-initial.png
+?? tmp/request-filter-motion-verified.png
+?? tmp/request-filter-motion-verified.xml
+?? tmp/request-filter-refresh-tests/
+?? tmp/request-filter-shared-reveal-refresh/
+?? tmp/request-filter-shared-reveal-tests/
+?? tmp/request-filters-current.png
+?? tmp/request-filters-current.xml
+?? tmp/request-filters-final.png
+?? tmp/request-filters-final.xml
+?? tmp/request-filters-rapid.png
+?? tmp/request-filters-rapid.xml
+?? tmp/request-motion-clean.png
+?? tmp/request-status-icon-tests/
+?? tmp/request-tracking-ui/
+?? tmp/requests-active-collapsed.png
+?? tmp/requests-after.png
+?? tmp/requests-all-ui-fix/
+?? tmp/requests-animation-performance.json
+?? tmp/requests-before.png
+?? tmp/requests-both-collapsed.png
+?? tmp/requests-current.png
+?? tmp/requests-current.xml
+?? tmp/requests-fade-closed.xml
+?? tmp/requests-fade-reopened.xml
+?? tmp/requests-fade-start.png
+?? tmp/requests-fade-start.xml
+?? tmp/requests-fade-tests/
+?? tmp/requests-hidden-work-tests/
+?? tmp/requests-perf-after.txt
+?? tmp/requests-perf-after.xml
+?? tmp/requests-perf-before.png
+?? tmp/requests-perf-before.txt
+?? tmp/requests-perf-before.xml
+?? tmp/requests-perf-ready.png
+?? tmp/requests-rapid-final.png
+?? tmp/requests-rapid-final.xml
+?? tmp/requests-shared-motion-tests/
+?? tmp/requests-shared-motion.png
+?? tmp/requests-shared-motion.xml
+?? tmp/requests-ui-thread-current.png
+?? tmp/requests-ui-thread-tests/
+?? tmp/requests-verified.png
+?? tmp/requests-verified.xml
+?? tmp/resident-action-guards/
+?? tmp/resident-android-magicpatterns-phase-10-20261020/
+?? tmp/resident-android-magicpatterns-phase-11-20261020/
+?? tmp/resident-android-magicpatterns-phase-12-20261020/
+?? tmp/resident-android-magicpatterns-phase-13-20261020/
+?? tmp/resident-android-magicpatterns-phase-14-20261021/
+?? tmp/resident-android-magicpatterns-phase-15-20261021/
+?? tmp/resident-android-magicpatterns-phase-15-about-key-fix-20261021/
+?? tmp/resident-android-magicpatterns-phase-16-20261021/
+?? tmp/resident-android-magicpatterns-phase-7-20261019/
+?? tmp/resident-android-magicpatterns-phase-9-20261020/
+?? tmp/resident-home-phase0-20261028/
+?? tmp/resident-home-phase1-20261028/
+?? tmp/resident-home-phase2-20261028/
+?? tmp/resident-home-phase3-20261028/
+?? tmp/resident-ios-phase4-20261023/
+?? tmp/resident-keyboard-audit/
+?? tmp/resident-keyboard-mumu-20261024/
+?? tmp/resident-keyboard-mumu-plan-20261025/
+?? tmp/resident-keyboard-phase0-20261024/
+?? tmp/resident-keyboard-phase1-20261024/
+?? tmp/resident-keyboard-phase1-native-20261024/
+?? tmp/resident-keyboard-phase2-20261025/
+?? tmp/resident-keyboard-phase2-mumu-completion-20261025/
+?? tmp/resident-keyboard-phase3-20261025/
+?? tmp/resident-keyboard-phase4-20261026/
+?? tmp/resident-keyboard-phase4-plan-update-20261026/
+?? tmp/resident-keyboard-phase5-20261026/
+?? tmp/resident-keyboard-phase6-20261027/
+?? tmp/resident-keyboard-plan-refresh-20261024/
+?? tmp/resident-nav-audit-20261022/
+?? tmp/resident-nav-browser.mjs
+?? tmp/resident-nav-fixture.jsx
+?? tmp/resident-nav-mumu-20261022/
+?? tmp/resident-nav-phase0-20261022/
+?? tmp/resident-nav-phase1-20261023/
+?? tmp/resident-nav-phase2-20261023/
+?? tmp/resident-nav-phase3-20261023/
+?? tmp/resident-nav-phase4-20261023/
+?? tmp/resident-nav-phase5-20261023/
+?? tmp/resident-nav-sizing-check.mjs
+?? tmp/resident-notifications-phase0-20261028/
+?? tmp/resident-notifications-phase1-20261028/
+?? tmp/resident-notifications-phase2-20261028/
+?? tmp/resident-notifications-phase3-20261028/
+?? tmp/resident-notifications-phase4-20261028/
+?? tmp/resident-notifications-phase5-20261028/
+?? tmp/resident-notifications-phase6-20261028/
+?? tmp/resident-notifications-plan-20261027/
+?? tmp/resident-profile-load-fix-20261025/
+?? tmp/resident-pull-refresh-20261025/
+?? tmp/resident-report-plan-update-20261020/
+?? tmp/resident-search-phase1-20261023-session/
+?? tmp/resident-search-phase1-20261023/
+?? tmp/resident-search-phase2-20261023/
+?? tmp/resident-search-phase3-20261023/
+?? tmp/resident-search-phase4-20261023/
+?? tmp/resident-search-phase5-20261023/
+?? tmp/resident-search-phase6-20261023/
+?? tmp/resident-search-plan-polish-20261023/
+?? tmp/resident-settings-polish-20261021/
+?? tmp/routing-status-compact-20261022/
+?? tmp/run-admin-profile-db.cjs
+?? tmp/scan-compact-guide.png
+?? tmp/scan-compact-instructions.png
+?? tmp/scan-compact-qr.png
+?? tmp/services-check.png
+?? tmp/services-icon-preview.png
+?? tmp/services-keyboard-fix/
+?? tmp/services-top-tabs-fix/
+?? tmp/settings-baseline.xml
+?? tmp/shared-motion-current.png
+?? tmp/shared-motion-final.xml
+?? tmp/shared-motion-open.png
+?? tmp/shared-motion-open.xml
+?? tmp/shared-motion-services.png
+?? tmp/status-icons-before.png
+?? tmp/status-icons-final.png
+?? tmp/status-icons-final.xml
+?? tmp/tab-all-final.png
+?? tmp/tab-attach-baseline.mp4
+?? tmp/tab-attach-fixed.mp4
+?? tmp/tab-baseline-overview.png
+?? tmp/tab-bump-before.png
+?? tmp/tab-check-drrm.png
+?? tmp/tab-check-health.png
+?? tmp/tab-check-home.png
+?? tmp/tab-check-maps.png
+?? tmp/tab-check-reports.png
+?? tmp/tab-check-settings.png
+?? tmp/tab-current.png
+?? tmp/tab-home-after.png
+?? tmp/tab-motion-before-overview.png
+?? tmp/tab-motion-before.mp4
+?? tmp/tab-motion-frames.cjs
+?? tmp/tab-services-after.png
+?? tmp/tab-services-final-transition.png
+?? tmp/tab-services-fixed-transition.png
+?? tmp/tab-services-settle.png
+?? tmp/tab-services-transition.png
+?? tmp/tab-services.png
+?? tmp/tab-svc-0.png
+?? tmp/tab-svc-1.png
+?? tmp/tab-svc-2.png
+?? tmp/tab-svc-3.png
+?? tmp/tab-svc-final-0.png
+?? tmp/tab-svc-final-1.png
+?? tmp/tab-svc-final-2.png
+?? tmp/tab-svc-final-3.png
+?? tmp/tab-svc-fixed-0.png
+?? tmp/tab-svc-fixed-1.png
+?? tmp/tab-svc-fixed-2.png
+?? tmp/tab-svc-fixed-3.png
+?? tmp/tab-test-services.png
+?? tmp/toast-phase1-build.log
+?? tmp/toast-phase1-inventory.txt
+?? tmp/toast-phase1-lint.log
+?? tmp/toast-phase1-plan-before.md
+?? tmp/toast-phase1-retries.txt
+?? tmp/toast-phase1-source-before.json
+?? tmp/toast-phase1-tests-permitted.log
+?? tmp/toast-phase1-tests.log
+?? tmp/toast-phase1-typecheck.log
+?? tmp/toast-phase1-working-tree-before.txt
+?? tmp/valid-id-details-scroll-browser.log
+?? tmp/valid-id-details-scroll-final-browser.log
+?? tmp/valid-id-details-scroll-final.log
+?? tmp/valid-id-details-scroll-verified-browser.log
+?? tmp/valid-id-phase5-db.cjs
+?? tmp/valid-id-shell-scroll-after.log
+?? tmp/valid-id-shell-scroll-before.log
+?? tmp/verification-back.xml
+?? tmp/verification-continue.png
+?? tmp/verification-continue.xml
+?? tmp/verification-dismissed.xml
+?? tmp/verification-icon-current.png
+?? tmp/verification-icon-current.xml
+?? tmp/verification-live.png
+?? tmp/verification-loaded.xml
+?? tmp/verification-open.xml
+?? tmp/verification-popover-now.png
+?? tmp/verification-popover-now.xml
+?? tmp/verification-reopened.xml
+?? tmp/verification-return.xml
+?? tmp/verification-server-errors.log
+?? tmp/verification-server.log
+?? tmp/verification-services-now.xml
+?? tmp/verification-services.png
+?? tmp/verification-services.xml
+?? tmp/verification-tab-icon-tests/
+?? tmp/verification-tab-stability-tests/

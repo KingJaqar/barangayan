@@ -1,0 +1,150 @@
+[
+  {
+    "id": "types",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-29T07:21:05.059Z",
+    "end": "2026-10-29T07:21:51.436Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-types.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-types"
+  },
+  {
+    "id": "lint",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-29T07:21:05.075Z",
+    "end": "2026-10-29T07:23:04.881Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-lint.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-lint"
+  },
+  {
+    "id": "home-unit",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/lib/home-request.test.ts",
+      "src/lib/refresh-resource.test.ts",
+      "src/lib/home-announcement.test.ts"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.088Z",
+    "end": "2026-10-29T07:21:21.449Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-home-unit.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-home-unit"
+  },
+  {
+    "id": "home-presentation-ui",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/home-presentation-ui.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.100Z",
+    "end": "2026-10-29T07:21:24.924Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-home-presentation-ui.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-home-presentation-ui"
+  },
+  {
+    "id": "services-tab-stability",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/services-tab-stability.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.113Z",
+    "end": "2026-10-29T07:21:13.849Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-services-tab-stability.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-services-tab-stability"
+  },
+  {
+    "id": "request-tracking-navigation",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/request-tracking-navigation.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.126Z",
+    "end": "2026-10-29T07:21:05.514Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-request-tracking-navigation.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-request-tracking-navigation"
+  },
+  {
+    "id": "resident-shell-lifecycle",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/resident-shell-lifecycle.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.142Z",
+    "end": "2026-10-29T07:21:13.780Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-resident-shell-lifecycle.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-resident-shell-lifecycle"
+  },
+  {
+    "id": "reports-announcements-ui",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/reports-announcements-ui.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-29T07:21:05.156Z",
+    "end": "2026-10-29T07:21:23.545Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-reports-announcements-ui.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-reports-announcements-ui"
+  },
+  {
+    "id": "export",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase5-20261029/export-baseline"
+    ],
+    "deadline": 1200000,
+    "start": "2026-10-29T07:21:05.170Z",
+    "end": "2026-10-29T07:23:59.218Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\baseline-export.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\baseline-export"
+  }
+]

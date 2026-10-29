@@ -1,0 +1,56 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\services\\index.tsx" b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+index 43852991..e146554c 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\services\\index.tsx"
++++ b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+@@ -5,8 +5,8 @@ import { useProfile } from '@/hooks/use-profile';
+ import { PrimaryButton } from '@/components/primary-button';
+ import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+ import { Ionicons } from '@expo/vector-icons';
+-import { useLocalSearchParams, useRouter } from 'expo-router';
+-import { useRef, useState } from 'react';
++import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
++import { useCallback, useRef, useState } from 'react';
+ import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+@@ -22,7 +22,9 @@ import { useTheme } from '@/hooks/use-theme';
+ 
+ type ServicesSegment = 'documents' | 'requests' | 'logs';
+ 
+-const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
++function isServicesSegment(value: unknown): value is ServicesSegment {
++  return value === 'documents' || value === 'requests' || value === 'logs';
++}
+ 
+ const TABS: { key: ServicesSegment; label: string }[] = [
+   { key: 'documents', label: 'Documents' },
+@@ -43,15 +45,26 @@ export default function ServicesScreen() {
+   const bottomTabInset = useFloatingTabInset();
+   const pull = usePullRefresh([refetch]);
+ 
+-  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
++  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string | string[] }>();
+   const initialSegment: ServicesSegment =
+-    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+-      ? (segmentParam as ServicesSegment)
++    session && isServicesSegment(segmentParam)
++      ? segmentParam
+       : 'documents';
+ 
+   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+   const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+   const verificationButton = useRef<View>(null);
++  const signedIn = Boolean(session);
++  useFocusEffect(useCallback(() => {
++    if (segmentParam === undefined) return;
++    if (isServicesSegment(segmentParam)) {
++      setVerificationAnchor(null);
++      setSegment(signedIn ? segmentParam : 'documents');
++    }
++    // Consume the entry once. Manual selection and normal tab refocus then stay intact,
++    // while another Home entry can request even the same segment again.
++    router.setParams({ segment: undefined });
++  }, [router, segmentParam, signedIn]));
+   const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+   const verifiedIcon = verified ? (
+     <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"

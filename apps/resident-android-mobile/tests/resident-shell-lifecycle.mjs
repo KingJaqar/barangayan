@@ -49,7 +49,9 @@ await build({
     b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
   } }],
 });
-const browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE });
+const browserOptions = { headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE };
+if (!browserOptions.executablePath && !fs.existsSync(chromium.executablePath())) browserOptions.channel = 'chrome';
+const browser = await chromium.launch(browserOptions);
 const errors = [];
 try {
   const page = await browser.newPage({ viewport: { width: 360, height: 640 } });
@@ -58,11 +60,29 @@ try {
   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
   const primary = page.getByRole('tablist', { name: 'Primary navigation' });
   await primary.waitFor();
-  for (const name of ['Services', 'DRRM', 'Maps', 'Health', 'Reports', 'Home']) {
+  // Measure actual pressable bounds: an oversized child icon is not a touch target.
+  const headerBounds = [];
+  for (const width of [320, 360, 412]) {
+    await page.setViewportSize({ width, height: 720 });
+    const buttons = [];
+    for (const name of ['Search', 'View announcements, 2 unread', 'Open settings']) {
+      const bounds = await page.getByRole('button', { name, exact: true }).boundingBox();
+      assert.ok(bounds && bounds.width >= 48 && bounds.height >= 48, `${name}: minimum 48px target at ${width}px`);
+      assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width, `${name}: fully inside viewport`);
+      buttons.push(bounds);
+    }
+    assert.ok(buttons[0].x + buttons[0].width <= buttons[1].x && buttons[1].x + buttons[1].width <= buttons[2].x, 'Header touch targets do not overlap');
+    headerBounds.push({ width, buttons });
+  }
+  fs.writeFileSync(path.join(out, 'header-targets.json'), JSON.stringify(headerBounds, null, 2));
+  await page.setViewportSize({ width: 360, height: 640 });
+  for (const name of ['Services', 'Emergency', 'Maps', 'Health', 'Reports', 'Home']) {
     await primary.getByRole('tab', { name: new RegExp(`^${name}(,|$)`) }).click();
     await page.waitForFunction(name => [...document.querySelectorAll('[role="tab"]')].some(tab => tab.getAttribute('aria-label')?.startsWith(name) && tab.getAttribute('aria-selected') === 'true'), name);
     assert.equal(await primary.getByRole('tab', { selected: true }).count(), 1);
+    assert.equal(await page.locator('input').count(), 0, `${name} must not retain a hidden header input`);
   }
+  assert.equal(await page.evaluate(() => window.fx.focusCalls), 0, 'Normal tab navigation never requests keyboard focus');
   await page.evaluate(() => {
     for (const label of ['Services', 'Maps', 'Health', 'Reports']) {
       [...document.querySelectorAll('[role="tab"]')].find(tab => tab.getAttribute('aria-label')?.split(',')[0] === label).click();
@@ -92,6 +112,15 @@ try {
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   const input = page.getByPlaceholder('Search Barangayan', { exact: true });
   await input.fill('clearance');
+  for (const width of [320, 360, 412]) {
+    await page.setViewportSize({ width, height: 720 });
+    for (const name of ['Back from search', 'Clear search', 'Submit search']) {
+      const bounds = await page.getByRole('button', { name, exact: true }).boundingBox();
+      assert.ok(bounds && bounds.width >= 48 && bounds.height >= 48, `${name}: minimum 48px search target at ${width}px`);
+      assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width, `${name}: search target inside viewport`);
+    }
+  }
+  await page.setViewportSize({ width: 360, height: 640 });
   await primary.waitFor({ state: 'detached' });
   assert.equal(await page.getByTestId('inset').textContent(), '0');
   const focuses = await page.evaluate(() => { document.querySelector('input').blur(); return window.fx.focusCalls; });
@@ -102,6 +131,16 @@ try {
   await primary.waitFor();
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   assert.equal(await input.inputValue(), 'clearance');
+  await page.waitForFunction(() => document.activeElement===document.querySelector('input'));
+  await page.evaluate(() => { window.keyboard(true);window.navigate('/services'); });
+  await primary.waitFor();
+  assert.equal(await page.locator('input').count(), 0, 'Leaving Search removes the native input from Services');
+  assert.equal(await page.evaluate(() => window.fx.keyboard), false, 'Leaving Search dismisses its keyboard');
+  const serviceFocuses=await page.evaluate(() => window.fx.focusCalls);
+  await page.evaluate(() => { window.refresh(); });
+  assert.equal(await page.evaluate(() => window.fx.focusCalls), serviceFocuses, 'Refreshing Services must not refocus hidden search');
+  await page.getByRole('button', { name:'Search', exact:true }).click();
+  assert.equal(await input.inputValue(), 'clearance', 'The draft survives removal of the search input');
   await page.clock.install();
   await page.clock.fastForward(16_000);assert.equal(await page.evaluate(()=>window.fx.path),'/search','Other header searches retain their existing behavior');
   await page.evaluate(()=>{window.fx.isMap=true;window.fx.returnTo='/drrm';window.navigate('/drrm')});
@@ -126,7 +165,7 @@ try {
   await page.evaluate(() => window.unmount());
   assert.deepEqual(await page.evaluate(() => Object.values(window.fx.listeners).map(set=>set.size)), [0,0]);
   assert.deepEqual(errors, []);
-  const result = { passed: ['six navigation actions and selected states', 'rapid accepted presses end on the last destination; prevented press preserves selection (synthetic navigation)', 'Settings/Announcements have no primary selection', 'keyboard removes/restores bar and measured clearance', 'Search/detail routes have no bar or phantom inset', 'appearance changes do not refocus Search', 'Search draft survives return', 'map header search idle collapse, interaction reset, icon collapse and query preservation; other header searches unchanged', 'providers remain mounted once', 'one keyboard listener pair, cleaned on unmount'], errors, nativeMotionVerified: false };
+  const result = { passed: ['six navigation actions and selected states without a hidden input or automatic keyboard focus', 'rapid accepted presses end on the last destination; prevented press preserves selection (synthetic navigation)', 'Settings/Announcements have no primary selection', 'keyboard removes/restores bar and measured clearance', 'Leaving Search for Services removes the input and dismisses the keyboard without losing the draft', 'Search/detail routes have no bar or phantom inset', 'appearance changes do not refocus Search', 'Search draft survives return', 'map header search idle collapse, interaction reset, icon collapse and query preservation; other header searches unchanged', 'providers remain mounted once', 'one keyboard listener pair, cleaned on unmount'], errors, nativeMotionVerified: false };
   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result));
 } finally { await browser.close(); }

@@ -1,0 +1,129 @@
+{
+  "sha256": "fd7fca87b609f0b2c253e7ec655c364737ad56dbc087ddfaf806c65d9e32a803",
+  "actual": [
+    "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+    "CLAUDE.md",
+    "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+    "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+    "AGENTS.md",
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx"
+  ],
+  "chunks": [
+    {
+      "n": 1,
+      "start": 0,
+      "end": 8889,
+      "lines": 200
+    },
+    {
+      "n": 2,
+      "start": 8889,
+      "end": 20889,
+      "lines": 187
+    },
+    {
+      "n": 3,
+      "start": 20889,
+      "end": 32889,
+      "lines": 173
+    },
+    {
+      "n": 4,
+      "start": 32889,
+      "end": 44889,
+      "lines": 156
+    },
+    {
+      "n": 5,
+      "start": 44889,
+      "end": 49851,
+      "lines": 70
+    }
+  ],
+  "version": "1.18.1",
+  "options": "exact --include selectors; --style xml; --quiet; default security/exclusions retained; no compression",
+  "completedReads": [
+    {
+      "n": 1,
+      "start": 0,
+      "end": 8889,
+      "lines": 200,
+      "read": true
+    },
+    {
+      "n": 2,
+      "start": 8889,
+      "end": 20889,
+      "lines": 187,
+      "read": true
+    },
+    {
+      "n": 3,
+      "start": 20889,
+      "end": 32889,
+      "lines": 173,
+      "read": true
+    },
+    {
+      "n": 4,
+      "start": 32889,
+      "end": 44889,
+      "lines": 156,
+      "read": true
+    },
+    {
+      "n": 5,
+      "start": 44889,
+      "end": 49851,
+      "lines": 70,
+      "read": true
+    }
+  ],
+  "omissions": [
+    "packages/shared/src/lib/announcement-lifecycle.ts",
+    "packages/shared/src/constants/announcements.ts"
+  ],
+  "resolution": "These initial selectors did not exist. Original discovery resolved category metadata/schema and existing detail/read ownership in the four-file supplement; no code relies on missing selectors.",
+  "supplement": {
+    "sha256": "fab959275b5d8ea50e1ca94472443740630e6232ab7abba6e7162403fe94c0c4",
+    "chunks": [
+      {
+        "start": 0,
+        "end": 10830,
+        "lines": 200
+      },
+      {
+        "start": 10830,
+        "end": 12456,
+        "lines": 30
+      }
+    ],
+    "read": true
+  },
+  "files": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "entrySha256": "f0a5eb7919d41c625e05da25d9cbbe1540b519f9809f651350c7a6933f97897b"
+    },
+    {
+      "path": "CLAUDE.md",
+      "entrySha256": "918b1c90559355ef78f33fdf3562f2b021ef8bdfd8a5c8415e5decd44934de55"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+      "entrySha256": "62972e39e06ade026f43ba826ced25c141b287b4cb614fad198c863ca0acf6bc"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+      "entrySha256": "ed5d70dfa4d4232f9c1f830ac222c4cae10a77475f3d38e8f3dce69a5aa42fe0"
+    },
+    {
+      "path": "AGENTS.md",
+      "entrySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "entrySha256": "96a44edbdc76c1e46127cf3a0f55dabcc61901bf63dfcaefded2368186a71f8d"
+    }
+  ]
+}

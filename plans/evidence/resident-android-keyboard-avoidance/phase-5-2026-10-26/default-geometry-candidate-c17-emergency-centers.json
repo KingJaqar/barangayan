@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-27T01:34:33.096Z",
+  "status": "pass",
+  "config": "default-geometry",
+  "route": "emergency-centers",
+  "observations": [
+    {
+      "tag": "default-geometry-candidate-c17-emergency-centers-initial",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        1029,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    },
+    {
+      "tag": "default-geometry-candidate-c17-emergency-centers-retained",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        897,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "default-geometry-candidate-c17-emergency-centers-map-return",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        1029,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "cycles": [
+    {
+      "tag": "default-geometry-candidate-c17-emergency-centers-cycle-0",
+      "label": "Search evacuation centers",
+      "bounds": [
+        183,
+        435,
+        1029,
+        567
+      ],
+      "imeTop": 1167,
+      "text": "Search 7 evacuation centers...",
+      "focused": "true"
+    }
+  ],
+  "fullEditorHeight": true,
+  "restoredGeometry": [
+    {
+      "label": "android.webkit.WebView",
+      "bounds": [
+        0,
+        240,
+        1080,
+        1920
+      ]
+    }
+  ],
+  "listEditorAbsent": true,
+  "syntheticTextCleared": true
+}

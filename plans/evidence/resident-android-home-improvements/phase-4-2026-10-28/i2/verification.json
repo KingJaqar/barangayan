@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-29T03:30:43.558Z",
+  "i2": "met",
+  "R1": "met",
+  "R6": "met for local content; I3 separate",
+  "R9": "met",
+  "affectedR10": "met; full product Phase5 separate; TalkBack waived",
+  "phase4": "complete",
+  "nativeGates": [
+    {
+      "name": "account-change",
+      "pass": true
+    },
+    {
+      "name": "inflight-logout",
+      "pass": true
+    },
+    {
+      "name": "expiry-focused",
+      "pass": true
+    },
+    {
+      "name": "expiry-resume",
+      "pass": true
+    },
+    {
+      "name": "combined-source-failure",
+      "pass": true
+    },
+    {
+      "name": "offline-observed",
+      "pass": true
+    },
+    {
+      "name": "offline-recovery",
+      "pass": true
+    },
+    {
+      "name": "preview-timeout",
+      "pass": true
+    },
+    {
+      "name": "missing-image",
+      "pass": true
+    },
+    {
+      "name": "expired-feed-detail",
+      "pass": true
+    },
+    {
+      "name": "native-advisory-matrix",
+      "pass": true
+    },
+    {
+      "name": "native-light-matrix",
+      "pass": true
+    },
+    {
+      "name": "native-contrast",
+      "pass": true
+    },
+    {
+      "name": "native-background-cleanup",
+      "pass": true
+    }
+  ],
+  "sourcesUnchanged": 9,
+  "planChangedOnlyPhase4Progress": true,
+  "newDependencies": [],
+  "console": {
+    "pid": "2678",
+    "reactNativeJsLines": 12,
+    "errorsAndWarnings": [],
+    "frameworkSoftExceptionLines": 0
+  },
+  "cleanup": {
+    "recorded": "2026-10-29T03:30:05.067Z",
+    "i2Acceptance": "met",
+    "deviceAndOriginalConnectionRestored": true,
+    "metro8099": "closed, process stopped",
+    "proxy58472": "closed, process stopped",
+    "temporaryNatAndAdbServers": "removed",
+    "temporaryCredentials": "removed",
+    "syntheticDatabases": "retained",
+    "dockerContainers": {
+      "names": [
+        "resident_home_i2_rest_keys",
+        "resident_home_i2_auth"
+      ],
+      "state": "cleaned; absence and closed ports verified after approved recovery",
+      "evidence": "restart-verification.json",
+      "attempts": [
+        "initial docker stop remained pending",
+        "bounded docker stop --time5 timed out20s",
+        "docker kill timed out15s"
+      ],
+      "taskCliProcesses": "stopped separately",
+      "nextStep": "none",
+      "approval": "Docker restart and later Windows administrator prompt approved by user",
+      "restartDiagnostics": [
+        "Normal Docker restart stalled",
+        "Docker-only distro restart hit WSL_E_USER_VHD_ALREADY_ATTACHED",
+        "No non-Docker WSL distributions were running",
+        "WSL shutdown/control queries stalled; direct service restart requires administrator rights",
+        "Windows administrator prompt opened; result pending",
+        "Windows administrator launch canceled; prepared script did not execute"
+      ],
+      "currentEvidence": "ports-after-restart-stop.json confirms58470/58471/58472/8099 closed; no data-disk deletion/reset",
+      "restartRecovery": "resolved; wsl-admin-recovery.json success=true"
+    },
+    "unrelatedServices": "All8 original local Supabase services recovered;7 configured checks healthy; REST HTTP200; databases retained",
+    "completed": "2026-10-29T07:17:53.730Z"
+  },
+  "cleanupCompleted": "2026-10-29T07:17:53.730Z",
+  "recovery": "restart-verification.json",
+  "acceptedSourcesRechecked": "2026-10-29T07:17:53.730Z"
+}

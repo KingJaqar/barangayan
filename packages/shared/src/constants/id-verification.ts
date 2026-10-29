@@ -34,6 +34,16 @@ export const ID_TYPES = [
   'Other',
 ] as const;
 
+/** ID types verified from the photo page / front alone. Every other type, including
+ * "Other", needs both a front and a back photo. */
+export const FRONT_ONLY_ID_TYPES: readonly string[] = ['Passport'];
+
+/** Whether a back photo is required for the given selected ID type (the raw dropdown
+ * value or the persisted `"Other: <name>"` form). */
+export function idTypeRequiresBack(idType: string): boolean {
+  return !FRONT_ONLY_ID_TYPES.includes(idType);
+}
+
 /** profiles.id_type has no enum constraint — when the resident picks "Other" we persist
  * their exact ID name under this prefix instead of adding a new column. */
 export const OTHER_ID_TYPE_PREFIX = 'Other: ';

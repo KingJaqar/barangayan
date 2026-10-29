@@ -1,0 +1,803 @@
+<repomix><files>This section contains the contents of the repository&apos;s files.<file path="apps/admin-web/AGENTS.md">&lt;!-- BEGIN:nextjs-agent-rules --&gt;
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file&apos;s directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+&lt;!-- END:nextjs-agent-rules --&gt;</file><file path="apps/resident-android-mobile/src/app/(app)/home/index.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import type { Tables } from &apos;@barangayan/shared&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useRef, useState } from &apos;react&apos;;
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+
+import { Avatar } from &apos;@/components/avatar&apos;;
+import { DrrmTabIcon } from &apos;@/components/drrm-tab-icon&apos;;
+import { ServicesTabIcon } from &apos;@/components/services-tab-icon&apos;;
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { HomeAction } from &apos;@/components/home/home-action&apos;;
+import { RequestSummarySheet } from &apos;@/components/home/request-summary-sheet&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProfileCompletionBanner } from &apos;@/components/profile-completion-banner&apos;;
+import { PullRefreshControl, usePullRefresh } from &apos;@/components/pull-refresh&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { MaxContentWidth } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { homeGreeting, homeRequestSummary, homeTimestamp, type HomeRequest } from &apos;@/lib/home-request&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+
+type Announcement = Tables&lt;&apos;announcements&apos;&gt;;
+const QUICK_ACTIONS = [
+  { label: &apos;Documents&apos;, description: &apos;Request a document&apos;, href: &apos;/services&apos;, icon: &apos;clipboard-outline&apos;, tone: &apos;accent&apos;, foreground: &apos;onAccent&apos; },
+  { label: &apos;Report&apos;, description: &apos;Report an issue&apos;, href: &apos;/reports&apos;, icon: &apos;warning-outline&apos;, tone: &apos;warning&apos;, foreground: &apos;onWarning&apos; },
+  { label: &apos;Emergency&apos;, description: &apos;Emergency information&apos;, href: &apos;/drrm&apos;, icon: &apos;drrm&apos;, tone: &apos;danger&apos;, foreground: &apos;onDanger&apos; },
+  { label: &apos;Maps&apos;, description: &apos;Open barangay maps&apos;, href: &apos;/maps&apos;, icon: &apos;location-outline&apos;, tone: &apos;info&apos;, foreground: &apos;onInfo&apos; },
+  { label: &apos;Health&apos;, description: &apos;Open health services&apos;, href: &apos;/health&apos;, icon: &apos;heart-outline&apos;, tone: &apos;rose&apos;, foreground: &apos;onRose&apos; },
+] as const;
+
+export default function HomeScreen() {
+  const { session } = useAuth();
+  const userId = session?.user.id ?? null;
+  const { profile, refetch: refetchProfile } = useProfile();
+  const { resident } = useTheme();
+  const router = useRouter();
+  const bottomTabInset = useFloatingTabInset();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { width, fontScale } = useWindowDimensions();
+  const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 &lt; 64 * fontScale;
+  const [requestRetry, setRequestRetry] = useState(0);
+  const [announcementRetry, setAnnouncementRetry] = useState(0);
+  const [failedImage, setFailedImage] = useState&lt;string | null&gt;(null);
+  const requestKey = JSON.stringify([userId, requestRetry]);
+  const [requestResult, setRequestResult] = useState&lt;{ key: string; items: HomeRequest[]; error: string | null } | null&gt;(null);
+  const [newsResult, setNewsResult] = useState&lt;{ retry: number; item: Announcement | null; error: string | null } | null&gt;(null);
+  const [selectedRequest, setSelectedRequest] = useState&lt;HomeRequest | null&gt;(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const pendingTracking = useRef&lt;string | null&gt;(null);
+  const homeActive = useRef(true);
+  const requestTargets = useRef(new Map&lt;string, View&gt;());
+  // Pull-to-refresh re-runs each effect&apos;s own query under its current key; a failed pull keeps the cards on screen.
+  const pullNews = useRef&lt;(() =&gt; Promise&lt;void&gt;) | null&gt;(null);
+  const pullRequests = useRef&lt;(() =&gt; Promise&lt;void&gt;) | null&gt;(null);
+  const pull = usePullRefresh([() =&gt; pullNews.current?.(), () =&gt; pullRequests.current?.(), refetchProfile]);
+
+  useEffect(() =&gt; {
+    let active = true;
+    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
+    const fetchLatest = () =&gt; Promise.resolve(supabase.from(&apos;announcements&apos;).select(&apos;*&apos;).order(&apos;published_at&apos;, { ascending: false }).limit(1));
+    fetchLatest()
+      .then(({ data, error }) =&gt; {
+        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? &apos;Announcements could not be loaded. Please try again.&apos; : null });
+      }).catch(() =&gt; {
+        if (active) setNewsResult({ retry: announcementRetry, item: null, error: &apos;Announcements could not be loaded. Please try again.&apos; });
+      });
+    pullNews.current = () =&gt; fetchLatest().then(({ data, error }) =&gt; {
+      if (!error &amp;&amp; active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
+    }).catch(() =&gt; undefined);
+    return () =&gt; { active = false; pullNews.current = null; };
+  }, [announcementRetry]);
+
+  useEffect(() =&gt; {
+    if (!userId) return;
+    let active = true;
+    // Preserve the existing authenticated resident scope and latest-three limit.
+    const fetchRecent = () =&gt; Promise.resolve(supabase.from(&apos;service_requests&apos;).select(&apos;*, document_types(name)&apos;).eq(&apos;resident_id&apos;, userId)
+      .order(&apos;created_at&apos;, { ascending: false }).limit(3));
+    fetchRecent()
+      .then(({ data, error }) =&gt; {
+        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? &apos;Your requests could not be loaded. Please try again.&apos; : null });
+      }).catch(() =&gt; {
+        if (active) setRequestResult({ key: requestKey, items: [], error: &apos;Your requests could not be loaded. Please try again.&apos; });
+      });
+    pullRequests.current = () =&gt; fetchRecent().then(({ data, error }) =&gt; {
+      if (!error &amp;&amp; active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
+    }).catch(() =&gt; undefined);
+    return () =&gt; { active = false; pullRequests.current = null; };
+  }, [userId, requestKey]);
+
+  useEffect(() =&gt; {
+    pendingTracking.current = null;
+    setSheetOpen(false);
+    setSelectedRequest(null);
+  }, [userId]);
+
+  useFocusEffect(useCallback(() =&gt; {
+    homeActive.current = true;
+    const listener = AppState.addEventListener(&apos;change&apos;, state =&gt; {
+      homeActive.current = state === &apos;active&apos;;
+      if (state !== &apos;active&apos;) { pendingTracking.current = null; setSheetOpen(false); }
+    });
+    return () =&gt; { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
+  }, []));
+
+  const requests = requestResult?.key === requestKey ? requestResult : null;
+  const news = newsResult?.retry === announcementRetry ? newsResult : null;
+  const selected = selectedRequest?.resident_id === userId &amp;&amp; userId ? selectedRequest : null;
+  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || &apos;Resident&apos;;
+  const announcement = news?.item;
+  const announcementTone = announcement?.category === &apos;emergency&apos; ? resident.danger
+    : announcement?.category === &apos;health&apos; ? resident.rose : resident.accentText;
+
+  function closeSheet() { pendingTracking.current = null; setSheetOpen(false); }
+  function afterDismiss() {
+    const id = pendingTracking.current;
+    pendingTracking.current = null;
+    if (!homeActive.current) return;
+    // Keep tracking in Home&apos;s stack so Back removes it without changing Services.
+    if (id &amp;&amp; selected?.id === id) router.push(`/home/requests/${id}`);
+    else {
+      const target = selected ? requestTargets.current.get(selected.id) : null;
+      if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, &apos;focus&apos;); }
+    }
+  }
+
+  return &lt;SafeAreaView edges={[&apos;left&apos;, &apos;right&apos;]} style={[styles.safeArea, { backgroundColor: resident.card }]}&gt;
+    &lt;ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+      refreshControl={&lt;PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} /&gt;}&gt;
+      &lt;View style={styles.inset}&gt;&lt;ProfileCompletionBanner /&gt;&lt;/View&gt;
+      &lt;View style={styles.identitySection}&gt;
+        {userId ? &lt;View style={styles.identity}&gt;
+          &lt;Avatar fullName={profile?.full_name ?? &apos;Resident&apos;} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} /&gt;
+          &lt;View style={styles.locationGroup}&gt;
+            &lt;Ionicons name=&quot;location-outline&quot; size={16} color={resident.accentText} accessible={false} /&gt;
+            &lt;ThemedText style={[styles.location, { color: resident.text }]}&gt;{profile?.barangays?.name ?? &apos;Barangayan&apos;}&lt;/ThemedText&gt;
+          &lt;/View&gt;
+        &lt;/View&gt; : &lt;HomeAction reducedMotion={reducedMotion} hitSlop={4} accessibilityLabel=&quot;Log in&quot; onPress={() =&gt; router.push(&apos;/(auth)/login&apos;)} style={styles.identity}&gt;
+          &lt;Avatar icon=&quot;person&quot; size={36} foregroundColor={resident.onAccent} /&gt;
+          &lt;ThemedText style={[styles.location, { color: resident.text }]}&gt;Log in&lt;/ThemedText&gt;
+        &lt;/HomeAction&gt;}
+        &lt;ThemedText accessibilityRole=&quot;header&quot; style={[styles.greeting, { color: resident.text }]}&gt;{homeGreeting(new Date().getHours())}, {userId ? firstName : &apos;neighbor&apos;}&lt;/ThemedText&gt;
+      &lt;/View&gt;
+      &lt;View style={styles.quickActions}&gt;
+        {QUICK_ACTIONS.map(action =&gt; &lt;HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+          accessibilityLabel={action.label} accessibilityHint={action.description} onPress={() =&gt; router.push(action.href)} style={[styles.quickAction, compactActions &amp;&amp; styles.compactAction]}&gt;
+          &lt;View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === &apos;accent&apos; &amp;&amp; resident.accentNeedsOutline ? 1 : 0 }]}&gt;
+            {action.href === &apos;/services&apos;
+              ? &lt;ServicesTabIcon size={24} color={resident[action.foreground]} /&gt;
+              : action.icon === &apos;drrm&apos;
+              ? &lt;DrrmTabIcon size={24} color={resident[action.foreground]} /&gt;
+              : &lt;Ionicons name={action.icon} size={24} color={resident[action.foreground]} accessible={false} /&gt;}
+          &lt;/View&gt;
+          &lt;ThemedText style={[styles.quickLabel, { color: resident.text }]}&gt;{action.label}&lt;/ThemedText&gt;
+        &lt;/HomeAction&gt;)}
+      &lt;/View&gt;
+      &lt;View style={styles.section}&gt;
+        &lt;View style={styles.sectionHeader}&gt;
+          &lt;View style={styles.sectionHeading}&gt;
+            &lt;ThemedText accessibilityRole=&quot;header&quot; style={[styles.sectionTitle, { color: resident.text }]}&gt;Your requests&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.subtitle, { color: resident.muted }]}&gt;{requests &amp;&amp; !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? &apos;request&apos; : &apos;requests&apos;}` : &apos;Your latest requests&apos;}&lt;/ThemedText&gt;
+          &lt;/View&gt;
+          &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel=&quot;View all requests&quot; onPress={() =&gt; router.push(&apos;/services&apos;)} style={styles.seeAll}&gt;
+            &lt;ThemedText style={[styles.seeAllText, { color: resident.text }]}&gt;See all&lt;/ThemedText&gt;
+          &lt;/HomeAction&gt;
+        &lt;/View&gt;
+        {!userId ? &lt;View style={styles.inset}&gt;&lt;GuestPrompt label=&quot;Log in to see your requests.&quot; /&gt;&lt;/View&gt;
+          : !requests ? &lt;HomeListState loading label=&quot;Loading your requests…&quot; /&gt;
+          : requests.error ? &lt;HomeListState label={requests.error} onRetry={() =&gt; setRequestRetry(value =&gt; value + 1)} /&gt;
+          : requests.items.length === 0 ? &lt;HomeListState label=&quot;Your requests will appear here. Tap Documents to request a document.&quot; /&gt;
+          : &lt;ScrollableChevronRow label=&quot;requests&quot; snapToItems contentContainerStyle={styles.shelf}&gt;
+            {requests.items.map(request =&gt; {
+              const summary = homeRequestSummary(request);
+              const title = request.document_types?.name ?? &apos;Document request&apos;;
+              return &lt;HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target =&gt; { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+                accessibilityHint=&quot;Opens a request summary&quot; onPress={() =&gt; { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+                style={({ pressed }) =&gt; [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}&gt;
+                &lt;View style={styles.requestTop}&gt;
+                  &lt;View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}&gt;
+                    &lt;DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} /&gt;
+                  &lt;/View&gt;
+                  &lt;View style={styles.requestInfo}&gt;
+                    &lt;ThemedText style={[styles.cardTitle, { color: resident.text }]}&gt;{title}&lt;/ThemedText&gt;
+                    &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;#{request.reference_number}&lt;/ThemedText&gt;
+                  &lt;/View&gt;
+                &lt;/View&gt;
+                &lt;View style={styles.requestProgress}&gt;
+                  &lt;View style={styles.segments} accessible={false} importantForAccessibility=&quot;no-hide-descendants&quot;&gt;
+                    {summary.steps.map((step, index) =&gt; &lt;View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled &amp;&amp; index &lt;= summary.stepIndex ? resident.accentText : resident.border }]} /&gt;)}
+                  &lt;/View&gt;
+                  &lt;ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}&gt;{summary.statusLabel}&lt;/ThemedText&gt;
+                &lt;/View&gt;
+              &lt;/HomeAction&gt;;
+            })}
+          &lt;/ScrollableChevronRow&gt;}
+      &lt;/View&gt;
+      &lt;View style={styles.section}&gt;
+        &lt;View style={styles.sectionHeader}&gt;
+          &lt;View style={styles.sectionHeading}&gt;
+            &lt;ThemedText accessibilityRole=&quot;header&quot; style={[styles.sectionTitle, { color: resident.text }]}&gt;Around the barangay&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.subtitle, { color: resident.muted }]}&gt;Latest announcements&lt;/ThemedText&gt;
+          &lt;/View&gt;
+          &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel=&quot;View all announcements&quot; onPress={() =&gt; router.push(&apos;/announcements&apos;)} style={styles.seeAll}&gt;
+            &lt;ThemedText style={[styles.seeAllText, { color: resident.text }]}&gt;See all&lt;/ThemedText&gt;
+          &lt;/HomeAction&gt;
+        &lt;/View&gt;
+        {!news ? &lt;HomeListState loading label=&quot;Loading announcements…&quot; /&gt;
+          : news.error ? &lt;HomeListState label={news.error} onRetry={() =&gt; setAnnouncementRetry(value =&gt; value + 1)} /&gt;
+          : announcement ? &lt;View style={styles.shelf}&gt;
+            &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() =&gt; router.push({ pathname: &apos;/announcements&apos;, params: { announcementId: announcement.id } })}
+              style={({ pressed }) =&gt; [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}&gt;
+              &lt;View style={styles.newsMeta}&gt;
+                &lt;View style={styles.categoryGroup}&gt;
+                  &lt;View style={[styles.categoryDot, { backgroundColor: announcementTone }]} /&gt;
+                  &lt;ThemedText style={[styles.category, { color: announcementTone }]}&gt;{announcement.category}&lt;/ThemedText&gt;
+                &lt;/View&gt;
+                &lt;ThemedText style={[styles.newsDate, { color: resident.muted }]}&gt;{homeTimestamp(announcement.published_at)}&lt;/ThemedText&gt;
+              &lt;/View&gt;
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Announcement image unavailable.&lt;/ThemedText&gt;
+                : &lt;Image source={{ uri: announcement.image_url }} contentFit=&quot;cover&quot; style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() =&gt; setFailedImage(announcement.image_url)} /&gt;
+                : null}
+              &lt;ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}&gt;{announcement.title}&lt;/ThemedText&gt;
+            &lt;/HomeAction&gt;
+          &lt;/View&gt; : &lt;HomeListState label=&quot;No announcements yet.&quot; /&gt;}
+      &lt;/View&gt;
+    &lt;/ScrollView&gt;
+    {selected ? &lt;RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() =&gt; { pendingTracking.current = selected.id; setSheetOpen(false); }} /&gt; : null}
+  &lt;/SafeAreaView&gt;;
+}
+
+function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () =&gt; void }) {
+  const { resident } = useTheme();
+  return &lt;View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion=&quot;polite&quot; accessibilityState={{ busy: loading }}&gt;
+    {loading ? &lt;ActivityIndicator color={resident.accentText} /&gt; : null}
+    &lt;ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}&gt;{label}&lt;/ThemedText&gt;
+    {onRetry ? &lt;PrimaryButton presentation=&quot;resident&quot; variant=&quot;secondary&quot; label=&quot;Try again&quot; onPress={onRetry} /&gt; : null}
+  &lt;/View&gt;;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: &apos;100%&apos;, maxWidth: MaxContentWidth, alignSelf: &apos;center&apos; },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
+  identity: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 10, minHeight: 36 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: &apos;600&apos;, flexShrink: 1 },
+  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: &apos;800&apos;, letterSpacing: -0.7 },
+  quickActions: { flexDirection: &apos;row&apos;, flexWrap: &apos;wrap&apos;, paddingHorizontal: 12, marginBottom: 28 },
+  quickAction: { flex: 1, alignItems: &apos;center&apos;, paddingVertical: 4, gap: 6, minWidth: 0 },
+  compactAction: { flex: 0, width: &apos;33.333333%&apos; },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: &apos;600&apos;, textAlign: &apos;center&apos;, alignSelf: &apos;stretch&apos; },
+  section: { marginBottom: 28 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: &apos;row&apos;, alignItems: &apos;flex-end&apos;, gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: &apos;800&apos;, letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 44, justifyContent: &apos;flex-end&apos; },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: &apos;600&apos;, textDecorationLine: &apos;underline&apos; },
+  shelf: { flexDirection: &apos;row&apos;, paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: &apos;stretch&apos; },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: &apos;#000&apos;, shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: &apos;row&apos;, gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos;, flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: &apos;700&apos;, minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: &apos;auto&apos;, paddingTop: 10 },
+  segments: { flexDirection: &apos;row&apos;, gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: &apos;700&apos; },
+  announcementCard: { width: 232, maxWidth: &apos;100%&apos;, gap: 6 },
+  announcementImage: { width: &apos;100%&apos;, aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: &apos;600&apos; },
+  newsMeta: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, justifyContent: &apos;space-between&apos;, gap: 8 },
+  categoryGroup: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: &apos;right&apos;, flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: &apos;700&apos;, textTransform: &apos;capitalize&apos;, flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});</file><file path="apps/resident-android-mobile/src/app/(app)/services/index.tsx">import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { ProfileCompletionBanner } from &apos;@/components/profile-completion-banner&apos;;
+import { idVerificationMessages, idVerificationState } from &apos;@barangayan/shared&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from &apos;@/components/pull-refresh&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useLocalSearchParams, useRouter } from &apos;expo-router&apos;;
+import { useRef, useState } from &apos;react&apos;;
+import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+
+import { DocumentsList } from &apos;@/components/services/documents-list&apos;;
+import { LogsList } from &apos;@/components/services/logs-list&apos;;
+import { RequestsList } from &apos;@/components/services/requests-list&apos;;
+import { ServicesNewRequestButton } from &apos;@/components/services/services-list-presentation&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { SegmentedControl } from &apos;@/components/segmented-control&apos;;
+import { Spacing } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+
+type ServicesSegment = &apos;documents&apos; | &apos;requests&apos; | &apos;logs&apos;;
+
+const VALID_SEGMENTS: ServicesSegment[] = [&apos;documents&apos;, &apos;requests&apos;, &apos;logs&apos;];
+
+const TABS: { key: ServicesSegment; label: string }[] = [
+  { key: &apos;documents&apos;, label: &apos;Documents&apos; },
+  { key: &apos;requests&apos;, label: &apos;Requests&apos; },
+  { key: &apos;logs&apos;, label: &apos;Logs&apos; },
+];
+
+// Documents/Requests/Logs — confirmed against the design file. Guests only ever see
+// Documents (real, guest-readable data per the 0005 migration&apos;s anon RLS policy) —
+// Requests/Logs require a real identity, so the control that would reach them isn&apos;t
+// rendered at all for a guest, rather than being reachable-but-gated.
+export default function ServicesScreen() {
+  const { session } = useAuth();
+  const router = useRouter();
+  const { profile, refetch, isLoading, error } = useProfile();
+  const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const bottomTabInset = useFloatingTabInset();
+  const pull = usePullRefresh([refetch]);
+
+  const { segment: segmentParam } = useLocalSearchParams&lt;{ segment?: string }&gt;();
+  const initialSegment: ServicesSegment =
+    session &amp;&amp; segmentParam &amp;&amp; VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+      ? (segmentParam as ServicesSegment)
+      : &apos;documents&apos;;
+
+  const [segment, setSegment] = useState&lt;ServicesSegment&gt;(initialSegment);
+  const [verificationAnchor, setVerificationAnchor] = useState&lt;{ x: number; y: number } | null&gt;(null);
+  const verificationButton = useRef&lt;View&gt;(null);
+  const verified = Boolean(session &amp;&amp; !error &amp;&amp; idVerificationState(profile) === &apos;verified&apos;);
+  const verifiedIcon = verified ? (
+    &lt;Pressable ref={verificationButton} accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Show ID verification status&quot;
+      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
+      onPress={event =&gt; {
+        event.stopPropagation();
+        verificationButton.current?.measureInWindow((x, y, _width, height) =&gt; setVerificationAnchor({ x, y: y + height + 6 }));
+      }}&gt;
+      &lt;Image source={require(&apos;../../../../assets/images/valid-id-verified.png&apos;)} style={styles.verifiedIcon} resizeMode=&quot;contain&quot; accessible={false} /&gt;
+    &lt;/Pressable&gt;
+  ) : undefined;
+  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab =&gt; tab.key === &apos;documents&apos;
+    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
+
+  const statusBlock = (
+    &lt;&gt;
+      &lt;ProfileCompletionBanner /&gt;
+      {session &amp;&amp; (error || idVerificationState(profile) !== &apos;verified&apos;) ? (
+        &lt;View
+          style={[
+            styles.verifyCard,
+            { backgroundColor: theme.resident.card, borderColor: theme.resident.border },
+          ]}&gt;
+          &lt;View style={styles.verifyHeader}&gt;
+            &lt;View style={[styles.verifyIcon, { backgroundColor: theme.resident.accentSoft }]}&gt;
+              &lt;Ionicons name=&quot;shield-checkmark-outline&quot; size={24} color={theme.resident.accentText} /&gt;
+            &lt;/View&gt;
+            &lt;ThemedText accessibilityRole=&quot;alert&quot; style={styles.verifyText}&gt;
+              {isLoading ? &apos;Checking ID verification…&apos; : error ?? idVerificationMessages[idVerificationState(profile)]}
+            &lt;/ThemedText&gt;
+          &lt;/View&gt;
+          &lt;PrimaryButton label=&quot;Verify Now&quot; presentation=&quot;resident&quot; onPress={() =&gt; router.push(&apos;/settings/valid-id&apos;)} /&gt;
+          {error ? &lt;PrimaryButton label=&quot;Retry verification check&quot; presentation=&quot;resident&quot; variant=&quot;secondary&quot; onPress={refetch} /&gt; : null}
+        &lt;/View&gt;
+      ) : null}
+    &lt;/&gt;
+  );
+
+  return (
+    &lt;SafeAreaView edges={[&apos;left&apos;, &apos;right&apos;]} style={[styles.safeArea, { backgroundColor: theme.primary }]}&gt;
+      &lt;View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}&gt;
+        &lt;View style={styles.controls}&gt;
+          &lt;SegmentedControl segments={tabs} activeKey={segment} onChange={next =&gt; { setVerificationAnchor(null); setSegment(next); }}
+            variant=&quot;underline&quot; presentation=&quot;resident&quot; sizing={session ? &apos;equal&apos; : &apos;content&apos;} /&gt;
+        &lt;/View&gt;
+
+        {session &amp;&amp; segment === &apos;requests&apos; ? (
+          // RequestsList owns its scroller so its filter chips can stay pinned while the
+          // list scrolls; the banner/verification block scrolls away above them.
+          &lt;RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} /&gt;
+        ) : (
+          &lt;PullRefreshScope register={pull.register}&gt;
+            &lt;ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={&lt;PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} /&gt;}
+              contentContainerStyle={[styles.scrollContent, (!session || segment === &apos;documents&apos;) &amp;&amp; styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}&gt;
+              {statusBlock}
+              {!session || segment === &apos;documents&apos; ? &lt;DocumentsList /&gt; : null}
+              {session &amp;&amp; segment === &apos;logs&apos; &amp;&amp; &lt;LogsList /&gt;}
+            &lt;/ScrollView&gt;
+          &lt;/PullRefreshScope&gt;
+        )}
+
+      &lt;ServicesNewRequestButton visible={Boolean(session &amp;&amp; segment === &apos;requests&apos;)} bottom={bottomTabInset + 12} onPress={() =&gt; setSegment(&apos;documents&apos;)} /&gt;
+      &lt;/View&gt;
+      &lt;Modal transparent visible={verified &amp;&amp; verificationAnchor !== null} animationType=&quot;none&quot; statusBarTranslucent
+        onRequestClose={() =&gt; setVerificationAnchor(null)}&gt;
+        &lt;View style={StyleSheet.absoluteFill} accessibilityViewIsModal&gt;
+          &lt;Pressable style={StyleSheet.absoluteFill} accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Dismiss ID verification status&quot;
+            onPress={() =&gt; setVerificationAnchor(null)} /&gt;
+          {verificationAnchor ? &lt;View style={[styles.verificationPopover, {
+            top: verificationAnchor.y,
+            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
+            maxWidth: width - 32,
+            backgroundColor: theme.resident.card,
+            borderColor: theme.resident.border,
+          }]}&gt;
+            &lt;Ionicons name=&quot;shield-checkmark&quot; size={20} color={theme.resident.accentText} accessible={false} /&gt;
+            &lt;ThemedText type=&quot;smallBold&quot; style={{ color: theme.resident.accentText, flexShrink: 1 }}&gt;Valid ID verified&lt;/ThemedText&gt;
+          &lt;/View&gt; : null}
+        &lt;/View&gt;
+      &lt;/Modal&gt;
+    &lt;/SafeAreaView&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+
+  contentWrapper: {
+    flex: 1,
+  },
+  controls: {
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingTop: 20,
+  },
+  documentsScrollContent: {
+    paddingTop: 6,
+  },
+  verifiedIcon: { width: 22, height: 22 },
+  verificationButton: { width: 22, height: 22, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  verificationPopover: { position: &apos;absolute&apos;, flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 8, padding: 12,
+    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: &apos;#000&apos;, shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  verifyCard: {
+    marginHorizontal: 20,
+    marginBottom: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  verifyHeader: {
+    flexDirection: &apos;row&apos;,
+    alignItems: &apos;center&apos;,
+    gap: Spacing.three,
+  },
+  verifyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: &apos;center&apos;,
+    justifyContent: &apos;center&apos;,
+  },
+  verifyText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+  },
+});</file><file path="apps/resident-android-mobile/src/lib/emergency-cache.ts">import AsyncStorage from &apos;@react-native-async-storage/async-storage&apos;;
+
+const CACHE_PREFIX = &apos;emergency_cache_&apos;;
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+interface CacheEntry&lt;T&gt; {
+  data: T;
+  timestamp: number;
+}
+
+function keyFor(tag: string): string {
+  return `${CACHE_PREFIX}${tag}`;
+}
+
+export async function getCachedData&lt;T&gt;(tag: string): Promise&lt;T | null&gt; {
+  try {
+    const raw = await AsyncStorage.getItem(keyFor(tag));
+    if (!raw) return null;
+    const entry: CacheEntry&lt;T&gt; = JSON.parse(raw);
+    if (Date.now() - entry.timestamp &gt; CACHE_TTL_MS) {
+      await AsyncStorage.removeItem(keyFor(tag));
+      return null;
+    }
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function setCachedData&lt;T&gt;(tag: string, data: T): Promise&lt;void&gt; {
+  try {
+    const entry: CacheEntry&lt;T&gt; = { data, timestamp: Date.now() };
+    await AsyncStorage.setItem(keyFor(tag), JSON.stringify(entry));
+  } catch {
+    // Storage full or unavailable — non-blocking
+  }
+}</file><file path="apps/resident-android-mobile/src/lib/home-request.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+import { homeGreeting, homeRequestSummary, homeTimestamp } from &apos;./home-request&apos;;
+
+const request = { status: &apos;in_progress&apos;, payment_status: &apos;paid&apos;, created_at: &apos;2026-10-18T01:00:00Z&apos;, status_history: null };
+
+describe(&apos;Home loaded-data summary&apos;, () =&gt; {
+  it(&apos;uses the real submission date and leaves missing reached dates unavailable&apos;, () =&gt; {
+    const summary = homeRequestSummary(request);
+    expect(summary.statusLabel).toBe(&apos;Processing&apos;);
+    expect(summary.stepIndex).toBe(1);
+    expect(summary.steps.map(step =&gt; [step.date, step.detail])).toEqual([
+      [request.created_at, null], [null, &apos;Date unavailable&apos;], [null, &apos;Pending&apos;], [null, &apos;Pending&apos;],
+    ]);
+  });
+
+  it(&apos;accepts valid loaded history only and rejects malformed entries/dates&apos;, () =&gt; {
+    const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: &apos;in_progress&apos;, at: &apos;invalid&apos; },
+      { status: &apos;in_progress&apos;, at: &apos;2026-10-19T02:00:00Z&apos; }, { status: &apos;ready_for_pickup&apos;, at: null }] });
+    expect(summary.steps[1]?.date).toBe(&apos;2026-10-19T02:00:00Z&apos;);
+    expect(summary.steps[2]?.date).toBeNull();
+    expect(homeTimestamp(&apos;invalid&apos;)).toBe(&apos;Date unavailable&apos;);
+  });
+
+  it(&apos;does not claim a cancelled request completed all steps&apos;, () =&gt; {
+    const summary = homeRequestSummary({ ...request, status: &apos;cancelled&apos; });
+    expect(summary.cancelled).toBe(true);
+    expect(summary.stepIndex).toBe(-1);
+    expect(summary.statusLabel).toBe(&apos;Cancelled&apos;);
+    expect(summary.steps.map(step =&gt; step.reached)).toEqual([true, false, false, false]);
+    expect(summary.steps[1]?.detail).toBe(&apos;Not recorded&apos;);
+  });
+
+  it(&apos;leaves unknown status/date honest and preserves paid/waived distinctions&apos;, () =&gt; {
+    expect(homeRequestSummary({ ...request, status: &apos;unexpected&apos;, created_at: &apos;bad&apos; }).statusLabel).toBe(&apos;Status unavailable&apos;);
+    expect(homeRequestSummary({ ...request, status: &apos;unexpected&apos;, created_at: &apos;bad&apos; }).steps.every(step =&gt; !step.reached)).toBe(true);
+    for (const payment_status of [&apos;paid&apos;, &apos;waived&apos;]) {
+      expect(homeRequestSummary({ ...request, status: &apos;submitted&apos;, payment_status }).statusLabel).toBe(&apos;Submitted (Paid)&apos;);
+    }
+    expect(homeRequestSummary({ ...request, status: &apos;submitted&apos;, payment_status: &apos;unpaid&apos; }).statusLabel).toBe(&apos;Submitted (Pending Payment)&apos;);
+    expect(homeRequestSummary({ ...request, status: &apos;completed&apos; }).stepIndex).toBe(3);
+  });
+
+  it(&apos;changes greeting at noon and evening boundaries&apos;, () =&gt; {
+    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual([&apos;Good morning&apos;, &apos;Good morning&apos;, &apos;Good afternoon&apos;, &apos;Good afternoon&apos;, &apos;Good evening&apos;, &apos;Good evening&apos;]);
+  });
+});</file><file path="apps/resident-android-mobile/src/lib/home-request.ts">import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from &apos;@barangayan/shared&apos;;
+
+export type HomeRequest = Tables&lt;&apos;service_requests&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos;&gt; | null;
+};
+
+const STEPS = [
+  { status: &apos;submitted&apos;, label: &apos;Submitted&apos; },
+  { status: &apos;in_progress&apos;, label: &apos;Processing&apos; },
+  { status: &apos;ready_for_pickup&apos;, label: &apos;Ready for pickup&apos; },
+  { status: &apos;completed&apos;, label: &apos;Completed&apos; },
+] as const;
+
+function validDate(value: unknown): string | null {
+  return typeof value === &apos;string&apos; &amp;&amp; Number.isFinite(Date.parse(value)) ? value : null;
+}
+
+/** Home has no processing-target join. Never infer dates or estimates from a status. */
+export function homeRequestSummary(request: Pick&lt;HomeRequest, &apos;status&apos; | &apos;payment_status&apos; | &apos;created_at&apos; | &apos;status_history&apos;&gt;) {
+  const stepIndex = STEPS.findIndex(step =&gt; step.status === request.status);
+  const cancelled = request.status === &apos;cancelled&apos;;
+  const history = Array.isArray(request.status_history) ? request.status_history : [];
+  const statusLabel = stepIndex &lt; 0 &amp;&amp; !cancelled ? &apos;Status unavailable&apos;
+    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
+  const steps = STEPS.map((step, index) =&gt; {
+    const entry = history.find(item =&gt; item !== null &amp;&amp; typeof item === &apos;object&apos; &amp;&amp; !Array.isArray(item)
+      &amp;&amp; item.status === step.status &amp;&amp; validDate(item.at));
+    const recordedAt = entry !== null &amp;&amp; typeof entry === &apos;object&apos; &amp;&amp; !Array.isArray(entry) ? validDate(entry.at) : null;
+    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+    const reached = Boolean(date) || (stepIndex &gt;= index &amp;&amp; !cancelled);
+    return { ...step, date, reached, current: index === stepIndex,
+      detail: date ? null : reached ? &apos;Date unavailable&apos; : cancelled || stepIndex &lt; 0 ? &apos;Not recorded&apos; : &apos;Pending&apos; };
+  });
+  return { stepIndex, cancelled, statusLabel, steps };
+}
+
+export function homeGreeting(hour: number) {
+  return hour &lt; 12 ? &apos;Good morning&apos; : hour &lt; 18 ? &apos;Good afternoon&apos; : &apos;Good evening&apos;;
+}
+
+export function homeTimestamp(value: string): string {
+  if (!validDate(value)) return &apos;Date unavailable&apos;;
+  return new Intl.DateTimeFormat(&apos;en-PH&apos;, { dateStyle: &apos;medium&apos;, timeStyle: &apos;short&apos; }).format(new Date(value));
+}</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;,
+    &quot;test:navigation&quot;: &quot;node tests/navigation-regressions.mjs&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;
+export default defineConfig({ test: { environment: &apos;node&apos;, include: [&apos;src/lib/*.test.ts&apos;] } });</file><file path="packages/shared/src/schemas/announcement.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+
+import { announcementSchema } from &apos;./announcement&apos;;
+
+describe(&apos;announcementSchema&apos;, () =&gt; {
+  it(&apos;parses a valid announcement&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Road Closure Notice&apos;,
+      body: &apos;Main street will be closed for repairs.&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;rejects a missing title&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;&apos;,
+      body: &apos;Body text&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects a missing body&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects an invalid category&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;not-a-real-category&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects an invalid image_url&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      image_url: &apos;not-a-url&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;accepts an empty string image_url&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      image_url: &apos;&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;accepts a missing detailed_description&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;accepts a valid detailed_description&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      detailed_description: &apos;A much longer write-up with the full context residents need.&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;rejects a detailed_description over 5000 characters&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      detailed_description: &apos;a&apos;.repeat(5001),
+    });
+    expect(result.success).toBe(false);
+  });
+});</file><file path="packages/shared/src/schemas/announcement.ts">import { z } from &apos;zod&apos;;
+
+export const announcementSchema = z.object({
+  title:                z.string().min(1, &apos;Title is required&apos;).max(200),
+  body:                 z.string().min(1, &apos;Body is required&apos;).max(2000),
+  // Expanded write-up shown in the resident app&apos;s Announcement Modal. Optional — falls
+  // back to `body` in the UI when omitted.
+  detailed_description: z.string().max(5000, &apos;Detailed description is too long&apos;).optional().or(z.literal(&apos;&apos;)),
+  category:             z.enum([&apos;general&apos;, &apos;emergency&apos;, &apos;health&apos;, &apos;events&apos;]),
+  image_url:            z.string().url(&apos;Must be a valid URL&apos;).optional().or(z.literal(&apos;&apos;)),
+  published_at:         z.string().datetime().optional(), // ISO string; defaults to now() on insert
+});
+
+export type AnnouncementFormValues = z.infer&lt;typeof announcementSchema&gt;;</file><file path="packages/shared/package.json">{
+  &quot;name&quot;: &quot;@barangayan/shared&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;./src/index.ts&quot;,
+  &quot;types&quot;: &quot;./src/index.ts&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;build:routing-pack&quot;: &quot;node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@supabase/supabase-js&quot;: &quot;^2.45.0&quot;,
+    &quot;zod&quot;: &quot;^3.23.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;typescript&quot;: &quot;~6.0.3&quot;,
+    &quot;@types/geojson&quot;: &quot;^7946.0.14&quot;,
+    &quot;vitest&quot;: &quot;^3.0.0&quot;
+  }
+}</file><file path="AGENTS.md"></file></files></repomix>

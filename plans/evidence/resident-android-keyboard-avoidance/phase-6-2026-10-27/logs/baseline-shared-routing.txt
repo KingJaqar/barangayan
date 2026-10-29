@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+·····················································································
+
+ Test Files  3 passed (3)
+      Tests  85 passed (85)
+   Start at  10:20:59
+   Duration  2.07s (transform 213ms, setup 0ms, collect 324ms, tests 242ms, environment 1ms, prepare 651ms)
+

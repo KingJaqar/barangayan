@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-27T01:37:34.688Z",
+  "size": "Physical size: 1080x1920",
+  "density": "Physical density: 480",
+  "font": "1.0",
+  "navigation": "0",
+  "overlays": [
+    "[ ] com.android.internal.systemui.navbar.gestural_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.threebutton\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_extra_wide_back\r",
+    "[ ] com.android.internal.systemui.navbar.gestural\r",
+    "[ ] com.android.internal.systemui.navbar.gestural_narrow_back\r"
+  ],
+  "bootId": "c3f16b9f-13e5-4bf4-97fe-0d88175d2b45",
+  "hardwareKeys": "1",
+  "nativePid": "27670",
+  "forwardList": "",
+  "reverseList": "host-15 tcp:8081 tcp:8081",
+  "imeHidden": true,
+  "home": true,
+  "gboardRestored": true,
+  "finalObservedImeTop": 1167,
+  "restored": true,
+  "existingMetroBridgeRetained": true,
+  "readers": "See final-reader-audit.json"
+}

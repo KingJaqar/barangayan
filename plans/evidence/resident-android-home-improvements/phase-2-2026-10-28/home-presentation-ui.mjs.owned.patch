@@ -1,0 +1,67 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs" b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+index 170ef55c..76b70477 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs"
++++ b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+@@ -144,7 +144,7 @@ try {
+   await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+   await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+   await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.').waitFor();
++  await page.getByText('No requests yet').waitFor();
+   assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 0, 'a pull started for the previous account never writes after a switch');
+   await page.evaluate(() => { window.fixture.hold = true; });
+   await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+@@ -188,9 +188,10 @@ try {
+   assert.ok(await page.evaluate(() => window.fixture.focusEvents.length > 1), 'Close returns accessibility focus to a request');
+   passed.push('Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries');
+ 
+-  for (const [name,route] of [['Documents','/services'],['Report','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests','/services'],['View all announcements','/announcements']]) {
++  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0,'Home has no greeting');
++  for (const [name,route] of [['Services',{pathname:'/services',params:{segment:'documents'}}],['Reports','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests',{pathname:'/services',params:{segment:'requests'}}],['View all announcements','/announcements']]) {
+     await page.getByRole('button', { name, exact: true }).click();
+-    assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), route);
++    assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), route);
+   }
+   await page.getByRole('button', { name: /^Read announcement:/ }).click();
+   assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), {pathname:'/announcements',params:{announcementId:'news'}});
+@@ -259,12 +260,21 @@ try {
+   await page.evaluate(() => { window.fixture.needsCompletion=true;window.renderHome(); });
+   await page.getByText(/Complete your profile before requesting/).waitFor();
+   await page.evaluate(() => {window.fixture.requests=[];window.fixture.announcements=[];window.resetHome();});
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   await page.getByText('No announcements yet.',{exact:true}).waitFor();
++  await page.getByRole('button',{name:'Request a document',exact:true}).click();
++  assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)),{pathname:'/services',params:{segment:'documents'}});
+   assert.equal(await right().count(), 0);
+   await page.evaluate(() => {window.fixture.session=null;window.resetHome();});
+   await page.getByText('Log in to see your requests.',{exact:true}).waitFor();
+   assert.equal(await cards().count(), 0);
++  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0);
++  for (const login of await page.getByRole('button',{name:'Log in',exact:true}).all()) {
++    await login.click();
++    assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)),'/(auth)/login');
++    const bounds=await login.boundingBox();
++    assert.ok(bounds.width>=48 && bounds.height>=48,'Both Home sign-in controls retain 48dp targets');
++  }
+   passed.push('Profile-completion, authenticated empty and guest states');
+ 
+   await page.evaluate(() => {window.fixture.session={user:{id:'synthetic-resident'}};window.fixture.fail={service_requests:true,announcements:true};window.resetHome();});
+@@ -275,7 +285,7 @@ try {
+   await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+   await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+   await page.getByText('No announcements yet.',{exact:true}).waitFor();
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   await page.evaluate(() => {window.fixture.reject={service_requests:true};window.resetHome();});
+   await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).waitFor();
+   passed.push('Visible database/transport failures and explicit independent retry recovery');
+@@ -285,7 +295,7 @@ try {
+   await page.evaluate(() => {window.fixture.session={user:{id:'different-resident'}};window.renderHome();});
+   await page.waitForFunction(() => window.fixture.waiting.length===3);
+   await page.evaluate(() => {window.fixture.hold=false;window.fixture.waiting.splice(0).forEach(resolve=>resolve());});
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   assert.equal(await page.getByText('Stale private request',{exact:true}).count(),0);
+   await page.evaluate(() => {window.fixture.focused=false;window.renderHome();});
+   await page.waitForFunction(() => window.fixture.listeners.size===0);

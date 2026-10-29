@@ -1,0 +1,34 @@
+{
+  "db": "resident_home_p4_20261028",
+  "server": "PostgreSQL17.6/PostgREST14.5",
+  "source": "Exact loadAnnouncements body from current Home hook, transpiled only; actual supabase-js2.112.1",
+  "results": [
+    {
+      "name": "owner",
+      "alertIds": [
+        1,
+        2
+      ],
+      "newsId": "e4000000-0000-4000-8000-000000000001",
+      "refreshedAt": "2026-10-28T13:15:36.831Z"
+    },
+    {
+      "name": "other",
+      "alertIds": [],
+      "refreshedAt": "2026-10-28T13:15:36.857Z"
+    },
+    {
+      "name": "guest",
+      "alertIds": [
+        1,
+        2,
+        7
+      ],
+      "newsId": "e4000000-0000-4000-8000-000000000001",
+      "refreshedAt": "2026-10-28T13:15:36.876Z"
+    }
+  ],
+  "before": "0|141|141\n",
+  "after": "0|141|141\n",
+  "readAndEventCountsUnchanged": true
+}

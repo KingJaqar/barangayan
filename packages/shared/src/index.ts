@@ -52,6 +52,7 @@ export * from './lib/format';
 export * from './lib/request-status';
 export * from './lib/service-tracking';
 export * from './lib/service-catalog';
+export * from './lib/home-request-priority';
 export * from './lib/resident-submission';
 export * from './lib/service-request-validation';
 export * from './lib/agency-sla';

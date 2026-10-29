@@ -1,0 +1,118 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style.<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/constants/resident-theme.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      constants/
+        resident-theme.ts</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/constants/resident-theme.ts">type RGB = readonly [number, number, number];
+
+function rgb(hex: string): RGB {
+  return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+}
+
+function mix(color: string, surface: string, amount: number): string {
+  const source = rgb(color);
+  return `#${rgb(surface).map((channel, index) =&gt; Math.round(source[index] + (channel - source[index]) * amount).toString(16).padStart(2, &apos;0&apos;)).join(&apos;&apos;)}`;
+}
+
+function luminance(hex: string): number {
+  const [red, green, blue] = rgb(hex).map((channel) =&gt; {
+    const value = channel / 255;
+    return value &lt;= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return red * 0.2126 + green * 0.7152 + blue * 0.0722;
+}
+
+function contrast(a: string, b: string): number {
+  const first = luminance(a);
+  const second = luminance(b);
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+}
+
+function foreground(background: string): string {
+  return contrast(&apos;#000000&apos;, background) &gt; contrast(&apos;#ffffff&apos;, background) ? &apos;#000000&apos; : &apos;#ffffff&apos;;
+}
+
+function readable(color: string, surface: string, text: string): string {
+  if (contrast(color, surface) &gt;= 4.5) return color;
+  let low = 0;
+  let high = 1;
+  for (let step = 0; step &lt; 16; step += 1) {
+    const middle = (low + high) / 2;
+    if (contrast(mix(color, text, middle), surface) &gt;= 4.5) high = middle;
+    else low = middle;
+  }
+  return mix(color, text, high);
+}
+
+/** Opt-in resident roles. Saved preferences and the legacy palette stay unchanged. */
+export function getResidentTheme(mode: &apos;light&apos; | &apos;dark&apos;, selectedAccent: string) {
+  const dark = mode === &apos;dark&apos;;
+  const card = dark ? &apos;#17191C&apos; : &apos;#FFFFFF&apos;;
+  const surface = dark ? &apos;#24272B&apos; : &apos;#F4F4F4&apos;;
+  const text = dark ? &apos;#F5F5F5&apos; : &apos;#222222&apos;;
+  const muted = dark ? &apos;#BDC0C5&apos; : &apos;#6A6A6A&apos;;
+  const accent = /^#[\da-f]{6}$/i.test(selectedAccent) ? selectedAccent : &apos;#0F6E5B&apos;;
+  const accentSoft = mix(accent, card, dark ? 0.82 : 0.90);
+  const accentPressed = mix(accent, &apos;#000000&apos;, 0.22);
+  const tone = (color: string) =&gt; {
+    const soft = mix(color, card, 0.90);
+    return { ink: readable(readable(readable(color, card, text), surface, text), soft, text), soft };
+  };
+  const danger = tone(&apos;#D93A3A&apos;);
+  const dangerFill = &apos;#8F1D1D&apos;;
+  const success = tone(&apos;#0F6E5B&apos;);
+  const warning = tone(&apos;#B86E00&apos;);
+  const info = tone(&apos;#2563EB&apos;);
+  const rose = tone(&apos;#C2416B&apos;);
+  const callFill = &apos;#E8930C&apos;;
+  return {
+    card, surface, text, muted, accent, accentSoft, accentPressed,
+    // Optical media surfaces preserve the original evidence image in either theme.
+    mediaBackdrop: &apos;#000000&apos;, mediaForeground: &apos;#FFFFFF&apos;, mediaScrim: &apos;rgba(0,0,0,0.55)&apos;,
+    onAccent: foreground(accent),
+    accentNeedsOutline: contrast(accent, card) &lt; 3,
+    onAccentPressed: foreground(accentPressed),
+    accentText: readable(readable(readable(accent, card, text), surface, text), accentSoft, text),
+    border: dark ? &apos;#34373C&apos; : &apos;#EBEBEB&apos;,
+    controlBorder: dark ? &apos;#868C95&apos; : &apos;#767676&apos;,
+    pressed: dark ? &apos;#30343A&apos; : &apos;#EBEBEB&apos;,
+    scrim: &apos;rgba(0,0,0,0.40)&apos;,
+    danger: danger.ink, dangerSoft: danger.soft, onDanger: foreground(danger.ink),
+    dangerFill, dangerFillPressed: &apos;#D93A3A&apos;, onDangerFill: foreground(dangerFill),
+    dangerFillNeedsOutline: contrast(dangerFill, card) &lt; 3,
+    success: success.ink, successSoft: success.soft,
+    warning: warning.ink, warningSoft: warning.soft,
+    info: info.ink, infoSoft: info.soft,
+    onWarning: foreground(warning.ink), onInfo: foreground(info.ink),
+    callFill, onCallFill: foreground(callFill), callNeedsOutline: contrast(callFill, card) &lt; 3,
+    rose: rose.ink, onRose: foreground(rose.ink),
+  };
+}
+
+export const ResidentLayout = {
+  screenPadding: 20,
+  panelRadius: 16,
+  controlRadius: 12,
+  overlayRadius: 24,
+  rowPadding: 16,
+  controlHeight: 48,
+} as const;</file></files></repomix>

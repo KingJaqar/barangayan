@@ -15,6 +15,14 @@ describe('root and callback bind the same server setup routing contract', () => 
     const route=residentSetupRoute({session:'authenticated',intent:'sign_in',guest:true,setup:{state:'ready',status:email}});
     expect(route).toEqual({destination:'details',required:true,returnTo:'home'});
   });
+  it('holds an unsubmitted email-origin resident on account setup for proof of residency, and releases them once submitted', () => {
+    const pending = {...email,profileComplete:true,idSubmitted:false};
+    const held = decide(pending);
+    expect(held.route).toEqual({destination:'id_verification',required:true,returnTo:'home'});
+    expect(held).toMatchObject({allowed:false,destination:'/account-setup'});
+    expect(decide({...pending,idSubmitted:true}).route.destination).toBe('password');
+    expect(decide({...pending,registrationOrigin:'google',hasGoogleIdentity:true}).destination).toBe('/home');
+  });
   it('preserves unknown credentials and supplies existing Settings management only for eligible accounts', () => {
     expect(decide({...email,profileComplete:true,passwordSet:null}).allowed).toBe(false);
     expect(decide({...email,registrationOrigin:'legacy',passwordSet:null},'settings_password').destination).toBe('/settings/change-password');

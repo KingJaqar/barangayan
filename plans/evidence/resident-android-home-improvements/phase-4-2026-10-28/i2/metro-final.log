@@ -1,0 +1,241 @@
+Starting project at C:\Users\User\barangayan\.home-i2-native
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8099
+
+Logs for your project will appear below.
+| (node:3492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:3492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Android Bundled 15711ms entry.jsx (2700 modules)
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./account-setup.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./complete-profile.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./emergency-centers.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/announcements.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/drrm.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/explore.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/search.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/health/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/health/register.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/emergency-info/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/emergency-info/scan.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/requests/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/hotline-directory.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/preparedness-guide.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/new.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/[incidentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/[documentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/success.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/pickup/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/qrph/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/request/[documentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/requests/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/about.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/change-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/email-verification.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/location-verification.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/profile.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/terms-privacy.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/valid-id.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/help/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/help/[articleId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/auth-choice.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/completion.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/forgot-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/login.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/otp.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/personalization.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/register.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/reset-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/value-prop.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/welcome.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./auth/callback.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./account-setup.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./complete-profile.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./emergency-centers.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/announcements.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/drrm.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/explore.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/search.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/health/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/health/register.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/emergency-info/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/emergency-info/scan.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/home/requests/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/hotline-directory.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/maps/preparedness-guide.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/new.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/reports/[incidentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/[documentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/success.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/pickup/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/payment/qrph/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/request/[documentId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/services/requests/[requestId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/about.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/change-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/email-verification.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/location-verification.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/profile.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/terms-privacy.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/valid-id.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/help/index.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(app)/settings/help/[articleId].tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/_layout.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/auth-choice.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/completion.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/forgot-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/login.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/otp.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/personalization.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/register.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/reset-password.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/value-prop.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./(auth)/welcome.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ WARN  Route "./auth/callback.tsx" is missing the required default export. Ensure a React component is exported as default.
+ ERROR  [Error: Missing EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY — copy apps/resident-android-mobile/.env.example to apps/resident-android-mobile/.env and fill in your Supabase project values.]
+ ERROR  [TypeError: Cannot read property 'ErrorBoundary' of undefined]

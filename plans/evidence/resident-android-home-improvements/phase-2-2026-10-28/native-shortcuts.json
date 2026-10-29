@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Reports",
+    "title": "Reports",
+    "reached": true,
+    "backToHome": true
+  },
+  {
+    "label": "Emergency",
+    "title": "Emergency & DRRM Info",
+    "reached": false,
+    "backToHome": true
+  },
+  {
+    "label": "Maps",
+    "title": "Maps",
+    "reached": true,
+    "backToHome": true
+  },
+  {
+    "label": "Health",
+    "title": "Health",
+    "reached": true,
+    "backToHome": true
+  }
+]

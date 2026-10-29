@@ -1,0 +1,313 @@
+{
+  "checked": "2026-10-29T07:25:02.069Z",
+  "identities": [
+    {
+      "path": "packages/shared/src/index.ts",
+      "expected": "310accdfeb574e12868d4b669b4077eeed7bb48b00b626ab80d2589b3f18e02c",
+      "actual": "310accdfeb574e12868d4b669b4077eeed7bb48b00b626ab80d2589b3f18e02c",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "expected": "409508f3430bb275c76e39a35299fce340153b60741a08521d77283950e534d9",
+      "actual": "409508f3430bb275c76e39a35299fce340153b60741a08521d77283950e534d9",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.ts",
+      "expected": "3d7ee3da8487d600006c2f86919fea57b3f144121121809184a676f670f61944",
+      "actual": "3d7ee3da8487d600006c2f86919fea57b3f144121121809184a676f670f61944",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.test.ts",
+      "expected": "341d8c78ce55ccb63d10f935ed35f2576897a702cc927b6e1df56f498ce6dde5",
+      "actual": "341d8c78ce55ccb63d10f935ed35f2576897a702cc927b6e1df56f498ce6dde5",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.ts",
+      "expected": "345751cb4c5c305f7dba45285dfa76bb97879ac1ff9af79cba865f088b2be6aa",
+      "actual": "345751cb4c5c305f7dba45285dfa76bb97879ac1ff9af79cba865f088b2be6aa",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.test.ts",
+      "expected": "1cf9e6ab4d790c7dc228c98197ceff14896c82502579d87f19ea1b599480bd87",
+      "actual": "1cf9e6ab4d790c7dc228c98197ceff14896c82502579d87f19ea1b599480bd87",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+      "expected": "824650a286813cbdc6c671017d72a5ac9e84bf288fcb81f504b43b6ad21aebb5",
+      "actual": "824650a286813cbdc6c671017d72a5ac9e84bf288fcb81f504b43b6ad21aebb5",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+      "expected": "cfe7f54c462dbf3686fb407005ee6cb2470322baa5af5743369e49596f78566c",
+      "actual": "cfe7f54c462dbf3686fb407005ee6cb2470322baa5af5743369e49596f78566c",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/src/lib/announcement-datetime.ts",
+      "expected": "aed68c40505f02a25f832aa7741cb86194f407a7681905d46b1ab54353b49fba",
+      "actual": "aed68c40505f02a25f832aa7741cb86194f407a7681905d46b1ab54353b49fba",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/announcement-datetime.test.ts",
+      "expected": "e8590bf12c171c991e9de7b1b5fdc826cd23fbea2b6aa627bda9e7a247cec0d3",
+      "actual": "e8590bf12c171c991e9de7b1b5fdc826cd23fbea2b6aa627bda9e7a247cec0d3",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/tests/content-workspace/announcement-lifetime.jsx",
+      "expected": "2f1c58cf9f70ff8a7dbe6ca8b289ab21754d87493894eae1102e71ee9f403086",
+      "actual": "2f1c58cf9f70ff8a7dbe6ca8b289ab21754d87493894eae1102e71ee9f403086",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "apps/admin-web/tests/content-workspace/announcement-lifetime.mjs",
+      "expected": "1531f6c963946028c499166f09974faef62585d9a9f8892cf556c3267fa424a9",
+      "actual": "1531f6c963946028c499166f09974faef62585d9a9f8892cf556c3267fa424a9",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+      "expected": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a",
+      "actual": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "supabase/migrations/0149_announcement_alert_expiry.sql",
+      "expected": "818a85fa83feae27ca7729cd8e4b808a63544d7e174e086a75341e97e7a87031",
+      "actual": "818a85fa83feae27ca7729cd8e4b808a63544d7e174e086a75341e97e7a87031",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "supabase/tests/resident_home_requests.mjs",
+      "expected": "0448a276bd4873338372c8d67b4f5e655ff0bac301c9f87afc5ddffec2637dac",
+      "actual": "0448a276bd4873338372c8d67b4f5e655ff0bac301c9f87afc5ddffec2637dac",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "supabase/tests/announcement_alert_lifetime.mjs",
+      "expected": "131b3cc0172cb7d7b64f632d96af675c3c4cea2456870e1a1ca400d41d04e3f1",
+      "actual": "131b3cc0172cb7d7b64f632d96af675c3c4cea2456870e1a1ca400d41d04e3f1",
+      "unchanged": true,
+      "evidence": "phase-1-2026-10-28/verification-final.json"
+    },
+    {
+      "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+      "expected": "2f1028b893116f505d3d7093a0a5881ebe97f981884743323cfc3ea4bff12eac",
+      "actual": "fdf5dce24df0dab0f5ff9502ec4cb70e2df2f6814b1354cfb6c50e7a8051fdf3",
+      "unchanged": false,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+      "expected": "f85fc605648ce85aa32a9b012f83f3ce427dac66d1010c3d9d7d73d5bb41cf11",
+      "actual": "be8569f63bf0664d3f81d89eff2773fe79d73a7d542091e55e954bd29bc5dcef",
+      "unchanged": false,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "AGENTS.md",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "CLAUDE.md",
+      "expected": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "actual": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "expected": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "actual": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "expected": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef",
+      "actual": "75b1d83ef57b3ba556fb8d30249d065e0f04280e60a31925ee83e564e04cdfef",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "expected": "a0103ee2c2fe045bf28a37e6b0d6450f8bec2c88cfa6c47899190d8f8d1f9136",
+      "actual": "a0103ee2c2fe045bf28a37e6b0d6450f8bec2c88cfa6c47899190d8f8d1f9136",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "expected": "ef0aa0664dbd7f143b88f94b622063e8c2d1583f58b9b9e5400d64fd5b28f0b5",
+      "actual": "ef0aa0664dbd7f143b88f94b622063e8c2d1583f58b9b9e5400d64fd5b28f0b5",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+      "expected": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+      "actual": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/guest-prompt.tsx",
+      "expected": "ccb2b4c7b52208471d9ea1bd85109d694f471f103edb4c563cc0143d077ef76e",
+      "actual": "ccb2b4c7b52208471d9ea1bd85109d694f471f103edb4c563cc0143d077ef76e",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+      "expected": "eef671aed57cb3269c37b8b7b112169606112e1c8761c555de3b252e801143fa",
+      "actual": "eef671aed57cb3269c37b8b7b112169606112e1c8761c555de3b252e801143fa",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "expected": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b",
+      "actual": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "expected": "229458071b5d93347dbbe35c0e10ec442cf150e89c7137681aa642c7ba8bcd38",
+      "actual": "229458071b5d93347dbbe35c0e10ec442cf150e89c7137681aa642c7ba8bcd38",
+      "unchanged": true,
+      "evidence": "phase-3-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "expected": "ecdaf99581cfce237727cba880653190c58c191f88c2ad35ecebee62964859e4",
+      "actual": "ecdaf99581cfce237727cba880653190c58c191f88c2ad35ecebee62964859e4",
+      "unchanged": true,
+      "evidence": "phase-3-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "expected": "0de66d8405ee84399cf80a3d4a49146e4a533729e31e5f38f7637866aa68f109",
+      "actual": "0de66d8405ee84399cf80a3d4a49146e4a533729e31e5f38f7637866aa68f109",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "package-lock.json",
+      "expected": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "actual": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/dependency-identities.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "expected": "fe4246f81a969e0e0d6779c87e34bfac5a11a462ac175acc5f3ee362de958369",
+      "actual": "fe4246f81a969e0e0d6779c87e34bfac5a11a462ac175acc5f3ee362de958369",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs",
+      "expected": "6fb3c49de63b28d2a42fefce94d28b743a40e25db4f35f6b46d183882833b5f9",
+      "actual": "6fb3c49de63b28d2a42fefce94d28b743a40e25db4f35f6b46d183882833b5f9",
+      "unchanged": true,
+      "evidence": "phase-2-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "expected": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8",
+      "actual": "9ed868b37aa3c8adbb2dc27d4bf8b86205ff339a1f8d17b951f385b6150846f8",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "expected": "dd8634d3f9023fbef9349dba1e3409caed939c523e8f36f30b7128234c9aae88",
+      "actual": "dd8634d3f9023fbef9349dba1e3409caed939c523e8f36f30b7128234c9aae88",
+      "unchanged": true,
+      "evidence": "phase-3-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "expected": "09dc2ec001ea74e10fcbd7108b48c1d0e943879557700092d0ba85918f781cb1",
+      "actual": "09dc2ec001ea74e10fcbd7108b48c1d0e943879557700092d0ba85918f781cb1",
+      "unchanged": true,
+      "evidence": "phase-3-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+      "expected": "f5503bcfad64c1583baa039c96adc4ecdf81a4c75727a17835d21350390f408d",
+      "actual": "f5503bcfad64c1583baa039c96adc4ecdf81a4c75727a17835d21350390f408d",
+      "unchanged": true,
+      "evidence": "phase-3-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-home-announcements.ts",
+      "expected": "44afcb1c3fac45efd7ee99df9dd085395ef57629ca963d5d36fc083210981955",
+      "actual": "44afcb1c3fac45efd7ee99df9dd085395ef57629ca963d5d36fc083210981955",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-advisory-expired.ts",
+      "expected": "6d5fd58b43e74a577bc464174bb1eb8151842782905f39e3f2cea66223239bc0",
+      "actual": "6d5fd58b43e74a577bc464174bb1eb8151842782905f39e3f2cea66223239bc0",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-announcement.ts",
+      "expected": "e23f872f4ef5eada364c7893b5be319326352313fef577707760e02adb257e72",
+      "actual": "e23f872f4ef5eada364c7893b5be319326352313fef577707760e02adb257e72",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-announcement.test.ts",
+      "expected": "65213e2bc72e44081f8afa589de76dafe0a03a4543bfb0eadf7ee2cb8051ef4f",
+      "actual": "65213e2bc72e44081f8afa589de76dafe0a03a4543bfb0eadf7ee2cb8051ef4f",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcement-card.tsx",
+      "expected": "fc0af6eeb846ef08668d59e7d56a77fd2525a60d55ca1ff7a58137c898d27748",
+      "actual": "fc0af6eeb846ef08668d59e7d56a77fd2525a60d55ca1ff7a58137c898d27748",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+      "expected": "8ac1c8ffc0679c34a94feaa1bcc06bbce0e16b2296bc2ad023dd5c8afcf39187",
+      "actual": "8ac1c8ffc0679c34a94feaa1bcc06bbce0e16b2296bc2ad023dd5c8afcf39187",
+      "unchanged": true,
+      "evidence": "phase-4-2026-10-28/source-final.json"
+    }
+  ]
+}

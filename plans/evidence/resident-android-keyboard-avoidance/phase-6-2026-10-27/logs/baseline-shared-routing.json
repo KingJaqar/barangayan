@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "src/lib/evacuation-routing.test.ts",
+    "src/lib/connected-route-client.test.ts",
+    "src/lib/agency-sla.test.ts",
+    "--reporter=dot",
+    "--maxWorkers=1",
+    "--minWorkers=1"
+  ],
+  "cwd": "packages/shared",
+  "status": 0,
+  "tests": 85,
+  "files": 3,
+  "output": "baseline-shared-routing.txt"
+}

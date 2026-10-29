@@ -1,0 +1,357 @@
+diff --git a/apps/resident-android-mobile/src/app/(app)/services/index.tsx b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+index c431a501..43852991 100644
+--- a/apps/resident-android-mobile/src/app/(app)/services/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+@@ -6,8 +6,8 @@ import { PrimaryButton } from '@/components/primary-button';
+ import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+ import { Ionicons } from '@expo/vector-icons';
+ import { useLocalSearchParams, useRouter } from 'expo-router';
+-import { useState } from 'react';
+-import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
++import { useRef, useState } from 'react';
++import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+ import { DocumentsList } from '@/components/services/documents-list';
+@@ -39,6 +39,7 @@ export default function ServicesScreen() {
+   const router = useRouter();
+   const { profile, refetch, isLoading, error } = useProfile();
+   const theme = useTheme();
++  const { width } = useWindowDimensions();
+   const bottomTabInset = useFloatingTabInset();
+   const pull = usePullRefresh([refetch]);
+ 
+@@ -49,21 +50,21 @@ export default function ServicesScreen() {
+       : 'documents';
+ 
+   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+-  const [verificationCollapsed, setVerificationCollapsed] = useState(false);
+-
+-  const verifiedChip = session && !error && idVerificationState(profile) === 'verified' ? (
+-    <Pressable accessibilityRole="button" accessibilityLabel={verificationCollapsed ? 'Show ID verification status' : 'Collapse ID verification status'}
+-      accessibilityState={{ expanded: !verificationCollapsed }} onPress={() => setVerificationCollapsed(value => !value)} style={styles.verificationToggle}>
+-      {verificationCollapsed ? <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessibilityLabel="Valid ID verified" /> : (
+-        <View style={[styles.verifiedChip, { backgroundColor: theme.resident.accentSoft }]}>
+-          <ThemedText type="smallBold" style={[styles.verifiedLabel, { color: theme.resident.accentText }]}>
+-            {isLoading ? 'Checking ID verification…' : 'Valid ID Verified'}
+-          </ThemedText>
+-          <Ionicons name="close" size={16} color={theme.resident.accentText} accessible={false} />
+-        </View>
+-      )}
++  const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
++  const verificationButton = useRef<View>(null);
++  const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
++  const verifiedIcon = verified ? (
++    <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
++      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
++      onPress={event => {
++        event.stopPropagation();
++        verificationButton.current?.measureInWindow((x, y, _width, height) => setVerificationAnchor({ x, y: y + height + 6 }));
++      }}>
++      <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessible={false} />
+     </Pressable>
+-  ) : null;
++  ) : undefined;
++  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab => tab.key === 'documents'
++    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
+ 
+   const statusBlock = (
+     <>
+@@ -93,7 +94,7 @@ export default function ServicesScreen() {
+     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+       <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
+         <View style={styles.controls}>
+-          <SegmentedControl segments={session ? TABS : TABS.slice(0, 1)} activeKey={segment} onChange={setSegment}
++          <SegmentedControl segments={tabs} activeKey={segment} onChange={next => { setVerificationAnchor(null); setSegment(next); }}
+             variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
+         </View>
+ 
+@@ -108,7 +109,7 @@ export default function ServicesScreen() {
+               refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+               contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
+               {statusBlock}
+-              {!session || segment === 'documents' ? <DocumentsList verification={verifiedChip} /> : null}
++              {!session || segment === 'documents' ? <DocumentsList /> : null}
+               {session && segment === 'logs' && <LogsList />}
+             </ScrollView>
+           </PullRefreshScope>
+@@ -116,6 +117,23 @@ export default function ServicesScreen() {
+ 
+       <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
+       </View>
++      <Modal transparent visible={verified && verificationAnchor !== null} animationType="none" statusBarTranslucent
++        onRequestClose={() => setVerificationAnchor(null)}>
++        <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
++          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss ID verification status"
++            onPress={() => setVerificationAnchor(null)} />
++          {verificationAnchor ? <View style={[styles.verificationPopover, {
++            top: verificationAnchor.y,
++            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
++            maxWidth: width - 32,
++            backgroundColor: theme.resident.card,
++            borderColor: theme.resident.border,
++          }]}>
++            <Ionicons name="shield-checkmark" size={20} color={theme.resident.accentText} accessible={false} />
++            <ThemedText type="smallBold" style={{ color: theme.resident.accentText, flexShrink: 1 }}>Valid ID verified</ThemedText>
++          </View> : null}
++        </View>
++      </Modal>
+     </SafeAreaView>
+   );
+ }
+@@ -137,18 +155,10 @@ const styles = StyleSheet.create({
+   documentsScrollContent: {
+     paddingTop: 6,
+   },
+-  verifiedChip: {
+-    flexDirection: 'row',
+-    alignItems: 'center',
+-    gap: 4,
+-    alignSelf: 'flex-start',
+-    paddingHorizontal: 10,
+-    paddingVertical: 4,
+-    borderRadius: 20,
+-  },
+-  verifiedIcon: { width: 44, height: 44 },
+-  verifiedLabel: { fontSize: 12, lineHeight: 16 },
+-  verificationToggle: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', alignSelf: 'flex-start' },
++  verifiedIcon: { width: 22, height: 22 },
++  verificationButton: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
++  verificationPopover: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12,
++    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+   verifyCard: {
+     marginHorizontal: 20,
+     marginBottom: Spacing.three,
+diff --git a/apps/resident-android-mobile/src/components/resident-header.tsx b/apps/resident-android-mobile/src/components/resident-header.tsx
+index 2bd61dfd..d51e85cb 100644
+--- a/apps/resident-android-mobile/src/components/resident-header.tsx
++++ b/apps/resident-android-mobile/src/components/resident-header.tsx
+@@ -30,7 +30,7 @@ const TITLES: Record<string, string> = {
+   '/settings': 'Settings',
+ };
+ 
+-/** Stays mounted across navigation so the expanding search keeps its input. */
++/** The header and search draft persist; editable native input only exists on search routes. */
+ export function ResidentHeader() {
+   const pathname = usePathname();
+   const enteringSearch = pathname === '/search';
+@@ -56,6 +56,8 @@ export function ResidentHeader() {
+   // A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
+   const entering = useRef(enteringSearch);
+   entering.current = enteringSearch;
++  const searchActive = useRef(searching);
++  searchActive.current = searching;
+   useEffect(() => {
+     if (!enteringSearch) {
+       input.current?.blur();
+@@ -64,6 +66,11 @@ export function ResidentHeader() {
+     const frame = requestAnimationFrame(() => { if (entering.current) input.current?.focus(); });
+     return () => cancelAnimationFrame(frame);
+   }, [enteringSearch]);
++  useEffect(() => {
++    if (!searching) return;
++    // Native focus/IME state can outlive a hidden or detached Android input.
++    return () => { Keyboard.dismiss(); };
++  }, [searching]);
+   const fieldStyle = useAnimatedStyle(() => ({
+     opacity: progress.value,
+     left: searchX + 12 + (48 - searchX - 12) * progress.value,
+@@ -135,14 +142,17 @@ export function ResidentHeader() {
+           {mapSearch ? <Pressable accessibilityRole="button" accessibilityLabel="Collapse header search" accessibilityState={{ expanded: true }} onPress={closeSearch} style={styles.button}>
+             <Ionicons name="search" size={18} color={theme.resident.muted} />
+           </Pressable> : <Ionicons name="search" size={18} color={theme.resident.muted} />}
+-          <TextInput
++          {searching ? <TextInput
+             ref={input} value={query} onChangeText={value => { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}
+             // Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
+-            onFocus={() => { if (enteringSearch) resetSearchIdle(); else editSearch(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
++            onFocus={() => {
++              if (!searchActive.current) { input.current?.blur(); Keyboard.dismiss(); return; }
++              if (entering.current) resetSearchIdle(); else editSearch();
++            }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
+             accessibilityLabel="Search services, announcements and your records"
+             placeholder="Search Barangayan" placeholderTextColor={theme.resident.muted}
+             returnKeyType="search" autoCorrect={false}
+-            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
++            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} /> : null}
+           {query ? (
+             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
+               onPress={() => { if (!enteringSearch) { editSearch(''); return; } setQuery(''); input.current?.focus(); }} style={styles.clear}>
+diff --git a/apps/resident-android-mobile/src/hooks/use-history-pages.ts b/apps/resident-android-mobile/src/hooks/use-history-pages.ts
+index bbfde8d8..f23a13f9 100644
+--- a/apps/resident-android-mobile/src/hooks/use-history-pages.ts
++++ b/apps/resident-android-mobile/src/hooks/use-history-pages.ts
+@@ -1,10 +1,39 @@
+ import { useEffect, useMemo, useSyncExternalStore } from 'react';
+ import { HistoryResource, type LoadHistoryPage } from '@/lib/history-resource';
+ 
+-export function useHistoryPages<T extends { id: string }>(key: string, load: LoadHistoryPage<T>, message: string) {
+-  const resource = useMemo(() => new HistoryResource(key, load, message), [key, load, message]);
+-  useEffect(() => { resource.activate(); return resource.cancel; }, [resource]);
++/** Optional account scope retains bounded filter windows and stable refresh ownership. */
++export function useHistoryPages<T extends { id: string }>(key: string, load: LoadHistoryPage<T>, message: string, scope?: string) {
++  type Page = { resource: HistoryResource<T>; dirty: boolean };
++  const cache = useMemo(() => ({ scope, pages: new Map<string, Page>(), current: undefined as Page | undefined }), [scope]);
++  const page = useMemo(() => {
++    const cached = scope === undefined ? undefined : cache.pages.get(key);
++    if (cached) return cached;
++    const next = { resource: new HistoryResource(key, load, message), dirty: true };
++    if (scope !== undefined) cache.pages.set(key, next);
++    return next;
++  }, [cache, key, load, message, scope]);
++  const { resource } = page;
++  cache.current = page;
++  useEffect(() => {
++    resource.activate();
++    if (scope !== undefined && (page.dirty || resource.getSnapshot().data === undefined)) {
++      page.dirty = false;
++      void resource.refresh();
++    }
++    return resource.cancel;
++  }, [page, resource, scope]);
++  const actions = useMemo(() => {
++    const refresh = (invalidate: boolean) => {
++      for (const entry of cache.pages.values()) entry.dirty = entry !== cache.current;
++      return invalidate ? cache.current!.resource.invalidate() : cache.current!.resource.refresh();
++    };
++    return {
++      refresh: () => refresh(false), invalidate: () => refresh(true),
++      loadMore: () => cache.current!.resource.loadMore(),
++      peek: (pageKey: string) => cache.pages.get(pageKey)?.resource.getSnapshot().data,
++    };
++  }, [cache]);
+   const snapshot = useSyncExternalStore(resource.subscribe, resource.getSnapshot, resource.getSnapshot);
+   return { ...snapshot, loading: snapshot.data === undefined && !snapshot.error,
+-    refresh: resource.refresh, invalidate: resource.invalidate, loadMore: resource.loadMore };
++    ...(scope === undefined ? { refresh: resource.refresh, invalidate: resource.invalidate, loadMore: resource.loadMore, peek: actions.peek } : actions) };
+ }
+diff --git a/apps/resident-android-mobile/tests/services-tab-stability.mjs b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+index 052f8b83..00cdd4b4 100644
+--- a/apps/resident-android-mobile/tests/services-tab-stability.mjs
++++ b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+@@ -16,13 +16,15 @@ fs.mkdirSync(out, { recursive: true });
+ // Render the real Services screen and shared verification rules. Only data hooks,
+ // navigation and the document feeds are fixtures; layout uses React Native Web.
+ const mocks = {
++  // Exercise selection even when native tab layout reports an unusable x coordinate.
++  'react-native': `import React from 'react';import {Pressable as WebPressable} from 'react-native-web';export * from 'react-native-web';export const Pressable=React.forwardRef(({accessibilityState,onLayout,...props},ref)=><WebPressable {...props} ref={ref} aria-selected={accessibilityState?.selected} onLayout={onLayout?event=>onLayout({nativeEvent:{layout:{...event.nativeEvent.layout,x:0}}}):undefined}/>);`,
+   'expo-router': `import React from 'react';export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>React.useEffect(fn,[fn]);`,
+   '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
+   '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
+   '@/hooks/use-profile': `export const useProfile=()=>({...window.profileState,refetch:()=>{window.profileRefetches=(window.profileRefetches??0)+1;window.profileState.refetch()}});`,
+   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
+   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+-  'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
++  'react-native-reanimated': `import React,{useRef,useReducer} from 'react';import {View} from 'react-native';export default {View};export const useSharedValue=initial=>{const [,render]=useReducer(n=>n+1,0);const ref=useRef(null);if(!ref.current){let value=initial;ref.current={get value(){return value},set value(next){if(!Object.is(value,next)){value=next;render()}}}}return ref.current};export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const withSpring=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
+   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+   '@/components/profile-completion-banner': `export const ProfileCompletionBanner=()=>null;`,
+   '@/constants/theme': `export const Spacing={one:4,two:8,three:16,four:24,five:32};export const Colors={light:{accentRed:'#93000A'}};`,
+@@ -55,18 +57,52 @@ try {
+   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+   const documents = page.getByTestId('document-list');
+-  await page.getByText('Valid ID Verified', { exact: true }).waitFor();
++  await page.getByRole('button',{name:'Show ID verification status',exact:true}).waitFor();
+   const before = await documents.boundingBox();
+   assert.equal(await page.evaluate(() => window.profileRefetches ?? 0), 0, 'Services uses the provider-owned profile on focus');
+ 
++  async function assertIndicator(name) {
++    const tab = page.getByRole('tab', { name, exact: true });
++    assert.equal(await tab.getAttribute('aria-selected'), 'true');
++    const geometry = await tab.evaluate(selected => {
++      const bars = [...selected.parentElement.querySelectorAll('*')].filter(element => {
++        const style=getComputedStyle(element);
++        return style.position==='absolute' && style.height==='3px';
++      });
++      const tab=selected.getBoundingClientRect();
++      const bar=bars[0]?.getBoundingClientRect();
++      return { count:bars.length, tab:{x:tab.x,width:tab.width,bottom:tab.bottom}, bar:bar?{x:bar.x,width:bar.width,bottom:bar.bottom}:null };
++    });
++    assert.equal(geometry.count, 1, 'Exactly one selected underline is visible');
++    assert.ok(Math.abs(geometry.bar.x-geometry.tab.x)<1, `${name} underline starts beneath its selected tab`);
++    assert.ok(Math.abs(geometry.bar.width-geometry.tab.width)<1, `${name} underline spans its selected tab`);
++    assert.ok(Math.abs(geometry.bar.bottom-geometry.tab.bottom)<=1, `${name} underline sits on the tab baseline`);
++  }
++
++  for (const width of [320,360,412]) {
++    await page.setViewportSize({ width, height:640 });
++    const documentsTab=await page.getByRole('tab',{name:'Documents',exact:true}).boundingBox();
++    const verifiedIcon=await page.getByRole('button',{name:'Show ID verification status',exact:true}).boundingBox();
++    assert.ok(verifiedIcon.x>=documentsTab.x && verifiedIcon.x+verifiedIcon.width<=documentsTab.x+documentsTab.width+1,'The verification icon fits inside the Documents tab');
++    for (const name of ['Requests','Logs','Documents','Logs','Requests']) {
++      await page.getByRole('tab', { name, exact:true }).click();
++      await assertIndicator(name);
++    }
++  }
++  await page.screenshot({path:path.join(out,'requests-selected.png')});
++  await page.setViewportSize({width:360,height:640});
++  await page.getByRole('tab',{name:'Documents',exact:true}).click();
++  await assertIndicator('Documents');
++
+   for (let visit = 0; visit < 3; visit++) {
+     await page.evaluate(() => { window.profileState = { ...window.profileState, isLoading: true }; window.renderServices(); });
+-    await page.getByText('Checking ID verification…', { exact: true }).waitFor();
++    await page.getByRole('button',{name:'Show ID verification status',exact:true}).waitFor();
++    await assertIndicator('Documents');
+     const during = await documents.boundingBox();
+     assert.equal(during.y, before.y, 'Tab-focus profile refresh must not move the document list');
+     assert.equal(await page.getByRole('button', { name: 'Verify Now', exact: true }).count(), 0);
+     await page.evaluate(() => { window.profileState = { ...window.profileState, isLoading: false }; window.renderServices(); });
+-    await page.getByText('Valid ID Verified', { exact: true }).waitFor();
++    await page.getByRole('button',{name:'Show ID verification status',exact:true}).waitFor();
+     assert.equal((await documents.boundingBox()).y, before.y);
+   }
+ 
+@@ -82,5 +118,5 @@ try {
+   await page.getByText('Your ID is awaiting verification. Requests are available after approval.', { exact: true }).waitFor();
+   await page.getByText('Verify Now', { exact: true }).waitFor({ state: 'attached' });
+   assert.deepEqual(errors, []);
+-  console.log(JSON.stringify({ passed: ['Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
++  console.log(JSON.stringify({ passed: ['Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements', 'Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list and selected underline at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
+ } finally { await browser.close(); }
+diff --git a/packages/shared/src/types/service-foundations.ts b/packages/shared/src/types/service-foundations.ts
+index 71b7bf93..25516341 100644
+--- a/packages/shared/src/types/service-foundations.ts
++++ b/packages/shared/src/types/service-foundations.ts
+@@ -69,6 +69,19 @@ export type NotificationInboxRow = {
+   id: string; event_id: string; recipient_id: string; kind: string; title: string; body: string;
+   destination: Json; created_at: string; read_at: string | null;
+ }
++/** Migration 0145: the columns a resident may read of a published System notice (operator fields are not granted). */
++export type SystemNoticeRow = {
++  id: string; subtype: 'service_status' | 'app_update' | 'policy'; title: string; body: string;
++  state: 'published' | 'resolved' | 'cancelled'; starts_at: string | null; ends_at: string | null; expires_at: string | null;
++  action: 'services' | 'reports' | 'health' | 'maps' | 'emergency_info' | 'email_verification' | 'terms_privacy' | null;
++  policy_key: 'privacy_policy' | 'terms_of_service' | null; policy_effective_on: string | null; app_version_code: number | null;
++  revision: number; published_at: string; resolved_at: string | null; cancelled_at: string | null; updated_at: string;
++}
++/** One row per source of `notification_hub_summary`; null means not available to the caller, never zero. */
++export type NotificationHubSummaryRow = {
++  source: 'barangay' | 'account' | 'system'; total: number | null; unread: number | null; scope_total: number | null; scope_unread: number | null;
++}
++export type NotificationInboxPageRow = Pick<NotificationInboxRow, 'id' | 'kind' | 'title' | 'body' | 'destination' | 'created_at' | 'read_at'> & { filter: string | null };
+ /** Foundation tables are written exclusively through controlled operations. */
+ type ReadOnlyTable<Row, Relationships extends { foreignKeyName: string; columns: string[]; isOneToOne: boolean; referencedRelation: string; referencedColumns: string[] }[] = []> = { Row: Row; Insert: never; Update: never; Relationships: Relationships };
+ export type FoundationTables = {
+@@ -77,6 +90,8 @@ export type FoundationTables = {
+     Row: NotificationInboxRow; Insert: never; Update: { read_at?: string | null };
+     Relationships: [{ foreignKeyName: 'notification_inbox_recipient_id_fkey'; columns: ['recipient_id']; isOneToOne: false; referencedRelation: 'profiles'; referencedColumns: ['id'] }];
+   };
++  // Migration 0145: residents read published notices of their barangay; only service_role writes.
++  system_notices: ReadOnlyTable<SystemNoticeRow>;
+   notification_preferences: ReadOnlyTable<{ user_id: string; kinds: Json; updated_at: string }, [
+     { foreignKeyName: 'notification_preferences_user_id_fkey'; columns: ['user_id']; isOneToOne: true; referencedRelation: 'profiles'; referencedColumns: ['id'] },
+   ]>;
+@@ -108,6 +123,12 @@ export type FoundationTables = {
+ type FoundationOperation = { Args: { p_input: Json }; Returns: string };
+ export type FoundationFunctions = ResidentAccountSetupFunctions & {
+   incomplete_profile_browsing_barangay: { Args: Record<string, never>; Returns: string | null };
++  notification_hub_summary: { Args: { p_view?: string; p_filter?: string }; Returns: NotificationHubSummaryRow[] };
++  notification_inbox_page: {
++    Args: { p_source: 'account' | 'system'; p_view?: string; p_filter?: string; p_before_created_at?: string; p_before_id?: string; p_limit?: number };
++    Returns: NotificationInboxPageRow[];
++  };
++  notification_mark_scope_read: { Args: { p_view?: string; p_filter?: string }; Returns: { announcements_marked: number; notifications_marked: number }[] };
+   service_request_sla_tracking: { Args: { p_request_id: string }; Returns: Json };
+   service_request_sla_metrics: { Args: { p_request_id: string; p_at?: string }; Returns: Json };
+   service_sla_report_rows: { Args: Record<string, never>; Returns: Json };

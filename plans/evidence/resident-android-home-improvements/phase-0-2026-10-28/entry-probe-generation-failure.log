@@ -1,0 +1,11 @@
+{"passed":["Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements","Services focus constructs zero redundant profile reads; explicit retry still refreshes","Three background refreshes keep the document list and selected underline at the same position","Refresh failures still show retry guidance","Changed verification status still shows verification guidance"],"documentListY":55}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+browser.newPage: Target page, context or browser has been closed
+    at C:\Users\User\barangayan\tmp\resident-home-phase0-20261028\services-entry-probe.mjs:124:27 {
+  log: []
+}
+
+Node.js v24.13.1

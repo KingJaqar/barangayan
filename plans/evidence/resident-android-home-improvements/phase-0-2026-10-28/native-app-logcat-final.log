@@ -1,0 +1,322 @@
+--------- beginning of main
+10-28 12:56:33.334 14903 14903 I Zygote  : fakeProductInfoIfNeed callded! com.barangayan.resident.dev
+10-28 12:56:33.336 14903 14903 I Zygote  : fake Product info com.barangayan.resident.dev not matched any pattern
+10-28 12:56:33.336 14903 14903 I Zygote  : fakeProductInfoFromProperties callded! com.barangayan.resident.dev
+10-28 12:56:33.339 14903 14903 E NemuAppNameUtil: save data success
+10-28 12:56:33.348 14903 14903 E linker  : do_dlopen failed
+10-28 12:56:33.348 14903 14903 E linker  : load selected hp /system/etc/mumu-configs/shared_libs/libhp12_x86_64.so failed
+10-28 12:56:33.348 14903 14903 E linker  : library "/system/etc/mumu-configs/shared_libs/libhp12_x86_64.so" ("/system/etc/mumu-configs/shared_libs/libhp12_x86_64.so") needed or dlopened by "/apex/com.android.art/lib64/libnativebridge.so" is not accessible for the namespace: [name="com_android_art", ld_library_paths="", default_library_paths="/apex/com.android.art/lib64", permitted_paths="/apex/com.android.art/lib64:/system/lib64:/data:/apex/com.android.art/javalib"]
+10-28 12:56:33.348 14903 14903 E linker  : do_dlopen failed
+10-28 12:56:33.348 14903 14903 E linker  : load origin hp /system/etc/mumu-configs/shared_libs/libhp12_x86_64.so failed
+10-28 12:56:33.317 14903 14903 I main    : type=1400 audit(0.0:12443): avc: denied { search } for name="com.android.permission" dev="sda6" ino=435 scontext=u:r:zygote:s0 tcontext=u:object_r:unlabeled:s0 tclass=dir permissive=1
+10-28 12:56:33.363 14903 14903 E linker  : hp entrace has not been loaded, ignored
+10-28 12:56:33.369 14903 14903 W nativebridge: LLLog DoRedirectTranslator not is_gte
+10-28 12:56:33.317 14903 14903 I main    : type=1400 audit(0.0:12444): avc: denied { read } for name="framework-permission-s.jar" dev="sda6" ino=444 scontext=u:r:zygote:s0 tcontext=u:object_r:unlabeled:s0 tclass=file permissive=1
+10-28 12:56:33.372 14903 14903 W nativebridge: Failed to bind-mount /system/etc/cpuinfo.x86_64.txt as /proc/cpuinfo: No such file or directory
+10-28 12:56:33.372 14903 14903 W nativebridge: Failed to bind-mount /system/lib64/x86_64/cpuinfo as /proc/cpuinfo: No such file or directory
+10-28 12:56:33.372 14903 14903 I Zygote  : seccomp disabled by setenforce 0
+10-28 12:56:33.389 14903 14903 I an.resident.de: Late-enabling -Xcheck:jni
+10-28 12:56:33.456 14903 14903 W an.resident.de: Unexpected CPU variant for X86 using defaults: x86_64
+10-28 12:56:33.456 14903 14903 V libnb   : enter native_bridge2_initialize /data/user/0/com.barangayan.resident.dev/code_cache arm64
+10-28 12:56:33.457 14903 14903 E libnb   : The translator implementation library has not been set.
+10-28 12:56:33.492 14903 14903 E libnb   : get_callbacks native_handle 0xcdd64ac70420c8b1: 1 libnb:/system/lib64/libhoudini.so
+10-28 12:56:33.492 14903 14903 I libnb   : Found /system/lib64/libhoudini.so version 6
+10-28 12:56:33.495 14903 14903 D houdini : [14903] Intel Bridge Technology for Netease internal evaluation only, Copyright(C) Intel Corp. 2012-2025.
+10-28 12:56:33.495 14903 14903 D houdini : [14903] Use permitted only under a valid evaluation software license agreement - all other rights reserved.
+10-28 12:56:33.495 14903 14903 D houdini : [14903] Initialize library(version: 12.0.1_z.Netease_ev4 RELEASE)... successfully.
+10-28 12:56:33.495 14903 14903 W HP      : x_initialize private_dir:/data/user/0/com.barangayan.resident.dev/code_cache instruction_set:arm64 getMethodShorty:0x75ba9ab3c340 ret:1
+10-28 12:56:33.512 14903 14903 D ProcessState: Binder ioctl to enable oneway spam detection failed: Invalid argument
+10-28 12:56:33.542 14903 14920 E ashmem  : memfd: ro.vndk.version not defined or invalid (), this is mandated since P.
+10-28 12:56:33.566 14903 14903 D CompatibilityChangeReporter: Compat change id reported: 171979766; UID 10060; state: ENABLED
+10-28 12:56:33.997 14903 14903 I Typeface: Preloading /system/fonts/Roboto-Regular.ttf
+10-28 12:56:33.998 14903 14903 I Typeface: Preloading /system/fonts/RobotoStatic-Regular.ttf
+10-28 12:56:35.329 14903 14903 V GraphicsEnvironment: ANGLE Developer option for 'com.barangayan.resident.dev' set to: 'default'
+10-28 12:56:35.330 14903 14903 V GraphicsEnvironment: ANGLE GameManagerService for com.barangayan.resident.dev: false
+10-28 12:56:35.330 14903 14903 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+10-28 12:56:35.332 14903 14903 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-28 12:56:35.333 14903 14903 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+10-28 12:56:35.341 14903 14903 W FirebaseApp: Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
+10-28 12:56:35.341 14903 14903 I FirebaseInitProvider: FirebaseApp initialization unsuccessful
+10-28 12:56:35.371 14903 14903 W SoLoader: Initializing SoLoader: 0
+10-28 12:56:35.372 14903 14903 W SoLoader: Recording new base apk path: /data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/base.apk
+10-28 12:56:35.372 14903 14903 W SoLoader: Previously recorded 0 base apk paths.
+10-28 12:56:35.374 14903 14903 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/vendor/lib64 flags = 2]
+10-28 12:56:35.374 14903 14903 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib64 flags = 2]
+10-28 12:56:35.374 14903 14903 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/base.apk!/lib/x86_64]]
+10-28 12:56:35.403 14903 14903 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/lib/x86_64 flags = 0]]
+10-28 12:56:35.403 14903 14903 I SoLoader: init finish: 4 SO sources prepared
+10-28 12:56:35.403 14903 14903 W SoLoader: SoLoader initialized: 8
+10-28 12:56:35.407 14903 14903 I an.resident.dev: type=1400 audit(0.0:12576): avc: denied { read } for name="libdl.so" dev="sda6" ino=3800 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=lnk_file permissive=1
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Entering merged library JNI_OnLoad.
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing 13 pre-merged libs (including stub)
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x75ba708884c0
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x75ba70ad40a0
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x75ba70ae6930
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x75ba70b8f4c0
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreact_tracingjni_so.  onload_func: 0x75ba70e91960
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x75ba70ea48b0
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x75ba70ec7b20
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x75ba70ecd610
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x75ba70f4a340
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x75ba710ad160
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x75ba710c3530
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x75ba710d2530
+10-28 12:56:35.442 14903 14903 D jni_lib_merge: About to register 12 actual methods.
+10-28 12:56:35.451 14903 14903 D jni_lib_merge: Entering merged library JNI_OnLoad.
+10-28 12:56:35.451 14903 14903 D jni_lib_merge: Preparing 13 pre-merged libs (including stub)
+10-28 12:56:35.451 14903 14903 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x75ba708884c0
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x75ba70ad40a0
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x75ba70ae6930
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x75ba70b8f4c0
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreact_tracingjni_so.  onload_func: 0x75ba70e91960
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x75ba70ea48b0
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x75ba70ec7b20
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x75ba70ecd610
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x75ba70f4a340
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x75ba710ad160
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x75ba710c3530
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x75ba710d2530
+10-28 12:56:35.452 14903 14903 D jni_lib_merge: About to register 12 actual methods.
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Entering merged library JNI_OnLoad.
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing 13 pre-merged libs (including stub)
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x75ba708884c0
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x75ba70ad40a0
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x75ba70ae6930
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x75ba70b8f4c0
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreact_tracingjni_so.  onload_func: 0x75ba70e91960
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x75ba70ea48b0
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x75ba70ec7b20
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x75ba70ecd610
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x75ba70f4a340
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x75ba710ad160
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x75ba710c3530
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x75ba710d2530
+10-28 12:56:35.457 14903 14903 D jni_lib_merge: About to register 12 actual methods.
+10-28 12:56:35.667 14903 14903 I alhost:8082/...: type=1400 audit(0.0:12578): avc: denied { connectto } for path="/dev/socket/dnsproxyd" scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:init:s0 tclass=unix_stream_socket permissive=1
+10-28 12:56:35.682 14903 14938 W unknown:ReconnectingWebSocket: Couldn't connect to "ws://localhost:8082/message?device=ASUS_AI2201_A%20-%2012%20-%20API%2032&app=com.barangayan.resident.dev&clientid=BridgelessDevSupportManager", will silently retry
+10-28 12:56:35.768 14903 14903 D CompatibilityChangeReporter: Compat change id reported: 191844585; UID 10060; state: ENABLED
+10-28 12:56:35.804 14903 14950 D libEGL  : loaded /system/lib64/egl/libEGL_emulation.so
+10-28 12:56:35.805 14903 14903 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+10-28 12:56:35.817 14903 14903 I RenderThread: type=1400 audit(0.0:12586): avc: denied { read write } for name="vaddress" dev="tmpfs" ino=9726 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1
+10-28 12:56:35.817 14903 14903 I RenderThread: type=1400 audit(0.0:12587): avc: denied { open } for path="/dev/vaddress" dev="tmpfs" ino=9726 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1
+10-28 12:56:35.817 14903 14903 I RenderThread: type=1400 audit(0.0:12588): avc: denied { ioctl } for path="/dev/vaddress" dev="tmpfs" ino=9726 ioctlcmd=0x4c15 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1
+10-28 12:56:35.817 14903 14903 I RenderThread: type=1400 audit(0.0:12589): avc: denied { map } for path="/dev/vaddress" dev="tmpfs" ino=9726 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1
+10-28 12:56:35.824 14903 14950 D an.resident.de: Features: 0 0 0
+10-28 12:56:35.825 14903 14950 E an.resident.de: vulkan version is 4211013
+10-28 12:56:35.829 14903 14950 D libEGL  : loaded /system/lib64/egl/libGLESv1_CM_emulation.so
+10-28 12:56:35.831 14903 14950 D libEGL  : loaded /system/lib64/egl/libGLESv2_emulation.so
+10-28 12:56:35.853 14903 14950 E GraphicsEnv: Failed to get gpu service
+10-28 12:56:35.861 14903 14903 W an.resident.de: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (unsupported, reflection, allowed)
+10-28 12:56:35.877 14903 14903 W an.resident.de: Accessing hidden field Ljava/lang/reflect/Field;->accessFlags:I (unsupported, reflection, allowed)
+10-28 12:56:35.992 14903 14948 D an.resident.de: Features: 0 0 0
+10-28 12:56:35.992 14903 14948 E an.resident.de: vulkan version is 4211013
+10-28 12:56:35.996 14903 14948 D hw-ProcessState: Binder ioctl to enable oneway spam detection failed: Invalid argument
+10-28 12:56:35.999 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.configstore@1.0::ISurfaceFlingerConfigs instance: default
+10-28 12:56:36.001 14903 14948 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-28 12:56:36.023 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.mapper@4.0::IMapper instance: default
+10-28 12:56:36.024 14903 14948 I Gralloc4: mapper 4.x is not supported
+10-28 12:56:36.024 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.mapper@3.0::IMapper instance: default
+10-28 12:56:36.024 14903 14948 W Gralloc3: mapper 3.x is not supported
+10-28 12:56:36.024 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.mapper@2.0::IMapper instance: default
+10-28 12:56:36.029 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.allocator@4.0::IAllocator instance: default
+10-28 12:56:36.030 14903 14948 W Gralloc4: allocator 4.x is not supported
+10-28 12:56:36.030 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.allocator@3.0::IAllocator instance: default
+10-28 12:56:36.030 14903 14948 W Gralloc3: allocator 3.x is not supported
+10-28 12:56:36.031 14903 14948 E HidlServiceManagement: getService: Potential race detected, descriptor: android.hardware.graphics.allocator@2.0::IAllocator instance: default
+10-28 12:56:36.032 14903 14948 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:36.040 14903 14960 D an.resident.de: Features: 0 0 0
+10-28 12:56:36.040 14903 14960 E an.resident.de: vulkan version is 4211013
+10-28 12:56:36.042 14903 14960 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:36.043 14903 14960 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:36.521 14903 14938 W unknown:ReconnectingWebSocket: Couldn't connect to "ws://localhost:8082/message?device=ASUS_AI2201_A%20-%2012%20-%20API%2032&app=com.barangayan.resident.dev&clientid=DevLauncherBridgelessDevSupportManager", will silently retry
+10-28 12:56:36.633 14903 14903 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-28 12:56:36.634 14903 14903 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-28 12:56:36.635 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-28 12:56:36.635 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Start
+10-28 12:56:36.635 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getJSBundleLoader()
+10-28 12:56:36.636 14903 14977 W unknown:BridgelessReact: ReactHost{0}.isMetroRunning()
+10-28 12:56:36.652 14903 14978 W unknown:BridgelessReact: ReactHost{0}.isMetroRunning(): Async result = true
+10-28 12:56:36.653 14903 14977 W unknown:BridgelessReact: ReactHost{0}.loadJSBundleFromMetro()
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: Entering merged library JNI_OnLoad.
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: Preparing 4 pre-merged libs (including stub)
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: Preparing to register libhermes_executor_so.  onload_func: 0x75ba5e31e6e0
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: Preparing to register libhermesinstancejni_so.  onload_func: 0x75ba5e34ab60
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: Preparing to register libjsijniprofiler_so.  onload_func: 0x75ba5e34c900
+10-28 12:56:36.685 14903 14903 D jni_lib_merge: About to register 3 actual methods.
+10-28 12:56:36.699 14903 14903 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-28 12:56:36.946 14903 14903 W an.resident.de: Accessing hidden method Landroid/os/SystemProperties;->addChangeCallback(Ljava/lang/Runnable;)V (unsupported, reflection, allowed)
+10-28 12:56:37.199 14903 14948 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:37.212 14903 14981 D an.resident.de: Features: 0 0 0
+10-28 12:56:37.212 14903 14981 E an.resident.de: vulkan version is 4211013
+10-28 12:56:37.214 14903 14981 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:37.216 14903 14981 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:37.427 14903 14903 D an.resident.de: Features: 0 0 0
+10-28 12:56:37.427 14903 14903 E an.resident.de: vulkan version is 4211013
+10-28 12:56:37.500 14903 14903 W unknown:BridgelessReact: ReactHost{0}.raiseSoftException(onWindowFocusChange(hasFocus = "true")): Tried to access onWindowFocusChange while context is not ready
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: Unhandled SoftException
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: com.facebook.react.bridge.ReactNoCrashSoftException: raiseSoftException(onWindowFocusChange(hasFocus = "true")): Tried to access onWindowFocusChange while context is not ready
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.runtime.ReactHostImpl.raiseSoftException(ReactHostImpl.kt:919)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.runtime.ReactHostImpl.raiseSoftException$default(ReactHostImpl.kt:910)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.runtime.ReactHostImpl.onWindowFocusChange(ReactHostImpl.kt:682)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.ReactDelegate.onWindowFocusChanged(ReactDelegate.kt:229)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.ReactActivityDelegate.onWindowFocusChanged(ReactActivityDelegate.java:235)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper$onWindowFocusChanged$1.invokeSuspend(ReactActivityDelegateWrapper.kt:320)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper$onWindowFocusChanged$1.invoke(Unknown Source:8)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper$onWindowFocusChanged$1.invoke(Unknown Source:4)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper$launchLifecycleScopeWithLock$1.invokeSuspend(ReactActivityDelegateWrapper.kt:452)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.internal.DispatchedContinuationKt.resumeCancellableWith(DispatchedContinuation.kt:375)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.intrinsics.CancellableKt.startCoroutineCancellable(Cancellable.kt:26)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.CoroutineStart.invoke(CoroutineStart.kt:358)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.AbstractCoroutine.start(AbstractCoroutine.kt:134)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.BuildersKt__Builders_commonKt.launch(Builders.common.kt:53)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.BuildersKt.launch(Unknown Source:1)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.BuildersKt__Builders_commonKt.launch$default(Builders.common.kt:44)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at kotlinx.coroutines.BuildersKt.launch$default(Unknown Source:1)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper.launchLifecycleScopeWithLock(ReactActivityDelegateWrapper.kt:450)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper.launchLifecycleScopeWithLock$default(ReactActivityDelegateWrapper.kt:446)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.ReactActivityDelegateWrapper.onWindowFocusChanged(ReactActivityDelegateWrapper.kt:318)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.facebook.react.ReactActivity.onWindowFocusChanged(ReactActivity.java:161)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at androidx.appcompat.view.WindowCallbackWrapper.onWindowFocusChanged(WindowCallbackWrapper.java:124)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at expo.modules.devmenu.detectors.InterceptingWindowCallback.onWindowFocusChanged(Unknown Source:2)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.android.internal.policy.DecorView.onWindowFocusChanged(DecorView.java:1788)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.View.dispatchWindowFocusChanged(View.java:14872)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.ViewGroup.dispatchWindowFocusChanged(ViewGroup.java:1507)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.ViewRootImpl.handleWindowFocusChanged(ViewRootImpl.java:3543)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.ViewRootImpl.access$1200(ViewRootImpl.java:227)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl(ViewRootImpl.java:5473)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.view.ViewRootImpl$ViewRootHandler.handleMessage(ViewRootImpl.java:5373)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.os.Looper.loopOnce(Looper.java:201)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.os.Looper.loop(Looper.java:288)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at android.app.ActivityThread.main(ActivityThread.java:8085)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at java.lang.reflect.Method.invoke(Native Method)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:571)
+10-28 12:56:37.504 14903 14903 E unknown:ReactHost: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1091)
+10-28 12:56:41.102 14903 14978 W unknown:BridgelessReact: ReactHost{0}.loadJSBundleFromMetro(): Creating BundleLoader
+10-28 12:56:41.103 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating BridgelessReactContext
+10-28 12:56:41.104 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating ReactInstance
+10-28 12:56:41.276 14903 14977 W ExpoModulesCore: Props class class expo.modules.ui.textfield.InnerTextFieldProps is not introspectable. Falling back to reflection-based props parsing, which may have performance implications. To fix this, annotate the props class with @OptimizedComposeProps.
+10-28 12:56:41.414 14903 14977 W ExpoModulesCore: Props class class expo.modules.ui.textfield.PlaceholderProps is not introspectable. Falling back to reflection-based props parsing, which may have performance implications. To fix this, annotate the props class with @OptimizedComposeProps.
+10-28 12:56:41.564 14903 14995 D ProfileInstaller: Installing profile for com.barangayan.resident.dev
+10-28 12:56:41.753 14903 14977 I ExpoModulesCore: ✅ AppContext was initialized
+10-28 12:56:41.760 14903 14903 I pool-1-thread-1: type=1400 audit(0.0:12633): avc: denied { use } for path="/dev/null" dev="tmpfs" ino=8107 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:kernel:s0 tclass=fd permissive=1
+10-28 12:56:41.841 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Loading JS Bundle
+10-28 12:56:41.842 14903 14977 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): DevSupportManager.onNewReactContextCreated()
+10-28 12:56:41.846 14903 14903 W unknown:ReactNative: Packager connection already open, nooping.
+10-28 12:56:41.846 14903 14977 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-28 12:56:41.846 14903 14903 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-28 12:56:41.850 14903 14903 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Executing ReactInstanceEventListeners
+10-28 12:56:42.086 14903 14948 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:42.095 14903 14997 D an.resident.de: Features: 0 0 0
+10-28 12:56:42.095 14903 14997 E an.resident.de: vulkan version is 4211013
+10-28 12:56:42.097 14903 14997 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:42.099 14903 14997 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-28 12:56:42.456 14903 14990 I WebViewFactory: Loading com.android.webview version 110.0.5481.154.1 (code 548115537)
+10-28 12:56:42.459 14903 14990 W an.resident.de: Entry not found
+10-28 12:56:42.464 14903 14990 E WebViewLibraryLoader: can't load with relro file; address space not reserved
+10-28 12:56:42.465 14903 14990 I an.resident.de: Waiting for a blocking GC ClassLinker
+10-28 12:56:42.518 14903 14990 I an.resident.de: WaitForGcToComplete blocked ClassLinker on NativeAlloc for 53.633ms
+10-28 12:56:42.537 14903 14990 W an.resident.de: Accessing hidden method Landroid/os/Trace;->isTagEnabled(J)Z (unsupported, reflection, allowed)
+10-28 12:56:42.537 14903 14990 W an.resident.de: Accessing hidden method Landroid/os/Trace;->traceBegin(JLjava/lang/String;)V (unsupported, reflection, allowed)
+10-28 12:56:42.537 14903 14990 W an.resident.de: Accessing hidden method Landroid/os/Trace;->traceEnd(J)V (unsupported, reflection, allowed)
+10-28 12:56:42.537 14903 14990 W an.resident.de: Accessing hidden method Landroid/os/Trace;->asyncTraceBegin(JLjava/lang/String;I)V (unsupported, reflection, allowed)
+10-28 12:56:42.537 14903 14990 W an.resident.de: Accessing hidden method Landroid/os/Trace;->asyncTraceEnd(JLjava/lang/String;I)V (unsupported, reflection, allowed)
+10-28 12:56:42.545 14903 14990 I cr_WVCFactoryProvider: Loaded version=110.0.5481.154 minSdkVersion=29 isBundle=false multiprocess=true packageId=2
+10-28 12:56:42.582 14903 14989 W BridgelessReactContext: [WARNING] Bridgeless doesn't support CatalystInstance. Accessing an API that's not part of the new architecture is not encouraged usage.
+10-28 12:56:42.588 14903 14990 I cr_LibraryLoader: Successfully loaded native library
+10-28 12:56:42.589 14903 14990 I cr_CachingUmaRecorder: Flushed 9 samples from 9 histograms.
+10-28 12:56:42.590 14903 14989 I ExpoModulesCore: ✅ JSI interop was installed
+10-28 12:56:42.607 14903 14989 I ExpoModulesCore: ✅ Constants were exported
+10-28 12:56:42.783 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class expo.modules.kotlin.views.GroupViewManagerWrapper
+10-28 12:56:42.787 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.LayoutShadowNode
+10-28 12:56:42.791 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContainerViewManager
+10-28 12:56:42.795 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.reanimated.view.REASharedTransitionBoundaryManager
+10-28 12:56:42.800 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.host.TabsHostViewManager
+10-28 12:56:42.801 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderConfigViewManager
+10-28 12:56:42.803 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderSubviewManager
+10-28 12:56:42.804 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.modals.formsheet.FormSheetHostViewManager
+10-28 12:56:42.808 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.scrollviewmarker.ScrollViewMarkerViewManager
+10-28 12:56:42.809 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.modals.formsheet.FormSheetContentWrapperViewManager
+10-28 12:56:42.810 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContentWrapperManager
+10-28 12:56:42.811 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.stack.screen.StackScreenViewManager
+10-28 12:56:42.812 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewManager
+10-28 12:56:42.814 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewShadowNode
+10-28 12:56:42.815 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenViewManager
+10-28 12:56:42.816 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.stack.header.config.StackHeaderConfigViewManager
+10-28 12:56:42.817 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaProviderManager
+10-28 12:56:42.817 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.SearchBarManager
+10-28 12:56:42.818 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.stack.host.StackHostViewManager
+10-28 12:56:42.819 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenFooterManager
+10-28 12:56:42.819 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ModalScreenViewManager
+10-28 12:56:42.820 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.safearea.SafeAreaViewManager
+10-28 12:56:42.822 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackViewManager
+10-28 12:56:42.822 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.stack.header.subview.StackHeaderSubviewViewManager
+10-28 12:56:42.823 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.reactnativecommunity.webview.RNCWebViewManager
+10-28 12:56:42.827 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class org.reactnative.maskedview.RNCMaskedViewManager
+10-28 12:56:42.828 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.screen.TabsScreenViewManager
+10-28 12:56:43.129 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$DefsViewManager
+10-28 12:56:43.131 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.VirtualViewManager$RenderableShadowNode
+10-28 12:56:43.135 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.debuggingoverlay.DebuggingOverlayManager
+10-28 12:56:43.138 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeMergeManager
+10-28 12:56:43.142 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewManager
+10-28 12:56:43.145 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LinearGradientManager
+10-28 12:56:43.149 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeGaussianBlurManager
+10-28 12:56:43.154 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ReactProgressBarViewManager
+10-28 12:56:43.159 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollViewManager
+10-28 12:56:43.165 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextViewManager
+10-28 12:56:43.169 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeColorMatrixManager
+10-28 12:56:43.172 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollContainerViewManager
+10-28 12:56:43.176 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ClipPathViewManager
+10-28 12:56:43.181 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$SymbolManager
+10-28 12:56:43.185 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PatternManager
+10-28 12:56:43.190 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeBlendManager
+10-28 12:56:43.194 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.view.ReactViewManager
+10-28 12:56:43.198 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.SvgViewManager
+10-28 12:56:43.205 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchManager
+10-28 12:56:43.208 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$UseViewManager
+10-28 12:56:43.213 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$CircleViewManager
+10-28 12:56:43.217 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TSpanViewManager
+10-28 12:56:43.221 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FilterManager
+10-28 12:56:43.225 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MarkerManager
+10-28 12:56:43.229 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager
+10-28 12:56:43.233 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.modal.ReactModalHostManager
+10-28 12:56:43.237 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ForeignObjectManager
+10-28 12:56:43.241 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$EllipseViewManager
+10-28 12:56:43.245 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LineViewManager
+10-28 12:56:43.249 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeFloodManager
+10-28 12:56:43.252 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$GroupViewManager
+10-28 12:56:43.255 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextViewManager
+10-28 12:56:43.259 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ImageViewManager
+10-28 12:56:43.263 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeCompositeManager
+10-28 12:56:43.267 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.image.ReactImageManager
+10-28 12:56:43.270 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RadialGradientManager
+10-28 12:56:43.274 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MaskManager
+10-28 12:56:43.278 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.unimplementedview.ReactUnimplementedViewManager
+10-28 12:56:43.282 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RectViewManager
+10-28 12:56:43.286 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextPathViewManager
+10-28 12:56:43.292 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactScrollViewManager
+10-28 12:56:43.296 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeOffsetManager
+10-28 12:56:43.299 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PathViewManager
+10-28 12:56:43.304 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.drawer.ReactDrawerLayoutManager
+10-28 12:56:43.309 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.swiperefresh.SwipeRefreshLayoutManager
+10-28 12:56:43.316 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputManager
+10-28 12:56:43.321 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.SelectableTextViewManager
+10-28 12:56:43.326 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerRootViewManager
+10-28 12:56:43.333 14903 14989 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.virtual.view.ReactVirtualViewManager
+10-28 12:56:43.887 14903 14989 I ReactNativeJS: Running "main" with {"rootTag":1,"initialProps":{},"fabric":true}
+10-28 12:56:44.442 14903 14903 I ExpoModulesCore: ✅ JSI interop was installed
+10-28 12:56:45.579 14903 14989 V AsyncStorageExpoMigration: No scoped database found
+10-28 12:56:48.830 14903 14903 D Glide   : Finished loading BitmapDrawable from REMOTE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 131.98712899999998 ms
+10-28 12:56:48.917 14903 14903 D CompatibilityChangeReporter: Compat change id reported: 171228096; UID 10060; state: ENABLED
+10-28 12:56:48.917 14903 14903 W an.resident.de: Accessing hidden field Landroid/widget/ScrollView;->mScroller:Landroid/widget/OverScroller; (unsupported, reflection, allowed)
+10-28 12:56:48.947 14903 14989 I ReactNativeJNI: instanceHandle is null, event of type topProgress will be dropped
+10-28 12:56:48.947 14903 14989 I ReactNativeJNI: instanceHandle is null, event of type topProgress will be dropped
+10-28 12:56:48.948 14903 14989 I ReactNativeJNI: instanceHandle is null, event of type topProgress will be dropped
+10-28 12:56:48.987 14903 14903 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 43.567128 ms
+10-28 12:56:54.474 14903 14903 I an.resident.dev: type=1400 audit(0.0:12690): avc: denied { call } for scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:adbd:s0 tclass=binder permissive=1
+10-28 12:57:43.049 14903 14914 I an.resident.de: JIT allocated 54KB for compiled code of void android.view.View.<init>(android.content.Context, android.util.AttributeSet, int, int)
+10-28 12:57:43.882 14903 14990 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 12:57:43.882 14903 14990 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-28 12:57:44.110 14903 14903 I RenderThread: type=1400 audit(0.0:12749): avc: denied { ioctl } for path="/dev/vaddress" dev="tmpfs" ino=9726 ioctlcmd=0x4c19 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1
+10-28 12:57:44.278 14903 14903 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8087/assets/?unstable_path=.%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 179.460976 ms

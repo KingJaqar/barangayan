@@ -1,0 +1,195 @@
+FILE: apps/admin-web/src/actions/admin-audit-actions.ts
+'use server';
+
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+
+import {
+  adminAuditActionSchema,
+  adminEntityTypeSchema,
+  entityTypeToCategory,
+  type AdminAuditAction,
+  type AdminAuditLogPreferences,
+  type AdminEntityType,
+  type BarangaySettings,
+  type Json,
+} from '@barangayan/shared';
+
+// ---------------------------------------------------------------------------
+// Core insert helper
+// ---------------------------------------------------------------------------
+
+interface LogParams {
+  action: AdminAuditAction;
+  entityType: AdminEntityType;
+  entityId?: string;
+  entityLabel?: string;
+  changes?: { before: Record<string, unknown>; after: Record<string, unknown> };
+  metadata?: Record<string, unknown>;
+  /**
+   * Pass the caller's already-loaded `barangaySettings` to skip a DB round-trip.
+   * Omit for infrequent events (login/logout) — the helper fetches settings itself.
+   */
+  barangaySettings?: BarangaySettings | null;
+}
+
+/**
+ * Insert one row into admin_audit_log from a Server Action context.
+ * The server session cookie identifies the acting admin; no admin_id/barangay_id
+ * is accepted from the caller to prevent spoofing.
+ *
+ * Callers should pass `barangaySettings` from their own hook/context to avoid an
+ * extra per-call DB read. If omitted, settings are fetched once internally.
+ */
+export async function logAdminAction({
+  action,
+  entityType,
+  entityId,
+  entityLabel,
+  changes,
+  metadata,
+  barangaySettings,
+}: LogParams): Promise<void> {
+  // Validate enums — fail loudly in development.
+  adminAuditActionSchema.parse(action);
+  adminEntityTypeSchema.parse(entityType);
+
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Fetch admin profile + barangay config in one query.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('barangay_id, full_name, barangays(config)')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (!profile?.barangay_id) return;
+
+  // Resolve settings: use passed-in value, or parse from the fetched config.
+  const config = barangaySettings
+    ?? ((profile.barangays as { config?: BarangaySettings } | null)?.config ?? null);
+
+  // Master on/off switch.
+  if (config?.features?.enableAdminAuditLog === false) return;
+
+  // Per-category filter (skip when prefs absent — default is to log everything).
+  const prefs = config?.adminAuditLogPreferences as AdminAuditLogPreferences | undefined;
+  if (prefs) {
+    const category = entityTypeToCategory(entityType);
+    if (!prefs.enabledCategories[category]) return;
+  }
+
+  await supabase.from('admin_audit_log').insert({
+    barangay_id: profile.barangay_id,
+    admin_id: user.id,
+    action,
+    entity_type: entityType,
+    entity_id: entityId ?? null,
+    entity_label: entityLabel ?? null,
+    // JSON round-trip rather than a cast: `changes` is typed as Record<string, unknown>,
+    // which isn't structurally a Json value (could hold undefined/functions/etc.) even
+    // though at runtime it's always plain audit data — this guarantees what actually
+    // reaches Postgres matches what TypeScript says was sent.
+    changes: changes ? (JSON.parse(JSON.stringify(changes)) as Json) : null,
+    // Always include admin_name so the notification bell can display who acted.
+    // Caller-supplied metadata is spread last so it can override if needed.
+    metadata: { admin_name: profile.full_name, ...(metadata ?? {}) },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Auth event helpers — called around sign-in / sign-out
+// ---------------------------------------------------------------------------
+
+/** Call server-side immediately after a successful admin login. */
+export async function logAdminLogin(): Promise<void> {
+  await logAdminAction({
+    action: 'login',
+    entityType: 'system',
+    entityLabel: 'Admin login',
+  });
+}
+
+/** Call before sign-out (after sign-out the session is gone and the insert would fail). */
+export async function logAdminLogout(): Promise<void> {
+  await logAdminAction({
+    action: 'logout',
+    entityType: 'system',
+    entityLabel: 'Admin logout',
+  });
+}
+END FILE
+
+FILE: apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx
+'use client';
+
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
+import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES } from '@barangayan/shared';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+import { logAdminAction } from '@/actions/admin-audit-actions';
+import { beginAttempt, notify as toast } from '@/lib/notify';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+
+const inputClass =
+  'w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
+const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
+
+export function AnnouncementForm({ barangayId }: { barangayId: string }) {
+  const router = useRouter();
+
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [detailedDescription, setDetailedDescription] = useState('');
+  const [category, setCategory] = useState<string>('general');
+  const [imageUrl, setImageUrl] = useState('');
+  const [publishedAt, setPublishedAt] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
+
+      const result = announcementSchema.safeParse({
+        title,
+        body,
+        detailed_description: detailedDescription || undefined,
+        category,
+        image_url: imageUrl || undefined,
+        published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
+      });
+
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
+
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: insertError } = await supabase.from('announcements').insert({
+        barangay_id: barangayId,
+        title: result.data.title,
+        body: result.data.body,
+        detailed_description: result.data.detailed_description || null,
+        category: result.data.category,
+        image_url: result.data.image_url || null,
+        published_at: result.data.published_at ?? new Date().toISOString(),
+      });
+      setSubmitting(false);
+
+      if (insertError) {
+        setError(insertError.message);

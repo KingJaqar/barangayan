@@ -1,0 +1,67 @@
+export * from './lib/point-in-polygon';
+export * from './lib/device-location';
+export * from './lib/resident-auth';
+export * from './lib/resident-account-setup';
+export * from './lib/resident-email-verification';
+export * from './lib/auth-fetch';
+export * from './lib/geocode';
+export * from './lib/format';
+export * from './lib/request-status';
+export * from './lib/service-tracking';
+export * from './lib/service-catalog';
+export * from './lib/resident-submission';
+export * from './lib/service-request-validation';
+export * from './lib/agency-sla';
+
+export * from './lib/attendance-request';
+END FILE
+
+FILE: packages/shared/package.json
+{
+  "name": "@barangayan/shared",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "build:routing-pack": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-routing-pack.mts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "@types/geojson": "^7946.0.14",
+    "vitest": "^3.0.0"
+  }
+}
+END FILE
+
+FILE: supabase/migrations/0143_residents_read_requested_document_types.sql
+-- Residents could only read ACTIVE document types, so once an admin retired a service the
+-- embedded document_types(name) on that resident's own past requests came back null and
+-- Logs/Requests fell back to the generic "Document Request" title. Let a resident read the
+-- catalog rows their own requests point at, whether or not the type is still offered.
+-- Not applied to hosted; rehearse on a clone first.
+create policy "residents can read document types of their own requests"
+  on public.document_types for select
+  to authenticated
+  using (
+    exists (
+      select 1 from public.service_requests r
+      where r.document_type_id = document_types.id
+        and r.resident_id = (select auth.uid())
+    )
+  );
+END FILE
+
+FILE: AGENTS.md
+
+END FILE
+
+FILE: CLAUDE.md
+@AGENTS.md
+END FILE
+

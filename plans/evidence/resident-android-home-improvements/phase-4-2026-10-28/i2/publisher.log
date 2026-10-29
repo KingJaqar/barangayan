@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('dialog', { name: 'Edit announcement', exact: true }).getByLabel('Body', { exact: true })
+
+    at C:\Users\User\barangayan\tmp\resident-home-i2-20261028\publisher.mjs:11:303 {
+  log: [
+    "  - waiting for getByRole('dialog', { name: 'Edit announcement', exact: true }).getByLabel('Body', { exact: true })"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

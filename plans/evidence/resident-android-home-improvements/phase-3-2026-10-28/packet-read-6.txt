@@ -1,0 +1,199 @@
+visible ? 'auto' : 'none'} accessibilityElementsHidden={!visible}
+    importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+    style={[styles.arrowHit, side === 'left' ? { left: 2 } : { right: 2 }, { opacity }]}>
+    <Pressable disabled={!visible} accessibilityRole="button" accessibilityLabel={`Scroll ${label} ${side}`} onPress={onPress}
+      style={styles.arrowButton}>
+      <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
+        <Ionicons name={side === 'left' ? 'chevron-back' : 'chevron-forward'} size={16} color={resident.text} accessible={false} />
+      </View>
+    </Pressable>
+  </Animated.View>;
+}
+
+function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevronRowProps) {
+  const theme = useTheme();
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const contentWidth = useRef(0);
+  const layoutWidth = useRef(0);
+
+  function updateScrollState(offsetX: number) {
+    setCanScrollLeft(offsetX > 4);
+    setCanScrollRight(offsetX < contentWidth.current - layoutWidth.current - 4);
+  }
+
+  function handleScroll(event: { nativeEvent: { contentOffset: { x: number } } }) {
+    updateScrollState(event.nativeEvent.contentOffset.x);
+  }
+
+  function handleContentSizeChange(width: number) {
+    contentWidth.current = width;
+    updateScrollState(0);
+  }
+
+  function handleLayout(event: { nativeEvent: { layout: { width: number } } }) {
+    layoutWidth.current = event.nativeEvent.layout.width;
+    updateScrollState(0);
+  }
+
+  return (
+    <View style={styles.wrap}>
+      {canScrollLeft ? (
+        <View style={[styles.chevron, styles.chevronLeft, { backgroundColor: theme.primary }]} pointerEvents="none">
+          <Ionicons name="chevron-back" size={18} color="#ffffff" />
+        </View>
+      ) : null}
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={contentContainerStyle}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        onContentSizeChange={handleContentSizeChange}
+        onLayout={handleLayout}>
+        {children}
+      </ScrollView>
+
+      {canScrollRight ? (
+        <View style={[styles.chevron, styles.chevronRight, { backgroundColor: theme.primary }]} pointerEvents="none">
+          <Ionicons name="chevron-forward" size={18} color="#ffffff" />
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  arrowButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  arrowHit: { position: 'absolute', zIndex: 1, elevation: 4, top: '50%', marginTop: -22, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  arrowFace: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center', elevation: 3, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
+  wrap: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  chevron: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -14,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+  },
+  chevronLeft: {
+    left: -6,
+  },
+  chevronRight: {
+    right: -6,
+  },
+});
+</file>
+
+<file path="AGENTS.md">
+
+</file>
+
+<file path="apps/resident-android-mobile/package.json">
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",
+    "test:navigation": "node tests/navigation-regressions.mjs"
+  },
+  "private": true
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(app)/home/index.tsx">
+import { Ionicons } from '@expo/vector-icons';
+import type { Tables } from '@barangayan/shared';
+import { Image } from 'expo-image';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Avatar } from '@/components/avatar';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+import { ServicesTabIcon } from '@/components/services-tab-icon';
+import { HomeAction } from '@/components/home/home-action';
+import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+import { ThemedText } from '@/components/themed-text';
+import { DocumentIcon } from '@/components/document-icon';
+import { getDocumentIcon } from '@/constants/document-icons';
+import { MaxContentWidth } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';

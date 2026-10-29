@@ -1,0 +1,24 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/announcement-datetime.test.ts (8 tests) 11ms
+ ✓ tests/table-browse/refund-handler.test.ts (19 tests) 66ms
+ ✓ tests/table-browse/notify.test.ts (6 tests) 328ms
+ ✓ tests/table-browse/browse-state.test.ts (51 tests) 45ms
+ ✓ tests/search/map-search.test.ts (3 tests) 5ms
+ ✓ tests/table-browse/operations.test.ts (3 tests) 257ms
+ ✓ tests/table-browse/content-archive.test.ts (4 tests) 265ms
+ ✓ tests/table-browse/pilot.test.ts (6 tests) 215ms
+ ✓ tests/search/search.test.ts (13 tests) 351ms
+ ✓ tests/table-browse/queries.test.ts (16 tests) 445ms
+ ✓ tests/profile/schema.test.ts (8 tests) 41ms
+ ✓ tests/table-browse/household-attendance-web.test.ts (6 tests) 46ms
+ ✓ tests/table-browse/record-options.test.ts (7 tests) 1506ms
+ ✓ tests/table-browse/record-lifecycle.test.ts (13 tests) 76ms
+ ✓ tests/auth/session-guards.test.tsx (7 tests) 91ms
+
+ Test Files  15 passed (15)
+      Tests  170 passed (170)
+   Start at  14:12:57
+   Duration  5.34s (transform 5.74s, setup 0ms, collect 16.12s, tests 3.75s, environment 6ms, prepare 17.81s)
+

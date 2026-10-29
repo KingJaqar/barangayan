@@ -1,0 +1,20 @@
+{
+  "pid": 37432,
+  "start": "2026-10-28T04:54:30.224Z",
+  "deadlineMs": 1200000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "start",
+    "--dev-client",
+    "--offline",
+    "--port",
+    "8087",
+    "--max-workers",
+    "2"
+  ],
+  "backend": "http://127.0.0.1:54321",
+  "credential": "existing local anon only, read in memory",
+  "correction": "Offline and localhost flags are mutually exclusive; confirmed hostname override used with offline"
+}

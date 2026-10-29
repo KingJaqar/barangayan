@@ -1,0 +1,55 @@
+{
+  "pass": true,
+  "logoutMs": 10717,
+  "serverOutstandingAtLogout": true,
+  "request": {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-29T03:16:32.222Z"
+  },
+  "afterRequests": [
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A10.812Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A18%3A10.812Z&offset=0&limit=100",
+      "time": "2026-10-29T03:16:32.219Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A10.810Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:16:32.220Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:16:32.222Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:16:32.225Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/logout?scope=local",
+      "time": "2026-10-29T03:16:41.912Z",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A24.032Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:16:45.594Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A24.034Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A18%3A24.034Z&offset=0&limit=100",
+      "time": "2026-10-29T03:16:45.596Z",
+      "status": 200
+    }
+  ],
+  "guestClearedOldRequest": true
+}

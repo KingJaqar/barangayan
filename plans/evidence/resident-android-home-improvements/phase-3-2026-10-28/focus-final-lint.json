@@ -1,0 +1,16 @@
+{
+  "id": "lint",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "lint"
+  ],
+  "deadline": 300000,
+  "start": "2026-10-28T12:40:12.821Z",
+  "end": "2026-10-28T12:43:04.971Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\focus-final-lint.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase3-20261028\\focus-final-lint"
+}

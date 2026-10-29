@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-28T05:00:39.193Z",
+  "appForceStopped": true,
+  "installedAppRetained": true,
+  "metroStop": {
+    "pid": 37432,
+    "end": "2026-10-28T04:58:31.068Z",
+    "code": 1,
+    "signal": null
+  },
+  "taskPortReversalsRemoved": true,
+  "remainingReverseMappings": "",
+  "otherInstancesAndServers": "Not stopped or modified"
+}

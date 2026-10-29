@@ -1,0 +1,395 @@
+[
+  {
+    "path": "AGENTS.md",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "previous": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\AGENTS.md"
+  },
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "bytes": 687,
+    "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+    "previous": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\admin-web\\AGENTS.md"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "bytes": 20684,
+    "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+    "previous": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\home\\index.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "bytes": 8928,
+    "sha256": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260",
+    "previous": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\services\\index.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+    "bytes": 13491,
+    "sha256": "b14524eab067e4fa337c2c5a171b6532a383b97b5505583665eecd4d43fa9836",
+    "previous": "b14524eab067e4fa337c2c5a171b6532a383b97b5505583665eecd4d43fa9836",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\components\\resident-header.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "bytes": 12404,
+    "sha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+    "previous": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\components\\app-tabs.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+    "bytes": 9402,
+    "sha256": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43",
+    "previous": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\components\\scrollable-chevron-row.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+    "bytes": 33875,
+    "sha256": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f",
+    "previous": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\components\\services\\request-tracking-screen.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+    "bytes": 2299,
+    "sha256": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a",
+    "previous": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "bytes": 2672,
+    "sha256": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+    "previous": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "bytes": 1032,
+    "sha256": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7",
+    "previous": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\lib\\emergency-cache.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+    "bytes": 3186,
+    "sha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+    "previous": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\hooks\\use-emergency-announcements.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+    "bytes": 2118,
+    "sha256": "9fe18507325663cccc28c9f61e3bdf722c19139c6e52dd6be651e9d3d2a1cffe",
+    "previous": "9fe18507325663cccc28c9f61e3bdf722c19139c6e52dd6be651e9d3d2a1cffe",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\hooks\\use-history-pages.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "bytes": 2122,
+    "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+    "previous": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\package.json"
+  },
+  {
+    "path": "apps/resident-android-mobile/vitest.config.ts",
+    "bytes": 142,
+    "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+    "previous": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\vitest.config.ts"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.ts",
+    "bytes": 811,
+    "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955",
+    "previous": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\src\\schemas\\announcement.ts"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.test.ts",
+    "bytes": 2390,
+    "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3",
+    "previous": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\src\\schemas\\announcement.test.ts"
+  },
+  {
+    "path": "packages/shared/src/lib/service-catalog.ts",
+    "bytes": 6899,
+    "sha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+    "previous": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\src\\lib\\service-catalog.ts"
+  },
+  {
+    "path": "packages/shared/src/types/database.ts",
+    "bytes": 60065,
+    "sha256": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb",
+    "previous": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\src\\types\\database.ts"
+  },
+  {
+    "path": "packages/shared/src/types/service-foundations.ts",
+    "bytes": 9331,
+    "sha256": "3651927e8344b2a18d32a79150835ce4bd846acc87ec2c0ab4f1518b9ec08e95",
+    "previous": "3651927e8344b2a18d32a79150835ce4bd846acc87ec2c0ab4f1518b9ec08e95",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\src\\types\\service-foundations.ts"
+  },
+  {
+    "path": "packages/shared/package.json",
+    "bytes": 491,
+    "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+    "previous": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\packages\\shared\\package.json"
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "bytes": 1496,
+    "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944",
+    "previous": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\admin-web\\package.json"
+  },
+  {
+    "path": "supabase/migrations/0011_announcements_admin_write.sql",
+    "bytes": 1988,
+    "sha256": "3b61ff73d3b9d31ee00cb4b294ec95c17e350164fb435fb6ba3ee3060857cdf6",
+    "previous": "3b61ff73d3b9d31ee00cb4b294ec95c17e350164fb435fb6ba3ee3060857cdf6",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0011_announcements_admin_write.sql"
+  },
+  {
+    "path": "supabase/migrations/0019_fix_announcement_soft_delete.sql",
+    "bytes": 922,
+    "sha256": "63bc0f5e090023388071c507982871634e9be343df8c13aeec65fb5f8d8b3f72",
+    "previous": "63bc0f5e090023388071c507982871634e9be343df8c13aeec65fb5f8d8b3f72",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0019_fix_announcement_soft_delete.sql"
+  },
+  {
+    "path": "supabase/migrations/0144_admin_request_optional_status_reason.sql",
+    "bytes": 5268,
+    "sha256": "8fd82a38a4f1542fc46df8079fbdffca8cceefa67d66bb26a2de472509c79efe",
+    "previous": "8fd82a38a4f1542fc46df8079fbdffca8cceefa67d66bb26a2de472509c79efe",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0144_admin_request_optional_status_reason.sql"
+  },
+  {
+    "path": "CLAUDE.md",
+    "bytes": 11,
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\CLAUDE.md"
+  },
+  {
+    "path": "apps/admin-web/CLAUDE.md",
+    "bytes": 12,
+    "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\admin-web\\CLAUDE.md"
+  },
+  {
+    "path": "package.json",
+    "bytes": 410,
+    "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\package.json"
+  },
+  {
+    "path": "package-lock.json",
+    "bytes": 667658,
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\package-lock.json"
+  },
+  {
+    "path": "apps/resident-android-mobile/app.json",
+    "bytes": 1295,
+    "sha256": "507d51f5145b7304129795b6b8fe300945bf73649fd7431bb53042b1fb5bcc5f",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\app.json"
+  },
+  {
+    "path": "apps/resident-android-mobile/tsconfig.json",
+    "bytes": 318,
+    "sha256": "09570b139a14ee71947b40b6ef8d639323603fd031bf253d32f449a77d3ab58e",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\tsconfig.json"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "bytes": 26028,
+    "sha256": "4fab8e06cb28d7b43b4a3d8af7514c35147dfa6767ed63a3749c6257f857c460",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+    "bytes": 32180,
+    "sha256": "9a48e7211bdd81beb52816a753d4b6db2a6c88bdc070b3ae9ea099628eeba336",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\tests\\reports-announcements-ui.mjs"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+    "bytes": 7757,
+    "sha256": "28614853ba42032c9d0db6ee1b02fbc6a03e77faa538cf7c78b08e39e57a7521",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\tests\\request-tracking-navigation.mjs"
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "bytes": 11204,
+    "sha256": "4beda86cdd637530a17350eb74e82960b581527b51a1ea9189ee9c4faf8160c1",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\tests\\services-tab-stability.mjs"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "bytes": 8422,
+    "sha256": "c84876c0d7252322894060101390084e831ca9c7036174cdab3fc5986f279a34",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\components\\home\\request-summary-sheet.tsx"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/notification-hub-data.ts",
+    "bytes": 4802,
+    "sha256": "2e0afbc28d4d4606aea839bb3c6bbb449eb7dce4f776097a8dd5bfaf27e0dad8",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\lib\\notification-hub-data.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/notification-hub.ts",
+    "bytes": 10926,
+    "sha256": "3f0e2af52cb48739bf3d2dcc0b6425c216c6f74e35c717b1867f4409251fb4a0",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\lib\\notification-hub.ts"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-notification-hub.ts",
+    "bytes": 4739,
+    "sha256": "f4159385a32bf708b81eb71175d33b4355323713cc4e50024ebebeb9746d2da3",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\resident-android-mobile\\src\\hooks\\use-notification-hub.ts"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+    "bytes": 6773,
+    "sha256": "71b050aeace82d7226b1f6b3c3ff19b099833af3da7a1d51703796234955e528",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-form.tsx"
+  },
+  {
+    "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+    "bytes": 10145,
+    "sha256": "f17add26aeb25e447a0c21fd8bc71fb0122f4b200742d30b6b563fc5937ebf40",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-row.tsx"
+  },
+  {
+    "path": "supabase/migrations/0139_remote_schema.sql",
+    "bytes": 77578,
+    "sha256": "9caf62b71ba723398b3363a39d8b557e5ac8a879592e6f909565172c92058ac2",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0139_remote_schema.sql"
+  },
+  {
+    "path": "supabase/migrations/0126_restore_automatic_request_submission.sql",
+    "bytes": 34330,
+    "sha256": "2008cab74d67c16dd5d2ea46d632c6f0e578205744f4070472761592ec610e7c",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0126_restore_automatic_request_submission.sql"
+  },
+  {
+    "path": "supabase/migrations/0145_notification_hub_contracts.sql",
+    "bytes": 41624,
+    "sha256": "3880306b98c1eedb1dc864e022a9825e8f78395dce053513dfc094c4ad7d859b",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\supabase\\migrations\\0145_notification_hub_contracts.sql"
+  },
+  {
+    "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "bytes": 46886,
+    "sha256": "ccda7a8be72256f23591932f929e5ffd6d4f8a4dba1c642f59f8c1d0c71924e7",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\plans\\Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md"
+  },
+  {
+    "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "bytes": 13672,
+    "sha256": "a08ff17bfdf2ea0749d28a37ae7903629ff17ca27c0a268bbf84fc7f9c555d39",
+    "changedSincePlanning": false,
+    "ownership": "pre-existing; read only during phase 0",
+    "snapshot": "tmp\\resident-home-phase0-20261028\\before\\plans\\evidence\\resident-android-home-improvements\\planning-2026-10-28\\context-index.md"
+  }
+]

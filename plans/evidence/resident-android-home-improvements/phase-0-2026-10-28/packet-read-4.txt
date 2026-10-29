@@ -1,0 +1,200 @@
+        entryFocused.current = false;
+        setMounted(false);
+        setSheetHeight(0);
+      }
+    });
+    return () => { active = false; animation.stop(); };
+  }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
+
+  useEffect(() => {
+    if (!mounted && !visible && dismissPending.current) {
+      dismissPending.current = false;
+      dismiss.current();
+    }
+  }, [mounted, visible]);
+
+  return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent
+    onRequestClose={onClose}>
+    <View style={styles.root}>
+      <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}>
+        <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss request summary" onPress={onClose} />
+      </Animated.View>
+      <Animated.View accessibilityViewIsModal onLayout={event => {
+        const measured = event.nativeEvent.layout.height;
+        setSheetHeight(previous => previous === measured ? previous : measured);
+      }} style={[styles.sheet, {
+        backgroundColor: resident.card, maxHeight: height * 0.92, paddingBottom: Math.max(32, insets.bottom + 16),
+        opacity: reducedMotion ? progress : 1,
+        transform: [{ translateY: reducedMotion ? 0 : progress.interpolate({ inputRange: [0, 1], outputRange: [sheetHeight || height, 0] }) }],
+      }]}>
+        <View accessible={false} style={[styles.handle, { backgroundColor: resident.border }]} />
+        <Pressable ref={closeTarget} hitSlop={4} accessibilityRole="button" accessibilityLabel="Close request summary" onPress={onClose}
+          style={({ pressed }) => [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}>
+          <Ionicons name="close" size={18} color={resident.text} accessible={false} />
+        </Pressable>
+        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View style={styles.titleGroup}>
+            <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
+            <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
+          </View>
+        </View>
+        <View style={styles.timeline}>
+          {summary.stepIndex <= 0 ? <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.statusLabel}</ThemedText> : null}
+          {summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
+            <View style={styles.indicator} accessible={false} importantForAccessibility="no-hide-descendants">
+              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
+                {step.current ? <View style={[styles.currentDot, { backgroundColor: resident.accentText }]} />
+                  : step.reached ? <Ionicons name="checkmark" size={14} color={resident.onAccent} /> : null}
+              </View>
+              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.border }]} /> : null}
+            </View>
+            <View style={styles.stepBody}>
+              <ThemedText accessibilityLabel={step.current ? `${step.label}, current stage` : step.label}
+                style={[styles.stepLabel, { color: step.reached ? resident.text : resident.muted, fontWeight: step.current ? '700' : step.reached ? '600' : '500' }]}>{step.label}</ThemedText>
+              <ThemedText style={[styles.date, { color: resident.muted }]}>{step.date ? homeTimestamp(step.date) : step.detail}</ThemedText>
+            </View>
+          </View>)}
+        </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <PrimaryButton presentation="resident" label="View full request" disabled={!visible} onPress={onViewFull} />
+        </View>
+      </Animated.View>
+    </View>
+  </Modal>;
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 20, paddingTop: 12, flexShrink: 1 },
+  handle: { width: 40, height: 4, borderRadius: 2, alignSelf: 'center' },
+  header: { flexDirection: 'row', alignItems: 'flex-start', paddingRight: 48 },
+  titleGroup: { flex: 1, minWidth: 0 },
+  category: { fontSize: 12.5, lineHeight: 18.75 },
+  title: { fontSize: 19, lineHeight: 26.125, fontWeight: '800', marginTop: 2 },
+  reference: { fontSize: 13, lineHeight: 19.5, marginTop: 4 },
+  close: { position: 'absolute', top: 32, right: 20, zIndex: 1, elevation: 4, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  body: { flexShrink: 1, marginTop: 16 },
+  timeline: { gap: 0, marginTop: 24, paddingRight: 48 },
+  status: { fontSize: 12.5, lineHeight: 18, fontWeight: '600', marginBottom: 16 },
+  step: { flexDirection: 'row', gap: 14 },
+  indicator: { width: 24, alignItems: 'center' },
+  dot: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  currentDot: { width: 8, height: 8, borderRadius: 4 },
+  line: { width: 2, flex: 1, minHeight: 24 },
+  stepBody: { flex: 1, paddingBottom: 20, marginTop: -2 },
+  stepLabel: { fontSize: 14.5, lineHeight: 21.75 },
+  date: { fontSize: 12.5, lineHeight: 18.75 },
+  footer: { marginTop: 8 },
+});
+END FILE: apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+FILE: apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts
+import { ANNOUNCEMENT_CATEGORY_META, type Tables } from '@barangayan/shared';
+import { useEffect, useRef, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
+import { getCachedData, setCachedData } from '@/lib/emergency-cache';
+import { uniqueChannelName } from '@/lib/realtime-channel';
+
+export type EmergencyAnnouncement = Tables<'announcements'>;
+
+const CACHE_TAG = 'emergency_announcements';
+
+export function useEmergencyAnnouncements() {
+  const [items, setItems] = useState<EmergencyAnnouncement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(false);
+  const cancelledRef = useRef(false);
+
+  async function fetchEmergencies() {
+    try {
+      const { data, error: qErr } = await supabase
+        .from('announcements')
+        .select('*')
+        .eq('category', 'emergency')
+        .is('deleted_at', null)
+        .order('published_at', { ascending: false });
+
+      if (qErr) throw qErr;
+      if (!cancelledRef.current) {
+        setItems(data ?? []);
+        setError(null);
+        setIsOffline(false);
+        await setCachedData(CACHE_TAG, (data ?? []) as EmergencyAnnouncement[]);
+      }
+    } catch (err) {
+      if (!cancelledRef.current) {
+        setError(err instanceof Error ? err.message : 'Failed to load emergency announcements');
+        setIsOffline(true);
+      }
+    } finally {
+      if (!cancelledRef.current) setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    cancelledRef.current = false;
+
+    async function init() {
+      const cached = await getCachedData<EmergencyAnnouncement[]>(CACHE_TAG);
+      if (cached && cached.length > 0 && !cancelledRef.current) {
+        setItems(cached);
+        setLoading(false);
+        setIsOffline(true);
+      }
+
+      fetchEmergencies();
+    }
+
+    init();
+
+    const channel = supabase
+      .channel(uniqueChannelName('emergency-announcements'))
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'announcements',
+          filter: `category=eq.emergency`,
+        },
+        () => {
+          fetchEmergencies();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      cancelledRef.current = true;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const refetch = () => {
+    setLoading(true);
+    setError(null);
+    setIsOffline(false);
+    return supabase
+      .from('announcements')
+      .select('*')
+      .eq('category', 'emergency')
+      .is('deleted_at', null)
+      .order('published_at', { ascending: false })
+      .then(({ data, error: qErr }) => {
+        if (qErr) {
+          setError(qErr.message);
+          setIsOffline(true);
+        } else {
+          setItems(data ?? []);
+          setError(null);
+          setIsOffline(false);
+          setCachedData(CACHE_TAG, (data ?? []) as EmergencyAnnouncement[]);
+        }
+        setLoading(false);
+      });
+  };
+
+  return { items, loading, error, refetch, isOffline };

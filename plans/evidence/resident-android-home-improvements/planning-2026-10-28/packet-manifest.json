@@ -1,0 +1,73 @@
+{
+  "version": "1.18.1",
+  "format": "parsable XML, uncompressed",
+  "packet_sha256": "abf36113f51c66ca80a857f286148f54ad8a53ecbafc40a52efba1911624949d",
+  "selectors_file": "packet-selectors.txt",
+  "included": [
+    "apps/admin-web/AGENTS.md",
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/vitest.config.ts",
+    "packages/shared/src/schemas/announcement.test.ts",
+    "packages/shared/src/schemas/announcement.ts",
+    "packages/shared/package.json",
+    "AGENTS.md"
+  ],
+  "omissions": [],
+  "security": "No suspicious files detected; default checks and exclusions retained",
+  "decoded_chars": 43275,
+  "boundaries": "half-open [start,end) over decoded-context.txt before its final Set-Content newline",
+  "chunks": [
+    {
+      "file": "packet-read-1.txt",
+      "start": 0,
+      "end": 12000,
+      "chars": 12000,
+      "newlineCount": 185,
+      "read": "Complete; all five chunks inspected in this planning revision",
+      "lines": 186
+    },
+    {
+      "file": "packet-read-2.txt",
+      "start": 12000,
+      "end": 24000,
+      "chars": 12000,
+      "newlineCount": 174,
+      "read": "Complete; all five chunks inspected in this planning revision",
+      "lines": 175
+    },
+    {
+      "file": "packet-read-3.txt",
+      "start": 24000,
+      "end": 32423,
+      "chars": 8423,
+      "newlineCount": 200,
+      "read": "Complete; all five chunks inspected in this planning revision",
+      "lines": 200
+    },
+    {
+      "file": "packet-read-4.txt",
+      "start": 32423,
+      "end": 40505,
+      "chars": 8082,
+      "newlineCount": 200,
+      "read": "Complete; all five chunks inspected in this planning revision",
+      "lines": 200
+    },
+    {
+      "file": "packet-read-5.txt",
+      "start": 40505,
+      "end": 43275,
+      "chars": 2770,
+      "newlineCount": 90,
+      "read": "Complete; all five chunks inspected in this planning revision",
+      "lines": 90
+    }
+  ],
+  "token_estimate": 13684,
+  "token_note": "Tool estimate only; no model-usage or savings measurement"
+}

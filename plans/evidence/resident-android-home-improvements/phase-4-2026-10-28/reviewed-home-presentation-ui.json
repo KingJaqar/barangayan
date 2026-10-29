@@ -1,0 +1,15 @@
+{
+  "id": "home-presentation-ui",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/home-presentation-ui.mjs"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-28T13:12:11.349Z",
+  "end": "2026-10-28T13:12:47.082Z",
+  "code": 1,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\reviewed-home-presentation-ui.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\reviewed-home-presentation-ui"
+}

@@ -1,0 +1,191 @@
+{
+  "at": "2026-10-27T02:13:47.634Z",
+  "auditId": "A05",
+  "configuration": "1080x1920 / 480dpi / font1.0",
+  "cycles": [
+    {
+      "focus": {
+        "tag": "a05-same-draft-focus-1",
+        "editor": [
+          60,
+          372,
+          1020,
+          1167
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "action": {
+        "tag": "a05-same-draft-action-1-1",
+        "action": [
+          120,
+          889,
+          960,
+          1047
+        ],
+        "editor": [
+          60,
+          372,
+          1020,
+          538
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "restored": {
+        "tag": "a05-same-draft-restored-1",
+        "map": [
+          0,
+          240,
+          1080,
+          600
+        ],
+        "action": [
+          60,
+          1690,
+          1020,
+          1848
+        ],
+        "editor": [
+          60,
+          732,
+          1020,
+          1339
+        ],
+        "imeTop": 1167,
+        "ime": false
+      }
+    },
+    {
+      "focus": {
+        "tag": "a05-same-draft-focus-2",
+        "editor": [
+          60,
+          372,
+          1020,
+          1167
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "action": {
+        "tag": "a05-same-draft-action-2-1",
+        "action": [
+          120,
+          889,
+          960,
+          1047
+        ],
+        "editor": [
+          60,
+          372,
+          1020,
+          538
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "restored": {
+        "tag": "a05-same-draft-restored-2",
+        "map": [
+          0,
+          240,
+          1080,
+          600
+        ],
+        "action": [
+          60,
+          1690,
+          1020,
+          1848
+        ],
+        "editor": [
+          60,
+          732,
+          1020,
+          1339
+        ],
+        "imeTop": 1167,
+        "ime": false
+      }
+    },
+    {
+      "focus": {
+        "tag": "a05-same-draft-focus-3",
+        "editor": [
+          60,
+          372,
+          1020,
+          1167
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "action": {
+        "tag": "a05-same-draft-action-3-1",
+        "action": [
+          120,
+          889,
+          960,
+          1047
+        ],
+        "editor": [
+          60,
+          372,
+          1020,
+          538
+        ],
+        "imeTop": 1167,
+        "ime": true
+      },
+      "restored": {
+        "tag": "a05-same-draft-restored-3",
+        "map": [
+          0,
+          240,
+          1080,
+          600
+        ],
+        "action": [
+          60,
+          1690,
+          1020,
+          1848
+        ],
+        "editor": [
+          60,
+          732,
+          1020,
+          1339
+        ],
+        "imeTop": 1167,
+        "ime": false
+      }
+    }
+  ],
+  "saved": false,
+  "before": {
+    "tag": "a05-same-draft-before",
+    "map": [
+      0,
+      240,
+      1080,
+      600
+    ],
+    "action": [
+      60,
+      1690,
+      1020,
+      1848
+    ],
+    "editor": [
+      60,
+      732,
+      1020,
+      1339
+    ],
+    "imeTop": null,
+    "ime": false
+  },
+  "status": "pass same-draft default restoration/action subset"
+}

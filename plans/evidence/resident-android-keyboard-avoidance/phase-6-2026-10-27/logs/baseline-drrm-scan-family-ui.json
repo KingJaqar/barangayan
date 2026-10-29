@@ -1,0 +1,11 @@
+{
+  "name": "drrm-scan-family-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/drrm-scan-family-ui.mjs"
+  ],
+  "start": "2026-10-27T02:03:52.978Z",
+  "end": "2026-10-27T02:04:19.849Z",
+  "status": 0
+}

@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-27T01:35:57.274Z",
+  "status": "pass stated protocol",
+  "origin": "home",
+  "config": "final-native",
+  "observations": [
+    {
+      "tag": "final-native-c15-home-focus",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-typed",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-native-cut",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-native-paste",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-start",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-end",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivez",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-middle",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "azzphasefivemz",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-submitted",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        912,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "false"
+    },
+    {
+      "tag": "final-native-c15-home-refocus",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        720,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "zzphasefive",
+      "focused": "true"
+    },
+    {
+      "tag": "final-native-c15-home-clear",
+      "label": "Search services, announcements and your records",
+      "bounds": [
+        252,
+        90,
+        852,
+        222
+      ],
+      "imeTop": 1167,
+      "text": "Search Barangayan",
+      "focused": "true"
+    }
+  ],
+  "checks": [
+    "initial focus",
+    "start/middle/end caret insertion",
+    "submit to Explore",
+    "submitted refocus retains query",
+    "clear",
+    "return to origin",
+    "synthetic history removed"
+  ]
+}

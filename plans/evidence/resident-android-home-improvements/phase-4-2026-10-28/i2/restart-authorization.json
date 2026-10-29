@@ -1,0 +1,6 @@
+{
+  "approved": "2026-10-29T05:10:40.070Z",
+  "instruction": "Restart Docker and finish cleanup",
+  "acceptedSourcesUnchanged": 9,
+  "scope": "Restart Docker Desktop, remove only resident_home_i2_rest_keys and resident_home_i2_auth, verify recovery of original local Supabase services"
+}

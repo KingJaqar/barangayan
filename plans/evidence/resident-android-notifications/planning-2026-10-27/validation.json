@@ -1,0 +1,24 @@
+{
+  "scope": "Document-only validation; no product acceptance run",
+  "document_validation": "passed",
+  "local_links_checked": 12,
+  "catalog_ids": 69,
+  "account_ids": 52,
+  "system_ids": 17,
+  "execution_phases": 7,
+  "acceptance_gates": 18,
+  "reviewed_source_identities": 17,
+  "snapshot_integrity_checks": 18,
+  "packet_entries": 11,
+  "supplement_entries": 2,
+  "live_source_drift": [
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "current_sha256": "d10d85a6e047ce79275356ecba77863443667fe49f56250575dc24fe6a3006fd",
+      "reviewed_sha256": "82d065d62a67129aeddb366cac8746262afb477b6811b828ddf320a63d8a9f4e",
+      "state": "Uncertain; refresh before dependent phase-0 implementation"
+    }
+  ],
+  "execution_status": "Not started; U06 and other phase-0 prerequisites remain",
+  "issues": []
+}

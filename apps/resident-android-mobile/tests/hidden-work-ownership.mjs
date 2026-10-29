@@ -42,7 +42,7 @@ await build({
     function LayoutControls(){window.fx.layout=useFloatingTabLayout();return null}
     const stableClearance=<><Clearance/><Clearance ignore/><LayoutControls/></>;
     function App(){const [n,render]=useState(0);window.render=()=>render(v=>v+1);const f=window.fx;
-      return <><Focus.Provider value={f.section==='compact'}><div data-testid="compact">{Array.from({length:f.count},(_,i)=><AgencySlaStatus key={i} requestId={'request-'+i} compact/>)}</div></Focus.Provider>
+      return <><Focus.Provider value={f.section==='compact'}><div data-testid="compact">{Array.from({length:f.count},(_,i)=><AgencySlaStatus key={i} requestId={'request-'+i} compact active={f.cardsActive!==false}/>)}</div></Focus.Provider>
       <Focus.Provider value={f.section==='full'}><div data-testid="full"><AgencySlaStatus requestId={f.fullId}/></div></Focus.Provider>
       <Routes/><Path.Provider value={f.path}><FloatingTabLayoutProvider>{stableClearance}</FloatingTabLayoutProvider></Path.Provider></>}
     const root=createRoot(document.getElementById('root'));window.unmount=()=>root.unmount();root.render(<App/>);`, resolveDir: app, loader: 'tsx' },
@@ -80,7 +80,7 @@ try {
   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
   const patch = async values => { await page.evaluate(values => { Object.assign(window.fx, values); window.render(); }, values); await page.waitForFunction(() => !!window.fx.routeState); };
   const counts = () => page.evaluate(() => ({ calls: window.fx.slaCalls.length, intervals: [...window.fx.intervals.values()], listeners: window.fx.appListeners.size }));
-  await page.waitForFunction(() => document.querySelector('[data-testid="compact"]')?.textContent.includes('On Track'));
+  await page.waitForFunction(() => document.querySelector('[data-testid="compact"]')?.textContent.includes('Est.'));
   assert.deepEqual(await counts(), { calls: 6, intervals: [15000,15000,15000,15000,15000,15000,1000], listeners: 1 });
   assert.equal(await page.evaluate(() => window.fx.compilations), 0);
   await patch({ section: 'home' });
@@ -204,6 +204,16 @@ try {
   await page.waitForFunction(()=>document.querySelector('[data-testid="full"]').textContent.includes('Cancelled'));
   assert.deepEqual((await counts()).intervals,[15000]);
   passed.push('ten hide/show loops retain one foreground listener and zero hidden timers; cancelled clock has no visible tick');
+  await patch({section:'compact',cardsActive:false,hold:false,malformed:false});
+  await page.waitForFunction(()=>window.fx.intervals.size===0);
+  const collapsedCalls=(await counts()).calls;
+  await page.clock.runFor(32000);
+  assert.equal((await counts()).calls,collapsedCalls,'Retained collapsed cards must not poll');
+  await patch({cardsActive:true});
+  await page.waitForFunction(previous=>window.fx.slaCalls.length===previous+6,collapsedCalls);
+  await patch({cardsActive:false});
+  await page.waitForFunction(()=>window.fx.intervals.size===0);
+  passed.push('retained collapsed request sections pause all six clocks/polls; reopening refreshes once per card');
   await page.evaluate(() => window.unmount());
   assert.deepEqual(await counts(), { calls: (await counts()).calls, intervals: [], listeners: 0 });
   assert.deepEqual(errors, []);

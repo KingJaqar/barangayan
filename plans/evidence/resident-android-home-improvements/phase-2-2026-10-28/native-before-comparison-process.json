@@ -1,0 +1,20 @@
+{
+  "mode": "before",
+  "port": 8087,
+  "start": "2026-10-28T08:45:43.146Z",
+  "deadlineMs": 2700000,
+  "exception": "45-minute bounded native continuation, recorded before launch, to cover resident matrix and one paired activity-recreation comparison without the prior deadline cutting off cleanup.",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "start",
+    "--dev-client",
+    "--offline",
+    "--port",
+    "8087",
+    "--max-workers",
+    "2"
+  ],
+  "backend": "Existing application environment; no override, no account/business write",
+  "pid": 24420
+}

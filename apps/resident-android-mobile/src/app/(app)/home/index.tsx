@@ -1,15 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { Tables } from '@barangayan/shared';
+import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
 import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
 import { DrrmTabIcon } from '@/components/drrm-tab-icon';
 import { ServicesTabIcon } from '@/components/services-tab-icon';
-import { GuestPrompt } from '@/components/guest-prompt';
 import { HomeAction } from '@/components/home/home-action';
 import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
 import { PrimaryButton } from '@/components/primary-button';
@@ -19,23 +18,35 @@ import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { ThemedText } from '@/components/themed-text';
 import { DocumentIcon } from '@/components/document-icon';
 import { getDocumentIcon } from '@/constants/document-icons';
+import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
+import { RefreshResource } from '@/lib/refresh-resource';
 import { MaxContentWidth } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { useProfile } from '@/hooks/use-profile';
 import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 import { useTheme } from '@/hooks/use-theme';
-import { homeGreeting, homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+import { homeRequestSummary, homeRequestTitle, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+import { useHomeAnnouncements } from '@/hooks/use-home-announcements';
+import { advisoryExpiry, announcementPreview } from '@/lib/home-announcement';
 import { supabase } from '@/lib/supabase';
 
-type Announcement = Tables<'announcements'>;
+
 const QUICK_ACTIONS = [
-  { label: 'Documents', description: 'Request a document', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
-  { label: 'Report', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+  { label: 'Services', description: 'Browse documents and services', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+  { label: 'Reports', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
   { label: 'Emergency', description: 'Emergency information', href: '/drrm', icon: 'drrm', tone: 'danger', foreground: 'onDanger' },
   { label: 'Maps', description: 'Open barangay maps', href: '/maps', icon: 'location-outline', tone: 'info', foreground: 'onInfo' },
   { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
 ] as const;
+
+async function loadHomeRequests(signal: AbortSignal) {
+  const { data, error } = await supabase.rpc('resident_home_requests', { p_qrph_settlement_ready: PAYMENT_SETTLEMENT_READY })
+    .abortSignal(signal).retry(false);
+  if (error) throw error;
+  if (!data || data.length > 3 || new Set(data.map(item => item.id)).size !== data.length) throw new Error('Invalid Home request response');
+  return { items: data, refreshedAt: new Date().toISOString() };
+}
 
 export default function HomeScreen() {
   const { session } = useAuth();
@@ -47,76 +58,49 @@ export default function HomeScreen() {
   const reducedMotion = useResidentReducedMotion(true);
   const { width, fontScale } = useWindowDimensions();
   const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
-  const [requestRetry, setRequestRetry] = useState(0);
-  const [announcementRetry, setAnnouncementRetry] = useState(0);
+  const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+  const requestWidth = Math.max(1, Math.min(width, MaxContentWidth) - 40);
   const [failedImage, setFailedImage] = useState<string | null>(null);
-  const requestKey = JSON.stringify([userId, requestRetry]);
-  const [requestResult, setRequestResult] = useState<{ key: string; items: HomeRequest[]; error: string | null } | null>(null);
-  const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
-  const [selectedRequest, setSelectedRequest] = useState<HomeRequest | null>(null);
+  const requestKey = JSON.stringify([userId, profile?.id === userId ? profile?.barangay_id : null]);
+  const requestResource = useMemo(() => new RefreshResource(requestKey, loadHomeRequests, 'Your requests could not be loaded. Please try again.', undefined, 12_000), [requestKey]);
+  const requestState = useSyncExternalStore(requestResource.subscribe, requestResource.getSnapshot, requestResource.getSnapshot);
+  const announcements = useHomeAnnouncements(requestKey);
+  const { news, alerts, offline } = announcements;
+  const [selectedRequest, setSelectedRequest] = useState<{ key: string; request: HomeRequest } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const pendingTracking = useRef<string | null>(null);
   const homeActive = useRef(true);
   const requestTargets = useRef(new Map<string, View>());
-  // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
-  const pullNews = useRef<(() => Promise<void>) | null>(null);
-  const pullRequests = useRef<(() => Promise<void>) | null>(null);
-  const pull = usePullRefresh([() => pullNews.current?.(), () => pullRequests.current?.(), refetchProfile]);
-
-  useEffect(() => {
-    let active = true;
-    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
-    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
-    fetchLatest()
-      .then(({ data, error }) => {
-        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
-      }).catch(() => {
-        if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
-      });
-    pullNews.current = () => fetchLatest().then(({ data, error }) => {
-      if (!error && active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
-    }).catch(() => undefined);
-    return () => { active = false; pullNews.current = null; };
-  }, [announcementRetry]);
-
-  useEffect(() => {
-    if (!userId) return;
-    let active = true;
-    // Preserve the existing authenticated resident scope and latest-three limit.
-    const fetchRecent = () => Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
-      .order('created_at', { ascending: false }).limit(3));
-    fetchRecent()
-      .then(({ data, error }) => {
-        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
-      }).catch(() => {
-        if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
-      });
-    pullRequests.current = () => fetchRecent().then(({ data, error }) => {
-      if (!error && active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
-    }).catch(() => undefined);
-    return () => { active = false; pullRequests.current = null; };
-  }, [userId, requestKey]);
+  const requestFallbackTarget = useRef<View>(null);
+  const visibleRequestId = useRef<string | null>(null);
+  const pull = usePullRefresh([announcements.refresh, () => userId ? requestResource.refresh() : undefined, refetchProfile]);
 
   useEffect(() => {
     pendingTracking.current = null;
     setSheetOpen(false);
     setSelectedRequest(null);
-  }, [userId]);
+  }, [requestKey]);
 
   useFocusEffect(useCallback(() => {
     homeActive.current = true;
+    requestResource.activate();
+    if (userId) void requestResource.refresh();
     const listener = AppState.addEventListener('change', state => {
       homeActive.current = state === 'active';
-      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); }
+      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); requestResource.cancel(); }
+      else { requestResource.activate(); if (userId) void requestResource.refresh(); }
     });
-    return () => { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
-  }, []));
+    return () => { homeActive.current = false; listener.remove(); requestResource.cancel(); pendingTracking.current = null; setSheetOpen(false); };
+  }, [requestResource, userId]));
 
-  const requests = requestResult?.key === requestKey ? requestResult : null;
-  const news = newsResult?.retry === announcementRetry ? newsResult : null;
-  const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
-  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || 'Resident';
-  const announcement = news?.item;
+  const requests = requestState.data;
+  const currentSelection = selectedRequest?.key === requestKey && userId ? selectedRequest : null;
+  const selectedLive = requests?.items.find(item => item.id === currentSelection?.request.id);
+  const selected = selectedLive ?? currentSelection?.request ?? null;
+  useEffect(() => {
+    if (sheetOpen && !selectedLive) { pendingTracking.current = null; setSheetOpen(false); }
+  }, [sheetOpen, selectedLive]);
+  const announcement = news.data?.items[0];
   const announcementTone = announcement?.category === 'emergency' ? resident.danger
     : announcement?.category === 'health' ? resident.rose : resident.accentText;
 
@@ -126,9 +110,9 @@ export default function HomeScreen() {
     pendingTracking.current = null;
     if (!homeActive.current) return;
     // Keep tracking in Home's stack so Back removes it without changing Services.
-    if (id && selected?.id === id) router.push(`/home/requests/${id}`);
+    if (id && selectedLive?.id === id) router.push(`/home/requests/${id}`);
     else {
-      const target = selected ? requestTargets.current.get(selected.id) : null;
+      const target = (selected?.id === visibleRequestId.current ? requestTargets.current.get(selected.id) : null) ?? requestFallbackTarget.current;
       if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, 'focus'); }
     }
   }
@@ -137,6 +121,7 @@ export default function HomeScreen() {
     <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
       refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
       <View style={styles.inset}><ProfileCompletionBanner /></View>
+      {offline ? <HomeListState label="You’re offline. Showing last-known information where available. Pull to refresh when connected." /> : null}
       <View style={styles.identitySection}>
         {userId ? <View style={styles.identity}>
           <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} />
@@ -148,11 +133,12 @@ export default function HomeScreen() {
           <Avatar icon="person" size={36} foregroundColor={resident.onAccent} />
           <ThemedText style={[styles.location, { color: resident.text }]}>Log in</ThemedText>
         </HomeAction>}
-        <ThemedText accessibilityRole="header" style={[styles.greeting, { color: resident.text }]}>{homeGreeting(new Date().getHours())}, {userId ? firstName : 'neighbor'}</ThemedText>
       </View>
       <View style={styles.quickActions}>
         {QUICK_ACTIONS.map(action => <HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
-          accessibilityLabel={action.label} accessibilityHint={action.description} onPress={() => router.push(action.href)} style={[styles.quickAction, compactActions && styles.compactAction]}>
+          accessibilityLabel={action.label} accessibilityHint={action.description}
+          onPress={() => router.push(action.href === '/services' ? { pathname: '/services', params: { segment: 'documents' } } : action.href)}
+          style={[styles.quickAction, { width: `${100 / actionColumns}%` }]}>
           <View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === 'accent' && resident.accentNeedsOutline ? 1 : 0 }]}>
             {action.href === '/services'
               ? <ServicesTabIcon size={24} color={resident[action.foreground]} />
@@ -164,28 +150,43 @@ export default function HomeScreen() {
         </HomeAction>)}
       </View>
       <View style={styles.section}>
+        {announcements.active.map(item => <View key={item.id} style={[styles.inset, { marginBottom: 12 }]}>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`View advisory: ${item.title}. ${announcementPreview(item.body)}`}
+            onPress={() => router.push({ pathname: '/announcements', params: { announcementId: item.id } })}
+            style={[styles.card, { backgroundColor: resident.surface, borderColor: resident.danger, gap: 8, minHeight: 48 }]}>
+            <ThemedText style={[styles.status, { color: resident.danger }]}>{alerts.error || alerts.fetching || offline ? 'Last-known emergency advisory' : 'Emergency advisory'}</ThemedText>
+            <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{item.title}</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.text }]}>{announcementPreview(item.body)}</ThemedText>
+            <ThemedText style={[styles.reference, { color: resident.muted }]}>Published {homeTimestamp(item.published_at)} · Expires {homeTimestamp(item.alert_expires_at ?? '')}</ThemedText>
+            <ThemedText style={[styles.seeAllText, { color: resident.accentText }]}>View advisory</ThemedText>
+          </HomeAction>
+        </View>)}
+        {!alerts.data ? <HomeListState loading={!alerts.error} label={alerts.error ?? 'Checking emergency advisories…'} onRetry={alerts.error ? announcements.retryAlerts : undefined} /> : null}
+        {alerts.data ? <View style={styles.inset}><ThemedText style={[styles.reference, { color: resident.muted }]}>Advisories · Last refreshed {homeTimestamp(alerts.data.refreshedAt)}</ThemedText></View> : null}
+        {alerts.data && alerts.error ? <HomeListState label={alerts.error} onRetry={announcements.retryAlerts} /> : null}
+      </View>
+      <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeading}>
             <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
-            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests ? `${requests.items.length} ${requests.items.length === 1 ? 'request' : 'requests'} shown` : 'Your requests'}</ThemedText>
           </View>
-          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push('/services')} style={styles.seeAll}>
+          <HomeAction pressableRef={requestFallbackTarget} reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push({ pathname: '/services', params: { segment: 'requests' } })} style={styles.seeAll}>
             <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
           </HomeAction>
         </View>
-        {!userId ? <View style={styles.inset}><GuestPrompt label="Log in to see your requests." /></View>
-          : !requests ? <HomeListState loading label="Loading your requests…" />
-          : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
-          : requests.items.length === 0 ? <HomeListState label="Your requests will appear here. Tap Documents to request a document." />
-          : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
+        {!userId ? <HomeListState label="Log in to see your requests." action={{ label: 'Log in', onPress: () => router.push('/(auth)/login') }} />
+          : !requests ? <HomeListState loading={!requestState.error} label={requestState.error ?? "Loading your requests…"} onRetry={requestState.error ? requestResource.refresh : undefined} />
+          : requests.items.length === 0 ? <HomeListState label="No requests yet" action={{ label: 'Request a document', onPress: () => router.push({ pathname: '/services', params: { segment: 'documents' } }) }} />
+          : <ScrollableChevronRow key={requestKey} label="requests" pageWidth={requestWidth} onIndexChange={index => { visibleRequestId.current = requests.items[index]?.id ?? null; }} contentContainerStyle={styles.shelf}>
             {requests.items.map(request => {
               const summary = homeRequestSummary(request);
-              const title = request.document_types?.name ?? 'Document request';
+              const title = homeRequestTitle(request);
               return <HomeAction key={request.id} reducedMotion={reducedMotion}
                 pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
-                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
-                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
-                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                accessibilityLabel={[title, `reference ${request.reference_number}`, summary.progressLabel ?? summary.statusLabel, summary.cancelled ? summary.cancellationLabel : summary.paymentLabel, summary.updatedLabel, summary.nextAction].filter(Boolean).join(", ")}
+                accessibilityHint="Opens a request summary" onPress={() => { if (sheetOpen || pendingTracking.current) return; pendingTracking.current = null; setSelectedRequest({ key: requestKey, request }); setSheetOpen(true); }}
+                style={({ pressed }) => [styles.requestCard, styles.card, { width: requestWidth, backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
                 <View style={styles.requestTop}>
                   <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
                     <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
@@ -196,14 +197,26 @@ export default function HomeScreen() {
                   </View>
                 </View>
                 <View style={styles.requestProgress}>
-                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
-                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
-                  </View>
-                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                  {summary.progressLabel ? <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: index <= summary.stepIndex ? resident.accentText : resident.controlBorder }]} />)}
+                  </View> : null}
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.progressLabel ?? summary.statusLabel}</ThemedText>
+                  <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.updatedLabel}</ThemedText>
+                  {summary.cancelled ? <>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.cancellationLabel}</ThemedText>
+                    {summary.cancellationNote ? <ThemedText style={[styles.reference, { color: resident.text }]}>{summary.cancellationNote}</ThemedText> : null}
+                  </> : <>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.paymentLabel}</ThemedText>
+                    {summary.nextAction ? <ThemedText style={[styles.status, { color: resident.accentText }]}>{summary.nextAction}</ThemedText> : null}
+                  </>}
                 </View>
               </HomeAction>;
             })}
           </ScrollableChevronRow>}
+        {userId && requests ? <View style={styles.inset}>
+          <ThemedText style={[styles.reference, { color: resident.muted }]}>Last refreshed {homeTimestamp(requests.refreshedAt)}</ThemedText>
+          {requestState.error ? <HomeListState label={requestState.error} onRetry={requestResource.refresh} /> : null}
+        </View> : null}
       </View>
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -215,8 +228,8 @@ export default function HomeScreen() {
             <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
           </HomeAction>
         </View>
-        {!news ? <HomeListState loading label="Loading announcements…" />
-          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+        {!news.data ? <HomeListState loading={!news.error} label={news.error ?? "Loading announcements…"} onRetry={news.error ? announcements.retryNews : undefined} />
+
           : announcement ? <View style={styles.shelf}>
             <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
               onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
@@ -224,7 +237,7 @@ export default function HomeScreen() {
               <View style={styles.newsMeta}>
                 <View style={styles.categoryGroup}>
                   <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
-                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{ANNOUNCEMENT_CATEGORY_META[announcement.category as AnnouncementCategory]?.label ?? announcement.category}</ThemedText>
                 </View>
                 <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
               </View>
@@ -234,21 +247,27 @@ export default function HomeScreen() {
                     accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
                 : null}
               <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+              {advisoryExpiry(announcement) !== null && Date.parse(announcement.alert_expires_at ?? '') <= announcements.clock ? <ThemedText style={[styles.status, { color: resident.muted }]}>Expired</ThemedText> : null}
+              <ThemedText style={[styles.subtitle, { color: resident.text }]}>{announcementPreview(announcement.body ?? '')}</ThemedText>
+              <ThemedText style={[styles.seeAllText, { color: resident.accentText }]}>View details</ThemedText>
             </HomeAction>
           </View> : <HomeListState label="No announcements yet." />}
+        {news.data ? <View style={styles.inset}><ThemedText style={[styles.reference, { color: resident.muted }]}>Announcements · Last refreshed {homeTimestamp(news.data.refreshedAt)}</ThemedText></View> : null}
+        {news.data && news.error ? <HomeListState label={news.error} onRetry={announcements.retryNews} /> : null}
       </View>
     </ScrollView>
-    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
-      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+    {selected ? <RequestSummarySheet request={selected} available={Boolean(selectedLive)} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { if (!sheetOpen || !selectedLive || pendingTracking.current) return; pendingTracking.current = selectedLive.id; setSheetOpen(false); }} /> : null}
   </SafeAreaView>;
 }
 
-function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () => void }) {
+function HomeListState({ label, loading = false, onRetry, action }: { label: string; loading?: boolean; onRetry?: () => void; action?: { label: string; onPress: () => void } }) {
   const { resident } = useTheme();
   return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
     {loading ? <ActivityIndicator color={resident.accentText} /> : null}
     <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
     {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+    {action ? <PrimaryButton presentation="resident" variant="secondary" label={action.label} onPress={action.onPress} /> : null}
   </View>;
 }
 
@@ -256,26 +275,24 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
   inset: { paddingHorizontal: 20 },
-  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
-  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 36 },
+  identitySection: { paddingHorizontal: 20, paddingVertical: 16 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48 },
   locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
   location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
-  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: '800', letterSpacing: -0.7 },
-  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 28 },
-  quickAction: { flex: 1, alignItems: 'center', paddingVertical: 4, gap: 6, minWidth: 0 },
-  compactAction: { flex: 0, width: '33.333333%' },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 16, rowGap: 8 },
+  quickAction: { alignItems: 'center', paddingVertical: 4, gap: 8, minWidth: 0, minHeight: 48 },
   quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
-  section: { marginBottom: 28 },
+  section: { marginBottom: 16 },
   sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
   sectionHeading: { flex: 1, minWidth: 0 },
   sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
   subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
-  seeAll: { minHeight: 44, justifyContent: 'flex-end' },
+  seeAll: { minHeight: 48, minWidth: 48, alignItems: 'flex-end', justifyContent: 'center' },
   seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
   shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
   card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
-  requestCard: { width: 244, flexGrow: 1 },
+  requestCard: { flexGrow: 1 },
   requestTop: { flexDirection: 'row', gap: 10 },
   requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   requestInfo: { flex: 1, minWidth: 0 },
@@ -285,7 +302,7 @@ const styles = StyleSheet.create({
   segments: { flexDirection: 'row', gap: 4 },
   segment: { flex: 1, height: 4, borderRadius: 2 },
   status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
-  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementCard: { flex: 1, maxWidth: '100%', gap: 6 },
   announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
   newsTitle: { fontWeight: '600' },
   newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },

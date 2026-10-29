@@ -1,0 +1,17 @@
+{
+  "id": "home-unit",
+  "start": "2026-10-28T04:21:49.591Z",
+  "end": "2026-10-28T04:21:59.066Z",
+  "code": 0,
+  "signal": null,
+  "deadlineMs": 600000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "src/lib/home-request.test.ts"
+  ],
+  "log": "home-unit.log",
+  "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\home-unit"
+}

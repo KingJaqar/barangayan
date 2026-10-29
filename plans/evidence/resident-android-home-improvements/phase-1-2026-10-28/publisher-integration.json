@@ -1,0 +1,93 @@
+{
+  "checks": [
+    "invalid ordering rejected before write",
+    "double create writes once with actual audit, UTC expiry and one insert fanout",
+    "RLS-denied edit retains draft and produces no false success/audit",
+    "server error remains visible with retained draft",
+    "double edit saves once, preserves ID and records expiry before/after without fanout",
+    "expiry field fits 1280/390/320 light/dark and inherited fonts/accents",
+    "explicitly clearing expiry permits ordinary category"
+  ],
+  "errors": [],
+  "expectedDiagnostics": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "limitations": [
+    "Synthetic local session/connection/routing adapters; actual publisher, Supabase JS, audit action, PostgreSQL RLS and event triggers. No production login or hosted access."
+  ],
+  "browser": "156.0.8078.48",
+  "finalCounts": {
+    "public.announcements": 1,
+    "public.admin_audit_log": 3,
+    "public.announcement_reads": 0,
+    "public.notification_inbox": 1,
+    "barangayan_private.notification_events": 1,
+    "barangayan_private.notification_outbox": 1,
+    "barangayan_private.notification_deliveries": 0
+  },
+  "rowId": "02b7f532-cc8c-4b38-88b3-de0d504513d1",
+  "writes": 5,
+  "audit": [
+    {
+      "action": "create",
+      "entity_id": "02b7f532-cc8c-4b38-88b3-de0d504513d1",
+      "changes": null,
+      "metadata": {
+        "body": "Synthetic guidance for isolated integration only.",
+        "title": "Synthetic lifetime advisory",
+        "category": "emergency",
+        "admin_name": "Publisher synthetic admin",
+        "published_at": "2026-10-28T04:00:00.000Z",
+        "alert_expires_at": "2026-10-29T04:00:00.000Z",
+        "detailed_description": null
+      }
+    },
+    {
+      "action": "update",
+      "entity_id": "02b7f532-cc8c-4b38-88b3-de0d504513d1",
+      "changes": {
+        "after": {
+          "body": "Synthetic guidance for isolated integration only.",
+          "title": "Synthetic updated advisory",
+          "category": "emergency",
+          "alert_expires_at": "2026-10-30T05:15:22.125Z",
+          "detailed_description": null
+        },
+        "before": {
+          "body": "Synthetic guidance for isolated integration only.",
+          "title": "Synthetic lifetime advisory",
+          "category": "emergency",
+          "alert_expires_at": "2026-10-29T04:00:00+00:00",
+          "detailed_description": null
+        }
+      },
+      "metadata": {
+        "admin_name": "Publisher synthetic admin"
+      }
+    },
+    {
+      "action": "update",
+      "entity_id": "02b7f532-cc8c-4b38-88b3-de0d504513d1",
+      "changes": {
+        "after": {
+          "body": "Synthetic guidance for isolated integration only.",
+          "title": "Synthetic updated advisory",
+          "category": "health",
+          "alert_expires_at": null,
+          "detailed_description": null
+        },
+        "before": {
+          "body": "Synthetic guidance for isolated integration only.",
+          "title": "Synthetic updated advisory",
+          "category": "emergency",
+          "alert_expires_at": "2026-10-30T05:15:22.125+00:00",
+          "detailed_description": null
+        }
+      },
+      "metadata": {
+        "admin_name": "Publisher synthetic admin"
+      }
+    }
+  ],
+  "pass": true
+}

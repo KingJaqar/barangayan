@@ -11,11 +11,12 @@ import {
   useNotificationPreferences,
 } from '@/hooks/use-notification-preferences';
 import { useNotificationRealtime } from '@/hooks/use-notification-realtime';
+import { usePushRegistration } from '@/hooks/use-push-registration';
 import { FontPreferenceProvider } from '@/hooks/use-font-preference';
 import { ProfileProvider, useProfile } from '@/hooks/use-profile';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
-import { registerPushToken } from '@/lib/push-notifications';
+import { NotificationTapHandler } from '@/components/notification-tap-handler';
 import { View } from 'react-native';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
@@ -73,23 +74,17 @@ export default function RootLayout() {
 }
 
 /**
- * Keeps the push-notification delivery engine alive for the whole app session: registers
- * this device's token whenever a real session exists and push is enabled, and opens the
- * realtime channels that turn DB events into local notifications. Renders nothing of its
- * own — purely a side-effect wrapper around the two notification hooks.
+ * Keeps the push-notification machinery alive for the whole app session: the device's push registration follows the session
+ * (`usePushRegistration`) and the realtime channels present the Health alerts. Renders nothing of its own.
  */
 function NotificationProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const { profile } = useProfile();
   const { pushEnabled } = useNotificationPreferences();
+  const userId = session?.user.id ?? null;
 
-  useEffect(() => {
-    if (session && pushEnabled) {
-      registerPushToken().catch((error) => console.warn('Failed to register push token:', error));
-    }
-  }, [session, pushEnabled]);
-
-  useNotificationRealtime(pushEnabled, session?.user.id ?? null, profile?.barangay_id ?? null);
+  usePushRegistration(userId, pushEnabled);
+  useNotificationRealtime(pushEnabled, userId, profile?.barangay_id ?? null);
 
   return children;
 }
@@ -114,7 +109,7 @@ const PUBLIC_EMERGENCY_PATH = '/emergency-centers';
 // overlay stays up until the initial session check resolves, so the app never flashes
 // signed-out content before we actually know the answer.
 function SplashGatedNavigator() {
-  return <><RootNavigator /><RestorationOverlay /></>;
+  return <><RootNavigator /><NotificationTapHandler /><RestorationOverlay /></>;
 }
 
 /** Route-sensitive restoration chrome stays outside the stable navigation subtree. */

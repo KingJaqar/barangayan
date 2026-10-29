@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "name": "resident-manual-logs",
+      "selected": "Logs"
+    },
+    {
+      "name": "resident-home-from-logs",
+      "selected": "Home"
+    },
+    {
+      "name": "resident-repeat-requests",
+      "selected": "Requests"
+    },
+    {
+      "name": "resident-manual-documents",
+      "selected": "Documents"
+    },
+    {
+      "name": "resident-back-from-documents",
+      "selected": "Home"
+    },
+    {
+      "name": "resident-repeat-requests-again",
+      "selected": "Requests"
+    },
+    {
+      "name": "resident-logs-before-refocus",
+      "selected": "Logs"
+    },
+    {
+      "name": "resident-home-before-refocus",
+      "selected": "Home"
+    },
+    {
+      "name": "resident-shortcut-documents",
+      "selected": "Documents"
+    },
+    {
+      "name": "resident-logs-manual-refocus",
+      "selected": "Logs"
+    },
+    {
+      "name": "resident-home-manual-refocus",
+      "selected": "Home"
+    },
+    {
+      "name": "resident-ordinary-services-refocus",
+      "selected": "Logs"
+    },
+    {
+      "name": "resident-empty-cta-documents",
+      "selected": "Documents"
+    }
+  ],
+  "backToHome": true,
+  "accountMutation": false,
+  "raw": "ignored resident-native artifacts"
+}

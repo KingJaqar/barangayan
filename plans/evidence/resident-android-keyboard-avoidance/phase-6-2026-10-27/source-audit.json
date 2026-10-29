@@ -1,0 +1,147 @@
+{
+  "phase5EvidenceIdentity": {
+    "contracts": [
+      {
+        "source": "apps/resident-android-mobile/src/components/resident-header.tsx",
+        "expected": "288de53b5ad4876bd0252c2e7e1f5343fd7cd8844f8fe873b56f01fdd9bdbfe7",
+        "current": "288de53b5ad4876bd0252c2e7e1f5343fd7cd8844f8fe873b56f01fdd9bdbfe7",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+        "expected": "2933b45feccb340e16c33489493e3b35c80384827d25cda91b19b1af8d4d7f32",
+        "current": "2933b45feccb340e16c33489493e3b35c80384827d25cda91b19b1af8d4d7f32",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+        "expected": "ff4b9441003e9db8e5eb6a5f6b5794798edf195f7e25c34580978ff65b2008ee",
+        "current": "ff4b9441003e9db8e5eb6a5f6b5794798edf195f7e25c34580978ff65b2008ee",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/hooks/use-search-inactivity.ts",
+        "expected": "7c0dba2f8a487683d33f56d3f2ebb67b3ab475a206480be335a301a512808297",
+        "current": "7c0dba2f8a487683d33f56d3f2ebb67b3ab475a206480be335a301a512808297",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/hooks/use-search-session.ts",
+        "expected": "ba0a12dcd4173b5c285999727faddad59ea8b7c676765f57dd9976651938c05d",
+        "current": "ba0a12dcd4173b5c285999727faddad59ea8b7c676765f57dd9976651938c05d",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/hooks/use-floating-tab-layout.tsx",
+        "expected": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d",
+        "current": "3ae8597facd6af5982193f5226503291ebc27b762389060c8d7075ca3559ca0d",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/emergency-centers.tsx",
+        "expected": "b9a3c93fd7d2c5fcbfca5bafbcc9ee8a52e0ebcf6ed2395243f0cea8761b2ca9",
+        "current": "b9a3c93fd7d2c5fcbfca5bafbcc9ee8a52e0ebcf6ed2395243f0cea8761b2ca9",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/themed-text.tsx",
+        "expected": "c7dc9f5a41aa4593f489a1452b1145e8c1ca856d6bc147e8eefccb425e759074",
+        "current": "c7dc9f5a41aa4593f489a1452b1145e8c1ca856d6bc147e8eefccb425e759074",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/_layout.tsx",
+        "expected": "5d91409ea30d8cd48e1ac9ec4342228d164e9791fed5b21b049d4a5152cf2f90",
+        "current": "5d91409ea30d8cd48e1ac9ec4342228d164e9791fed5b21b049d4a5152cf2f90",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+        "expected": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+        "current": "b052a171ff6e3f8ef22c590590868b1851a6750720d3ae49df72a716415b22f2",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+        "expected": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+        "current": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/home/_layout.tsx",
+        "expected": "29dc7ed25c02189804f46cac687cb7d4f93fad7a04f953f30468370a648350de",
+        "current": "29dc7ed25c02189804f46cac687cb7d4f93fad7a04f953f30468370a648350de",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx",
+        "expected": "d7a1c6cf170814d93a1afe56e0f55b74c554ef9e763c4ec637fec362fdcc4f0c",
+        "current": "d7a1c6cf170814d93a1afe56e0f55b74c554ef9e763c4ec637fec362fdcc4f0c",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx",
+        "expected": "63d92c65b55d32565609fa610f5256a85e3708f49c113afed22be6ecd8d325f9",
+        "current": "63d92c65b55d32565609fa610f5256a85e3708f49c113afed22be6ecd8d325f9",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/services/_layout.tsx",
+        "expected": "7240dbd7e8b5821c384beeaf9de859986c0047f3dbb5dbee7636609db21aedbe",
+        "current": "7240dbd7e8b5821c384beeaf9de859986c0047f3dbb5dbee7636609db21aedbe",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/health/_layout.tsx",
+        "expected": "f6c816131263aa59d5fe5f591db10f1330fdaa7d701a202f8f387d6f8de5783e",
+        "current": "f6c816131263aa59d5fe5f591db10f1330fdaa7d701a202f8f387d6f8de5783e",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx",
+        "expected": "1d45bb6767a2973ab9e0d103826207273c879161eb4d47fd666cf5be316d588e",
+        "current": "1d45bb6767a2973ab9e0d103826207273c879161eb4d47fd666cf5be316d588e",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx",
+        "expected": "1318a6a7fa2f51c11ebb684fcef6a16e7b4cdc587b47649c1bc9f85ac485116c",
+        "current": "1318a6a7fa2f51c11ebb684fcef6a16e7b4cdc587b47649c1bc9f85ac485116c",
+        "evidence": "../phase-5-2026-10-26/final-current-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx",
+        "expected": "98179c325511f0b20f528e7467a16ebf0393921fc6b269b0a9c0be147a5d0376",
+        "current": "98179c325511f0b20f528e7467a16ebf0393921fc6b269b0a9c0be147a5d0376",
+        "evidence": "../phase-5-2026-10-26/final-added-contracts-source-identity.json"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+        "expected": "d42147aeaff1d9aa4eec91169c0ef9d98a2e855550c9410774eb354642ecccf7",
+        "current": "d42147aeaff1d9aa4eec91169c0ef9d98a2e855550c9410774eb354642ecccf7",
+        "evidence": "../phase-5-2026-10-26/final-added-contracts-source-identity.json"
+      }
+    ],
+    "dependencies": [
+      {
+        "source": "apps/resident-android-mobile/package.json",
+        "expected": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+        "current": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c"
+      },
+      {
+        "source": "package.json",
+        "expected": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343",
+        "current": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343"
+      },
+      {
+        "source": "package-lock.json",
+        "expected": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+        "current": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+      }
+    ]
+  },
+  "prerequisites": "Phase1 skip-shared-helper and local Phase2/3/4/5 strategies exist in current original source. Phases2–4 remain partially complete in native acceptance.",
+  "sourceOnlyIosPreservation": "No product changes in Phase6. Current platform branches reviewed; native iOS not performed.",
+  "newVisibilityHelper": "None introduced; existing local measurement lifecycle has cancel/revision/listener cleanup. Existing Maps/Centers/shell fixtures exercise it.",
+  "historicalInventorySha256": "bd6ce63b8e169b1ee430d76610057b9e11e71f994e4e405a2d81640420c88f34"
+}

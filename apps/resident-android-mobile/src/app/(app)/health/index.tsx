@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, Easing, PanResponder, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Reanimated, { cancelAnimation, Easing as UIEasing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { WheelColumn } from '@/components/birthday-wheel-modal';
 import { FilterChips } from '@/components/filter-chips';
 import {
@@ -122,9 +123,11 @@ function MonthYearPicker({
 }
 
 const WEEKDAY_LETTERS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-const EXPAND_MS = 280;
+const CALENDAR_TOP_PADDING = 6;
+const CALENDAR_BORDER = 1;
 
 function DriveCalendar({
+  visible,
   selectedDate,
   onDateSelect,
   eventDateMap,
@@ -132,6 +135,7 @@ function DriveCalendar({
   onMonthChange,
   onJumpTo,
 }: {
+  visible: boolean;
   selectedDate: string;
   onDateSelect: (date: string) => void;
   eventDateMap: Record<string, string[]>;
@@ -156,17 +160,13 @@ function DriveCalendar({
   // native-driven translateX, so finger-follow and snapping never touch the JS thread.
   const drag = useRef(new Animated.Value(0)).current;
   const sliding = useRef(false);
-  // Expand/collapse: one JS-driven height + slide so the card resizes smoothly.
-  const boxHeight = useRef(new Animated.Value(0)).current;
-  const reveal = useRef(new Animated.Value(0)).current;
+  // Retain both layers and reverse from the current UI-thread values on rapid taps.
+  const boxHeight = useSharedValue(0);
   const sized = useRef(false);
-  // Only one calendar is ever visible: the week strip at rest, otherwise the month grid,
-  // which the animated box height slides open / closed from the top.
-  const [settled, setSettled] = useState(true);
-  // 1 = week strip visible, 0 = month grid visible; only animated once a slide has finished.
-  const swap = useRef(new Animated.Value(1)).current;
-  const monthSwap = swap.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
-  const showWeek = !expanded && settled;
+  const swap = useSharedValue(1);
+  const visibility = useSharedValue(Number(visible));
+  const showWeek = visible && !expanded;
+  const showMonth = visible && expanded;
 
   useEffect(() => {
     setWeekStart(weekStartOf(selectedDate));
@@ -182,31 +182,41 @@ function DriveCalendar({
     const target = expanded ? monthHeight : weekHeight;
     if (!sized.current || reducedMotion) {
       sized.current = true;
-      boxHeight.setValue(target);
-      reveal.setValue(expanded ? 1 : 0);
-      swap.setValue(expanded ? 0 : 1);
-      setSettled(true);
+      boxHeight.value = target;
+      swap.value = expanded ? 0 : 1;
       return;
     }
-    const animation = Animated.parallel([
-      Animated.timing(boxHeight, { toValue: target, duration: EXPAND_MS, easing: Easing.inOut(Easing.cubic), useNativeDriver: false }),
-      Animated.timing(reveal, { toValue: expanded ? 1 : 0, duration: EXPAND_MS, easing: Easing.inOut(Easing.cubic), useNativeDriver: false }),
-    ]);
-    animation.start(({ finished }) => {
-      if (!finished) return;
-      setSettled(true);
-      // Slide is done: fade the finished state in.
-      const fade = Easing.out(Easing.cubic);
-      // Mirror of collapse: the old layer stays put through the slide, then cross-fades to the new one.
-      Animated.timing(swap, { toValue: expanded ? 0 : 1, duration: 220, easing: fade, useNativeDriver: true }).start();
+    boxHeight.value = withTiming(target, {
+      duration: 220, easing: UIEasing.out(UIEasing.cubic),
     });
-    return () => animation.stop();
-  }, [expanded, weekHeight, monthHeight, reducedMotion, boxHeight, reveal, swap, gridOpacity]);
+    swap.value = withTiming(expanded ? 0 : 1, {
+      duration: 140, easing: UIEasing.out(UIEasing.cubic),
+    });
+    return () => { cancelAnimation(boxHeight); cancelAnimation(swap); };
+  }, [expanded, weekHeight, monthHeight, reducedMotion, boxHeight, swap]);
+
+  useEffect(() => {
+    visibility.value = reducedMotion ? Number(visible) : withTiming(Number(visible), {
+      duration: 220, easing: UIEasing.out(UIEasing.cubic),
+    });
+    return () => cancelAnimation(visibility);
+  }, [visible, reducedMotion, visibility]);
+
+  const ready = weekHeight > 0 && monthHeight > 0;
+  const viewportStyle = useAnimatedStyle(() => ({
+    height: ready ? (boxHeight.value + CALENDAR_TOP_PADDING + CALENDAR_BORDER) * visibility.value : undefined,
+    opacity: visibility.value,
+    paddingTop: CALENDAR_TOP_PADDING * visibility.value,
+    borderBottomWidth: CALENDAR_BORDER * visibility.value,
+    marginTop: -14 * visibility.value,
+    // Cancel the ScrollView's gap while hidden so the filters return to their original position.
+    marginBottom: -10 * (1 - visibility.value),
+  }));
+  const stackStyle = useAnimatedStyle(() => ({ height: ready ? boxHeight.value : weekHeight || undefined }));
+  const weekStyle = useAnimatedStyle(() => ({ opacity: swap.value }));
+  const monthStyle = useAnimatedStyle(() => ({ opacity: 1 - swap.value }));
 
   const toggleExpanded = () => {
-    setSettled(false);
-    // Collapsing starts from the month grid; expanding keeps the week strip until the slide ends.
-    if (expanded) swap.setValue(0);
     setWeekStart(weekStartOf(selectedDate));
     setExpanded((value) => !value);
   };
@@ -346,16 +356,21 @@ function DriveCalendar({
         <ThemedText style={[styles.dayLabel, { color: i === selectedWeekday ? resident.accentText : resident.muted }]}>{day}</ThemedText>
       </View>
     ));
-  const ready = weekHeight > 0 && monthHeight > 0;
   return (
     <>
-      <View style={[styles.calendarFlat, { backgroundColor: resident.accentSoft, borderColor: resident.border }]}>
+      <Reanimated.View
+        pointerEvents={visible ? 'auto' : 'none'}
+        accessibilityElementsHidden={!visible}
+        importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+        style={[styles.calendarFlat, viewportStyle, { backgroundColor: resident.accentSoft, borderColor: resident.border }]}
+      >
         <View style={styles.calendar}>
-          <Animated.View style={[styles.calendarStack, { height: ready ? boxHeight : weekHeight || undefined }]}>
-            <Animated.View
+          <Reanimated.View style={[styles.calendarStack, stackStyle]}>
+            <Reanimated.View
               pointerEvents={showWeek ? 'auto' : 'none'}
+              accessibilityElementsHidden={!showWeek}
               importantForAccessibility={showWeek ? 'auto' : 'no-hide-descendants'}
-              style={[styles.calendarLayer, { opacity: swap }]}
+              style={[styles.calendarLayer, weekStyle]}
               onLayout={(event) => {
                 const next = Math.round(event.nativeEvent.layout.height);
                 setWeekHeight((previous) => (previous === next ? previous : next));
@@ -427,11 +442,12 @@ function DriveCalendar({
               >
                 <Ionicons name="chevron-down" size={20} color={resident.accentText} />
               </Pressable>
-            </Animated.View>
-            <Animated.View
-              pointerEvents={showWeek ? 'none' : 'auto'}
-              importantForAccessibility={showWeek ? 'no-hide-descendants' : 'auto'}
-              style={[styles.calendarLayer, { opacity: monthSwap }]}
+            </Reanimated.View>
+            <Reanimated.View
+              pointerEvents={showMonth ? 'auto' : 'none'}
+              accessibilityElementsHidden={!showMonth}
+              importantForAccessibility={showMonth ? 'auto' : 'no-hide-descendants'}
+              style={[styles.calendarLayer, monthStyle]}
               onLayout={(event) => {
                 const next = Math.round(event.nativeEvent.layout.height);
                 setMonthHeight((previous) => (previous === next ? previous : next));
@@ -485,10 +501,10 @@ function DriveCalendar({
               >
                 <Ionicons name="chevron-up" size={20} color={resident.accentText} />
               </Pressable>
-            </Animated.View>
-          </Animated.View>
+            </Reanimated.View>
+          </Reanimated.View>
         </View>
-      </View>
+      </Reanimated.View>
       <MonthYearPicker
         visible={pickerVisible}
         value={currentMonth}
@@ -866,16 +882,15 @@ export default function HealthScreen() {
           contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 16 }]}
           keyboardShouldPersistTaps="handled"
         >
-          {showCalendar ? (
-            <DriveCalendar
-              selectedDate={selectedDate}
-              onDateSelect={handleDateSelect}
-              eventDateMap={monthEventMap}
-              currentMonth={currentMonth}
-              onMonthChange={handleMonthChange}
-              onJumpTo={(year, month) => setCurrentMonth({ year, month })}
-            />
-          ) : null}
+          <DriveCalendar
+            visible={showCalendar}
+            selectedDate={selectedDate}
+            onDateSelect={handleDateSelect}
+            eventDateMap={monthEventMap}
+            currentMonth={currentMonth}
+            onMonthChange={handleMonthChange}
+            onJumpTo={(year, month) => setCurrentMonth({ year, month })}
+          />
           {calendarError ? <View style={styles.empty}>
             <ThemedText accessibilityRole="alert" style={{ color: resident.danger }}>{calendarError}</ThemedText>
             <PrimaryButton presentation="resident" variant="secondary" label="Retry calendar" onPress={() => { void refetchCalendar(); }} />
@@ -884,7 +899,7 @@ export default function HealthScreen() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={showCalendar ? 'Hide calendar' : 'Show calendar'}
-              accessibilityState={{ selected: showCalendar }}
+              accessibilityState={{ selected: showCalendar, expanded: showCalendar }}
               onPress={() => setShowCalendar((v) => !v)}
               style={({ pressed }) => [
                 styles.iconButton,
@@ -1009,7 +1024,7 @@ const styles = StyleSheet.create({
   registrationFilters: { paddingHorizontal: 14, paddingTop: 10 },
   iconButton: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
   calendar: { paddingTop: 0 },
-  calendarFlat: { borderBottomWidth: 1, marginHorizontal: -14, marginTop: -14, paddingHorizontal: 14, paddingTop: 6 },
+  calendarFlat: { overflow: 'hidden', marginHorizontal: -14, paddingHorizontal: 14 },
   navButton: { width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
   toggleBar: { height: 22, borderRadius: 11, justifyContent: 'center', alignItems: 'center' },
   calendarStack: { overflow: 'hidden' },

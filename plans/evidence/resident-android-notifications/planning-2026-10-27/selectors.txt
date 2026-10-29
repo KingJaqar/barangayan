@@ -1,0 +1,11 @@
+package.json
+apps/resident-android-mobile/package.json
+apps/resident-android-mobile/vitest.config.ts
+apps/resident-android-mobile/src/app/(app)/announcements.tsx
+apps/resident-android-mobile/src/hooks/use-unread-counts.tsx
+apps/resident-android-mobile/src/lib/push-notifications.ts
+apps/resident-android-mobile/src/hooks/use-notification-realtime.ts
+apps/resident-android-mobile/src/components/resident-header.tsx
+apps/resident-android-mobile/src/components/services/requests-list.tsx
+apps/resident-ios-mobile/src/features/notifications/model.ts
+supabase/functions/send-notifications/worker.ts

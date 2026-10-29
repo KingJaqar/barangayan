@@ -1,0 +1,486 @@
+ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
+Display #0 (activities from top to bottom):
+  * Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+    isSleeping=false
+    topResumedActivity=ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+    * Hist  #0: ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+      packageName=com.android.vending processName=com.android.vending
+      launchedFromUid=10020 launchedFromPackage=com.android.vending launchedFromFeature=null userId=0
+      app=ProcessRecord{98d548f 6689:com.android.vending/u0a20}
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.vending/.AssetBrowserActivity bnds=[607,268][801,462] (has extras) }
+      rootOfTask=true task=Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+      taskAffinity=10020:com.android.vending
+      mActivityComponent=com.android.vending/com.google.android.finsky.activities.MainActivity
+      baseDir=/system/priv-app/Phonesky/base.apk
+      dataDir=/data/user/0/com.android.vending
+      splitDir=[/system/priv-app/Phonesky/split_config.de.apk, /system/priv-app/Phonesky/split_config.en.apk, /system/priv-app/Phonesky/split_config.es.apk, /system/priv-app/Phonesky/split_config.fr.apk, /system/priv-app/Phonesky/split_config.ja.apk, /system/priv-app/Phonesky/split_config.ko.apk, /system/priv-app/Phonesky/split_config.x86_64.apk, /system/priv-app/Phonesky/split_config.zh.apk, /system/priv-app/Phonesky/split_phonesky_data_loader.apk, /system/priv-app/Phonesky/split_phonesky_data_loader.config.x86_64.apk]
+      stateNotNeeded=false componentSpecified=false mActivityType=standard
+      compat={480dpi} labelRes=0x7f1408ad icon=0x7f110005 theme=0x7f1502e4
+      mLastReportedConfigurations:
+        mGlobalConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+        mOverrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      CurrentConfiguration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      taskDescription: label="null" icon=null iconResource=/0 iconFilename=null primaryColor=ffffffff
+        backgroundColor=ff303030 statusBarColor=ff131314 navigationBarColor=ff1e1f20
+       backgroundColorFloating=ff424242
+      launchFailed=false launchCount=0 lastLaunchTime=-14m33s62ms
+      launchCookie=android.os.BinderProxy@1a84549
+      mHaveState=false mIcicle=null
+      state=RESUMED stopped=false delayedResume=false finishing=false
+      keysPaused=false inHistory=true idle=true
+      occludesParent=true noDisplay=false immersive=false launchMode=2
+      frozenBeforeDestroy=false forceNewConfig=false
+      mActivityType=standard
+      mImeInsetsFrozenUntilStartInput=false
+      windows=[Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}]
+      windowType=2 hasVisible=true
+      mOccludesParent=true
+      mOrientation=SCREEN_ORIENTATION_UNSPECIFIED
+      mVisibleRequested=true mVisible=true mClientVisible=true reportedDrawn=true reportedVisible=true
+      mNumInterestingWindows=2 mNumDrawnWindows=2 allDrawn=true lastAllDrawn=true)
+      startingData=null firstWindowDrawn=true mIsExiting=false
+      nowVisible=true lastVisibleTime=-4s703ms
+      resizeMode=RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION
+      mLastReportedMultiWindowMode=false mLastReportedPictureInPictureMode=false
+      supportsSizeChanges=SIZE_CHANGES_UNSUPPORTED_METADATA
+      configChanges=0x3
+      neverSandboxDisplayApis=false
+      alwaysSandboxDisplayApis=false
+      areBoundsLetterboxed=false
+
+  * Task{966df6d #1 type=home ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+    * Task{a98979 #5 type=home I=app.lawnchair/.LawnchairLauncher U=0 rootTaskId=1 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+      mLastPausedActivity: ActivityRecord{6b827a6 u0 app.lawnchair/.LawnchairLauncher t5}
+      isSleeping=false
+      * Hist  #0: ActivityRecord{6b827a6 u0 app.lawnchair/.LawnchairLauncher t5}
+        packageName=app.lawnchair processName=app.lawnchair
+        launchedFromUid=0 launchedFromPackage=null launchedFromFeature=null userId=0
+        app=ProcessRecord{4a3594 1720:app.lawnchair/u0a17}
+        Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10000100 cmp=app.lawnchair/.LawnchairLauncher (has extras) }
+        rootOfTask=true task=Task{a98979 #5 type=home I=app.lawnchair/.LawnchairLauncher U=0 rootTaskId=1 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+        taskAffinity=null
+        mActivityComponent=app.lawnchair/.LawnchairLauncher
+        baseDir=/system/priv-app/app.lawnchair_overseas/app.lawnchair_overseas.apk
+        dataDir=/data/user/0/app.lawnchair
+        stateNotNeeded=true componentSpecified=false mActivityType=home
+        compat={480dpi} labelRes=0x7f12011e icon=0x7f0802a9 theme=0x7f130012
+        mLastReportedConfigurations:
+          mGlobalConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+          mOverrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=home mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.6 fontWeightAdjustment=0}
+        CurrentConfiguration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=home mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.6 fontWeightAdjustment=0}
+        RequestedOverrideConfiguration={0.0 ?mcc?mnc ?localeList ?layoutDir ?swdp ?wdp ?hdp ?density ?lsize ?long ?ldr ?wideColorGamut ?orien ?uimode ?night ?touch ?keyb/?/? ?nav/? winConfig={ mBounds=Rect(0, 0 - 0, 0) mAppBounds=null mMaxBounds=Rect(0, 0 - 0, 0) mWindowingMode=undefined mDisplayWindowingMode=undefined mActivityType=home mAlwaysOnTop=undefined mRotation=undefined} as.1 ?fontWeightAdjustment}
+        taskDescription: label="null" icon=null iconResource=/0 iconFilename=null primaryColor=fff5f5f5
+          backgroundColor=ff1c1b1b statusBarColor=0 navigationBarColor=0
+         backgroundColorFloating=ff1c1b1b
+        launchFailed=false launchCount=0 lastLaunchTime=-32m41s277ms
+        mHaveState=true mIcicle=Bundle[mParcelledData.dataSize=5208]
+        state=STOPPED stopped=true delayedResume=false finishing=false
+        keysPaused=false inHistory=true idle=true
+        occludesParent=true noDisplay=false immersive=false launchMode=2
+        frozenBeforeDestroy=false forceNewConfig=false
+        mActivityType=home
+        mImeInsetsFrozenUntilStartInput=true
+        windows=[Window{97fea11 u0 app.lawnchair/app.lawnchair.LawnchairLauncher}]
+        windowType=2 hasVisible=true
+        mOccludesParent=true
+        mOrientation=SCREEN_ORIENTATION_PORTRAIT
+        mVisibleRequested=false mVisible=false mClientVisible=false reportedDrawn=false reportedVisible=false
+        mAppStopped=true
+        mNumInterestingWindows=1 mNumDrawnWindows=1 allDrawn=true lastAllDrawn=true)
+        nowVisible=false lastVisibleTime=-8m15s154ms
+        connections={ConnectionRecord{3617c00 u0 app.lawnchair/com.android.quickstep.TouchInteractionService:@ac19283}}
+        resizeMode=RESIZE_MODE_RESIZEABLE
+        mLastReportedMultiWindowMode=false mLastReportedPictureInPictureMode=false
+        supportsSizeChanges=SIZE_CHANGES_UNSUPPORTED_METADATA
+        configChanges=0xdf3
+        neverSandboxDisplayApis=false
+        alwaysSandboxDisplayApis=false
+        areBoundsLetterboxed=false
+
+  * Task{ae5366b #17 type=standard A=10056:host.exp.exponent U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+    mLastPausedActivity: ActivityRecord{bf8e157 u0 host.exp.exponent/.experience.HomeActivity t17}
+    isSleeping=false
+    * Hist  #0: ActivityRecord{bf8e157 u0 host.exp.exponent/.experience.HomeActivity t17}
+      packageName=host.exp.exponent processName=host.exp.exponent
+      launchedFromUid=10017 launchedFromPackage=app.lawnchair launchedFromFeature=null userId=0
+      app=ProcessRecord{af25e62 10388:host.exp.exponent/u0a56}
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=host.exp.exponent/.experience.HomeActivity bnds=[712,438][1055,678] }
+      rootOfTask=true task=Task{ae5366b #17 type=standard A=10056:host.exp.exponent U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+      taskAffinity=10056:host.exp.exponent
+      mActivityComponent=host.exp.exponent/.experience.HomeActivity
+      baseDir=/data/app/~~gjEh2q4syDCYPEpURHvcfA==/host.exp.exponent-IyNSjNhCsI7_CMsB7CcS0w==/base.apk
+      dataDir=/data/user/0/host.exp.exponent
+      stateNotNeeded=false componentSpecified=false mActivityType=standard
+      compat={480dpi} labelRes=0x7f13043a icon=0x7f100002 theme=0x7f140301
+      mLastReportedConfigurations:
+        mGlobalConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+        mOverrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      CurrentConfiguration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      taskDescription: label="null" icon=null iconResource=/0 iconFilename=null primaryColor=ff1b73b4
+        backgroundColor=ffffffff statusBarColor=0 navigationBarColor=0
+       backgroundColorFloating=ffffffff
+      launchFailed=false launchCount=0 lastLaunchTime=-8m51s899ms
+      launchCookie=android.os.BinderProxy@15ace36
+      mHaveState=true mIcicle=Bundle[mParcelledData.dataSize=4888]
+      state=STOPPED stopped=true delayedResume=false finishing=false
+      keysPaused=false inHistory=true idle=true
+      occludesParent=true noDisplay=false immersive=false launchMode=2
+      frozenBeforeDestroy=false forceNewConfig=false
+      mActivityType=standard
+      mImeInsetsFrozenUntilStartInput=true
+      windows=[Window{de53c21 u0 host.exp.exponent/host.exp.exponent.experience.HomeActivity}]
+      windowType=2 hasVisible=true
+      mOccludesParent=true
+      mOrientation=SCREEN_ORIENTATION_PORTRAIT
+      mVisibleRequested=false mVisible=false mClientVisible=false reportedDrawn=false reportedVisible=false
+      mAppStopped=true
+      mNumInterestingWindows=1 mNumDrawnWindows=1 allDrawn=true lastAllDrawn=true)
+      nowVisible=false lastVisibleTime=-8m16s448ms
+      resizeMode=RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION
+      mLastReportedMultiWindowMode=false mLastReportedPictureInPictureMode=false
+      supportsSizeChanges=SIZE_CHANGES_UNSUPPORTED_METADATA
+      configChanges=0xfb3
+      neverSandboxDisplayApis=false
+      alwaysSandboxDisplayApis=false
+      areBoundsLetterboxed=false
+
+  * Task{6b99e61 #11 type=standard A=10055:com.android.chrome U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=2}
+    isSleeping=false
+    * Hist  #1: ActivityRecord{de35b6d u0 com.android.chrome/org.chromium.chrome.browser.app.download.home.DownloadActivity t11}
+      packageName=com.android.chrome processName=com.android.chrome
+      launchedFromUid=10055 launchedFromPackage=com.android.chrome launchedFromFeature=null userId=0
+      app=null
+      Intent { flg=0x28000000 cmp=com.android.chrome/org.chromium.chrome.browser.app.download.home.DownloadActivity (has extras) }
+      rootOfTask=false task=Task{6b99e61 #11 type=standard A=10055:com.android.chrome U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=2}
+      taskAffinity=10055:com.android.chrome
+      mActivityComponent=com.android.chrome/org.chromium.chrome.browser.app.download.home.DownloadActivity
+      baseDir=/data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/base.apk
+      dataDir=/data/user/0/com.android.chrome
+      splitDir=[/data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_cablev2_authenticator.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_chrome.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ar.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.de.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.en.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.es.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.fr.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.hi.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.in.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.it.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ja.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ms.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.nl.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.pt.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ru.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.zh.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_feedv2.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_survey.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_weblayer.apk]
+      stateNotNeeded=false componentSpecified=false mActivityType=standard
+      compat={480dpi} labelRes=0x7f140244 icon=0x7f090294 theme=0x7f1504d5
+      mLastReportedConfigurations:
+        mGlobalConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+        mOverrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      CurrentConfiguration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      taskDescription: label="null" icon=null iconResource=/0 iconFilename=null primaryColor=ff1f1f1f
+        backgroundColor=ff1f1f1f statusBarColor=0 navigationBarColor=ff1f1f1f
+       backgroundColorFloating=ff424242
+      launchFailed=false launchCount=0 lastLaunchTime=-9m23s809ms
+      mHaveState=true mIcicle=Bundle[mParcelledData.dataSize=3636]
+      state=DESTROYED stopped=true delayedResume=false finishing=false
+      keysPaused=false inHistory=true idle=true
+      occludesParent=true noDisplay=false immersive=false launchMode=0
+      frozenBeforeDestroy=false forceNewConfig=false
+      mActivityType=standard
+      mImeInsetsFrozenUntilStartInput=true
+      windows=[]
+      windowType=2 hasVisible=true
+      mOccludesParent=true
+      mOrientation=SCREEN_ORIENTATION_UNSPECIFIED
+      mVisibleRequested=false mVisible=false mClientVisible=false reportedDrawn=false reportedVisible=false
+      mAppStopped=true
+      mNumInterestingWindows=1 mNumDrawnWindows=1 allDrawn=false lastAllDrawn=false)
+      nowVisible=false lastVisibleTime=-9m6s511ms
+      resizeMode=RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION
+      mLastReportedMultiWindowMode=false mLastReportedPictureInPictureMode=false
+      supportsSizeChanges=SIZE_CHANGES_UNSUPPORTED_METADATA
+      configChanges=0xdb3
+      neverSandboxDisplayApis=false
+      alwaysSandboxDisplayApis=false
+    * Hist  #0: ActivityRecord{a2f2dc8 u0 com.android.chrome/com.google.android.apps.chrome.Main t11}
+      packageName=com.android.chrome processName=com.android.chrome
+      launchedFromUid=10055 launchedFromPackage=com.android.chrome launchedFromFeature=null userId=0
+      app=null
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.chrome/com.google.android.apps.chrome.Main bnds=[369,438][712,678] (has extras) }
+      rootOfTask=true task=Task{6b99e61 #11 type=standard A=10055:com.android.chrome U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=2}
+      taskAffinity=10055:com.android.chrome
+      mActivityComponent=com.android.chrome/org.chromium.chrome.browser.ChromeTabbedActivity
+      baseDir=/data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/base.apk
+      dataDir=/data/user/0/com.android.chrome
+      splitDir=[/data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_cablev2_authenticator.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_chrome.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ar.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.de.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.en.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.es.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.fr.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.hi.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.in.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.it.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ja.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ms.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.nl.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.pt.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.ru.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_config.zh.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_feedv2.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_survey.apk, /data/app/~~qAe_V6yh_7PTD1tCRbimlA==/com.android.chrome--98lWxG0sGjHDMAql_wbVQ==/split_weblayer.apk]
+      stateNotNeeded=false componentSpecified=false mActivityType=standard
+      compat={480dpi} labelRes=0x7f140244 icon=0x7f090294 theme=0x7f1504de
+      mLastReportedConfigurations:
+        mGlobalConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+        mOverrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      CurrentConfiguration={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.1 fontWeightAdjustment=0}
+      taskDescription: label="null" icon=null iconResource=/0 iconFilename=null primaryColor=ff1f1f1f
+        backgroundColor=ff1f1f1f statusBarColor=ff1c1b1b navigationBarColor=ff1c1b1b
+       backgroundColorFloating=ff424242
+      launchFailed=false launchCount=0 lastLaunchTime=-13m32s782ms
+      mHaveState=true mIcicle=Bundle[mParcelledData.dataSize=14652]
+      state=DESTROYED stopped=true delayedResume=false finishing=false
+      keysPaused=false inHistory=true idle=true
+      occludesParent=true noDisplay=false immersive=false launchMode=4
+      frozenBeforeDestroy=false forceNewConfig=false
+      mActivityType=standard
+      mImeInsetsFrozenUntilStartInput=true
+      windows=[]
+      windowType=2 hasVisible=true
+      mOccludesParent=true
+      mOrientation=SCREEN_ORIENTATION_UNSPECIFIED
+      mVisibleRequested=false mVisible=false mClientVisible=false reportedDrawn=false reportedVisible=false
+      mAppStopped=true
+      mNumInterestingWindows=1 mNumDrawnWindows=1 allDrawn=false lastAllDrawn=false)
+      nowVisible=false lastVisibleTime=-9m43s380ms
+      resizeMode=RESIZE_MODE_RESIZEABLE
+      mLastReportedMultiWindowMode=false mLastReportedPictureInPictureMode=false
+      supportsPictureInPicture=true
+      supportsEnterPipOnTaskSwitch: true
+      supportsSizeChanges=SIZE_CHANGES_UNSUPPORTED_METADATA
+      configChanges=0xff3
+      neverSandboxDisplayApis=false
+      alwaysSandboxDisplayApis=false
+
+  * Task{3ccc63c #2 type=undefined ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=0}
+    mCreatedByOrganizer=true
+    isSleeping=false
+
+  * Task{abe0a28 #3 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+    mCreatedByOrganizer=true
+    isSleeping=false
+
+  * Task{b3a50e6 #4 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+    mCreatedByOrganizer=true
+    isSleeping=false
+
+  Resumed activities in task display areas (from top to bottom):
+    Resumed: ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+
+  ResumedActivity: ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+
+ActivityTaskSupervisor state:
+  topDisplayFocusedRootTask=Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+  mLastOrientationSource=WindowedMagnification:0:31@194979923
+  deepestLastOrientationSource=ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+  overrideConfig={1.0 302mcc780mnc [en_US] ldltr sw360dp w360dp h616dp 480dpi nrml long port night finger -keyb/v/v dpad/v winConfig={ mBounds=Rect(0, 0 - 1080, 1920) mAppBounds=Rect(0, 0 - 1080, 1920) mMaxBounds=Rect(0, 0 - 1080, 1920) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.1 s.33 fontWeightAdjustment=0}
+  Display: mDisplayId=0 rootTasks=7
+    init=1080x1920 480dpi cur=1080x1920 app=1080x1920 rng=1080x1008-1920x1848
+    deferred=false mLayoutNeeded=false mTouchExcludeRegion=SkRegion((0,0,1080,1920))
+
+  mLayoutSeq=1059
+  mCurrentFocus=Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+  mFocusedApp=ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+
+  displayId=0
+  mWallpaperTarget=null
+  mLastWallpaperX=-1.0 mLastWallpaperY=-1.0
+
+  Display areas in top down Z order:
+    * Leaf:36:36
+    * HideDisplayCutout:32:35
+      * OneHanded:32:35
+        * FullscreenMagnification:33:35
+          * Leaf:33:35
+        * Leaf:32:32
+    * WindowedMagnification:0:31
+      * HideDisplayCutout:26:31
+        * OneHanded:26:31
+          * FullscreenMagnification:29:31
+            * Leaf:29:31
+          * Leaf:28:28
+          * FullscreenMagnification:26:27
+            * Leaf:26:27
+      * Leaf:24:25
+      * HideDisplayCutout:20:23
+        * OneHanded:20:23
+          * FullscreenMagnification:20:23
+            * Leaf:20:23
+      * OneHanded:19:19
+        * FullscreenMagnification:19:19
+          * Leaf:19:19
+      * HideDisplayCutout:18:18
+        * OneHanded:18:18
+          * FullscreenMagnification:18:18
+            * Leaf:18:18
+      * OneHanded:17:17
+        * FullscreenMagnification:17:17
+          * Leaf:17:17
+      * HideDisplayCutout:0:16
+        * OneHanded:2:16
+          * ImePlaceholder:15:16
+            * ImeContainer
+          * FullscreenMagnification:2:14
+            * Leaf:3:14
+            * DefaultTaskDisplayArea
+        * OneHandedBackgroundPanel:0:1
+          * OneHanded:0:1
+            * FullscreenMagnification:0:1
+              * Leaf:0:1
+
+  Task display areas in top down Z order:
+    TaskDisplayArea DefaultTaskDisplayArea
+      mPreferredTopFocusableRootTask=Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+      mLastFocusedRootTask=Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+      Application tokens in top down Z order:
+      * Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+        bounds=[0,0][1080,1920]
+        * ActivityRecord{8504673 u0 com.android.vending/.AssetBrowserActivity t9}
+      * Task{966df6d #1 type=home ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+        bounds=[0,0][1080,1920]
+        * Task{a98979 #5 type=home I=app.lawnchair/.LawnchairLauncher U=0 rootTaskId=1 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+          bounds=[0,0][1080,1920]
+          * ActivityRecord{6b827a6 u0 app.lawnchair/.LawnchairLauncher t5}
+      * Task{ae5366b #17 type=standard A=10056:host.exp.exponent U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+        bounds=[0,0][1080,1920]
+        * ActivityRecord{bf8e157 u0 host.exp.exponent/.experience.HomeActivity t17}
+      * Task{6b99e61 #11 type=standard A=10055:com.android.chrome U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=2}
+        bounds=[0,0][1080,1920]
+        * ActivityRecord{de35b6d u0 com.android.chrome/org.chromium.chrome.browser.app.download.home.DownloadActivity t11}
+        * ActivityRecord{a2f2dc8 u0 com.android.chrome/com.google.android.apps.chrome.Main t11}
+      * Task{3ccc63c #2 type=undefined ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=0}
+        bounds=[0,0][1080,1920]
+      * Task{abe0a28 #3 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+        bounds=[0,0][1080,1920]
+      * Task{b3a50e6 #4 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+        bounds=[0,0][1080,1920]
+
+  no ScreenRotationAnimation 
+
+  rootHomeTask=Task=1
+
+  PinnedTaskController
+    mIsImeShowing=false
+    mImeHeight=0
+    mAspectRatio=-1.0
+    mMinAspectRatio=0.41841003
+    mMaxAspectRatio=2.39
+    mActions=[]
+
+  DisplayFrames w=1080 h=1920 r=0
+
+  DisplayPolicy
+    mCarDockEnablesAccelerometer=true mDeskDockEnablesAccelerometer=true
+    mDockMode=EXTRA_DOCK_STATE_UNDOCKED mLidState=LID_ABSENT
+    mAwake=true mScreenOnEarly=true mScreenOnFully=true
+    mKeyguardDrawComplete=true mWindowManagerDrawComplete=true
+    mHdmiPlugged=false
+    mLastBehavior=DEFAULT
+    mShowingDream=false mDreamingLockscreen=false
+    mStatusBar=Window{dbe98ad u0 StatusBar}
+    mExpandedPanel=Window{ca1ec18 u0 NotificationShade}
+    isKeyguardShowing=false
+    mFocusedWindow=Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+    mTopFullscreenOpaqueWindowState=Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+    mStatusBarColorWindows=
+      Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+    mStatusBarBackgroundWindows=
+      Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+    mTopIsFullscreen=false
+    mForceStatusBar=false mAllowLockscreenWhenOn=false
+    mRemoteInsetsControllerControlsSystemBars=false
+    SystemGestures:
+      mDisplayCutoutTouchableRegionSize=0
+      mSwipeStartThreshold=Rect(72, 72 - 72, 72)
+      mSwipeDistanceThreshold=72
+    Looper state:
+      Looper (android.ui, tid 19) {7ee0910}
+        (Total messages: 0, polling=true, quitting=false)
+
+  DisplayRotation
+    mCurrentAppOrientation=SCREEN_ORIENTATION_UNSPECIFIED
+    mLastOrientation=-1
+    mRotation=0 mDeferredRotationPauseCount=0
+    mLandscapeRotation=ROTATION_90 mSeascapeRotation=ROTATION_270
+    mPortraitRotation=ROTATION_0 mUpsideDownRotation=ROTATION_180
+    mSupportAutoRotation=false
+    WindowOrientationListener
+      mEnabled=false
+      mCurrentRotation=ROTATION_0
+      mSensorType=null
+      mSensor={Sensor name="3-axis Accelerometer", vendor="STMicro", version=1, type=1, maxRange=39.300102, resolution=2.480159E-4, power=3.0, minDelay=10000}
+      mRate=2
+      AccelSensorJudge
+        mProposedRotation=0
+        mPredictedRotation=0
+        mLastFilteredX=0.0
+        mLastFilteredY=0.0
+        mLastFilteredZ=0.0
+        mLastFilteredTimestampNanos=0 (1975854.5ms ago)
+        mTiltHistory={last: 0.0}
+        mFlat=false
+        mSwinging=false
+        mAccelerating=false
+        mOverhead=false
+        mTouched=false
+        mTiltToleranceConfig=[[-25, 70], [-25, 65], [-25, 60], [-25, 65]]
+
+    mCarDockRotation=-1 mDeskDockRotation=-1
+    mUserRotationMode=USER_ROTATION_FREE mUserRotation=ROTATION_0 mCameraRotationMode=0 mAllowAllRotations=unknown
+    mDemoHdmiRotation=ROTATION_90 mDemoHdmiRotationLock=false mUndockedHdmiRotation=-1
+    mLidOpenRotation=-1
+    mFixedToUserRotation=false
+
+  InputConsumers:
+    name=recents_animation_input_consumer pid=1720 user=UserHandle{0}
+
+  WindowInsetsStateController
+    InsetsState
+      mDisplayFrame=Rect(0, 0 - 1080, 1920)
+      mDisplayCutout=DisplayCutout{insets=Rect(0, 0 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=0 displayHeight=0 density={0.0} cutoutSpec={} rotation={0} scale={0.0}}}}
+      mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=0, center=Point(0, 0)}, RoundedCorner{position=TopRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomRight, radius=0, center=Point(0, 0)}, RoundedCorner{position=BottomLeft, radius=0, center=Point(0, 0)}]}
+      mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(792, 0 - 1038, 72) rotation=0}
+        InsetsSource type=ITYPE_STATUS_BAR frame=[0,0][1080,72] visible=true
+        InsetsSource type=ITYPE_TOP_MANDATORY_GESTURES frame=[0,0][1080,72] visible=true
+        InsetsSource type=ITYPE_TOP_TAPPABLE_ELEMENT frame=[0,0][1080,72] visible=true
+        InsetsSource type=ITYPE_IME frame=[0,1920][1080,1920] visible=true
+    Control map:
+      ITYPE_IME -> Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+      ITYPE_STATUS_BAR -> Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+    InsetsSourceProviders:
+      ImeInsetsSourceProvider
+        mSource=InsetsSource type=ITYPE_IME frame=[0,1920][1080,1920] visible=true
+        mControl=InsetsSourceControl type=ITYPE_IME mLeash=Surface(name=Surface(name=ef09f1a InputMethod)/@0xbadbd41 - animation-leash of insets_animation)/@0x937ee4e mSurfacePosition=Point(0, 1920) mInsetsHint=Insets{left=0, top=0, right=0, bottom=0} mSkipAnimationOnce=false
+        mIsLeashReadyForDispatching=true mImeOverrideFrame=[0,0][0,0]
+        mWin=Window{ef09f1a u0 InputMethod}
+        mAdapter=ControlAdapter mCapturedLeash=Surface(name=Surface(name=ef09f1a InputMethod)/@0xbadbd41 - animation-leash of insets_animation)/@0x937ee4e
+        mControlTarget=Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+        mImeShowing=true
+      InsetsSourceProvider
+        mSource=InsetsSource type=ITYPE_TOP_TAPPABLE_ELEMENT frame=[0,0][1080,72] visible=true
+        mIsLeashReadyForDispatching=true mImeOverrideFrame=[0,0][0,0]
+        mWin=Window{dbe98ad u0 StatusBar}
+      InsetsSourceProvider
+        mSource=InsetsSource type=ITYPE_TOP_MANDATORY_GESTURES frame=[0,0][1080,72] visible=true
+        mIsLeashReadyForDispatching=true mImeOverrideFrame=[0,0][0,0]
+        mWin=Window{dbe98ad u0 StatusBar}
+      InsetsSourceProvider
+        mSource=InsetsSource type=ITYPE_STATUS_BAR frame=[0,0][1080,72] visible=true
+        mControl=InsetsSourceControl type=ITYPE_STATUS_BAR mLeash=Surface(name=Surface(name=dbe98ad StatusBar)/@0x6dea32d - animation-leash of insets_animation)/@0x5c06b6f mSurfacePosition=Point(0, 0) mInsetsHint=Insets{left=0, top=72, right=0, bottom=0} mSkipAnimationOnce=false
+        mIsLeashReadyForDispatching=true mImeOverrideFrame=[0,0][0,0]
+        mWin=Window{dbe98ad u0 StatusBar}
+        mAdapter=ControlAdapter mCapturedLeash=Surface(name=Surface(name=dbe98ad StatusBar)/@0x6dea32d - animation-leash of insets_animation)/@0x5c06b6f
+        mControlTarget=Window{2777b4 u0 com.android.vending/com.android.vending.AssetBrowserActivity}
+
+  KeyguardController:
+    mKeyguardShowing=false
+    mAodShowing=false
+    mKeyguardGoingAway=false
+    Occluded=false DismissingKeyguardActivity=null TurnScreenOnActivity=null at display=0
+    mDismissalRequested=false
+
+  LockTaskController:
+    mLockTaskModeState=NONE
+    mLockTaskModeTasks=
+    mLockTaskPackages (userId:packages)=
+      u0:[]
+
+  mCurTaskIdForUser={0=19}
+  mUserRootTaskInFront={}
+  mVisibilityTransactionDepth=0
+  isHomeRecentsComponent=true
+  mNoHistoryActivities=[]
+
+  TaskOrganizerController:
+      android.window.ITaskOrganizer$Stub$Proxy@dc8502f uid=10045:
+        (fullscreen) Task{966df6d #1 type=home ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+        (fullscreen) Task{3ccc63c #2 type=undefined ?? U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=0}
+        (multi-window) Task{abe0a28 #3 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+        (multi-window) Task{b3a50e6 #4 type=undefined ?? U=0 visible=false visibleRequested=false mode=multi-window translucent=true sz=0}
+        (fullscreen) Task{f973930 #9 type=standard A=10020:com.android.vending U=0 visible=true visibleRequested=true mode=fullscreen translucent=false sz=1}
+        (fullscreen) Task{6b99e61 #11 type=standard A=10055:com.android.chrome U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=2}
+        (fullscreen) Task{ae5366b #17 type=standard A=10056:host.exp.exponent U=0 visible=false visibleRequested=false mode=fullscreen translucent=true sz=1}
+
+  VisibleActivityProcess:[ ProcessRecord{98d548f 6689:com.android.vending/u0a20}]
+  NumNonAppVisibleWindowByUid:[ 10045:3 1000:1]

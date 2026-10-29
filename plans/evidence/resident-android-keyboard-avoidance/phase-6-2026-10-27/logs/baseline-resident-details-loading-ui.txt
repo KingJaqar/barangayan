@@ -1,0 +1,11 @@
+{
+  "passed": [
+    "eligible resident reads their own locality, not the enabled signup locality; locked fields remain readonly",
+    "admin receives accurate nonretryable account restriction; no locality read, editable form, save or misleading retry",
+    "deleted and signed-out identities fail closed without an endless loading/retry state",
+    "401 requests fresh sign-in; transient profile failure exposes a working retry only after loading finishes",
+    "new profile uses configured signup locality; missing configuration and boundary transport errors stay distinct",
+    "late prior-account response cannot replace the current draft; unmount cancels pending reads"
+  ],
+  "errors": []
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "ProcessId": 12764,
+    "Name": "Docker Desktop.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\Docker Desktop.exe"
+  },
+  {
+    "ProcessId": 53520,
+    "Name": "com.docker.backend.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\resources\\com.docker.backend.exe"
+  },
+  {
+    "ProcessId": 11288,
+    "Name": "com.docker.backend.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\resources\\com.docker.backend.exe"
+  },
+  {
+    "ProcessId": 59908,
+    "Name": "Docker Desktop.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\frontend\\Docker Desktop.exe"
+  },
+  {
+    "ProcessId": 5404,
+    "Name": "Docker Desktop.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\frontend\\Docker Desktop.exe"
+  },
+  {
+    "ProcessId": 60084,
+    "Name": "Docker Desktop.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\frontend\\Docker Desktop.exe"
+  },
+  {
+    "ProcessId": 18708,
+    "Name": "Docker Desktop.exe",
+    "ExecutablePath": "C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\frontend\\Docker Desktop.exe"
+  }
+]

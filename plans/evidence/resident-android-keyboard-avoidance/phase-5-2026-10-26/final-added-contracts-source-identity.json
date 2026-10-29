@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-27T01:27:13.949Z",
+  "bundleSha256": "a75f928e65d69466ba61c58ee43bec16749fdcea8ca78d75ebc076fa42c74a03",
+  "bundleBytes": 16365603,
+  "results": [
+    {
+      "name": "src/hooks/use-emergency-map-header.tsx",
+      "moduleId": 2058,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "98179c325511f0b20f528e7467a16ebf0393921fc6b269b0a9c0be147a5d0376",
+      "downloadedFactorySha256": "72bafd53c816c99bf62f08fd5d0a976713e2ea32367236420c1ddd6423911f51",
+      "currentFactorySha256": "72bafd53c816c99bf62f08fd5d0a976713e2ea32367236420c1ddd6423911f51"
+    },
+    {
+      "name": "src/app/(app)/home/emergency-info/index.tsx",
+      "moduleId": 2075,
+      "downloadedFactoryMatches": true,
+      "currentMapMatchesSource": true,
+      "sourceSha256": "d42147aeaff1d9aa4eec91169c0ef9d98a2e855550c9410774eb354642ecccf7",
+      "downloadedFactorySha256": "478925c5003d73970360b219e908960a5a43d7407900ceeeb33987f66c6fdec9",
+      "currentFactorySha256": "478925c5003d73970360b219e908960a5a43d7407900ceeeb33987f66c6fdec9"
+    }
+  ],
+  "allMatch": true,
+  "limitation": "Downloaded development bundle identity, not a live Runtime factory inspection. Runtime inspector is unresponsive; native APK revision unknown."
+}

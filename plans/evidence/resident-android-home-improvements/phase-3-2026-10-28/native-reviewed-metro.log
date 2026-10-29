@@ -1,0 +1,22 @@
+Starting project at C:\Users\User\barangayan\.home-phase3-native
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8097
+
+Logs for your project will appear below.
+| (node:52016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Android Bundling failed 2279ms entry.jsx (1 module)
+Unable to resolve "@/assets/fonts/GideonRoman-Regular.ttf" from "entry.jsx"
+[0m[31m[1m>[22m[39m[90m 1 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[36mimport[39m {registerRootComponent} [36mfrom[39m [32m'expo'[39m[33m;[39m[36mimport[39m {[33mExpoRoot[39m} [36mfrom[39m [32m'expo-router'[39m[33m;[39m[36mimport[39m {useFonts} [36mfrom[39m [32m'expo-font'[39m[33m;[39m[36mconst[39m routes[33m=[39m{[32m'./_layout.tsx'[39m[33m:[39m()[33m=>[39mrequire([32m'./layout'[39m)[33m,[39m[32m'./home/index.tsx'[39m[33m:[39m()[33m=>[39mrequire([32m'@/app/(app)/home/index'[39m)[33m,[39m[32m'./home/requests/[requestId].tsx'[39m[33m:[39m()[33m=>[39mrequire([32m'@/app/(app)/home/requests/[requestId]'[39m)}[33m;[39m[36mconst[39m context[33m=[39m[33mObject[39m[33m.[39massign(key[33m=>[39mroutes[key]()[33m,[39m{keys[33m:[39m()[33m=>[39m[33mObject[39m[33m.[39mkeys(routes)[33m,[39mresolve[33m:[39mkey[33m=>[39mkey[33m,[39mid[33m:[39m[32m'phase3-native'[39m})[33m;[39m[36mfunction[39m [33mApp[39m(){[36mconst[39m [loaded][33m=[39museFonts({[33mGideonRoman[39m[33m:[39mrequire([32m'@/assets/fonts/GideonRoman-Regular.ttf'[39m)})[33m;[39m[36mreturn[39m loaded[33m?[39m[33m<[39m[33mExpoRoot[39m context[33m=[39m{context} location[33m=[39m[32m'/home'[39m[33m/[39m[33m>[39m[33m:[39m[36mnull[39m}registerRootComponent([33mApp[39m)[33m;[39m
+ [90m   |[39m                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     [31m[1m^[22m[39m[0m
+
+Import stack:
+
+ entry.jsx
+ | import "@/assets/fonts/GideonRoman-Regular.ttf"
+
+ 
+ | import "./entry.jsx"
+

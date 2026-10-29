@@ -1,0 +1,40 @@
+[
+  {
+    "index": "0",
+    "text": "",
+    "resource-id": "",
+    "class": "android.widget.ImageView",
+    "package": "com.barangayan.resident.dev",
+    "content-desc": "Tools",
+    "checkable": "false",
+    "checked": "false",
+    "clickable": "false",
+    "enabled": "true",
+    "focusable": "false",
+    "focused": "false",
+    "scrollable": "false",
+    "long-clickable": "false",
+    "password": "false",
+    "selected": "false",
+    "bounds": "[895,179][983,267]"
+  },
+  {
+    "index": "0",
+    "text": "Tools",
+    "resource-id": "",
+    "class": "android.widget.TextView",
+    "package": "com.barangayan.resident.dev",
+    "content-desc": "",
+    "checkable": "false",
+    "checked": "false",
+    "clickable": "false",
+    "enabled": "true",
+    "focusable": "false",
+    "focused": "false",
+    "scrollable": "false",
+    "long-clickable": "false",
+    "password": "false",
+    "selected": "false",
+    "bounds": "[893,345][985,388]"
+  }
+]

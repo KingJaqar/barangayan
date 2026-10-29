@@ -33,6 +33,12 @@
           "imageWidth": 76,
           "resizeMode": "contain"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "default"
+        }
       ]
     ],
     "experiments": {

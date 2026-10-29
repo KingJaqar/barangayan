@@ -1,0 +1,11 @@
+{
+  "name": "services-lists-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/services-lists-ui.mjs"
+  ],
+  "start": "2026-10-27T02:03:41.521Z",
+  "end": "2026-10-27T02:03:54.458Z",
+  "status": 0
+}

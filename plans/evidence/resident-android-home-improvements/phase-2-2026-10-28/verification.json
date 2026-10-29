@@ -1,0 +1,123 @@
+{
+  "at": "2026-10-28T08:00:02.325Z",
+  "owned": [
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs"
+  ],
+  "unchangedInputs": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/src/components/home/home-action.tsx",
+    "apps/resident-android-mobile/src/components/guest-prompt.tsx",
+    "apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+    "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+    "package-lock.json"
+  ],
+  "baseline": [
+    {
+      "id": "types",
+      "code": 0
+    },
+    {
+      "id": "lint",
+      "code": 0
+    },
+    {
+      "id": "home-unit",
+      "code": 0
+    },
+    {
+      "id": "home-presentation-ui",
+      "code": 0
+    },
+    {
+      "id": "services-tab-stability",
+      "code": 0
+    },
+    {
+      "id": "request-tracking-navigation",
+      "code": 0
+    },
+    {
+      "id": "resident-shell-lifecycle",
+      "code": 0
+    },
+    {
+      "id": "export",
+      "code": 0
+    }
+  ],
+  "final": [
+    {
+      "id": "types",
+      "code": 0
+    },
+    {
+      "id": "lint",
+      "code": 0
+    },
+    {
+      "id": "home-unit",
+      "code": 0
+    },
+    {
+      "id": "home-presentation-ui",
+      "code": 0
+    },
+    {
+      "id": "services-tab-stability",
+      "code": 0
+    },
+    {
+      "id": "request-tracking-navigation",
+      "code": 0
+    },
+    {
+      "id": "resident-shell-lifecycle",
+      "code": 0
+    },
+    {
+      "id": "export",
+      "code": 0
+    }
+  ],
+  "packet": {
+    "sha256": "7F784E5C0F56E9885109761079C6BE3B1A697089F1400EEF451B81D60323A6F0",
+    "entries": 13,
+    "chunks": 6,
+    "read": "All six extracts fully read in this session; no omissions/compression gaps"
+  },
+  "native": "Resident/guest structure and routing verified; exact paired native baseline reproduces previous Fabric diagnostics with zero new React signatures; see resident-verification.json",
+  "dependenciesAdded": 0,
+  "phaseStatus": "Complete / Verified for Phase 2 local structure, labels and Home-entry gates",
+  "talkBack": {
+    "status": "Waived",
+    "scope": "all phases",
+    "userInstruction": "no need for talkback verification testing for all phases"
+  },
+  "resume": {
+    "at": "2026-10-28T09:28:12.244Z",
+    "productEdits": 0,
+    "sourceInputsUnchanged": 16,
+    "existingChecksReused": 8,
+    "nativeLayouts": 6,
+    "baselineNativeLayouts": 6,
+    "routingTransitions": 13,
+    "coldRequests": true,
+    "contrastPairs": 110,
+    "remainingPhase2Work": [],
+    "integrationRemaining": [
+      "Phase 3/4 cards/previews",
+      "Full R5/R10 integration and later native preference/incomplete-profile permutations"
+    ]
+  }
+}

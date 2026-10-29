@@ -1,0 +1,998 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style.<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: AGENTS.md, CLAUDE.md, apps/resident-android-mobile/src/app/(app)/home/index.tsx, apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx, apps/resident-android-mobile/src/constants/resident-theme.ts, apps/resident-android-mobile/src/hooks/use-home-announcements.ts, apps/resident-android-mobile/src/lib/refresh-resource.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          home/
+            index.tsx
+      components/
+        home/
+          request-summary-sheet.tsx
+        resident-header.tsx
+      constants/
+        resident-theme.ts
+      hooks/
+        use-home-announcements.ts
+      lib/
+        refresh-resource.ts
+AGENTS.md
+CLAUDE.md</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/home/index.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from &apos;@barangayan/shared&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from &apos;react&apos;;
+import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { SafeAreaView } from &apos;react-native-safe-area-context&apos;;
+
+import { Avatar } from &apos;@/components/avatar&apos;;
+import { DrrmTabIcon } from &apos;@/components/drrm-tab-icon&apos;;
+import { ServicesTabIcon } from &apos;@/components/services-tab-icon&apos;;
+import { HomeAction } from &apos;@/components/home/home-action&apos;;
+import { RequestSummarySheet } from &apos;@/components/home/request-summary-sheet&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProfileCompletionBanner } from &apos;@/components/profile-completion-banner&apos;;
+import { PullRefreshControl, usePullRefresh } from &apos;@/components/pull-refresh&apos;;
+import { ScrollableChevronRow } from &apos;@/components/scrollable-chevron-row&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { RefreshResource } from &apos;@/lib/refresh-resource&apos;;
+import { MaxContentWidth } from &apos;@/constants/theme&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useFloatingTabInset } from &apos;@/hooks/use-floating-tab-inset&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { homeRequestSummary, homeRequestTitle, homeTimestamp, type HomeRequest } from &apos;@/lib/home-request&apos;;
+import { useHomeAnnouncements } from &apos;@/hooks/use-home-announcements&apos;;
+import { advisoryExpiry, announcementPreview } from &apos;@/lib/home-announcement&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+
+
+const QUICK_ACTIONS = [
+  { label: &apos;Services&apos;, description: &apos;Browse documents and services&apos;, href: &apos;/services&apos;, icon: &apos;clipboard-outline&apos;, tone: &apos;accent&apos;, foreground: &apos;onAccent&apos; },
+  { label: &apos;Reports&apos;, description: &apos;Report an issue&apos;, href: &apos;/reports&apos;, icon: &apos;warning-outline&apos;, tone: &apos;warning&apos;, foreground: &apos;onWarning&apos; },
+  { label: &apos;Emergency&apos;, description: &apos;Emergency information&apos;, href: &apos;/drrm&apos;, icon: &apos;drrm&apos;, tone: &apos;danger&apos;, foreground: &apos;onDanger&apos; },
+  { label: &apos;Maps&apos;, description: &apos;Open barangay maps&apos;, href: &apos;/maps&apos;, icon: &apos;location-outline&apos;, tone: &apos;info&apos;, foreground: &apos;onInfo&apos; },
+  { label: &apos;Health&apos;, description: &apos;Open health services&apos;, href: &apos;/health&apos;, icon: &apos;heart-outline&apos;, tone: &apos;rose&apos;, foreground: &apos;onRose&apos; },
+] as const;
+
+async function loadHomeRequests(signal: AbortSignal) {
+  const { data, error } = await supabase.rpc(&apos;resident_home_requests&apos;, { p_qrph_settlement_ready: PAYMENT_SETTLEMENT_READY })
+    .abortSignal(signal).retry(false);
+  if (error) throw error;
+  if (!data || data.length &gt; 3 || new Set(data.map(item =&gt; item.id)).size !== data.length) throw new Error(&apos;Invalid Home request response&apos;);
+  return { items: data, refreshedAt: new Date().toISOString() };
+}
+
+export default function HomeScreen() {
+  const { session } = useAuth();
+  const userId = session?.user.id ?? null;
+  const { profile, refetch: refetchProfile } = useProfile();
+  const { resident } = useTheme();
+  const router = useRouter();
+  const bottomTabInset = useFloatingTabInset();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { width, fontScale } = useWindowDimensions();
+  const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 &lt; 64 * fontScale;
+  const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+  const requestWidth = Math.max(1, Math.min(width, MaxContentWidth) - 40);
+  const [failedImage, setFailedImage] = useState&lt;string | null&gt;(null);
+  const requestKey = JSON.stringify([userId, profile?.id === userId ? profile?.barangay_id : null]);
+  const requestResource = useMemo(() =&gt; new RefreshResource(requestKey, loadHomeRequests, &apos;Your requests could not be loaded. Please try again.&apos;, undefined, 12_000), [requestKey]);
+  const requestState = useSyncExternalStore(requestResource.subscribe, requestResource.getSnapshot, requestResource.getSnapshot);
+  const announcements = useHomeAnnouncements(requestKey);
+  const { news, alerts, offline } = announcements;
+  const [selectedRequest, setSelectedRequest] = useState&lt;{ key: string; request: HomeRequest } | null&gt;(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const pendingTracking = useRef&lt;string | null&gt;(null);
+  const homeActive = useRef(true);
+  const requestTargets = useRef(new Map&lt;string, View&gt;());
+  const requestFallbackTarget = useRef&lt;View&gt;(null);
+  const visibleRequestId = useRef&lt;string | null&gt;(null);
+  const pull = usePullRefresh([announcements.refresh, () =&gt; userId ? requestResource.refresh() : undefined, refetchProfile]);
+
+  useEffect(() =&gt; {
+    pendingTracking.current = null;
+    setSheetOpen(false);
+    setSelectedRequest(null);
+  }, [requestKey]);
+
+  useFocusEffect(useCallback(() =&gt; {
+    homeActive.current = true;
+    requestResource.activate();
+    if (userId) void requestResource.refresh();
+    const listener = AppState.addEventListener(&apos;change&apos;, state =&gt; {
+      homeActive.current = state === &apos;active&apos;;
+      if (state !== &apos;active&apos;) { pendingTracking.current = null; setSheetOpen(false); requestResource.cancel(); }
+      else { requestResource.activate(); if (userId) void requestResource.refresh(); }
+    });
+    return () =&gt; { homeActive.current = false; listener.remove(); requestResource.cancel(); pendingTracking.current = null; setSheetOpen(false); };
+  }, [requestResource, userId]));
+
+  const requests = requestState.data;
+  const currentSelection = selectedRequest?.key === requestKey &amp;&amp; userId ? selectedRequest : null;
+  const selectedLive = requests?.items.find(item =&gt; item.id === currentSelection?.request.id);
+  const selected = selectedLive ?? currentSelection?.request ?? null;
+  useEffect(() =&gt; {
+    if (sheetOpen &amp;&amp; !selectedLive) { pendingTracking.current = null; setSheetOpen(false); }
+  }, [sheetOpen, selectedLive]);
+  const announcement = news.data?.items[0];
+  const announcementTone = announcement?.category === &apos;emergency&apos; ? resident.danger
+    : announcement?.category === &apos;health&apos; ? resident.rose : resident.accentText;
+
+  function closeSheet() { pendingTracking.current = null; setSheetOpen(false); }
+  function afterDismiss() {
+    const id = pendingTracking.current;
+    pendingTracking.current = null;
+    if (!homeActive.current) return;
+    // Keep tracking in Home&apos;s stack so Back removes it without changing Services.
+    if (id &amp;&amp; selectedLive?.id === id) router.push(`/home/requests/${id}`);
+    else {
+      const target = (selected?.id === visibleRequestId.current ? requestTargets.current.get(selected.id) : null) ?? requestFallbackTarget.current;
+      if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, &apos;focus&apos;); }
+    }
+  }
+
+  return &lt;SafeAreaView edges={[&apos;left&apos;, &apos;right&apos;]} style={[styles.safeArea, { backgroundColor: resident.card }]}&gt;
+    &lt;ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+      refreshControl={&lt;PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} /&gt;}&gt;
+      &lt;View style={styles.inset}&gt;&lt;ProfileCompletionBanner /&gt;&lt;/View&gt;
+      {offline ? &lt;HomeListState label=&quot;You’re offline. Showing last-known information where available. Pull to refresh when connected.&quot; /&gt; : null}
+      &lt;View style={styles.identitySection}&gt;
+        {userId ? &lt;View style={styles.identity}&gt;
+          &lt;Avatar fullName={profile?.full_name ?? &apos;Resident&apos;} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} /&gt;
+          &lt;View style={styles.locationGroup}&gt;
+            &lt;Ionicons name=&quot;location-outline&quot; size={16} color={resident.accentText} accessible={false} /&gt;
+            &lt;ThemedText style={[styles.location, { color: resident.text }]}&gt;{profile?.barangays?.name ?? &apos;Barangayan&apos;}&lt;/ThemedText&gt;
+          &lt;/View&gt;
+        &lt;/View&gt; : &lt;HomeAction reducedMotion={reducedMotion} hitSlop={4} accessibilityLabel=&quot;Log in&quot; onPress={() =&gt; router.push(&apos;/(auth)/login&apos;)} style={styles.identity}&gt;
+          &lt;Avatar icon=&quot;person&quot; size={36} foregroundColor={resident.onAccent} /&gt;
+          &lt;ThemedText style={[styles.location, { color: resident.text }]}&gt;Log in&lt;/ThemedText&gt;
+        &lt;/HomeAction&gt;}
+      &lt;/View&gt;
+      &lt;View style={styles.quickActions}&gt;
+        {QUICK_ACTIONS.map(action =&gt; &lt;HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+          accessibilityLabel={action.label} accessibilityHint={action.description}
+          onPress={() =&gt; router.push(action.href === &apos;/services&apos; ? { pathname: &apos;/services&apos;, params: { segment: &apos;documents&apos; } } : action.href)}
+          style={[styles.quickAction, { width: `${100 / actionColumns}%` }]}&gt;
+          &lt;View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === &apos;accent&apos; &amp;&amp; resident.accentNeedsOutline ? 1 : 0 }]}&gt;
+            {action.href === &apos;/services&apos;
+              ? &lt;ServicesTabIcon size={24} color={resident[action.foreground]} /&gt;
+              : action.icon === &apos;drrm&apos;
+              ? &lt;DrrmTabIcon size={24} color={resident[action.foreground]} /&gt;
+              : &lt;Ionicons name={action.icon} size={24} color={resident[action.foreground]} accessible={false} /&gt;}
+          &lt;/View&gt;
+          &lt;ThemedText style={[styles.quickLabel, { color: resident.text }]}&gt;{action.label}&lt;/ThemedText&gt;
+        &lt;/HomeAction&gt;)}
+      &lt;/View&gt;
+      &lt;View style={styles.section}&gt;
+        {announcements.active.map(item =&gt; &lt;View key={item.id} style={[styles.inset, { marginBottom: 12 }]}&gt;
+          &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel={`View advisory: ${item.title}. ${announcementPreview(item.body)}`}
+            onPress={() =&gt; router.push({ pathname: &apos;/announcements&apos;, params: { announcementId: item.id } })}
+            style={[styles.card, { backgroundColor: resident.surface, borderColor: resident.danger, gap: 8, minHeight: 48 }]}&gt;
+            &lt;ThemedText style={[styles.status, { color: resident.danger }]}&gt;{alerts.error || alerts.fetching || offline ? &apos;Last-known emergency advisory&apos; : &apos;Emergency advisory&apos;}&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.cardTitle, { color: resident.text }]}&gt;{item.title}&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.subtitle, { color: resident.text }]}&gt;{announcementPreview(item.body)}&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Published {homeTimestamp(item.published_at)} · Expires {homeTimestamp(item.alert_expires_at ?? &apos;&apos;)}&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.seeAllText, { color: resident.accentText }]}&gt;View advisory&lt;/ThemedText&gt;
+          &lt;/HomeAction&gt;
+        &lt;/View&gt;)}
+        {!alerts.data ? &lt;HomeListState loading={!alerts.error} label={alerts.error ?? &apos;Checking emergency advisories…&apos;} onRetry={alerts.error ? announcements.retryAlerts : undefined} /&gt; : null}
+        {alerts.data ? &lt;View style={styles.inset}&gt;&lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Advisories · Last refreshed {homeTimestamp(alerts.data.refreshedAt)}&lt;/ThemedText&gt;&lt;/View&gt; : null}
+        {alerts.data &amp;&amp; alerts.error ? &lt;HomeListState label={alerts.error} onRetry={announcements.retryAlerts} /&gt; : null}
+      &lt;/View&gt;
+      &lt;View style={styles.section}&gt;
+        &lt;View style={styles.sectionHeader}&gt;
+          &lt;View style={styles.sectionHeading}&gt;
+            &lt;ThemedText accessibilityRole=&quot;header&quot; style={[styles.sectionTitle, { color: resident.text }]}&gt;Your requests&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.subtitle, { color: resident.muted }]}&gt;{requests ? `${requests.items.length} ${requests.items.length === 1 ? &apos;request&apos; : &apos;requests&apos;} shown` : &apos;Your requests&apos;}&lt;/ThemedText&gt;
+          &lt;/View&gt;
+          &lt;HomeAction pressableRef={requestFallbackTarget} reducedMotion={reducedMotion} accessibilityLabel=&quot;View all requests&quot; onPress={() =&gt; router.push({ pathname: &apos;/services&apos;, params: { segment: &apos;requests&apos; } })} style={styles.seeAll}&gt;
+            &lt;ThemedText style={[styles.seeAllText, { color: resident.text }]}&gt;See all&lt;/ThemedText&gt;
+          &lt;/HomeAction&gt;
+        &lt;/View&gt;
+        {!userId ? &lt;HomeListState label=&quot;Log in to see your requests.&quot; action={{ label: &apos;Log in&apos;, onPress: () =&gt; router.push(&apos;/(auth)/login&apos;) }} /&gt;
+          : !requests ? &lt;HomeListState loading={!requestState.error} label={requestState.error ?? &quot;Loading your requests…&quot;} onRetry={requestState.error ? requestResource.refresh : undefined} /&gt;
+          : requests.items.length === 0 ? &lt;HomeListState label=&quot;No requests yet&quot; action={{ label: &apos;Request a document&apos;, onPress: () =&gt; router.push({ pathname: &apos;/services&apos;, params: { segment: &apos;documents&apos; } }) }} /&gt;
+          : &lt;ScrollableChevronRow key={requestKey} label=&quot;requests&quot; pageWidth={requestWidth} onIndexChange={index =&gt; { visibleRequestId.current = requests.items[index]?.id ?? null; }} contentContainerStyle={styles.shelf}&gt;
+            {requests.items.map(request =&gt; {
+              const summary = homeRequestSummary(request);
+              const title = homeRequestTitle(request);
+              return &lt;HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target =&gt; { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={[title, `reference ${request.reference_number}`, summary.progressLabel ?? summary.statusLabel, summary.cancelled ? summary.cancellationLabel : summary.paymentLabel, summary.updatedLabel, summary.nextAction].filter(Boolean).join(&quot;, &quot;)}
+                accessibilityHint=&quot;Opens a request summary&quot; onPress={() =&gt; { if (sheetOpen || pendingTracking.current) return; pendingTracking.current = null; setSelectedRequest({ key: requestKey, request }); setSheetOpen(true); }}
+                style={({ pressed }) =&gt; [styles.requestCard, styles.card, { width: requestWidth, backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}&gt;
+                &lt;View style={styles.requestTop}&gt;
+                  &lt;View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}&gt;
+                    &lt;DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} /&gt;
+                  &lt;/View&gt;
+                  &lt;View style={styles.requestInfo}&gt;
+                    &lt;ThemedText style={[styles.cardTitle, { color: resident.text }]}&gt;{title}&lt;/ThemedText&gt;
+                    &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;#{request.reference_number}&lt;/ThemedText&gt;
+                  &lt;/View&gt;
+                &lt;/View&gt;
+                &lt;View style={styles.requestProgress}&gt;
+                  {summary.progressLabel ? &lt;View style={styles.segments} accessible={false} importantForAccessibility=&quot;no-hide-descendants&quot;&gt;
+                    {summary.steps.map((step, index) =&gt; &lt;View key={step.status} style={[styles.segment, { backgroundColor: index &lt;= summary.stepIndex ? resident.accentText : resident.border }]} /&gt;)}
+                  &lt;/View&gt; : null}
+                  &lt;ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}&gt;{summary.progressLabel ?? summary.statusLabel}&lt;/ThemedText&gt;
+                  &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;{summary.updatedLabel}&lt;/ThemedText&gt;
+                  {summary.cancelled ? &lt;&gt;
+                    &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;{summary.cancellationLabel}&lt;/ThemedText&gt;
+                    {summary.cancellationNote ? &lt;ThemedText style={[styles.reference, { color: resident.text }]}&gt;{summary.cancellationNote}&lt;/ThemedText&gt; : null}
+                  &lt;/&gt; : &lt;&gt;
+                    &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;{summary.paymentLabel}&lt;/ThemedText&gt;
+                    {summary.nextAction ? &lt;ThemedText style={[styles.status, { color: resident.accentText }]}&gt;{summary.nextAction}&lt;/ThemedText&gt; : null}
+                  &lt;/&gt;}
+                &lt;/View&gt;
+              &lt;/HomeAction&gt;;
+            })}
+          &lt;/ScrollableChevronRow&gt;}
+        {userId &amp;&amp; requests ? &lt;View style={styles.inset}&gt;
+          &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Last refreshed {homeTimestamp(requests.refreshedAt)}&lt;/ThemedText&gt;
+          {requestState.error ? &lt;HomeListState label={requestState.error} onRetry={requestResource.refresh} /&gt; : null}
+        &lt;/View&gt; : null}
+      &lt;/View&gt;
+      &lt;View style={styles.section}&gt;
+        &lt;View style={styles.sectionHeader}&gt;
+          &lt;View style={styles.sectionHeading}&gt;
+            &lt;ThemedText accessibilityRole=&quot;header&quot; style={[styles.sectionTitle, { color: resident.text }]}&gt;Around the barangay&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.subtitle, { color: resident.muted }]}&gt;Latest announcements&lt;/ThemedText&gt;
+          &lt;/View&gt;
+          &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel=&quot;View all announcements&quot; onPress={() =&gt; router.push(&apos;/announcements&apos;)} style={styles.seeAll}&gt;
+            &lt;ThemedText style={[styles.seeAllText, { color: resident.text }]}&gt;See all&lt;/ThemedText&gt;
+          &lt;/HomeAction&gt;
+        &lt;/View&gt;
+        {!news.data ? &lt;HomeListState loading={!news.error} label={news.error ?? &quot;Loading announcements…&quot;} onRetry={news.error ? announcements.retryNews : undefined} /&gt;
+
+          : announcement ? &lt;View style={styles.shelf}&gt;
+            &lt;HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() =&gt; router.push({ pathname: &apos;/announcements&apos;, params: { announcementId: announcement.id } })}
+              style={({ pressed }) =&gt; [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}&gt;
+              &lt;View style={styles.newsMeta}&gt;
+                &lt;View style={styles.categoryGroup}&gt;
+                  &lt;View style={[styles.categoryDot, { backgroundColor: announcementTone }]} /&gt;
+                  &lt;ThemedText style={[styles.category, { color: announcementTone }]}&gt;{ANNOUNCEMENT_CATEGORY_META[announcement.category as AnnouncementCategory]?.label ?? announcement.category}&lt;/ThemedText&gt;
+                &lt;/View&gt;
+                &lt;ThemedText style={[styles.newsDate, { color: resident.muted }]}&gt;{homeTimestamp(announcement.published_at)}&lt;/ThemedText&gt;
+              &lt;/View&gt;
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Announcement image unavailable.&lt;/ThemedText&gt;
+                : &lt;Image source={{ uri: announcement.image_url }} contentFit=&quot;cover&quot; style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() =&gt; setFailedImage(announcement.image_url)} /&gt;
+                : null}
+              &lt;ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}&gt;{announcement.title}&lt;/ThemedText&gt;
+              {advisoryExpiry(announcement) !== null &amp;&amp; Date.parse(announcement.alert_expires_at ?? &apos;&apos;) &lt;= announcements.clock ? &lt;ThemedText style={[styles.status, { color: resident.muted }]}&gt;Expired&lt;/ThemedText&gt; : null}
+              &lt;ThemedText style={[styles.subtitle, { color: resident.text }]}&gt;{announcementPreview(announcement.body ?? &apos;&apos;)}&lt;/ThemedText&gt;
+              &lt;ThemedText style={[styles.seeAllText, { color: resident.accentText }]}&gt;View details&lt;/ThemedText&gt;
+            &lt;/HomeAction&gt;
+          &lt;/View&gt; : &lt;HomeListState label=&quot;No announcements yet.&quot; /&gt;}
+        {news.data ? &lt;View style={styles.inset}&gt;&lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Announcements · Last refreshed {homeTimestamp(news.data.refreshedAt)}&lt;/ThemedText&gt;&lt;/View&gt; : null}
+        {news.data &amp;&amp; news.error ? &lt;HomeListState label={news.error} onRetry={announcements.retryNews} /&gt; : null}
+      &lt;/View&gt;
+    &lt;/ScrollView&gt;
+    {selected ? &lt;RequestSummarySheet request={selected} available={Boolean(selectedLive)} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() =&gt; { if (!sheetOpen || !selectedLive || pendingTracking.current) return; pendingTracking.current = selectedLive.id; setSheetOpen(false); }} /&gt; : null}
+  &lt;/SafeAreaView&gt;;
+}
+
+function HomeListState({ label, loading = false, onRetry, action }: { label: string; loading?: boolean; onRetry?: () =&gt; void; action?: { label: string; onPress: () =&gt; void } }) {
+  const { resident } = useTheme();
+  return &lt;View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion=&quot;polite&quot; accessibilityState={{ busy: loading }}&gt;
+    {loading ? &lt;ActivityIndicator color={resident.accentText} /&gt; : null}
+    &lt;ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}&gt;{label}&lt;/ThemedText&gt;
+    {onRetry ? &lt;PrimaryButton presentation=&quot;resident&quot; variant=&quot;secondary&quot; label=&quot;Try again&quot; onPress={onRetry} /&gt; : null}
+    {action ? &lt;PrimaryButton presentation=&quot;resident&quot; variant=&quot;secondary&quot; label={action.label} onPress={action.onPress} /&gt; : null}
+  &lt;/View&gt;;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: &apos;100%&apos;, maxWidth: MaxContentWidth, alignSelf: &apos;center&apos; },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingVertical: 16 },
+  identity: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 10, minHeight: 48 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: &apos;600&apos;, flexShrink: 1 },
+  quickActions: { flexDirection: &apos;row&apos;, flexWrap: &apos;wrap&apos;, paddingHorizontal: 12, marginBottom: 16, rowGap: 8 },
+  quickAction: { alignItems: &apos;center&apos;, paddingVertical: 4, gap: 8, minWidth: 0, minHeight: 48 },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: &apos;600&apos;, textAlign: &apos;center&apos;, alignSelf: &apos;stretch&apos; },
+  section: { marginBottom: 16 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: &apos;row&apos;, alignItems: &apos;flex-end&apos;, gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: &apos;800&apos;, letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 48, minWidth: 48, alignItems: &apos;flex-end&apos;, justifyContent: &apos;center&apos; },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: &apos;600&apos;, textDecorationLine: &apos;underline&apos; },
+  shelf: { flexDirection: &apos;row&apos;, paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: &apos;stretch&apos; },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: &apos;#000&apos;, shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { flexGrow: 1 },
+  requestTop: { flexDirection: &apos;row&apos;, gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos;, flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: &apos;700&apos;, minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: &apos;auto&apos;, paddingTop: 10 },
+  segments: { flexDirection: &apos;row&apos;, gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: &apos;700&apos; },
+  announcementCard: { flex: 1, maxWidth: &apos;100%&apos;, gap: 6 },
+  announcementImage: { width: &apos;100%&apos;, aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: &apos;600&apos; },
+  newsMeta: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, justifyContent: &apos;space-between&apos;, gap: 8 },
+  categoryGroup: { flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: &apos;right&apos;, flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: &apos;700&apos;, textTransform: &apos;capitalize&apos;, flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});</file><file path="apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { useEffect, useRef, useState } from &apos;react&apos;;
+import { AccessibilityInfo, Animated, Easing, Modal, Platform, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from &apos;react-native&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { homeRequestSummary, homeTimestamp, type HomeRequest } from &apos;@/lib/home-request&apos;;
+
+/** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
+export function RequestSummarySheet({ request, visible, available, reducedMotion, onClose, onDismiss, onViewFull }: {
+  request: HomeRequest;
+  visible: boolean;
+  available: boolean;
+  reducedMotion: boolean;
+  onClose: () =&gt; void;
+  onDismiss: () =&gt; void;
+  onViewFull: () =&gt; void;
+}) {
+  const { resident } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const [mounted, setMounted] = useState(visible);
+  const [sheetHeight, setSheetHeight] = useState(0);
+  const progress = useRef(new Animated.Value(0)).current;
+  const scrim = useRef(new Animated.Value(0)).current;
+  const shown = useRef(visible);
+  const dismissPending = useRef(false);
+  const entryFocused = useRef(false);
+  const closeTarget = useRef&lt;View&gt;(null);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  const summary = homeRequestSummary(request);
+
+  useEffect(() =&gt; {
+    if (visible &amp;&amp; !mounted) { setMounted(true); return; }
+    if (!visible &amp;&amp; !shown.current) return;
+    if (!sheetHeight) {
+      if (!visible) { shown.current = false; dismissPending.current = true; setMounted(false); }
+      return;
+    }
+    if (visible) { shown.current = true; dismissPending.current = false; }
+    let active = true;
+    const animation = Animated.parallel([
+      Animated.timing(progress, { toValue: Number(visible), duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+      Animated.timing(scrim, { toValue: Number(visible), duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+    ]);
+    animation.start(({ finished }) =&gt; {
+      if (!active || !finished) return;
+      if (visible &amp;&amp; !entryFocused.current &amp;&amp; closeTarget.current) {
+        entryFocused.current = true;
+        AccessibilityInfo.sendAccessibilityEvent(closeTarget.current, &apos;focus&apos;);
+      }
+      if (finished &amp;&amp; !visible) {
+        shown.current = false;
+        dismissPending.current = true;
+        entryFocused.current = false;
+        setMounted(false);
+        setSheetHeight(0);
+      }
+    });
+    return () =&gt; { active = false; animation.stop(); };
+  }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
+
+  useEffect(() =&gt; {
+    // RN Web owns an additional render/cleanup cycle for its focus trap.
+    // Its actual dismissal event is the reliable point to restore focus.
+    if (Platform.OS === &apos;web&apos;) return;
+    if (!mounted &amp;&amp; !visible &amp;&amp; dismissPending.current) {
+      // Let the modal release its focus trap/native window before restoring focus or routing.
+      const frame = requestAnimationFrame(() =&gt; {
+        dismissPending.current = false;
+        dismiss.current();
+      });
+      return () =&gt; cancelAnimationFrame(frame);
+    }
+  }, [mounted, visible]);
+
+  return &lt;Modal visible={mounted} transparent animationType=&quot;none&quot; statusBarTranslucent
+    onDismiss={Platform.OS === &apos;web&apos; ? () =&gt; {
+      if (dismissPending.current) { dismissPending.current = false; dismiss.current(); }
+    } : undefined}
+    onRequestClose={onClose}&gt;
+    &lt;View style={styles.root}&gt;
+      &lt;Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}&gt;
+        &lt;Pressable style={StyleSheet.absoluteFill} accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Dismiss request summary&quot; onPress={onClose} /&gt;
+      &lt;/Animated.View&gt;
+      &lt;Animated.View accessibilityViewIsModal onLayout={event =&gt; {
+        const measured = event.nativeEvent.layout.height;
+        setSheetHeight(previous =&gt; previous === measured ? previous : measured);
+      }} style={[styles.sheet, {
+        backgroundColor: resident.card, maxHeight: height * 0.92, paddingBottom: Math.max(32, insets.bottom + 16),
+        opacity: reducedMotion ? progress : 1,
+        transform: [{ translateY: reducedMotion ? 0 : progress.interpolate({ inputRange: [0, 1], outputRange: [sheetHeight || height, 0] }) }],
+      }]}&gt;
+        &lt;View accessible={false} style={[styles.handle, { backgroundColor: resident.border }]} /&gt;
+        &lt;Pressable ref={closeTarget} hitSlop={4} accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Close request summary&quot; onPress={onClose}
+          style={({ pressed }) =&gt; [styles.close, { backgroundColor: pressed ? resident.pressed : resident.surface }]}&gt;
+          &lt;Ionicons name=&quot;close&quot; size={18} color={resident.text} accessible={false} /&gt;
+        &lt;/Pressable&gt;
+        &lt;ScrollView style={styles.body} showsVerticalScrollIndicator={false}&gt;
+        &lt;View style={styles.header}&gt;
+          &lt;View style={styles.titleGroup}&gt;
+            &lt;ThemedText style={[styles.category, { color: resident.muted }]}&gt;Document request&lt;/ThemedText&gt;
+            &lt;ThemedText type=&quot;residentHeader&quot; accessibilityRole=&quot;header&quot; style={[styles.title, { color: resident.text }]}&gt;{request.document_name ?? &apos;Document request&apos;}&lt;/ThemedText&gt;
+            &lt;ThemedText style={[styles.reference, { color: resident.muted }]}&gt;Ref #{request.reference_number}&lt;/ThemedText&gt;
+          &lt;/View&gt;
+        &lt;/View&gt;
+        &lt;View style={styles.timeline}&gt;
+          &lt;ThemedText accessibilityLiveRegion=&quot;polite&quot; style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}&gt;{summary.progressLabel ?? summary.statusLabel}&lt;/ThemedText&gt;
+          &lt;ThemedText style={[styles.status, { color: resident.muted }]}&gt;{summary.updatedLabel}&lt;/ThemedText&gt;
+          {summary.cancelled ? &lt;&gt;
+            &lt;ThemedText style={[styles.status, { color: resident.muted }]}&gt;{summary.cancellationLabel}&lt;/ThemedText&gt;
+            {summary.cancellationNote ? &lt;ThemedText style={[styles.status, { color: resident.text }]}&gt;{summary.cancellationNote}&lt;/ThemedText&gt; : null}
+          &lt;/&gt; : &lt;&gt;
+          &lt;ThemedText style={[styles.status, { color: resident.muted }]}&gt;{summary.paymentLabel}&lt;/ThemedText&gt;
+          {summary.nextAction ? &lt;ThemedText style={[styles.status, { color: resident.accentText }]}&gt;{summary.nextAction}&lt;/ThemedText&gt; : null}
+          {summary.stepIndex &gt;= 0 ? summary.steps.map((step, index) =&gt; &lt;View key={step.status} style={styles.step}&gt;
+            &lt;View style={styles.indicator} accessible={false} importantForAccessibility=&quot;no-hide-descendants&quot;&gt;
+              &lt;View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached &amp;&amp; !step.current ? resident.accent : resident.card }]}&gt;
+                {step.current ? &lt;View style={[styles.currentDot, { backgroundColor: resident.accentText }]} /&gt;
+                  : step.reached ? &lt;Ionicons name=&quot;checkmark&quot; size={14} color={resident.onAccent} /&gt; : null}
+              &lt;/View&gt;
+              {index &lt; summary.steps.length - 1 ? &lt;View style={[styles.line, { backgroundColor: step.reached &amp;&amp; !step.current ? resident.accentText : resident.border }]} /&gt; : null}
+            &lt;/View&gt;
+            &lt;View style={styles.stepBody}&gt;
+              &lt;ThemedText accessibilityLabel={step.current ? `${step.label}, current stage` : step.label}
+                style={[styles.stepLabel, { color: step.reached ? resident.text : resident.muted, fontWeight: step.current ? &apos;700&apos; : step.reached ? &apos;600&apos; : &apos;500&apos; }]}&gt;{step.label}&lt;/ThemedText&gt;
+              &lt;ThemedText style={[styles.date, { color: resident.muted }]}&gt;{step.date ? homeTimestamp(step.date) : step.detail}&lt;/ThemedText&gt;
+            &lt;/View&gt;
+          &lt;/View&gt;) : null}
+          &lt;/&gt;}
+        &lt;/View&gt;
+        &lt;/ScrollView&gt;
+        &lt;View style={styles.footer}&gt;
+          &lt;PrimaryButton presentation=&quot;resident&quot; label=&quot;View full request&quot; disabled={!visible || !available} onPress={onViewFull} /&gt;
+        &lt;/View&gt;
+      &lt;/Animated.View&gt;
+    &lt;/View&gt;
+  &lt;/Modal&gt;;
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, justifyContent: &apos;flex-end&apos; },
+  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 20, paddingTop: 12, flexShrink: 1 },
+  handle: { width: 40, height: 4, borderRadius: 2, alignSelf: &apos;center&apos; },
+  header: { flexDirection: &apos;row&apos;, alignItems: &apos;flex-start&apos;, paddingRight: 48 },
+  titleGroup: { flex: 1, minWidth: 0 },
+  category: { fontSize: 12.5, lineHeight: 18.75 },
+  title: { fontSize: 19, lineHeight: 26.125, fontWeight: &apos;800&apos;, marginTop: 2 },
+  reference: { fontSize: 13, lineHeight: 19.5, marginTop: 4 },
+  close: { position: &apos;absolute&apos;, top: 24, right: 20, zIndex: 1, elevation: 4, width: 48, height: 48, borderRadius: 24, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  body: { flexShrink: 1, marginTop: 16 },
+  timeline: { gap: 0, marginTop: 16 },
+  status: { fontSize: 12.5, lineHeight: 18, fontWeight: &apos;600&apos;, marginBottom: 16 },
+  step: { flexDirection: &apos;row&apos;, gap: 14 },
+  indicator: { width: 24, alignItems: &apos;center&apos; },
+  dot: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  currentDot: { width: 8, height: 8, borderRadius: 4 },
+  line: { width: 2, flex: 1, minHeight: 24 },
+  stepBody: { flex: 1, paddingBottom: 20, marginTop: -2 },
+  stepLabel: { fontSize: 14.5, lineHeight: 21.75 },
+  date: { fontSize: 12.5, lineHeight: 18.75 },
+  footer: { marginTop: 8 },
+});</file><file path="apps/resident-android-mobile/src/components/resident-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { router, usePathname } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+
+import { NotificationBell } from &apos;@/components/notification-bell&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useSearchDraft } from &apos;@/hooks/use-resident-search&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+import { useEmergencyMapHeader } from &apos;@/hooks/use-emergency-map-header&apos;;
+import { useSearchInactivity } from &apos;@/hooks/use-search-inactivity&apos;;
+import { isSearchableQuery } from &apos;@/lib/resident-search&apos;;
+
+const TITLES: Record&lt;string, string&gt; = {
+  &apos;/home&apos;: &apos;Home&apos;,
+  &apos;/services&apos;: &apos;Services&apos;,
+  &apos;/drrm&apos;: &apos;Emergency &amp; DRRM Info&apos;,
+  &apos;/home/emergency-info&apos;: &apos;Emergency &amp; DRRM Info&apos;,
+  &apos;/maps&apos;: &apos;Maps&apos;,
+  &apos;/health&apos;: &apos;Health&apos;,
+  &apos;/reports&apos;: &apos;Reports&apos;,
+  &apos;/announcements&apos;: &apos;Announcements&apos;,
+  &apos;/settings&apos;: &apos;Settings&apos;,
+};
+
+/** The header and search draft persist; editable native input only exists on search routes. */
+export function ResidentHeader() {
+  const pathname = usePathname();
+  const enteringSearch = pathname === &apos;/search&apos;;
+  const searching = enteringSearch || pathname === &apos;/explore&apos;;
+  const { active: emergencyMapActive, searchAvoidance } = useEmergencyMapHeader();
+  const [mapSearch, setMapSearch] = useState(false);
+  const title = TITLES[pathname];
+  const theme = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  const { announcementsUnreadCount } = useUnreadCounts();
+  const { fontId } = useFontPreference();
+  const insets = useSafeAreaInsets();
+  const { query, setQuery, submitSearch, openSearch, editSearch, backFromSearch } = useSearchDraft();
+  const searchable = isSearchableQuery(query);
+  const input = useRef&lt;TextInput&gt;(null);
+  const [width, setWidth] = useState(336);
+  const [searchX, setSearchX] = useState(140);
+  const progress = useSharedValue(searching ? 1 : 0);
+  useEffect(() =&gt; {
+    progress.value = reducedMotion ? (searching ? 1 : 0) : withTiming(searching ? 1 : 0, { duration: 200 });
+    return () =&gt; cancelAnimation(progress);
+  }, [searching, reducedMotion, progress]);
+  // A frame can run after Explore has committed but before this effect&apos;s cleanup; focusing there would reopen editing.
+  const entering = useRef(enteringSearch);
+  entering.current = enteringSearch;
+  const searchActive = useRef(searching);
+  searchActive.current = searching;
+  useEffect(() =&gt; {
+    if (!enteringSearch) {
+      input.current?.blur();
+      return;
+    }
+    const frame = requestAnimationFrame(() =&gt; { if (entering.current) input.current?.focus(); });
+    return () =&gt; cancelAnimationFrame(frame);
+  }, [enteringSearch]);
+  useEffect(() =&gt; {
+    if (!searching) return;
+    // Native focus/IME state can outlive a hidden or detached Android input.
+    return () =&gt; { Keyboard.dismiss(); };
+  }, [searching]);
+  const fieldStyle = useAnimatedStyle(() =&gt; ({
+    opacity: progress.value,
+    left: searchX + 12 + (48 - searchX - 12) * progress.value,
+    width: 44 + (width - 40 - 44) * progress.value,
+  }));
+  const normalStyle = useAnimatedStyle(() =&gt; ({ opacity: 1 - progress.value }));
+  const closeSearch = () =&gt; {
+    Keyboard.dismiss();
+    backFromSearch();
+  };
+  const resetSearchIdle = useSearchInactivity(enteringSearch &amp;&amp; mapSearch, closeSearch);
+  useEffect(() =&gt; { if (!searching) setMapSearch(false); }, [searching]);
+  // Android Back takes the header&apos;s Back path, so leaving search also clears the submitted session.
+  const back = useRef(closeSearch);
+  back.current = closeSearch;
+  useEffect(() =&gt; {
+    if (!searching) return;
+    const subscription = BackHandler.addEventListener(&apos;hardwareBackPress&apos;, () =&gt; { back.current(); return true; });
+    return () =&gt; subscription.remove();
+  }, [searching]);
+  return &lt;View style={{
+    display: title || searching ? &apos;flex&apos; : &apos;none&apos;,
+    backgroundColor: theme.resident.accent,
+    paddingTop: insets.top,
+    paddingLeft: insets.left,
+    paddingRight: insets.right,
+  }}&gt;
+    &lt;View style={styles.row} onLayout={event =&gt; { const next = event.nativeEvent.layout.width; setWidth(current =&gt; current === next ? current : next); }}&gt;
+      &lt;Animated.View
+        style={[styles.normal, normalStyle]}
+        pointerEvents={searching ? &apos;none&apos; : &apos;auto&apos;}
+        accessibilityElementsHidden={searching}
+        importantForAccessibility={searching ? &apos;no-hide-descendants&apos; : &apos;auto&apos;}&gt;
+        &lt;Image source={require(&apos;@/assets/logo/barangayan-logo-1024.png&apos;)}
+          style={styles.logo} contentFit=&quot;contain&quot; accessibilityLabel=&quot;Barangayan&quot; /&gt;
+        &lt;ThemedText type=&quot;residentHeader&quot; accessibilityRole=&quot;header&quot;
+          numberOfLines={pathname === &apos;/announcements&apos; || searchAvoidance ? 1 : undefined}
+          adjustsFontSizeToFit={pathname === &apos;/announcements&apos; || searchAvoidance}
+          minimumFontScale={0.6}
+          style={[styles.title, title &amp;&amp; title.length &gt; 14 ? styles.longTitle : undefined, { color: theme.resident.onAccent }]}&gt;{title}&lt;/ThemedText&gt;
+        &lt;View onLayout={event =&gt; { const next = event.nativeEvent.layout.x; setSearchX(current =&gt; current === next ? current : next); }}&gt;
+          &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Search&quot;
+            accessibilityState={emergencyMapActive ? { expanded: false } : undefined}
+            onPress={() =&gt; { setMapSearch(emergencyMapActive); openSearch(pathname); }} style={styles.button}&gt;
+            &lt;Ionicons name=&quot;search&quot; size={22} color={theme.resident.onAccent} /&gt;
+          &lt;/Pressable&gt;
+        &lt;/View&gt;
+        &lt;HeaderAction label={announcementsUnreadCount &gt; 0 ? `View announcements, ${announcementsUnreadCount} unread` : &apos;View announcements&apos;}
+          selected={pathname === &apos;/announcements&apos;} reducedMotion={reducedMotion}
+          onPress={() =&gt; router.navigate(&apos;/announcements&apos;)}&gt;
+            &lt;NotificationBell size={22} color={pathname === &apos;/announcements&apos; ? theme.resident.accentText : theme.resident.onAccent} presentation=&quot;resident&quot; /&gt;
+        &lt;/HeaderAction&gt;
+        &lt;HeaderAction label=&quot;Open settings&quot; selected={pathname === &apos;/settings&apos;} reducedMotion={reducedMotion}
+          onPress={() =&gt; router.navigate(&apos;/settings&apos;)}&gt;
+            &lt;Ionicons name=&quot;menu&quot; size={24} color={pathname === &apos;/settings&apos; ? theme.resident.accentText : theme.resident.onAccent} /&gt;
+        &lt;/HeaderAction&gt;
+      &lt;/Animated.View&gt;
+      &lt;View style={styles.searchLayer} pointerEvents={searching ? &apos;box-none&apos; : &apos;none&apos;}
+        accessibilityElementsHidden={!searching}
+        importantForAccessibility={searching ? &apos;auto&apos; : &apos;no-hide-descendants&apos;}&gt;
+        {searching ? (
+          &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Back from search&quot;
+            onPress={closeSearch} style={styles.button}&gt;
+            &lt;Ionicons name=&quot;arrow-back&quot; size={24} color={theme.resident.onAccent} /&gt;
+          &lt;/Pressable&gt;
+        ) : null}
+        &lt;Animated.View style={[styles.field, fieldStyle]} onTouchStart={resetSearchIdle}&gt;
+          &lt;View pointerEvents=&quot;none&quot; style={[styles.fieldSurface, { backgroundColor: theme.resident.card }]} /&gt;
+          {mapSearch ? &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Collapse header search&quot; accessibilityState={{ expanded: true }} onPress={closeSearch} style={styles.button}&gt;
+            &lt;Ionicons name=&quot;search&quot; size={18} color={theme.resident.muted} /&gt;
+          &lt;/Pressable&gt; : &lt;Ionicons name=&quot;search&quot; size={18} color={theme.resident.muted} /&gt;}
+          {searching ? &lt;TextInput
+            ref={input} value={query} onChangeText={value =&gt; { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}
+            // Explore&apos;s field is the way back to editing: focusing it reopens the entry with the submitted query.
+            onFocus={() =&gt; {
+              if (!searchActive.current) { input.current?.blur(); Keyboard.dismiss(); return; }
+              if (entering.current) resetSearchIdle(); else editSearch();
+            }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
+            accessibilityLabel=&quot;Search services, announcements and your records&quot;
+            placeholder=&quot;Search Barangayan&quot; placeholderTextColor={theme.resident.muted}
+            returnKeyType=&quot;search&quot; autoCorrect={false}
+            onSubmitEditing={() =&gt; submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} /&gt; : null}
+          {query ? (
+            &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Clear search&quot;
+              onPress={() =&gt; { if (!enteringSearch) { editSearch(&apos;&apos;); return; } setQuery(&apos;&apos;); input.current?.focus(); }} style={styles.clear}&gt;
+              &lt;Ionicons name=&quot;close-circle&quot; size={18} color={theme.resident.muted} /&gt;
+            &lt;/Pressable&gt;
+          ) : null}
+          {enteringSearch ? (
+            &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel=&quot;Submit search&quot; accessibilityState={{ disabled: !searchable }}
+              disabled={!searchable} onPress={() =&gt; submitSearch(query)} style={styles.submit}&gt;
+              &lt;ThemedText type=&quot;smallBold&quot; style={{ color: searchable ? theme.resident.accentText : theme.resident.muted }}&gt;Search&lt;/ThemedText&gt;
+            &lt;/Pressable&gt;
+          ) : null}
+        &lt;/Animated.View&gt;
+      &lt;/View&gt;
+    &lt;/View&gt;
+  &lt;/View&gt;;
+}
+
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+function HeaderAction({ label, selected, reducedMotion, onPress, children }: {
+  label: string;
+  selected: boolean;
+  reducedMotion: boolean;
+  onPress: () =&gt; void;
+  children: ReactNode;
+}) {
+  const { resident } = useTheme();
+  const selection = useSharedValue(Number(selected));
+  const press = useSharedValue(0);
+  useEffect(() =&gt; {
+    selection.value = reducedMotion ? Number(selected) : withTiming(Number(selected), {
+      duration: selected ? 260 : 180,
+      easing: Easing.bezier(0.16, 1, 0.3, 1),
+    });
+    return () =&gt; cancelAnimation(selection);
+  }, [selected, reducedMotion, selection]);
+  useEffect(() =&gt; {
+    if (reducedMotion) { cancelAnimation(press); press.value = 0; }
+    return () =&gt; cancelAnimation(press);
+  }, [reducedMotion, press]);
+  const surfaceStyle = useAnimatedStyle(() =&gt; ({
+    opacity: selection.value,
+    transform: [{ scale: reducedMotion ? 1 : 0.84 + selection.value * 0.16 }],
+  }));
+  const pressStyle = useAnimatedStyle(() =&gt; ({ opacity: press.value * 0.14 }));
+  const contentStyle = useAnimatedStyle(() =&gt; ({
+    transform: [{ scale: reducedMotion ? 1 : 1 - press.value * 0.08 }],
+  }));
+  const setPressed = (value: number) =&gt; {
+    press.value = reducedMotion ? value : withTiming(value, {
+      duration: value ? 90 : 180,
+      easing: Easing.out(Easing.cubic),
+    });
+  };
+  return &lt;Pressable accessibilityRole=&quot;button&quot; accessibilityLabel={label}
+    accessibilityState={{ selected }} onPress={onPress}
+    onPressIn={() =&gt; setPressed(1)} onPressOut={() =&gt; setPressed(0)} style={styles.button}&gt;
+    &lt;Animated.View pointerEvents=&quot;none&quot; style={[styles.actionContent, contentStyle]}&gt;
+      {/* Route state owns visibility so a stale native animation cannot leave a pale surface behind the white inactive icon. */}
+      {selected ? &lt;Animated.View style={[styles.iconHighlight, { backgroundColor: resident.accentSoft, borderColor: resident.onAccent }, surfaceStyle]} /&gt; : null}
+      &lt;Animated.View style={[styles.pressHighlight, { backgroundColor: selected ? resident.accentText : resident.onAccent }, pressStyle]} /&gt;
+      {children}
+    &lt;/Animated.View&gt;
+  &lt;/Pressable&gt;;
+}
+const styles = StyleSheet.create({
+  row: { minHeight: 56, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: &apos;center&apos; },
+  normal: { minHeight: 44, flexDirection: &apos;row&apos;, alignItems: &apos;center&apos; },
+  logo: { width: 36, height: 36, borderRadius: 18, marginRight: 12, flexShrink: 0 },
+  title: { fontSize: 22, lineHeight: 28, flex: 1, minWidth: 0 },
+  longTitle: { fontSize: 19, lineHeight: 22 },
+  button: { width: 44, height: 44, flexShrink: 0, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  actionContent: { width: 40, height: 40, alignItems: &apos;center&apos;, justifyContent: &apos;center&apos; },
+  iconHighlight: { position: &apos;absolute&apos;, inset: 0, borderRadius: 24, borderWidth: 1 },
+  pressHighlight: { position: &apos;absolute&apos;, inset: 0, borderRadius: 24 },
+  searchLayer: { position: &apos;absolute&apos;, left: -12, right: 4, top: 6, height: 44 },
+  field: { position: &apos;absolute&apos;, top: 0, height: 44, borderRadius: 24, paddingLeft: 14, flexDirection: &apos;row&apos;, alignItems: &apos;center&apos;, overflow: &apos;hidden&apos; },
+  fieldSurface: { position: &apos;absolute&apos;, left: 0, right: 0, top: 2, bottom: 2, borderRadius: 24 },
+  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 44 },
+  clear: { width: 44, height: 44, justifyContent: &apos;center&apos;, alignItems: &apos;center&apos; },
+  submit: { minWidth: 44, height: 44, paddingHorizontal: 10, justifyContent: &apos;center&apos;, alignItems: &apos;center&apos; },
+});</file><file path="apps/resident-android-mobile/src/constants/resident-theme.ts">type RGB = readonly [number, number, number];
+
+function rgb(hex: string): RGB {
+  return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+}
+
+function mix(color: string, surface: string, amount: number): string {
+  const source = rgb(color);
+  return `#${rgb(surface).map((channel, index) =&gt; Math.round(source[index] + (channel - source[index]) * amount).toString(16).padStart(2, &apos;0&apos;)).join(&apos;&apos;)}`;
+}
+
+function luminance(hex: string): number {
+  const [red, green, blue] = rgb(hex).map((channel) =&gt; {
+    const value = channel / 255;
+    return value &lt;= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return red * 0.2126 + green * 0.7152 + blue * 0.0722;
+}
+
+function contrast(a: string, b: string): number {
+  const first = luminance(a);
+  const second = luminance(b);
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+}
+
+function foreground(background: string): string {
+  return contrast(&apos;#000000&apos;, background) &gt; contrast(&apos;#ffffff&apos;, background) ? &apos;#000000&apos; : &apos;#ffffff&apos;;
+}
+
+function readable(color: string, surface: string, text: string): string {
+  if (contrast(color, surface) &gt;= 4.5) return color;
+  let low = 0;
+  let high = 1;
+  for (let step = 0; step &lt; 16; step += 1) {
+    const middle = (low + high) / 2;
+    if (contrast(mix(color, text, middle), surface) &gt;= 4.5) high = middle;
+    else low = middle;
+  }
+  return mix(color, text, high);
+}
+
+/** Opt-in resident roles. Saved preferences and the legacy palette stay unchanged. */
+export function getResidentTheme(mode: &apos;light&apos; | &apos;dark&apos;, selectedAccent: string) {
+  const dark = mode === &apos;dark&apos;;
+  const card = dark ? &apos;#17191C&apos; : &apos;#FFFFFF&apos;;
+  const surface = dark ? &apos;#24272B&apos; : &apos;#F4F4F4&apos;;
+  const text = dark ? &apos;#F5F5F5&apos; : &apos;#222222&apos;;
+  const muted = dark ? &apos;#BDC0C5&apos; : &apos;#6A6A6A&apos;;
+  const accent = /^#[\da-f]{6}$/i.test(selectedAccent) ? selectedAccent : &apos;#0F6E5B&apos;;
+  const accentSoft = mix(accent, card, dark ? 0.82 : 0.90);
+  const accentPressed = mix(accent, &apos;#000000&apos;, 0.22);
+  const tone = (color: string) =&gt; {
+    const soft = mix(color, card, 0.90);
+    return { ink: readable(readable(readable(color, card, text), surface, text), soft, text), soft };
+  };
+  const danger = tone(&apos;#D93A3A&apos;);
+  const dangerFill = &apos;#8F1D1D&apos;;
+  const success = tone(&apos;#0F6E5B&apos;);
+  const warning = tone(&apos;#B86E00&apos;);
+  const info = tone(&apos;#2563EB&apos;);
+  const rose = tone(&apos;#C2416B&apos;);
+  const callFill = &apos;#E8930C&apos;;
+  return {
+    card, surface, text, muted, accent, accentSoft, accentPressed,
+    // Optical media surfaces preserve the original evidence image in either theme.
+    mediaBackdrop: &apos;#000000&apos;, mediaForeground: &apos;#FFFFFF&apos;, mediaScrim: &apos;rgba(0,0,0,0.55)&apos;,
+    onAccent: foreground(accent),
+    accentNeedsOutline: contrast(accent, card) &lt; 3,
+    onAccentPressed: foreground(accentPressed),
+    accentText: readable(readable(readable(accent, card, text), surface, text), accentSoft, text),
+    border: dark ? &apos;#34373C&apos; : &apos;#EBEBEB&apos;,
+    controlBorder: dark ? &apos;#868C95&apos; : &apos;#767676&apos;,
+    pressed: dark ? &apos;#30343A&apos; : &apos;#EBEBEB&apos;,
+    scrim: &apos;rgba(0,0,0,0.40)&apos;,
+    danger: danger.ink, dangerSoft: danger.soft, onDanger: foreground(danger.ink),
+    dangerFill, dangerFillPressed: &apos;#D93A3A&apos;, onDangerFill: foreground(dangerFill),
+    dangerFillNeedsOutline: contrast(dangerFill, card) &lt; 3,
+    success: success.ink, successSoft: success.soft,
+    warning: warning.ink, warningSoft: warning.soft,
+    info: info.ink, infoSoft: info.soft,
+    onWarning: foreground(warning.ink), onInfo: foreground(info.ink),
+    callFill, onCallFill: foreground(callFill), callNeedsOutline: contrast(callFill, card) &lt; 3,
+    rose: rose.ink, onRose: foreground(rose.ink),
+  };
+}
+
+export const ResidentLayout = {
+  screenPadding: 20,
+  panelRadius: 16,
+  controlRadius: 12,
+  overlayRadius: 24,
+  rowPadding: 16,
+  controlHeight: 48,
+} as const;</file><file path="apps/resident-android-mobile/src/hooks/use-home-announcements.ts">import type { Tables } from &apos;@barangayan/shared&apos;;
+import { addEventListener } from &apos;@react-native-community/netinfo&apos;;
+import { useFocusEffect } from &apos;expo-router&apos;;
+import { useCallback, useMemo, useState, useSyncExternalStore } from &apos;react&apos;;
+import { AppState } from &apos;react-native&apos;;
+import { activeAdvisories, advisoryExpiry } from &apos;@/lib/home-announcement&apos;;
+import { RefreshResource } from &apos;@/lib/refresh-resource&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+
+type Announcement = Tables&lt;&apos;announcements&apos;&gt;;
+async function loadAnnouncements(signal: AbortSignal, alerts: boolean) {
+  const now = new Date().toISOString();
+  const items: Announcement[] = [];
+  // Only currently published active alerts, never full announcement history.
+  for (let page = 0; page &lt; 100; page++) {
+    if (signal.aborted) throw new Error(&apos;Cancelled&apos;);
+    let query = supabase.from(&apos;announcements&apos;).select(&apos;*&apos;, alerts ? { count: &apos;exact&apos; } : undefined).is(&apos;deleted_at&apos;, null)
+      .lte(&apos;published_at&apos;, now).order(&apos;published_at&apos;, { ascending: false }).order(&apos;id&apos;, { ascending: false });
+    if (alerts) query = query.eq(&apos;category&apos;, &apos;emergency&apos;).gt(&apos;alert_expires_at&apos;, now).range(items.length, items.length + 99);
+    else query = query.limit(1);
+    const { data, error, count } = await query.abortSignal(signal).retry(false);
+    if (error || !data) throw error ?? new Error(&apos;Invalid announcement response&apos;);
+    items.push(...data);
+    if (!alerts || (count !== null &amp;&amp; count !== undefined &amp;&amp; items.length &gt;= count)) return { items, refreshedAt: new Date().toISOString() };
+    if (!data.length || count === null || count === undefined) throw new Error(&apos;Incomplete advisory response&apos;);
+  }
+  throw new Error(&apos;Advisory response exceeded the safe page limit&apos;);
+}
+const loadNews = (signal: AbortSignal) =&gt; loadAnnouncements(signal, false);
+const loadAlerts = (signal: AbortSignal) =&gt; loadAnnouncements(signal, true);
+
+export function useHomeAnnouncements(scope: string) {
+  const newsResource = useMemo(() =&gt; new RefreshResource(scope, loadNews, &apos;Announcements could not be loaded. Please try again.&apos;, undefined, 12_000), [scope]);
+  const alertResource = useMemo(() =&gt; new RefreshResource(scope, loadAlerts, &apos;Advisories could not be checked. Please try again.&apos;, undefined, 12_000), [scope]);
+  const news = useSyncExternalStore(newsResource.subscribe, newsResource.getSnapshot, newsResource.getSnapshot);
+  const alerts = useSyncExternalStore(alertResource.subscribe, alertResource.getSnapshot, alertResource.getSnapshot);
+  const [offline, setOffline] = useState(false);
+  const [clock, setClock] = useState(Date.now);
+  const refresh = useCallback(() =&gt; Promise.all([newsResource.refresh(), alertResource.refresh()]), [newsResource, alertResource]);
+  useFocusEffect(useCallback(() =&gt; {
+    let timer: ReturnType&lt;typeof setTimeout&gt; | undefined;
+    let active = AppState.currentState !== &apos;background&apos; &amp;&amp; AppState.currentState !== &apos;inactive&apos;;
+    const tick = () =&gt; {
+      clearTimeout(timer);
+      if (!active) return;
+      const now = Date.now();
+      setClock(now);
+      const next = Math.min(...[...(alertResource.getSnapshot().data?.items ?? []), ...(newsResource.getSnapshot().data?.items ?? [])].map(advisoryExpiry).filter((value): value is number =&gt; value !== null &amp;&amp; value &gt; now));
+      if (Number.isFinite(next)) timer = setTimeout(tick, Math.min(next - now, 2_147_483_647));
+    };
+    let network: (() =&gt; void) | undefined;
+    const start = () =&gt; {
+      network ??= addEventListener(state =&gt; setOffline(state.isConnected === false || state.isInternetReachable === false));
+      newsResource.activate(); alertResource.activate(); tick(); void refresh();
+    };
+    const stop = () =&gt; { clearTimeout(timer); network?.(); network = undefined; newsResource.cancel(); alertResource.cancel(); };
+    const unsubscribe = alertResource.subscribe(tick);
+    const unsubscribeNews = newsResource.subscribe(tick);
+    if (active) start();
+    const listener = AppState.addEventListener(&apos;change&apos;, state =&gt; { active = state === &apos;active&apos;; if (active) start(); else stop(); });
+    return () =&gt; { active = false; stop(); unsubscribe(); unsubscribeNews(); listener.remove(); };
+  }, [newsResource, alertResource, refresh]));
+  return { news, alerts, clock, active: activeAdvisories(alerts.data?.items ?? [], clock), offline,
+    refresh, retryNews: newsResource.refresh, retryAlerts: alertResource.refresh };
+}</file><file path="apps/resident-android-mobile/src/lib/refresh-resource.ts">interface RefreshSnapshot&lt;T&gt; {
+  data: T | undefined;
+  fetching: boolean;
+  error: string | null;
+}
+
+/** One read owner per account/filter. Ordinary reads join; invalidations queue
+ * one follow-up and prevent a pre-invalidation reply from being published. */
+export class RefreshResource&lt;T&gt; {
+  private snapshot: RefreshSnapshot&lt;T&gt; = { data: undefined, fetching: false, error: null };
+  private listeners = new Set&lt;() =&gt; void&gt;();
+  private pending: Promise&lt;void&gt; | null = null;
+  private controller: AbortController | null = null;
+  private revision = 0;
+  private active = true;
+
+  constructor(
+    readonly key: string,
+    private load: (signal: AbortSignal) =&gt; Promise&lt;T&gt;,
+    private message: string,
+    private reconcile: (previous: T | undefined, next: T) =&gt; T = (_, next) =&gt; next,
+    private timeoutMs = 30_000,
+  ) {}
+
+  getSnapshot = () =&gt; this.snapshot;
+  subscribe = (listener: () =&gt; void) =&gt; {
+    this.listeners.add(listener);
+    return () =&gt; { this.listeners.delete(listener); };
+  };
+  private publish(snapshot: RefreshSnapshot&lt;T&gt;) {
+    this.snapshot = snapshot;
+    this.listeners.forEach(listener =&gt; listener());
+  }
+  activate = () =&gt; { this.active = true; };
+  cancel = () =&gt; {
+    this.active = false;
+    this.revision++;
+    this.controller?.abort();
+    this.controller = null;
+    this.pending = null;
+    this.snapshot = { ...this.snapshot, fetching: false };
+  };
+  refresh = (): Promise&lt;void&gt; =&gt; {
+    if (!this.active) return Promise.resolve();
+    if (this.pending) return this.pending;
+    this.publish({ ...this.snapshot, fetching: true, error: null });
+    // Install ownership before invoking transport, including synchronous callers.
+    const work = Promise.resolve().then(async () =&gt; {
+      while (this.active &amp;&amp; this.pending === work) {
+        const revision = this.revision;
+        const controller = new AbortController();
+        this.controller = controller;
+        let timeout: ReturnType&lt;typeof setTimeout&gt; | undefined;
+        let removeAbortListener: (() =&gt; void) | undefined;
+        try {
+          const data = await Promise.race([this.load(controller.signal), new Promise&lt;never&gt;((_, reject) =&gt; {
+            const abort = () =&gt; reject(new Error(this.message));
+            controller.signal.addEventListener(&apos;abort&apos;, abort, { once: true });
+            removeAbortListener = () =&gt; controller.signal.removeEventListener(&apos;abort&apos;, abort);
+            timeout = setTimeout(() =&gt; controller.abort(), this.timeoutMs);
+          })]);
+          if (!this.active || this.pending !== work) return;
+          if (revision === this.revision) {
+            if (controller.signal.aborted) throw new Error(this.message);
+            this.publish({ data: this.reconcile(this.snapshot.data, data), fetching: false, error: null });
+            return;
+          }
+        } catch {
+          if (!this.active || this.pending !== work) return;
+          if (revision === this.revision) {
+            this.publish({ ...this.snapshot, fetching: false, error: this.message });
+            return;
+          }
+        } finally {
+          clearTimeout(timeout);
+          removeAbortListener?.();
+          if (this.controller === controller) this.controller = null;
+        }
+      }
+    }).finally(() =&gt; { if (this.pending === work) this.pending = null; });
+    this.pending = work;
+    return work;
+  };
+  invalidate = (): Promise&lt;void&gt; =&gt; {
+    this.revision++;
+    this.controller?.abort();
+    return this.refresh();
+  };
+}</file><file path="AGENTS.md"></file><file path="CLAUDE.md">@AGENTS.md</file></files></repomix>

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "types",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T13:15:19.715Z",
+    "end": "2026-10-28T13:16:01.656Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-types.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-types"
+  },
+  {
+    "id": "lint",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-28T13:15:19.740Z",
+    "end": "2026-10-28T13:15:44.988Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-lint.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-lint"
+  },
+  {
+    "id": "home-unit",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/lib/home-request.test.ts",
+      "src/lib/refresh-resource.test.ts"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T13:15:19.758Z",
+    "end": "2026-10-28T13:15:27.944Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-home-unit.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-home-unit"
+  },
+  {
+    "id": "home-presentation-ui",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/home-presentation-ui.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T13:15:19.777Z",
+    "end": "2026-10-28T13:15:55.725Z",
+    "code": 1,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-home-presentation-ui.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-home-presentation-ui"
+  },
+  {
+    "id": "services-tab-stability",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/services-tab-stability.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T13:15:19.797Z",
+    "end": "2026-10-28T13:15:25.806Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-services-tab-stability.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-services-tab-stability"
+  },
+  {
+    "id": "request-tracking-navigation",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/request-tracking-navigation.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T13:15:19.815Z",
+    "end": "2026-10-28T13:15:20.058Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-request-tracking-navigation.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-request-tracking-navigation"
+  },
+  {
+    "id": "resident-shell-lifecycle",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/resident-shell-lifecycle.mjs"
+    ],
+    "deadline": 600000,
+    "start": "2026-10-28T13:15:19.834Z",
+    "end": "2026-10-28T13:15:25.847Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-resident-shell-lifecycle.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-resident-shell-lifecycle"
+  },
+  {
+    "id": "export",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase4-20261028/export-closure"
+    ],
+    "deadline": 1200000,
+    "start": "2026-10-28T13:15:19.855Z",
+    "end": "2026-10-28T13:16:19.484Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\closure-export.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\closure-export"
+  }
+]

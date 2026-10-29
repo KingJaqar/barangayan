@@ -1,0 +1,145 @@
+{
+  "chunks": [
+    {
+      "end": 12000,
+      "chars": 12000,
+      "lines": 184,
+      "file": "packet-read-1.txt",
+      "start": 0,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    },
+    {
+      "end": 24000,
+      "chars": 12000,
+      "lines": 176,
+      "file": "packet-read-2.txt",
+      "start": 12000,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    },
+    {
+      "end": 33669,
+      "chars": 9669,
+      "lines": 200,
+      "file": "packet-read-3.txt",
+      "start": 24000,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    },
+    {
+      "end": 45479,
+      "chars": 11810,
+      "lines": 200,
+      "file": "packet-read-4.txt",
+      "start": 33669,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    },
+    {
+      "end": 57479,
+      "chars": 12000,
+      "lines": 165,
+      "file": "packet-read-5.txt",
+      "start": 45479,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    },
+    {
+      "end": 64134,
+      "chars": 6655,
+      "lines": 129,
+      "file": "packet-read-6.txt",
+      "start": 57479,
+      "read": "Completely read in this execution session",
+      "analysis": "R4/R5/R7/U04: Home identity/spacing/routes, focused Services consumption, shared bar/guards/helpers/tests; originals resolve styles/effects. No compression gap."
+    }
+  ],
+  "version": "1.18.1",
+  "security": "No suspicious files detected",
+  "omissions": [],
+  "sha256": "7F784E5C0F56E9885109761079C6BE3B1A697089F1400EEF451B81D60323A6F0",
+  "compressed": false,
+  "actual": [
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/components/home/home-action.tsx",
+    "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "apps/resident-android-mobile/src/components/guest-prompt.tsx",
+    "apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+    "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+    "apps/resident-android-mobile/package.json",
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "actualSources": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+      "bytes": 20684
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260",
+      "bytes": 8928
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+      "sha256": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+      "bytes": 1523
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+      "bytes": 12404
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/guest-prompt.tsx",
+      "sha256": "ccb2b4c7b52208471d9ea1bd85109d694f471f103edb4c563cc0143d077ef76e",
+      "bytes": 937
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+      "sha256": "eef671aed57cb3269c37b8b7b112169606112e1c8761c555de3b252e801143fa",
+      "bytes": 722
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-floating-tab-inset.ts",
+      "sha256": "7d23631196efd55bcacebacd579c01d9e45d354955c3937c61c7a1961130d70b",
+      "bytes": 411
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "sha256": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+      "bytes": 2672
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "sha256": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a",
+      "bytes": 2299
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "sha256": "4beda86cdd637530a17350eb74e82960b581527b51a1ea9189ee9c4faf8160c1",
+      "bytes": 11204
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "bytes": 2122
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "bytes": 11
+    }
+  ]
+}

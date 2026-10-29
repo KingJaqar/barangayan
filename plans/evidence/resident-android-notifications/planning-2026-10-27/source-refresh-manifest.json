@@ -1,0 +1,19 @@
+{
+  "supersedes": [
+    "requests-list.tsx entry in original source/packet manifests only"
+  ],
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "sha256": "82d065d62a67129aeddb366cac8746262afb477b6811b828ddf320a63d8a9f4e",
+      "bytes": 23510,
+      "reason": "Concurrent user edit/new dependency; preserved without modification"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/constants/disclosure-motion.ts",
+      "sha256": "d164a1af03e127c5119cc75b3682178b32a887c3a89c7a28460a79a0f711b230",
+      "bytes": 361,
+      "reason": "Concurrent user edit/new dependency; preserved without modification"
+    }
+  ]
+}

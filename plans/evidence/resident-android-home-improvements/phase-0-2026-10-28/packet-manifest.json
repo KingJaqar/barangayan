@@ -1,0 +1,205 @@
+{
+  "compressed": false,
+  "sha256": "C7190F2F8CC3A735FED4EC8FF3E3D2DED8F65AF18C70783D4732BB10E7E63CC6",
+  "security": "No suspicious files detected; security checks retained",
+  "actual": [
+    "apps/admin-web/AGENTS.md",
+    "apps/admin-web/CLAUDE.md",
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+    "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/vitest.config.ts",
+    "packages/shared/src/lib/request-status.ts",
+    "packages/shared/src/lib/service-catalog.ts",
+    "packages/shared/src/schemas/announcement.test.ts",
+    "packages/shared/src/schemas/announcement.ts",
+    "packages/shared/package.json",
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "failedPacket": "omitted-stdin-context.xml is superseded: Windows stdin selectors selected only root files; exact --include selectors resolved all omissions",
+  "version": "1.18.1",
+  "omissions": [],
+  "chunks": [
+    {
+      "end": 11987,
+      "chars": 11987,
+      "lines": 187,
+      "file": "packet-read-1.txt",
+      "start": 0,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "ef0953cc71aa3a808d370d3d391269b8eeb6b39ae18a093cf9de1ca0402ecf11"
+    },
+    {
+      "end": 23987,
+      "chars": 12000,
+      "lines": 172,
+      "file": "packet-read-2.txt",
+      "start": 11987,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "dbb58df41d80e127e0c697156bf3e2f4bf6cfa0f72f5bd3c10342d9b6a3dd024"
+    },
+    {
+      "end": 33223,
+      "chars": 9236,
+      "lines": 200,
+      "file": "packet-read-3.txt",
+      "start": 23987,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "59c8368c6ff647aff0842e4c4f79f6cc4134ec4ac54437158a1a5dc2ace11ffa"
+    },
+    {
+      "end": 42202,
+      "chars": 8979,
+      "lines": 200,
+      "file": "packet-read-4.txt",
+      "start": 33223,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "492cbebd6d8dc2bacc452dba1c1549f213baf0b50c46fe127a49035301cab7e9"
+    },
+    {
+      "end": 50727,
+      "chars": 8525,
+      "lines": 200,
+      "file": "packet-read-5.txt",
+      "start": 42202,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "3bac9bce9201d4ca50d3c00b4dc1512e0f9e5a4c987f53458f4e0ae56025b32c"
+    },
+    {
+      "end": 59633,
+      "chars": 8906,
+      "lines": 200,
+      "file": "packet-read-6.txt",
+      "start": 50727,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "a1523a169bdb4b07c63721ab79346414be01403ea7bf0fda1b2d9c8d52842ec8"
+    },
+    {
+      "end": 63409,
+      "chars": 3776,
+      "lines": 128,
+      "file": "packet-read-7.txt",
+      "start": 59633,
+      "read": "Complete in this execution session; explicit contiguous bounded extraction",
+      "sha256": "f7f547172e57a93c381554f4cd7a737bd77f58abbd04ecb841d043876f28e325"
+    }
+  ],
+  "selectors": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "apps/admin-web/AGENTS.md",
+    "apps/admin-web/CLAUDE.md",
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+    "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/vitest.config.ts",
+    "packages/shared/src/lib/service-catalog.ts",
+    "packages/shared/src/lib/request-status.ts",
+    "packages/shared/src/schemas/announcement.ts",
+    "packages/shared/src/schemas/announcement.test.ts",
+    "packages/shared/package.json"
+  ],
+  "entries": [
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/admin-web/CLAUDE.md",
+      "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "sha256": "c84876c0d7252322894060101390084e831ca9c7036174cdab3fc5986f279a34",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "sha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "sha256": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "sha256": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "sha256": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "packages/shared/src/lib/request-status.ts",
+      "sha256": "1222c4f0680faf10e427865a4dae9d3223823bd7efae27d9191a83f880bf5aee",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "packages/shared/src/lib/service-catalog.ts",
+      "sha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.test.ts",
+      "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.ts",
+      "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "read": "Entire uncompressed XML entry across the listed continuations"
+    }
+  ]
+}

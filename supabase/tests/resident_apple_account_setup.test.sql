@@ -47,7 +47,7 @@ select is((select registration_origin from barangayan_private.resident_account_l
 set local role authenticated;
 select set_config('request.jwt.claim.sub','b6122000-0000-0000-0000-000000000001',true);
 select is((select array_agg(k order by k) from jsonb_object_keys(public.get_resident_account_setup_status()) k),
- array['hasGoogleIdentity','passwordSet','profileComplete','registrationOrigin'],'v1 response keeps exactly its legacy keys');
+ array['hasGoogleIdentity','idSubmitted','passwordSet','profileComplete','registrationOrigin'],'v1 response keeps its legacy keys plus idSubmitted');
 select is(public.get_resident_account_setup_status()->>'registrationOrigin','legacy','v1 never emits the new origin value');
 select is((public.get_resident_account_setup_status()->>'passwordSet')::boolean,false,'v1 reports the real password state for an Apple account');
 select is((public.get_resident_account_setup_status()->>'hasGoogleIdentity')::boolean,false,'v1 reports no Google identity for an Apple account');

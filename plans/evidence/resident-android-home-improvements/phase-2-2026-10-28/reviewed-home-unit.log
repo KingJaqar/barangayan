@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/home-request.test.ts (4 tests) 10ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  15:27:09
+   Duration  4.73s (transform 1.31s, setup 0ms, collect 2.26s, tests 10ms, environment 0ms, prepare 457ms)
+

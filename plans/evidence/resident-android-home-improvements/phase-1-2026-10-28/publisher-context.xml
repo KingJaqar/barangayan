@@ -1,0 +1,772 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style.<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/admin-web/AGENTS.md, apps/admin-web/CLAUDE.md, apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx, apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx, apps/admin-web/src/actions/admin-audit-actions.ts, packages/shared/src/schemas/announcement.ts, packages/shared/src/schemas/announcement.test.ts, supabase/migrations/0011_announcements_admin_write.sql, supabase/migrations/0019_fix_announcement_soft_delete.sql
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style</notes></file_summary><directory_structure>apps/
+  admin-web/
+    src/
+      actions/
+        admin-audit-actions.ts
+      app/
+        (admin)/
+          announcements/
+            announcement-form.tsx
+            announcement-row.tsx
+    AGENTS.md
+    CLAUDE.md
+packages/
+  shared/
+    src/
+      schemas/
+        announcement.test.ts
+        announcement.ts
+supabase/
+  migrations/
+    0011_announcements_admin_write.sql
+    0019_fix_announcement_soft_delete.sql</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/admin-web/src/actions/admin-audit-actions.ts">&apos;use server&apos;;
+
+import { createSupabaseServerClient } from &apos;@/lib/supabase/server&apos;;
+
+import {
+  adminAuditActionSchema,
+  adminEntityTypeSchema,
+  entityTypeToCategory,
+  type AdminAuditAction,
+  type AdminAuditLogPreferences,
+  type AdminEntityType,
+  type BarangaySettings,
+  type Json,
+} from &apos;@barangayan/shared&apos;;
+
+// ---------------------------------------------------------------------------
+// Core insert helper
+// ---------------------------------------------------------------------------
+
+interface LogParams {
+  action: AdminAuditAction;
+  entityType: AdminEntityType;
+  entityId?: string;
+  entityLabel?: string;
+  changes?: { before: Record&lt;string, unknown&gt;; after: Record&lt;string, unknown&gt; };
+  metadata?: Record&lt;string, unknown&gt;;
+  /**
+   * Pass the caller&apos;s already-loaded `barangaySettings` to skip a DB round-trip.
+   * Omit for infrequent events (login/logout) — the helper fetches settings itself.
+   */
+  barangaySettings?: BarangaySettings | null;
+}
+
+/**
+ * Insert one row into admin_audit_log from a Server Action context.
+ * The server session cookie identifies the acting admin; no admin_id/barangay_id
+ * is accepted from the caller to prevent spoofing.
+ *
+ * Callers should pass `barangaySettings` from their own hook/context to avoid an
+ * extra per-call DB read. If omitted, settings are fetched once internally.
+ */
+export async function logAdminAction({
+  action,
+  entityType,
+  entityId,
+  entityLabel,
+  changes,
+  metadata,
+  barangaySettings,
+}: LogParams): Promise&lt;void&gt; {
+  // Validate enums — fail loudly in development.
+  adminAuditActionSchema.parse(action);
+  adminEntityTypeSchema.parse(entityType);
+
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Fetch admin profile + barangay config in one query.
+  const { data: profile } = await supabase
+    .from(&apos;profiles&apos;)
+    .select(&apos;barangay_id, full_name, barangays(config)&apos;)
+    .eq(&apos;id&apos;, user.id)
+    .maybeSingle();
+
+  if (!profile?.barangay_id) return;
+
+  // Resolve settings: use passed-in value, or parse from the fetched config.
+  const config = barangaySettings
+    ?? ((profile.barangays as { config?: BarangaySettings } | null)?.config ?? null);
+
+  // Master on/off switch.
+  if (config?.features?.enableAdminAuditLog === false) return;
+
+  // Per-category filter (skip when prefs absent — default is to log everything).
+  const prefs = config?.adminAuditLogPreferences as AdminAuditLogPreferences | undefined;
+  if (prefs) {
+    const category = entityTypeToCategory(entityType);
+    if (!prefs.enabledCategories[category]) return;
+  }
+
+  await supabase.from(&apos;admin_audit_log&apos;).insert({
+    barangay_id: profile.barangay_id,
+    admin_id: user.id,
+    action,
+    entity_type: entityType,
+    entity_id: entityId ?? null,
+    entity_label: entityLabel ?? null,
+    // JSON round-trip rather than a cast: `changes` is typed as Record&lt;string, unknown&gt;,
+    // which isn&apos;t structurally a Json value (could hold undefined/functions/etc.) even
+    // though at runtime it&apos;s always plain audit data — this guarantees what actually
+    // reaches Postgres matches what TypeScript says was sent.
+    changes: changes ? (JSON.parse(JSON.stringify(changes)) as Json) : null,
+    // Always include admin_name so the notification bell can display who acted.
+    // Caller-supplied metadata is spread last so it can override if needed.
+    metadata: { admin_name: profile.full_name, ...(metadata ?? {}) },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Auth event helpers — called around sign-in / sign-out
+// ---------------------------------------------------------------------------
+
+/** Call server-side immediately after a successful admin login. */
+export async function logAdminLogin(): Promise&lt;void&gt; {
+  await logAdminAction({
+    action: &apos;login&apos;,
+    entityType: &apos;system&apos;,
+    entityLabel: &apos;Admin login&apos;,
+  });
+}
+
+/** Call before sign-out (after sign-out the session is gone and the insert would fail). */
+export async function logAdminLogout(): Promise&lt;void&gt; {
+  await logAdminAction({
+    action: &apos;logout&apos;,
+    entityType: &apos;system&apos;,
+    entityLabel: &apos;Admin logout&apos;,
+  });
+}</file><file path="apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx">&apos;use client&apos;;
+
+import { AdminSelect } from &apos;@/components/admin/dropdown/admin-select&apos;;
+
+import { ContentFormActions } from &apos;@/components/admin/content-create-panel&apos;;
+import styles from &apos;@/components/admin/content-forms.module.css&apos;;
+
+import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES } from &apos;@barangayan/shared&apos;;
+import { useRouter } from &apos;next/navigation&apos;;
+import { useState } from &apos;react&apos;;
+
+import { logAdminAction } from &apos;@/actions/admin-audit-actions&apos;;
+import { beginAttempt, notify as toast } from &apos;@/lib/notify&apos;;
+import { createSupabaseBrowserClient } from &apos;@/lib/supabase/client&apos;;
+import { LoadingButtonContent } from &apos;@/components/loading/loading-button-content&apos;;
+
+const inputClass =
+  &apos;w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800&apos;;
+const labelClass = &apos;mb-1 block text-xs font-medium text-zinc-500&apos;;
+
+export function AnnouncementForm({ barangayId }: { barangayId: string }) {
+  const router = useRouter();
+
+  const [title, setTitle] = useState(&apos;&apos;);
+  const [body, setBody] = useState(&apos;&apos;);
+  const [detailedDescription, setDetailedDescription] = useState(&apos;&apos;);
+  const [category, setCategory] = useState&lt;string&gt;(&apos;general&apos;);
+  const [imageUrl, setImageUrl] = useState(&apos;&apos;);
+  const [publishedAt, setPublishedAt] = useState(&apos;&apos;);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt(&apos;handleSubmit&apos;);
+    try {
+      event.preventDefault();
+      setError(null);
+
+      const result = announcementSchema.safeParse({
+        title,
+        body,
+        detailed_description: detailedDescription || undefined,
+        category,
+        image_url: imageUrl || undefined,
+        published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
+      });
+
+      if (!result.success) {
+        toast.error(&apos;Review the highlighted fields before continuing.&apos;, { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? &apos;Invalid input&apos;);
+        return;
+      }
+
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: insertError } = await supabase.from(&apos;announcements&apos;).insert({
+        barangay_id: barangayId,
+        title: result.data.title,
+        body: result.data.body,
+        detailed_description: result.data.detailed_description || null,
+        category: result.data.category,
+        image_url: result.data.image_url || null,
+        published_at: result.data.published_at ?? new Date().toISOString(),
+      });
+      setSubmitting(false);
+
+      if (insertError) {
+        setError(insertError.message);
+        toast.error(`Failed to create announcement: ${insertError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: &apos;create&apos;,
+        entityType: &apos;announcement&apos;,
+        entityLabel: result.data.title,
+        metadata: {
+          title: result.data.title,
+          body: result.data.body,
+          detailed_description: result.data.detailed_description ?? null,
+          category: result.data.category,
+          published_at: result.data.published_at ?? null,
+        },
+      }).catch(() =&gt; {});
+
+      setTitle(&apos;&apos;);
+      setBody(&apos;&apos;);
+      setDetailedDescription(&apos;&apos;);
+      setCategory(&apos;general&apos;);
+      setImageUrl(&apos;&apos;);
+      setPublishedAt(&apos;&apos;);
+      toast.success(`Announcement published.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning(&apos;The action could not be confirmed. Refresh the record before trying again.&apos;, { id: toastAttempt });
+    } finally { setSubmitting(false); }
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}&gt;
+      &lt;label className=&quot;sm:col-span-2 text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Title&lt;/span&gt;
+        &lt;input
+          className={inputClass}
+          value={title}
+          onChange={(e) =&gt; setTitle(e.target.value)}
+          placeholder=&quot;e.g. Typhoon Advisory: Signal No. 2 Raised&quot;
+          required
+        /&gt;
+      &lt;/label&gt;
+
+      &lt;label className=&quot;sm:col-span-2 text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Body&lt;/span&gt;
+        &lt;textarea
+          className={inputClass}
+          value={body}
+          onChange={(e) =&gt; setBody(e.target.value)}
+          rows={3}
+          placeholder=&quot;Short summary shown on the announcement card (2 sentences or so)…&quot;
+          required
+        /&gt;
+      &lt;/label&gt;
+
+      &lt;label className=&quot;sm:col-span-2 text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Detailed Description (optional)&lt;/span&gt;
+        &lt;textarea
+          className={inputClass}
+          value={detailedDescription}
+          onChange={(e) =&gt; setDetailedDescription(e.target.value)}
+          rows={4}
+          placeholder=&quot;Full write-up shown when a resident taps the announcement for more detail…&quot;
+        /&gt;
+      &lt;/label&gt;
+
+      &lt;div className={styles.groupHeading}&gt;&lt;h3&gt;Publication&lt;/h3&gt;&lt;/div&gt;
+
+      &lt;label className=&quot;text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Category&lt;/span&gt;
+        &lt;AdminSelect kind=&quot;announcement&quot; className={inputClass} value={category} onValueChange={(nextValue) =&gt; setCategory(nextValue)}&gt;
+          {ANNOUNCEMENT_CATEGORIES.map((cat) =&gt; (
+            &lt;option key={cat} value={cat}&gt;
+              {ANNOUNCEMENT_CATEGORY_META[cat].label}
+            &lt;/option&gt;
+          ))}
+        &lt;/AdminSelect&gt;
+      &lt;/label&gt;
+
+      &lt;label className=&quot;text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Publish At (optional)&lt;/span&gt;
+        &lt;input
+          type=&quot;datetime-local&quot;
+          className={inputClass}
+          value={publishedAt}
+          onChange={(e) =&gt; setPublishedAt(e.target.value)}
+        /&gt;
+      &lt;/label&gt;
+
+      &lt;div className={styles.groupHeading}&gt;&lt;h3&gt;Media&lt;/h3&gt;&lt;/div&gt;
+
+      &lt;label className=&quot;text-sm&quot;&gt;
+        &lt;span className={labelClass}&gt;Image URL (optional)&lt;/span&gt;
+        &lt;input
+          className={inputClass}
+          value={imageUrl}
+          onChange={(e) =&gt; setImageUrl(e.target.value)}
+          placeholder=&quot;https://…&quot;
+          type=&quot;url&quot;
+        /&gt;
+      &lt;/label&gt;
+
+      {error ? &lt;p role=&quot;alert&quot; className=&quot;sm:col-span-2 text-sm text-red-600&quot;&gt;{error}&lt;/p&gt; : null}
+
+      &lt;ContentFormActions busy={submitting}&gt;
+        &lt;button
+          type=&quot;submit&quot;
+          disabled={submitting || !barangayId}
+          className=&quot;rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50&quot;
+          aria-busy={submitting}&gt;
+          &lt;LoadingButtonContent pending={submitting} pendingLabel=&quot;Publishing…&quot;&gt;Publish Announcement&lt;/LoadingButtonContent&gt;
+        &lt;/button&gt;
+      &lt;/ContentFormActions&gt;
+    &lt;/form&gt;
+  );
+}</file><file path="apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx">&apos;use client&apos;;
+
+import { ContentEditDialog } from &apos;@/components/admin/content-edit-dialog&apos;;
+import editStyles from &apos;@/components/admin/content-edit-dialog.module.css&apos;;
+
+import { AdminSelect } from &apos;@/components/admin/dropdown/admin-select&apos;;
+
+import styles from &apos;@/components/admin/content-workspace.module.css&apos;;
+
+import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES, type Tables } from &apos;@barangayan/shared&apos;;
+import { useRouter } from &apos;next/navigation&apos;;
+import { useState } from &apos;react&apos;;
+
+import { logAdminAction } from &apos;@/actions/admin-audit-actions&apos;;
+import { ConfirmButton } from &apos;@/components/admin/confirm-button&apos;;
+import { beginAttempt, notify as toast } from &apos;@/lib/notify&apos;;
+import { createSupabaseBrowserClient } from &apos;@/lib/supabase/client&apos;;
+import { LoadingButtonContent } from &apos;@/components/loading/loading-button-content&apos;;
+
+type Announcement = Tables&lt;&apos;announcements&apos;&gt;;
+
+const inputClass =
+  &apos;w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800&apos;;
+const labelClass = &apos;mb-1 block text-xs font-medium text-zinc-500&apos;;
+
+/** Formats an ISO datetime string for display (e.g. &quot;Aug 7, 2026, 9:00 AM&quot;). */
+function formatPublishedAt(iso: string): string {
+  return new Intl.DateTimeFormat(&apos;en-PH&apos;, { dateStyle: &apos;medium&apos;, timeStyle: &apos;short&apos; }).format(
+    new Date(iso),
+  );
+}
+
+export function AnnouncementRow({ announcement }: { announcement: Announcement }) {
+  const router = useRouter();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+
+  const [title, setTitle] = useState(announcement.title);
+  const [body, setBody] = useState(announcement.body);
+  const [detailedDescription, setDetailedDescription] = useState(announcement.detailed_description ?? &apos;&apos;);
+  const [category, setCategory] = useState(announcement.category);
+  const [imageUrl, setImageUrl] = useState(announcement.image_url ?? &apos;&apos;);
+
+  function startEdit() {
+    setTitle(announcement.title);
+    setBody(announcement.body);
+    setDetailedDescription(announcement.detailed_description ?? &apos;&apos;);
+    setCategory(announcement.category);
+    setImageUrl(announcement.image_url ?? &apos;&apos;);
+    setError(null);
+    setIsEditing(true);
+  }
+
+  async function handleSave(event: React.FormEvent) {
+    const toastAttempt = beginAttempt(&apos;handleSave&apos;);
+    try {
+      event.preventDefault();
+      setError(null);
+
+      const result = announcementSchema.safeParse({
+        title,
+        body,
+        detailed_description: detailedDescription || undefined,
+        category,
+        image_url: imageUrl || undefined,
+      });
+
+      if (!result.success) {
+        toast.error(&apos;Review the highlighted fields before continuing.&apos;, { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? &apos;Invalid input&apos;);
+        return;
+      }
+
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from(&apos;announcements&apos;)
+        .update({
+          title: result.data.title,
+          body: result.data.body,
+          detailed_description: result.data.detailed_description || null,
+          category: result.data.category,
+          image_url: result.data.image_url || null,
+        })
+        .eq(&apos;id&apos;, announcement.id);
+      setSubmitting(false);
+
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: &apos;update&apos;,
+        entityType: &apos;announcement&apos;,
+        entityId: announcement.id,
+        entityLabel: result.data.title,
+        changes: {
+          before: {
+            title: announcement.title,
+            body: announcement.body,
+            detailed_description: announcement.detailed_description,
+            category: announcement.category,
+          },
+          after: {
+            title: result.data.title,
+            body: result.data.body,
+            detailed_description: result.data.detailed_description || null,
+            category: result.data.category,
+          },
+        },
+      }).catch(() =&gt; {});
+
+      toast.success(&apos;Announcement updated.&apos;, { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning(&apos;The action could not be confirmed. Refresh the record before trying again.&apos;, { id: toastAttempt });
+    } finally { setSubmitting(false); }
+  }
+
+  async function archive() {
+    const toastAttempt = beginAttempt(&apos;archive&apos;);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from(&apos;announcements&apos;)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq(&apos;id&apos;, announcement.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: &apos;delete&apos;,
+        entityType: &apos;announcement&apos;,
+        entityId: announcement.id,
+        entityLabel: announcement.title,
+        metadata: { title: announcement.title, body: announcement.body, category: announcement.category },
+      }).catch(() =&gt; {});
+
+      toast.success(`Announcement archived.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning(&apos;The action could not be confirmed. Refresh the record before trying again.&apos;, { id: toastAttempt });
+    }
+  }
+
+  const meta = ANNOUNCEMENT_CATEGORY_META[announcement.category as keyof typeof ANNOUNCEMENT_CATEGORY_META];
+
+  return (
+    &lt;&gt;
+    &lt;ContentEditDialog open={isEditing} title=&quot;Edit announcement&quot; context={announcement.title}
+      description=&quot;Update the content, category, and optional image shown to residents.&quot; busy={submitting} onClose={() =&gt; setIsEditing(false)}&gt;
+      &lt;form
+        onSubmit={handleSave}
+        className={editStyles.form} aria-busy={submitting}&gt;
+        &lt;div className={editStyles.fields} data-edit-scroll&gt;
+        &lt;fieldset disabled={submitting}&gt;
+          &lt;div className={editStyles.grid}&gt;
+            &lt;label className={editStyles.full}&gt;
+              &lt;span className={labelClass}&gt;Title&lt;/span&gt;
+              &lt;input className={inputClass} value={title} onChange={(e) =&gt; setTitle(e.target.value)} required /&gt;
+            &lt;/label&gt;
+
+            &lt;label className=&quot;text-sm&quot;&gt;
+              &lt;span className={labelClass}&gt;Category&lt;/span&gt;
+              &lt;AdminSelect kind=&quot;announcement&quot; className={inputClass} value={category} onValueChange={(nextValue) =&gt; setCategory(nextValue)}&gt;
+                {ANNOUNCEMENT_CATEGORIES.map((cat) =&gt; (
+                  &lt;option key={cat} value={cat}&gt;
+                    {ANNOUNCEMENT_CATEGORY_META[cat].label}
+                  &lt;/option&gt;
+                ))}
+              &lt;/AdminSelect&gt;
+            &lt;/label&gt;
+
+            &lt;label className=&quot;text-sm&quot;&gt;
+              &lt;span className={labelClass}&gt;Image URL (optional)&lt;/span&gt;
+              &lt;input
+                className={inputClass}
+                value={imageUrl}
+                onChange={(e) =&gt; setImageUrl(e.target.value)}
+                placeholder=&quot;https://…&quot;
+                type=&quot;url&quot;
+              /&gt;
+            &lt;/label&gt;
+
+            &lt;label className={editStyles.full}&gt;
+              &lt;span className={labelClass}&gt;Body&lt;/span&gt;
+              &lt;textarea
+                className={inputClass}
+                value={body}
+                onChange={(e) =&gt; setBody(e.target.value)}
+                rows={3}
+                required
+              /&gt;
+            &lt;/label&gt;
+
+            &lt;label className={editStyles.full}&gt;
+              &lt;span className={labelClass}&gt;Detailed Description (optional)&lt;/span&gt;
+              &lt;textarea
+                className={inputClass}
+                value={detailedDescription}
+                onChange={(e) =&gt; setDetailedDescription(e.target.value)}
+                rows={4}
+                placeholder=&quot;Full write-up shown when a resident taps the announcement for more detail…&quot;
+              /&gt;
+            &lt;/label&gt;
+
+            {error ? &lt;p role=&quot;alert&quot; className={`${editStyles.full} ${editStyles.error}`}&gt;{error}&lt;/p&gt; : null}
+
+          &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;/div&gt;
+        &lt;div className={editStyles.actions}&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onClick={() =&gt; setIsEditing(false)}
+            disabled={submitting}&gt;
+            Cancel
+          &lt;/button&gt;
+          &lt;button
+            type=&quot;submit&quot;
+            disabled={submitting}
+            aria-busy={submitting}&gt;
+            &lt;LoadingButtonContent pending={submitting} pendingLabel=&quot;Saving…&quot;&gt;Save Changes&lt;/LoadingButtonContent&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/ContentEditDialog&gt;
+    &lt;div className={styles.row}&gt;
+      &lt;div className={styles.rowHeader}&gt;
+        &lt;div className={styles.rowMain}&gt;
+          &lt;div className=&quot;flex flex-wrap items-center gap-2&quot;&gt;
+            {/* Category color dot + badge */}
+            &lt;span
+              className=&quot;inline-block h-2.5 w-2.5 shrink-0 rounded-full&quot;
+              style={{ backgroundColor: meta?.color }}
+            /&gt;
+            &lt;span
+              className={`${styles.badge} ${announcement.category === &apos;emergency&apos; ? styles.urgentStatus : &apos;&apos;}`}&gt;
+              {meta?.label}
+            &lt;/span&gt;
+            &lt;h3 className={styles.rowTitle}&gt;{announcement.title}&lt;/h3&gt;
+          &lt;/div&gt;
+          &lt;p className={styles.rowMeta}&gt;{formatPublishedAt(announcement.published_at)}&lt;/p&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+
+      &lt;div className={styles.rowDescription}&gt;
+        &lt;p className=&quot;line-clamp-2&quot;&gt;{announcement.body}&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div className={`${styles.rowActions} mt-4`}&gt;
+        &lt;button type=&quot;button&quot; onClick={startEdit} aria-haspopup=&quot;dialog&quot; aria-label={`Edit ${announcement.title}`}
+          className={styles.primaryAction}&gt;Edit announcement&lt;/button&gt;
+        &lt;ConfirmButton label=&quot;Archive&quot; ariaLabel={`Archive ${announcement.title}`}
+          confirmLabel=&quot;Archive?&quot; onConfirm={archive} className={styles.dangerAction} /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/&gt;
+  );
+}</file><file path="apps/admin-web/AGENTS.md">&lt;!-- BEGIN:nextjs-agent-rules --&gt;
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file&apos;s directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+&lt;!-- END:nextjs-agent-rules --&gt;</file><file path="apps/admin-web/CLAUDE.md">@AGENTS.md</file><file path="packages/shared/src/schemas/announcement.test.ts">import { describe, expect, it } from &apos;vitest&apos;;
+
+import { announcementSchema } from &apos;./announcement&apos;;
+
+describe(&apos;announcementSchema&apos;, () =&gt; {
+  it(&apos;parses a valid announcement&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Road Closure Notice&apos;,
+      body: &apos;Main street will be closed for repairs.&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;rejects a missing title&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;&apos;,
+      body: &apos;Body text&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects a missing body&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects an invalid category&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;not-a-real-category&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;rejects an invalid image_url&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      image_url: &apos;not-a-url&apos;,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it(&apos;accepts an empty string image_url&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      image_url: &apos;&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;accepts a missing detailed_description&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;accepts a valid detailed_description&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      detailed_description: &apos;A much longer write-up with the full context residents need.&apos;,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it(&apos;rejects a detailed_description over 5000 characters&apos;, () =&gt; {
+    const result = announcementSchema.safeParse({
+      title: &apos;Title&apos;,
+      body: &apos;Body&apos;,
+      category: &apos;general&apos;,
+      detailed_description: &apos;a&apos;.repeat(5001),
+    });
+    expect(result.success).toBe(false);
+  });
+});</file><file path="packages/shared/src/schemas/announcement.ts">import { z } from &apos;zod&apos;;
+
+export const announcementSchema = z.object({
+  title:                z.string().min(1, &apos;Title is required&apos;).max(200),
+  body:                 z.string().min(1, &apos;Body is required&apos;).max(2000),
+  // Expanded write-up shown in the resident app&apos;s Announcement Modal. Optional — falls
+  // back to `body` in the UI when omitted.
+  detailed_description: z.string().max(5000, &apos;Detailed description is too long&apos;).optional().or(z.literal(&apos;&apos;)),
+  category:             z.enum([&apos;general&apos;, &apos;emergency&apos;, &apos;health&apos;, &apos;events&apos;]),
+  image_url:            z.string().url(&apos;Must be a valid URL&apos;).optional().or(z.literal(&apos;&apos;)),
+  published_at:         z.string().datetime().optional(), // ISO string; defaults to now() on insert
+});
+
+export type AnnouncementFormValues = z.infer&lt;typeof announcementSchema&gt;;</file><file path="supabase/migrations/0011_announcements_admin_write.sql">-- Adds: (1) soft-delete column on announcements so archived items stay in the DB but
+-- disappear from resident/guest feeds; (2) admin write RLS on announcements; (3) rebuilt
+-- SELECT policies that filter out soft-deleted rows.
+--
+-- Pattern mirrors 0009&apos;s admin CRUD on document_types / service_requests.
+
+-- ============================================================================
+-- soft-delete column
+-- ============================================================================
+alter table public.announcements
+  add column if not exists deleted_at timestamptz;
+
+-- ============================================================================
+-- SELECT policies — drop and recreate to add deleted_at IS NULL guard.
+-- Original policies were created in 0003 / 0005 migrations.
+-- ============================================================================
+drop policy if exists &quot;residents can read announcements from their barangay&quot; on public.announcements;
+drop policy if exists &quot;guests can read all announcements&quot;                    on public.announcements;
+
+create policy &quot;residents can read announcements from their barangay&quot;
+  on public.announcements for select
+  to authenticated
+  using (barangay_id = public.current_barangay_id() and deleted_at is null);
+
+create policy &quot;guests can read all announcements&quot;
+  on public.announcements for select
+  to anon
+  using (deleted_at is null);
+
+-- ============================================================================
+-- Admin ALL policy — insert / update / delete (soft) scoped to own barangay.
+-- ============================================================================
+create policy &quot;admins can manage announcements in their barangay&quot;
+  on public.announcements for all
+  to authenticated
+  using  (barangay_id = public.current_barangay_id() and public.current_role() = &apos;admin&apos;)
+  with check (barangay_id = public.current_barangay_id() and public.current_role() = &apos;admin&apos;);</file><file path="supabase/migrations/0019_fix_announcement_soft_delete.sql">-- S0-5 / P1-C: migrations 0003 and 0005 created SELECT policies on announcements
+-- (&quot;residents can read their own barangay&apos;s announcements&quot;, &quot;anyone can read
+-- announcements&quot;) without a deleted_at IS NULL check. Migration 0011 tried to drop
+-- policies by different names (&quot;residents can read announcements from their barangay&quot;,
+-- &quot;guests can read all announcements&quot;) — a no-op against the originals — and created its
+-- own corrected policies (which DO filter deleted_at IS NULL) alongside them. Result: 4
+-- active SELECT policies, 2 without the soft-delete filter, so deleted announcements
+-- remained visible. This drops the two original, unfiltered policies by their actual
+-- names; the corrected 0011 policies remain active.
+drop policy if exists &quot;residents can read their own barangay&apos;s announcements&quot; on public.announcements;
+drop policy if exists &quot;anyone can read announcements&quot; on public.announcements;</file></files></repomix>

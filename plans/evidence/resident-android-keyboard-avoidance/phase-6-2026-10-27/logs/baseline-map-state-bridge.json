@@ -1,0 +1,11 @@
+{
+  "name": "map-state-bridge",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/map-state-bridge.mjs"
+  ],
+  "start": "2026-10-27T02:03:20.262Z",
+  "end": "2026-10-27T02:03:26.761Z",
+  "status": 0
+}

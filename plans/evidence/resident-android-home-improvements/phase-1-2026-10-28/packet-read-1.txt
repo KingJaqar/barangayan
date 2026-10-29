@@ -1,0 +1,195 @@
+FILE: packages/shared/src/lib/service-catalog.ts
+import { serviceCatalogContractSchema, serviceDocumentTypeSchema, type ServiceDocumentTypeInput } from '../schemas/service-foundations';
+import type { Json, Tables } from '../types/database';
+import { formatProcessingTime } from './format';
+
+export const charterSections = [
+  ['officeDivision', 'Office/Division'],
+  ['classification', 'Classification'],
+  ['transactionType', 'Type of Transaction'],
+  ['whoMayAvail', 'Who May Avail'],
+  ['checklistOfRequirements', 'Checklist of Requirements'],
+  ['whereToSecureRequirements', 'Where to Secure the Requirements'],
+  ['clientSteps', 'Client Steps'],
+  ['agencyActions', 'Agency Actions'],
+  ['feesToBePaid', 'Fees to Be Paid'],
+  ['processingTime', 'Processing Time'],
+  ['personResponsible', 'Person Responsible'],
+] as const;
+
+/** One validated mapping for create/edit. Legacy request contracts stay untouched. */
+export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput) {
+  const value = serviceDocumentTypeSchema.parse(input);
+  return {
+    name: value.name, description: value.description || null, contract_version: 2,
+    service_kind: value.catalog.serviceKind,
+    charter: {
+      ...value.catalog.charter,
+      feesToBePaid: value.catalog.pricingMode === 'assessment' ? BUSINESS_FEE_DESCRIPTION
+        : value.catalog.serviceKind === 'general' ? value.catalog.charter.feesToBePaid
+        : `₱${(value.feeCentavos / 100).toFixed(2)}${value.catalog.pricingMode === 'per_page' ? ' per page' : ''}`,
+    },
+    purposes: value.catalog.purposes, requirement_rules: value.catalog.requirementRules,
+    pricing_mode: value.catalog.pricingMode,
+    processing_target_minutes: value.catalog.processingTargetMinutes,
+    fee_centavos: value.catalog.pricingMode === 'assessment' ? 0 : value.feeCentavos,
+    requirements: value.catalog.charter.checklistOfRequirements.split('\n').map(line => line.trim()).filter(Boolean),
+  };
+}
+
+export function catalogContract(row: Tables<'document_types'>) {
+  if (row.contract_version !== 2) return null;
+  return serviceCatalogContractSchema.parse({
+    serviceKind: row.service_kind,
+    charter: row.charter,
+    purposes: row.purposes,
+    requirementRules: row.requirement_rules,
+    pricingMode: row.pricing_mode,
+    processingTargetMinutes: row.processing_target_minutes,
+  });
+}
+
+export const BUSINESS_FEE_DESCRIPTION = 'See Attached Tax Code (depends on the kind of transaction)';
+
+export function servicePriceLabel(row: Tables<'document_types'>) {
+  if (row.pricing_mode === 'assessment') return BUSINESS_FEE_DESCRIPTION;
+  if (row.pricing_mode === 'per_page') return `₱${(row.fee_centavos / 100).toFixed(2)} per page`;
+  return row.fee_centavos === 0 ? 'No payment required' : `₱${(row.fee_centavos / 100).toFixed(2)}`;
+}
+
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request: { fee_assessment_state: string }, amount: number | null) {
+  if (amount !== null) return `₱${(amount / 100).toFixed(2)}`;
+  return request.fee_assessment_state === 'page_count_required'
+    ? '₱10.00 per page — enter total pages to continue'
+    : BUSINESS_FEE_DESCRIPTION;
+}
+
+/** Charter guidance only; elapsed tracking remains a separate timing contract. */
+export function serviceProcessingLabel(row: Tables<'document_types'>) {
+  return row.contract_version === 2
+    ? `${row.processing_target_minutes} minutes of agency processing`
+    : formatProcessingTime(row.processing_target_hours);
+}
+
+export function idVerificationState(
+  profile: Pick<
+    Tables<'profiles'>,
+    'id_verification_status' | 'approved_id_submission_id' | 'current_id_submission_id' | 'id_repair_required'
+  > | null,
+) {
+  if (
+    profile?.id_verification_status === 'verified' &&
+    profile.approved_id_submission_id &&
+    profile.approved_id_submission_id === profile.current_id_submission_id &&
+    !profile.id_repair_required
+  )
+    return 'verified';
+  if (profile?.id_verification_status === 'pending') return 'pending';
+  if (profile?.id_verification_status === 'verification_failed' || profile?.id_repair_required)
+    return 'failed';
+  return 'missing';
+}
+
+export const idVerificationMessages = {
+  verified: 'Your approved profile ID will be reused for this request.',
+  pending: 'Your ID is awaiting verification. Requests are available after approval.',
+  failed: 'Your ID needs attention. Open your profile to review the reason and upload a valid ID.',
+  missing: 'Upload a valid ID in your profile and have it verified before requesting a document.',
+};
+
+export function submittedDetailLines(value: Json | null): [string, string][] {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
+  const labels = {
+    businessName: 'Business name',
+    establishmentAddress: 'Establishment address',
+    recordReference: 'Record/document reference',
+    copies: 'Number of copies',
+    totalPages: 'Total pages across all copies',
+  };
+  const lines: [string, string][] = [];
+  for (const [key, label] of Object.entries(labels))
+    if (value[key] !== undefined) lines.push([label, String(value[key])]);
+  if (typeof value.isRenter === 'boolean')
+    lines.push(['Residency', value.isRenter ? 'Renter' : 'Non-renter']);
+  if (value.personalAppearanceAcknowledged === true)
+    lines.push(['Personal appearance', 'Requirement acknowledged']);
+  return lines;
+}
+
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
+export function requestFee(
+  request: Pick<
+    Tables<'service_requests'>,
+    'contract_version' | 'fee_assessment_state' | 'assessed_amount_centavos'
+  > & { legacy_fee_centavos?: number | null },
+  legacyCatalogFee: number,
+  recordedPaymentFee?: number | null,
+) {
+  if (recordedPaymentFee != null) return recordedPaymentFee;
+  if (request.contract_version === 2)
+    return request.assessed_amount_centavos;
+  return request.legacy_fee_centavos ?? legacyCatalogFee;
+}
+
+/** List rows stay compact: a tax-code assessed fee reads "Varies" here, the full explanation lives on the detail screen. */
+export function serviceListPriceLabel(row: Tables<'document_types'>) {
+  return row.pricing_mode === 'assessment' ? 'Varies' : servicePriceLabel(row);
+}
+
+/** Compact turnaround for list rows ("~15 min", "~2 hr", "Same day"); the charter wording stays on the detail screen. */
+export function serviceProcessingShortLabel(row: Tables<'document_types'>) {
+  if (row.contract_version !== 2) return formatProcessingTime(row.processing_target_hours).replace('Same Day', 'Same day');
+  const minutes = row.processing_target_minutes;
+  if (minutes === null) return formatProcessingTime(row.processing_target_hours).replace('Same Day', 'Same day');
+  if (minutes < 60) return `~${minutes} min`;
+  if (minutes < 480) return `~${Math.ceil(minutes / 60)} hr`;
+  if (minutes <= 1440) return 'Same day';
+  return `~${Math.ceil(minutes / 1440)} days`;
+}
+END FILE
+
+FILE: packages/shared/src/index.ts
+export * from './types/domain';
+export * from './types/database';
+export * from './types/service-foundations';
+export * from './types/map-bridge';
+
+export * from './schemas/announcement';
+export * from './schemas/auth';
+export * from './schemas/emergency-information';
+export * from './schemas/faq';
+export * from './schemas/request-form';
+export * from './schemas/incident-report';
+export * from './schemas/incident-map';
+export * from './schemas/drive-registration';
+export * from './schemas/payment';
+export * from './schemas/document-type';
+export * from './schemas/service-foundations';
+export * from './lib/service-foundations';
+export * from './lib/id-evidence';
+export * from './schemas/evacuation-center';
+export * from './schemas/routing-conditions';
+export * from './schemas/emergency-qr';
+export * from './schemas/waste-management';
+export * from './schemas/household';
+export * from './schemas/household-attendance';
+export * from './schemas/staff';
+export * from './schemas/settings';
+export * from './schemas/admin-audit-log';
+export * from './schemas/site-content';
+export * from './schemas/about-us';
+
+export * from './constants/announcement-categories';
+export * from './constants/document-catalog-shape';
+export * from './constants/drive-types';
+export * from './constants/id-verification';
+export * from './constants/incident-categories';
+export * from './constants/official-roles';
+export * from './constants/priority-weights';
+export * from './constants/theme-colors';
+export * from './constants/theme-fonts';
+export * from './constants/waste-types';
+
+export * from './lib/supabase-client';
+export * from './lib/haversine';

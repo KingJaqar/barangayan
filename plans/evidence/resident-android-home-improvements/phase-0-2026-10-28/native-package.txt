@@ -1,0 +1,367 @@
+Activity Resolver Table:
+  Schemes:
+      barangayan:
+        739c971 com.barangayan.resident.dev/.MainActivity filter 93fafd7
+          Action: "android.intent.action.VIEW"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.BROWSABLE"
+          Scheme: "barangayan"
+          Scheme: "exp+barangayan"
+      expo-dev-launcher:
+        efb90c4 com.barangayan.resident.dev/expo.modules.devlauncher.compose.AuthActivity filter 2d08bad
+          Action: "android.intent.action.VIEW"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.BROWSABLE"
+          Scheme: "expo-dev-launcher"
+      exp+barangayan:
+        739c971 com.barangayan.resident.dev/.MainActivity filter 93fafd7
+          Action: "android.intent.action.VIEW"
+          Category: "android.intent.category.DEFAULT"
+          Category: "android.intent.category.BROWSABLE"
+          Scheme: "barangayan"
+          Scheme: "exp+barangayan"
+
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        739c971 com.barangayan.resident.dev/.MainActivity filter d616356
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      android.intent.action.QUICKBOOT_POWERON:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+      com.htc.intent.action.QUICKBOOT_POWERON:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+      androidx.profileinstaller.action.SAVE_PROFILE:
+        3da345c com.barangayan.resident.dev/androidx.profileinstaller.ProfileInstallReceiver filter faabceb
+          Action: "androidx.profileinstaller.action.SAVE_PROFILE"
+      expo.modules.taskManager.TaskBroadcastReceiver.INTENT_ACTION:
+        e82f530 com.barangayan.resident.dev/expo.modules.taskManager.TaskBroadcastReceiver filter 79735a9
+          Action: "expo.modules.taskManager.TaskBroadcastReceiver.INTENT_ACTION"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      expo.modules.notifications.NOTIFICATION_EVENT:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+      androidx.profileinstaller.action.INSTALL_PROFILE:
+        3da345c com.barangayan.resident.dev/androidx.profileinstaller.ProfileInstallReceiver filter b048365
+          Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
+      com.google.android.c2dm.intent.RECEIVE:
+        771872e com.barangayan.resident.dev/com.google.firebase.iid.FirebaseInstanceIdReceiver filter e1ac2cf
+          Action: "com.google.android.c2dm.intent.RECEIVE"
+      androidx.profileinstaller.action.SKIP_FILE:
+        3da345c com.barangayan.resident.dev/androidx.profileinstaller.ProfileInstallReceiver filter 612e83a
+          Action: "androidx.profileinstaller.action.SKIP_FILE"
+      androidx.profileinstaller.action.BENCHMARK_OPERATION:
+        3da345c com.barangayan.resident.dev/androidx.profileinstaller.ProfileInstallReceiver filter a043a48
+          Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+      android.intent.action.BOOT_COMPLETED:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+        e82f530 com.barangayan.resident.dev/expo.modules.taskManager.TaskBroadcastReceiver filter 79735a9
+          Action: "expo.modules.taskManager.TaskBroadcastReceiver.INTENT_ACTION"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.MY_PACKAGE_REPLACED:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+        e82f530 com.barangayan.resident.dev/expo.modules.taskManager.TaskBroadcastReceiver filter 79735a9
+          Action: "expo.modules.taskManager.TaskBroadcastReceiver.INTENT_ACTION"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+      android.intent.action.REBOOT:
+        2285ee2 com.barangayan.resident.dev/expo.modules.notifications.service.NotificationsService filter ce57273
+          Action: "expo.modules.notifications.NOTIFICATION_EVENT"
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.REBOOT"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Action: "com.htc.intent.action.QUICKBOOT_POWERON"
+          Action: "android.intent.action.MY_PACKAGE_REPLACED"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+
+Service Resolver Table:
+  Non-Data Actions:
+      com.google.firebase.MESSAGING_EVENT:
+        93ef0e1 com.barangayan.resident.dev/expo.modules.notifications.service.ExpoFirebaseMessagingService filter c374e06
+          Action: "com.google.firebase.MESSAGING_EVENT"
+          mPriority=-1, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+        bf63cc7 com.barangayan.resident.dev/com.google.firebase.messaging.FirebaseMessagingService filter 746b2f4
+          Action: "com.google.firebase.MESSAGING_EVENT"
+          mPriority=-500, mOrder=0, mHasStaticPartialTypes=false, mHasDynamicPartialTypes=false
+
+Domain verification status:
+
+Permissions:
+  Permission [com.barangayan.resident.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (1a55d98):
+    sourcePackage=com.barangayan.resident.dev
+    uid=10060 gids=[] type=0 prot=signature
+    perm=PermissionInfo{9f90118 com.barangayan.resident.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+
+Registered ContentProviders:
+  com.barangayan.resident.dev/com.reactnativecommunity.webview.RNCWebViewFileProvider:
+    Provider{deaf771 com.barangayan.resident.dev/com.reactnativecommunity.webview.RNCWebViewFileProvider}
+  com.barangayan.resident.dev/expo.modules.sharing.SharingFileProvider:
+    Provider{6d5f956 com.barangayan.resident.dev/expo.modules.sharing.SharingFileProvider}
+  com.barangayan.resident.dev/org.jetbrains.compose.resources.AndroidContextProvider:
+    Provider{9978dd7 com.barangayan.resident.dev/org.jetbrains.compose.resources.AndroidContextProvider}
+  com.barangayan.resident.dev/com.google.mlkit.common.internal.MlKitInitProvider:
+    Provider{e0916c4 com.barangayan.resident.dev/com.google.mlkit.common.internal.MlKitInitProvider}
+  com.barangayan.resident.dev/expo.modules.filesystem.FileSystemFileProvider:
+    Provider{e6699ad com.barangayan.resident.dev/expo.modules.filesystem.FileSystemFileProvider}
+  com.barangayan.resident.dev/com.google.firebase.provider.FirebaseInitProvider:
+    Provider{d5054e2 com.barangayan.resident.dev/com.google.firebase.provider.FirebaseInitProvider}
+  com.barangayan.resident.dev/androidx.startup.InitializationProvider:
+    Provider{ddd3073 com.barangayan.resident.dev/androidx.startup.InitializationProvider}
+
+ContentProvider Authorities:
+  [com.barangayan.resident.dev.androidx-startup]:
+    Provider{ddd3073 com.barangayan.resident.dev/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{17d59f1 com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.firebaseinitprovider]:
+    Provider{d5054e2 com.barangayan.resident.dev/com.google.firebase.provider.FirebaseInitProvider}
+      applicationInfo=ApplicationInfo{52ce9d6 com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.SharingFileProvider]:
+    Provider{6d5f956 com.barangayan.resident.dev/expo.modules.sharing.SharingFileProvider}
+      applicationInfo=ApplicationInfo{4e2f457 com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.fileprovider]:
+    Provider{deaf771 com.barangayan.resident.dev/com.reactnativecommunity.webview.RNCWebViewFileProvider}
+      applicationInfo=ApplicationInfo{d5ebb44 com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.resources.AndroidContextProvider]:
+    Provider{9978dd7 com.barangayan.resident.dev/org.jetbrains.compose.resources.AndroidContextProvider}
+      applicationInfo=ApplicationInfo{8fca42d com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.mlkitinitprovider]:
+    Provider{e0916c4 com.barangayan.resident.dev/com.google.mlkit.common.internal.MlKitInitProvider}
+      applicationInfo=ApplicationInfo{565cd62 com.barangayan.resident.dev}
+  [com.barangayan.resident.dev.FileSystemFileProvider]:
+    Provider{e6699ad com.barangayan.resident.dev/expo.modules.filesystem.FileSystemFileProvider}
+      applicationInfo=ApplicationInfo{cb87ef3 com.barangayan.resident.dev}
+
+Key Set Manager:
+  [com.barangayan.resident.dev]
+      Signing KeySets: 22
+
+Packages:
+  Package [com.barangayan.resident.dev] (41c3aeb):
+    userId=10060
+    pkg=Package{6bae048 com.barangayan.resident.dev}
+    codePath=/data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==
+    resourcePath=/data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==
+    legacyNativeLibraryDir=/data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/lib
+    extractNativeLibs=false
+    primaryCpuAbi=x86_64
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=1 minSdk=24 targetSdk=36
+    minExtensionVersions=[]
+    versionName=1.0.0
+    usesNonSdkApi=false
+    splits=[base]
+    apkSigningVersion=2
+    applicationInfo=PackageImpl{6bae048 com.barangayan.resident.dev}
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_REQUEST_LEGACY_EXTERNAL_STORAGE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    forceQueryable=false
+    queriesIntents=[Intent { act=android.intent.action.VIEW cat=[android.intent.category.BROWSABLE] dat=https:///... }, Intent { act=org.chromium.intent.action.PAY }, Intent { act=org.chromium.intent.action.IS_READY_TO_PAY }, Intent { act=org.chromium.intent.action.UPDATE_PAYMENT_DETAILS }, Intent { act=android.intent.action.OPEN_DOCUMENT_TREE }, Intent { act=android.intent.action.SEND dat=content://*/* typ=*/* }, Intent { act=android.intent.action.OPEN_DOCUMENT cat=[android.intent.category.DEFAULT,android.intent.category.OPENABLE] dat=content://*/* typ=*/* }, Intent { act=android.support.customtabs.action.CustomTabsService }, Intent { act=androidx.camera.extensions.action.VENDOR_ACTION }]
+    dataDir=/data/user/0/com.barangayan.resident.dev
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    usesOptionalLibraries:
+      androidx.camera.extensions.impl
+      androidx.window.extensions
+      androidx.window.sidecar
+    timeStamp=2026-10-28 12:53:51
+    firstInstallTime=2026-10-28 12:53:51
+    lastUpdateTime=2026-10-28 12:53:51
+    signatures=PackageSignatures{d979ee1 version:2, signatures:[51ed3f60], past signatures:[]}
+    installPermissionsFixed=true
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    declared permissions:
+      com.barangayan.resident.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: prot=signature, INSTALLED
+    requested permissions:
+      android.permission.QUERY_ALL_PACKAGES
+      android.permission.SYSTEM_ALERT_WINDOW
+      android.permission.ACCESS_COARSE_LOCATION
+      android.permission.ACCESS_FINE_LOCATION
+      android.permission.CAMERA
+      android.permission.INTERNET
+      android.permission.READ_EXTERNAL_STORAGE
+      android.permission.READ_MEDIA_AUDIO
+      android.permission.READ_MEDIA_IMAGES
+      android.permission.READ_MEDIA_VIDEO
+      android.permission.READ_MEDIA_VISUAL_USER_SELECTED
+      android.permission.RECORD_AUDIO
+      android.permission.VIBRATE
+      android.permission.WRITE_EXTERNAL_STORAGE
+      android.permission.ACCESS_NETWORK_STATE
+      android.permission.ACCESS_WIFI_STATE
+      android.permission.CHANGE_WIFI_MULTICAST_STATE
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.POST_NOTIFICATIONS
+      android.permission.WAKE_LOCK
+      com.google.android.c2dm.permission.RECEIVE
+      com.barangayan.resident.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+      com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE
+      com.sec.android.provider.badge.permission.READ
+      com.sec.android.provider.badge.permission.WRITE
+      com.htc.launcher.permission.READ_SETTINGS
+      com.htc.launcher.permission.UPDATE_SHORTCUT
+      com.sonyericsson.home.permission.BROADCAST_BADGE
+      com.sonymobile.home.permission.PROVIDER_INSERT_BADGE
+      com.anddoes.launcher.permission.UPDATE_COUNT
+      com.majeur.launcher.permission.UPDATE_BADGE
+      com.huawei.android.launcher.permission.CHANGE_BADGE
+      com.huawei.android.launcher.permission.READ_SETTINGS
+      com.huawei.android.launcher.permission.WRITE_SETTINGS
+      android.permission.READ_APP_BADGE
+      com.oppo.launcher.permission.READ_SETTINGS
+      com.oppo.launcher.permission.WRITE_SETTINGS
+      me.everything.badger.permission.BADGE_COUNT_READ
+      me.everything.badger.permission.BADGE_COUNT_WRITE
+    install permissions:
+      com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE: granted=true
+      com.google.android.c2dm.permission.RECEIVE: granted=true
+      android.permission.RECEIVE_BOOT_COMPLETED: granted=true
+      android.permission.CHANGE_WIFI_MULTICAST_STATE: granted=true
+      android.permission.INTERNET: granted=true
+      android.permission.ACCESS_NETWORK_STATE: granted=true
+      com.barangayan.resident.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION: granted=true
+      android.permission.VIBRATE: granted=true
+      android.permission.ACCESS_WIFI_STATE: granted=true
+      android.permission.QUERY_ALL_PACKAGES: granted=true
+      android.permission.WAKE_LOCK: granted=true
+    User 0: ceDataInode=4588148 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false
+      overlay paths:
+        /data/resource-cache/com.android.systemui-neutral-eVBh.frro
+        /data/resource-cache/com.android.systemui-accent-64Pi.frro
+      gids=[3003]
+      runtime permissions:
+        android.permission.ACCESS_FINE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+        android.permission.READ_EXTERNAL_STORAGE: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED|RESTRICTION_INSTALLER_EXEMPT]
+        android.permission.ACCESS_COARSE_LOCATION: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+        android.permission.CAMERA: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+        android.permission.WRITE_EXTERNAL_STORAGE: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED|RESTRICTION_INSTALLER_EXEMPT]
+        android.permission.RECORD_AUDIO: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+
+Queries:
+  system apps queryable: false
+  queries via package name:
+    com.barangayan.resident.dev:
+      host.exp.exponent
+  queries via intent:
+  queryable via interaction:
+    User 0:
+      [com.android.location.fused,com.android.keychain,com.android.settings,com.android.providers.settings,com.sohu.inputmethod.sogou.chuizi,android,com.mumu.store,com.netease.mumu.cloner,com.netease.nemu_vapi_android.nemu]:
+        com.barangayan.resident.dev
+      [com.google.android.backuptransport,com.google.android.gsf,com.google.android.gms]:
+        com.barangayan.resident.dev
+      com.barangayan.resident.dev:
+        com.android.webview
+  queryable via uses-library:
+
+Package Changes:
+  Sequence number=497
+  User 0:
+    seq=0, package=com.android.permissioncontroller
+    seq=1, package=com.android.systemui
+    seq=123, package=com.mumu.store
+    seq=141, package=com.android.settings
+    seq=145, package=com.android.gallery3d
+    seq=308, package=com.google.android.syncadapters.contacts
+    seq=317, package=com.google.android.gsf
+    seq=336, package=com.google.android.play.games
+    seq=377, package=com.google.android.contacts
+    seq=461, package=com.google.android.gms
+    seq=462, package=com.google.android.apps.pixelmigrate
+    seq=463, package=com.android.vending
+    seq=464, package=com.google.android.safetycore
+    seq=465, package=com.google.android.contactkeys
+    seq=466, package=com.google.ar.core
+    seq=472, package=com.android.chrome
+    seq=477, package=host.exp.exponent
+    seq=478, package=com.barangayan.resident
+    seq=493, package=com.android.chromium
+    seq=495, package=com.inditex.zara
+    seq=496, package=com.barangayan.resident.dev
+
+
+Dexopt state:
+  [com.barangayan.resident.dev]
+    path: /data/app/~~h-r0lhZ-sRMz7j6tK0do9Q==/com.barangayan.resident.dev-LIuPYY4889qwNUDxO32j1g==/base.apk
+      x86_64: [status=run-from-apk] [reason=unknown]
+
+
+Compiler stats:
+  [com.barangayan.resident.dev]
+    (No recorded stats)
+Snapshot statistics
+   Unrecorded-hits: 1133  Cork-level: 0
+   Summary stats               TotBlds     TotUsed     TotCork     BigBlds    ShortLvd     TotTime     MaxTime
+          0:24         now           0           0           0           0           0           0           0
+          1:24        0:24           0           0           0           0           0           0           0
+          2:24        1:24           0           0           0           0           0           0           0
+          3:24        2:24           1          12           0           0           0           0           0
+          4:24        3:24           4        2936           0           0           0           0           0
+          5:24        4:24           0           0           0           0           0           0           0
+          6:24        5:24           3       69409           0           0           0           4           2
+          7:24        6:24           0           0           0           0           0           0           0
+          8:24        7:24           0           0           0           0           0           0           0
+          9:24        8:24           0           0           0           0           0           0           0
+      01:09:04         now        1031      470182           0           2         359         295          29
+
+   Build times                  <= 1ms      <= 2ms      <= 5ms     <= 10ms     <= 20ms     <= 50ms    <= 100ms     > 100ms
+          0:24         now           0           0           0           0           0           0           0           0
+          1:24        0:24           0           0           0           0           0           0           0           0
+          2:24        1:24           0           0           0           0           0           0           0           0
+          3:24        2:24           1           0           0           0           0           0           0           0
+          4:24        3:24           4           0           0           0           0           0           0           0
+          5:24        4:24           0           0           0           0           0           0           0           0
+          6:24        5:24           2           1           0           0           0           0           0           0
+          7:24        6:24           0           0           0           0           0           0           0           0
+          8:24        7:24           0           0           0           0           0           0           0           0
+          9:24        8:24           0           0           0           0           0           0           0           0
+      01:09:04         now        1014           6           7           2           1           1           0           0
+
+   Use counters                   <= 1        <= 2        <= 5       <= 10       <= 20       <= 50      <= 100       > 100
+          0:24         now           0           0           0           0           0           0           0           0
+          1:24        0:24           0           0           0           0           0           0           0           0
+          2:24        1:24           0           0           0           0           0           0           0           0
+          3:24        2:24           0           0           0           0           1           0           0           0
+          4:24        3:24           0           0           0           0           0           1           1           2
+          5:24        4:24           0           0           0           0           0           0           0           0
+          6:24        5:24           0           0           0           0           0           0           0           3
+          7:24        6:24           0           0           0           0           0           0           0           0
+          8:24        7:24           0           0           0           0           0           0           0           0
+          9:24        8:24           0           0           0           0           0           0           0           0
+      01:09:04         now          70         142         146         187          87         107          58         233

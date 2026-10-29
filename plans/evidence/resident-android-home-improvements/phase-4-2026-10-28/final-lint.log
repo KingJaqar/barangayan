@@ -1,0 +1,36 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\home\index.tsx
+  250:108  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\home\index.tsx:250:108
+  248 |                 : null}
+  249 |               <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+> 250 |               {advisoryExpiry(announcement) !== null && Date.parse(announcement.alert_expires_at ?? '') <= Date.now() ? <ThemedText style={[styles.status, { color: resident.muted }]}>Expired</ThemedText> : null}
+      |                                                                                                            ^^^^^^^^^^ Cannot call impure function
+  251 |               <ThemedText style={[styles.subtitle, { color: resident.text }]}>{announcementPreview(announcement.body ?? '')}</ThemedText>
+  252 |               <ThemedText style={[styles.seeAllText, { color: resident.accentText }]}>View details</ThemedText>
+  253 |             </HomeAction>  react-hooks/purity
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\health\health-presentation.tsx
+  2:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\hooks\use-home-announcements.ts
+  58:93  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\hooks\use-home-announcements.ts:58:93
+  56 |     return () => { active = false; stop(); unsubscribe(); network(); listener.remove(); };
+  57 |   }, [newsResource, alertResource, refresh]));
+> 58 |   return { news, alerts, active: activeAdvisories(alerts.data?.items ?? [], Math.max(clock, Date.now())), offline,
+     |                                                                                             ^^^^^^^^^^ Cannot call impure function
+  59 |     refresh, retryNews: newsResource.refresh, retryAlerts: alertResource.refresh };
+  60 | }
+  61 |  react-hooks/purity
+
+✖ 3 problems (2 errors, 1 warning)
+

@@ -1,0 +1,123 @@
+
+📦 Repomix v1.18.1
+
+No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{256f7b59-a0b1-45c4-a6c6-5bb681929ebf}\AC\Repomix\repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+
+[K[?25l⠋ Initializing...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Searching for files...
+
+[K[1A
+[K[?25l⠧ Searching for files...
+
+[K[1A
+[K[?25l⠇ Searching for files...
+
+[K[1A
+[K[?25l⠏ Searching for files...
+
+[K[1A
+[K[?25l⠋ Searching for files...
+
+[K[1A
+[K[?25l⠙ Searching for files...
+
+[K[1A
+[K[?25l⠹ Searching for files...
+
+[K[1A
+[K[?25l⠸ Searching for files...
+
+[K[1A
+[K[?25l⠼ Searching for files...
+
+[K[1A
+[K[?25l⠴ Searching for files...
+
+[K[1A
+[K[?25l⠦ Collecting files...
+
+[K[1A
+[K[?25l⠧ Processing file... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠇ Processing file... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠏ Processing file... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠋ Processing file... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠙ Processing file... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠹ Running security check... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠸ Running security check... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠼ Generating output...
+
+[K[1A
+[K[?25l⠴ Generating output...
+
+[K[1A
+[K[?25l⠦ Generating output...
+
+[K[1A
+[K[?25l⠧ Calculating metrics... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠇ Calculating metrics... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l⠏ Calculating metrics... (18/18) CLAUDE.md
+
+[K[1A
+[K[?25l✔ Packing completed successfully!
+[?25h
+📈 Top 5 Files by Token Count:
+──────────────────────────────
+1.  apps/resident-android-mobile/src/app/(app)/home/index.tsx (5,071 tokens, 20,679 chars, 26%)
+2.  apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx (2,169 tokens, 8,421 chars, 11.1%)
+3.  apps/resident-android-mobile/src/app/(app)/services/index.tsx (2,065 tokens, 8,920 chars, 10.6%)
+4.  packages/shared/src/lib/service-catalog.ts (1,602 tokens, 6,886 chars, 8.2%)
+5.  apps/resident-android-mobile/package.json (761 tokens, 2,121 chars, 3.9%)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+
+📊 Pack Summary:
+────────────────
+  Total Files: 18 files
+ Total Tokens: 19,500 tokens
+  Total Chars: 72,269 chars
+       Output: plans\evidence\resident-android-home-improvements\phase-0-2026-10-28\context.xml
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com

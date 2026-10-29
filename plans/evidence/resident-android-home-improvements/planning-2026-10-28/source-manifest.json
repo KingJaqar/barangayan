@@ -1,0 +1,177 @@
+[
+  {
+    "path": "AGENTS.md",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/admin-web/AGENTS.md",
+    "bytes": 687,
+    "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "bytes": 20684,
+    "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "bytes": 8928,
+    "sha256": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260",
+    "status": "M apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+    "bytes": 13491,
+    "sha256": "b14524eab067e4fa337c2c5a171b6532a383b97b5505583665eecd4d43fa9836",
+    "status": "M apps/resident-android-mobile/src/components/resident-header.tsx",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+    "bytes": 12404,
+    "sha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+    "bytes": 9402,
+    "sha256": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+    "bytes": 33875,
+    "sha256": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+    "bytes": 2299,
+    "sha256": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "bytes": 2672,
+    "sha256": "cbabadca4b5cdf55d392255c4b9d05cc148b530ff9a16d4b1f9e1b2336cf15a9",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "bytes": 1032,
+    "sha256": "d7a574ea4b1be7305f5f9bf02518901907a1a98fc91279ec66814a82e4c352d7",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+    "bytes": 3186,
+    "sha256": "33bec9b04e890fe4d56e7276e310a1c30de6042b83628587b986ea4bc3d624b5",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+    "bytes": 2118,
+    "sha256": "9fe18507325663cccc28c9f61e3bdf722c19139c6e52dd6be651e9d3d2a1cffe",
+    "status": "M apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "bytes": 2122,
+    "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/resident-android-mobile/vitest.config.ts",
+    "bytes": 142,
+    "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.ts",
+    "bytes": 811,
+    "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/src/schemas/announcement.test.ts",
+    "bytes": 2390,
+    "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/src/lib/service-catalog.ts",
+    "bytes": 6899,
+    "sha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/src/types/database.ts",
+    "bytes": 60065,
+    "sha256": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/src/types/service-foundations.ts",
+    "bytes": 9331,
+    "sha256": "3651927e8344b2a18d32a79150835ce4bd846acc87ec2c0ab4f1518b9ec08e95",
+    "status": "M packages/shared/src/types/service-foundations.ts",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "packages/shared/package.json",
+    "bytes": 491,
+    "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "apps/admin-web/package.json",
+    "bytes": 1496,
+    "sha256": "523256b07bd7a9698df36e55c8d064bc7864d4c91a6119b9b81dc2b3d19be944",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "supabase/migrations/0011_announcements_admin_write.sql",
+    "bytes": 1988,
+    "sha256": "3b61ff73d3b9d31ee00cb4b294ec95c17e350164fb435fb6ba3ee3060857cdf6",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "supabase/migrations/0019_fix_announcement_soft_delete.sql",
+    "bytes": 922,
+    "sha256": "63bc0f5e090023388071c507982871634e9be343df8c13aeec65fb5f8d8b3f72",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  },
+  {
+    "path": "supabase/migrations/0144_admin_request_optional_status_reason.sql",
+    "bytes": 5268,
+    "sha256": "8fd82a38a4f1542fc46df8079fbdffca8cceefa67d66bb26a2de472509c79efe",
+    "status": "",
+    "read_scope": "See context-index.md; hash does not establish complete reading or runtime correctness"
+  }
+]

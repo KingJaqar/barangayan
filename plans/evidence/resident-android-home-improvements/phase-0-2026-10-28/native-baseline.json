@@ -1,0 +1,69 @@
+{
+  "phase": 0,
+  "status": "Verified",
+  "date": "2026-10-28",
+  "timezone": "Asia/Manila",
+  "authorization": "User approved installation of anything necessary after the specific development APK proposal.",
+  "instance": {
+    "name": "Android Device test 2",
+    "index": 1,
+    "serial": "127.0.0.1:16416",
+    "android": "12",
+    "model": "ASUS_AI2201_A",
+    "physicalPixels": [
+      1080,
+      1920
+    ],
+    "densityDpi": 480,
+    "nominalDp": [
+      360,
+      640
+    ],
+    "runtimeAppDp": [
+      360,
+      616
+    ],
+    "fontScale": 1,
+    "systemNightMode": true,
+    "observedAppAppearance": "light surface, teal accent; guest defaults; no appearance changes"
+  },
+  "app": {
+    "package": "com.barangayan.resident.dev",
+    "versionName": "1.0.0",
+    "versionCode": 1,
+    "pid": 14903,
+    "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+    "installResult": "Success; installed only on selected instance",
+    "runtime": "exposdk:57.0.0",
+    "currentSource": "source-manifest.json plus native-resume-inputs.json unchanged; task Metro compiled 2737 modules",
+    "metroUrl": "http://127.0.0.1:8087",
+    "backend": "http://127.0.0.1:54321 (existing local Docker anon credential; in-memory override; .env not modified)",
+    "nativeRebuild": false
+  },
+  "flow": {
+    "steps": [
+      "Open local current-source development link",
+      "Dismiss development menu introduction and menu",
+      "Browse as guest",
+      "Observe Home identity/greeting/shortcuts/request sign-in guidance/navigation",
+      "Scroll to loaded local announcement preview"
+    ],
+    "homeRendered": true,
+    "localAnnouncementLoaded": true,
+    "announcementOpened": false,
+    "authenticated": false,
+    "modelOrRemoteDataWrites": false
+  },
+  "evidence": [
+    "native-home.png",
+    "native-home.xml",
+    "native-home-lower.png",
+    "native-home-lower.xml",
+    "native-package.txt",
+    "native-runtime-config.txt",
+    "native-app-logcat-final.log",
+    "native-metro.log"
+  ],
+  "warnings": "Baseline app launch contains nonfatal ReactHost context-not-ready SoftException, two edge-to-edge StatusBar warnings and emulator/platform diagnostics. No FATAL EXCEPTION or JS error/warning observed in captured process window. Not an error-free-runtime claim.",
+  "limits": "Guest/default-font single-device baseline only; resident summary/tracking, TalkBack, large fonts, other widths/themes and integrated R1-R10 remain later-phase gates."
+}

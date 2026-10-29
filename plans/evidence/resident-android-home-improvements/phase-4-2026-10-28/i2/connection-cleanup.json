@@ -1,0 +1,15 @@
+{
+  "originalSerial": "127.0.0.1:16416",
+  "originalTransportRestored": true,
+  "originalReversesRestored": "host-12 tcp:8087 tcp:8087\r\nhost-12 tcp:8088 tcp:8088",
+  "temporaryReverseRemoval": [
+    0,
+    0
+  ],
+  "temporaryNatRemoval": 0,
+  "taskAdbServersStopped": [
+    0,
+    0
+  ],
+  "telemetryStopped": 1
+}

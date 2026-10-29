@@ -19,6 +19,7 @@ export class RefreshResource<T> {
     private load: (signal: AbortSignal) => Promise<T>,
     private message: string,
     private reconcile: (previous: T | undefined, next: T) => T = (_, next) => next,
+    private timeoutMs = 30_000,
   ) {}
 
   getSnapshot = () => this.snapshot;
@@ -56,7 +57,7 @@ export class RefreshResource<T> {
             const abort = () => reject(new Error(this.message));
             controller.signal.addEventListener('abort', abort, { once: true });
             removeAbortListener = () => controller.signal.removeEventListener('abort', abort);
-            timeout = setTimeout(() => controller.abort(), 30_000);
+            timeout = setTimeout(() => controller.abort(), this.timeoutMs);
           })]);
           if (!this.active || this.pending !== work) return;
           if (revision === this.revision) {

@@ -1,0 +1,15 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts" b/apps/resident-android-mobile/src/lib/home-request.ts
+index 33748edf..f68b1046 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.ts
+@@ -34,10 +34,6 @@ export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'paymen
+   return { stepIndex, cancelled, statusLabel, steps };
+ }
+ 
+-export function homeGreeting(hour: number) {
+-  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+-}
+-
+ export function homeTimestamp(value: string): string {
+   if (!validDate(value)) return 'Date unavailable';
+   return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));

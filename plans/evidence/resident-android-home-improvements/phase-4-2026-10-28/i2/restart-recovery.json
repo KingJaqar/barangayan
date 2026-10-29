@@ -1,0 +1,23 @@
+{
+  "recorded": "2026-10-29T05:22:03.264Z",
+  "restartAuthorized": true,
+  "i2Acceptance": "met",
+  "taskApiPortsClosed": true,
+  "taskContainerMetadataRemoval": "verified complete; task containers absent",
+  "originalSupabaseServiceRecovery": "verified; all8 running,7 configured checks healthy, REST HTTP200",
+  "diagnosis": "WSL_E_USER_VHD_ALREADY_ATTACHED, followed by stalled WSL shutdown/control calls",
+  "scopeEvidence": "wsl-restart-scope.json: only docker-desktop was running; barangayan-phase1 stopped",
+  "directServiceRestart": "Windows denied access to WslService",
+  "administratorLaunch": {
+    "accepted": true,
+    "scriptExecuted": true,
+    "result": "wsl-admin-recovery.json success=true",
+    "earlierCanceledAttempt": "historical; superseded by later user-approved launch"
+  },
+  "requiredOwnerStep": null,
+  "dataDisk": "Preserved; no unregister, reset, format or deletion",
+  "reference": "https://learn.microsoft.com/en-us/windows/wsl/basic-commands",
+  "resolved": true,
+  "resolvedAt": "2026-10-29T07:17:53.730Z",
+  "verification": "restart-verification.json"
+}

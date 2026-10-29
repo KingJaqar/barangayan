@@ -12,7 +12,7 @@ Scope: W9 / C15–C17 only. Common rules and acceptance remain centralized in pl
 - [x] Original source resolves compressed header layout/callback/effect cleanup; search-session transitions and duplicate guard; provider history/data cancellation; Maps toolbar/filter/selection/geometry; Centers collapse/idle/conditional placement/overlay; public/authenticated callers and public guard independence. No new owner is justified by missing wrappers alone.
 - [x] Version matching: installed/package Expo 57.0.10, RN 0.86.2, React 19.2.3; read Expo v57 reference, Router and safe-area-context pages, Expo keyboard guide, RN 0.86 TextInput and Keyboard. Keep resize despite the guide's general pan suggestion. No product code written before docs/context/baseline checks.
 - [x] Baseline typecheck, source ESLint (0 errors, 1 existing health unused-useState warning), 335 tests/32 files, Android JS/Hermes export pass. Existing color-environment warning retained. Seven supporting browser suites pass: search session/submit/lifecycle/explore/history, Maps, Centers. Maps/Centers retain known React Native Web deprecation diagnostics; no unexpected Maps diagnostic. Exact commands, dates, exits and full logs are in logs/.
-- [ ] Complete native route/configuration/protocol results, source identity and console review; record any precise remaining gate instead of inferring a pass.
+- [x] Complete native route/configuration/protocol results, source identity and console review; record any precise remaining gate instead of inferring a pass.
 - [x] Owned-diff/source preservation reviewed:77 unchanged inputs,9 recorded concurrent external edits and1 selected-phase plan update; no owned product changes. Plan content outside Phase5 is byte-identical to baseline. Report/ledger retain every unresolved acceptance gate.
 
 ## Initial requirement classification
@@ -76,3 +76,18 @@ Packet paths and per-entry character counts: `packet-manifest.json`. Original so
 - Preservation correction: earlier notes called raw tmp captures ignored, but git check-ignore showed no matching rule. Added a task-local .gitignore and verified the native PNG/JSON paths are now ignored. Only this narrow ignore file remains reviewable; raw account UI, snapshots and helper diagnostics remain local and excluded from context packets.
 
 - Verification reuse: all3 Centers consumers already passed3 full restoration cycles at the most crowded taller540 setting. The remaining geometry-only480/default variants confirm one complete cycle plus initial focus, retained query, Map/List and restored geometry. The three-cycle requirement is not counted again or claimed for these lighter variants.
+
+- Native finisher metadata correction: its default filename suffix is drrm even for Header/Incidents, while source explicitly opens Home/Maps. Updated those record route fields to their actual origins and retained the filename suffix with an explanation; observations/results are unchanged.
+
+- Final cold download matches20/20 compared contracts. A default native geometry comparison counted a newly populated semantic document node as a second WebView. Direct ancestry inspection confirmed outer node53 and child54 at identical[0,375,1080,1920] bounds. Geometry selectors now measure the outer native component; the completed C16 flow resumes only its final restoration assertion. No source change or cold/test-suite rerun.
+
+- Long-caret captures visually reviewed for the shared header and authenticated/public Centers at compact480/font1.3/tall Gboard. Full text viewport and caret are above the keyboard. Obsolete pending-paste labels were removed only from records that contain actual exact native-paste observations; historical observations/results are unchanged.
+
+## Final closure — 27 October 2026
+
+- All29 explicitly required native gate records pass. Final cold download matches20/20 compared contracts; no live Runtime claim. Default source-preservation confirmations pass.
+- Final cleanup verifies Home/IME hidden, original1080×1920/480dpi/font1.0/nav0/disabled overlays, original753px Gboard (final observed IME top1167), no owned inspector forward, stopped owned readers and preserved8081 bridge. Sampled native logs contain8 copies of the existing Firebase warning and0 unexpected lines; observed WebView exceptions0.
+- All100 resumed inputs audited: 92 unchanged,7 owned production/test changes and1 selected-phase plan update,0 unexpected changes. Plan outside selected progress is byte-identical to resumed baseline. Raw full map diagnostics are private; reviewable diagnostic retains relative pixel deltas only. No commit/push/deployment/remote migration/configuration/domain submission.
+- Final report/ledger/verification are authoritative closure; earlier checkpoints and failed-attempt records remain identifiable. Phase6 and earlier pending work are unchanged.
+
+- Final Git audit: HEAD advanced externally to 9fe8add15b0a5b75f6c232e30679da869731a4ea (27 October09:20 Asia/Manila) and includes the validated product/test changes. This chat issued no commit or push. Source hashes remain identical to the tested working copy; resumed snapshots, not HEAD, remain the ownership baseline. Final progress/evidence cleanup remains uncommitted. The earlier full camera diagnostic was included in that external commit; its current reviewable version is redacted, and no history rewrite was performed.

@@ -1,0 +1,200 @@
+FILE apps/resident-android-mobile/src/app/(app)/announcements.tsx
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { FilterChips } from '@/components/filter-chips';
+import { AnnouncementsFeed, type FilterKey, useAnnouncementChips } from '@/components/reports/announcements-feed';
+import { ReadAction, ReportSourceState } from '@/components/reports/report-presentation';
+import { ThemedText } from '@/components/themed-text';
+import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
+⋮----
+{readStateError ? <ReportSourceState message="Read status could not be refreshed." retry={retryReadState} retryLabel="Retry read status" /> : null}
+    <View><FilterChips chips={chips} active={announcementId ? 'all' : filter} onSelect={setFilter} /></View>
+    <AnnouncementsFeed activeFilter={announcementId ? 'all' : filter} openId={announcementId} onOpenHandled={() => router.setParams({ announcementId: undefined })} />
+  </View>;
+}
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  heading: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 4, paddingBottom: 2, columnGap: 8 },
+  headingSummary: { flexGrow: 1, flexShrink: 1, flexBasis: 140 },
+  title: { fontSize: 21, lineHeight: 28, fontWeight: '800', paddingVertical: 8, includeFontPadding: false },
+  count: { fontSize: 12.5, lineHeight: 18, includeFontPadding: false },
+});
+FILE apps/resident-android-mobile/src/components/services/requests-list.tsx
+import { AgencySlaStatus } from './agency-sla-status';
+import { Ionicons } from '@expo/vector-icons';
+import {
+  estimateLabel,
+  formatCentavosAsPHP,
+  formatDate,
+  getResidentRequestStatus,
+  progressFraction,
+  requestFee,
+  type ResidentRequestStatus,
+  type Tables,
+} from '@barangayan/shared';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+⋮----
+import { GuestPrompt } from '@/components/guest-prompt';
+import { PrimaryButton } from '@/components/primary-button';
+import { ProgressBar } from '@/components/progress-bar';
+import { PullRefreshControl, usePullRefresh } from '@/components/pull-refresh';
+import { ServiceListLink, ServicesPanel, serviceListStyles } from '@/components/services/services-list-presentation';
+import { ServicesFilterChips } from '@/components/services/services-filter-chips';
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
+import { ThemedText } from '@/components/themed-text';
+import { DocumentIcon } from '@/components/document-icon';
+import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
+import { getDocumentIcon } from '@/constants/document-icons';
+import { useAuth } from '@/hooks/use-auth';
+import { useHistoryPages } from '@/hooks/use-history-pages';
+import { useProfile } from '@/hooks/use-profile';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useTheme } from '@/hooks/use-theme';
+import { supabase } from '@/lib/supabase';
+import { HISTORY_PAGE_SIZE, historyBefore } from '@/lib/history-resource';
+import { uniqueChannelName } from '@/lib/realtime-channel';
+⋮----
+type ServiceRequest = Pick<Tables<'service_requests'>,
+  'id' | 'reference_number' | 'status' | 'payment_status' | 'payment_method' | 'created_at' | 'updated_at' | 'timing_model' | 'sla_state'
+  | 'contract_version' | 'fee_assessment_state' | 'assessed_amount_centavos' | 'legacy_fee_centavos'> & {
+  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
+};
+⋮----
+type Filter = 'all' | 'active' | 'pickup' | 'history';
+type ActiveSubFilter = 'all' | 'pending_payment' | 'paid' | 'processing';
+⋮----
+/** Live chip numbers; one lightweight status-only query, independent of the selected filter. */
+interface RequestCounts { active: number; pickup: number; history: number; pending_payment: number; paid: number; processing: number }
+⋮----
+/** Resident-facing label of the one status pill. Shorter than the shared long form on purpose. */
+⋮----
+interface Pill { label: string; icon: keyof typeof Ionicons.glyphMap; color: string; background: string }
+⋮----
+/** The single decision a card has to communicate: what the resident should do now. */
+interface NextStep {
+  /** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+  text?: string;
+  /** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+  urgent: boolean;
+  payAmount?: number;
+  /** Where "Pay now" leads. */
+  payHref?: string;
+  estimate?: 'agency' | 'legacy';
+}
+⋮----
+/** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+⋮----
+/** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+⋮----
+/** Where "Pay now" leads. */
+⋮----
+const isOpen = (status: ResidentRequestStatus)
+⋮----
+function nextStep(request: ServiceRequest, status: ResidentRequestStatus): NextStep
+⋮----
+function displayPill(status: ResidentRequestStatus, step: NextStep, resident: ReturnType<typeof useTheme>['resident']): Pill
+⋮----
+/** Needs-action first, then other open requests, then pickup, then the rest; newest first inside each band. */
+function sortRequests(requests: ServiceRequest[]): ServiceRequest[]
+⋮----
+const band = (request: ServiceRequest) =>
+⋮----
+function RequestRow(
+⋮----
+<DocumentIcon name=
+⋮----
+onPress=
+⋮----
+/** Fade only: natural height avoids relayout on every animation frame. */
+⋮----
+function toggle()
+⋮----
+// Invalidate an outgoing fade before React commits a rapid reopen.
+⋮----
+
+⋮----
+/** Actionable profile guidance scrolls away, leaving the filter chips pinned. */
+⋮----
+// Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
+// already-subscribed channel when this list is mounted twice (or remounted before the
+// async removeChannel() finishes), and .on() then throws.
+⋮----
+// The sub-filter row only makes sense inside "Active" — reset it whenever the resident
+// navigates to a different top-level filter, so it doesn't silently stay narrowed the
+// next time they come back to "Active".
+function handleFilterChange(next: Filter)
+⋮----
+// "All" is the open-work overview (the five sections); finished requests live under History.
+⋮----
+if (error || !data) return; // keep the last known numbers rather than flashing them away
+⋮----
+const statusOf = (request: ServiceRequest)
+⋮----
+// Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
+⋮----
+{/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
+⋮----
+<View style=
+FILE apps/resident-android-mobile/src/components/resident-header.tsx
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { router, usePathname } from 'expo-router';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+⋮----
+import { NotificationBell } from '@/components/notification-bell';
+import { ThemedText } from '@/components/themed-text';
+import { useSearchDraft } from '@/hooks/use-resident-search';
+import { useTheme } from '@/hooks/use-theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useEmergencyMapHeader } from '@/hooks/use-emergency-map-header';
+import { useSearchInactivity } from '@/hooks/use-search-inactivity';
+import { isSearchableQuery } from '@/lib/resident-search';
+⋮----
+/** The header and search draft persist; editable native input only exists on search routes. */
+⋮----
+// A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
+⋮----
+// Native focus/IME state can outlive a hidden or detached Android input.
+⋮----
+const closeSearch = () =>
+⋮----
+// Android Back takes the header's Back path, so leaving search also clears the submitted session.
+⋮----
+
+// Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =>
+FILE apps/resident-android-mobile/src/hooks/use-notification-realtime.ts
+import type { Tables } from '@barangayan/shared';
+import { useEffect } from 'react';
+⋮----
+import { presentNotification } from '@/lib/push-notifications';
+import {
+  announcementTemplate,
+  driveRegistrationTemplate,
+  incidentTemplate,
+  medicalDriveTemplate,
+  serviceRequestTemplate,
+} from '@/lib/notification-templates';
+import { supabase } from '@/lib/supabase';
+import { uniqueChannelName } from '@/lib/realtime-channel';
+⋮----
+/**
+ * The delivery engine — opens one Supabase realtime channel per source table and presents
+ * a local notification when a relevant row event fires. Mirrors the channel/subscribe/
+ * cleanup pattern used by use-announcements.ts etc. All channels tear down whenever
+ * `enabled` flips false, `userId`/`barangayId` change, or the component unmounts.
+ */

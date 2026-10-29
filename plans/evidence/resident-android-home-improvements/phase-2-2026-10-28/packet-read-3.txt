@@ -1,0 +1,199 @@
+ event.stopPropagation();
+        verificationButton.current?.measureInWindow((x, y, _width, height) => setVerificationAnchor({ x, y: y + height + 6 }));
+      }}>
+      <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessible={false} />
+    </Pressable>
+  ) : undefined;
+  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab => tab.key === 'documents'
+    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
+
+  const statusBlock = (
+    <>
+      <ProfileCompletionBanner />
+      {session && (error || idVerificationState(profile) !== 'verified') ? (
+        <View
+          style={[
+            styles.verifyCard,
+            { backgroundColor: theme.resident.card, borderColor: theme.resident.border },
+          ]}>
+          <View style={styles.verifyHeader}>
+            <View style={[styles.verifyIcon, { backgroundColor: theme.resident.accentSoft }]}>
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
+            </View>
+            <ThemedText accessibilityRole="alert" style={styles.verifyText}>
+              {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
+            </ThemedText>
+          </View>
+          <PrimaryButton label="Verify Now" presentation="resident" onPress={() => router.push('/settings/valid-id')} />
+          {error ? <PrimaryButton label="Retry verification check" presentation="resident" variant="secondary" onPress={refetch} /> : null}
+        </View>
+      ) : null}
+    </>
+  );
+
+  return (
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
+        <View style={styles.controls}>
+          <SegmentedControl segments={tabs} activeKey={segment} onChange={next => { setVerificationAnchor(null); setSegment(next); }}
+            variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
+        </View>
+
+        {session && segment === 'requests' ? (
+          // RequestsList owns its scroller so its filter chips can stay pinned while the
+          // list scrolls; the banner/verification block scrolls away above them.
+          <RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} />
+        ) : (
+          <PullRefreshScope register={pull.register}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+              contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
+              {statusBlock}
+              {!session || segment === 'documents' ? <DocumentsList /> : null}
+              {session && segment === 'logs' && <LogsList />}
+            </ScrollView>
+          </PullRefreshScope>
+        )}
+
+      <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
+      </View>
+      <Modal transparent visible={verified && verificationAnchor !== null} animationType="none" statusBarTranslucent
+        onRequestClose={() => setVerificationAnchor(null)}>
+        <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss ID verification status"
+            onPress={() => setVerificationAnchor(null)} />
+          {verificationAnchor ? <View style={[styles.verificationPopover, {
+            top: verificationAnchor.y,
+            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
+            maxWidth: width - 32,
+            backgroundColor: theme.resident.card,
+            borderColor: theme.resident.border,
+          }]}>
+            <Ionicons name="shield-checkmark" size={20} color={theme.resident.accentText} accessible={false} />
+            <ThemedText type="smallBold" style={{ color: theme.resident.accentText, flexShrink: 1 }}>Valid ID verified</ThemedText>
+          </View> : null}
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+
+  contentWrapper: {
+    flex: 1,
+  },
+  controls: {
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingTop: 20,
+  },
+  documentsScrollContent: {
+    paddingTop: 6,
+  },
+  verifiedIcon: { width: 22, height: 22 },
+  verificationButton: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+  verificationPopover: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12,
+    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  verifyCard: {
+    marginHorizontal: 20,
+    marginBottom: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  verifyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  verifyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifyText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+  },
+});
+PATH: apps/resident-android-mobile/src/components/home/home-action.tsx
+import { useEffect, useState, type Ref } from 'react';
+import { Pressable, type PressableProps, type View } from 'react-native';
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/** Home cards/tiles share finite press feedback; routing stays in their existing owner. */
+export function HomeAction({ reducedMotion, pressScale = 0.98, pressableRef, style, onPressIn, onPressOut, ...props }: Omit<PressableProps, 'style'> & {
+  reducedMotion: boolean;
+  pressScale?: number;
+  pressableRef?: Ref<View>;
+  style?: PressableProps['style'];
+}) {
+  const scale = useSharedValue(1);
+  const [pressed, setPressed] = useState(false);
+  useEffect(() => {
+    if (reducedMotion) scale.value = 1;
+    return () => cancelAnimation(scale);
+  }, [reducedMotion, scale]);
+  const feedback = useAnimatedStyle(() => ({ transform: [{ scale: reducedMotion ? 1 : scale.value }] }));
+  function animate(value: number) {
+    scale.value = reducedMotion ? 1 : withTiming(value, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+  }
+  return <AnimatedPressable {...props} ref={pressableRef} accessibilityRole="button"
+    style={[typeof style === 'function' ? style({ pressed, hovered: false }) : style, feedback]}
+    onPressIn={event => { setPressed(true); animate(pressScale); onPressIn?.(event); }}
+    onPressOut={event => { setPressed(false); animate(1); onPressOut?.(event); }} />;
+}
+PATH: apps/resident-android-mobile/src/components/app-tabs.tsx
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs, usePathname } from 'expo-router';
+import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Platform, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import Animated, { cancelAnimation, Easing, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CountBadge } from '@/components/count-badge';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+import { HomeTabIcon } from '@/components/home-tab-icon';
+import { ServicesTabIcon } from '@/components/services-tab-icon';
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { useFloatingTabLayout } from '@/hooks/use-floating-tab-layout';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { NavigationDiagnosticScreen } from '@/components/navigation-diagnostic-screen';
+import { beginDiagnosticNavigation, diagnosticRoute, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from '@/lib/navigation-diagnostics';
+
+const TABS = [
+  { name: 'home', label: 'Home', icon: 'home' },
+  { name: 'services', label: 'Services', icon: 'clipboard' },
+  { name: 'drrm', label: 'DRRM' },
+  { name: 'maps', label: 'Maps', icon: 'location' },
+  { name: 'health', label: 'Health', icon: 'heart' },
+  { name: 'reports', label: 'Reports', icon: 'warning' },
+] as const;
+export default function ResidentTabs() {
+  const theme = useTheme();
+  const reducedMotion = useResidentReducedMotion(true);
+  return <Tabs
+    initialRouteName="home"
+    backBehavior="history"
+    screenLayout={navigationDiagnosticsAvailable ? ({ route, children }) => <NavigationDiagnosticScreen name={route.name}>{children}</NavigationDiagnosticScreen> : undefined}
+    screenListeners={navigationDiagnosticsAvailable ? ({ route }) => ({
+      focus: () => recordNavigationDiagnostic('focus', diagnosticRoute(route.name)),
+      blur: () => recordNavigationDiagnostic('blur', diagnosticRoute(route.name)),
+    }) : undefined}
+    tabBar={props => <FloatingTabBar {...props} />}

@@ -1,0 +1,140 @@
+<repomix><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/index.tsx">import { Redirect } from &apos;expo-router&apos;;
+import { ActivityIndicator, View } from &apos;react-native&apos;;
+import * as Linking from &apos;expo-linking&apos;;
+import { EmergencyEntryLink } from &apos;@/components/emergency-entry-link&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { nativeCallbackPending, setupDestination } from &apos;@/lib/setup-navigation&apos;;
+
+export default function RootIndexRedirect() {
+  const { session, isGuest, signedOutEntry, isPasswordRecovery, setupRoute, setup, isLoading, restorationError } = useAuth();
+  // A cold-started Google callback is handed to /auth/callback by the root navigator;
+  // redirecting from here first would drop it on the signed-out entry screen.
+  const nativeUrl = Linking.useLinkingURL();
+  const theme = useTheme();
+  if (restorationError || nativeCallbackPending(nativeUrl)) return null;
+  // Shown once the splash lifts during a slow restoration: emergency routes stay reachable.
+  if (isLoading) {
+    return (
+      &lt;View style={{ flex: 1, justifyContent: &apos;center&apos;, alignItems: &apos;center&apos;, gap: 16, backgroundColor: theme.background }}&gt;
+        &lt;ActivityIndicator color={theme.primary} /&gt;
+        &lt;ThemedText accessibilityLiveRegion=&quot;polite&quot;&gt;Restoring your session…&lt;/ThemedText&gt;
+        &lt;EmergencyEntryLink style={{ alignSelf: &apos;stretch&apos; }} /&gt;
+      &lt;/View&gt;
+    );
+  }
+  if (isPasswordRecovery) return &lt;Redirect href=&quot;/(auth)/forgot-password&quot; /&gt;;
+  if (session) {
+    return &lt;Redirect href={setupDestination(setupRoute, setup)} /&gt;;
+  }
+  return &lt;Redirect href={isGuest ? &apos;/home&apos; : signedOutEntry ? &apos;/(auth)/login&apos; : &apos;/(auth)/auth-choice&apos;} /&gt;;
+}</file><file path="apps/resident-android-mobile/src/components/guest-browse-button.tsx">import { useRouter } from &apos;expo-router&apos;;
+import { Alert, Pressable, StyleSheet } from &apos;react-native&apos;;
+
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { authSetupRequests } from &apos;@/lib/setup-request&apos;;
+
+export function GuestBrowseButton({ disabled = false }: { disabled?: boolean }) {
+  const router = useRouter();
+  const { setGuest } = useAuth();
+  const theme = useTheme();
+  return (
+    &lt;Pressable
+      disabled={disabled}
+      accessibilityRole=&quot;button&quot;
+      accessibilityState={{ disabled }}
+      accessibilityHint=&quot;Browse public updates. You can log in or create an account later.&quot;
+      style={({ pressed }) =&gt; [styles.action, { opacity: disabled ? 0.5 : pressed ? 0.6 : 1 }]}
+      onPress={() =&gt; {
+        if (authSetupRequests.busy) {
+          Alert.alert(&apos;Please wait&apos;, &apos;An account request is still finishing. Please wait before browsing as a guest.&apos;);
+          return;
+        }
+        setGuest(true);
+        router.replace(&apos;/home&apos;);
+      }}&gt;
+      &lt;ThemedText style={[styles.label, { color: theme.textSecondary }]}&gt;Browse as guest&lt;/ThemedText&gt;
+    &lt;/Pressable&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  action: { minHeight: 48, alignSelf: &apos;center&apos;, justifyContent: &apos;center&apos;, paddingHorizontal: 20, paddingVertical: 12 },
+  label: { fontSize: 14, lineHeight: 22, fontWeight: &apos;600&apos;, textAlign: &apos;center&apos;, textDecorationLine: &apos;underline&apos; },
+});</file><file path="apps/resident-android-mobile/app.config.js">// Opt-in identity for local Phase 2 development-device qualification.
+// app.json remains the source of the application&apos;s normal configuration.
+module.exports = ({ config }) =&gt; {
+  if (process.env.BARANGAYAN_PHASE2_DEV_BUILD !== &apos;1&apos;) return config;
+  return {
+    ...config,
+    android: { ...config.android, package: &apos;com.barangayan.resident.dev&apos; },
+    plugins: [...(config.plugins ?? []), [&apos;expo-dev-client&apos;, { launchMode: &apos;most-recent&apos; }]],
+  };
+};</file><file path="apps/resident-android-mobile/metro.config.js">// Metro config for the npm-workspaces monorepo.
+// Metro&apos;s default config only watches apps/resident-android-mobile, so it can&apos;t resolve
+// @barangayan/shared out of the box — this is the fix (see the plan&apos;s
+// &quot;Pre-Development Technical Risk Mitigations&quot;).
+const { getDefaultConfig } = require(&apos;expo/metro-config&apos;);
+const path = require(&apos;path&apos;);
+
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, &apos;../..&apos;);
+
+const config = getDefaultConfig(projectRoot);
+
+config.watchFolders = [workspaceRoot];
+config.resolver.nodeModulesPaths = [
+  path.resolve(projectRoot, &apos;node_modules&apos;),
+  path.resolve(workspaceRoot, &apos;node_modules&apos;),
+];
+config.resolver.disableHierarchicalLookup = true;
+
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+const escapedWorkspaceRoot = workspaceRoot
+  .split(/[\\/]/)
+  .map((segment) =&gt; segment.replace(/[.*+?^${}()|[\]\\]/g, &apos;\\$&amp;&apos;))
+  .join(&apos;[\\\\/]&apos;);
+const existingBlockList = config.resolver.blockList;
+config.resolver.blockList = [
+  ...(Array.isArray(existingBlockList) ? existingBlockList : existingBlockList ? [existingBlockList] : []),
+  // Other tools create and delete short-lived refs under .git; if one vanishes while
+  // the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+  /[\\/]\.git(?:[\\/]|$)/,
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]dist(?:[\\\\/]|$)`),
+  // Root-level scratch, test output and agent worktrees. Without Watchman the fallback
+  // watcher walks every directory under watchFolders and gives up after 240s; these
+  // held ~85k of the repo&apos;s directories (a stray Gradle cache in .expo alone ~62k).
+  new RegExp(
+    `^${escapedWorkspaceRoot}[\\\\/](?:\\.expo|\\.scratch|\\.claude|\\.kilo|\\.aider-desk|tmp|plans|output|screen records|repomix output files)(?:[\\\\/]|$)`,
+  ),
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/](?:\\.next(?:-[^\\\\/]+)?|dist)(?:[\\\\/]|$)`),
+];
+
+// `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
+// only sees the hoisted `entities@4` at the workspace root — which dropped the old
+// `lib/maps/*.json` layout that `markdown-it@10` (pulled in by
+// react-native-markdown-display) still `require`s. Redirect that legacy subpath to
+// markdown-it&apos;s own nested `entities@2` copy, leaving entities@4 consumers untouched.
+const defaultResolveRequest = config.resolver.resolveRequest;
+config.resolver.resolveRequest = (context, moduleName, platform) =&gt; {
+  if (moduleName.startsWith(&apos;entities/lib/&apos;)) {
+    return {
+      type: &apos;sourceFile&apos;,
+      filePath: require.resolve(`markdown-it/node_modules/${moduleName}`, {
+        paths: [workspaceRoot],
+      }),
+    };
+  }
+  return defaultResolveRequest
+    ? defaultResolveRequest(context, moduleName, platform)
+    : context.resolveRequest(context, moduleName, platform);
+};
+
+module.exports = config;</file></files></repomix>

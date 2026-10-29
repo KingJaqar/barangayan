@@ -1,0 +1,23 @@
+ERROR:  use_controlled_request_operations
+CONTEXT:  PL/pgSQL function barangayan_private.guard_request_foundations() line 39 at RAISE
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: SQL failed: ERROR:  use_controlled_request_operations
+CONTEXT:  PL/pgSQL function barangayan_private.guard_request_foundations() line 39 at RAISE
+
+
+3 !== 0
+
+    at file:///C:/Users/User/barangayan/supabase/tests/resident_home_requests.mjs:208:8
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

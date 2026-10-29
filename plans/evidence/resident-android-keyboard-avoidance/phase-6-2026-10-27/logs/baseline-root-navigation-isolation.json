@@ -1,0 +1,11 @@
+{
+  "name": "root-navigation-isolation",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/root-navigation-isolation.mjs"
+  ],
+  "start": "2026-10-27T02:03:26.765Z",
+  "end": "2026-10-27T02:03:27.729Z",
+  "status": 1
+}

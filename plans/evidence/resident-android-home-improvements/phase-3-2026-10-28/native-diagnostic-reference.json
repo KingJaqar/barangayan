@@ -1,0 +1,8 @@
+{
+  "beforePath": "tmp/resident-home-phase2-20261028/resident-native/before-matrix-logcat.log",
+  "comparison": "Known pre-Phase2 APK framework signature reference, not a matched Phase3 count/performance comparison",
+  "startupReference": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-app-logcat-final.log",
+  "baselineSignatures": 70,
+  "currentSignatures": 69,
+  "newSignatures": []
+}

@@ -1,0 +1,22 @@
+{
+  "mode": "before Phase 2",
+  "selected": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "a90c8008f79b5ede3b85d664bb6845a256add667a3613241669647d2ad849bb1"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "2390cc1e7faa919307679480e1c5f606041d30e62a23d4a0791f78b67caf0260"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "6cefe6f8920ac7aed00063e112641e778c423ff2b2237aee1e652438bbea1260"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "sha256": "d2c5ec311f8ea2738141896a66d70f0acb55ad77bc48aa5fed5c66dc534bdd7a"
+    }
+  ],
+  "note": "Only four task-owned runtime source deltas redirected; current shared/user changes retained; no working source overwritten."
+}

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-27T01:37:35.687Z",
+  "sources": [
+    "monitored-logcat.txt",
+    "final-logcat.txt",
+    "final-resume-logcat.txt"
+  ],
+  "knownPreExistingWarningLines": 8,
+  "knownWarning": "Firebase Expo push-token E_REGISTRATION_FAILED; unchanged existing configuration path",
+  "unexpectedLines": [],
+  "limitation": "Filtered ReactNativeJS warnings/errors and AndroidRuntime errors for the identified native processes; sampled intervals, not comprehensive Runtime inspection."
+}

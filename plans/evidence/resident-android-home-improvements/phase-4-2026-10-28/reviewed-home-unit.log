@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/refresh-resource.test.ts (9 tests) 139ms
+ ✓ src/lib/home-request.test.ts (16 tests) 68ms
+
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
+   Start at  21:12:13
+   Duration  5.48s (transform 1.48s, setup 0ms, collect 2.51s, tests 207ms, environment 0ms, prepare 809ms)
+

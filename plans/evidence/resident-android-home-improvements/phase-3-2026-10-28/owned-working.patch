@@ -1,0 +1,940 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\home\\index.tsx" b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+index c1fd8aea..d2aca522 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\home\\index.tsx"
++++ b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
+ import type { Tables } from '@barangayan/shared';
+ import { Image } from 'expo-image';
+ import { useFocusEffect, useRouter } from 'expo-router';
+-import { useCallback, useEffect, useRef, useState } from 'react';
++import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+ import { AccessibilityInfo, ActivityIndicator, AppState, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+@@ -18,13 +18,15 @@ import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
+ import { ThemedText } from '@/components/themed-text';
+ import { DocumentIcon } from '@/components/document-icon';
+ import { getDocumentIcon } from '@/constants/document-icons';
++import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
++import { RefreshResource } from '@/lib/refresh-resource';
+ import { MaxContentWidth } from '@/constants/theme';
+ import { useAuth } from '@/hooks/use-auth';
+ import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+ import { useProfile } from '@/hooks/use-profile';
+ import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ import { useTheme } from '@/hooks/use-theme';
+-import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
++import { homeRequestSummary, homeRequestTitle, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+ import { supabase } from '@/lib/supabase';
+ 
+ type Announcement = Tables<'announcements'>;
+@@ -36,6 +38,14 @@ const QUICK_ACTIONS = [
+   { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
+ ] as const;
+ 
++async function loadHomeRequests(signal: AbortSignal) {
++  const { data, error } = await supabase.rpc('resident_home_requests', { p_qrph_settlement_ready: PAYMENT_SETTLEMENT_READY })
++    .abortSignal(signal).retry(false);
++  if (error) throw error;
++  if (!data || data.length > 3 || new Set(data.map(item => item.id)).size !== data.length) throw new Error('Invalid Home request response');
++  return { items: data, refreshedAt: new Date().toISOString() };
++}
++
+ export default function HomeScreen() {
+   const { session } = useAuth();
+   const userId = session?.user.id ?? null;
+@@ -47,21 +57,24 @@ export default function HomeScreen() {
+   const { width, fontScale } = useWindowDimensions();
+   const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
+   const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+-  const [requestRetry, setRequestRetry] = useState(0);
++  const requestWidth = Math.max(1, Math.min(width, MaxContentWidth) - 40);
+   const [announcementRetry, setAnnouncementRetry] = useState(0);
+   const [failedImage, setFailedImage] = useState<string | null>(null);
+-  const requestKey = JSON.stringify([userId, requestRetry]);
+-  const [requestResult, setRequestResult] = useState<{ key: string; items: HomeRequest[]; error: string | null } | null>(null);
++  const requestKey = JSON.stringify([userId, profile?.id === userId ? profile?.barangay_id : null]);
++  const requestResource = useMemo(() => new RefreshResource(requestKey, loadHomeRequests, 'Your requests could not be loaded. Please try again.', undefined, 12_000), [requestKey]);
++  const requestState = useSyncExternalStore(requestResource.subscribe, requestResource.getSnapshot, requestResource.getSnapshot);
+   const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
+-  const [selectedRequest, setSelectedRequest] = useState<HomeRequest | null>(null);
++  const [selectedRequest, setSelectedRequest] = useState<{ key: string; request: HomeRequest } | null>(null);
+   const [sheetOpen, setSheetOpen] = useState(false);
+   const pendingTracking = useRef<string | null>(null);
+   const homeActive = useRef(true);
+   const requestTargets = useRef(new Map<string, View>());
++  const requestFallbackTarget = useRef<View>(null);
++  const visibleRequestId = useRef<string | null>(null);
+   // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
+   const pullNews = useRef<(() => Promise<void>) | null>(null);
+-  const pullRequests = useRef<(() => Promise<void>) | null>(null);
+-  const pull = usePullRefresh([() => pullNews.current?.(), () => pullRequests.current?.(), refetchProfile]);
++
++  const pull = usePullRefresh([() => pullNews.current?.(), () => userId ? requestResource.refresh() : undefined, refetchProfile]);
+ 
+   useEffect(() => {
+     let active = true;
+@@ -79,42 +92,32 @@ export default function HomeScreen() {
+     return () => { active = false; pullNews.current = null; };
+   }, [announcementRetry]);
+ 
+-  useEffect(() => {
+-    if (!userId) return;
+-    let active = true;
+-    // Preserve the existing authenticated resident scope and latest-three limit.
+-    const fetchRecent = () => Promise.resolve(supabase.from('service_requests').select('*, document_types(name)').eq('resident_id', userId)
+-      .order('created_at', { ascending: false }).limit(3));
+-    fetchRecent()
+-      .then(({ data, error }) => {
+-        if (active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: error ? 'Your requests could not be loaded. Please try again.' : null });
+-      }).catch(() => {
+-        if (active) setRequestResult({ key: requestKey, items: [], error: 'Your requests could not be loaded. Please try again.' });
+-      });
+-    pullRequests.current = () => fetchRecent().then(({ data, error }) => {
+-      if (!error && active) setRequestResult({ key: requestKey, items: (data as HomeRequest[]) ?? [], error: null });
+-    }).catch(() => undefined);
+-    return () => { active = false; pullRequests.current = null; };
+-  }, [userId, requestKey]);
+-
+   useEffect(() => {
+     pendingTracking.current = null;
+     setSheetOpen(false);
+     setSelectedRequest(null);
+-  }, [userId]);
++  }, [requestKey]);
+ 
+   useFocusEffect(useCallback(() => {
+     homeActive.current = true;
++    requestResource.activate();
++    if (userId) void requestResource.refresh();
+     const listener = AppState.addEventListener('change', state => {
+       homeActive.current = state === 'active';
+-      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); }
++      if (state !== 'active') { pendingTracking.current = null; setSheetOpen(false); requestResource.cancel(); }
++      else { requestResource.activate(); if (userId) void requestResource.refresh(); }
+     });
+-    return () => { homeActive.current = false; listener.remove(); pendingTracking.current = null; setSheetOpen(false); };
+-  }, []));
++    return () => { homeActive.current = false; listener.remove(); requestResource.cancel(); pendingTracking.current = null; setSheetOpen(false); };
++  }, [requestResource, userId]));
+ 
+-  const requests = requestResult?.key === requestKey ? requestResult : null;
++  const requests = requestState.data;
+   const news = newsResult?.retry === announcementRetry ? newsResult : null;
+-  const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
++  const currentSelection = selectedRequest?.key === requestKey && userId ? selectedRequest : null;
++  const selectedLive = requests?.items.find(item => item.id === currentSelection?.request.id);
++  const selected = selectedLive ?? currentSelection?.request ?? null;
++  useEffect(() => {
++    if (sheetOpen && !selectedLive) { pendingTracking.current = null; setSheetOpen(false); }
++  }, [sheetOpen, selectedLive]);
+   const announcement = news?.item;
+   const announcementTone = announcement?.category === 'emergency' ? resident.danger
+     : announcement?.category === 'health' ? resident.rose : resident.accentText;
+@@ -125,9 +128,9 @@ export default function HomeScreen() {
+     pendingTracking.current = null;
+     if (!homeActive.current) return;
+     // Keep tracking in Home's stack so Back removes it without changing Services.
+-    if (id && selected?.id === id) router.push(`/home/requests/${id}`);
++    if (id && selectedLive?.id === id) router.push(`/home/requests/${id}`);
+     else {
+-      const target = selected ? requestTargets.current.get(selected.id) : null;
++      const target = (selected?.id === visibleRequestId.current ? requestTargets.current.get(selected.id) : null) ?? requestFallbackTarget.current;
+       if (target) { target.focus(); AccessibilityInfo.sendAccessibilityEvent(target, 'focus'); }
+     }
+   }
+@@ -167,25 +170,24 @@ export default function HomeScreen() {
+         <View style={styles.sectionHeader}>
+           <View style={styles.sectionHeading}>
+             <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
+-            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
++            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests ? `${requests.items.length} ${requests.items.length === 1 ? 'request' : 'requests'} shown` : 'Your requests'}</ThemedText>
+           </View>
+-          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push({ pathname: '/services', params: { segment: 'requests' } })} style={styles.seeAll}>
++          <HomeAction pressableRef={requestFallbackTarget} reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push({ pathname: '/services', params: { segment: 'requests' } })} style={styles.seeAll}>
+             <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+           </HomeAction>
+         </View>
+         {!userId ? <HomeListState label="Log in to see your requests." action={{ label: 'Log in', onPress: () => router.push('/(auth)/login') }} />
+-          : !requests ? <HomeListState loading label="Loading your requests…" />
+-          : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
++          : !requests ? <HomeListState loading={!requestState.error} label={requestState.error ?? "Loading your requests…"} onRetry={requestState.error ? requestResource.refresh : undefined} />
+           : requests.items.length === 0 ? <HomeListState label="No requests yet" action={{ label: 'Request a document', onPress: () => router.push({ pathname: '/services', params: { segment: 'documents' } }) }} />
+-          : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
++          : <ScrollableChevronRow key={requestKey} label="requests" pageWidth={requestWidth} onIndexChange={index => { visibleRequestId.current = requests.items[index]?.id ?? null; }} contentContainerStyle={styles.shelf}>
+             {requests.items.map(request => {
+               const summary = homeRequestSummary(request);
+-              const title = request.document_types?.name ?? 'Document request';
++              const title = homeRequestTitle(request);
+               return <HomeAction key={request.id} reducedMotion={reducedMotion}
+                 pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+-                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+-                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+-                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
++                accessibilityLabel={[title, `reference ${request.reference_number}`, summary.progressLabel ?? summary.statusLabel, summary.cancelled ? summary.cancellationLabel : summary.paymentLabel, summary.updatedLabel, summary.nextAction].filter(Boolean).join(", ")}
++                accessibilityHint="Opens a request summary" onPress={() => { if (sheetOpen || pendingTracking.current) return; pendingTracking.current = null; setSelectedRequest({ key: requestKey, request }); setSheetOpen(true); }}
++                style={({ pressed }) => [styles.requestCard, styles.card, { width: requestWidth, backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                 <View style={styles.requestTop}>
+                   <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
+                     <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
+@@ -196,14 +198,26 @@ export default function HomeScreen() {
+                   </View>
+                 </View>
+                 <View style={styles.requestProgress}>
+-                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+-                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+-                  </View>
+-                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
++                  {summary.progressLabel ? <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
++                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
++                  </View> : null}
++                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.progressLabel ?? summary.statusLabel}</ThemedText>
++                  <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.updatedLabel}</ThemedText>
++                  {summary.cancelled ? <>
++                    <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.cancellationLabel}</ThemedText>
++                    {summary.cancellationNote ? <ThemedText style={[styles.reference, { color: resident.text }]}>{summary.cancellationNote}</ThemedText> : null}
++                  </> : <>
++                    <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.paymentLabel}</ThemedText>
++                    {summary.nextAction ? <ThemedText style={[styles.status, { color: resident.accentText }]}>{summary.nextAction}</ThemedText> : null}
++                  </>}
+                 </View>
+               </HomeAction>;
+             })}
+           </ScrollableChevronRow>}
++        {userId && requests ? <View style={styles.inset}>
++          <ThemedText style={[styles.reference, { color: resident.muted }]}>Last refreshed {homeTimestamp(requests.refreshedAt)}</ThemedText>
++          {requestState.error ? <HomeListState label={requestState.error} onRetry={requestResource.refresh} /> : null}
++        </View> : null}
+       </View>
+       <View style={styles.section}>
+         <View style={styles.sectionHeader}>
+@@ -238,8 +252,8 @@ export default function HomeScreen() {
+           </View> : <HomeListState label="No announcements yet." />}
+       </View>
+     </ScrollView>
+-    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+-      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
++    {selected ? <RequestSummarySheet request={selected} available={Boolean(selectedLive)} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
++      onViewFull={() => { if (!sheetOpen || !selectedLive || pendingTracking.current) return; pendingTracking.current = selectedLive.id; setSheetOpen(false); }} /> : null}
+   </SafeAreaView>;
+ }
+ 
+@@ -274,7 +288,7 @@ const styles = StyleSheet.create({
+   seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+   shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+   card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+-  requestCard: { width: 244, flexGrow: 1 },
++  requestCard: { flexGrow: 1 },
+   requestTop: { flexDirection: 'row', gap: 10 },
+   requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+   requestInfo: { flex: 1, minWidth: 0 },
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\home\\request-summary-sheet.tsx" b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+index c33013e4..ae8095a9 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\home\\request-summary-sheet.tsx"
++++ b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+@@ -9,9 +9,10 @@ import { useTheme } from '@/hooks/use-theme';
+ import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+ 
+ /** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
+-export function RequestSummarySheet({ request, visible, reducedMotion, onClose, onDismiss, onViewFull }: {
++export function RequestSummarySheet({ request, visible, available, reducedMotion, onClose, onDismiss, onViewFull }: {
+   request: HomeRequest;
+   visible: boolean;
++  available: boolean;
+   reducedMotion: boolean;
+   onClose: () => void;
+   onDismiss: () => void;
+@@ -64,8 +65,12 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose,
+ 
+   useEffect(() => {
+     if (!mounted && !visible && dismissPending.current) {
+-      dismissPending.current = false;
+-      dismiss.current();
++      // Let the modal release its focus trap/native window before restoring focus or routing.
++      const frame = requestAnimationFrame(() => {
++        dismissPending.current = false;
++        dismiss.current();
++      });
++      return () => cancelAnimationFrame(frame);
+     }
+   }, [mounted, visible]);
+ 
+@@ -92,13 +97,20 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose,
+         <View style={styles.header}>
+           <View style={styles.titleGroup}>
+             <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
+-            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
++            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_name ?? 'Document request'}</ThemedText>
+             <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
+           </View>
+         </View>
+         <View style={styles.timeline}>
+-          {summary.stepIndex <= 0 ? <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.statusLabel}</ThemedText> : null}
+-          {summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
++          <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.progressLabel ?? summary.statusLabel}</ThemedText>
++          <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.updatedLabel}</ThemedText>
++          {summary.cancelled ? <>
++            <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.cancellationLabel}</ThemedText>
++            {summary.cancellationNote ? <ThemedText style={[styles.status, { color: resident.text }]}>{summary.cancellationNote}</ThemedText> : null}
++          </> : <>
++          <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.paymentLabel}</ThemedText>
++          {summary.nextAction ? <ThemedText style={[styles.status, { color: resident.accentText }]}>{summary.nextAction}</ThemedText> : null}
++          {summary.stepIndex >= 0 ? summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
+             <View style={styles.indicator} accessible={false} importantForAccessibility="no-hide-descendants">
+               <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
+                 {step.current ? <View style={[styles.currentDot, { backgroundColor: resident.accentText }]} />
+@@ -111,11 +123,12 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose,
+                 style={[styles.stepLabel, { color: step.reached ? resident.text : resident.muted, fontWeight: step.current ? '700' : step.reached ? '600' : '500' }]}>{step.label}</ThemedText>
+               <ThemedText style={[styles.date, { color: resident.muted }]}>{step.date ? homeTimestamp(step.date) : step.detail}</ThemedText>
+             </View>
+-          </View>)}
++          </View>) : null}
++          </>}
+         </View>
+         </ScrollView>
+         <View style={styles.footer}>
+-          <PrimaryButton presentation="resident" label="View full request" disabled={!visible} onPress={onViewFull} />
++          <PrimaryButton presentation="resident" label="View full request" disabled={!visible || !available} onPress={onViewFull} />
+         </View>
+       </Animated.View>
+     </View>
+@@ -131,9 +144,9 @@ const styles = StyleSheet.create({
+   category: { fontSize: 12.5, lineHeight: 18.75 },
+   title: { fontSize: 19, lineHeight: 26.125, fontWeight: '800', marginTop: 2 },
+   reference: { fontSize: 13, lineHeight: 19.5, marginTop: 4 },
+-  close: { position: 'absolute', top: 32, right: 20, zIndex: 1, elevation: 4, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
++  close: { position: 'absolute', top: 24, right: 20, zIndex: 1, elevation: 4, width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+   body: { flexShrink: 1, marginTop: 16 },
+-  timeline: { gap: 0, marginTop: 24, paddingRight: 48 },
++  timeline: { gap: 0, marginTop: 16 },
+   status: { fontSize: 12.5, lineHeight: 18, fontWeight: '600', marginBottom: 16 },
+   step: { flexDirection: 'row', gap: 14 },
+   indicator: { width: 24, alignItems: 'center' },
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\scrollable-chevron-row.tsx" b/apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx
+index afa2f473..ad2e0441 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\scrollable-chevron-row.tsx"
++++ b/apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx
+@@ -1,18 +1,20 @@
+-import { Children, useEffect, useRef, useState, type ReactNode } from 'react';
++import { Children, cloneElement, isValidElement, useEffect, useRef, useState, type ReactNode } from 'react';
+ import { Ionicons } from '@expo/vector-icons';
+-import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
++import { Pressable, ScrollView, StyleSheet, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+ 
+ import { useTheme } from '@/hooks/use-theme';
+ import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ import { horizontalScrollEdges, horizontalScrollTarget } from '@/lib/horizontal-scroll';
++import { ThemedText } from '@/components/themed-text';
+ 
+ interface ScrollableChevronRowProps {
+   children: ReactNode;
+   contentContainerStyle?: StyleProp<ViewStyle>;
+   /** Opt-in interactive controls; existing Settings rows keep their current presentation. */
+   label?: string;
+-  /** Home shelves snap by the measured first card plus their gap. */
+-  snapToItems?: boolean;
++  /** Home-only full-card pages, with controls below content. Other modes are unchanged. */
++  pageWidth?: number;
++  onIndexChange?: (index: number) => void;
+   /** Interactive rows only: a range within the first child to scroll into view whenever it changes. */
+   reveal?: { x: number; width: number };
+ }
+@@ -25,10 +27,65 @@ interface ScrollableChevronRowProps {
+  * they read clearly over any swatch/chip color underneath.
+  */
+ export function ScrollableChevronRow(props: ScrollableChevronRowProps) {
++  if (props.label && props.pageWidth !== undefined) {
++    // Geometry or membership changes restart at one complete card; ordinary refreshes retain position.
++    const identity = JSON.stringify([props.pageWidth, Children.toArray(props.children).map((child, index) => isValidElement(child) ? child.key : index)]);
++    return <PagedChevronRow key={identity} {...props} label={props.label} pageWidth={props.pageWidth} />;
++  }
+   return props.label ? <InteractiveChevronRow {...props} label={props.label} /> : <PassiveChevronRow {...props} />;
+ }
+ 
+-function InteractiveChevronRow({ children, contentContainerStyle, label, snapToItems = false, reveal }: ScrollableChevronRowProps & { label: string }) {
++function PagedChevronRow({ children, contentContainerStyle, label, pageWidth, onIndexChange }: ScrollableChevronRowProps & { label: string; pageWidth: number }) {
++  const { resident } = useTheme();
++  const reducedMotion = useResidentReducedMotion(true);
++  const scroll = useRef<ScrollView>(null);
++  const items = Children.toArray(children);
++  const [index, setIndex] = useState(0);
++  const currentIndex = useRef(0);
++  const pendingIndex = useRef<number | null>(null);
++  const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
++  const stride = pageWidth + (typeof gap === 'number' ? gap : 0);
++  useEffect(() => { onIndexChange?.(index); }, [index, onIndexChange]);
++  function advance(direction: number) {
++    const next = Math.max(0, Math.min(items.length - 1, (pendingIndex.current ?? currentIndex.current) + direction));
++    pendingIndex.current = next;
++    scroll.current?.scrollTo({ x: next * stride, animated: !reducedMotion });
++  }
++  return <View style={styles.wrap}>
++    <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false}
++      contentContainerStyle={contentContainerStyle} snapToInterval={stride} decelerationRate="fast"
++      onScrollBeginDrag={() => { pendingIndex.current = null; }}
++      onScroll={event => {
++        const offset = event.nativeEvent.contentOffset.x;
++        const next = Math.max(0, Math.min(items.length - 1, Math.round(offset / stride)));
++        currentIndex.current = next;
++        setIndex(next);
++        if (pendingIndex.current !== null && Math.abs(offset - pendingIndex.current * stride) < 1) pendingIndex.current = null;
++      }} scrollEventThrottle={16}>
++      {items.map((child, itemIndex) => <View key={isValidElement(child) ? child.key : itemIndex} style={{ width: pageWidth }}
++        accessibilityElementsHidden={itemIndex !== index} importantForAccessibility={itemIndex === index ? 'auto' : 'no-hide-descendants'}>
++        {isValidElement<PressableProps>(child) ? cloneElement(child, {
++          accessible: itemIndex === index, focusable: itemIndex === index, disabled: itemIndex !== index,
++          importantForAccessibility: itemIndex === index ? 'auto' : 'no-hide-descendants',
++          accessibilityElementsHidden: itemIndex !== index,
++        }) : child}
++      </View>)}
++    </ScrollView>
++    {items.length > 1 ? <View style={styles.pageControls}>
++      {([-1, 1] as const).map(direction => {
++        const disabled = direction < 0 ? index === 0 : index === items.length - 1;
++        return <Pressable key={direction} accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled}
++          accessibilityLabel={`Scroll ${label} ${direction < 0 ? 'left' : 'right'}`} onPress={() => advance(direction)}
++          style={({ pressed }) => [styles.pageButton, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.controlBorder }]}>
++          <Ionicons name={direction < 0 ? 'chevron-back' : 'chevron-forward'} size={20} color={disabled ? resident.muted : resident.text} accessible={false} />
++        </Pressable>;
++      })}
++      <ThemedText accessibilityLiveRegion="polite" style={[styles.position, { color: resident.text }]}>{index + 1} of {items.length}</ThemedText>
++    </View> : null}
++  </View>;
++}
++
++function InteractiveChevronRow({ children, contentContainerStyle, label, reveal }: ScrollableChevronRowProps & { label: string }) {
+   const { resident } = useTheme();
+   const reducedMotion = useResidentReducedMotion(true);
+   const scroll = useRef<ScrollView>(null);
+@@ -43,7 +100,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
+     if (target !== offset) scroll.current?.scrollTo({ x: Math.max(0, Math.min(Math.max(0, content - width), target)), animated: !reducedMotion });
+   }, [reveal, reducedMotion]);
+   const [edges, setEdges] = useState({ left: false, right: false });
+-  const [itemWidth, setItemWidth] = useState(0);
+   const gap = StyleSheet.flatten(contentContainerStyle)?.gap;
+   const itemGap = typeof gap === 'number' ? gap : 0;
+   function update() {
+@@ -57,8 +113,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
+   }
+   return <View style={styles.wrap}>
+     <ScrollView ref={scroll} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={contentContainerStyle}
+-      snapToInterval={snapToItems && itemWidth > 0 ? itemWidth + itemGap : undefined}
+-      decelerationRate={snapToItems ? 'fast' : 'normal'}
+       onScroll={event => { metrics.current.offset = event.nativeEvent.contentOffset.x; update(); }} scrollEventThrottle={16}
+       onContentSizeChange={width => { metrics.current.content = width; update(); }}
+       onLayout={event => { metrics.current.width = event.nativeEvent.layout.width; update(); }}>
+@@ -66,11 +120,9 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
+         const width = event.nativeEvent.layout.width;
+         metrics.current.first = width;
+         metrics.current.firstX = event.nativeEvent.layout.x;
+-        if (snapToItems) setItemWidth(previous => previous === width ? previous : width);
+       } : undefined}>{child}</View>)}
+     </ScrollView>
+-    {(['left', 'right'] as const).map(side => snapToItems ? <ShelfChevron key={side} side={side} visible={edges[side]} label={label}
+-      reducedMotion={reducedMotion} onPress={() => advance(side === 'left' ? -1 : 1)} /> : edges[side] ? <Pressable key={side} accessibilityRole="button"
++    {(['left', 'right'] as const).map(side => edges[side] ? <Pressable key={side} accessibilityRole="button"
+       accessibilityLabel={`Scroll ${label} ${side}`} onPress={() => advance(side === 'left' ? -1 : 1)}
+       style={[styles.arrowHit, side === 'left' ? { left: 4 } : { right: 4 }]}>
+       <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
+@@ -80,30 +132,6 @@ function InteractiveChevronRow({ children, contentContainerStyle, label, snapToI
+   </View>;
+ }
+ 
+-/** Home keeps the reference's 200ms edge fade without leaving hidden touch/focus targets. */
+-function ShelfChevron({ side, visible, label, reducedMotion, onPress }: {
+-  side: 'left' | 'right'; visible: boolean; label: string; reducedMotion: boolean; onPress: () => void;
+-}) {
+-  const { resident } = useTheme();
+-  const opacity = useRef(new Animated.Value(0)).current;
+-  useEffect(() => {
+-    const animation = Animated.timing(opacity, { toValue: Number(visible), duration: reducedMotion ? 100 : 200,
+-      easing: Easing.bezier(0, 0, 0.58, 1), useNativeDriver: true });
+-    animation.start();
+-    return () => animation.stop();
+-  }, [visible, reducedMotion, opacity]);
+-  return <Animated.View pointerEvents={visible ? 'auto' : 'none'} accessibilityElementsHidden={!visible}
+-    importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+-    style={[styles.arrowHit, side === 'left' ? { left: 2 } : { right: 2 }, { opacity }]}>
+-    <Pressable disabled={!visible} accessibilityRole="button" accessibilityLabel={`Scroll ${label} ${side}`} onPress={onPress}
+-      style={styles.arrowButton}>
+-      <View style={[styles.arrowFace, { backgroundColor: resident.card, borderColor: resident.border }]}>
+-        <Ionicons name={side === 'left' ? 'chevron-back' : 'chevron-forward'} size={16} color={resident.text} accessible={false} />
+-      </View>
+-    </Pressable>
+-  </Animated.View>;
+-}
+-
+ function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevronRowProps) {
+   const theme = useTheme();
+   const [canScrollLeft, setCanScrollLeft] = useState(false);
+@@ -159,7 +187,9 @@ function PassiveChevronRow({ children, contentContainerStyle }: ScrollableChevro
+ }
+ 
+ const styles = StyleSheet.create({
+-  arrowButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
++  pageControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, paddingHorizontal: 20 },
++  pageButton: { width: 48, height: 48, borderRadius: 24, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
++  position: { fontSize: 13, lineHeight: 20, flexShrink: 1 },
+   arrowHit: { position: 'absolute', zIndex: 1, elevation: 4, top: '50%', marginTop: -22, width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+   arrowFace: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center', elevation: 3, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
+   wrap: {
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts" b/apps/resident-android-mobile/src/lib/home-request.ts
+index f68b1046..0138524b 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.ts
+@@ -1,8 +1,8 @@
+-import { getResidentRequestStatus, RESIDENT_STATUS_LABEL, type Tables } from '@barangayan/shared';
++import { homeRequestAttention, type HomeRequestAction, type HomeRequestRow } from '@barangayan/shared';
+ 
+-export type HomeRequest = Tables<'service_requests'> & {
+-  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+-};
++import { PAYMENT_SETTLEMENT_READY } from '../constants/payment';
++
++export type HomeRequest = HomeRequestRow;
+ 
+ const STEPS = [
+   { status: 'submitted', label: 'Submitted' },
+@@ -10,28 +10,58 @@ const STEPS = [
+   { status: 'ready_for_pickup', label: 'Ready for pickup' },
+   { status: 'completed', label: 'Completed' },
+ ] as const;
++const ACTIONS: Record<HomeRequestAction, string> = {
++  collect: 'Collect your document', enter_pages: 'Enter the total pages',
++  review_requirements: 'Review the requirements', choose_payment: 'Choose a payment method', pay: 'Continue payment',
++};
++const SHORT_TITLES = new Map([
++  ['business', 'Business Clearance'], ['certified_true_copy', 'Certified True Copy'],
++  ['first_time_job_seeker', 'First Time Job Seeker Certificate'],
++]);
+ 
+ function validDate(value: unknown): string | null {
+   return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
+ }
+ 
+-/** Home has no processing-target join. Never infer dates or estimates from a status. */
+-export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'payment_status' | 'created_at' | 'status_history'>) {
++export function homeRequestTitle(request: Pick<HomeRequest, 'service_kind' | 'document_name'>): string {
++  return SHORT_TITLES.get(request.service_kind ?? '') ?? request.document_name ?? 'Document request';
++}
++
++/** Only the owner's status-history event notes are resident-readable; never use generic notes. */
++export function homeRequestSummary(request: HomeRequest) {
+   const stepIndex = STEPS.findIndex(step => step.status === request.status);
+   const cancelled = request.status === 'cancelled';
+   const history = Array.isArray(request.status_history) ? request.status_history : [];
+-  const statusLabel = stepIndex < 0 && !cancelled ? 'Status unavailable'
+-    : RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)];
++  const events = history.flatMap(item => item !== null && typeof item === 'object' && !Array.isArray(item)
++    ? [{ status: item.status, at: validDate(item.at), note: item.note }] : []);
++  const cancellation = events.filter(item => item.status === 'cancelled' && validDate(item.at))
++    .reverse()
++    .sort((a, b) => Date.parse(String(b.at)) - Date.parse(String(a.at)))[0];
++  const cancelledAt = validDate(request.cancelled_at) ?? validDate(cancellation?.at);
++  const cancellationNote = typeof cancellation?.note === 'string' ? cancellation.note.trim() || null : null;
++  const stage = STEPS[stepIndex]?.label ?? null;
++  const statusLabel = cancelled ? 'Cancelled' : stage ?? 'Status unavailable';
+   const steps = STEPS.map((step, index) => {
+-    const entry = history.find(item => item !== null && typeof item === 'object' && !Array.isArray(item)
+-      && item.status === step.status && validDate(item.at));
+-    const recordedAt = entry !== null && typeof entry === 'object' && !Array.isArray(entry) ? validDate(entry.at) : null;
+-    const date = recordedAt ?? (index === 0 ? validDate(request.created_at) : null);
+-    const reached = Boolean(date) || (stepIndex >= index && !cancelled);
+-    return { ...step, date, reached, current: index === stepIndex,
+-      detail: date ? null : reached ? 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
++    const entry = events.filter(item => item.status === step.status && validDate(item.at))
++      .sort((a, b) => Date.parse(String(b.at)) - Date.parse(String(a.at)))[0];
++    const date = validDate(entry?.at) ?? (index === 0 ? validDate(request.created_at) : null);
++    const reached = stepIndex >= index && !cancelled;
++    return { ...step, date: reached ? date : null, reached, current: index === stepIndex,
++      detail: reached ? date ? null : 'Date unavailable' : cancelled || stepIndex < 0 ? 'Not recorded' : 'Pending' };
+   });
+-  return { stepIndex, cancelled, statusLabel, steps };
++  const fee = request.resolved_fee_centavos;
++  const paymentLabel = request.payment_status === 'waived' ? 'Fee waived'
++    : request.payment_status === 'refunded' ? 'Payment refunded'
++    : request.payment_status === 'paid' ? 'Paid'
++    : fee === 0 ? 'No payment required'
++    : fee === null || !Number.isFinite(fee) || fee < 0 ? 'Fee not yet assessed' : 'Payment pending';
++  // Recheck the same predicate used by SQL; a malformed/stale action never creates a payment prompt.
++  const action = homeRequestAttention(request, PAYMENT_SETTLEMENT_READY);
++  const nextAction = action && action === request.next_action ? ACTIONS[action] : null;
++  return { stepIndex, cancelled, statusLabel, steps, paymentLabel, nextAction,
++    progressLabel: stage ? `Step ${stepIndex + 1} of 4 · ${stage}` : null,
++    updatedLabel: validDate(request.updated_at) ? `Updated ${homeTimestamp(request.updated_at)}` : 'Update time unavailable',
++    cancellationLabel: cancelledAt ? `Cancelled ${homeTimestamp(cancelledAt)}` : 'Cancellation date unavailable', cancellationNote };
+ }
+ 
+ export function homeTimestamp(value: string): string {
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts" b/apps/resident-android-mobile/src/lib/home-request.test.ts
+index 6a9644da..260f0e1e 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.test.ts
+@@ -1,43 +1,92 @@
+ import { describe, expect, it } from 'vitest';
+-import { homeRequestSummary, homeTimestamp } from './home-request';
++import { homeRequestSummary, homeRequestTitle, homeTimestamp, type HomeRequest } from './home-request';
+ 
+-const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
++const request: HomeRequest = {
++  id: 'request', reference_number: 'REF', status: 'in_progress', payment_status: 'paid', payment_method: null,
++  created_at: '2026-10-18T01:00:00Z', updated_at: '2026-10-19T01:00:00Z', status_history: null,
++  cancelled_at: null, contract_version: 2, fee_assessment_state: 'assessed', assessed_amount_centavos: 10000,
++  legacy_fee_centavos: null, sla_state: 'running', document_name: 'Business Barangay Clearance', service_kind: 'business',
++  resolved_fee_centavos: 10000, next_action: null,
++};
+ 
+ describe('Home loaded-data summary', () => {
+-  it('uses the real submission date and leaves missing reached dates unavailable', () => {
++  it('uses recorded dates, delivery progress and separate payment state', () => {
+     const summary = homeRequestSummary(request);
++    expect(summary.progressLabel).toBe('Step 2 of 4 · Processing');
+     expect(summary.statusLabel).toBe('Processing');
+-    expect(summary.stepIndex).toBe(1);
++    expect(summary.paymentLabel).toBe('Paid');
+     expect(summary.steps.map(step => [step.date, step.detail])).toEqual([
+       [request.created_at, null], [null, 'Date unavailable'], [null, 'Pending'], [null, 'Pending'],
+     ]);
++    expect(summary.updatedLabel).toBe(`Updated ${homeTimestamp(request.updated_at)}`);
+   });
+-
+-  it('accepts valid loaded history only and rejects malformed entries/dates', () => {
++  it('accepts latest valid history and ignores malformed entries and future stages', () => {
+     const summary = homeRequestSummary({ ...request, status_history: [null, 42, [], { status: 'in_progress', at: 'invalid' },
+-      { status: 'in_progress', at: '2026-10-19T02:00:00Z' }, { status: 'ready_for_pickup', at: null }] });
+-    expect(summary.steps[1]?.date).toBe('2026-10-19T02:00:00Z');
++      { status: 'in_progress', at: '2026-10-20T02:00:00Z' }, { status: 'in_progress', at: '2026-10-19T02:00:00Z' },
++      { status: 'ready_for_pickup', at: '2026-10-21T02:00:00Z' }] });
++    expect(summary.steps[1]?.date).toBe('2026-10-20T02:00:00Z');
+     expect(summary.steps[2]?.date).toBeNull();
++    expect(summary.steps[2]?.reached).toBe(false);
+     expect(homeTimestamp('invalid')).toBe('Date unavailable');
+   });
+-
+-  it('does not claim a cancelled request completed all steps', () => {
+-    const summary = homeRequestSummary({ ...request, status: 'cancelled' });
++  it('uses cancelled_at first and only the latest valid cancelled event note', () => {
++    const summary = homeRequestSummary({ ...request, status: 'cancelled', cancelled_at: '2026-10-25T00:00:00Z', status_history: [
++      { status: 'cancelled', at: '2026-10-22T00:00:00Z', note: 'Latest cancellation' },
++      { status: 'cancelled', at: 'bad', note: 'Invalid' },
++      { status: 'in_progress', at: '2026-10-24T00:00:00Z', note: 'Internal processing note' },
++      { status: 'cancelled', at: '2026-10-21T00:00:00Z', note: 'Older cancellation' },
++    ] });
++    expect(summary.cancellationLabel).toBe(`Cancelled ${homeTimestamp('2026-10-25T00:00:00Z')}`);
++    expect(summary.cancellationNote).toBe('Latest cancellation');
+     expect(summary.cancelled).toBe(true);
+-    expect(summary.stepIndex).toBe(-1);
+-    expect(summary.statusLabel).toBe('Cancelled');
+-    expect(summary.steps.map(step => step.reached)).toEqual([true, false, false, false]);
+-    expect(summary.steps[1]?.detail).toBe('Not recorded');
++    expect(summary.progressLabel).toBeNull();
++    expect(summary.nextAction).toBeNull();
++    expect(summary.steps.every(step => !step.reached)).toBe(true);
+   });
+-
+-  it('leaves unknown status/date honest and preserves paid/waived distinctions', () => {
+-    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).statusLabel).toBe('Status unavailable');
+-    expect(homeRequestSummary({ ...request, status: 'unexpected', created_at: 'bad' }).steps.every(step => !step.reached)).toBe(true);
+-    for (const payment_status of ['paid', 'waived']) {
+-      expect(homeRequestSummary({ ...request, status: 'submitted', payment_status }).statusLabel).toBe('Submitted (Paid)');
+-    }
+-    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'unpaid' }).statusLabel).toBe('Submitted (Pending Payment)');
+-    expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
++  it('falls back to latest valid cancellation timestamp, never fabricated reason or date', () => {
++    const history = [{ status: 'cancelled', at: '2026-10-22T00:00:00Z', note: ' ' },
++      { status: 'cancelled', at: '2026-10-21T00:00:00Z', note: 'Old' }];
++    expect(homeRequestSummary({ ...request, status: 'cancelled', status_history: history }).cancellationLabel)
++      .toBe(`Cancelled ${homeTimestamp('2026-10-22T00:00:00Z')}`);
++    expect(homeRequestSummary({ ...request, status: 'cancelled', status_history: history }).cancellationNote).toBeNull();
++    const missing = homeRequestSummary({ ...request, status: 'cancelled', status_history: { reason: 'Not an event' } });
++    expect(missing.cancellationLabel).toBe('Cancellation date unavailable');
++    expect(missing.cancellationNote).toBeNull();
++  });
++  it.each([
++    ['paid', 100, 'Paid'], ['waived', 100, 'Fee waived'], ['refunded', 100, 'Payment refunded'],
++    ['pending', 0, 'No payment required'], ['unpaid', 100, 'Payment pending'],
++    ['unpaid', null, 'Fee not yet assessed'], ['unpaid', -1, 'Fee not yet assessed'],
++  ])('keeps submitted %s/%s distinct from stage count', (payment_status, resolved_fee_centavos, paymentLabel) => {
++    const summary = homeRequestSummary({ ...request, status: 'submitted', payment_status, resolved_fee_centavos });
++    expect(summary.progressLabel).toBe('Step 1 of 4 · Submitted');
++    expect(summary.paymentLabel).toBe(paymentLabel);
++  });
++  it.each([
++    ['submitted', 'choose_payment', 'Choose a payment method'], ['ready_for_pickup', 'collect', 'Collect your document'],
++  ] as const)('shows the validated %s action without a new business action', (status, next_action, text) => {
++    expect(homeRequestSummary({ ...request, status, next_action, payment_status: 'pending' }).nextAction).toBe(text);
++  });
++  it('does not prompt payment for unknown fees, settled requests or mismatched actions', () => {
++    expect(homeRequestSummary({ ...request, status: 'submitted', payment_status: 'pending', resolved_fee_centavos: null, next_action: 'choose_payment' }).nextAction).toBeNull();
++    expect(homeRequestSummary({ ...request, status: 'submitted', next_action: 'choose_payment' }).nextAction).toBeNull();
++    expect(homeRequestSummary({ ...request, status: 'completed', next_action: 'collect' }).nextAction).toBeNull();
++  });
++  it('leaves unknown status/update honest, including valid but unrelated history', () => {
++    const summary = homeRequestSummary({ ...request, status: 'unexpected', updated_at: 'bad', status_history: [{status:'submitted',at:request.created_at}] });
++    expect(summary.statusLabel).toBe('Status unavailable');
++    expect(summary.steps.every(step => !step.reached)).toBe(true);
++    expect(summary.progressLabel).toBeNull();
++    expect(summary.updatedLabel).toBe('Update time unavailable');
++    expect(summary.nextAction).toBeNull();
++    expect(homeRequestSummary({ ...request, status: 'completed' }).progressLabel).toBe('Step 4 of 4 · Completed');
++    expect(homeRequestSummary({ ...request, status: 'ready_for_pickup' }).progressLabel).toBe('Step 3 of 4 · Ready for pickup');
++  });
++  it('shortens confirmed metadata only; unknown services preserve the full title', () => {
++    expect(homeRequestTitle(request)).toBe('Business Clearance');
++    expect(homeRequestTitle({ service_kind: 'certified_true_copy', document_name: 'Full catalog name' })).toBe('Certified True Copy');
++    expect(homeRequestTitle({ service_kind: 'unknown', document_name: 'Unknown service with a very long title' })).toBe('Unknown service with a very long title');
++    expect(homeRequestTitle({ service_kind: 'constructor', document_name: 'Unknown title' })).toBe('Unknown title');
++    expect(homeRequestTitle({ service_kind: null, document_name: null })).toBe('Document request');
+   });
+-
+ });
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\refresh-resource.ts" b/apps/resident-android-mobile/src/lib/refresh-resource.ts
+index 45cc3b24..62f535b1 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\refresh-resource.ts"
++++ b/apps/resident-android-mobile/src/lib/refresh-resource.ts
+@@ -19,6 +19,7 @@ export class RefreshResource<T> {
+     private load: (signal: AbortSignal) => Promise<T>,
+     private message: string,
+     private reconcile: (previous: T | undefined, next: T) => T = (_, next) => next,
++    private timeoutMs = 30_000,
+   ) {}
+ 
+   getSnapshot = () => this.snapshot;
+@@ -56,7 +57,7 @@ export class RefreshResource<T> {
+             const abort = () => reject(new Error(this.message));
+             controller.signal.addEventListener('abort', abort, { once: true });
+             removeAbortListener = () => controller.signal.removeEventListener('abort', abort);
+-            timeout = setTimeout(() => controller.abort(), 30_000);
++            timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+           })]);
+           if (!this.active || this.pending !== work) return;
+           if (revision === this.revision) {
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\refresh-resource.test.ts" b/apps/resident-android-mobile/src/lib/refresh-resource.test.ts
+index 67639599..cb388a36 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\refresh-resource.test.ts"
++++ b/apps/resident-android-mobile/src/lib/refresh-resource.test.ts
+@@ -120,6 +120,22 @@ describe('account/filter refresh ownership', () => {
+     await two;
+     expect(resource.getSnapshot().data).toBe('fresh');
+   });
++  it('allows Home to use a twelve-second deadline without retries or retained timers', async () => {
++    vi.useFakeTimers();
++    const load = vi.fn(() => new Promise<string>(() => {}));
++    const resource = new RefreshResource('Home/A/barangay', load, 'Retry requests', undefined, 12_000);
++    const read = resource.refresh();
++    expect(resource.refresh()).toBe(read);
++    await vi.advanceTimersByTimeAsync(11_999);
++    expect(resource.getSnapshot().error).toBeNull();
++    await vi.advanceTimersByTimeAsync(1);
++    await read;
++    expect(resource.getSnapshot().error).toBe('Retry requests');
++    await vi.advanceTimersByTimeAsync(60_000);
++    expect(load).toHaveBeenCalledTimes(1);
++    expect(vi.getTimerCount()).toBe(0);
++    resource.cancel();
++  });
+   it('retains equal data identity through reconciliation and releases subscriptions', async () => {
+     const resource = new RefreshResource('A', async () => ({ name: 'same' }), 'Retry', (prior, next) => prior?.name === next.name ? prior : next);
+     const listener = vi.fn();
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs" b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+index 76b70477..8e6e3f60 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-3-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs"
++++ b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+@@ -46,7 +46,7 @@ const mocks = {
+     export const AppState={addEventListener:(event,callback)=>{window.fixture.listeners.add(callback);return {remove:()=>window.fixture.listeners.delete(callback)}}};
+     export const AccessibilityInfo={sendAccessibilityEvent:(target,event)=>window.fixture.focusEvents.push(event)};
+     export const RefreshControl=({children,style,...props})=>{const ref=React.useRef(props);ref.current=props;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
+-  '@barangayan/shared': `export * from '${shared}/lib/request-status.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
++  '@barangayan/shared': `export * from '${shared}/lib/request-status.ts';export {homeRequestAttention} from '${shared}/lib/home-request-priority.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
+   'expo-router': `import React,{useEffect} from 'react';export const useRouter=()=>({push:href=>window.fixture.routes.push(href)});export const useFocusEffect=fn=>useEffect(()=>window.fixture.focused?fn():undefined,[fn,window.fixture.focused]);export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
+   '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:window.fixture.needsCompletion});`,
+   '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,refetch:()=>{window.fixture.profileRefetches+=1;return Promise.resolve()}});`,
+@@ -54,7 +54,9 @@ const mocks = {
+   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';import {Colors} from '${root}/constants/theme.ts';export const useTheme=()=>({...Colors[window.fixture.mode],primary:window.fixture.accent,resident:getResidentTheme(window.fixture.mode,window.fixture.accent)});`,
+   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reducedMotion;`,
+   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+-  '@/lib/supabase': `export const supabase={from(table){const query={table,select(columns){query.columns=columns;return query},eq(column,value){query.filter=[column,value];return query},order(column,options){query.order=[column,options];return query},limit(count){query.limit=count;return query},then(done,fail){const f=window.fixture;f.queries.push({table,columns:query.columns,filter:query.filter,limit:query.limit,order:query.order});const data=structuredClone((table==='announcements'?f.announcements:f.requests.filter(item=>item.resident_id===query.filter?.[1])).slice(0,query.limit));const error=f.fail[table]?{}:null;return new Promise((resolve,reject)=>{const settle=()=>f.reject[table]?reject(Error('Synthetic transport error')):resolve({data:error?null:data,error});if(f.hold)f.waiting.push(settle);else settle();}).then(done,fail);}};return query;}};`,
++  '@/lib/supabase': `import {homeRequestAttention} from '${shared}/lib/home-request-priority.ts';
++    function response(table,query,data){const f=window.fixture;return {abortSignal(signal){query.signal=signal;return this},retry(enabled){query.retry=enabled;return this},then(done,fail){f.queries.push({...query,signal:undefined});const error=f.fail[table]?{}:null;return new Promise((resolve,reject)=>{const settle=()=>f.reject[table]?reject(Error('Synthetic transport error')):resolve({data:error?null:data,error});if(f.hold)f.waiting.push(settle);else settle();}).then(done,fail)}}}
++    export const supabase={rpc(name,args){const f=window.fixture;const priority=r=>r.next_action?0:['submitted','in_progress','ready_for_pickup'].includes(r.status)?1:r.status==='completed'?2:r.status==='cancelled'?3:4;const data=structuredClone(f.requests.filter(item=>item.resident_id===f.session?.user.id)).map(item=>({...item,next_action:homeRequestAttention(item,args.p_qrph_settlement_ready)})).sort((a,b)=>priority(a)-priority(b)||(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)||b.id.localeCompare(a.id)).slice(0,3);return response('service_requests',{table:'service_requests',rpc:name,args},data)},from(table){const q={table,select(columns){q.columns=columns;return q},order(column,options){q.order=[column,options];return q},limit(count){q.limit=count;return q},then(done,fail){return response(table,q,structuredClone(window.fixture.announcements.slice(0,q.limit))).then(done,fail)}};return q}};`,
+   'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View,createAnimatedComponent:component=>component};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
+   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size,flexShrink:0}}/>;`,
+   'expo-image': `export {Image} from 'react-native';`,
+@@ -64,11 +66,11 @@ const mocks = {
+ 
+ await build({
+   stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Home from '${root}/app/(app)/home/index.tsx';
+-    const requests=['submitted','in_progress','ready_for_pickup'].map((status,index)=>({id:'request-'+index,resident_id:'synthetic-resident',reference_number:'SYNTHETIC-'+index,status,payment_status:index===0?'unpaid':'paid',created_at:'2026-10-18T01:00:00Z',status_history:index===1?[{status:'in_progress',at:'2026-10-19T02:00:00Z'}]:null,document_types:{name:index===2?'Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)':'Service '+index}}));
+-    window.fixture={session:{user:{id:'synthetic-resident'}},profile:{full_name:'Test Resident',avatar_url:null,barangays:{name:'Synthetic barangay'}},needsCompletion:false,requests,announcements:[{id:'news',title:'Synthetic community advisory with a long title for full text coverage',category:'general',published_at:'2026-10-18T02:00:00Z'}],mode:'light',accent:'#0F6E5B',fontId:'system',reducedMotion:true,focused:true,listeners:new Set(),motions:[],focusEvents:[],queries:[],routes:[],profileRefetches:0,fail:{},reject:{},hold:false,waiting:[]};
++    const requests=['submitted','in_progress','ready_for_pickup'].map((status,index)=>({id:'request-'+index,resident_id:'synthetic-resident',reference_number:'SYNTHETIC-'+index,status,payment_status:index===0?'unpaid':'paid',created_at:'2026-10-18T01:00:00Z',status_history:index===1?[{status:'in_progress',at:'2026-10-19T02:00:00Z'}]:null,document_name:'Service '+index,service_kind:'general',updated_at:'2026-10-'+(22-index)+'T01:00:00Z',cancelled_at:null,payment_method:'pickup',contract_version:2,fee_assessment_state:'assessed',assessed_amount_centavos:10000,legacy_fee_centavos:null,sla_state:'running',resolved_fee_centavos:10000,next_action:null}));
++    window.fixture={session:{user:{id:'synthetic-resident'}},profile:{id:'synthetic-resident',barangay_id:'synthetic-barangay',full_name:'Test Resident',avatar_url:null,barangays:{name:'Synthetic barangay'}},needsCompletion:false,requests,announcements:[{id:'news',title:'Synthetic community advisory with a long title for full text coverage',category:'general',published_at:'2026-10-18T02:00:00Z'}],mode:'light',accent:'#0F6E5B',fontId:'system',reducedMotion:true,focused:true,listeners:new Set(),motions:[],focusEvents:[],queries:[],routes:[],profileRefetches:0,fail:{},reject:{},hold:false,waiting:[]};
+     const root=createRoot(document.getElementById('root'));let generation=0;window.renderHome=()=>root.render(<Home key={generation}/>);window.resetHome=()=>{generation++;window.renderHome();};window.unmountHome=()=>root.render(null);window.renderHome();`, resolveDir: app, loader: 'tsx' },
+   outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
+-  define: { __DEV__: 'false', global: 'globalThis', 'process.env.NODE_ENV': '"production"' },
++  define: { __DEV__: 'false', global: 'globalThis', 'process.env.NODE_ENV': '"production"', 'process.env.EXPO_PUBLIC_QRPH_SETTLEMENT_READY': '"false"' },
+   ...(workspaceOnly ? { tsconfigRaw: { compilerOptions: { jsx: 'react-jsx' } } } : {}),
+   plugins: [{ name: 'fixtures', setup(b) {
+     b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : workspaceOnly ? resolveFixtureSource(args) : undefined);
+@@ -93,37 +95,75 @@ try {
+   page.on('console', message => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
+   await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+-  const cards = () => page.getByRole('button', { name: /reference SYNTHETIC-/ });
++  const cards = () => page.getByRole('button', { name: /reference SYNTHETIC-/, includeHidden: true });
+   const right = () => page.getByRole('button', { name: 'Scroll requests right', exact: true });
+   const left = () => page.getByRole('button', { name: 'Scroll requests left', exact: true });
+   const close = () => page.getByRole('button', { name: 'Close request summary', exact: true });
+   await cards().first().waitFor();
+   assert.equal(await cards().count(), 3);
+   assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+-    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
++    ['announcements',1,undefined,'*'],['service_requests',undefined,undefined,undefined],
+   ]);
+   await right().waitFor();
+-  assert.equal(await left().count(), 0);
++  assert.equal(await left().isDisabled(), true);
+   await right().click();
+   await left().waitFor();
+   await right().click();
+-  await right().waitFor({ state: 'detached' });
++  await page.waitForFunction(() => document.querySelector('[aria-label="Scroll requests right"]')?.getAttribute('aria-disabled')==='true');
+   await left().click();
+   await right().waitFor();
+   assert.equal(await page.getByRole('button', { name: /Scroll announcements/ }).count(), 0);
+-  passed.push('Actual latest-three/latest-one query shapes and measured chevrons at both boundaries');
++  assert.deepEqual(await page.evaluate(() => window.fixture.queries.filter(q=>q.rpc).map(q=>[q.rpc,q.args,q.retry])), [['resident_home_requests',{p_qrph_settlement_ready:false},false]]);
++  await page.getByText('2 of 3',{exact:true}).waitFor();
++  assert.equal(await page.getByRole('button',{name:/reference SYNTHETIC-/}).count(),1,'Only the visible request is accessible');
++  const control=await right().boundingBox();const card=await cards().nth(1).boundingBox();
++  assert.ok(control && card && control.y>=card.y+card.height && control.width>=48 && control.height>=48);
++  passed.push('Owner RPC/no resident argument/no retries; below-card controls, disabled edges and visible-only accessibility');
+ 
+   const pulling = () => page.evaluate(() => [...window.pullControls][0].current.refreshing);
+   const pullHome = async () => { await page.evaluate(() => [...window.pullControls][0].current.onRefresh()); await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing); };
++  await pullHome();
++  await page.getByText('2 of 3',{exact:true}).waitFor();
++  await page.evaluate(() => { window.fixture.savedRequests=structuredClone(window.fixture.requests); window.fixture.requests[1].updated_at='2030-01-01T00:00:00Z'; });
++  await pullHome();
++  await page.getByText('1 of 3',{exact:true}).waitFor();
++  await page.setViewportSize({width:412,height:640});
++  await page.getByText('1 of 3',{exact:true}).waitFor();
++  await page.getByRole('button',{name:/reference SYNTHETIC-2/}).waitFor();
++  await right().click();
++  await page.getByText('2 of 3',{exact:true}).waitFor();
++  await right().click();
++  await page.getByText('3 of 3',{exact:true}).waitFor();
++  await page.getByRole('button',{name:/reference SYNTHETIC-0/}).waitFor();
++  await page.evaluate(() => {window.fixture.requests=window.fixture.requests.filter(item=>item.id!=='request-0');});
++  await pullHome();
++  await page.getByText('1 of 2',{exact:true}).waitFor();
++  await right().click();
++  await page.getByText('2 of 2',{exact:true}).waitFor();
++  await page.getByRole('button',{name:/reference SYNTHETIC-1/}).click();
++  await close().waitFor();
++  await page.evaluate(() => {window.fixture.requests.find(item=>item.id==='request-1').document_name='Updated while open';});
++  await pullHome();
++  await page.getByRole('dialog').getByText('Updated while open',{exact:true}).waitFor();
++  const routesBeforeRemoval=await page.evaluate(()=>window.fixture.routes.length);
++  await page.evaluate(() => {window.fixture.requests=window.fixture.requests.filter(item=>item.id!=='request-1');});
++  await pullHome();
++  await close().waitFor({state:'detached'});
++  await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label')==='View all requests');
++  assert.equal(await page.evaluate(()=>window.fixture.routes.length),routesBeforeRemoval,'Removing the selected request closes without navigating stale data');
++  await page.evaluate(() => {window.fixture.requests=window.fixture.savedRequests;});
++  await pullHome();
++  await page.setViewportSize({width:360,height:640});
++  passed.push('Unchanged refresh retains position; reorder/resize/removal restart with a matching full first card; open summaries update and removed selections close without navigation');
+   assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'Home mounts one pull scroller');
+-  await page.evaluate(() => { window.fixture.queries = []; });
++  await page.evaluate(() => { window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+   await pullHome();
+   assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+-    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
++    ['announcements',1,undefined,'*'],['service_requests',undefined,undefined,undefined],
+   ]);
+   assert.equal(await page.evaluate(() => window.fixture.profileRefetches), 1);
+   assert.equal(await cards().count(), 3);
+-  await page.evaluate(() => { window.fixture.requests[0].document_types.name = 'Pulled service'; window.fixture.announcements[0].title = 'Pulled advisory'; });
++  await page.evaluate(() => { window.fixture.requests[0].document_name = 'Pulled service'; window.fixture.announcements[0].title = 'Pulled advisory'; });
+   await pullHome();
+   await page.getByText('Pulled service', { exact: true }).waitFor();
+   await page.getByText('Pulled advisory', { exact: true }).waitFor();
+@@ -135,7 +175,7 @@ try {
+   await page.evaluate(() => { window.fixture.reject = {}; });
+   assert.equal(await cards().count(), 3);
+   assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 1);
+-  assert.equal(await page.getByText(/could not be loaded/).count(), 0, 'a failed pull keeps the cards and adds no error state');
++  assert.equal(await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).count(), 1, 'failed request pull retains cards and exposes retry');
+   await page.evaluate(() => { window.fixture.hold = true; window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+   await page.evaluate(() => { const control = [...window.pullControls][0].current; control.onRefresh(); control.onRefresh(); });
+   await page.waitForFunction(() => window.fixture.waiting.length === 2);
+@@ -152,7 +192,7 @@ try {
+   await page.evaluate(() => window.unmountHome());
+   await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+   await page.evaluate(() => {
+-    window.fixture.session = { user: { id: 'synthetic-resident' } }; window.fixture.requests[0].document_types.name = 'Service 0';
++    window.fixture.session = { user: { id: 'synthetic-resident' } }; window.fixture.requests[0].document_name = 'Service 0';
+     window.fixture.announcements[0].title = 'Synthetic community advisory with a long title for full text coverage';
+     window.fixture.queries = []; window.fixture.waiting = []; window.resetHome();
+   });
+@@ -160,13 +200,22 @@ try {
+   await page.evaluate(() => { window.fixture.queries = []; });
+   passed.push('Pulling Home reloads announcements, requests and profile together, shows new data, keeps cards through failed pulls, runs one flight, ignores a previous account and unmounted pull');
+ 
+-  await cards().nth(1).click();
++  await right().click();
++  await page.getByText('2 of 3',{exact:true}).waitFor();
++  await right().click();
++  await page.getByText('3 of 3',{exact:true}).waitFor();
++  await page.getByRole('button',{name:/reference SYNTHETIC-1/}).click();
+   await close().waitFor();
+   await page.getByRole('dialog').getByLabel('Processing, current stage', { exact: true }).waitFor();
+   assert.equal(await page.getByText('Pending', { exact: true }).count(), 2);
+   await page.screenshot({ path: path.join(out, 'summary-light.png') });
+   await close().click();
+   await close().waitFor({ state: 'detached' });
++  await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label')?.includes('reference SYNTHETIC-1'));
++  await left().click();
++  await page.getByText('2 of 3',{exact:true}).waitFor();
++  await left().click();
++  await page.getByText('1 of 3',{exact:true}).waitFor();
+   const queries = await page.evaluate(() => window.fixture.queries.length);
+   for (let cycle = 0; cycle < 5; cycle++) {
+     await cards().first().click();
+@@ -181,7 +230,7 @@ try {
+   await cards().first().click();
+   await page.getByRole('button', { name: 'View full request', exact: true }).click();
+   await close().waitFor({ state: 'detached' });
+-  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/home/requests/request-0');
++  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/home/requests/request-2');
+   passed.push(...verifyRequestTrackingNavigation(await page.evaluate(() => window.fixture.routes.at(-1))));
+   assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+   assert.equal(await page.evaluate(() => window.fixture.listeners.size), 1);
+@@ -217,7 +266,8 @@ try {
+   await cards().first().click();
+   await close().waitFor();
+   await page.getByRole('dialog').getByText('Cancelled',{exact:true}).waitFor();
+-  assert.equal(await page.getByText('Not recorded',{exact:true}).count(),3);
++  assert.equal(await page.getByText('Not recorded',{exact:true}).count(),0);
++  await page.getByRole('dialog').getByText('Cancellation date unavailable',{exact:true}).waitFor();
+   await close().click();
+   await close().waitFor({state:'detached'});
+   // Use real web Animated at normal durations to exercise cancellation and reopen ownership.
+@@ -239,7 +289,7 @@ try {
+   passed.push('Single-card no-overflow/cancelled history and normal/reduced sheet targets, background close and theme change while open');
+ 
+   await page.setViewportSize({width:320,height:320});
+-  await page.evaluate(() => {window.fixture.requests[0].document_types.name='Long document title '.repeat(12);window.resetHome();});
++  await page.evaluate(() => {window.fixture.requests[0].document_name='Long document title '.repeat(12);window.resetHome();});
+   await cards().first().click();
+   await close().waitFor();
+   const fullAction=page.getByRole('button',{name:'View full request',exact:true});
+@@ -290,7 +340,7 @@ try {
+   await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).waitFor();
+   passed.push('Visible database/transport failures and explicit independent retry recovery');
+ 
+-  await page.evaluate(() => {window.fixture.reject={};window.fixture.hold=true;window.fixture.requests=[{id:'stale',resident_id:'synthetic-resident',reference_number:'STALE',status:'submitted',payment_status:'unpaid',created_at:'2026-10-18T00:00:00Z',status_history:null,document_types:{name:'Stale private request'}}];window.resetHome();});
++  await page.evaluate(() => {window.fixture.reject={};window.fixture.hold=true;window.fixture.requests=[{id:'stale',resident_id:'synthetic-resident',reference_number:'STALE',status:'submitted',payment_status:'unpaid',created_at:'2026-10-18T00:00:00Z',status_history:null,document_name:'Stale private request',updated_at:'2026-10-18T00:00:00Z',resolved_fee_centavos:null}];window.resetHome();});
+   await page.getByText('Loading your requests…',{exact:true}).waitFor();
+   await page.evaluate(() => {window.fixture.session={user:{id:'different-resident'}};window.renderHome();});
+   await page.waitForFunction(() => window.fixture.waiting.length===3);

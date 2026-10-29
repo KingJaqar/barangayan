@@ -1,0 +1,17 @@
+{
+  "scope": "Document validation only; product acceptance remains pending",
+  "local_links_checked": 12,
+  "catalog_ids": 69,
+  "account_ids": 52,
+  "system_ids": 17,
+  "execution_phases": 7,
+  "acceptance_gates": 18,
+  "effective_current_source_identities": 17,
+  "original_snapshots_preserved": 16,
+  "concurrent_refresh": "Requests change and shared motion dependency verified; historical failure retained in validation-initial.json",
+  "packet_entries": 11,
+  "supplement_entries": 2,
+  "issues": [
+    "Changed current source apps/resident-android-mobile/src/components/services/requests-list.tsx"
+  ]
+}

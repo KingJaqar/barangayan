@@ -1,0 +1,29 @@
+ERROR:  invalid_payload
+CONTEXT:  PL/pgSQL function barangayan_private.check_keys(jsonb,text[]) line 5 at RAISE
+SQL statement "SELECT barangayan_private.check_keys(new.charter,array['officeDivision','classification','transactionType','whoMayAvail','checklistOfRequirements',
+    'whereToSecureRequirements','clientSteps','agencyActions','feesToBePaid','processingTime','personResponsible'])"
+PL/pgSQL function barangayan_private.guard_catalog_contract() line 19 at PERFORM
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: SQL failed: ERROR:  invalid_payload
+CONTEXT:  PL/pgSQL function barangayan_private.check_keys(jsonb,text[]) line 5 at RAISE
+SQL statement "SELECT barangayan_private.check_keys(new.charter,array['officeDivision','classification','transactionType','whoMayAvail','checklistOfRequirements',
+    'whereToSecureRequirements','clientSteps','agencyActions','feesToBePaid','processingTime','personResponsible'])"
+PL/pgSQL function barangayan_private.guard_catalog_contract() line 19 at PERFORM
+
+
+3 !== 0
+
+    at file:///C:/Users/User/barangayan/supabase/tests/resident_home_requests.mjs:193:8
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

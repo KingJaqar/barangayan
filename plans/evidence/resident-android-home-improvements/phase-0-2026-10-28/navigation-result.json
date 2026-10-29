@@ -1,0 +1,15 @@
+{
+  "id": "navigation",
+  "start": "2026-10-28T04:21:49.651Z",
+  "end": "2026-10-28T04:21:49.915Z",
+  "code": 0,
+  "signal": null,
+  "deadlineMs": 600000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/request-tracking-navigation.mjs"
+  ],
+  "log": "navigation.log",
+  "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\navigation"
+}

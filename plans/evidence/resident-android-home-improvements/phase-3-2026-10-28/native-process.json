@@ -1,0 +1,16 @@
+{
+  "pid": 16672,
+  "start": "2026-10-28T10:07:15.361Z",
+  "deadlineMs": 2700000,
+  "reason": "Bounded 45-minute native request/card/Back and layout matrix; no server or account settings changed",
+  "fixture": ".home-phase3-native",
+  "port": 8097,
+  "proxy": 58451,
+  "container": "resident_home_p3_rest",
+  "database": "resident_home_p3_20261028",
+  "adapters": [
+    "Synthetic owner/profile/preferences; no stored session/preference writes",
+    "Realtime transport disabled in this isolated fixture; actual Home/query/summary/tracking/router/native controls"
+  ],
+  "originalSources": "Current working sources, no product copies"
+}

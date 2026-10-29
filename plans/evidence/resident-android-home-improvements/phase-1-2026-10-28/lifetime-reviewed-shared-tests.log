@@ -1,0 +1,49 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/connected-route-client.test.ts (10 tests) 45ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 43ms
+ ✓ src/lib/attendance-request.test.ts (3 tests) 14ms
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 14ms
+ ✓ src/lib/model-activation.test.ts (12 tests) 14ms
+ ✓ src/schemas/household-attendance-responses.test.ts (19 tests) 16ms
+ ✓ src/lib/model-exclusions.test.ts (10 tests) 12ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 11ms
+ ✓ src/lib/format.test.ts (17 tests) 75ms
+ ✓ src/lib/device-location.test.ts (29 tests) 66ms
+ ✓ src/schemas/household-attendance.test.ts (25 tests) 57ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 9ms
+ ✓ src/schemas/drive-registration-result.test.ts (5 tests) 8ms
+ ✓ src/schemas/routing-conditions.test.ts (11 tests) 20ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 11ms
+ ✓ src/lib/evacuation-routing.test.ts (62 tests) 352ms
+ ✓ src/lib/flood-shadow.test.ts (57 tests) 116ms
+ ✓ src/lib/flood-validation.test.ts (12 tests) 44ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 51ms
+ ✓ src/lib/routing-pack-builder.test.ts (25 tests) 685ms
+   ✓ coverage buffer > stays within 6 m of the exact 150 m buffer  528ms
+ ✓ src/schemas/staff.test.ts (9 tests) 22ms
+ ✓ src/lib/registration-locality.test.ts (10 tests) 45ms
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 39ms
+ ✓ src/lib/service-catalog.test.ts (10 tests) 45ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 103ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 44ms
+ ✓ src/lib/evacuation-route-service.test.ts (44 tests) 51ms
+ ✓ src/lib/resident-auth.test.ts (44 tests) 46ms
+ ✓ src/lib/resident-account-setup.test.ts (20 tests) 54ms
+ ✓ src/lib/service-request-validation.test.ts (12 tests) 37ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 49ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 7ms
+ ✓ src/lib/haversine.test.ts (4 tests) 9ms
+ ✓ src/lib/home-request-priority.test.ts (24 tests) 10ms
+ ✓ src/schemas/payment.test.ts (9 tests) 13ms
+ ✓ src/schemas/announcement.test.ts (21 tests) 19ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 14ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 12ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 9ms
+
+ Test Files  39 passed (39)
+      Tests  625 passed (625)
+   Start at  14:23:23
+   Duration  7.46s (transform 18.57s, setup 0ms, collect 60.42s, tests 2.29s, environment 15ms, prepare 41.64s)
+

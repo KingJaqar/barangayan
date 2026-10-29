@@ -1,0 +1,11 @@
+{
+  "name": "tracking-payment-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/tracking-payment-ui.mjs"
+  ],
+  "start": "2026-10-27T02:03:44.112Z",
+  "end": "2026-10-27T02:03:52.974Z",
+  "status": 0
+}

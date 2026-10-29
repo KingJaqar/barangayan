@@ -1,0 +1,25 @@
+{
+  "passed": [
+    "four cards in order, no \"What's New\", All/All default and its seven chips",
+    "All lists disjoint Barangay, Account, System groups with full counts and no foreign row",
+    "card switches reset the chip; every view lists exactly its own source and chip membership",
+    "inbox/announcement read and unread converge in the bell, touch no business row, and a failed write is readable",
+    "bulk read: one atomic server scope call (collapsed groups included), rapid taps coalesce, counts reach zero, collapse writes nothing",
+    "failed bulk read keeps the true unread state and shows a readable retry",
+    "request/incident rows open their existing record and read only themselves; account events open one allowlisted screen action",
+    "System detail re-reads the notice: published action shown, resolved/missing/failed states have none, retry recovers",
+    "original announcement sheet opens/closes five times and marks read once",
+    "announcement links resolve beyond the loaded page; a foreign or missing notification/announcement is unavailable, never disclosed",
+    "F49: a failed notification fetch shows a retryable load failure (not \"no longer available\") and the retry opens the item",
+    "1003 tied-timestamp announcements: full count shown with 25 loaded, older page uses the (published_at, id) keyset, inbox pages request 25",
+    "partial source failure keeps healthy groups and offers retry; a failed or unknown summary says \"unavailable\", never zero",
+    "guest sees only All/Barangay cards and public filters, without private RPCs, counts or bulk read",
+    "signing out from Account/System cards or filters resets to public All without remounting",
+    "account replacement, five rapid card cycles keep one hub channel, realtime arrival appears, 700 row events cause one refetch per owner, a pull reloads without writes or new channels",
+    "light/dark, custom accent and selected font at 320–412px without page overflow",
+    "empty sources are omitted and each view reports its own empty state with bulk read disabled"
+  ],
+  "errors": [
+    "\"shadow*\" style props are deprecated. Use \"boxShadow\"."
+  ]
+}

@@ -1,0 +1,176 @@
+ment_types?.name ?? 'Document request';
+              return <HomeAction key={request.id} reducedMotion={reducedMotion}
+                pressableRef={target => { if (target) requestTargets.current.set(request.id, target); else requestTargets.current.delete(request.id); }}
+                accessibilityLabel={`${title}, reference ${request.reference_number}, ${summary.statusLabel}`}
+                accessibilityHint="Opens a request summary" onPress={() => { pendingTracking.current = null; setSelectedRequest(request); setSheetOpen(true); }}
+                style={({ pressed }) => [styles.requestCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+                <View style={styles.requestTop}>
+                  <View style={[styles.requestIcon, { backgroundColor: resident.accentSoft }]}>
+                    <DocumentIcon name={getDocumentIcon(title)} size={16} color={resident.accentText} accessible={false} />
+                  </View>
+                  <View style={styles.requestInfo}>
+                    <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{title}</ThemedText>
+                    <ThemedText style={[styles.reference, { color: resident.muted }]}>#{request.reference_number}</ThemedText>
+                  </View>
+                </View>
+                <View style={styles.requestProgress}>
+                  <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+                  </View>
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                </View>
+              </HomeAction>;
+            })}
+          </ScrollableChevronRow>}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Around the barangay</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Latest announcements</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all announcements" onPress={() => router.push('/announcements')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!news ? <HomeListState loading label="Loading announcements…" />
+          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+          : announcement ? <View style={styles.shelf}>
+            <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+              style={({ pressed }) => [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+              <View style={styles.newsMeta}>
+                <View style={styles.categoryGroup}>
+                  <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                </View>
+                <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+              </View>
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? <ThemedText style={[styles.reference, { color: resident.muted }]}>Announcement image unavailable.</ThemedText>
+                : <Image source={{ uri: announcement.image_url }} contentFit="cover" style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                : null}
+              <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+            </HomeAction>
+          </View> : <HomeListState label="No announcements yet." />}
+      </View>
+    </ScrollView>
+    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+  </SafeAreaView>;
+}
+
+function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () => void }) {
+  const { resident } = useTheme();
+  return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+    {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+    <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+    {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+  </View>;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 36 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: '800', letterSpacing: -0.7 },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 28 },
+  quickAction: { flex: 1, alignItems: 'center', paddingVertical: 4, gap: 6, minWidth: 0 },
+  compactAction: { flex: 0, width: '33.333333%' },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+  section: { marginBottom: 28 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 44, justifyContent: 'flex-end' },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: 'row', gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: 'auto', paddingTop: 10 },
+  segments: { flexDirection: 'row', gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: '600' },
+  newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  categoryGroup: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: 'right', flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: '700', textTransform: 'capitalize', flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});
+PATH: apps/resident-android-mobile/src/app/(app)/services/index.tsx
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
+import { useProfile } from '@/hooks/use-profile';
+import { PrimaryButton } from '@/components/primary-button';
+import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRef, useState } from 'react';
+import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { DocumentsList } from '@/components/services/documents-list';
+import { LogsList } from '@/components/services/logs-list';
+import { RequestsList } from '@/components/services/requests-list';
+import { ServicesNewRequestButton } from '@/components/services/services-list-presentation';
+import { ThemedText } from '@/components/themed-text';
+import { SegmentedControl } from '@/components/segmented-control';
+import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
+
+type ServicesSegment = 'documents' | 'requests' | 'logs';
+
+const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
+
+const TABS: { key: ServicesSegment; label: string }[] = [
+  { key: 'documents', label: 'Documents' },
+  { key: 'requests', label: 'Requests' },
+  { key: 'logs', label: 'Logs' },
+];
+
+// Documents/Requests/Logs — confirmed against the design file. Guests only ever see
+// Documents (real, guest-readable data per the 0005 migration's anon RLS policy) —
+// Requests/Logs require a real identity, so the control that would reach them isn't
+// rendered at all for a guest, rather than being reachable-but-gated.
+export default function ServicesScreen() {
+  const { session } = useAuth();
+  const router = useRouter();
+  const { profile, refetch, isLoading, error } = useProfile();
+  const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const bottomTabInset = useFloatingTabInset();
+  const pull = usePullRefresh([refetch]);
+
+  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
+  const initialSegment: ServicesSegment =
+    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+      ? (segmentParam as ServicesSegment)
+      : 'documents';
+
+  const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+  const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+  const verificationButton = useRef<View>(null);
+  const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+  const verifiedIcon = verified ? (
+    <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
+      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
+      onPress={event => {
+       

@@ -1,0 +1,555 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style, content has been compressed (code blocks are separated by ⋮---- delimiter).<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: package.json, apps/resident-android-mobile/package.json, apps/resident-android-mobile/vitest.config.ts, apps/resident-android-mobile/src/app/(app)/announcements.tsx, apps/resident-android-mobile/src/hooks/use-unread-counts.tsx, apps/resident-android-mobile/src/lib/push-notifications.ts, apps/resident-android-mobile/src/hooks/use-notification-realtime.ts, apps/resident-android-mobile/src/components/resident-header.tsx, apps/resident-android-mobile/src/components/services/requests-list.tsx, apps/resident-ios-mobile/src/features/notifications/model.ts, supabase/functions/send-notifications/worker.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style
+- Content has been compressed - code blocks are separated by ⋮---- delimiter</notes></file_summary><directory_structure>apps/
+  resident-android-mobile/
+    src/
+      app/
+        (app)/
+          announcements.tsx
+      components/
+        services/
+          requests-list.tsx
+        resident-header.tsx
+      hooks/
+        use-notification-realtime.ts
+        use-unread-counts.tsx
+      lib/
+        push-notifications.ts
+    package.json
+    vitest.config.ts
+  resident-ios-mobile/
+    src/
+      features/
+        notifications/
+          model.ts
+supabase/
+  functions/
+    send-notifications/
+      worker.ts
+package.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="apps/resident-android-mobile/src/app/(app)/announcements.tsx">import { router, useLocalSearchParams } from &apos;expo-router&apos;;
+import { useState } from &apos;react&apos;;
+import { StyleSheet, View } from &apos;react-native&apos;;
+import { FilterChips } from &apos;@/components/filter-chips&apos;;
+import { AnnouncementsFeed, type FilterKey, useAnnouncementChips } from &apos;@/components/reports/announcements-feed&apos;;
+import { ReadAction, ReportSourceState } from &apos;@/components/reports/report-presentation&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+⋮----
+{readStateError ? &lt;ReportSourceState message=&quot;Read status could not be refreshed.&quot; retry={retryReadState} retryLabel=&quot;Retry read status&quot; /&gt; : null}
+    &lt;View&gt;&lt;FilterChips chips={chips} active={announcementId ? &apos;all&apos; : filter} onSelect={setFilter} /&gt;&lt;/View&gt;
+    &lt;AnnouncementsFeed activeFilter={announcementId ? &apos;all&apos; : filter} openId={announcementId} onOpenHandled={() =&gt; router.setParams({ announcementId: undefined })} /&gt;
+  &lt;/View&gt;;
+}
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  heading: { flexDirection: &apos;row&apos;, flexWrap: &apos;wrap&apos;, alignItems: &apos;flex-start&apos;, justifyContent: &apos;space-between&apos;, paddingHorizontal: 16, paddingTop: 4, paddingBottom: 2, columnGap: 8 },
+  headingSummary: { flexGrow: 1, flexShrink: 1, flexBasis: 140 },
+  title: { fontSize: 21, lineHeight: 28, fontWeight: &apos;800&apos;, paddingVertical: 8, includeFontPadding: false },
+  count: { fontSize: 12.5, lineHeight: 18, includeFontPadding: false },
+});</file><file path="apps/resident-android-mobile/src/components/services/requests-list.tsx">import { AgencySlaStatus } from &apos;./agency-sla-status&apos;;
+import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import {
+  estimateLabel,
+  formatCentavosAsPHP,
+  formatDate,
+  getResidentRequestStatus,
+  progressFraction,
+  requestFee,
+  type ResidentRequestStatus,
+  type Tables,
+} from &apos;@barangayan/shared&apos;;
+import { useCallback, useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { useFocusEffect, useRouter } from &apos;expo-router&apos;;
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from &apos;react-native&apos;;
+⋮----
+import { GuestPrompt } from &apos;@/components/guest-prompt&apos;;
+import { PrimaryButton } from &apos;@/components/primary-button&apos;;
+import { ProgressBar } from &apos;@/components/progress-bar&apos;;
+import { PullRefreshControl, usePullRefresh } from &apos;@/components/pull-refresh&apos;;
+import { ServiceListLink, ServicesPanel, serviceListStyles } from &apos;@/components/services/services-list-presentation&apos;;
+import { ServicesFilterChips } from &apos;@/components/services/services-filter-chips&apos;;
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from &apos;@/components/services/services-list-states&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { DocumentIcon } from &apos;@/components/document-icon&apos;;
+import { PAYMENT_SETTLEMENT_READY } from &apos;@/constants/payment&apos;;
+import { getDocumentIcon } from &apos;@/constants/document-icons&apos;;
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useHistoryPages } from &apos;@/hooks/use-history-pages&apos;;
+import { useProfile } from &apos;@/hooks/use-profile&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { HISTORY_PAGE_SIZE, historyBefore } from &apos;@/lib/history-resource&apos;;
+import { uniqueChannelName } from &apos;@/lib/realtime-channel&apos;;
+⋮----
+type ServiceRequest = Pick&lt;Tables&lt;&apos;service_requests&apos;&gt;,
+  &apos;id&apos; | &apos;reference_number&apos; | &apos;status&apos; | &apos;payment_status&apos; | &apos;payment_method&apos; | &apos;created_at&apos; | &apos;updated_at&apos; | &apos;timing_model&apos; | &apos;sla_state&apos;
+  | &apos;contract_version&apos; | &apos;fee_assessment_state&apos; | &apos;assessed_amount_centavos&apos; | &apos;legacy_fee_centavos&apos;&gt; &amp; {
+  document_types: Pick&lt;Tables&lt;&apos;document_types&apos;&gt;, &apos;name&apos; | &apos;processing_target_hours&apos; | &apos;fee_centavos&apos;&gt; | null;
+};
+⋮----
+type Filter = &apos;all&apos; | &apos;active&apos; | &apos;pickup&apos; | &apos;history&apos;;
+type ActiveSubFilter = &apos;all&apos; | &apos;pending_payment&apos; | &apos;paid&apos; | &apos;processing&apos;;
+⋮----
+/** Live chip numbers; one lightweight status-only query, independent of the selected filter. */
+interface RequestCounts { active: number; pickup: number; history: number; pending_payment: number; paid: number; processing: number }
+⋮----
+/** Resident-facing label of the one status pill. Shorter than the shared long form on purpose. */
+⋮----
+interface Pill { label: string; icon: keyof typeof Ionicons.glyphMap; color: string; background: string }
+⋮----
+/** The single decision a card has to communicate: what the resident should do now. */
+interface NextStep {
+  /** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+  text?: string;
+  /** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+  urgent: boolean;
+  payAmount?: number;
+  /** Where &quot;Pay now&quot; leads. */
+  payHref?: string;
+  estimate?: &apos;agency&apos; | &apos;legacy&apos;;
+}
+⋮----
+/** Plain line under the pill; omitted when a live estimate or progress row takes its place. */
+⋮----
+/** Needs the resident (payment due, requirements missing): warning tone, pinned first. */
+⋮----
+/** Where &quot;Pay now&quot; leads. */
+⋮----
+const isOpen = (status: ResidentRequestStatus)
+⋮----
+function nextStep(request: ServiceRequest, status: ResidentRequestStatus): NextStep
+⋮----
+function displayPill(status: ResidentRequestStatus, step: NextStep, resident: ReturnType&lt;typeof useTheme&gt;[&apos;resident&apos;]): Pill
+⋮----
+/** Needs-action first, then other open requests, then pickup, then the rest; newest first inside each band. */
+function sortRequests(requests: ServiceRequest[]): ServiceRequest[]
+⋮----
+const band = (request: ServiceRequest) =&gt;
+⋮----
+function RequestRow(
+⋮----
+&lt;DocumentIcon name=
+⋮----
+onPress=
+⋮----
+/** Fade only: natural height avoids relayout on every animation frame. */
+⋮----
+function toggle()
+⋮----
+// Invalidate an outgoing fade before React commits a rapid reopen.
+⋮----
+
+⋮----
+/** Actionable profile guidance scrolls away, leaving the filter chips pinned. */
+⋮----
+// Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
+// already-subscribed channel when this list is mounted twice (or remounted before the
+// async removeChannel() finishes), and .on() then throws.
+⋮----
+// The sub-filter row only makes sense inside &quot;Active&quot; — reset it whenever the resident
+// navigates to a different top-level filter, so it doesn&apos;t silently stay narrowed the
+// next time they come back to &quot;Active&quot;.
+function handleFilterChange(next: Filter)
+⋮----
+// &quot;All&quot; is the open-work overview (the five sections); finished requests live under History.
+⋮----
+if (error || !data) return; // keep the last known numbers rather than flashing them away
+⋮----
+const statusOf = (request: ServiceRequest)
+⋮----
+// Stable children: 0 guidance (possibly empty), 1 pinned filters, 2 list/state.
+⋮----
+{/* The chip strip is transparent. Its sticky host masks rows passing underneath. */}
+⋮----
+&lt;View style=</file><file path="apps/resident-android-mobile/src/components/resident-header.tsx">import { Ionicons } from &apos;@expo/vector-icons&apos;;
+import { Image } from &apos;expo-image&apos;;
+import { router, usePathname } from &apos;expo-router&apos;;
+import { useEffect, useRef, useState, type ReactNode } from &apos;react&apos;;
+import { BackHandler, Keyboard, Pressable, StyleSheet, TextInput, View } from &apos;react-native&apos;;
+import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from &apos;react-native-reanimated&apos;;
+import { useSafeAreaInsets } from &apos;react-native-safe-area-context&apos;;
+⋮----
+import { NotificationBell } from &apos;@/components/notification-bell&apos;;
+import { ThemedText } from &apos;@/components/themed-text&apos;;
+import { useSearchDraft } from &apos;@/hooks/use-resident-search&apos;;
+import { useTheme } from &apos;@/hooks/use-theme&apos;;
+import { getMobileFontFamily } from &apos;@/constants/fonts&apos;;
+import { useFontPreference } from &apos;@/hooks/use-font-preference&apos;;
+import { useResidentReducedMotion } from &apos;@/hooks/use-resident-reduced-motion&apos;;
+import { useUnreadCounts } from &apos;@/hooks/use-unread-counts&apos;;
+import { useEmergencyMapHeader } from &apos;@/hooks/use-emergency-map-header&apos;;
+import { useSearchInactivity } from &apos;@/hooks/use-search-inactivity&apos;;
+import { isSearchableQuery } from &apos;@/lib/resident-search&apos;;
+⋮----
+/** The header and search draft persist; editable native input only exists on search routes. */
+⋮----
+// A frame can run after Explore has committed but before this effect&apos;s cleanup; focusing there would reopen editing.
+⋮----
+// Native focus/IME state can outlive a hidden or detached Android input.
+⋮----
+const closeSearch = () =&gt;
+⋮----
+// Android Back takes the header&apos;s Back path, so leaving search also clears the submitted session.
+⋮----
+
+// Explore&apos;s field is the way back to editing: focusing it reopens the entry with the submitted query.
+⋮----
+/** Animate only presentation; the full touch target and unread badge stay stable. */
+⋮----
+const setPressed = (value: number) =&gt;</file><file path="apps/resident-android-mobile/src/hooks/use-notification-realtime.ts">import type { Tables } from &apos;@barangayan/shared&apos;;
+import { useEffect } from &apos;react&apos;;
+⋮----
+import { presentNotification } from &apos;@/lib/push-notifications&apos;;
+import {
+  announcementTemplate,
+  driveRegistrationTemplate,
+  incidentTemplate,
+  medicalDriveTemplate,
+  serviceRequestTemplate,
+} from &apos;@/lib/notification-templates&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { uniqueChannelName } from &apos;@/lib/realtime-channel&apos;;
+⋮----
+/**
+ * The delivery engine — opens one Supabase realtime channel per source table and presents
+ * a local notification when a relevant row event fires. Mirrors the channel/subscribe/
+ * cleanup pattern used by use-announcements.ts etc. All channels tear down whenever
+ * `enabled` flips false, `userId`/`barangayId` change, or the component unmounts.
+ */
+export function useNotificationRealtime(
+  enabled: boolean,
+  userId: string | null,
+  barangayId: string | null,
+)</file><file path="apps/resident-android-mobile/src/hooks/use-unread-counts.tsx">import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from &apos;react&apos;;
+⋮----
+import { useAuth } from &apos;@/hooks/use-auth&apos;;
+import { useRefreshResource } from &apos;@/hooks/use-refresh-resource&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { uniqueChannelName } from &apos;@/lib/realtime-channel&apos;;
+⋮----
+interface UnreadCountsValue {
+  readStateError: boolean;
+  retryReadState: () =&gt; void;
+  /** Live status count — the resident&apos;s own open + in_progress incidents. Not an
+   * unread/notification count, so there&apos;s no mark-as-read for it. */
+  activeReportsCount: number;
+  /** The resident&apos;s own resolved incidents they haven&apos;t acknowledged yet. */
+  resolvedUnreadCount: number;
+  /** Announcements for the resident&apos;s barangay they haven&apos;t acknowledged yet. Also
+   * drives the Home screen bell — same number, same source of truth. */
+  announcementsUnreadCount: number;
+  /** Ids of announcements not yet marked read by this resident — lets a single
+   * AnnouncementCard check its own read state without a separate query. */
+  unreadAnnouncementIds: string[];
+  /** Marks every currently-unread resolved incident as read (bulk, per the Resolved
+   * Reports segment&apos;s single &quot;Mark all as read&quot; button). */
+  markResolvedRead: () =&gt; Promise&lt;void&gt;;
+  /** Marks a single resolved incident read — the per-card &quot;mark as read&quot; icon. */
+  markIncidentRead: (incidentId: string) =&gt; Promise&lt;void&gt;;
+  /** Marks a single resolved incident unread again — the per-card &quot;mark as unread&quot; icon. */
+  markIncidentUnread: (incidentId: string) =&gt; Promise&lt;void&gt;;
+  /** Marks every currently-unread announcement as read (bulk — shared by the
+   * Announcements screen&apos;s button and the shared header bell it clears). */
+  markAnnouncementsRead: () =&gt; Promise&lt;void&gt;;
+  /** Marks a single announcement read — the per-card &quot;mark as read&quot; icon. */
+  markAnnouncementRead: (announcementId: string) =&gt; Promise&lt;void&gt;;
+  /** Marks a single announcement unread again — the per-card &quot;mark as unread&quot; icon. */
+  markAnnouncementUnread: (announcementId: string) =&gt; Promise&lt;void&gt;;
+}
+⋮----
+/** Live status count — the resident&apos;s own open + in_progress incidents. Not an
+   * unread/notification count, so there&apos;s no mark-as-read for it. */
+⋮----
+/** The resident&apos;s own resolved incidents they haven&apos;t acknowledged yet. */
+⋮----
+/** Announcements for the resident&apos;s barangay they haven&apos;t acknowledged yet. Also
+   * drives the Home screen bell — same number, same source of truth. */
+⋮----
+/** Ids of announcements not yet marked read by this resident — lets a single
+   * AnnouncementCard check its own read state without a separate query. */
+⋮----
+/** Marks every currently-unread resolved incident as read (bulk, per the Resolved
+   * Reports segment&apos;s single &quot;Mark all as read&quot; button). */
+⋮----
+/** Marks a single resolved incident read — the per-card &quot;mark as read&quot; icon. */
+⋮----
+/** Marks a single resolved incident unread again — the per-card &quot;mark as unread&quot; icon. */
+⋮----
+/** Marks every currently-unread announcement as read (bulk — shared by the
+   * Announcements screen&apos;s button and the shared header bell it clears). */
+⋮----
+/** Marks a single announcement read — the per-card &quot;mark as read&quot; icon. */
+⋮----
+/** Marks a single announcement unread again — the per-card &quot;mark as unread&quot; icon. */
+⋮----
+/**
+ * Single source of truth for the Reports tab&apos;s incident badges and the shared header
+ * bell&apos;s announcement count. Mounted once in (app)/_layout.tsx — alongside AppTabs, not
+ * inside the Reports screen — so the counts (and their Realtime subscriptions) stay live
+ * while the resident is on any tab, not just while Reports is focused.
+ */
+export function UnreadCountsProvider(
+⋮----
+// Announcement ids not yet marked read by this resident — kept around so
+// markAnnouncementsRead() knows exactly which ids to upsert without a second round-trip.
+⋮----
+// Single-item counterparts of markResolvedRead — the per-card &quot;mark as read&quot; / &quot;mark
+// as unread&quot; icons on a resolved IncidentCard. `resolved_read_at` lives on the
+// incident row itself (not a join table, since only the reporter ever sees their own
+// report — see 0080&apos;s comment), so these are plain single-row updates; RLS scopes them
+// to the caller&apos;s own resolved incidents (0085_resident_mark_resolved_incident_read.sql).
+⋮----
+// Single-item counterparts of the bulk actions above — the &quot;mark as read&quot; / &quot;mark as
+// unread&quot; icons on each AnnouncementCard. Both just upsert/delete the one
+// announcement_reads row for this resident + announcement; RLS already scopes writes
+// to the caller&apos;s own resident_id (0080_reports_unread_counts.sql).
+⋮----
+retryReadState: () =&gt;</file><file path="apps/resident-android-mobile/src/lib/push-notifications.ts">import Constants, { ExecutionEnvironment } from &apos;expo-constants&apos;;
+⋮----
+import { Platform } from &apos;react-native&apos;;
+⋮----
+import { supabase } from &apos;@/lib/supabase&apos;;
+⋮----
+// Remote push notifications were removed from Expo Go on Android in SDK 53 — merely
+// *importing* expo-notifications there throws (its module-level auto-registration code
+// runs on import, before any of our own guards get a chance to run). So the module must
+// never be statically imported; it&apos;s lazy-required, and only outside Expo Go.
+⋮----
+function getNotifications(): typeof NotificationsType | null
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+⋮----
+// Foreground presentation — realtime events arrive instantly via Supabase channels, so
+// we always want the banner/sound to show immediately rather than being queued/suppressed.
+⋮----
+/**
+ * Requests OS permission (if not already granted) and returns the Expo push token for this
+ * device. Returns null on simulators/emulators (no push capability), in Expo Go (remote
+ * push unsupported there since SDK 53 — needs a development build), or if permission is
+ * denied — callers should treat null as &quot;can&apos;t register a token right now&quot;, not throw.
+ */
+export async function getExpoPushToken(): Promise&lt;string | null&gt;
+⋮----
+/**
+ * Registers (or refreshes) this device&apos;s push token with the backend via the
+ * upsert_push_token RPC — idempotent, safe to call on every app foreground.
+ */
+export async function registerPushToken(): Promise&lt;void&gt;
+⋮----
+/**
+ * Removes this device&apos;s token from the backend (e.g. when the user toggles push off or
+ * logs out) so it stops receiving deliveries.
+ */
+export async function unregisterPushToken(): Promise&lt;void&gt;
+⋮----
+/**
+ * Immediately presents a local notification — used for realtime-triggered alerts. Local
+ * (non-remote) scheduling still works in Expo Go, but we no-op there for consistency since
+ * getNotifications() is the single gate for the whole module.
+ */
+export async function presentNotification(title: string, body: string): Promise&lt;void&gt;</file><file path="apps/resident-android-mobile/package.json">{
+  &quot;name&quot;: &quot;@barangayan/mobile&quot;,
+  &quot;main&quot;: &quot;expo-router/entry&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;@barangayan/shared&quot;: &quot;*&quot;,
+    &quot;@expo/ui&quot;: &quot;~57.0.8&quot;,
+    &quot;@expo/vector-icons&quot;: &quot;^15.0.2&quot;,
+    &quot;@react-native-async-storage/async-storage&quot;: &quot;2.2.0&quot;,
+    &quot;@react-native-community/netinfo&quot;: &quot;^12.0.1&quot;,
+    &quot;@supabase/supabase-js&quot;: &quot;^2.112.1&quot;,
+    &quot;expo&quot;: &quot;^57.0.10&quot;,
+    &quot;expo-camera&quot;: &quot;~57.0.3&quot;,
+    &quot;expo-constants&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-crypto&quot;: &quot;57.0.3&quot;,
+    &quot;expo-dev-client&quot;: &quot;57.0.19&quot;,
+    &quot;expo-device&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-document-picker&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-file-system&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-font&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-glass-effect&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-image&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-linking&quot;: &quot;~57.0.4&quot;,
+    &quot;expo-location&quot;: &quot;~57.0.8&quot;,
+    &quot;expo-media-library&quot;: &quot;^57.0.3&quot;,
+    &quot;expo-notifications&quot;: &quot;~57.0.11&quot;,
+    &quot;expo-print&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-router&quot;: &quot;~57.0.9&quot;,
+    &quot;expo-sharing&quot;: &quot;~57.0.13&quot;,
+    &quot;expo-splash-screen&quot;: &quot;^57.0.5&quot;,
+    &quot;expo-status-bar&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-symbols&quot;: &quot;~57.0.1&quot;,
+    &quot;expo-system-ui&quot;: &quot;~57.0.2&quot;,
+    &quot;expo-task-manager&quot;: &quot;~57.0.10&quot;,
+    &quot;expo-web-browser&quot;: &quot;~57.0.2&quot;,
+    &quot;qrcode.react&quot;: &quot;^4.2.0&quot;,
+    &quot;react&quot;: &quot;19.2.3&quot;,
+    &quot;react-dom&quot;: &quot;19.2.3&quot;,
+    &quot;react-native&quot;: &quot;0.86.2&quot;,
+    &quot;react-native-gesture-handler&quot;: &quot;~2.32.0&quot;,
+    &quot;react-native-markdown-display&quot;: &quot;^7.0.2&quot;,
+    &quot;react-native-qrcode-svg&quot;: &quot;^6.3.21&quot;,
+    &quot;react-native-reanimated&quot;: &quot;4.5.1&quot;,
+    &quot;react-native-safe-area-context&quot;: &quot;~5.7.0&quot;,
+    &quot;react-native-screens&quot;: &quot;~4.26.0&quot;,
+    &quot;react-native-view-shot&quot;: &quot;5.1.0&quot;,
+    &quot;react-native-web&quot;: &quot;~0.21.0&quot;,
+    &quot;react-native-webview&quot;: &quot;13.16.1&quot;,
+    &quot;react-native-worklets&quot;: &quot;0.10.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/react&quot;: &quot;~19.2.2&quot;,
+    &quot;eslint-config-expo&quot;: &quot;~57.0.1&quot;,
+    &quot;leaflet&quot;: &quot;1.9.4&quot;,
+    &quot;typescript&quot;: &quot;~6.0.3&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;expo start&quot;,
+    &quot;reset-project&quot;: &quot;node ./scripts/reset-project.js&quot;,
+    &quot;android&quot;: &quot;expo start --android&quot;,
+    &quot;ios&quot;: &quot;expo start --ios&quot;,
+    &quot;web&quot;: &quot;expo start --web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;,
+    &quot;test:navigation&quot;: &quot;node tests/navigation-regressions.mjs&quot;
+  },
+  &quot;private&quot;: true
+}</file><file path="apps/resident-android-mobile/vitest.config.ts">import { defineConfig } from &apos;vitest/config&apos;;</file><file path="apps/resident-ios-mobile/src/features/notifications/model.ts">import type { IconName } from &apos;@expo/ui&apos;;
+import type { Href } from &apos;expo-router&apos;;
+import { z } from &apos;zod&apos;;
+import type { InboxItem } from &apos;../../data/resident-api&apos;;
+⋮----
+/**
+ * The notification kinds the server creates (migration 0135) with the resident-facing wording of their phone-alert switch.
+ * A kind this version does not know still shows in the inbox, as a plain entry.
+ */
+⋮----
+export type NotificationKind = (typeof NOTIFICATION_KINDS)[number][&apos;kind&apos;];
+⋮----
+export function kindPresentation(kind: string):
+⋮----
+/** A switch is on unless the resident turned it off. */
+export function kindEnabled(kinds: Readonly&lt;Record&lt;string, boolean&gt;&gt;, kind: NotificationKind): boolean
+⋮----
+/** A versioned reference to a record. It never holds a URL, a path or a snapshot of the record. */
+export type Destination = z.infer&lt;typeof destinationSchema&gt;;
+⋮----
+/** Null for anything that is not exactly `{ v: 1, kind, id }` with an allowlisted kind and a UUID. */
+export function parseDestination(input: unknown): Destination | null
+⋮----
+/** The screen a destination opens. The screen itself re-reads the record, so authorization is never decided here. */
+export function destinationHref(destination: Destination): Href
+⋮----
+export const openLabel = (destination: Destination): string
+⋮----
+/** What an inbox row needs to render; `destination` is null when this version cannot open it. */
+export type InboxEntry = { id: string; kind: string; title: string; body: string; destination: Destination | null; createdAt: string; read: boolean };
+export function inboxEntry(item: InboxItem): InboxEntry
+⋮----
+/** The payload the sender attaches to a push: the destination reference and the inbox row it belongs to. Nothing else is trusted. */
+export function parsePushData(input: unknown):
+⋮----
+/** The detail line of an inbox entry point: its own unread count, never mixed with the Reports signals. */
+export function inboxDetail(count: number | null): string</file><file path="supabase/functions/send-notifications/worker.ts">// The notification sender&apos;s logic (Resident iOS Phase 17, P17-T02), kept free of Deno and
+// network globals so the same code runs in the Edge Function and in the repository&apos;s tests.
+//
+// One run: claim due outbox rows (the database applies each resident&apos;s preferences at that
+// moment), send them to Expo Push in batches, record the tickets, check the receipts that
+// are due, purge expired rows and report operational counts. Nothing here logs or returns a
+// push token, a ticket id or message text.
+⋮----
+/** Expo accepts at most 100 messages per send request and 1000 ids per receipts request. */
+⋮----
+/** A message not delivered within a day is no longer news (the database also skips such rows). */
+⋮----
+export type RpcResult = { data: unknown; error: { message: string } | null };
+export type Rpc = (name: string, args?: Record&lt;string, unknown&gt;) =&gt; Promise&lt;RpcResult&gt;;
+export type Fetcher = (url: string, init: { method: &apos;POST&apos;; headers: Record&lt;string, string&gt;; body: string; signal: AbortSignal }) =&gt; Promise&lt;{ status: number; json(): Promise&lt;unknown&gt; }&gt;;
+⋮----
+export type WorkerDeps = {
+  rpc: Rpc;
+  fetch: Fetcher;
+  /** Optional Expo access token (enhanced push security). */
+  accessToken?: string;
+  sleep?: (ms: number) =&gt; Promise&lt;void&gt;;
+};
+⋮----
+/** Optional Expo access token (enhanced push security). */
+⋮----
+export type Claimed = { outbox_id: string; inbox_id: string; kind: string; title: string; body: string; destination: { v: number; kind: string; id: string }; tokens: string[]; attempt: number };
+type Ticket = { token: string; status: &apos;ok&apos; | &apos;error&apos;; id?: string; error?: string };
+⋮----
+export type RunSummary = {
+  claimed: number;
+  sent: number;
+  retried: number;
+  dead: number;
+  skipped: number;
+  receiptsChecked: number;
+  receiptsRecorded: number;
+  purged: { inbox: number; outbox: number; events: number } | null;
+  health: Record&lt;string, number&gt; | null;
+  errors: string[];
+};
+⋮----
+const isRecord = (value: unknown): value is Record&lt;string, unknown&gt;
+⋮----
+export function parseClaimed(data: unknown): Claimed[]
+⋮----
+/** The push payload: generic text and a versioned reference. `data` carries no record content. */
+export function buildMessage(row: Claimed, token: string)
+⋮----
+async function postJson(deps: WorkerDeps, url: string, payload: unknown): Promise&lt;
+⋮----
+// Only rate limiting and server errors are worth repeating; a 4xx means the request itself is wrong.
+⋮----
+type ProviderTicket = { status: &apos;ok&apos;; id: string } | { status: &apos;error&apos;; error: string };
+⋮----
+function parseTickets(body: unknown, expected: number): ProviderTicket[] | null
+⋮----
+async function call(deps: WorkerDeps, name: string, args: Record&lt;string, unknown&gt; =
+⋮----
+export async function runWorker(deps: WorkerDeps): Promise&lt;RunSummary&gt;
+⋮----
+const note = (error: unknown) =&gt;
+const tally = (state: unknown) =&gt;</file><file path="package.json">{
+  &quot;name&quot;: &quot;barangayan&quot;,
+  &quot;private&quot;: true,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.13.0&quot;
+  },
+  &quot;allowScripts&quot;: {
+    &quot;esbuild@0.28.1&quot;: true,
+    &quot;unrs-resolver@1.12.2&quot;: true
+  },
+  &quot;workspaces&quot;: [
+    &quot;apps/*&quot;,
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;mobile&quot;: &quot;npm run start --workspace=@barangayan/mobile&quot;,
+    &quot;web&quot;: &quot;npm run dev --workspace=@barangayan/web&quot;,
+    &quot;lint&quot;: &quot;expo lint&quot;
+  }
+}</file></files></repomix>

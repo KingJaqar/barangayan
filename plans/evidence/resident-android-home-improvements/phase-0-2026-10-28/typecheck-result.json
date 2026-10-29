@@ -1,0 +1,16 @@
+{
+  "id": "typecheck",
+  "start": "2026-10-28T04:21:49.558Z",
+  "end": "2026-10-28T04:22:34.166Z",
+  "code": 0,
+  "signal": null,
+  "deadlineMs": 300000,
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "log": "typecheck.log",
+  "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\typecheck"
+}

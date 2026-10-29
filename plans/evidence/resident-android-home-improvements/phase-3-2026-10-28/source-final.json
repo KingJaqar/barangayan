@@ -1,0 +1,155 @@
+{
+  "time": "2026-10-28T12:53:52.763Z",
+  "head": "9fe8add15b0a5b75f6c232e30679da869731a4ea",
+  "ownership": "Only listed eight source/test files and selected Phase3 plan/index/evidence deltas are owned. Existing working bytes preserved in before/.",
+  "owned": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "cb8ab230a8943e174169e1aa511ac8a831737d01cfddffde4c49959ebe51905d",
+      "bytes": 22939,
+      "beforeSha256": "7b0b99fc93f4c6f1a5f79fcc95df72d85c44279141576c439c7436c7f124570c",
+      "mtime": "2026-10-28T10:19:47.721Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "sha256": "aae30028ea21faba2e1c122a2aef959a5d8927d49b7b16a297c1d2ada963b4ef",
+      "bytes": 9368,
+      "beforeSha256": "c84876c0d7252322894060101390084e831ca9c7036174cdab3fc5986f279a34",
+      "mtime": "2026-10-28T12:38:47.253Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "sha256": "dd8634d3f9023fbef9349dba1e3409caed939c523e8f36f30b7128234c9aae88",
+      "bytes": 11566,
+      "beforeSha256": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43",
+      "mtime": "2026-10-28T12:21:13.228Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "sha256": "229458071b5d93347dbbe35c0e10ec442cf150e89c7137681aa642c7ba8bcd38",
+      "bytes": 4165,
+      "beforeSha256": "9a8b2e66a1f32b833776f28983d6bb4426366778a5c9bc53cb6eb579a6328bb8",
+      "mtime": "2026-10-28T10:17:03.393Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "sha256": "ecdaf99581cfce237727cba880653190c58c191f88c2ad35ecebee62964859e4",
+      "bytes": 6653,
+      "beforeSha256": "12a74c504a6471ea04befad97aacebbc9f8b3f528f69e48162c44c26d289a47e",
+      "mtime": "2026-10-28T10:17:03.396Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "sha256": "09dc2ec001ea74e10fcbd7108b48c1d0e943879557700092d0ba85918f781cb1",
+      "bytes": 3469,
+      "beforeSha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391",
+      "mtime": "2026-10-28T09:51:23.979Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+      "sha256": "f5503bcfad64c1583baa039c96adc4ecdf81a4c75727a17835d21350390f408d",
+      "bytes": 7176,
+      "beforeSha256": "91549507f06dc0df82c2f33165e23f11f7bf2952354685bf1b7560d873e14313",
+      "mtime": "2026-10-28T09:56:21.887Z",
+      "predatesFinalChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "sha256": "75416d7261574ab3ce0aa1be9cf546e7fb31ceb07d0719d7c526e02f9f56c177",
+      "bytes": 31264,
+      "beforeSha256": "efeceec3a7e5d011d430e976ea527b9d40940aecd4f66011fbdeab77e8214c25",
+      "mtime": "2026-10-28T12:35:36.313Z",
+      "predatesFinalChecks": true
+    }
+  ],
+  "unchangedInputs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+      "sha256": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.ts",
+      "sha256": "3d7ee3da8487d600006c2f86919fea57b3f144121121809184a676f670f61944",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+      "sha256": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+      "unchanged": true
+    }
+  ],
+  "versions": {
+    "expo": "57.0.10",
+    "expo-router": "57.0.10",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-web": "0.21.2",
+    "@supabase/supabase-js": "2.112.1",
+    "@supabase/postgrest-js": "2.112.1",
+    "typescript": "6.0.3",
+    "vitest": "3.2.7"
+  },
+  "checks": {
+    "baseline": "baseline-checks.json",
+    "reviewed": "reviewed-checks.json",
+    "final": "focus-final-checks.json",
+    "unit": "final-resource-tests.log",
+    "finalUI": "focus-reviewed-ui.log",
+    "uiScenarios": 14,
+    "consoleErrors": []
+  },
+  "docs": {
+    "expo": "https://docs.expo.dev/versions/v57.0.0/sdk/router/",
+    "native": [
+      "https://reactnative.dev/docs/0.86/scrollview",
+      "https://reactnative.dev/docs/0.86/pressable",
+      "https://reactnative.dev/docs/0.86/accessibility",
+      "https://reactnative.dev/docs/0.86/modal",
+      "https://reactnative.dev/docs/0.86/timers"
+    ],
+    "react": [
+      "https://react.dev/reference/react/useEffect",
+      "https://react.dev/learn/preserving-and-resetting-state",
+      "https://react.dev/reference/react/cloneElement"
+    ],
+    "supabase": [
+      "https://supabase.com/docs/reference/javascript/rpc",
+      "https://supabase.com/changelog"
+    ],
+    "installedBodies": [
+      "node_modules/@supabase/postgrest-js/src/PostgrestBuilder.ts:retry",
+      "node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts:abortSignal",
+      "node_modules/react-native-web/dist/exports/Modal/ModalAnimation.js",
+      "node_modules/react-native-web/dist/exports/Modal/ModalFocusTrap.js"
+    ]
+  },
+  "reader": "packet-manifest.json + resource-packet-manifest.json; all required entries completely analyzed; own final delta reviewed against original sources",
+  "dependenciesAdded": []
+}

@@ -2,21 +2,16 @@ import type { Tables } from '@barangayan/shared';
 import { useEffect } from 'react';
 
 import { presentNotification } from '@/lib/push-notifications';
-import {
-  announcementTemplate,
-  driveRegistrationTemplate,
-  incidentTemplate,
-  medicalDriveTemplate,
-  serviceRequestTemplate,
-} from '@/lib/notification-templates';
+import { driveRegistrationTemplate, medicalDriveTemplate } from '@/lib/notification-templates';
 import { supabase } from '@/lib/supabase';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
 /**
- * The delivery engine — opens one Supabase realtime channel per source table and presents
- * a local notification when a relevant row event fires. Mirrors the channel/subscribe/
- * cleanup pattern used by use-announcements.ts etc. All channels tear down whenever
- * `enabled` flips false, `userId`/`barangayId` change, or the component unmounts.
+ * Local alerts for the Health events (medical drives and drive registrations), kept as they
+ * are by the notifications plan (D13). Announcements, document requests and incident reports
+ * are presented from the server's event/outbox push, so they have no branch here. All
+ * channels tear down whenever `enabled` flips false, `userId`/`barangayId` change, or the
+ * component unmounts.
  */
 export function useNotificationRealtime(
   enabled: boolean,
@@ -27,18 +22,6 @@ export function useNotificationRealtime(
     if (!enabled || !userId || !barangayId) return;
 
     const channels = [
-      supabase
-        .channel(uniqueChannelName(`push:announcements:${barangayId}`))
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'announcements', filter: `barangay_id=eq.${barangayId}` },
-          (payload) => {
-            const { title, body } = announcementTemplate(payload.new as Tables<'announcements'>);
-            presentNotification(title, body);
-          },
-        )
-        .subscribe(),
-
       supabase
         .channel(uniqueChannelName(`push:drive_registrations:${userId}`))
         .on(
@@ -66,32 +49,6 @@ export function useNotificationRealtime(
             const row = payload.new as Tables<'medical_drives'>;
             if (!row.is_active) return;
             const { title, body } = medicalDriveTemplate(row);
-            presentNotification(title, body);
-          },
-        )
-        .subscribe(),
-
-      supabase
-        .channel(uniqueChannelName(`push:incidents:${userId}`))
-        .on(
-          'postgres_changes',
-          { event: 'UPDATE', schema: 'public', table: 'incidents', filter: `reporter_id=eq.${userId}` },
-          (payload) => {
-            const { title, body } = incidentTemplate(payload.new as Tables<'incidents'>);
-            presentNotification(title, body);
-          },
-        )
-        .subscribe(),
-
-      supabase
-        .channel(uniqueChannelName(`push:service_requests:${userId}`))
-        .on(
-          'postgres_changes',
-          { event: 'UPDATE', schema: 'public', table: 'service_requests', filter: `resident_id=eq.${userId}` },
-          (payload) => {
-            const row = payload.new as Tables<'service_requests'>;
-            const previous = payload.old as Tables<'service_requests'> | null;
-            const { title, body } = serviceRequestTemplate(row, previous);
             presentNotification(title, body);
           },
         )

@@ -1,0 +1,285 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/lib/refresh-resource.ts, apps/resident-android-mobile/src/lib/refresh-resource.test.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      lib/
+        refresh-resource.test.ts
+        refresh-resource.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="apps/resident-android-mobile/src/lib/refresh-resource.test.ts">
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { RefreshResource } from './refresh-resource';
+
+function deferred<T>() {
+  let resolve: (value: T) => void = () => { throw new Error('Deferred not initialized'); };
+  let reject: (error: Error) => void = () => { throw new Error('Deferred not initialized'); };
+  const promise = new Promise<T>((yes, no) => { resolve = yes; reject = no; });
+  return { promise, resolve, reject };
+}
+afterEach(() => { vi.useRealTimers(); });
+describe('account/filter refresh ownership', () => {
+  it('joins same-key reads and retains loaded and empty content during refresh', async () => {
+    const first = deferred<string[]>();
+    const load = vi.fn(() => first.promise);
+    const resource = new RefreshResource('A/date/all', load, 'Retry');
+    const one = resource.refresh();
+    expect(resource.refresh()).toBe(one);
+    await Promise.resolve();
+    expect(load).toHaveBeenCalledTimes(1);
+    first.resolve([]);
+    await one;
+    const next = deferred<string[]>();
+    load.mockReturnValue(next.promise);
+    const two = resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: [], fetching: true, error: null });
+    next.resolve(['new']);
+    await two;
+    expect(resource.getSnapshot().data).toEqual(['new']);
+  });
+  it('coalesces mutation/event invalidations and never publishes the pre-write reply', async () => {
+    const before = deferred<string>();
+    const after = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(before.promise).mockReturnValueOnce(after.promise);
+    const resource = new RefreshResource<string>('A', load, 'Retry');
+    const published: (string | undefined)[] = [];
+    resource.subscribe(() => published.push(resource.getSnapshot().data));
+    const read = resource.refresh();
+    await Promise.resolve();
+    expect(resource.invalidate()).toBe(read);
+    expect(resource.invalidate()).toBe(read);
+    before.resolve('obsolete');
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(published).not.toContain('obsolete');
+    expect(resource.getSnapshot().fetching).toBe(true);
+    after.resolve('current');
+    await read;
+    expect(resource.getSnapshot().data).toBe('current');
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+  it('ignores old filter/account success and error returned after B, and cancels transport', async () => {
+    const old = deferred<string>();
+    let signal: AbortSignal | undefined;
+    const a = new RefreshResource('A/filter1', async abort => { signal = abort; return old.promise; }, 'Old failure');
+    const b = new RefreshResource('B/filter2', async () => 'B', 'B failure');
+    const pending = a.refresh();
+    await Promise.resolve();
+    a.cancel();
+    await b.refresh();
+    expect(signal?.aborted).toBe(true);
+    old.reject(new Error('late A failure'));
+    await pending;
+    expect(a.getSnapshot()).toEqual({ data: undefined, fetching: false, error: null });
+    expect(b.getSnapshot()).toEqual({ data: 'B', fetching: false, error: null });
+  });
+  it('a stale failure cannot clear a newer read’s loading/error state', async () => {
+    const old = deferred<string>();
+    const latest = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(old.promise).mockReturnValueOnce(latest.promise);
+    const resource = new RefreshResource('A', load, 'Retry');
+    const pending = resource.refresh();
+    await Promise.resolve();
+    void resource.invalidate();
+    old.reject(new Error('Old failure'));
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+    expect(resource.getSnapshot()).toEqual({ data: undefined, fetching: true, error: null });
+    latest.resolve('latest');
+    await pending;
+    expect(resource.getSnapshot().error).toBeNull();
+  });
+  it('shows recoverable errors without losing warm data, and explicit retry works', async () => {
+    const load = vi.fn().mockResolvedValueOnce(['warm']).mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(['fresh']);
+    const resource = new RefreshResource('A', load, 'Reconnect and retry');
+    await resource.refresh();
+    await resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: ['warm'], fetching: false, error: 'Reconnect and retry' });
+    await resource.refresh();
+    expect(resource.getSnapshot()).toEqual({ data: ['fresh'], fetching: false, error: null });
+  });
+  it('bounds hung reads and clears deadlines/listeners on unmount, including ignored aborts', async () => {
+    vi.useFakeTimers();
+    const load = vi.fn(() => new Promise<string>(() => {}));
+    const resource = new RefreshResource('A', load, 'Retry');
+    const pending = resource.refresh();
+    await Promise.resolve();
+    await vi.advanceTimersByTimeAsync(30_000);
+    await pending;
+    expect(resource.getSnapshot()).toEqual({ data: undefined, fetching: false, error: 'Retry' });
+    const again = resource.refresh();
+    await Promise.resolve();
+    resource.cancel();
+    await again;
+    expect(vi.getTimerCount()).toBe(0);
+    await resource.invalidate();
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+  it('supports effect cleanup/re-setup without an old request ending the new request', async () => {
+    const old = deferred<string>();
+    const fresh = deferred<string>();
+    const load = vi.fn().mockReturnValueOnce(old.promise).mockReturnValueOnce(fresh.promise);
+    const resource = new RefreshResource('A', load, 'Retry');
+    const one = resource.refresh();
+    await Promise.resolve();
+    resource.cancel();
+    resource.activate();
+    const two = resource.refresh();
+    old.resolve('old');
+    await one;
+    expect(resource.getSnapshot().fetching).toBe(true);
+    fresh.resolve('fresh');
+    await two;
+    expect(resource.getSnapshot().data).toBe('fresh');
+  });
+  it('retains equal data identity through reconciliation and releases subscriptions', async () => {
+    const resource = new RefreshResource('A', async () => ({ name: 'same' }), 'Retry', (prior, next) => prior?.name === next.name ? prior : next);
+    const listener = vi.fn();
+    const unsubscribe = resource.subscribe(listener);
+    await resource.refresh();
+    const first = resource.getSnapshot().data;
+    await resource.refresh();
+    expect(resource.getSnapshot().data).toBe(first);
+    unsubscribe();
+    const calls = listener.mock.calls.length;
+    await resource.refresh();
+    expect(listener).toHaveBeenCalledTimes(calls);
+  });
+});
+</file>
+
+<file path="apps/resident-android-mobile/src/lib/refresh-resource.ts">
+interface RefreshSnapshot<T> {
+  data: T | undefined;
+  fetching: boolean;
+  error: string | null;
+}
+
+/** One read owner per account/filter. Ordinary reads join; invalidations queue
+ * one follow-up and prevent a pre-invalidation reply from being published. */
+export class RefreshResource<T> {
+  private snapshot: RefreshSnapshot<T> = { data: undefined, fetching: false, error: null };
+  private listeners = new Set<() => void>();
+  private pending: Promise<void> | null = null;
+  private controller: AbortController | null = null;
+  private revision = 0;
+  private active = true;
+
+  constructor(
+    readonly key: string,
+    private load: (signal: AbortSignal) => Promise<T>,
+    private message: string,
+    private reconcile: (previous: T | undefined, next: T) => T = (_, next) => next,
+  ) {}
+
+  getSnapshot = () => this.snapshot;
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener);
+    return () => { this.listeners.delete(listener); };
+  };
+  private publish(snapshot: RefreshSnapshot<T>) {
+    this.snapshot = snapshot;
+    this.listeners.forEach(listener => listener());
+  }
+  activate = () => { this.active = true; };
+  cancel = () => {
+    this.active = false;
+    this.revision++;
+    this.controller?.abort();
+    this.controller = null;
+    this.pending = null;
+    this.snapshot = { ...this.snapshot, fetching: false };
+  };
+  refresh = (): Promise<void> => {
+    if (!this.active) return Promise.resolve();
+    if (this.pending) return this.pending;
+    this.publish({ ...this.snapshot, fetching: true, error: null });
+    // Install ownership before invoking transport, including synchronous callers.
+    const work = Promise.resolve().then(async () => {
+      while (this.active && this.pending === work) {
+        const revision = this.revision;
+        const controller = new AbortController();
+        this.controller = controller;
+        let timeout: ReturnType<typeof setTimeout> | undefined;
+        let removeAbortListener: (() => void) | undefined;
+        try {
+          const data = await Promise.race([this.load(controller.signal), new Promise<never>((_, reject) => {
+            const abort = () => reject(new Error(this.message));
+            controller.signal.addEventListener('abort', abort, { once: true });
+            removeAbortListener = () => controller.signal.removeEventListener('abort', abort);
+            timeout = setTimeout(() => controller.abort(), 30_000);
+          })]);
+          if (!this.active || this.pending !== work) return;
+          if (revision === this.revision) {
+            if (controller.signal.aborted) throw new Error(this.message);
+            this.publish({ data: this.reconcile(this.snapshot.data, data), fetching: false, error: null });
+            return;
+          }
+        } catch {
+          if (!this.active || this.pending !== work) return;
+          if (revision === this.revision) {
+            this.publish({ ...this.snapshot, fetching: false, error: this.message });
+            return;
+          }
+        } finally {
+          clearTimeout(timeout);
+          removeAbortListener?.();
+          if (this.controller === controller) this.controller = null;
+        }
+      }
+    }).finally(() => { if (this.pending === work) this.pending = null; });
+    this.pending = work;
+    return work;
+  };
+  invalidate = (): Promise<void> => {
+    this.revision++;
+    this.controller?.abort();
+    return this.refresh();
+  };
+}
+</file>
+
+</files>

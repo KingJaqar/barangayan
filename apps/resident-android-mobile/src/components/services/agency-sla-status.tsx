@@ -15,7 +15,7 @@ import { useAppForeground } from '@/hooks/use-app-foreground';
 import { useVisibleClock } from '@/hooks/use-visible-clock';
 import { readAgencySlaSnapshot, type AgencySlaSnapshot } from '@/lib/agency-sla-snapshot';
 
-interface Props { requestId: string; compact?: boolean }
+interface Props { requestId: string; compact?: boolean; active?: boolean }
 
 export function AgencySlaStatus(props: Props) {
   const { session } = useAuth();
@@ -23,12 +23,12 @@ export function AgencySlaStatus(props: Props) {
   return <OwnedAgencySlaStatus key={`${userId}:${props.requestId}`} {...props} signedIn={userId !== null} />;
 }
 
-function OwnedAgencySlaStatus({ requestId, compact = false, signedIn }: Props & { signedIn: boolean }) {
+function OwnedAgencySlaStatus({ requestId, compact = false, active = true, signedIn }: Props & { signedIn: boolean }) {
   const { resident } = useTheme();
   const reducedMotion = useResidentReducedMotion(true);
   const focused = useIsFocused();
   const foreground = useAppForeground();
-  const visible = focused && foreground && signedIn;
+  const visible = active && focused && foreground && signedIn;
   const [snapshot, setSnapshot] = useState<(AgencySlaSnapshot & { receivedAt: number }) | null>(null);
   const [error, setError] = useState('');
   const tick = useVisibleClock(visible && snapshot !== null && !error && snapshot.request.timing_model === 'agency_minutes_v1' && !snapshot.request.released_at && !snapshot.request.cancelled_at);

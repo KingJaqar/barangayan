@@ -1,0 +1,87 @@
+{
+  "repomix_version": "1.18.1",
+  "xml_sha256": "50271b451897e6d3cc45208d112aac836eeaf7559deb52e56b3a512da64d4ccf",
+  "security": "No suspicious files detected",
+  "tool_token_estimate": 8084,
+  "included": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/announcements.tsx",
+      "decoded_chars": 1544,
+      "entry_sha256": "df6ddfb5a36767d0d3e5cb3e13f60991b09499b88bec0d3d79dc1253d0e74f39"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "decoded_chars": 5330,
+      "entry_sha256": "3c4f91f35498e4efd958e35858b745dafc90f395f16ffb1a4785e101f1e81fde"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "decoded_chars": 1877,
+      "entry_sha256": "504d8502969d269b59f96017f42fbb1ff7cc8841e21c026bb39420fcd9c8b4aa"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-realtime.ts",
+      "decoded_chars": 906,
+      "entry_sha256": "66d2522e6a34870b672da210fcb85b2804a720fe75eb9a2857875c70cab802d6"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "decoded_chars": 4648,
+      "entry_sha256": "0d42c062ce3981437a3f824509a6e7300b0ea8acb264a83f478deea33204580b"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "decoded_chars": 2048,
+      "entry_sha256": "826fff0f51999bb4763a970b00ab5dff0caff9a5b2475d2ccc47bdec1a54069f"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "decoded_chars": 2121,
+      "entry_sha256": "1704353432fc15f2d2e12920671707fad81b051324053dce8db08a9a2e38d7a9"
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "decoded_chars": 45,
+      "entry_sha256": "85734f4752244f71454215d0cfbe952f4ff6d79da03016ebd55e0dd9a1e7d328"
+    },
+    {
+      "path": "apps/resident-ios-mobile/src/features/notifications/model.ts",
+      "decoded_chars": 1955,
+      "entry_sha256": "1b1bfa0ca64c5f910ea07ff39363d6c48882ae84b0000543c609be92c4788963"
+    },
+    {
+      "path": "supabase/functions/send-notifications/worker.ts",
+      "decoded_chars": 2841,
+      "entry_sha256": "8aac0e02c3aa19d43f7e40a8b6e639ce61fb5218e17aa73f16da09d16f03e41b"
+    },
+    {
+      "path": "package.json",
+      "decoded_chars": 389,
+      "entry_sha256": "6ca7b795fc6f8656b27a175c0a9afaa487045d9d937cc7a705a386f191de8cf0"
+    }
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "file": "packet-read-1.txt",
+      "start": 0,
+      "end": 9828,
+      "chars": 9828,
+      "lines": 200
+    },
+    {
+      "file": "packet-read-2.txt",
+      "start": 9828,
+      "end": 18854,
+      "chars": 9026,
+      "lines": 200
+    },
+    {
+      "file": "packet-read-3.txt",
+      "start": 18854,
+      "end": 24364,
+      "chars": 5510,
+      "lines": 129
+    }
+  ]
+}

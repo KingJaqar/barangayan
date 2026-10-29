@@ -1,0 +1,370 @@
+diff --git a/tmp/resident-home-phase4-20261028/before/home.tsx b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+index d2aca522..3a7220f0 100644
+--- a/tmp/resident-home-phase4-20261028/before/home.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+@@ -1,5 +1,5 @@
+ import { Ionicons } from '@expo/vector-icons';
+-import type { Tables } from '@barangayan/shared';
++import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
+ import { Image } from 'expo-image';
+ import { useFocusEffect, useRouter } from 'expo-router';
+ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+@@ -27,9 +27,11 @@ import { useProfile } from '@/hooks/use-profile';
+ import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ import { useTheme } from '@/hooks/use-theme';
+ import { homeRequestSummary, homeRequestTitle, homeTimestamp, type HomeRequest } from '@/lib/home-request';
++import { useHomeAnnouncements } from '@/hooks/use-home-announcements';
++import { advisoryExpiry, announcementPreview } from '@/lib/home-announcement';
+ import { supabase } from '@/lib/supabase';
+ 
+-type Announcement = Tables<'announcements'>;
++
+ const QUICK_ACTIONS = [
+   { label: 'Services', description: 'Browse documents and services', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+   { label: 'Reports', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+@@ -58,12 +60,12 @@ export default function HomeScreen() {
+   const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
+   const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+   const requestWidth = Math.max(1, Math.min(width, MaxContentWidth) - 40);
+-  const [announcementRetry, setAnnouncementRetry] = useState(0);
+   const [failedImage, setFailedImage] = useState<string | null>(null);
+   const requestKey = JSON.stringify([userId, profile?.id === userId ? profile?.barangay_id : null]);
+   const requestResource = useMemo(() => new RefreshResource(requestKey, loadHomeRequests, 'Your requests could not be loaded. Please try again.', undefined, 12_000), [requestKey]);
+   const requestState = useSyncExternalStore(requestResource.subscribe, requestResource.getSnapshot, requestResource.getSnapshot);
+-  const [newsResult, setNewsResult] = useState<{ retry: number; item: Announcement | null; error: string | null } | null>(null);
++  const announcements = useHomeAnnouncements(requestKey);
++  const { news, alerts, offline } = announcements;
+   const [selectedRequest, setSelectedRequest] = useState<{ key: string; request: HomeRequest } | null>(null);
+   const [sheetOpen, setSheetOpen] = useState(false);
+   const pendingTracking = useRef<string | null>(null);
+@@ -71,26 +73,7 @@ export default function HomeScreen() {
+   const requestTargets = useRef(new Map<string, View>());
+   const requestFallbackTarget = useRef<View>(null);
+   const visibleRequestId = useRef<string | null>(null);
+-  // Pull-to-refresh re-runs each effect's own query under its current key; a failed pull keeps the cards on screen.
+-  const pullNews = useRef<(() => Promise<void>) | null>(null);
+-
+-  const pull = usePullRefresh([() => pullNews.current?.(), () => userId ? requestResource.refresh() : undefined, refetchProfile]);
+-
+-  useEffect(() => {
+-    let active = true;
+-    // Preserve the existing public latest-one query, including guest browsing. No new feed channel.
+-    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
+-    fetchLatest()
+-      .then(({ data, error }) => {
+-        if (active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: error ? 'Announcements could not be loaded. Please try again.' : null });
+-      }).catch(() => {
+-        if (active) setNewsResult({ retry: announcementRetry, item: null, error: 'Announcements could not be loaded. Please try again.' });
+-      });
+-    pullNews.current = () => fetchLatest().then(({ data, error }) => {
+-      if (!error && active) setNewsResult({ retry: announcementRetry, item: data?.[0] ?? null, error: null });
+-    }).catch(() => undefined);
+-    return () => { active = false; pullNews.current = null; };
+-  }, [announcementRetry]);
++  const pull = usePullRefresh([announcements.refresh, () => userId ? requestResource.refresh() : undefined, refetchProfile]);
+ 
+   useEffect(() => {
+     pendingTracking.current = null;
+@@ -111,14 +94,13 @@ export default function HomeScreen() {
+   }, [requestResource, userId]));
+ 
+   const requests = requestState.data;
+-  const news = newsResult?.retry === announcementRetry ? newsResult : null;
+   const currentSelection = selectedRequest?.key === requestKey && userId ? selectedRequest : null;
+   const selectedLive = requests?.items.find(item => item.id === currentSelection?.request.id);
+   const selected = selectedLive ?? currentSelection?.request ?? null;
+   useEffect(() => {
+     if (sheetOpen && !selectedLive) { pendingTracking.current = null; setSheetOpen(false); }
+   }, [sheetOpen, selectedLive]);
+-  const announcement = news?.item;
++  const announcement = news.data?.items[0];
+   const announcementTone = announcement?.category === 'emergency' ? resident.danger
+     : announcement?.category === 'health' ? resident.rose : resident.accentText;
+ 
+@@ -139,6 +121,7 @@ export default function HomeScreen() {
+     <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + 20 }]}
+       refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}>
+       <View style={styles.inset}><ProfileCompletionBanner /></View>
++      {offline ? <HomeListState label="You’re offline. Showing last-known information where available. Pull to refresh when connected." /> : null}
+       <View style={styles.identitySection}>
+         {userId ? <View style={styles.identity}>
+           <Avatar fullName={profile?.full_name ?? 'Resident'} imageUrl={profile?.avatar_url} size={36} foregroundColor={resident.onAccent} />
+@@ -166,6 +149,22 @@ export default function HomeScreen() {
+           <ThemedText style={[styles.quickLabel, { color: resident.text }]}>{action.label}</ThemedText>
+         </HomeAction>)}
+       </View>
++      <View style={styles.section}>
++        {announcements.active.map(item => <View key={item.id} style={[styles.inset, { marginBottom: 12 }]}>
++          <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`View advisory: ${item.title}. ${announcementPreview(item.body)}`}
++            onPress={() => router.push({ pathname: '/announcements', params: { announcementId: item.id } })}
++            style={[styles.card, { backgroundColor: resident.surface, borderColor: resident.danger, gap: 8, minHeight: 48 }]}>
++            <ThemedText style={[styles.status, { color: resident.danger }]}>{alerts.error || alerts.fetching || offline ? 'Last-known emergency advisory' : 'Emergency advisory'}</ThemedText>
++            <ThemedText style={[styles.cardTitle, { color: resident.text }]}>{item.title}</ThemedText>
++            <ThemedText style={[styles.subtitle, { color: resident.text }]}>{announcementPreview(item.body)}</ThemedText>
++            <ThemedText style={[styles.reference, { color: resident.muted }]}>Published {homeTimestamp(item.published_at)} · Expires {homeTimestamp(item.alert_expires_at ?? '')}</ThemedText>
++            <ThemedText style={[styles.seeAllText, { color: resident.accentText }]}>View advisory</ThemedText>
++          </HomeAction>
++        </View>)}
++        {!alerts.data ? <HomeListState loading={!alerts.error} label={alerts.error ?? 'Checking emergency advisories…'} onRetry={alerts.error ? announcements.retryAlerts : undefined} /> : null}
++        {alerts.data ? <View style={styles.inset}><ThemedText style={[styles.reference, { color: resident.muted }]}>Advisories · Last refreshed {homeTimestamp(alerts.data.refreshedAt)}</ThemedText></View> : null}
++        {alerts.data && alerts.error ? <HomeListState label={alerts.error} onRetry={announcements.retryAlerts} /> : null}
++      </View>
+       <View style={styles.section}>
+         <View style={styles.sectionHeader}>
+           <View style={styles.sectionHeading}>
+@@ -229,8 +228,8 @@ export default function HomeScreen() {
+             <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+           </HomeAction>
+         </View>
+-        {!news ? <HomeListState loading label="Loading announcements…" />
+-          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
++        {!news.data ? <HomeListState loading={!news.error} label={news.error ?? "Loading announcements…"} onRetry={news.error ? announcements.retryNews : undefined} />
++
+           : announcement ? <View style={styles.shelf}>
+             <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+               onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+@@ -238,7 +237,7 @@ export default function HomeScreen() {
+               <View style={styles.newsMeta}>
+                 <View style={styles.categoryGroup}>
+                   <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+-                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
++                  <ThemedText style={[styles.category, { color: announcementTone }]}>{ANNOUNCEMENT_CATEGORY_META[announcement.category as AnnouncementCategory]?.label ?? announcement.category}</ThemedText>
+                 </View>
+                 <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+               </View>
+@@ -248,8 +247,13 @@ export default function HomeScreen() {
+                     accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                 : null}
+               <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
++              {advisoryExpiry(announcement) !== null && Date.parse(announcement.alert_expires_at ?? '') <= announcements.clock ? <ThemedText style={[styles.status, { color: resident.muted }]}>Expired</ThemedText> : null}
++              <ThemedText style={[styles.subtitle, { color: resident.text }]}>{announcementPreview(announcement.body ?? '')}</ThemedText>
++              <ThemedText style={[styles.seeAllText, { color: resident.accentText }]}>View details</ThemedText>
+             </HomeAction>
+           </View> : <HomeListState label="No announcements yet." />}
++        {news.data ? <View style={styles.inset}><ThemedText style={[styles.reference, { color: resident.muted }]}>Announcements · Last refreshed {homeTimestamp(news.data.refreshedAt)}</ThemedText></View> : null}
++        {news.data && news.error ? <HomeListState label={news.error} onRetry={announcements.retryNews} /> : null}
+       </View>
+     </ScrollView>
+     {selected ? <RequestSummarySheet request={selected} available={Boolean(selectedLive)} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
+   segments: { flexDirection: 'row', gap: 4 },
+   segment: { flex: 1, height: 4, borderRadius: 2 },
+   status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+-  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
++  announcementCard: { flex: 1, maxWidth: '100%', gap: 6 },
+   announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+   newsTitle: { fontWeight: '600' },
+   newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+diff --git a/tmp/resident-home-phase4-20261028/before/home-presentation-ui.mjs b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+index 8e6e3f60..d58cf2da 100644
+--- a/tmp/resident-home-phase4-20261028/before/home-presentation-ui.mjs
++++ b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+@@ -46,7 +46,8 @@ const mocks = {
+     export const AppState={addEventListener:(event,callback)=>{window.fixture.listeners.add(callback);return {remove:()=>window.fixture.listeners.delete(callback)}}};
+     export const AccessibilityInfo={sendAccessibilityEvent:(target,event)=>window.fixture.focusEvents.push(event)};
+     export const RefreshControl=({children,style,...props})=>{const ref=React.useRef(props);ref.current=props;React.useEffect(()=>{(window.pullControls??=new Set()).add(ref);return()=>{window.pullControls.delete(ref)}},[]);return <View style={style}>{children}</View>};`,
+-  '@barangayan/shared': `export * from '${shared}/lib/request-status.ts';export {homeRequestAttention} from '${shared}/lib/home-request-priority.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
++  '@react-native-community/netinfo': `export const addEventListener=callback=>{(window.fixture.networkListeners??=new Set()).add(callback);callback({isConnected:true,isInternetReachable:true});return ()=>window.fixture.networkListeners.delete(callback)};`,
++  '@barangayan/shared': `export {ANNOUNCEMENT_CATEGORY_META} from '${shared}/constants/announcement-categories.ts';export * from '${shared}/lib/request-status.ts';export {homeRequestAttention} from '${shared}/lib/home-request-priority.ts';export {ACCENT_COLORS} from '${shared}/constants/theme-colors.ts';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts.ts';`,
+   'expo-router': `import React,{useEffect} from 'react';export const useRouter=()=>({push:href=>window.fixture.routes.push(href)});export const useFocusEffect=fn=>useEffect(()=>window.fixture.focused?fn():undefined,[fn,window.fixture.focused]);export const Link=({href,children})=>React.cloneElement(children,{onPress:()=>window.fixture.routes.push(href)});`,
+   '@/hooks/use-auth': `export const useAuth=()=>({session:window.fixture.session,needsCompletion:window.fixture.needsCompletion});`,
+   '@/hooks/use-profile': `export const useProfile=()=>({profile:window.fixture.profile,refetch:()=>{window.fixture.profileRefetches+=1;return Promise.resolve()}});`,
+@@ -55,8 +56,8 @@ const mocks = {
+   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>window.fixture.reducedMotion;`,
+   '@/hooks/use-floating-tab-inset': `export const useFloatingTabInset=()=>82;`,
+   '@/lib/supabase': `import {homeRequestAttention} from '${shared}/lib/home-request-priority.ts';
+-    function response(table,query,data){const f=window.fixture;return {abortSignal(signal){query.signal=signal;return this},retry(enabled){query.retry=enabled;return this},then(done,fail){f.queries.push({...query,signal:undefined});const error=f.fail[table]?{}:null;return new Promise((resolve,reject)=>{const settle=()=>f.reject[table]?reject(Error('Synthetic transport error')):resolve({data:error?null:data,error});if(f.hold)f.waiting.push(settle);else settle();}).then(done,fail)}}}
+-    export const supabase={rpc(name,args){const f=window.fixture;const priority=r=>r.next_action?0:['submitted','in_progress','ready_for_pickup'].includes(r.status)?1:r.status==='completed'?2:r.status==='cancelled'?3:4;const data=structuredClone(f.requests.filter(item=>item.resident_id===f.session?.user.id)).map(item=>({...item,next_action:homeRequestAttention(item,args.p_qrph_settlement_ready)})).sort((a,b)=>priority(a)-priority(b)||(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)||b.id.localeCompare(a.id)).slice(0,3);return response('service_requests',{table:'service_requests',rpc:name,args},data)},from(table){const q={table,select(columns){q.columns=columns;return q},order(column,options){q.order=[column,options];return q},limit(count){q.limit=count;return q},then(done,fail){return response(table,q,structuredClone(window.fixture.announcements.slice(0,q.limit))).then(done,fail)}};return q}};`,
++    function response(table,query,data){const f=window.fixture;return {abortSignal(signal){query.signal=signal;return this},retry(enabled){query.retry=enabled;return this},then(done,fail){f.queries.push({...query,signal:undefined});const error=f.fail[table]?{}:null;return new Promise((resolve,reject)=>{const settle=()=>f.reject[table]?reject(Error('Synthetic transport error')):resolve({data:error?null:data,error,count:query.totalCount??data.length});if(f.hold)f.waiting.push(settle);else settle();}).then(done,fail)}}}
++    export const supabase={rpc(name,args){const f=window.fixture;const priority=r=>r.next_action?0:['submitted','in_progress','ready_for_pickup'].includes(r.status)?1:r.status==='completed'?2:r.status==='cancelled'?3:4;const data=structuredClone(f.requests.filter(item=>item.resident_id===f.session?.user.id)).map(item=>({...item,next_action:homeRequestAttention(item,args.p_qrph_settlement_ready)})).sort((a,b)=>priority(a)-priority(b)||(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)||b.id.localeCompare(a.id)).slice(0,3);return response('service_requests',{table:'service_requests',rpc:name,args},data)},from(table){const filters=[];const q={table,select(columns){q.columns=columns;return q},is(key,value){filters.push([key,'is',value]);return q},lte(key,value){filters.push([key,'lte',value]);return q},gt(key,value){filters.push([key,'gt',value]);return q},eq(key,value){filters.push([key,'eq',value]);q.filter=[key,value];return q},range(from,to){q.rangeBounds=[from,to];return q},abortSignal(signal){q.signal=signal;return q},retry(value){q.retry=value;return q},order(column,options){q.orders=[...(q.orders??[]),[column,options]];return q},limit(count){q.limit=count;return q},then(done,fail){let rows=structuredClone(window.fixture.announcements).filter(item=>filters.every(([key,op,value])=>op==='is'?item[key]==null:op==='eq'?item[key]===value:op==='lte'?Date.parse(item[key])<=Date.parse(value):Date.parse(item[key])>Date.parse(value)));rows.sort((a,b)=>Date.parse(b.published_at)-Date.parse(a.published_at)||b.id.localeCompare(a.id));q.totalCount=rows.length;rows=q.rangeBounds?rows.slice(q.rangeBounds[0],q.rangeBounds[1]+1):rows.slice(0,q.limit);return response(q.filter?'alerts':table,q,rows).then(done,fail)}};return q}};`,
+   'react-native-reanimated': `import React,{useRef} from 'react';import {View} from 'react-native';export default {View,createAnimatedComponent:component=>component};export const useSharedValue=value=>useRef({value}).current;export const useAnimatedStyle=fn=>fn();export const withTiming=value=>value;export const cancelAnimation=()=>{};export const Easing={bezier:()=>undefined};`,
+   '@expo/vector-icons': `import React from 'react';import {View} from 'react-native';export const Ionicons=({size})=><View style={{width:size,height:size,flexShrink:0}}/>;`,
+   'expo-image': `export {Image} from 'react-native';`,
+@@ -101,8 +102,8 @@ try {
+   const close = () => page.getByRole('button', { name: 'Close request summary', exact: true });
+   await cards().first().waitFor();
+   assert.equal(await cards().count(), 3);
+-  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+-    ['announcements',1,undefined,'*'],['service_requests',undefined,undefined,undefined],
++  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,typeof q.limit === 'number' ? q.limit : undefined,q.filter,q.columns])), [
++    ['announcements',1,undefined,'*'],['announcements',undefined,['category','emergency'],'*'],['service_requests',undefined,undefined,undefined],
+   ]);
+   await right().waitFor();
+   assert.equal(await left().isDisabled(), true);
+@@ -158,8 +159,8 @@ try {
+   assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'Home mounts one pull scroller');
+   await page.evaluate(() => { window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+   await pullHome();
+-  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+-    ['announcements',1,undefined,'*'],['service_requests',undefined,undefined,undefined],
++  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,typeof q.limit === 'number' ? q.limit : undefined,q.filter,q.columns])), [
++    ['announcements',1,undefined,'*'],['announcements',undefined,['category','emergency'],'*'],['service_requests',undefined,undefined,undefined],
+   ]);
+   assert.equal(await page.evaluate(() => window.fixture.profileRefetches), 1);
+   assert.equal(await cards().count(), 3);
+@@ -178,9 +179,9 @@ try {
+   assert.equal(await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).count(), 1, 'failed request pull retains cards and exposes retry');
+   await page.evaluate(() => { window.fixture.hold = true; window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+   await page.evaluate(() => { const control = [...window.pullControls][0].current; control.onRefresh(); control.onRefresh(); });
+-  await page.waitForFunction(() => window.fixture.waiting.length === 2);
++  await page.waitForFunction(() => window.fixture.waiting.length === 3);
+   assert.equal(await pulling(), true);
+-  assert.deepEqual(await page.evaluate(() => [window.fixture.queries.length, window.fixture.profileRefetches]), [2, 1], 'a second pull during a flight starts nothing');
++  assert.deepEqual(await page.evaluate(() => [window.fixture.queries.length, window.fixture.profileRefetches]), [3, 1], 'a second pull during a flight starts nothing');
+   await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+   await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+   await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+@@ -233,7 +234,7 @@ try {
+   assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/home/requests/request-2');
+   passed.push(...verifyRequestTrackingNavigation(await page.evaluate(() => window.fixture.routes.at(-1))));
+   assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+-  assert.equal(await page.evaluate(() => window.fixture.listeners.size), 1);
++  assert.equal(await page.evaluate(() => window.fixture.listeners.size), 2);
+   assert.ok(await page.evaluate(() => window.fixture.focusEvents.length > 1), 'Close returns accessibility focus to a request');
+   passed.push('Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries');
+ 
+@@ -343,10 +344,52 @@ try {
+   await page.evaluate(() => {window.fixture.reject={};window.fixture.hold=true;window.fixture.requests=[{id:'stale',resident_id:'synthetic-resident',reference_number:'STALE',status:'submitted',payment_status:'unpaid',created_at:'2026-10-18T00:00:00Z',status_history:null,document_name:'Stale private request',updated_at:'2026-10-18T00:00:00Z',resolved_fee_centavos:null}];window.resetHome();});
+   await page.getByText('Loading your requests…',{exact:true}).waitFor();
+   await page.evaluate(() => {window.fixture.session={user:{id:'different-resident'}};window.renderHome();});
+-  await page.waitForFunction(() => window.fixture.waiting.length===3);
++  await page.waitForFunction(() => window.fixture.waiting.length===6);
+   await page.evaluate(() => {window.fixture.hold=false;window.fixture.waiting.splice(0).forEach(resolve=>resolve());});
+   await page.getByText('No requests yet',{exact:true}).waitFor();
+   assert.equal(await page.getByText('Stale private request',{exact:true}).count(),0);
++
++  await page.evaluate(() => {
++    window.fixture.session={user:{id:'synthetic-resident'}};
++    const now=Date.now();const base={category:'emergency',body:'<p>**Stay safe** &amp; follow [instructions](https://example.com).</p>',deleted_at:null,image_url:null,alert_expires_at:new Date(now+3600000).toISOString()};
++    window.fixture.announcements=[{...base,id:'active-old',title:'Older active warning',published_at:new Date(now-7200000).toISOString()},
++      {...base,id:'active-new',title:'Newer active warning',published_at:new Date(now-3600000).toISOString()},
++      {...base,id:'routine',category:'general',alert_expires_at:null,title:'Newest routine notice',published_at:new Date(now-1000).toISOString()},
++      {...base,id:'future',title:'Scheduled hidden',published_at:new Date(now+60000).toISOString()},
++      {...base,id:'deleted',title:'Deleted hidden',deleted_at:new Date(now).toISOString(),published_at:new Date(now-500).toISOString()},
++      {...base,id:'legacy',title:'Unknown lifetime',alert_expires_at:null,published_at:new Date(now-8000000).toISOString()}];window.resetHome();
++  });
++  await page.getByRole('button',{name:/View advisory: Older active warning/}).waitFor();
++  await page.getByRole('button',{name:/View advisory: Newer active warning/}).waitFor();
++  assert.equal(await page.getByText('Scheduled hidden',{exact:true}).count(),0);
++  assert.equal(await page.getByText('Deleted hidden',{exact:true}).count(),0);
++  await page.getByText('Newest routine notice',{exact:true}).waitFor();
++  await page.getByText('View details',{exact:true}).waitFor();
++  await page.getByRole('button',{name:/View advisory: Older active warning/}).click();
++  assert.deepEqual(await page.evaluate(()=>window.fixture.routes.at(-1)),{pathname:'/announcements',params:{announcementId:'active-old'}});
++  await page.evaluate(()=>{window.fixture.fail={alerts:true};window.fixture.announcements.find(item=>item.id==='routine').title='Successful news during alert failure';});
++  await pullHome();
++  await page.getByText('Successful news during alert failure',{exact:true}).waitFor();
++  await page.getByText('Advisories could not be checked. Please try again.',{exact:true}).waitFor();
++  assert.equal(await page.getByText('Last-known emergency advisory',{exact:true}).count(),2);
++  await page.evaluate(()=>{window.fixture.networkListeners.forEach(callback=>callback({isConnected:false,isInternetReachable:false}));});
++  await page.getByText(/You’re offline/).waitFor();
++  await page.evaluate(()=>{window.fixture.fail={};window.fixture.networkListeners.forEach(callback=>callback({isConnected:true,isInternetReachable:true}));window.fixture.announcements=window.fixture.announcements.filter(item=>item.id==='active-new');window.fixture.announcements[0].alert_expires_at=new Date(Date.now()+1800).toISOString();});
++  await pullHome();
++  await page.getByRole('button',{name:/View advisory: Newer active warning/}).waitFor();
++  await page.waitForFunction(()=>!document.querySelector('[aria-label^="View advisory:"]'));
++  await page.getByText('Expired',{exact:true}).waitFor();
++  await page.evaluate(()=>{window.fixture.announcements[0].alert_expires_at=new Date(Date.now()+800).toISOString();});
++  await pullHome();
++  await page.getByRole('button',{name:/View advisory: Newer active warning/}).waitFor();
++  await page.evaluate(()=>window.fixture.listeners.forEach(callback=>callback('background')));
++  assert.equal(await page.evaluate(()=>window.fixture.networkListeners.size),0,'background releases connectivity listener');
++  await page.evaluate(()=>new Promise(resolve=>setTimeout(resolve,900)));
++  await page.evaluate(()=>window.fixture.listeners.forEach(callback=>callback('active')));
++  await page.waitForFunction(()=>!document.querySelector('[aria-label^="View advisory:"]'));
++  await page.getByText('Expired',{exact:true}).waitFor();
++  await page.screenshot({path:path.join(out,'expired-preview.png'),fullPage:true});
++  passed.push('Independent active advisories despite newer routine post; deleted/future/unknown exclusion; exact detail ID; partial-success retained errors, truthful offline and focused expiry without a fetch');
+   await page.evaluate(() => {window.fixture.focused=false;window.renderHome();});
+   await page.waitForFunction(() => window.fixture.listeners.size===0);
+   await page.evaluate(() => window.unmountHome());
+@@ -357,6 +400,7 @@ try {
+   console.log(JSON.stringify({passed,errors,out},null,2));
+ } catch (error) {
+   fs.writeFileSync(path.join(out,'failure-console.json'),JSON.stringify(errors,null,2));
++  if(page)fs.writeFileSync(path.join(out,'failure-state.json'),JSON.stringify(await page.evaluate(()=>({text:document.body.innerText,active:document.activeElement?.outerHTML,queries:window.fixture.queries})),null,2));
+   if(page)await page.screenshot({path:path.join(out,'failure.png')});
+   throw error;
+ } finally {await browser.close();}
+diff --git a/tmp/resident-home-phase4-20261028/before/announcement-card.tsx b/apps/resident-android-mobile/src/components/reports/announcement-card.tsx
+index 2a04a70b..c8d0f300 100644
+--- a/tmp/resident-home-phase4-20261028/before/announcement-card.tsx
++++ b/apps/resident-android-mobile/src/components/reports/announcement-card.tsx
+@@ -5,15 +5,18 @@ import { useReportTone } from '@/components/reports/report-presentation';
+ import { useAuth } from '@/hooks/use-auth';
+ import { useUnreadCounts } from '@/hooks/use-unread-counts';
+ 
++import { useAdvisoryExpired } from '@/hooks/use-advisory-expired';
++
+ export function AnnouncementCard({ announcement, onPress }: { announcement: Tables<'announcements'>; onPress: () => void }) {
+   const { session } = useAuth();
+   const { unreadAnnouncementIds, markAnnouncementRead, markAnnouncementUnread } = useUnreadCounts();
++  const expired = useAdvisoryExpired(announcement);
+   const unread = unreadAnnouncementIds.includes(announcement.id);
+   const meta = ANNOUNCEMENT_CATEGORY_META[announcement.category as AnnouncementCategory] ?? ANNOUNCEMENT_CATEGORY_META.general;
+   const tone = useReportTone(meta.color);
+-  return <HubRow icon={meta.icon as keyof typeof Ionicons.glyphMap} tone={tone} label={meta.label} stamp={announcement.published_at}
++  return <HubRow icon={meta.icon as keyof typeof Ionicons.glyphMap} tone={tone} label={expired ? `${meta.label} · Expired` : meta.label} stamp={announcement.published_at}
+     title={announcement.title} body={announcement.body} unread={unread} onPress={onPress}
+-    accessibilityLabel={`View announcement: ${announcement.title}${unread ? ', unread' : ''}`}
++    accessibilityLabel={`View announcement: ${announcement.title}${expired ? ', expired' : ''}${unread ? ', unread' : ''}`}
+     read={session ? { label: `Mark ${announcement.title} as ${unread ? 'read' : 'unread'}`,
+       action: () => unread ? markAnnouncementRead(announcement.id) : markAnnouncementUnread(announcement.id) } : null} />;
+ }
+diff --git a/tmp/resident-home-phase4-20261028/before/announcement-modal.tsx b/apps/resident-android-mobile/src/components/reports/announcement-modal.tsx
+index f6d867c2..17ad5043 100644
+--- a/tmp/resident-home-phase4-20261028/before/announcement-modal.tsx
++++ b/apps/resident-android-mobile/src/components/reports/announcement-modal.tsx
+@@ -9,9 +9,12 @@ import { ThemedText } from '@/components/themed-text';
+ import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
+ import { useTheme } from '@/hooks/use-theme';
+ 
++import { useAdvisoryExpired } from '@/hooks/use-advisory-expired';
++
+ export function AnnouncementModal({ visible, announcement, onClose, readError = false }: {
+   visible: boolean; announcement: Tables<'announcements'> | null; onClose: () => void; readError?: boolean;
+ }) {
++  const expired = useAdvisoryExpired(announcement, visible);
+   const { resident } = useTheme();
+   const insets = useSafeAreaInsets();
+   const { mounted, panel, scrim, reduced } = useReportModalMotion(visible);
+@@ -31,7 +34,7 @@ export function AnnouncementModal({ visible, announcement, onClose, readError =
+           <View style={styles.header}>
+             <View style={[styles.category, { backgroundColor: tone.soft }]}>
+               <Ionicons name={meta.icon as keyof typeof Ionicons.glyphMap} size={14} color={tone.ink} accessible={false} />
+-              <ThemedText style={{ color: tone.ink, fontSize: 13, lineHeight: 18, fontWeight: '700' }}>{meta.label}</ThemedText>
++              <ThemedText style={{ color: tone.ink, fontSize: 13, lineHeight: 18, fontWeight: '700' }}>{expired ? `${meta.label} · Expired` : meta.label}</ThemedText>
+             </View>
+             <Pressable accessibilityRole="button" accessibilityLabel="Close" onPress={onClose} style={[styles.close, { backgroundColor: resident.surface }]}>
+               <Ionicons name="close" size={18} color={resident.text} />
+diff --git a/tmp/resident-home-phase4-20261028/before/request-summary-sheet.tsx b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+index ae8095a9..0928e5c4 100644
+--- a/tmp/resident-home-phase4-20261028/before/request-summary-sheet.tsx
++++ b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+@@ -1,6 +1,6 @@
+ import { Ionicons } from '@expo/vector-icons';
+ import { useEffect, useRef, useState } from 'react';
+-import { AccessibilityInfo, Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
++import { AccessibilityInfo, Animated, Easing, Modal, Platform, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ 
+ import { PrimaryButton } from '@/components/primary-button';
+@@ -64,6 +64,9 @@ export function RequestSummarySheet({ request, visible, available, reducedMotion
+   }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
+ 
+   useEffect(() => {
++    // RN Web owns an additional render/cleanup cycle for its focus trap.
++    // Its actual dismissal event is the reliable point to restore focus.
++    if (Platform.OS === 'web') return;
+     if (!mounted && !visible && dismissPending.current) {
+       // Let the modal release its focus trap/native window before restoring focus or routing.
+       const frame = requestAnimationFrame(() => {
+@@ -75,6 +78,9 @@ export function RequestSummarySheet({ request, visible, available, reducedMotion
+   }, [mounted, visible]);
+ 
+   return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent
++    onDismiss={Platform.OS === 'web' ? () => {
++      if (dismissPending.current) { dismissPending.current = false; dismiss.current(); }
++    } : undefined}
+     onRequestClose={onClose}>
+     <View style={styles.root}>
+       <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}>

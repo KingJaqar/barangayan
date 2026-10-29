@@ -1,0 +1,18 @@
+{
+  "reversals": [
+    "host-12 tcp:8106 tcp:8106",
+    "host-12 tcp:58420 tcp:58420",
+    ""
+  ],
+  "originalServers": [
+    48448,
+    43644
+  ],
+  "font": "null",
+  "animator": "null",
+  "window": "0.5",
+  "transition": "0.5",
+  "at": "2026-10-28T17:28:10.6109974+08:00",
+  "density": "Physical density: 480",
+  "appPid": "6533"
+}

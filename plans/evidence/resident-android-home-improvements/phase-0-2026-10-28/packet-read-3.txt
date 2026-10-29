@@ -1,0 +1,200 @@
+  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
+  const initialSegment: ServicesSegment =
+    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+      ? (segmentParam as ServicesSegment)
+      : 'documents';
+
+  const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+  const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+  const verificationButton = useRef<View>(null);
+  const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+  const verifiedIcon = verified ? (
+    <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
+      accessibilityState={{ expanded: verificationAnchor !== null }} hitSlop={10} style={styles.verificationButton}
+      onPress={event => {
+        event.stopPropagation();
+        verificationButton.current?.measureInWindow((x, y, _width, height) => setVerificationAnchor({ x, y: y + height + 6 }));
+      }}>
+      <Image source={require('../../../../assets/images/valid-id-verified.png')} style={styles.verifiedIcon} resizeMode="contain" accessible={false} />
+    </Pressable>
+  ) : undefined;
+  const tabs = (session ? TABS : TABS.slice(0, 1)).map(tab => tab.key === 'documents'
+    ? { ...tab, accessory: verifiedIcon, weight: verified ? 1.4 : undefined } : tab);
+
+  const statusBlock = (
+    <>
+      <ProfileCompletionBanner />
+      {session && (error || idVerificationState(profile) !== 'verified') ? (
+        <View
+          style={[
+            styles.verifyCard,
+            { backgroundColor: theme.resident.card, borderColor: theme.resident.border },
+          ]}>
+          <View style={styles.verifyHeader}>
+            <View style={[styles.verifyIcon, { backgroundColor: theme.resident.accentSoft }]}>
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
+            </View>
+            <ThemedText accessibilityRole="alert" style={styles.verifyText}>
+              {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
+            </ThemedText>
+          </View>
+          <PrimaryButton label="Verify Now" presentation="resident" onPress={() => router.push('/settings/valid-id')} />
+          {error ? <PrimaryButton label="Retry verification check" presentation="resident" variant="secondary" onPress={refetch} /> : null}
+        </View>
+      ) : null}
+    </>
+  );
+
+  return (
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.resident.card }]}>
+        <View style={styles.controls}>
+          <SegmentedControl segments={tabs} activeKey={segment} onChange={next => { setVerificationAnchor(null); setSegment(next); }}
+            variant="underline" presentation="resident" sizing={session ? 'equal' : 'content'} />
+        </View>
+
+        {session && segment === 'requests' ? (
+          // RequestsList owns its scroller so its filter chips can stay pinned while the
+          // list scrolls; the banner/verification block scrolls away above them.
+          <RequestsList header={statusBlock} contentContainerStyle={{ paddingBottom: bottomTabInset + 100 }} />
+        ) : (
+          <PullRefreshScope register={pull.register}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              refreshControl={<PullRefreshControl refreshing={pull.refreshing} onRefresh={pull.onRefresh} />}
+              contentContainerStyle={[styles.scrollContent, (!session || segment === 'documents') && styles.documentsScrollContent, { paddingBottom: bottomTabInset + 20 }]}>
+              {statusBlock}
+              {!session || segment === 'documents' ? <DocumentsList /> : null}
+              {session && segment === 'logs' && <LogsList />}
+            </ScrollView>
+          </PullRefreshScope>
+        )}
+
+      <ServicesNewRequestButton visible={Boolean(session && segment === 'requests')} bottom={bottomTabInset + 12} onPress={() => setSegment('documents')} />
+      </View>
+      <Modal transparent visible={verified && verificationAnchor !== null} animationType="none" statusBarTranslucent
+        onRequestClose={() => setVerificationAnchor(null)}>
+        <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+          <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Dismiss ID verification status"
+            onPress={() => setVerificationAnchor(null)} />
+          {verificationAnchor ? <View style={[styles.verificationPopover, {
+            top: verificationAnchor.y,
+            left: Math.max(16, Math.min(verificationAnchor.x - 80, width - 216)),
+            maxWidth: width - 32,
+            backgroundColor: theme.resident.card,
+            borderColor: theme.resident.border,
+          }]}>
+            <Ionicons name="shield-checkmark" size={20} color={theme.resident.accentText} accessible={false} />
+            <ThemedText type="smallBold" style={{ color: theme.resident.accentText, flexShrink: 1 }}>Valid ID verified</ThemedText>
+          </View> : null}
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+
+  contentWrapper: {
+    flex: 1,
+  },
+  controls: {
+    paddingHorizontal: 20,
+  },
+  scrollContent: {
+    paddingTop: 20,
+  },
+  documentsScrollContent: {
+    paddingTop: 6,
+  },
+  verifiedIcon: { width: 22, height: 22 },
+  verificationButton: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+  verificationPopover: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12,
+    borderRadius: 12, borderWidth: 1, elevation: 6, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  verifyCard: {
+    marginHorizontal: 20,
+    marginBottom: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  verifyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  verifyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifyText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+  },
+});
+END FILE: apps/resident-android-mobile/src/app/(app)/services/index.tsx
+FILE: apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
+import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+
+/** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
+export function RequestSummarySheet({ request, visible, reducedMotion, onClose, onDismiss, onViewFull }: {
+  request: HomeRequest;
+  visible: boolean;
+  reducedMotion: boolean;
+  onClose: () => void;
+  onDismiss: () => void;
+  onViewFull: () => void;
+}) {
+  const { resident } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const [mounted, setMounted] = useState(visible);
+  const [sheetHeight, setSheetHeight] = useState(0);
+  const progress = useRef(new Animated.Value(0)).current;
+  const scrim = useRef(new Animated.Value(0)).current;
+  const shown = useRef(visible);
+  const dismissPending = useRef(false);
+  const entryFocused = useRef(false);
+  const closeTarget = useRef<View>(null);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  const summary = homeRequestSummary(request);
+
+  useEffect(() => {
+    if (visible && !mounted) { setMounted(true); return; }
+    if (!visible && !shown.current) return;
+    if (!sheetHeight) {
+      if (!visible) { shown.current = false; dismissPending.current = true; setMounted(false); }
+      return;
+    }
+    if (visible) { shown.current = true; dismissPending.current = false; }
+    let active = true;
+    const animation = Animated.parallel([
+      Animated.timing(progress, { toValue: Number(visible), duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+      Animated.timing(scrim, { toValue: Number(visible), duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+    ]);
+    animation.start(({ finished }) => {
+      if (!active || !finished) return;
+      if (visible && !entryFocused.current && closeTarget.current) {
+        entryFocused.current = true;
+        AccessibilityInfo.sendAccessibilityEvent(closeTarget.current, 'focus');
+      }
+      if (finished && !visible) {
+        shown.current = false;
+        dismissPending.current = true;

@@ -1,0 +1,15 @@
+{
+  "id": "reports-announcements-ui",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/reports-announcements-ui.mjs"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-29T08:18:20.170Z",
+  "end": "2026-10-29T08:18:38.066Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\repaired-reports-announcements-ui.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\repaired-reports-announcements-ui"
+}

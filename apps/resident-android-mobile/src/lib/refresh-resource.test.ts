@@ -120,6 +120,22 @@ describe('account/filter refresh ownership', () => {
     await two;
     expect(resource.getSnapshot().data).toBe('fresh');
   });
+  it('allows Home to use a twelve-second deadline without retries or retained timers', async () => {
+    vi.useFakeTimers();
+    const load = vi.fn(() => new Promise<string>(() => {}));
+    const resource = new RefreshResource('Home/A/barangay', load, 'Retry requests', undefined, 12_000);
+    const read = resource.refresh();
+    expect(resource.refresh()).toBe(read);
+    await vi.advanceTimersByTimeAsync(11_999);
+    expect(resource.getSnapshot().error).toBeNull();
+    await vi.advanceTimersByTimeAsync(1);
+    await read;
+    expect(resource.getSnapshot().error).toBe('Retry requests');
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+    resource.cancel();
+  });
   it('retains equal data identity through reconciliation and releases subscriptions', async () => {
     const resource = new RefreshResource('A', async () => ({ name: 'same' }), 'Retry', (prior, next) => prior?.name === next.name ? prior : next);
     const listener = vi.fn();

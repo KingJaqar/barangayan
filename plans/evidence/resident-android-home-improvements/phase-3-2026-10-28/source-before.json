@@ -1,0 +1,77 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "CLAUDE.md",
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "bytes": 11
+  },
+  {
+    "path": "apps/resident-android-mobile/package.json",
+    "sha256": "7c713d1c916c3183bc0303f9033d12de5a27b1df69d01ace6f4c6198ed3e8a8c",
+    "bytes": 2122
+  },
+  {
+    "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "sha256": "7b0b99fc93f4c6f1a5f79fcc95df72d85c44279141576c439c7436c7f124570c",
+    "bytes": 20854
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+    "sha256": "b65df45a7da7f6a490042c27db91b9c9222bc21907f9a99b66c09fa165e82b99",
+    "bytes": 1523
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "sha256": "c84876c0d7252322894060101390084e831ca9c7036174cdab3fc5986f279a34",
+    "bytes": 8422
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+    "sha256": "949b5d6ef8836a3135f28a1581c7571e04774a46d9bfbc69b83519b394bd7f43",
+    "bytes": 9402
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+    "sha256": "9a8b2e66a1f32b833776f28983d6bb4426366778a5c9bc53cb6eb579a6328bb8",
+    "bytes": 2166
+  },
+  {
+    "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "sha256": "12a74c504a6471ea04befad97aacebbc9f8b3f528f69e48162c44c26d289a47e",
+    "bytes": 2423
+  },
+  {
+    "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "sha256": "efeceec3a7e5d011d430e976ea527b9d40940aecd4f66011fbdeab77e8214c25",
+    "bytes": 26672
+  },
+  {
+    "path": "packages/shared/src/lib/home-request-priority.ts",
+    "sha256": "3d7ee3da8487d600006c2f86919fea57b3f144121121809184a676f670f61944",
+    "bytes": 1800
+  },
+  {
+    "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+    "sha256": "2f44fce11113f2fbb16f5bb8c0fafc8a35b23a103d71e4ad2aeca6731186823a",
+    "bytes": 3590
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8",
+    "bytes": 667658
+  },
+  {
+    "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "sha256": "2f1028b893116f505d3d7093a0a5881ebe97f981884743323cfc3ea4bff12eac",
+    "bytes": 58970
+  },
+  {
+    "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "sha256": "f85fc605648ce85aa32a9b012f83f3ce427dac66d1010c3d9d7d73d5bb41cf11",
+    "bytes": 31335
+  }
+]

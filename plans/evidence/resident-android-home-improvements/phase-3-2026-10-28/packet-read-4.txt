@@ -1,0 +1,166 @@
+ Set(),motions:[],focusEvents:[],queries:[],routes:[],profileRefetches:0,fail:{},reject:{},hold:false,waiting:[]};
+    const root=createRoot(document.getElementById('root'));let generation=0;window.renderHome=()=>root.render(<Home key={generation}/>);window.resetHome=()=>{generation++;window.renderHome();};window.unmountHome=()=>root.render(null);window.renderHome();`, resolveDir: app, loader: 'tsx' },
+  outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.css': 'empty', '.png': 'dataurl' },
+  define: { __DEV__: 'false', global: 'globalThis', 'process.env.NODE_ENV': '"production"' },
+  ...(workspaceOnly ? { tsconfigRaw: { compilerOptions: { jsx: 'react-jsx' } } } : {}),
+  plugins: [{ name: 'fixtures', setup(b) {
+    b.onResolve({ filter: /.*/ }, args => args.path in mocks ? { path: args.path, namespace: 'fixture' } : workspaceOnly ? resolveFixtureSource(args) : undefined);
+    b.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: mocks[args.path], loader: 'jsx', resolveDir: app }));
+    if (workspaceOnly) b.onLoad({ filter: /.*/, namespace: 'workspace-source' }, args => {
+      const extension = path.extname(args.path);
+      const loader = extension === '.tsx' ? 'tsx' : extension === '.ts' ? 'ts' : extension === '.json' ? 'json' : extension === '.css' ? 'empty' : /\.(png|jpe?g|webp)$/.test(extension) ? 'dataurl' : 'jsx';
+      return { contents: loader === 'empty' ? '' : fs.readFileSync(args.path), loader, resolveDir: path.dirname(args.path) };
+    });
+  } }],
+});
+
+const options = { headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE };
+if (!options.executablePath && !fs.existsSync(chromium.executablePath())) options.channel = 'chrome';
+const browser = await chromium.launch(options);
+const passed = [];
+const errors = [];
+let page;
+try {
+  page = await browser.newPage({ viewport: { width: 360, height: 640 } });
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
+  await page.setContent('<html><head><style>html,body,#root{margin:0;height:100%;display:flex;flex-direction:column}</style></head><body><div id="root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+  const cards = () => page.getByRole('button', { name: /reference SYNTHETIC-/ });
+  const right = () => page.getByRole('button', { name: 'Scroll requests right', exact: true });
+  const left = () => page.getByRole('button', { name: 'Scroll requests left', exact: true });
+  const close = () => page.getByRole('button', { name: 'Close request summary', exact: true });
+  await cards().first().waitFor();
+  assert.equal(await cards().count(), 3);
+  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
+  ]);
+  await right().waitFor();
+  assert.equal(await left().count(), 0);
+  await right().click();
+  await left().waitFor();
+  await right().click();
+  await right().waitFor({ state: 'detached' });
+  await left().click();
+  await right().waitFor();
+  assert.equal(await page.getByRole('button', { name: /Scroll announcements/ }).count(), 0);
+  passed.push('Actual latest-three/latest-one query shapes and measured chevrons at both boundaries');
+
+  const pulling = () => page.evaluate(() => [...window.pullControls][0].current.refreshing);
+  const pullHome = async () => { await page.evaluate(() => [...window.pullControls][0].current.onRefresh()); await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing); };
+  assert.equal(await page.evaluate(() => window.pullControls.size), 1, 'Home mounts one pull scroller');
+  await page.evaluate(() => { window.fixture.queries = []; });
+  await pullHome();
+  assert.deepEqual(await page.evaluate(() => window.fixture.queries.map(q => [q.table,q.limit,q.filter,q.columns])), [
+    ['announcements',1,undefined,'*'],['service_requests',3,['resident_id','synthetic-resident'],'*, document_types(name)'],
+  ]);
+  assert.equal(await page.evaluate(() => window.fixture.profileRefetches), 1);
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.requests[0].document_types.name = 'Pulled service'; window.fixture.announcements[0].title = 'Pulled advisory'; });
+  await pullHome();
+  await page.getByText('Pulled service', { exact: true }).waitFor();
+  await page.getByText('Pulled advisory', { exact: true }).waitFor();
+  assert.equal(await cards().count(), 3);
+  await page.evaluate(() => { window.fixture.fail = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.fail = {}; window.fixture.reject = { service_requests: true, announcements: true }; });
+  await pullHome();
+  await page.evaluate(() => { window.fixture.reject = {}; });
+  assert.equal(await cards().count(), 3);
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 1);
+  assert.equal(await page.getByText(/could not be loaded/).count(), 0, 'a failed pull keeps the cards and adds no error state');
+  await page.evaluate(() => { window.fixture.hold = true; window.fixture.queries = []; window.fixture.profileRefetches = 0; });
+  await page.evaluate(() => { const control = [...window.pullControls][0].current; control.onRefresh(); control.onRefresh(); });
+  await page.waitForFunction(() => window.fixture.waiting.length === 2);
+  assert.equal(await pulling(), true);
+  assert.deepEqual(await page.evaluate(() => [window.fixture.queries.length, window.fixture.profileRefetches]), [2, 1], 'a second pull during a flight starts nothing');
+  await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+  await page.getByText('No requests yet').waitFor();
+  assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 0, 'a pull started for the previous account never writes after a switch');
+  await page.evaluate(() => { window.fixture.hold = true; });
+  await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+  await page.waitForFunction(() => window.fixture.waiting.length >= 1);
+  await page.evaluate(() => window.unmountHome());
+  await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+  await page.evaluate(() => {
+    window.fixture.session = { user: { id: 'synthetic-resident' } }; window.fixture.requests[0].document_types.name = 'Service 0';
+    window.fixture.announcements[0].title = 'Synthetic community advisory with a long title for full text coverage';
+    window.fixture.queries = []; window.fixture.waiting = []; window.resetHome();
+  });
+  await cards().first().waitFor();
+  await page.evaluate(() => { window.fixture.queries = []; });
+  passed.push('Pulling Home reloads announcements, requests and profile together, shows new data, keeps cards through failed pulls, runs one flight, ignores a previous account and unmounted pull');
+
+  await cards().nth(1).click();
+  await close().waitFor();
+  await page.getByRole('dialog').getByLabel('Processing, current stage', { exact: true }).waitFor();
+  assert.equal(await page.getByText('Pending', { exact: true }).count(), 2);
+  await page.screenshot({ path: path.join(out, 'summary-light.png') });
+  await close().click();
+  await close().waitFor({ state: 'detached' });
+  const queries = await page.evaluate(() => window.fixture.queries.length);
+  for (let cycle = 0; cycle < 5; cycle++) {
+    await cards().first().click();
+    await close().waitFor();
+    await page.getByRole('button', { name: 'Dismiss request summary', exact: true }).click({ position: { x: 5, y: 5 } });
+    await close().waitFor({ state: 'detached' });
+  }
+  await cards().first().click();
+  await close().waitFor();
+  await page.keyboard.press('Escape');
+  await close().waitFor({ state: 'detached' });
+  await cards().first().click();
+  await page.getByRole('button', { name: 'View full request', exact: true }).click();
+  await close().waitFor({ state: 'detached' });
+  assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), '/home/requests/request-0');
+  passed.push(...verifyRequestTrackingNavigation(await page.evaluate(() => window.fixture.routes.at(-1))));
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+  assert.equal(await page.evaluate(() => window.fixture.listeners.size), 1);
+  assert.ok(await page.evaluate(() => window.fixture.focusEvents.length > 1), 'Close returns accessibility focus to a request');
+  passed.push('Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries');
+
+  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0,'Home has no greeting');
+  for (const [name,route] of [['Services',{pathname:'/services',params:{segment:'documents'}}],['Reports','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests',{pathname:'/services',params:{segment:'requests'}}],['View all announcements','/announcements']]) {
+    await page.getByRole('button', { name, exact: true }).click();
+    assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), route);
+  }
+  await page.getByRole('button', { name: /^Read announcement:/ }).click();
+  assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), {pathname:'/announcements',params:{announcementId:'news'}});
+  for (const [width,mode,accent,fontId] of [[320,'dark','#ffffff','georgia'],[400,'light','#2563eb','system'],[360,'dark','#c2410c','tahoma'],[412,'light','#000000','times-new-roman']]) {
+    await page.setViewportSize({width,height:640});
+    await page.evaluate(values => {Object.assign(window.fixture,values);window.renderHome();}, {mode,accent,fontId});
+    assert.equal(await cards().count(), 3);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({path:path.join(out,`home-${width}-${mode}.png`)});
+  }
+  assert.equal(await page.evaluate(() => window.fixture.queries.length), queries);
+  passed.push('Five quick actions, See all/news destinations and 320/360/400/412 theme/font/extreme-accent layouts without reloads');
+
+  await page.evaluate(() => {
+    window.fixture.requests=window.fixture.requests.slice(0,1);
+    window.fixture.requests[0].status='cancelled';
+    window.resetHome();
+  });
+  await cards().first().waitFor();
+  assert.equal(await cards().count(),1);
+  await right().waitFor({state:'detached'});
+  assert.equal(await left().count(),0);
+  await cards().first().click();
+  await close().waitFor();
+  await page.getByRole('dialog').getByText('Cancelled',{exact:true}).waitFor();
+  assert.equal(await page.getByText('Not recorded',{exact:true}).count(),3);
+  await close().click();
+  await close().waitFor({state:'detached'});
+  // Use real web Animated at normal durations to exercise cancellation and reopen ownership.
+  await page.evaluate(() => {window.fixture.reducedMotion=false;window.renderHome();});
+  await cards().first().click();
+  await close().waitFor();
+  await page.evaluate(() => {for(const listener of window.fixture.listeners)listener('background');});
+  await close().waitFor({state:'detached'});
+  const focusEventsAfterBackground=await page.evaluate(() => window.fixture.focusEvents.length);
+  await page.evaluate(() => {for(const listener of window.fixture.listeners)listener('active');});
+  await cards().first().click();
+  await close().waitFor();
+  await page.evaluate(() => {window.fixture.

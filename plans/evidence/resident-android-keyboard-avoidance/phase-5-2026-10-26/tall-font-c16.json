@@ -232,8 +232,11 @@
     "three dismiss/reopen cycles with WebView bounds restored"
   ],
   "remaining": [
-    "touch paste/selection",
     "selected incident marker",
     "actual map camera identity"
-  ]
+  ],
+  "nativePasteEvidence": [
+    "tall-font-c16-native-paste"
+  ],
+  "metadataCorrection": "Removed stale static pending-paste label because these recorded native observations verify exact paste."
 }

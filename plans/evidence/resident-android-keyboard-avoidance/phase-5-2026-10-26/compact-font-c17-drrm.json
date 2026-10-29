@@ -227,9 +227,12 @@
   "listEditorAbsent": true,
   "oneEditor": true,
   "remaining": [
-    "touch paste/selection",
     "selected center/route overlay",
     "idle-collapse timing",
     "actual map camera identity"
-  ]
+  ],
+  "nativePasteEvidence": [
+    "compact-font-c17-drrm-native-paste"
+  ],
+  "metadataCorrection": "Removed stale static pending-paste label because these recorded native observations verify exact paste."
 }

@@ -1,0 +1,67 @@
+[
+  {
+    "path": "AGENTS.md",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "CLAUDE.md",
+    "bytes": 11,
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+  },
+  {
+    "path": "packages/shared/src/index.ts",
+    "bytes": 2300,
+    "sha256": "1f4a259f4ad809897a8b8ecd14d224df7d7719c418ae75fbd84db0b07eadcd42"
+  },
+  {
+    "path": "packages/shared/src/lib/service-catalog.ts",
+    "bytes": 6899,
+    "sha256": "df3fb2cbd3c5788a6bbbce7cf2c8e8b0d0bbdd7f5d8cf8d410bb8b7947706152"
+  },
+  {
+    "path": "packages/shared/package.json",
+    "bytes": 491,
+    "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee"
+  },
+  {
+    "path": "supabase/migrations/0143_residents_read_requested_document_types.sql",
+    "bytes": 720,
+    "sha256": "3c2c10cfdc3ba66c43009c6a374ec5398e21a026b79c138a131c3f633a3f264a"
+  },
+  {
+    "path": "packages/shared/src/types/database.ts",
+    "bytes": 60065,
+    "sha256": "dc5820b0d290d3754c8596bcf3e422178a4deb0bd4b9e0cfd386763ccb9976bb"
+  },
+  {
+    "path": "packages/shared/src/types/service-foundations.ts",
+    "bytes": 9331,
+    "sha256": "3651927e8344b2a18d32a79150835ce4bd846acc87ec2c0ab4f1518b9ec08e95"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+    "bytes": 33875,
+    "sha256": "e641e41db9fe62c1a729aa8b0b4ae15cdaceb1122a9ba20330ccffde313dce9f"
+  },
+  {
+    "path": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+    "bytes": 12681,
+    "sha256": "90920ec8b76825908925ab0bc3a9e71423a2d92b4431f1cd10b33df960a7f04a"
+  },
+  {
+    "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "bytes": 50084,
+    "sha256": "96022285dfff385d82244d7ff340cb511aab081f7ee3341b59666c03c684ffdc"
+  },
+  {
+    "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "bytes": 19653,
+    "sha256": "31c61d8693b386a394309004c6edf244e1141764843d79a771c10f0b3fb1682a"
+  },
+  {
+    "path": "package-lock.json",
+    "bytes": 667658,
+    "sha256": "7f459a2312248988e9ebbd9615f0d69b9766f74fcead887191a27d03b320c4e8"
+  }
+]

@@ -1,0 +1,348 @@
+{
+  "layouts": [
+    {
+      "name": "native-final-home-320-default",
+      "dpi": 540,
+      "font": 1,
+      "widthDp": 320,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Reports",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 98.37037037037037,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Maps",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "Health",
+          "widthDp": 98.66666666666667,
+          "heightDp": 90.07407407407408
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 48,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 280,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 48.2962962962963,
+      "pngSha256": "091f2e7360f5bfc9967873a5d4c6f3548087a0f430717d5d23dd235ff4555731"
+    },
+    {
+      "name": "native-final-home-320-large-valid",
+      "dpi": 540,
+      "font": 1.3,
+      "widthDp": 320,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Reports",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 98.37037037037037,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Maps",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "Health",
+          "widthDp": 98.66666666666667,
+          "heightDp": 95.4074074074074
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 55.111111111111114,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 280,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 48.2962962962963,
+      "pngSha256": "4779289c65f28a64a79e575884516616b5af58a5f5cb2fa954f0c1f6b3da625b"
+    },
+    {
+      "name": "native-final-home-360-default",
+      "dpi": 480,
+      "font": 1,
+      "widthDp": 360,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        },
+        {
+          "label": "Reports",
+          "widthDp": 67,
+          "heightDp": 90
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        },
+        {
+          "label": "Maps",
+          "widthDp": 67,
+          "heightDp": 90
+        },
+        {
+          "label": "Health",
+          "widthDp": 67.33333333333333,
+          "heightDp": 90
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 48,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 320,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 53.666666666666664,
+      "pngSha256": "a9fe52e60e093c3a25963e77e31a278e612cda28fd9e1ed97307b009f06331e5"
+    },
+    {
+      "name": "native-final-home-360-large",
+      "dpi": 480,
+      "font": 1.3,
+      "widthDp": 360,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Reports",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Maps",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "Health",
+          "widthDp": 112,
+          "heightDp": 95.66666666666667
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 55,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 320,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 53.666666666666664,
+      "pngSha256": "00853de4d694e3938f613efbf30d37f5a427aedf5f80ad43d743b6421b93a5c3"
+    },
+    {
+      "name": "native-final-home-412-default",
+      "dpi": 420,
+      "font": 1,
+      "widthDp": 411.42857142857144,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Reports",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 77.71428571428571,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Maps",
+          "widthDp": 77.33333333333333,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "Health",
+          "widthDp": 77.71428571428571,
+          "heightDp": 90.28571428571429
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 48,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 371.42857142857144,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 62.095238095238095,
+      "pngSha256": "5c31fcec3af912252cba8179923a5dc35c266fb40dad57da5788688691fe9077"
+    },
+    {
+      "name": "native-final-home-412-large",
+      "dpi": 420,
+      "font": 1.3,
+      "widthDp": 411.42857142857144,
+      "controls": [
+        {
+          "label": "Services",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Reports",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Emergency",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Maps",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "Health",
+          "widthDp": 129.14285714285714,
+          "heightDp": 95.61904761904762
+        },
+        {
+          "label": "View all requests",
+          "widthDp": 54.857142857142854,
+          "heightDp": 48
+        },
+        {
+          "label": "Log in",
+          "widthDp": 371.42857142857144,
+          "heightDp": 48
+        }
+      ],
+      "minTabWidthDp": 62.095238095238095,
+      "pngSha256": "810569fafa891c207d0c872abbce57eb72969f282feb37222d8105ee039ece18"
+    }
+  ],
+  "bottomClearance": true,
+  "guestLoginBack": true,
+  "shortcuts": [
+    {
+      "label": "Reports",
+      "title": "Reports",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Emergency",
+      "title": "Emergency & DRRM Info",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Maps",
+      "title": "Maps",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Health",
+      "title": "Health",
+      "reached": true,
+      "backToHome": true
+    }
+  ],
+  "diagnostic": {
+    "fatalExceptions": 0,
+    "fabricLeakMessages": [
+      "10-28 15:31:39.269 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 1 has leaked 243 components out of 261",
+      "10-28 15:31:39.535 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 11 has leaked 255 components out of 258",
+      "10-28 15:43:48.499 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 21 has leaked 5 components out of 5",
+      "10-28 15:44:19.651 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 31 has leaked 268 components out of 271",
+      "10-28 15:44:19.836 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 41 has leaked 255 components out of 258",
+      "10-28 15:44:45.869 19547 19662 E ReactNativeJNI: [LeakChecker] Surface with id: 51 has leaked 5 components out of 5"
+    ],
+    "surfaceMessages": [
+      "10-28 15:30:56.877 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 1 is not found",
+      "10-28 15:31:39.416 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 11 is not found",
+      "10-28 15:31:39.416 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 21 is not found",
+      "10-28 15:43:48.355 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 31 is not found",
+      "10-28 15:44:19.739 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 41 is not found",
+      "10-28 15:44:19.746 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 51 is not found",
+      "10-28 15:44:45.765 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 61 is not found",
+      "10-28 15:46:10.578 19547 19547 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 61 is not found"
+    ],
+    "jsWarnings": [
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: Cannot connect to Expo CLI.",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: ",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: Try the following to fix the issue:",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: - Ensure that Expo dev server is running and available on the same network",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: - Ensure that your device/emulator is connected to your machine and has USB debugging enabled - run 'adb devices' to see a list of connected devices",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: - If you're on a physical device connected to the same machine, run 'adb reverse tcp:8081 tcp:8081' to forward requests from your device",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: ",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: URL: 127.0.0.1:8087",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: ",
+      "10-28 15:48:37.981 19547 19662 W ReactNativeJS: Error: undefined"
+    ],
+    "limitation": "Native activity-recreation diagnostics are not established baseline-equivalent. JS dev-server disconnect warnings follow the recorded server deadline. Zero-new-runtime-diagnostics gate remains pending."
+  },
+  "cleanup": {
+    "font": "null",
+    "at": "2026-10-28T15:53:42.9415465+08:00",
+    "night": "Night mode: yes",
+    "appPid": null,
+    "recovery": "MuMu instance 1 restart after Android controls stalled; no data deletion",
+    "density": "Physical density: 480",
+    "server": "task Metro reached bounded deadline, process stopped",
+    "reversals": ""
+  },
+  "status": "Historical guest verification; superseded for current acceptance",
+  "supersededBy": "resident-verification.json"
+}

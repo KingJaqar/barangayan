@@ -1,0 +1,53 @@
+packages/shared/src\schemas\announcement.test.ts:3:import { announcementSchema } from './announcement';
+packages/shared/src\schemas\announcement.test.ts:5:describe('announcementSchema', () => {
+packages/shared/src\schemas\announcement.test.ts:7:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:16:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:25:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:34:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:43:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:53:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:63:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:72:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.test.ts:82:    const result = announcementSchema.safeParse({
+packages/shared/src\schemas\announcement.ts:3:export const announcementSchema = z.object({
+packages/shared/src\schemas\announcement.ts:14:export type AnnouncementFormValues = z.infer<typeof announcementSchema>;
+apps\resident-web\src\hooks\use-unread-counts.tsx:101:      supabase.from('announcements').select('id').is('deleted_at', null),
+apps\resident-android-mobile\src\lib\notification-templates.ts:10:export function announcementTemplate(row: Tables<'announcements'>) {
+apps\resident-android-mobile\src\lib\notification-hub-data.ts:6:export type Announcement = Tables<'announcements'>;
+apps\resident-android-mobile\src\lib\notification-hub-data.ts:21:  let query = supabase.from('announcements').select('*', count ? { count: 'exact' } : undefined)
+apps\resident-android-mobile\src\lib\notification-hub-data.ts:47:  const { data, error } = await supabase.from('announcements').select('*').eq('id', id).is('deleted_at', null).abortSignal(signal).maybeSingle();
+apps\resident-web\src\hooks\use-announcements.ts:10:export type AnnouncementRow = Tables<'announcements'>;
+apps\resident-web\src\hooks\use-announcements.ts:56:    let query = supabase.from('announcements').select('*').is('deleted_at', null).order('published_at', { ascending: false });
+apps\admin-web\tests\content-workspace\preview.tsx:35:] as unknown as Tables<'announcements'>[];
+apps\resident-android-mobile\src\hooks\use-emergency-announcements.ts:8:export type EmergencyAnnouncement = Tables<'announcements'>;
+apps\resident-android-mobile\src\hooks\use-emergency-announcements.ts:22:        .from('announcements')
+apps\resident-android-mobile\src\hooks\use-emergency-announcements.ts:88:      .from('announcements')
+apps\resident-android-mobile\src\hooks\use-announcements.ts:8:type Announcement = Tables<'announcements'>;
+apps\resident-android-mobile\src\hooks\use-announcements.ts:32:        .from('announcements')
+apps\resident-android-mobile\src\hooks\use-unread-counts.tsx:105:      supabase.from('announcements').select('id').is('deleted_at', null),
+apps\resident-android-mobile\src\hooks\use-notification-realtime.ts:36:            const { title, body } = announcementTemplate(payload.new as Tables<'announcements'>);
+apps\resident-android-mobile\src\components\reports\announcements-feed.tsx:14:type Announcement = Tables<'announcements'>;
+apps\resident-android-mobile\src\components\reports\announcement-modal.tsx:13:  visible: boolean; announcement: Tables<'announcements'> | null; onClose: () => void; readError?: boolean;
+apps\resident-android-mobile\src\components\reports\announcement-card.tsx:8:export function AnnouncementCard({ announcement, onPress }: { announcement: Tables<'announcements'>; onPress: () => void }) {
+apps\resident-ios-mobile\src\data\resident-api.ts:353:      let query = client.from('announcements').select(columns).eq('barangay_id', barangayId).is('deleted_at', null);
+apps\resident-ios-mobile\src\data\resident-api.ts:363:      let query = client.from('announcements').select('id', { count: 'exact', head: true }).eq('barangay_id', barangayId).is('deleted_at', null);
+apps\resident-ios-mobile\src\data\resident-api.ts:373:        let query = client.from('announcements').select(columns).eq('id', id).eq('barangay_id', barangayId).is('deleted_at', null);
+apps\resident-ios-mobile\src\data\resident-api.ts:385:        client.from('announcements').select('id', { count: 'exact', head: true }).eq('barangay_id', barangayId).is('deleted_at', null).abortSignal(signal),
+apps\resident-ios-mobile\src\data\resident-api.ts:410:        parseRows(announcementUnreadRow, await client.from('announcements').select(`id,${ANNOUNCEMENT_READS_COLUMN}`).eq('barangay_id', barangayId).is('deleted_at', null).eq('announcement_reads.resident_id', resident).order('published_at', { ascending: false }).order('id').range(from, to).abortSignal(pageSignal), pageSignal), signal, SNAPSHOT_MAX_ROWS);
+apps\resident-android-mobile\src\app\(app)\home\index.tsx:31:type Announcement = Tables<'announcements'>;
+apps\resident-android-mobile\src\app\(app)\home\index.tsx:69:    const fetchLatest = () => Promise.resolve(supabase.from('announcements').select('*').order('published_at', { ascending: false }).limit(1));
+apps\resident-web\src\components\reports\announcement-modal.tsx:13:type AnnouncementRow = Tables<'announcements'>;
+apps\resident-web\src\components\reports\announcement-card.tsx:12:export type AnnouncementRow = Tables<'announcements'>;
+apps\resident-web\src\app\(resident)\home\page.tsx:67:          .from('announcements')
+apps\resident-web\src\app\(resident)\home\page.tsx:75:          .from('announcements')
+apps\admin-web\src\app\(admin)\announcements\page.tsx:18:    .from('announcements')
+apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx:10:import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES, type Tables } from '@barangayan/shared';
+apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx:20:type Announcement = Tables<'announcements'>;
+apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx:62:      const result = announcementSchema.safeParse({
+apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx:79:        .from('announcements')
+apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx:131:        .from('announcements')
+apps\admin-web\src\app\(admin)\announcements\announcement-form.tsx:8:import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES } from '@barangayan/shared';
+apps\admin-web\src\app\(admin)\announcements\announcement-form.tsx:39:      const result = announcementSchema.safeParse({
+apps\admin-web\src\app\(admin)\announcements\announcement-form.tsx:56:      const { error: insertError } = await supabase.from('announcements').insert({
+apps\admin-web\src\app\(admin)\announcements\announcement-catalog.tsx:11:type Announcement = Tables<'announcements'>;
+apps\resident-web\src\app\(resident)\announcements\[announcementId]\page.tsx:16:  let query = supabase.from('announcements').select('id,title,body,detailed_description,category,published_at').eq('id', announcementId).is('deleted_at', null);

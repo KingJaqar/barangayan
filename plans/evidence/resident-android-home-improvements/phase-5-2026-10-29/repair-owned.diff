@@ -1,0 +1,140 @@
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/resident-header.tsx b/apps/resident-android-mobile/src/components/resident-header.tsx
+index d57b2a54..d3bcb0ae 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/resident-header.tsx
++++ b/apps/resident-android-mobile/src/components/resident-header.tsx
+@@ -74,7 +74,7 @@ export function ResidentHeader() {
+   const fieldStyle = useAnimatedStyle(() => ({
+     opacity: progress.value,
+     left: searchX + 12 + (48 - searchX - 12) * progress.value,
+-    width: 44 + (width - 40 - 44) * progress.value,
++    width: 48 + (width - 40 - 48) * progress.value,
+   }));
+   const normalStyle = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
+   const closeSearch = () => {
+@@ -219,19 +219,19 @@ function HeaderAction({ label, selected, reducedMotion, onPress, children }: {
+   </Pressable>;
+ }
+ const styles = StyleSheet.create({
+-  row: { minHeight: 56, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: 'center' },
+-  normal: { minHeight: 44, flexDirection: 'row', alignItems: 'center' },
++  row: { minHeight: 60, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: 'center' },
++  normal: { minHeight: 48, flexDirection: 'row', alignItems: 'center' },
+   logo: { width: 36, height: 36, borderRadius: 18, marginRight: 12, flexShrink: 0 },
+   title: { fontSize: 22, lineHeight: 28, flex: 1, minWidth: 0 },
+   longTitle: { fontSize: 19, lineHeight: 22 },
+-  button: { width: 44, height: 44, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
++  button: { width: 48, height: 48, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
+   actionContent: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+   iconHighlight: { position: 'absolute', inset: 0, borderRadius: 24, borderWidth: 1 },
+   pressHighlight: { position: 'absolute', inset: 0, borderRadius: 24 },
+-  searchLayer: { position: 'absolute', left: -12, right: 4, top: 6, height: 44 },
+-  field: { position: 'absolute', top: 0, height: 44, borderRadius: 24, paddingLeft: 14, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
++  searchLayer: { position: 'absolute', left: -12, right: 4, top: 6, height: 48 },
++  field: { position: 'absolute', top: 0, height: 48, borderRadius: 24, paddingLeft: 14, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
+   fieldSurface: { position: 'absolute', left: 0, right: 0, top: 2, bottom: 2, borderRadius: 24 },
+-  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 44 },
+-  clear: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
+-  submit: { minWidth: 44, height: 44, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' },
++  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 48 },
++  clear: { width: 48, height: 48, justifyContent: 'center', alignItems: 'center' },
++  submit: { minWidth: 48, height: 48, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' },
+ });
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/announcement-modal.tsx b/apps/resident-android-mobile/src/components/reports/announcement-modal.tsx
+index 17ad5043..897b17d7 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/announcement-modal.tsx
++++ b/apps/resident-android-mobile/src/components/reports/announcement-modal.tsx
+@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
+   body: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
+   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
+   category: { flexDirection: 'row', alignItems: 'center', flexShrink: 1, gap: 6, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 100 },
+-  close: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
++  close: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+   title: { fontSize: 21, lineHeight: 26, fontWeight: '800', letterSpacing: -0.4, marginTop: 12 },
+   stamp: { flexDirection: 'row', gap: 6, marginTop: 6, alignItems: 'center' },
+   detail: { fontSize: 15, lineHeight: 23, borderTopWidth: 1, marginTop: 16, paddingTop: 16 },
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/request-summary-sheet.tsx b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+index 0928e5c4..cd448326 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/request-summary-sheet.tsx
++++ b/apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx
+@@ -118,11 +118,11 @@ export function RequestSummarySheet({ request, visible, available, reducedMotion
+           {summary.nextAction ? <ThemedText style={[styles.status, { color: resident.accentText }]}>{summary.nextAction}</ThemedText> : null}
+           {summary.stepIndex >= 0 ? summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
+             <View style={styles.indicator} accessible={false} importantForAccessibility="no-hide-descendants">
+-              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
++              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.controlBorder, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
+                 {step.current ? <View style={[styles.currentDot, { backgroundColor: resident.accentText }]} />
+                   : step.reached ? <Ionicons name="checkmark" size={14} color={resident.onAccent} /> : null}
+               </View>
+-              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.border }]} /> : null}
++              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.controlBorder }]} /> : null}
+             </View>
+             <View style={styles.stepBody}>
+               <ThemedText accessibilityLabel={step.current ? `${step.label}, current stage` : step.label}
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/home.tsx b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+index 3a7220f0..b9126e8c 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/home.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+@@ -198,7 +198,7 @@ export default function HomeScreen() {
+                 </View>
+                 <View style={styles.requestProgress}>
+                   {summary.progressLabel ? <View style={styles.segments} accessible={false} importantForAccessibility="no-hide-descendants">
+-                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
++                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: index <= summary.stepIndex ? resident.accentText : resident.controlBorder }]} />)}
+                   </View> : null}
+                   <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.progressLabel ?? summary.statusLabel}</ThemedText>
+                   <ThemedText style={[styles.reference, { color: resident.muted }]}>{summary.updatedLabel}</ThemedText>
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/resident-shell-lifecycle.mjs b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+index e763aae0..6a29e54e 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/resident-shell-lifecycle.mjs
++++ b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+@@ -60,6 +60,22 @@ try {
+   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+   const primary = page.getByRole('tablist', { name: 'Primary navigation' });
+   await primary.waitFor();
++  // Measure actual pressable bounds: an oversized child icon is not a touch target.
++  const headerBounds = [];
++  for (const width of [320, 360, 412]) {
++    await page.setViewportSize({ width, height: 720 });
++    const buttons = [];
++    for (const name of ['Search', 'View announcements, 2 unread', 'Open settings']) {
++      const bounds = await page.getByRole('button', { name, exact: true }).boundingBox();
++      assert.ok(bounds && bounds.width >= 48 && bounds.height >= 48, `${name}: minimum 48px target at ${width}px`);
++      assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width, `${name}: fully inside viewport`);
++      buttons.push(bounds);
++    }
++    assert.ok(buttons[0].x + buttons[0].width <= buttons[1].x && buttons[1].x + buttons[1].width <= buttons[2].x, 'Header touch targets do not overlap');
++    headerBounds.push({ width, buttons });
++  }
++  fs.writeFileSync(path.join(out, 'header-targets.json'), JSON.stringify(headerBounds, null, 2));
++  await page.setViewportSize({ width: 360, height: 640 });
+   for (const name of ['Services', 'Emergency', 'Maps', 'Health', 'Reports', 'Home']) {
+     await primary.getByRole('tab', { name: new RegExp(`^${name}(,|$)`) }).click();
+     await page.waitForFunction(name => [...document.querySelectorAll('[role="tab"]')].some(tab => tab.getAttribute('aria-label')?.startsWith(name) && tab.getAttribute('aria-selected') === 'true'), name);
+@@ -96,6 +112,15 @@ try {
+   await page.getByRole('button', { name: 'Search', exact: true }).click();
+   const input = page.getByPlaceholder('Search Barangayan', { exact: true });
+   await input.fill('clearance');
++  for (const width of [320, 360, 412]) {
++    await page.setViewportSize({ width, height: 720 });
++    for (const name of ['Back from search', 'Clear search', 'Submit search']) {
++      const bounds = await page.getByRole('button', { name, exact: true }).boundingBox();
++      assert.ok(bounds && bounds.width >= 48 && bounds.height >= 48, `${name}: minimum 48px search target at ${width}px`);
++      assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width, `${name}: search target inside viewport`);
++    }
++  }
++  await page.setViewportSize({ width: 360, height: 640 });
+   await primary.waitFor({ state: 'detached' });
+   assert.equal(await page.getByTestId('inset').textContent(), '0');
+   const focuses = await page.evaluate(() => { document.querySelector('input').blur(); return window.fx.focusCalls; });
+diff --git a/tmp/resident-home-phase5-20261029/repair-before/resident-theme.test.ts b/apps/resident-android-mobile/src/lib/resident-theme.test.ts
+index 7ffad27d..9de500ca 100644
+--- a/tmp/resident-home-phase5-20261029/repair-before/resident-theme.test.ts
++++ b/apps/resident-android-mobile/src/lib/resident-theme.test.ts
+@@ -26,6 +26,7 @@ describe.each(['light', 'dark'] as const)('resident %s contrast', (mode) => {
+     expect(contrast(theme.accentText, theme.surface)).toBeGreaterThanOrEqual(4.5);
+     expect(contrast(theme.muted, theme.surface)).toBeGreaterThanOrEqual(4.5);
+     expect(contrast(theme.controlBorder, theme.surface)).toBeGreaterThanOrEqual(3);
++    expect(contrast(theme.controlBorder, theme.card)).toBeGreaterThanOrEqual(3);
+     for (const [ink, surface] of [[theme.danger, theme.dangerSoft], [theme.success, theme.successSoft], [theme.warning, theme.warningSoft], [theme.info, theme.infoSoft]]) {
+       expect(contrast(ink, surface)).toBeGreaterThanOrEqual(4.5);
+     }

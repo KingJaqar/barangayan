@@ -1,0 +1,37 @@
+src/components/scrollable-chevron-row.tsx(120,23): error TS2304: Cannot find name 'snapToItems'.
+src/components/scrollable-chevron-row.tsx(121,25): error TS2304: Cannot find name 'snapToItems'.
+src/components/scrollable-chevron-row.tsx(129,13): error TS2304: Cannot find name 'snapToItems'.
+src/components/scrollable-chevron-row.tsx(132,47): error TS2304: Cannot find name 'snapToItems'.
+src/components/scrollable-chevron-row.tsx(132,62): error TS2304: Cannot find name 'ShelfChevron'.
+src/lib/home-request.ts(36,46): error TS18047: 'item' is possibly 'null'.
+src/lib/home-request.ts(36,51): error TS2339: Property 'status' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'status' does not exist on type 'string'.
+src/lib/home-request.ts(36,87): error TS18047: 'item' is possibly 'null'.
+src/lib/home-request.ts(36,92): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(37,39): error TS18047: 'b' is possibly 'null'.
+src/lib/home-request.ts(37,41): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(37,66): error TS18047: 'a' is possibly 'null'.
+src/lib/home-request.ts(37,68): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(38,82): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(39,49): error TS2339: Property 'note' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'note' does not exist on type 'string'.
+src/lib/home-request.ts(39,82): error TS2339: Property 'note' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'note' does not exist on type 'string'.
+src/lib/home-request.ts(43,41): error TS18047: 'item' is possibly 'null'.
+src/lib/home-request.ts(43,46): error TS2339: Property 'status' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'status' does not exist on type 'string'.
+src/lib/home-request.ts(43,82): error TS18047: 'item' is possibly 'null'.
+src/lib/home-request.ts(43,87): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(44,41): error TS18047: 'b' is possibly 'null'.
+src/lib/home-request.ts(44,43): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(44,68): error TS18047: 'a' is possibly 'null'.
+src/lib/home-request.ts(44,70): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.
+src/lib/home-request.ts(45,35): error TS2339: Property 'at' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.
+  Property 'at' does not exist on type 'number'.

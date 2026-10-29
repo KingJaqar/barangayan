@@ -30,7 +30,7 @@ const TITLES: Record<string, string> = {
   '/settings': 'Settings',
 };
 
-/** Stays mounted across navigation so the expanding search keeps its input. */
+/** The header and search draft persist; editable native input only exists on search routes. */
 export function ResidentHeader() {
   const pathname = usePathname();
   const enteringSearch = pathname === '/search';
@@ -56,6 +56,8 @@ export function ResidentHeader() {
   // A frame can run after Explore has committed but before this effect's cleanup; focusing there would reopen editing.
   const entering = useRef(enteringSearch);
   entering.current = enteringSearch;
+  const searchActive = useRef(searching);
+  searchActive.current = searching;
   useEffect(() => {
     if (!enteringSearch) {
       input.current?.blur();
@@ -64,10 +66,15 @@ export function ResidentHeader() {
     const frame = requestAnimationFrame(() => { if (entering.current) input.current?.focus(); });
     return () => cancelAnimationFrame(frame);
   }, [enteringSearch]);
+  useEffect(() => {
+    if (!searching) return;
+    // Native focus/IME state can outlive a hidden or detached Android input.
+    return () => { Keyboard.dismiss(); };
+  }, [searching]);
   const fieldStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
     left: searchX + 12 + (48 - searchX - 12) * progress.value,
-    width: 44 + (width - 40 - 44) * progress.value,
+    width: 48 + (width - 40 - 48) * progress.value,
   }));
   const normalStyle = useAnimatedStyle(() => ({ opacity: 1 - progress.value }));
   const closeSearch = () => {
@@ -135,14 +142,17 @@ export function ResidentHeader() {
           {mapSearch ? <Pressable accessibilityRole="button" accessibilityLabel="Collapse header search" accessibilityState={{ expanded: true }} onPress={closeSearch} style={styles.button}>
             <Ionicons name="search" size={18} color={theme.resident.muted} />
           </Pressable> : <Ionicons name="search" size={18} color={theme.resident.muted} />}
-          <TextInput
+          {searching ? <TextInput
             ref={input} value={query} onChangeText={value => { setQuery(value); resetSearchIdle(); }} maxLength={120} editable={searching}
             // Explore's field is the way back to editing: focusing it reopens the entry with the submitted query.
-            onFocus={() => { if (enteringSearch) resetSearchIdle(); else editSearch(); }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
+            onFocus={() => {
+              if (!searchActive.current) { input.current?.blur(); Keyboard.dismiss(); return; }
+              if (entering.current) resetSearchIdle(); else editSearch();
+            }} onSelectionChange={resetSearchIdle} onKeyPress={resetSearchIdle}
             accessibilityLabel="Search services, announcements and your records"
             placeholder="Search Barangayan" placeholderTextColor={theme.resident.muted}
             returnKeyType="search" autoCorrect={false}
-            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} />
+            onSubmitEditing={() => submitSearch(query)} style={[styles.input, { color: theme.resident.text, fontFamily: getMobileFontFamily(fontId) }]} /> : null}
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
               onPress={() => { if (!enteringSearch) { editSearch(''); return; } setQuery(''); input.current?.focus(); }} style={styles.clear}>
@@ -201,26 +211,27 @@ function HeaderAction({ label, selected, reducedMotion, onPress, children }: {
     accessibilityState={{ selected }} onPress={onPress}
     onPressIn={() => setPressed(1)} onPressOut={() => setPressed(0)} style={styles.button}>
     <Animated.View pointerEvents="none" style={[styles.actionContent, contentStyle]}>
-      <Animated.View style={[styles.iconHighlight, { backgroundColor: resident.accentSoft, borderColor: resident.onAccent }, surfaceStyle]} />
+      {/* Route state owns visibility so a stale native animation cannot leave a pale surface behind the white inactive icon. */}
+      {selected ? <Animated.View style={[styles.iconHighlight, { backgroundColor: resident.accentSoft, borderColor: resident.onAccent }, surfaceStyle]} /> : null}
       <Animated.View style={[styles.pressHighlight, { backgroundColor: selected ? resident.accentText : resident.onAccent }, pressStyle]} />
       {children}
     </Animated.View>
   </Pressable>;
 }
 const styles = StyleSheet.create({
-  row: { minHeight: 56, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: 'center' },
-  normal: { minHeight: 44, flexDirection: 'row', alignItems: 'center' },
+  row: { minHeight: 60, paddingVertical: 6, marginLeft: 16, marginRight: 8, justifyContent: 'center' },
+  normal: { minHeight: 48, flexDirection: 'row', alignItems: 'center' },
   logo: { width: 36, height: 36, borderRadius: 18, marginRight: 12, flexShrink: 0 },
   title: { fontSize: 22, lineHeight: 28, flex: 1, minWidth: 0 },
   longTitle: { fontSize: 19, lineHeight: 22 },
-  button: { width: 44, height: 44, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
+  button: { width: 48, height: 48, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   actionContent: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   iconHighlight: { position: 'absolute', inset: 0, borderRadius: 24, borderWidth: 1 },
   pressHighlight: { position: 'absolute', inset: 0, borderRadius: 24 },
-  searchLayer: { position: 'absolute', left: -12, right: 4, top: 6, height: 44 },
-  field: { position: 'absolute', top: 0, height: 44, borderRadius: 24, paddingLeft: 14, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
+  searchLayer: { position: 'absolute', left: -12, right: 4, top: 6, height: 48 },
+  field: { position: 'absolute', top: 0, height: 48, borderRadius: 24, paddingLeft: 14, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
   fieldSurface: { position: 'absolute', left: 0, right: 0, top: 2, bottom: 2, borderRadius: 24 },
-  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 44 },
-  clear: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-  submit: { minWidth: 44, height: 44, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' },
+  input: { flex: 1, minWidth: 0, paddingHorizontal: 8, fontSize: 15, height: 48 },
+  clear: { width: 48, height: 48, justifyContent: 'center', alignItems: 'center' },
+  submit: { minWidth: 48, height: 48, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' },
 });

@@ -1,0 +1,65 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\services-tab-stability.mjs" b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+index 00cdd4b4..b0a9024a 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\services-tab-stability.mjs"
++++ b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+@@ -18,9 +18,9 @@ fs.mkdirSync(out, { recursive: true });
+ const mocks = {
+   // Exercise selection even when native tab layout reports an unusable x coordinate.
+   'react-native': `import React from 'react';import {Pressable as WebPressable} from 'react-native-web';export * from 'react-native-web';export const Pressable=React.forwardRef(({accessibilityState,onLayout,...props},ref)=><WebPressable {...props} ref={ref} aria-selected={accessibilityState?.selected} onLayout={onLayout?event=>onLayout({nativeEvent:{layout:{...event.nativeEvent.layout,x:0}}}):undefined}/>);`,
+-  'expo-router': `import React from 'react';export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>React.useEffect(fn,[fn]);`,
++  'expo-router': `import React from 'react';const router={push:()=>{},setParams:params=>{window.paramWrites++;window.routeParams={...window.routeParams,...params};window.renderServices()}};export const useRouter=()=>router;export const useLocalSearchParams=()=>window.routeParams;export const useFocusEffect=fn=>React.useEffect(()=>window.focused?fn():undefined,[fn,window.focused]);`,
+   '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
+-  '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
++  '@/hooks/use-auth': `export const useAuth=()=>({session:window.session,needsCompletion:false});`,
+   '@/hooks/use-profile': `export const useProfile=()=>({...window.profileState,refetch:()=>{window.profileRefetches=(window.profileRefetches??0)+1;window.profileState.refetch()}});`,
+   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
+   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+@@ -38,7 +38,7 @@ const mocks = {
+ };
+ 
+ await build({
+-  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));window.renderServices=()=>root.render(<Services/>);window.renderServices();`, resolveDir: app, loader: 'tsx' },
++  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.routeParams={};window.paramWrites=0;window.focused=true;window.session={user:{id:'resident'}};window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));let generation=0;window.renderServices=()=>root.render(<Services key={generation}/>);window.resetServices=()=>{generation++;window.renderServices()};window.renderServices();`, resolveDir: app, loader: 'tsx' },
+   outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.png': 'dataurl' },
+   define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
+   plugins: [{ name: 'fixtures', setup(b) {
+@@ -117,6 +117,38 @@ try {
+   await page.evaluate(() => { window.profileState = { ...window.profileState, error: null, profile: { ...window.profileState.profile, id_verification_status: 'pending' } }; window.renderServices(); });
+   await page.getByText('Your ID is awaiting verification. Requests are available after approval.', { exact: true }).waitFor();
+   await page.getByText('Verify Now', { exact: true }).waitFor({ state: 'attached' });
++  // Entry intents are consumed once, including when Services is already mounted.
++  const selected = name => page.getByRole('tab', { name, exact: true });
++  const expectSelected = async name => assert.equal(await selected(name).getAttribute('aria-selected'), 'true');
++  for (const segment of ['requests', 'documents']) {
++    await page.evaluate(segment => { window.routeParams={segment};window.resetServices(); }, segment);
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected(segment === 'requests' ? 'Requests' : 'Documents');
++  }
++  for (const segment of ['requests', 'requests', 'documents', 'documents']) {
++    await selected('Logs').click();
++    await page.evaluate(segment => { window.focused=false;window.routeParams={segment};window.renderServices(); }, segment);
++    await expectSelected('Logs');
++    await page.evaluate(() => {window.focused=true;window.renderServices()});
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected(segment === 'requests' ? 'Requests' : 'Documents');
++    await selected('Logs').click();
++    await page.evaluate(() => {window.focused=false;window.renderServices()});
++    await page.evaluate(() => {window.focused=true;window.renderServices()});
++    await expectSelected('Logs');
++  }
++  for (const segment of ['invalid', ['requests', 'documents']]) {
++    await page.evaluate(segment => {window.routeParams={segment};window.renderServices()}, segment);
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected('Logs');
++  }
++  await page.evaluate(() => {window.session=null;window.routeParams={segment:'requests'};window.resetServices()});
++  await page.waitForFunction(() => window.routeParams.segment === undefined);
++  await expectSelected('Documents');
++  assert.equal(await selected('Requests').count(),0,'Guest entry cannot reveal private tabs');
++  await page.evaluate(() => {window.session={user:{id:'resident'}};window.renderServices()});
++  await expectSelected('Documents');
++  assert.equal(await page.evaluate(() => window.paramWrites),9,'Each explicit intent is consumed once; refocus and manual tabs cause no route writes');
+   assert.deepEqual(errors, []);
+-  console.log(JSON.stringify({ passed: ['Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements', 'Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list and selected underline at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
++  console.log(JSON.stringify({ passed: ['Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements', 'Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list and selected underline at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance', 'Fresh, mounted and repeated Requests/Documents entry consumes once; manual selection survives refocus; malformed and guest private entry stay safe'], documentListY: before.y, browser:await browser.version() }));
+ } finally { await browser.close(); }

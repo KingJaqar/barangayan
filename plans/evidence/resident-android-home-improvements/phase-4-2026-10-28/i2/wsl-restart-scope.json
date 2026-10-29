@@ -1,0 +1,6 @@
+{
+  "running": [
+    "docker-desktop"
+  ],
+  "reason": "Docker data disk already attached after distro-only termination; no other distributions running"
+}

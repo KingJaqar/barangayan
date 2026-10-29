@@ -1,0 +1,17 @@
+{
+  "id": "schema-unit",
+  "start": "2026-10-28T04:21:49.607Z",
+  "end": "2026-10-28T04:21:56.706Z",
+  "code": 0,
+  "signal": null,
+  "deadlineMs": 600000,
+  "cwd": "C:\\Users\\User\\barangayan\\packages\\shared",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/vitest/vitest.mjs",
+    "run",
+    "src/schemas/announcement.test.ts"
+  ],
+  "log": "schema-unit.log",
+  "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\schema-unit"
+}

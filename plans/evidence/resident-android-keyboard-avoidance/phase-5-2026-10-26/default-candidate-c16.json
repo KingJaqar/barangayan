@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-27T01:30:45.544Z",
+  "status": "pass restored geometry continuation after completed focus/type/filter/dismiss",
+  "geometryRestored": [
+    [
+      0,
+      375,
+      1080,
+      1920
+    ]
+  ],
+  "observation": "default-candidate-c16-0",
+  "nativeComponentCount": 1,
+  "nestedDocumentNodeExcluded": true,
+  "syntheticTextCleared": true
+}

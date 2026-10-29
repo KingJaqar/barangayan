@@ -1,0 +1,1889 @@
+{
+  "mode": {},
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/auth/v1/token?grant_type=refresh_token",
+      "time": "2026-10-29T02:30:22.022Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:30:23.102Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:30:23.415Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T02:30:23.493Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:30:24.879Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T02:30:24.903Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:30:24.908Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T02:30:24.910Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000001&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:30:24.918Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A32%3A03.335Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:30:24.922Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A32%3A03.338Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A32%3A03.338Z&offset=0&limit=100",
+      "time": "2026-10-29T02:30:24.943Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:30:24.944Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&limit=1",
+      "time": "2026-10-29T02:31:01.292Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&published_at=lte.2026-10-29T02%3A31%3A22.927Z&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A31%3A22.928Z&offset=0&limit=100",
+      "time": "2026-10-29T02:31:22.981Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:31:55.675Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A33%3A34.240Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:31:55.683Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A33%3A34.242Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A33%3A34.242Z&offset=0&limit=100",
+      "time": "2026-10-29T02:31:55.685Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:31:55.686Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T02:31:56.091Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A33%3A58.777Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:32:20.194Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A33%3A58.779Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A33%3A58.779Z&offset=0&limit=100",
+      "time": "2026-10-29T02:32:20.195Z",
+      "status": 503
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:32:20.196Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:32:20.198Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:33:47.900Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&id=eq.e4000000-0000-4000-8000-000000000003&deleted_at=is.null",
+      "time": "2026-10-29T02:33:47.903Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_inbox_page",
+      "time": "2026-10-29T02:33:47.906Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:33:47.908Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&order=published_at.desc%2Cid.desc&limit=25",
+      "time": "2026-10-29T02:33:47.911Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:33:47.994Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_inbox_page",
+      "time": "2026-10-29T02:33:48.004Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T02:33:48.319Z",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/announcement_reads?on_conflict=resident_id%2Cannouncement_id",
+      "time": "2026-10-29T02:33:49.099Z",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:33:50.249Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000001&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:33:50.250Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:33:50.251Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A35.152Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:33:56.575Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:33:56.576Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A35.157Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A35%3A35.157Z&offset=0&limit=100",
+      "time": "2026-10-29T02:33:56.578Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A39.557Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:34:00.965Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A39.558Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A35%3A39.558Z&offset=0&limit=100",
+      "time": "2026-10-29T02:34:00.968Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:34:00.975Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:34:00.991Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A45.112Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:34:06.523Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A35%3A45.117Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A35%3A45.117Z&offset=0&limit=100",
+      "time": "2026-10-29T02:34:06.525Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:34:06.526Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:34:06.536Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A37%3A06.241Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A37%3A06.241Z&offset=0&limit=100",
+      "time": "2026-10-29T02:35:27.655Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:35:57.079Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A37%3A35.663Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:35:57.081Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A37%3A35.664Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A37%3A35.664Z&offset=0&limit=100",
+      "time": "2026-10-29T02:35:57.082Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:35:57.084Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:39:28.430Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:39:28.541Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T02:39:28.808Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:39:30.164Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T02:39:30.180Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000001&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:39:30.183Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T02:39:30.189Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:39:30.194Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A39%3A27.551Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A39%3A27.551Z&offset=0&limit=100",
+      "time": "2026-10-29T02:39:30.231Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:39:30.237Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A39%3A27.549Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:39:30.240Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T02:39:31.183Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A39%3A58.008Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:40:00.529Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:40:00.529Z",
+      "status": 503
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:40:00.530Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A39%3A58.009Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A39%3A58.009Z&offset=0&limit=100",
+      "time": "2026-10-29T02:40:00.532Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:40:02.114Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:40:04.154Z",
+      "status": 503
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:57:17.355Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:57:17.516Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T02:57:17.840Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:57:19.339Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000001&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T02:57:19.351Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T02:57:19.360Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000001&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T02:57:19.365Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T02:57:19.371Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A58%3A57.811Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:57:19.405Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:57:19.414Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A58%3A57.813Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A58%3A57.813Z&offset=0&limit=100",
+      "time": "2026-10-29T02:57:19.421Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T02:57:20.174Z",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:57:45.807Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A24.387Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A59%3A24.387Z&offset=0&limit=100",
+      "time": "2026-10-29T02:57:45.809Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:57:45.812Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A24.385Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:57:45.814Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A30.151Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A59%3A30.151Z&offset=0&limit=100",
+      "time": "2026-10-29T02:57:51.558Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A30.150Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:57:51.560Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:57:51.562Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:57:51.566Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A53.310Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:58:14.728Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:58:14.730Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T02%3A59%3A53.311Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T02%3A59%3A53.311Z&offset=0&limit=100",
+      "time": "2026-10-29T02:58:14.731Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:58:14.732Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A00%3A20.889Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T02:58:42.306Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T02:58:42.307Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A00%3A20.891Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A00%3A20.891Z&offset=0&limit=100",
+      "time": "2026-10-29T02:58:42.308Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T02:58:42.313Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A01%3A40.492Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:00:01.909Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:00:01.911Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A01%3A40.494Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A01%3A40.494Z&offset=0&limit=100",
+      "time": "2026-10-29T03:00:01.912Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000001",
+      "time": "2026-10-29T03:00:01.913Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/logout?scope=local",
+      "time": "2026-10-29T03:00:50.206Z",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A02%3A50.118Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:01:11.655Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A02%3A50.119Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A02%3A50.119Z&offset=0&limit=100",
+      "time": "2026-10-29T03:01:11.658Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:01:11.939Z",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/token?grant_type=password",
+      "time": "2026-10-29T03:01:55.913Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:01:56.236Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:01:56.240Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:01:56.397Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:01:57.307Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:01:57.310Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:01:57.311Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:01:57.315Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:01:57.324Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A03%3A35.808Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:01:57.334Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A03%3A35.809Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A03%3A35.809Z&offset=0&limit=100",
+      "time": "2026-10-29T03:01:57.344Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:01:57.350Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:01:57.744Z",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_inbox_page",
+      "time": "2026-10-29T03:03:20.651Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:03:20.653Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:03:20.655Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&order=published_at.desc%2Cid.desc&limit=25",
+      "time": "2026-10-29T03:03:20.657Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_inbox_page",
+      "time": "2026-10-29T03:03:20.659Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:03:20.764Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/announcement_reads?on_conflict=resident_id%2Cannouncement_id",
+      "time": "2026-10-29T03:03:44.144Z",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:03:44.362Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:03:44.365Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:03:44.367Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A05%3A58.060Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:04:19.475Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A05%3A58.063Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A05%3A58.063Z&offset=0&limit=100",
+      "time": "2026-10-29T03:04:19.476Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:04:19.477Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:05:11.210Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A06%3A49.795Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:05:11.211Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A06%3A49.796Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A06%3A49.796Z&offset=0&limit=100",
+      "time": "2026-10-29T03:05:11.212Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:11.216Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:05:20.699Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A06%3A59.286Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A06%3A59.286Z&offset=0&limit=100",
+      "time": "2026-10-29T03:05:20.701Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:20.702Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A06%3A59.285Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:05:20.704Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:21.588Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:22.160Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:22.290Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:05:22.411Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:05:23.202Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:05:23.203Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:05:23.203Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:05:23.210Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:05:23.210Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:05:23.238Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A07%3A01.695Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A07%3A01.695Z&offset=0&limit=100",
+      "time": "2026-10-29T03:05:23.238Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A07%3A01.694Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:05:23.239Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:05:23.734Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:31.149Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:05:31.268Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:05:31.293Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:05:31.958Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:05:31.963Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:05:31.967Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:05:31.968Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:05:31.970Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A07%3A10.457Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:05:31.986Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:05:31.993Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A07%3A10.458Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A07%3A10.458Z&offset=0&limit=100",
+      "time": "2026-10-29T03:05:31.994Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:05:32.336Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A33.011Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A33.011Z&offset=0&limit=100",
+      "time": "2026-10-29T03:06:54.430Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:06:54.432Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A33.010Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:06:54.433Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:06:54.436Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A35.094Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:06:56.503Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A35.096Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A35.096Z&offset=0&limit=100",
+      "time": "2026-10-29T03:06:56.504Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:06:56.504Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:06:56.509Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:06:57.606Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:06:57.764Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:06:57.801Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:06:58.517Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:06:58.518Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:06:58.519Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:06:58.520Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:06:58.529Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A37.003Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A37.003Z&offset=0&limit=100",
+      "time": "2026-10-29T03:06:58.542Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A37.002Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:06:58.547Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:06:58.550Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:06:59.010Z",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:10.175Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A48.761Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A48.761Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:10.176Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A48.760Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:10.177Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:10.180Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A50.338Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A50.338Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:11.837Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:11.837Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A50.337Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:11.838Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:11.840Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:12.082Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:12.228Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:07:12.287Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:07:13.035Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:07:13.037Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:07:13.038Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:07:13.040Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:07:13.044Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A51.522Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:13.057Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A51.523Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A51.523Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:13.062Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:13.063Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:07:13.467Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A59.564Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:20.978Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:20.979Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:20.980Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A08%3A59.565Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A08%3A59.565Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:20.982Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:22.272Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:22.423Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:07:22.442Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:07:23.174Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:07:23.176Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:07:23.178Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:07:23.179Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:07:23.182Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A01.655Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:23.194Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:23.196Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A01.657Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A09%3A01.657Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:23.196Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/not_a_real_image",
+      "time": "2026-10-29T03:07:23.806Z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A38.503Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A09%3A38.503Z&offset=0&limit=100",
+      "time": "2026-10-29T03:07:59.915Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:07:59.916Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A38.502Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:07:59.918Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:07:59.921Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A43.143Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:08:04.553Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A09%3A43.144Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A09%3A43.144Z&offset=0&limit=100",
+      "time": "2026-10-29T03:08:04.553Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:08:04.554Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:08:04.557Z",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles?id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:05.953Z",
+      "status": 204
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles?id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:06.002Z",
+      "status": 204
+    },
+    {
+      "method": "PATCH",
+      "path": "/rest/v1/profiles?id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:06.005Z",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A13%3A47.862Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A13%3A47.862Z&offset=0&limit=100",
+      "time": "2026-10-29T03:12:09.270Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A13%3A47.861Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:12:09.271Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:12:09.277Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:12:40.123Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A18.698Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A14%3A18.698Z&offset=0&limit=100",
+      "time": "2026-10-29T03:12:40.126Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A18.697Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:12:40.127Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:40.128Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:49.486Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:12:49.547Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:12:49.682Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:12:50.496Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:12:50.498Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:12:50.501Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:12:50.503Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:12:50.506Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A28.981Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A14%3A28.981Z&offset=0&limit=100",
+      "time": "2026-10-29T03:12:50.522Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A28.981Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:12:50.522Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:12:50.525Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A40.546Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:13:02.078Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:13:02.079Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:13:02.087Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A40.547Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A14%3A40.547Z&offset=0&limit=100",
+      "time": "2026-10-29T03:13:02.089Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A40.764Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:13:02.174Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A40.765Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A14%3A40.765Z&offset=0&limit=100",
+      "time": "2026-10-29T03:13:02.176Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:13:02.653Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:13:02.792Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:13:02.826Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:13:03.536Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:13:03.538Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:13:03.543Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:13:03.544Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:13:03.549Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A42.016Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:13:03.561Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A14%3A42.017Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A14%3A42.017Z&offset=0&limit=100",
+      "time": "2026-10-29T03:13:03.563Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:13:03.569Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:29.141Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:29.286Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:14:29.341Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:29.953Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:29.956Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:14:29.958Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:14:29.966Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:14:29.968Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A08.533Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:14:29.981Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A08.534Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A16%3A08.534Z&offset=0&limit=100",
+      "time": "2026-10-29T03:14:29.986Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:14:29.993Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:14:41.490Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A19.977Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A16%3A19.977Z&offset=0&limit=100",
+      "time": "2026-10-29T03:14:41.492Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A19.976Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:14:41.495Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:41.496Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:41.709Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:41.847Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:14:41.879Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:42.465Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:42.467Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:14:42.470Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:14:42.473Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:14:42.479Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A21.046Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:14:42.490Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A21.047Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A16%3A21.047Z&offset=0&limit=100",
+      "time": "2026-10-29T03:14:42.493Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:14:42.497Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:50.947Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:14:51.084Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/get_resident_account_setup_status",
+      "time": "2026-10-29T03:14:51.106Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=id&deleted_at=is.null&order=id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:51.749Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcement_reads?select=announcement_id&resident_id=eq.b3000000-0000-4000-8000-000000000002&order=announcement_id.asc&offset=0&limit=1000",
+      "time": "2026-10-29T03:14:51.754Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=in.%28open%2Cin_progress%29",
+      "time": "2026-10-29T03:14:51.757Z",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/rest/v1/incidents?select=id&reporter_id=eq.b3000000-0000-4000-8000-000000000002&deleted_at=is.null&status=eq.resolved&resolved_read_at=is.null",
+      "time": "2026-10-29T03:14:51.759Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/notification_hub_summary",
+      "time": "2026-10-29T03:14:51.763Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A30.334Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:14:51.782Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A16%3A30.334Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A16%3A30.334Z&offset=0&limit=100",
+      "time": "2026-10-29T03:14:51.782Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:14:51.797Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:16:27.707Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:16:27.708Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A06.292Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A18%3A06.292Z&offset=0&limit=100",
+      "time": "2026-10-29T03:16:27.709Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A06.288Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:16:27.711Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A10.812Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A18%3A10.812Z&offset=0&limit=100",
+      "time": "2026-10-29T03:16:32.219Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A10.810Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:16:32.220Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/rest/v1/rpc/resident_home_requests",
+      "time": "2026-10-29T03:16:32.222Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/profiles?select=*%2Cbarangays%28name%2Cboundary%2Cbarangay_localities%28display_name%2Ccity%2Cprovince%29%29&id=eq.b3000000-0000-4000-8000-000000000002",
+      "time": "2026-10-29T03:16:32.225Z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/auth/v1/logout?scope=local",
+      "time": "2026-10-29T03:16:41.912Z",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A24.032Z&order=published_at.desc%2Cid.desc&limit=1",
+      "time": "2026-10-29T03:16:45.594Z",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/rest/v1/announcements?select=*&deleted_at=is.null&published_at=lte.2026-10-29T03%3A18%3A24.034Z&order=published_at.desc%2Cid.desc&category=eq.emergency&alert_expires_at=gt.2026-10-29T03%3A18%3A24.034Z&offset=0&limit=100",
+      "time": "2026-10-29T03:16:45.596Z",
+      "status": 200
+    }
+  ]
+}

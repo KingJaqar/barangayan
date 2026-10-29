@@ -1,0 +1,9 @@
+apps/admin-web/AGENTS.md
+apps/admin-web/CLAUDE.md
+apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx
+apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx
+apps/admin-web/src/actions/admin-audit-actions.ts
+packages/shared/src/schemas/announcement.ts
+packages/shared/src/schemas/announcement.test.ts
+supabase/migrations/0011_announcements_admin_write.sql
+supabase/migrations/0019_fix_announcement_soft_delete.sql

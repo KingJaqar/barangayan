@@ -1,0 +1,11 @@
+{
+  "name": "resident-search-explore",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/resident-search-explore.mjs"
+  ],
+  "start": "2026-10-27T02:03:12.781Z",
+  "end": "2026-10-27T02:03:27.773Z",
+  "status": 0
+}

@@ -1,11 +1,250 @@
 {
-  "date": "2026-10-26 Asia/Manila",
+  "date": "2026-10-27 Asia/Manila",
   "phase": 5,
-  "status": "Partially complete; awaiting MuMuPlayer ownership clarification",
-  "ownedProductChanges": [],
+  "status": "Complete within available MuMuPlayer scope",
+  "completionGuard": {
+    "requiredNativeRecords": 29,
+    "allRequiredGatesPresent": true
+  },
+  "ownedProductFiles": [
+    "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+    "apps/resident-android-mobile/src/components/resident-header.tsx",
+    "apps/resident-android-mobile/src/hooks/use-emergency-map-header.tsx",
+    "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+    "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+    "apps/resident-android-mobile/tests/drrm-centers-ui.mjs",
+    "apps/resident-android-mobile/tests/maps-presentation-ui.mjs"
+  ],
   "newDependencies": [],
+  "nativeRecords": [
+    {
+      "file": "compact-font-c15-home.json",
+      "status": "pass stated protocol"
+    },
+    {
+      "file": "compact-font-c16.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "compact-font-c17-drrm.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "compact-font-c17-emergency-centers.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "compact-font-c17-home-emergency-info.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "compact-font-lifecycle-announcements.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-drrm.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-health.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-home-emergency-info.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-maps.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-reports.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-services.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-lifecycle-settings.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "compact-font-long-paste-incident-drrm.json",
+      "status": "pass native paste/long horizontal caret and cleanup"
+    },
+    {
+      "file": "default-candidate-c16.json",
+      "status": "pass restored geometry continuation after completed focus/type/filter/dismiss"
+    },
+    {
+      "file": "default-geometry-candidate-c17-drrm.json",
+      "status": "pass"
+    },
+    {
+      "file": "default-geometry-candidate-c17-emergency-centers.json",
+      "status": "pass"
+    },
+    {
+      "file": "default-geometry-candidate-c17-home-emergency-info.json",
+      "status": "pass"
+    },
+    {
+      "file": "exclusive-default-c15-home.json",
+      "status": "pass stated protocol"
+    },
+    {
+      "file": "exclusive-default-incident-selected.json",
+      "status": "pass selected incident/filter/camera/nav/already-open header"
+    },
+    {
+      "file": "exclusive-default-lifecycle-announcements.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-drrm.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-health.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-home-emergency-info.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-maps.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-reports.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-services.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-lifecycle-settings.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "exclusive-default-public-settled-selected-idle-emergency-centers.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "exclusive-default-selected-idle-drrm.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "exclusive-default-selected-idle-home-emergency-info.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "final-native-c15-home.json",
+      "status": "pass stated protocol"
+    },
+    {
+      "file": "tall-display-c15-home.json",
+      "status": "pass stated protocol"
+    },
+    {
+      "file": "tall-display-c16.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "tall-display-candidate-c17-drrm.json",
+      "status": "pass completed with separate Map-return continuation"
+    },
+    {
+      "file": "tall-display-candidate-c17-emergency-centers.json",
+      "status": "pass"
+    },
+    {
+      "file": "tall-display-candidate-c17-home-emergency-info.json",
+      "status": "pass"
+    },
+    {
+      "file": "tall-display-incident-selected.json",
+      "status": "pass selected incident/filter/camera/nav/already-open header"
+    },
+    {
+      "file": "tall-display-lifecycle-announcements.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-drrm.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-health.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-home-emergency-info.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-maps.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-reports.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-services.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-lifecycle-settings.json",
+      "status": "pass submit/edit/clear/back and exact origin"
+    },
+    {
+      "file": "tall-display-selected-idle-drrm.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "tall-display-selected-idle-emergency-centers.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "tall-display-selected-idle-home-emergency-info.json",
+      "status": "pass selected center/camera/status/idle/list and stated header subset"
+    },
+    {
+      "file": "tall-font-c16.json",
+      "status": "pass stated subset"
+    },
+    {
+      "file": "tall-font-geometry-candidate-c17-drrm.json",
+      "status": "pass"
+    },
+    {
+      "file": "tall-font-geometry-candidate-c17-emergency-centers.json",
+      "status": "pass"
+    },
+    {
+      "file": "tall-font-geometry-candidate-c17-home-emergency-info.json",
+      "status": "pass"
+    },
+    {
+      "file": "tall-font-long-paste-center-drrm.json",
+      "status": "pass native paste/long horizontal caret and cleanup"
+    },
+    {
+      "file": "tall-font-long-paste-center-emergency-centers.json",
+      "status": "pass native paste/long horizontal caret and cleanup"
+    },
+    {
+      "file": "tall-font-long-paste-header-drrm.json",
+      "status": "pass native paste/long horizontal caret and cleanup"
+    }
+  ],
   "checks": [
     {
+      "file": "baseline-drrm-centers-ui.json",
       "name": "drrm-centers-ui",
       "stage": "baseline",
       "start": "2026-10-26T10:50:22.962Z",
@@ -13,7 +252,7 @@
       "status": 0
     },
     {
-      "name": "baseline-export.json",
+      "file": "baseline-export.json",
       "stage": "baseline",
       "check": "export",
       "command": [
@@ -30,7 +269,7 @@
       "status": 0
     },
     {
-      "name": "baseline-lint.json",
+      "file": "baseline-lint.json",
       "stage": "baseline",
       "check": "lint",
       "command": [
@@ -44,6 +283,7 @@
       "status": 0
     },
     {
+      "file": "baseline-maps-presentation-ui.json",
       "name": "maps-presentation-ui",
       "stage": "baseline",
       "start": "2026-10-26T10:49:58.523Z",
@@ -51,6 +291,7 @@
       "status": 0
     },
     {
+      "file": "baseline-resident-search-explore.json",
       "name": "resident-search-explore",
       "stage": "baseline",
       "start": "2026-10-26T10:51:40.149Z",
@@ -58,6 +299,7 @@
       "status": 0
     },
     {
+      "file": "baseline-resident-search-history-ui.json",
       "name": "resident-search-history-ui",
       "stage": "baseline",
       "start": "2026-10-26T10:51:55.052Z",
@@ -65,6 +307,7 @@
       "status": 0
     },
     {
+      "file": "baseline-resident-search-lifecycle.json",
       "name": "resident-search-lifecycle",
       "stage": "baseline",
       "start": "2026-10-26T10:49:27.973Z",
@@ -72,6 +315,7 @@
       "status": 0
     },
     {
+      "file": "baseline-resident-search-session.json",
       "name": "resident-search-session",
       "stage": "baseline",
       "start": "2026-10-26T10:48:11.237Z",
@@ -79,6 +323,7 @@
       "status": 0
     },
     {
+      "file": "baseline-resident-search-submit.json",
       "name": "resident-search-submit",
       "stage": "baseline",
       "start": "2026-10-26T10:49:24.081Z",
@@ -86,7 +331,7 @@
       "status": 0
     },
     {
-      "name": "baseline-type.json",
+      "file": "baseline-type.json",
       "stage": "baseline",
       "check": "type",
       "command": [
@@ -101,7 +346,7 @@
       "status": 0
     },
     {
-      "name": "baseline-unit.json",
+      "file": "baseline-unit.json",
       "stage": "baseline",
       "check": "unit",
       "command": [
@@ -117,14 +362,60 @@
       "status": 0
     },
     {
+      "file": "candidate-drrm-centers-ui.json",
       "name": "drrm-centers-ui",
-      "stage": "final",
-      "start": "2026-10-26T11:50:50.359Z",
-      "end": "2026-10-26T11:51:11.715Z",
+      "stage": "candidate",
+      "start": "2026-10-27T00:40:48.089Z",
+      "end": "2026-10-27T00:41:10.356Z",
       "status": 0
     },
     {
-      "name": "final-export.json",
+      "file": "candidate-lint.json",
+      "stage": "candidate",
+      "check": "lint",
+      "command": [
+        "node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src",
+        "--no-cache"
+      ],
+      "start": "2026-10-26T14:24:42.149Z",
+      "end": "2026-10-26T14:27:00.560Z",
+      "status": 0
+    },
+    {
+      "file": "candidate-type.json",
+      "stage": "candidate",
+      "check": "type",
+      "command": [
+        "node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "start": "2026-10-26T14:24:10.572Z",
+      "end": "2026-10-26T14:24:42.035Z",
+      "status": 0
+    },
+    {
+      "file": "candidate2-maps-presentation-ui.json",
+      "name": "maps-presentation-ui",
+      "stage": "candidate2",
+      "start": "2026-10-27T00:53:51.034Z",
+      "end": "2026-10-27T00:54:05.235Z",
+      "status": 1
+    },
+    {
+      "file": "final-drrm-centers-ui.json",
+      "name": "drrm-centers-ui",
+      "stage": "final",
+      "start": "2026-10-27T00:43:12.352Z",
+      "end": "2026-10-27T00:43:33.240Z",
+      "status": 0
+    },
+    {
+      "file": "final-export.json",
       "stage": "final",
       "check": "export",
       "command": [
@@ -136,12 +427,12 @@
         "--output-dir",
         "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase5-20261026\\final-export"
       ],
-      "start": "2026-10-26T11:46:51.877Z",
-      "end": "2026-10-26T11:47:37.149Z",
+      "start": "2026-10-27T00:46:22.930Z",
+      "end": "2026-10-27T00:46:56.016Z",
       "status": 0
     },
     {
-      "name": "final-lint.json",
+      "file": "final-lint.json",
       "stage": "final",
       "check": "lint",
       "command": [
@@ -150,19 +441,36 @@
         "src",
         "--no-cache"
       ],
-      "start": "2026-10-26T11:45:32.968Z",
-      "end": "2026-10-26T11:46:26.683Z",
+      "start": "2026-10-27T00:44:22.928Z",
+      "end": "2026-10-27T00:45:51.465Z",
       "status": 0
     },
     {
+      "file": "final-maps-presentation-ui.json",
       "name": "maps-presentation-ui",
       "stage": "final",
-      "start": "2026-10-26T11:50:25.374Z",
-      "end": "2026-10-26T11:50:50.229Z",
+      "start": "2026-10-27T00:44:47.921Z",
+      "end": "2026-10-27T00:45:12.095Z",
       "status": 0
     },
     {
-      "name": "final-type.json",
+      "file": "final-resident-search-lifecycle.json",
+      "name": "resident-search-lifecycle",
+      "stage": "final",
+      "start": "2026-10-27T00:44:33.130Z",
+      "end": "2026-10-27T00:44:40.663Z",
+      "status": 0
+    },
+    {
+      "file": "final-resident-search-submit.json",
+      "name": "resident-search-submit",
+      "stage": "final",
+      "start": "2026-10-27T00:44:40.766Z",
+      "end": "2026-10-27T00:44:47.808Z",
+      "status": 0
+    },
+    {
+      "file": "final-type.json",
       "stage": "final",
       "check": "type",
       "command": [
@@ -172,12 +480,12 @@
         "--pretty",
         "false"
       ],
-      "start": "2026-10-26T11:45:13.976Z",
-      "end": "2026-10-26T11:45:32.871Z",
+      "start": "2026-10-27T00:43:51.882Z",
+      "end": "2026-10-27T00:44:11.819Z",
       "status": 0
     },
     {
-      "name": "final-unit.json",
+      "file": "final-unit.json",
       "stage": "final",
       "check": "unit",
       "command": [
@@ -188,85 +496,204 @@
         "--maxWorkers=1",
         "--minWorkers=1"
       ],
-      "start": "2026-10-26T11:46:26.777Z",
-      "end": "2026-10-26T11:46:51.776Z",
+      "start": "2026-10-27T00:45:51.565Z",
+      "end": "2026-10-27T00:46:22.834Z",
+      "status": 0
+    },
+    {
+      "file": "final2-export.json",
+      "stage": "final2",
+      "check": "export",
+      "command": [
+        "node",
+        "../../node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase5-20261026\\final2-export"
+      ],
+      "start": "2026-10-27T00:55:51.831Z",
+      "end": "2026-10-27T00:57:23.797Z",
+      "status": 0
+    },
+    {
+      "file": "final2-lint.json",
+      "stage": "final2",
+      "check": "lint",
+      "command": [
+        "node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src",
+        "--no-cache"
+      ],
+      "start": "2026-10-27T00:54:26.056Z",
+      "end": "2026-10-27T00:56:31.416Z",
+      "status": 0
+    },
+    {
+      "file": "final2-maps-presentation-ui.json",
+      "name": "maps-presentation-ui",
+      "stage": "final2",
+      "start": "2026-10-27T00:55:27.792Z",
+      "end": "2026-10-27T00:55:51.729Z",
+      "status": 0
+    },
+    {
+      "file": "final2-type.json",
+      "stage": "final2",
+      "check": "type",
+      "command": [
+        "node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "start": "2026-10-27T00:54:05.360Z",
+      "end": "2026-10-27T00:54:25.959Z",
+      "status": 0
+    },
+    {
+      "file": "final2-unit.json",
+      "stage": "final2",
+      "check": "unit",
+      "command": [
+        "node",
+        "../../node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=dot",
+        "--maxWorkers=1",
+        "--minWorkers=1"
+      ],
+      "start": "2026-10-27T00:56:20.413Z",
+      "end": "2026-10-27T00:56:54.393Z",
+      "status": 0
+    },
+    {
+      "file": "resume-baseline-export.json",
+      "stage": "resume-baseline",
+      "check": "export",
+      "command": [
+        "node",
+        "../../node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase5-20261026\\resume-baseline-export"
+      ],
+      "start": "2026-10-26T12:51:33.151Z",
+      "end": "2026-10-26T12:52:14.241Z",
+      "status": 0
+    },
+    {
+      "file": "resume-baseline-lint.json",
+      "stage": "resume-baseline",
+      "check": "lint",
+      "command": [
+        "node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src",
+        "--no-cache"
+      ],
+      "start": "2026-10-26T12:49:56.842Z",
+      "end": "2026-10-26T12:51:00.885Z",
+      "status": 0
+    },
+    {
+      "file": "resume-baseline-type.json",
+      "stage": "resume-baseline",
+      "check": "type",
+      "command": [
+        "node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "start": "2026-10-26T12:49:56.768Z",
+      "end": "2026-10-26T12:50:25.932Z",
+      "status": 0
+    },
+    {
+      "file": "resume-baseline-unit.json",
+      "stage": "resume-baseline",
+      "check": "unit",
+      "command": [
+        "node",
+        "../../node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=dot",
+        "--maxWorkers=1",
+        "--minWorkers=1"
+      ],
+      "start": "2026-10-26T12:49:56.842Z",
+      "end": "2026-10-26T12:50:23.816Z",
+      "status": 0
+    },
+    {
+      "file": "resume-drrm-centers-ui.json",
+      "name": "drrm-centers-ui",
+      "stage": "resume",
+      "start": "2026-10-26T13:02:52.704Z",
+      "end": "2026-10-26T13:03:15.690Z",
+      "status": 0
+    },
+    {
+      "file": "resume-maps-presentation-ui.json",
+      "name": "maps-presentation-ui",
+      "stage": "resume",
+      "start": "2026-10-26T13:02:27.008Z",
+      "end": "2026-10-26T13:02:52.595Z",
+      "status": 0
+    },
+    {
+      "file": "resume-resident-search-explore.json",
+      "name": "resident-search-explore",
+      "stage": "resume",
+      "start": "2026-10-26T13:02:02.340Z",
+      "end": "2026-10-26T13:02:19.457Z",
+      "status": 0
+    },
+    {
+      "file": "resume-resident-search-history-ui.json",
+      "name": "resident-search-history-ui",
+      "stage": "resume",
+      "start": "2026-10-26T13:02:19.583Z",
+      "end": "2026-10-26T13:02:26.890Z",
+      "status": 0
+    },
+    {
+      "file": "resume-resident-search-lifecycle.json",
+      "name": "resident-search-lifecycle",
+      "stage": "resume",
+      "start": "2026-10-26T13:01:54.374Z",
+      "end": "2026-10-26T13:02:02.232Z",
+      "status": 0
+    },
+    {
+      "file": "resume-resident-search-session.json",
+      "name": "resident-search-session",
+      "stage": "resume",
+      "start": "2026-10-26T13:01:24.192Z",
+      "end": "2026-10-26T13:01:47.507Z",
+      "status": 0
+    },
+    {
+      "file": "resume-resident-search-submit.json",
+      "name": "resident-search-submit",
+      "stage": "resume",
+      "start": "2026-10-26T13:01:47.621Z",
+      "end": "2026-10-26T13:01:54.268Z",
       "status": 0
     }
   ],
-  "nativeSubsetCases": [
-    {
-      "id": "announcements",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "drrm",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "health",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "home/emergency-info",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "home",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "maps",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "reports",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "services",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "id": "settings",
-      "status": "pass focus/type/clear/back subset",
-      "configuration": "default"
-    },
-    {
-      "status": "pass stated subset",
-      "configuration": "default"
-    },
-    {
-      "id": "drrm",
-      "status": "pass stated subset",
-      "configuration": "default"
-    },
-    {
-      "id": "emergency-centers",
-      "status": "pass stated subset",
-      "configuration": "default"
-    },
-    {
-      "id": "home/emergency-info",
-      "status": "pass stated subset",
-      "configuration": "default"
-    }
+  "limitations": [
+    "Hardware navigation keys: no rendered gesture/three-button bars",
+    "Unknown native revision; downloaded-source identity only",
+    "Physical/release/native iOS outside current scope"
   ],
-  "nativeAcceptance": "Incomplete; see ledger.md",
-  "cleanup": {
-    "nativeHomeObserved": true,
-    "imeHiddenObserved": true,
-    "deviceConfigurationUnchanged": true,
-    "ownedForwardRemoved": true,
-    "ownedLogReaderStopped": true,
-    "development8081BridgeRetained": true,
-    "syntheticRecentCleanup": "pending exclusive emulator access"
-  }
+  "externalGitHead": "9fe8add15b0a5b75f6c232e30679da869731a4ea",
+  "externalHeadNote": "Final Git audit: HEAD advanced externally to 9fe8add15b0a5b75f6c232e30679da869731a4ea (27 October09:20 Asia/Manila) and includes the validated product/test changes. This chat issued no commit or push. Source hashes remain identical to the tested working copy; resumed snapshots, not HEAD, remain the ownership baseline. Final progress/evidence cleanup remains uncommitted. The earlier full camera diagnostic was included in that external commit; its current reviewable version is redacted, and no history rewrite was performed."
 }

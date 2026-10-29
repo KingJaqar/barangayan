@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "realDeviceWifiDisabled": true,
+  "offlineBanner": true,
+  "retainedAdvisory": true,
+  "controlledLocalhostFailure": true
+}

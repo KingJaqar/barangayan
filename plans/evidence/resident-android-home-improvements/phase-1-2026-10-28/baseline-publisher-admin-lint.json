@@ -1,0 +1,14 @@
+{
+  "id": "admin-lint",
+  "cwd": "apps/admin-web",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/eslint/bin/eslint.js"
+  ],
+  "deadline": 300000,
+  "start": "2026-10-28T06:04:15.328Z",
+  "end": "2026-10-28T06:05:32.075Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-publisher-admin-lint.log"
+}

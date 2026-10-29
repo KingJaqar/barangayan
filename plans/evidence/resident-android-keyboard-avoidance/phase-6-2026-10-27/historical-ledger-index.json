@@ -1,0 +1,45 @@
+{
+  "source": "../phase-0-2026-10-24/ledger.json",
+  "sha256": "332af6dae8b7d0fa6a5f83ee140902334216e11c49ff47e348c47077c3fc19d2",
+  "rows": 791,
+  "editableRows": 770,
+  "listRegressions": 21,
+  "matrix": [
+    {
+      "code": "M0",
+      "classification": "Historical MuMu default observations; superseded only by explicitly linked current evidence",
+      "rows": 113
+    },
+    {
+      "code": "M1",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    },
+    {
+      "code": "M1L",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    },
+    {
+      "code": "M2",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    },
+    {
+      "code": "M2L",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    },
+    {
+      "code": "M3",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    },
+    {
+      "code": "M3L",
+      "classification": "Outside current validation scope under §9.0; never passed",
+      "rows": 113
+    }
+  ],
+  "note": "Historical row identities/counts remain intact in their original file. Current MuMu matrix is separate; unavailable physical/release API/iOS coverage cannot close a current MuMu gap."
+}

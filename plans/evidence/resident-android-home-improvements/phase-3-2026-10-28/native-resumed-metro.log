@@ -1,0 +1,13 @@
+Starting project at C:\Users\User\barangayan\.home-phase3-native
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8097
+
+Logs for your project will appear below.
+| (node:56968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:56968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Android Bundled 12153ms entry.jsx (2003 modules)
+Android Bundled 200ms entry.jsx (1 module)

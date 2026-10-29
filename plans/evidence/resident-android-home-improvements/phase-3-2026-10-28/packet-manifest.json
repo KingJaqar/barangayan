@@ -1,0 +1,95 @@
+{
+  "version": "1.18.1",
+  "compressed": false,
+  "security": "No suspicious files detected",
+  "sha256": "f914ed725a14f95dcb95cf128f6d3f22c6571ea6f42f5ac618487a0c78bf0e82",
+  "actual": [
+    "packages/shared/src/lib/home-request-priority.ts",
+    "supabase/migrations/0148_resident_home_request_priority.sql",
+    "apps/resident-android-mobile/src/components/home/home-action.tsx",
+    "apps/resident-android-mobile/src/lib/home-request.test.ts",
+    "apps/resident-android-mobile/src/lib/home-request.ts",
+    "CLAUDE.md",
+    "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+    "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+    "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+    "AGENTS.md",
+    "apps/resident-android-mobile/package.json",
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx"
+  ],
+  "omissions": [],
+  "chunks": [
+    {
+      "file": "packet-read-1.txt",
+      "start": 0,
+      "end": 9756,
+      "chars": 9756,
+      "lines": 200,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R2/R3: shared action projection and invoker SQL priority/fee/owner contract; Home action press ownership"
+    },
+    {
+      "file": "packet-read-2.txt",
+      "start": 9756,
+      "end": 20091,
+      "chars": 10335,
+      "lines": 200,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R3/R10: historical helper/test behavior and summary entry/animation lifecycle"
+    },
+    {
+      "file": "packet-read-3.txt",
+      "start": 20091,
+      "end": 32091,
+      "chars": 12000,
+      "lines": 121,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R3/R9/R10: full summary body/styles and browser platform/network/preferences adapters"
+    },
+    {
+      "file": "packet-read-4.txt",
+      "start": 32091,
+      "end": 44091,
+      "chars": 12000,
+      "lines": 166,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R2/R8/R9/R10: baseline query, pull, navigation/focus and layout acceptance fixtures"
+    },
+    {
+      "file": "packet-read-5.txt",
+      "start": 44091,
+      "end": 56091,
+      "chars": 12000,
+      "lines": 178,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R8/R9: failure/late-scope fixtures and old interactive shelf control layout"
+    },
+    {
+      "file": "packet-read-6.txt",
+      "start": 56091,
+      "end": 63507,
+      "chars": 7416,
+      "lines": 200,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R8: passive/default carousel behavior and dependency declarations; Home imports"
+    },
+    {
+      "file": "packet-read-7.txt",
+      "start": 63507,
+      "end": 75507,
+      "chars": 12000,
+      "lines": 174,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R2/R3/R8/R9: Home state/effects/newest-three gap and existing cards"
+    },
+    {
+      "file": "packet-read-8.txt",
+      "start": 75507,
+      "end": 82844,
+      "chars": 7337,
+      "lines": 102,
+      "read": "Fully read during Phase3 entry; no missing continuation",
+      "analysis": "R2/R8/R10: remaining Home render/styles; announcement work deferred to Phase4"
+    }
+  ]
+}

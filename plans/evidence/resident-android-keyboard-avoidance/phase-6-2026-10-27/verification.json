@@ -1,0 +1,469 @@
+{
+  "date": "2026-10-27 Asia/Manila",
+  "phase": 6,
+  "status": "Partially complete",
+  "newDependencies": [],
+  "productChanges": [],
+  "checks": [
+    {
+      "stage": "baseline",
+      "check": "type",
+      "command": [
+        "node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "start": "2026-10-27T01:43:56.992Z",
+      "end": "2026-10-27T01:44:23.438Z",
+      "status": 0
+    },
+    {
+      "stage": "baseline",
+      "check": "lint",
+      "command": [
+        "node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src",
+        "--no-cache"
+      ],
+      "start": "2026-10-27T01:43:57.021Z",
+      "end": "2026-10-27T01:45:00.463Z",
+      "status": 0
+    },
+    {
+      "stage": "baseline",
+      "check": "unit",
+      "command": [
+        "node",
+        "../../node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=dot",
+        "--maxWorkers=1",
+        "--minWorkers=1"
+      ],
+      "start": "2026-10-27T01:43:57.037Z",
+      "end": "2026-10-27T01:44:33.602Z",
+      "status": 0
+    },
+    {
+      "stage": "baseline",
+      "check": "export",
+      "command": [
+        "node",
+        "../../node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "C:\\Users\\User\\barangayan\\tmp\\resident-keyboard-phase6-20261027\\baseline-export"
+      ],
+      "start": "2026-10-27T01:43:57.037Z",
+      "end": "2026-10-27T01:45:04.297Z",
+      "status": 0
+    }
+  ],
+  "regressionSuites": {
+    "pass": 19,
+    "total": 24,
+    "results": [
+      {
+        "name": "refresh-ownership",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/refresh-ownership.mjs"
+        ],
+        "start": "2026-10-27T02:02:38.518Z",
+        "end": "2026-10-27T02:02:47.026Z",
+        "status": 0
+      },
+      {
+        "name": "hidden-work-ownership",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/hidden-work-ownership.mjs"
+        ],
+        "start": "2026-10-27T02:02:47.034Z",
+        "end": "2026-10-27T02:03:20.258Z",
+        "status": 1
+      },
+      {
+        "name": "map-state-bridge",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/map-state-bridge.mjs"
+        ],
+        "start": "2026-10-27T02:03:20.262Z",
+        "end": "2026-10-27T02:03:26.761Z",
+        "status": 0
+      },
+      {
+        "name": "root-navigation-isolation",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/root-navigation-isolation.mjs"
+        ],
+        "start": "2026-10-27T02:03:26.765Z",
+        "end": "2026-10-27T02:03:27.729Z",
+        "status": 1
+      },
+      {
+        "name": "request-tracking-navigation",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/request-tracking-navigation.mjs"
+        ],
+        "start": "2026-10-27T02:03:27.734Z",
+        "end": "2026-10-27T02:03:27.885Z",
+        "status": 0
+      },
+      {
+        "name": "resident-shell-lifecycle",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-shell-lifecycle.mjs"
+        ],
+        "start": "2026-10-27T02:03:27.890Z",
+        "end": "2026-10-27T02:03:34.798Z",
+        "status": 0
+      },
+      {
+        "name": "services-tab-stability",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/services-tab-stability.mjs"
+        ],
+        "start": "2026-10-27T02:03:34.803Z",
+        "end": "2026-10-27T02:03:41.516Z",
+        "status": 0
+      },
+      {
+        "name": "services-lists-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/services-lists-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:41.521Z",
+        "end": "2026-10-27T02:03:54.458Z",
+        "status": 0
+      },
+      {
+        "name": "resident-search-session",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-search-session.mjs"
+        ],
+        "start": "2026-10-27T02:02:38.551Z",
+        "end": "2026-10-27T02:02:58.252Z",
+        "status": 0
+      },
+      {
+        "name": "resident-search-submit",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-search-submit.mjs"
+        ],
+        "start": "2026-10-27T02:02:58.261Z",
+        "end": "2026-10-27T02:03:04.948Z",
+        "status": 0
+      },
+      {
+        "name": "resident-search-lifecycle",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-search-lifecycle.mjs"
+        ],
+        "start": "2026-10-27T02:03:04.952Z",
+        "end": "2026-10-27T02:03:12.777Z",
+        "status": 0
+      },
+      {
+        "name": "resident-search-explore",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-search-explore.mjs"
+        ],
+        "start": "2026-10-27T02:03:12.781Z",
+        "end": "2026-10-27T02:03:27.773Z",
+        "status": 0
+      },
+      {
+        "name": "resident-search-history-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-search-history-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:27.778Z",
+        "end": "2026-10-27T02:03:35.067Z",
+        "status": 0
+      },
+      {
+        "name": "maps-presentation-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/maps-presentation-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:35.072Z",
+        "end": "2026-10-27T02:04:01.312Z",
+        "status": 0
+      },
+      {
+        "name": "drrm-centers-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/drrm-centers-ui.mjs"
+        ],
+        "start": "2026-10-27T02:04:01.315Z",
+        "end": "2026-10-27T02:04:22.742Z",
+        "status": 0
+      },
+      {
+        "name": "settings-profile-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/settings-profile-ui.mjs"
+        ],
+        "start": "2026-10-27T02:02:38.598Z",
+        "end": "2026-10-27T02:03:22.524Z",
+        "status": 0
+      },
+      {
+        "name": "resident-details-loading-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/resident-details-loading-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:22.532Z",
+        "end": "2026-10-27T02:03:29.278Z",
+        "status": 0
+      },
+      {
+        "name": "document-forms-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/document-forms-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:29.282Z",
+        "end": "2026-10-27T02:03:37.309Z",
+        "status": 0
+      },
+      {
+        "name": "request-document-presentation-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/request-document-presentation-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:37.315Z",
+        "end": "2026-10-27T02:03:44.109Z",
+        "status": 0
+      },
+      {
+        "name": "tracking-payment-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/tracking-payment-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:44.112Z",
+        "end": "2026-10-27T02:03:52.974Z",
+        "status": 0
+      },
+      {
+        "name": "drrm-scan-family-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/drrm-scan-family-ui.mjs"
+        ],
+        "start": "2026-10-27T02:03:52.978Z",
+        "end": "2026-10-27T02:04:19.849Z",
+        "status": 0
+      },
+      {
+        "name": "verification-sensitive-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/verification-sensitive-ui.mjs"
+        ],
+        "start": "2026-10-27T02:04:19.851Z",
+        "end": "2026-10-27T02:04:20.782Z",
+        "status": 1
+      },
+      {
+        "name": "reports-announcements-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/reports-announcements-ui.mjs"
+        ],
+        "start": "2026-10-27T02:04:20.785Z",
+        "end": "2026-10-27T02:04:29.542Z",
+        "status": 1
+      },
+      {
+        "name": "health-presentation-ui",
+        "stage": "baseline",
+        "command": [
+          "node",
+          "tests/health-presentation-ui.mjs"
+        ],
+        "start": "2026-10-27T02:04:29.546Z",
+        "end": "2026-10-27T02:04:36.232Z",
+        "status": 1
+      }
+    ],
+    "failures": [
+      {
+        "name": "hidden-work-ownership",
+        "status": "pre-existing failure; reproduced before any product change",
+        "output": "logs/baseline-hidden-work-ownership.txt"
+      },
+      {
+        "name": "root-navigation-isolation",
+        "status": "pre-existing failure; reproduced before any product change",
+        "output": "logs/baseline-root-navigation-isolation.txt"
+      },
+      {
+        "name": "verification-sensitive-ui",
+        "status": "pre-existing failure; reproduced before any product change",
+        "output": "logs/baseline-verification-sensitive-ui.txt"
+      },
+      {
+        "name": "reports-announcements-ui",
+        "status": "pre-existing failure; reproduced before any product change",
+        "output": "logs/baseline-reports-announcements-ui.txt"
+      },
+      {
+        "name": "health-presentation-ui",
+        "status": "pre-existing failure; reproduced before any product change",
+        "output": "logs/baseline-health-presentation-ui.txt"
+      }
+    ]
+  },
+  "mobileUnit": {
+    "tests": 335,
+    "files": 32,
+    "status": "pass"
+  },
+  "sharedUnit": {
+    "tests": 85,
+    "files": 3,
+    "status": "pass"
+  },
+  "lint": {
+    "errors": 0,
+    "preExistingWarnings": 1,
+    "owner": "components/health/health-presentation.tsx: unused useState"
+  },
+  "export": "Android JS/Hermes export passed; native release APK not built or qualified",
+  "native": {
+    "a05": "native-a05-continuation.json",
+    "a05Cycles": "native-a05-cycles.json",
+    "completion": [
+      {
+        "file": "native-completion.json",
+        "status": "pass stated optional-completion focus/edit/status subset",
+        "definitions": 8,
+        "configuration": "default"
+      },
+      {
+        "file": "native-completion-compact-font.json",
+        "status": "pass stated optional-completion focus/edit/status subset",
+        "definitions": 8,
+        "configuration": "compact-font"
+      },
+      {
+        "file": "native-completion-larger-display.json",
+        "status": "pass stated optional-completion focus/edit/status subset",
+        "definitions": 8,
+        "configuration": "larger-display"
+      }
+    ],
+    "matrix": "native-completion-matrix.json",
+    "identity": "40/40 selected downloaded factories and served originals match working copy; not live Runtime inspection",
+    "runtimeProbe": "native-runtime-probe.json",
+    "console": {
+      "start": "2026-10-27T02:04:28.490Z",
+      "end": "2026-10-27T02:39:33.361Z",
+      "nativePid": 27670,
+      "method": "adb logcat for the identified native process; warning/error tags only",
+      "knownPushTokenWarningLines": 5,
+      "androidRuntimeErrorLines": 0,
+      "unexpectedLines": 0,
+      "readerStopped": true,
+      "limitation": "Filtered ReactNativeJS warning/AndroidRuntime error sample includes buffered startup entries; Runtime.enable unavailable. No complete live-console claim."
+    },
+    "cleanup": "cleanup.json"
+  },
+  "acceptance": [
+    {
+      "requirement": 1,
+      "criterion": "Every field/consumer/configuration completes native protocol; reconcile exact59 IDs",
+      "status": "pending manual verification",
+      "met": "59 source identities,110 editable consumers,330 current editable cases and9 List regressions reconciled",
+      "remaining": "56 definitions retain required route/protocol/configuration gaps; Phase5 C15-C17 stated-scope results inherited after identity checks"
+    },
+    {
+      "requirement": 2,
+      "criterion": "Run installed typecheck/lint and affected navigation/search/shell/library checks",
+      "status": "met for execution; five pre-existing suite failures remain",
+      "result": "Typecheck/lint/export,335 mobile tests,85 shared tests and19/24 existing regression suites pass. Lint1 pre-existing warning;5 baseline suite failures recorded"
+    },
+    {
+      "requirement": 3,
+      "criterion": "Test any new visibility-helper overlap math/lifecycle",
+      "status": "not applicable",
+      "result": "No new helper or product code; existing Maps/Centers/shell lifecycle checks pass"
+    },
+    {
+      "requirement": 4,
+      "criterion": "Candidate identity and before/after results for every code-changing case; summarize each field",
+      "status": "pending manual verification",
+      "met": "APK/resize/API/IME/session requalified;40 selected contracts match downloaded/served source;59-field ledger produced",
+      "remaining": "Prior repairs have subset evidence; full native consumers, initial-map restoration comparison and live Runtime coverage remain unqualified"
+    },
+    {
+      "requirement": 5,
+      "criterion": "Review final diff for Android scope, iOS/security/read-only behavior and bloat",
+      "status": "met",
+      "result": "No product/config/dependency/domain change. Baseline source and user work preserved; no new wrappers/listeners/offsets/logging"
+    },
+    {
+      "requirement": 6,
+      "criterion": "Deliver evidence/ledger/summary, disclose coverage limits and clean temporary runtime state",
+      "status": "met for recorded scope",
+      "result": "Selected-phase evidence and report delivered; native synthetic edits cleared/restored, original settings/Home/IME state verified, owned reader stopped; clipboard caveat explicit"
+    }
+  ],
+  "completionGate": "Not met: current-scope required native cases remain unexecuted; no unqualified completion claim",
+  "verificationReuse": "No product source changed: baseline type/lint/unit/export results remain applicable after final source-identity/preservation audit. Repeated unchanged commands were unnecessary; new evidence/ledger checked directly.",
+  "remaining": "See ledger.md and report.md for exact state prerequisites and per-definition native work",
+  "outsideScope": [
+    "Physical phones",
+    "Other emulator products",
+    "Unavailable min/newest release APIs",
+    "Native iOS and release-APK certification"
+  ],
+  "head": "9fe8add15b0a5b75f6c232e30679da869731a4ea"
+}

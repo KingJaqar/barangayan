@@ -1,0 +1,422 @@
+--------- beginning of main
+10-29 11:08:50.125  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:08:50.127  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:08:50.179  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:08:50.180  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:08:50.187  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:08:50.187  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:08:50.188  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":71,"initialProps":{},"fabric":true}
+10-29 11:08:50.193  2678  4265 D an.resident.de: Features: 0 0 0
+10-29 11:08:50.194  2678  4265 E an.resident.de: vulkan version is 4211013
+10-29 11:08:50.205  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:08:50.206  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:08:50.218  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 61): Schedule
+10-29 11:08:50.218  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 61)
+10-29 11:08:50.218  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:08:50.218  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 61): Execute
+10-29 11:08:50.218  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [61]
+10-29 11:08:50.239  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [61].
+10-29 11:08:50.278  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:08:50.286  2678  5909 D an.resident.de: Features: 0 0 0
+10-29 11:08:50.287  2678  5909 E an.resident.de: vulkan version is 4211013
+10-29 11:08:50.290  2678  5909 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:08:50.291  2678  5909 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:08:50.298  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 61 is not found
+10-29 11:08:50.315  2678  2678 E unknown:SurfaceMountingManager: Surface [61] was stopped on SurfaceMountingManager.
+10-29 11:08:50.588  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:08:50.589  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 43.576429999999995 ms
+10-29 11:08:50.864  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 63.725566 ms
+10-29 11:08:50.866  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 58.007855 ms
+10-29 11:08:51.361  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 67.661033 ms
+10-29 11:08:51.508  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:08:51.530  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topAttached will be dropped
+10-29 11:08:52.081  2678  2678 W Glide   : Load failed for [http://127.0.0.1:58472/rest/v1/not_a_real_image] with dimensions [906x378]
+10-29 11:08:52.081  2678  2678 W Glide   : class com.bumptech.glide.load.engine.GlideException: Failed to load resource
+10-29 11:08:52.081  2678  2678 W Glide   : There was 1 root cause:
+10-29 11:08:52.081  2678  2678 W Glide   : com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:08:52.081  2678  2678 W Glide   :  call GlideException#logRootCauses(String) for more detail
+10-29 11:08:52.081  2678  2678 W Glide   :   Cause (1 of 1): class com.bumptech.glide.load.engine.GlideException: Fetching data failed, class java.io.InputStream, REMOTE
+10-29 11:08:52.081  2678  2678 W Glide   : There was 1 root cause:
+10-29 11:08:52.081  2678  2678 W Glide   : com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:08:52.081  2678  2678 W Glide   :  call GlideException#logRootCauses(String) for more detail
+10-29 11:08:52.081  2678  2678 W Glide   :     Cause (1 of 1): class com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:08:52.082  2678  2678 I Glide   : Root cause (1 of 1)
+10-29 11:08:52.082  2678  2678 I Glide   : com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:08:52.082  2678  2678 I Glide   : 	at com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher.onResponse(OkHttpStreamFetcher.java:71)
+10-29 11:08:52.082  2678  2678 I Glide   : 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-29 11:08:52.082  2678  2678 I Glide   : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-29 11:08:52.082  2678  2678 I Glide   : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-29 11:08:52.082  2678  2678 I Glide   : 	at java.lang.Thread.run(Thread.java:920)
+10-29 11:08:52.082  2678  2678 E ExpoImage: Failed to load resource
+10-29 11:08:52.082  2678  2678 E ExpoImage: There was 1 root cause:
+10-29 11:08:52.082  2678  2678 E ExpoImage: com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:08:52.082  2678  2678 I ExpoImage: Root cause (1 of 1)
+10-29 11:08:52.082  2678  2678 I ExpoImage: com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:08:52.082  2678  2678 I ExpoImage: 	at com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher.onResponse(OkHttpStreamFetcher.java:71)
+10-29 11:08:52.082  2678  2678 I ExpoImage: 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-29 11:08:52.082  2678  2678 I ExpoImage: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-29 11:08:52.082  2678  2678 I ExpoImage: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-29 11:08:52.082  2678  2678 I ExpoImage: 	at java.lang.Thread.run(Thread.java:920)
+10-29 11:08:59.999  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:09:00.005  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:09:00.055  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:09:00.055  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:09:00.058  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:09:00.059  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:09:00.066  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":81,"initialProps":{},"fabric":true}
+10-29 11:09:00.066  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:09:00.068  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:09:00.085  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 71): Schedule
+10-29 11:09:00.085  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 71)
+10-29 11:09:00.085  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:09:00.085  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 71): Execute
+10-29 11:09:00.086  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [71]
+10-29 11:09:00.113  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [71].
+10-29 11:09:00.151  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.162  2678  6004 D an.resident.de: Features: 0 0 0
+10-29 11:09:00.162  2678  6004 E an.resident.de: vulkan version is 4211013
+10-29 11:09:00.163  2678  6004 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.168  2678  6004 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.172  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 71 is not found
+10-29 11:09:00.177  2678  2678 E unknown:SurfaceMountingManager: Surface [71] was stopped on SurfaceMountingManager.
+10-29 11:09:00.204  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.218  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.222  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:09:00.225  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:09:00.263  2678  2693 D an.resident.de: Features: 0 0 0
+10-29 11:09:00.266  2678  2693 E an.resident.de: vulkan version is 4211013
+10-29 11:09:00.267  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:09:00.267  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:09:00.269  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:09:00.269  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:09:00.281  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:09:00.286  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:09:00.368  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.383  2678  6019 D an.resident.de: Features: 0 0 0
+10-29 11:09:00.383  2678  6019 E an.resident.de: vulkan version is 4211013
+10-29 11:09:00.385  2678  6019 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.387  2678  6019 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:09:00.400  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 81): Schedule
+10-29 11:09:00.400  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 81)
+10-29 11:09:00.400  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 81): Execute
+10-29 11:09:00.400  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [81]
+10-29 11:09:00.401  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:09:00.411  2678  2678 E unknown:SurfaceMountingManager: Surface [81] was stopped on SurfaceMountingManager.
+10-29 11:09:00.436  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 61 has leaked 293 components out of 327
+10-29 11:09:00.439  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":91,"initialProps":{},"fabric":true}
+10-29 11:09:00.501  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:09:00.585  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 71 has leaked 319 components out of 327
+10-29 11:09:00.859  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 50.646533 ms
+10-29 11:09:01.130  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 56.371384 ms
+10-29 11:09:01.487  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 56.318456999999995 ms
+10-29 11:09:01.639  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:09:01.665  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topDetached will be dropped
+10-29 11:09:02.416  2678  2678 W Glide   : Load failed for [http://127.0.0.1:58472/rest/v1/not_a_real_image] with dimensions [882x368]
+10-29 11:09:02.416  2678  2678 W Glide   : class com.bumptech.glide.load.engine.GlideException: Failed to load resource
+10-29 11:09:02.416  2678  2678 W Glide   : There was 1 root cause:
+10-29 11:09:02.416  2678  2678 W Glide   : com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:09:02.416  2678  2678 W Glide   :  call GlideException#logRootCauses(String) for more detail
+10-29 11:09:02.416  2678  2678 W Glide   :   Cause (1 of 1): class com.bumptech.glide.load.engine.GlideException: Fetching data failed, class java.io.InputStream, REMOTE
+10-29 11:09:02.416  2678  2678 W Glide   : There was 1 root cause:
+10-29 11:09:02.416  2678  2678 W Glide   : com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:09:02.416  2678  2678 W Glide   :  call GlideException#logRootCauses(String) for more detail
+10-29 11:09:02.416  2678  2678 W Glide   :     Cause (1 of 1): class com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:09:02.417  2678  2678 I Glide   : Root cause (1 of 1)
+10-29 11:09:02.417  2678  2678 I Glide   : com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:09:02.417  2678  2678 I Glide   : 	at com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher.onResponse(OkHttpStreamFetcher.java:71)
+10-29 11:09:02.417  2678  2678 I Glide   : 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-29 11:09:02.417  2678  2678 I Glide   : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-29 11:09:02.417  2678  2678 I Glide   : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-29 11:09:02.417  2678  2678 I Glide   : 	at java.lang.Thread.run(Thread.java:920)
+10-29 11:09:02.417  2678  2678 E ExpoImage: Failed to load resource
+10-29 11:09:02.417  2678  2678 E ExpoImage: There was 1 root cause:
+10-29 11:09:02.417  2678  2678 E ExpoImage: com.bumptech.glide.load.HttpException(Not Found, status code: 404)
+10-29 11:09:02.417  2678  2678 I ExpoImage: Root cause (1 of 1)
+10-29 11:09:02.417  2678  2678 I ExpoImage: com.bumptech.glide.load.HttpException: Not Found, status code: 404
+10-29 11:09:02.417  2678  2678 I ExpoImage: 	at com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher.onResponse(OkHttpStreamFetcher.java:71)
+10-29 11:09:02.417  2678  2678 I ExpoImage: 	at okhttp3.internal.connection.RealCall$AsyncCall.run(RealCall.kt:519)
+10-29 11:09:02.417  2678  2678 I ExpoImage: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-29 11:09:02.417  2678  2678 I ExpoImage: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-29 11:09:02.417  2678  2678 I ExpoImage: 	at java.lang.Thread.run(Thread.java:920)
+10-29 11:09:44.876  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:09:44.877  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:09:45.255  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:09:45.256  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:13:43.723  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:13:43.724  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:13:43.815  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:13:44.464  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:13:44.465  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:13:44.542  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:19.239  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:26.890  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:14:26.892  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:14:26.943  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:14:26.943  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:14:26.944  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:14:26.946  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:14:26.947  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":101,"initialProps":{},"fabric":true}
+10-29 11:14:26.959  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:14:26.963  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:14:26.976  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 91): Schedule
+10-29 11:14:26.976  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 91)
+10-29 11:14:26.977  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:14:26.978  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 91): Execute
+10-29 11:14:26.978  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [91]
+10-29 11:14:27.022  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.049  2678  6491 D an.resident.de: Features: 0 0 0
+10-29 11:14:27.049  2678  6491 E an.resident.de: vulkan version is 4211013
+10-29 11:14:27.050  2678  6491 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.056  2678  6491 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.071  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [91].
+10-29 11:14:27.079  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 91 is not found
+10-29 11:14:27.092  2678  2678 E unknown:SurfaceMountingManager: Surface [91] was stopped on SurfaceMountingManager.
+10-29 11:14:27.099  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:14:27.100  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:14:27.142  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:14:27.142  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:14:27.143  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:14:27.143  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:14:27.166  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:14:27.168  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:14:27.193  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 101): Schedule
+10-29 11:14:27.193  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 101)
+10-29 11:14:27.194  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 101): Execute
+10-29 11:14:27.194  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [101]
+10-29 11:14:27.195  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:14:27.195  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [101].
+10-29 11:14:27.244  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.258  2678  6506 D an.resident.de: Features: 0 0 0
+10-29 11:14:27.258  2678  6506 E an.resident.de: vulkan version is 4211013
+10-29 11:14:27.260  2678  6506 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.261  2678  6506 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:27.264  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 101 is not found
+10-29 11:14:27.272  2678  2678 E unknown:SurfaceMountingManager: Surface [101] was stopped on SurfaceMountingManager.
+10-29 11:14:27.575  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":111,"initialProps":{},"fabric":true}
+10-29 11:14:27.684  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:27.799  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 91 has leaked 673 components out of 719
+10-29 11:14:28.124  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 100.50417999999999 ms
+10-29 11:14:28.143  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topLoad will be dropped
+10-29 11:14:28.229  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 35.810432999999996 ms
+10-29 11:14:28.407  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 124.912813 ms
+10-29 11:14:28.879  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 69.284815 ms
+10-29 11:14:28.968  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:28.989  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topWillAppear will be dropped
+10-29 11:14:29.398  2678  2678 I RenderThread: type=1400 audit(0.0:5322): avc: denied { ioctl } for path="/dev/vaddress" dev="tmpfs" ino=11329 ioctlcmd=0x4c19 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:device:s0 tclass=chr_file permissive=1 app=com.barangayan.resident.dev
+10-29 11:14:31.321  2678  2678 I an.resident.dev: type=1400 audit(0.0:5323): avc: denied { call } for scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:r:adbd:s0 tclass=binder permissive=1 app=com.barangayan.resident.dev
+10-29 11:14:40.328  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:14:40.330  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:14:40.371  2678  2678 I an.resident.dev: type=1400 audit(0.0:5330): avc: denied { getattr } for path="/system/framework/framework-res.apk" dev="sda6" ino=2312 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=file permissive=1 app=com.barangayan.resident.dev
+10-29 11:14:40.389  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:14:40.389  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:14:40.390  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:14:40.390  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:14:40.391  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":121,"initialProps":{},"fabric":true}
+10-29 11:14:40.375  2678  2678 I an.resident.dev: type=1400 audit(0.0:5331): avc: denied { map } for path="/system/framework/framework-res.apk" dev="sda6" ino=2312 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=file permissive=1 app=com.barangayan.resident.dev
+10-29 11:14:40.375  2678  2678 I an.resident.dev: type=1400 audit(0.0:5332): avc: denied { read } for path="/system/framework/framework-res.apk" dev="sda6" ino=2312 scontext=u:r:untrusted_app:s0:c60,c256,c512,c768 tcontext=u:object_r:unlabeled:s0 tclass=file permissive=1 app=com.barangayan.resident.dev
+10-29 11:14:40.415  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:14:40.419  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:14:40.443  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 111): Schedule
+10-29 11:14:40.443  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 111)
+10-29 11:14:40.443  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:14:40.443  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 111): Execute
+10-29 11:14:40.444  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [111]
+10-29 11:14:40.489  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [111].
+10-29 11:14:40.542  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.555  2678  6655 D an.resident.de: Features: 0 0 0
+10-29 11:14:40.555  2678  6655 E an.resident.de: vulkan version is 4211013
+10-29 11:14:40.558  2678  6655 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.560  2678  6655 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.577  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 111 is not found
+10-29 11:14:40.595  2678  2678 E unknown:SurfaceMountingManager: Surface [111] was stopped on SurfaceMountingManager.
+10-29 11:14:40.629  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.638  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.646  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:14:40.647  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:14:40.658  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 101 has leaked 5 components out of 5
+10-29 11:14:40.702  2678  4082 W NativeResponse: Invalid state - currentState[6] validStates[2,4,5]
+10-29 11:14:40.706  2678  6529 W NativeResponse: Invalid state - currentState[6] validStates[1,2,4,5]
+10-29 11:14:40.708  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:14:40.710  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:14:40.710  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:14:40.710  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:14:40.732  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:14:40.736  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:14:40.755  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:40.760  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":131,"initialProps":{},"fabric":true}
+10-29 11:14:40.760  2678  2687 I an.resident.de: Background concurrent copying GC freed 479443(18MB) AllocSpace objects, 8(7264KB) LOS objects, 44% free, 30MB/54MB, paused 3.547ms,2.300ms total 293.566ms
+10-29 11:14:40.804  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.818  2678  6666 D an.resident.de: Features: 0 0 0
+10-29 11:14:40.818  2678  6666 E an.resident.de: vulkan version is 4211013
+10-29 11:14:40.820  2678  6666 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.824  2678  6666 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:14:40.828  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 121): Schedule
+10-29 11:14:40.828  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 121)
+10-29 11:14:40.828  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:14:40.830  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 121): Execute
+10-29 11:14:40.830  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [121]
+10-29 11:14:40.831  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [121].
+10-29 11:14:40.833  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 121 is not found
+10-29 11:14:40.837  2678  2678 E unknown:SurfaceMountingManager: Surface [121] was stopped on SurfaceMountingManager.
+10-29 11:14:40.999  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 111 has leaked 289 components out of 322
+10-29 11:14:41.257  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 44.543969999999995 ms
+10-29 11:14:41.460  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 53.909911 ms
+10-29 11:14:41.462  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 52.189197 ms
+10-29 11:14:41.879  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 60.726512 ms
+10-29 11:14:42.001  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:14:42.026  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topTransitionProgress will be dropped
+10-29 11:16:06.869  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:16:06.874  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:16:06.936  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:16:06.936  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:16:06.937  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:16:06.937  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:16:06.938  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":141,"initialProps":{},"fabric":true}
+10-29 11:16:06.953  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:16:06.955  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:16:06.969  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 131): Schedule
+10-29 11:16:06.969  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 131)
+10-29 11:16:06.969  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:16:06.970  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 131): Execute
+10-29 11:16:06.970  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [131]
+10-29 11:16:06.984  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [131].
+10-29 11:16:07.029  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.039  2678  6731 D an.resident.de: Features: 0 0 0
+10-29 11:16:07.039  2678  6731 E an.resident.de: vulkan version is 4211013
+10-29 11:16:07.040  2678  6731 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.045  2678  6731 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.053  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 131 is not found
+10-29 11:16:07.061  2678  2678 E unknown:SurfaceMountingManager: Surface [131] was stopped on SurfaceMountingManager.
+10-29 11:16:07.088  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topDetached will be dropped
+10-29 11:16:07.091  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.105  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.109  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:16:07.117  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:16:07.144  2678  5930 D an.resident.de: Features: 0 0 0
+10-29 11:16:07.144  2678  5930 E an.resident.de: vulkan version is 4211013
+10-29 11:16:07.178  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:16:07.178  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:16:07.179  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:16:07.179  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:16:07.198  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:16:07.199  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:16:07.256  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.269  2678  6745 D an.resident.de: Features: 0 0 0
+10-29 11:16:07.269  2678  6745 E an.resident.de: vulkan version is 4211013
+10-29 11:16:07.269  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 121 has leaked 5 components out of 23
+10-29 11:16:07.271  2678  6745 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.273  2678  6745 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:07.287  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 121 is not found
+10-29 11:16:07.289  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 141): Schedule
+10-29 11:16:07.289  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 141)
+10-29 11:16:07.289  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:16:07.296  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 141): Execute
+10-29 11:16:07.296  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [141]
+10-29 11:16:07.298  2678  2678 E unknown:SurfaceMountingManager: Surface [141] was stopped on SurfaceMountingManager.
+10-29 11:16:07.299  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":151,"initialProps":{},"fabric":true}
+10-29 11:16:07.318  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [141].
+10-29 11:16:07.319  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 141 is not found
+10-29 11:16:07.356  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:07.450  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 131 has leaked 289 components out of 322
+10-29 11:16:07.723  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 42.324028 ms
+10-29 11:16:07.888  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 98.850331 ms
+10-29 11:16:07.931  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 53.043319 ms
+10-29 11:16:08.409  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 57.442274 ms
+10-29 11:16:08.516  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:08.541  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topAttached will be dropped
+10-29 11:16:19.770  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:16:19.772  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:16:19.826  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:16:19.827  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:16:19.827  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:16:19.827  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:16:19.828  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":161,"initialProps":{},"fabric":true}
+10-29 11:16:19.841  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:16:19.844  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:16:19.946  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:19.955  2678  6878 D an.resident.de: Features: 0 0 0
+10-29 11:16:19.955  2678  6878 E an.resident.de: vulkan version is 4211013
+10-29 11:16:19.957  2678  6878 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:19.958  2678  6878 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:19.962  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 151): Schedule
+10-29 11:16:19.962  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 151)
+10-29 11:16:19.962  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 151): Execute
+10-29 11:16:19.962  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [151]
+10-29 11:16:19.963  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:16:19.969  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [151].
+10-29 11:16:19.976  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 151 is not found
+10-29 11:16:19.980  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topLayout will be dropped
+10-29 11:16:19.980  2678  2678 E unknown:SurfaceMountingManager: Surface [151] was stopped on SurfaceMountingManager.
+10-29 11:16:20.077  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 141 has leaked 5 components out of 5
+10-29 11:16:20.242  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:20.264  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 49.690591 ms
+10-29 11:16:20.423  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 33.316685 ms
+10-29 11:16:20.947  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 68.61325599999999 ms
+10-29 11:16:21.034  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:21.055  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topWillAppear will be dropped
+10-29 11:16:28.673  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:16:28.676  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:16:28.752  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:16:28.752  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:16:28.753  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:16:28.754  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:16:28.756  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":171,"initialProps":{},"fabric":true}
+10-29 11:16:28.768  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:16:28.771  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:16:28.789  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 161): Schedule
+10-29 11:16:28.789  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 161)
+10-29 11:16:28.789  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:16:28.790  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 161): Execute
+10-29 11:16:28.790  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [161]
+10-29 11:16:28.810  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [161].
+10-29 11:16:28.840  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:28.849  2678  6972 D an.resident.de: Features: 0 0 0
+10-29 11:16:28.849  2678  6972 E an.resident.de: vulkan version is 4211013
+10-29 11:16:28.851  2678  6972 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:28.853  2678  6972 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:28.876  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 161 is not found
+10-29 11:16:28.888  2678  2678 E unknown:SurfaceMountingManager: Surface [161] was stopped on SurfaceMountingManager.
+10-29 11:16:28.905  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+10-29 11:16:28.906  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostPause()
+10-29 11:16:28.949  2678  2678 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+10-29 11:16:28.949  2678  2678 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+10-29 11:16:28.951  2678  4037 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+10-29 11:16:28.951  2678  4037 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+10-29 11:16:28.964  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+10-29 11:16:28.967  2678  2678 W unknown:BridgelessReact: ReactHost{0}.ReactContext.onHostResume()
+10-29 11:16:29.027  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:29.040  2678  6987 D an.resident.de: Features: 0 0 0
+10-29 11:16:29.040  2678  6987 E an.resident.de: vulkan version is 4211013
+10-29 11:16:29.041  2678  6987 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:29.043  2678  6987 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:16:29.046  2678  2678 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 171): Schedule
+10-29 11:16:29.046  2678  2678 W unknown:BridgelessReact: ReactHost{0}.detachSurface(surfaceId = 171)
+10-29 11:16:29.046  2678  2678 W unknown:BridgelessReact: ReactHost{0}.onHostDestroy(activity)
+10-29 11:16:29.047  2678  4037 W unknown:BridgelessReact: ReactHost{0}.stopSurface(surfaceId = 171): Execute
+10-29 11:16:29.047  2678  4037 E unknown:SurfaceMountingManager: Stopping surface [171]
+10-29 11:16:29.050  2678  2678 E unknown:IntBufferBatchMountItem: Skipping batch of MountItems; was stopped [171].
+10-29 11:16:29.057  2678  2678 E ReactNativeJNI: FabricUIManagerBinding::reportMount: Surface with id 171 is not found
+10-29 11:16:29.057  2678  2678 E unknown:SurfaceMountingManager: Surface [171] was stopped on SurfaceMountingManager.
+10-29 11:16:29.079  2678  2678 E unknown:ReactNative: Got DOWN touch before receiving UP or CANCEL from last gesture
+10-29 11:16:29.085  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 151 has leaked 290 components out of 322
+10-29 11:16:29.085  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topInsetsChange will be dropped
+10-29 11:16:29.092  2678  4078 I ReactNativeJS: Running "main" with {"rootTag":181,"initialProps":{},"fabric":true}
+10-29 11:16:29.169  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:29.270  2678  4078 E ReactNativeJNI: [LeakChecker] Surface with id: 161 has leaked 289 components out of 322
+10-29 11:16:29.524  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 47.603671999999996 ms
+10-29 11:16:29.665  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 74.252833 ms
+10-29 11:16:30.172  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 75.542766 ms
+10-29 11:16:30.321  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:16:30.577  2678  4078 I ReactNativeJNI: instanceHandle is null, event of type topTouchMove will be dropped
+10-29 11:18:12.406  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:18:12.408  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:18:12.750  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:18:12.752  2678  4078 E ReactNativeJNI: AndroidSwitch returned an invalid measurement. Min: [51,0] Max: [51,31] Actual: [46.6667,27]
+10-29 11:18:20.076  2678  4006 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:18:20.084  2678  7286 D an.resident.de: Features: 0 0 0
+10-29 11:18:20.084  2678  7286 E an.resident.de: vulkan version is 4211013
+10-29 11:18:20.085  2678  7286 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:18:20.087  2678  7286 D gralloc_x86: gralloc_alloc: Creating ashmem region of size 8298496
+10-29 11:18:20.464  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:18:24.020  2678  4079 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+10-29 11:18:24.225  2678  2678 D Glide   : Finished loading BitmapDrawable from DATA_DISK_CACHE for http://127.0.0.1:8099/assets/?unstable_path=.%2F..%2Fapps%2Fresident-android-mobile%2Fassets%2Flogo/barangayan-logo-1024.png?platform=android&hash=1508c3e3ed9f1cac698d9cddd3d53c81 with size [1024x1024] in 85.55831099999999 ms

@@ -1,0 +1,1005 @@
+{
+  "definitions": 59,
+  "counts": {
+    "A": 10,
+    "B": 32,
+    "C": 17
+  },
+  "nativeInputScan": {
+    "tsxFiles": "Entire mobile src tree",
+    "openingElements": 65,
+    "matchedOpeningElements": 57,
+    "exclusions": [
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+        "line": 166,
+        "tag": "TextField",
+        "reason": "IncidentFormField primitive; A01-A03 counted at callers"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+        "line": 303,
+        "tag": "TextInput",
+        "reason": "InlineFieldInput primitive; counted at its callers"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+        "line": 126,
+        "tag": "TextInput",
+        "reason": "RecoveryCodeInput primitive; one B06 field, six visual cells"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 393,
+        "tag": "TextField",
+        "reason": "Read-only setup Email/City/Province excluded by contract"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 431,
+        "tag": "TextField",
+        "reason": "Read-only setup Email/City/Province excluded by contract"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+        "line": 432,
+        "tag": "TextField",
+        "reason": "Read-only setup Email/City/Province excluded by contract"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+        "line": 76,
+        "tag": "TextField",
+        "reason": "Charter Field primitive; B25-B31 counted at callers"
+      },
+      {
+        "source": "apps/resident-android-mobile/src/components/text-field.tsx",
+        "line": 62,
+        "tag": "TextInput",
+        "reason": "Native TextField primitive; counted at its callers"
+      }
+    ],
+    "newOrUnmapped": []
+  },
+  "rows": [
+    {
+      "id": "A01",
+      "screen": "New incident report",
+      "field": "Title",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 459,
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4",
+      "tag": "IncidentFormField",
+      "consumers": [
+        "R001"
+      ],
+      "historicalLine": 459
+    },
+    {
+      "id": "A02",
+      "screen": "New incident report",
+      "field": "Description",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 460,
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4",
+      "tag": "IncidentFormField",
+      "consumers": [
+        "R001"
+      ],
+      "historicalLine": 460
+    },
+    {
+      "id": "A03",
+      "screen": "New incident report",
+      "field": "Specific area details",
+      "condition": "Report form; padding behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "line": 488,
+      "sourceSha256": "b78652ce2759369c76a93454eac836c2a86f3232fbe91fdae54b1ebaa0b85bf4",
+      "tag": "IncidentFormField",
+      "consumers": [
+        "R001"
+      ],
+      "historicalLine": 488
+    },
+    {
+      "id": "A04",
+      "screen": "Pin Your Location",
+      "field": "Address",
+      "condition": "Editable correction of detected address; its own modal wrapper uses padding.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "line": 116,
+      "sourceSha256": "06b289a6762438aa93ae119ccbf55fdd6723194692f9562f115935a007abcff9",
+      "tag": "TextField",
+      "consumers": [
+        "R002"
+      ],
+      "historicalLine": 116
+    },
+    {
+      "id": "A05",
+      "screen": "Location Verification",
+      "field": "Detected Address",
+      "condition": "Multiline; height behavior on Android.",
+      "workPackage": "W6 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "line": 278,
+      "sourceSha256": "17d0fb743ffd3c41c3c13ecdda72eb30f1f5a068372a63df63273f00dd7fd516",
+      "tag": "TextField",
+      "consumers": [
+        "R003"
+      ],
+      "historicalLine": 267
+    },
+    {
+      "id": "A06",
+      "screen": "Health registration",
+      "field": "Age",
+      "condition": "Shown when profileAge is null, including household-member registration.",
+      "workPackage": "W7 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 556,
+      "sourceSha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802",
+      "tag": "TextField",
+      "consumers": [
+        "R004",
+        "R005"
+      ],
+      "historicalLine": 556
+    },
+    {
+      "id": "A07",
+      "screen": "Health registration",
+      "field": "Previous dose date",
+      "condition": "Vaccination drive and dose is not 1st Dose.",
+      "workPackage": "W7 / Phase 4",
+      "source": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "line": 635,
+      "sourceSha256": "f9ef6ccec4b3a0abb8f5127cddb68c08445e5448827a5d3bf82a133b5d8b2802",
+      "tag": "TextField",
+      "consumers": [
+        "R006",
+        "R007"
+      ],
+      "historicalLine": 635
+    },
+    {
+      "id": "A08",
+      "screen": "Profile → Add/Edit Family Member",
+      "field": "Full name",
+      "condition": "SettingsSheet uses Android height behavior; add/edit share one input.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 478,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "TextInput",
+      "consumers": [
+        "R008",
+        "R009"
+      ],
+      "historicalLine": 476
+    },
+    {
+      "id": "A09",
+      "screen": "Emergency Info → Family → Add/Edit Member",
+      "field": "Full Name",
+      "condition": "ScanFamilySheet uses Android height behavior; separate editor from Profile.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "line": 60,
+      "sourceSha256": "c01938d2b63b66219463dd02d89cc4579e85b4ab53beef807fd3ab0e33457204",
+      "tag": "TextField",
+      "consumers": [
+        "R010",
+        "R011",
+        "R012",
+        "R013"
+      ],
+      "historicalLine": 60
+    },
+    {
+      "id": "A10",
+      "screen": "Settings → Custom Accent Color",
+      "field": "Hex color",
+      "condition": "SettingsSheet uses Android height behavior.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "line": 55,
+      "sourceSha256": "8a01f4ec7c8698dd0e00e321cec78f0c175bfc7bdf8ba6637248f475df23de47",
+      "tag": "TextInput",
+      "consumers": [
+        "R014"
+      ],
+      "historicalLine": 55
+    },
+    {
+      "id": "B01",
+      "screen": "Login",
+      "field": "Email",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 92,
+      "sourceSha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3",
+      "tag": "TextField",
+      "consumers": [
+        "R015"
+      ],
+      "historicalLine": 92
+    },
+    {
+      "id": "B02",
+      "screen": "Login",
+      "field": "Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "line": 103,
+      "sourceSha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3",
+      "tag": "TextField",
+      "consumers": [
+        "R015"
+      ],
+      "historicalLine": 103
+    },
+    {
+      "id": "B03",
+      "screen": "Registration",
+      "field": "Email address",
+      "condition": "Email step.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "sourceSha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627",
+      "tag": "TextField",
+      "consumers": [
+        "R016"
+      ],
+      "historicalLine": 107
+    },
+    {
+      "id": "B04",
+      "screen": "Registration",
+      "field": "Confirmation code",
+      "condition": "Email confirmation step; one six-digit numeric input.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "line": 107,
+      "sourceSha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627",
+      "tag": "TextField",
+      "consumers": [
+        "R017"
+      ],
+      "historicalLine": 107
+    },
+    {
+      "id": "B05",
+      "screen": "Forgot Password",
+      "field": "Email address",
+      "condition": "Disabled while a session exists or a request is loading; editable in the applicable recovery state.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "line": 47,
+      "sourceSha256": "2dc66b3bb3f31bbce8e2cebf4d8d144750208f75781d74e6626bdfab9c8926a2",
+      "tag": "TextField",
+      "consumers": [
+        "R018"
+      ],
+      "historicalLine": 47
+    },
+    {
+      "id": "B06",
+      "screen": "Password recovery → Verify code",
+      "field": "6-digit reset code",
+      "condition": "RecoveryCodeInput renders one TextInput with six visual digit cells; counted once.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "line": 82,
+      "sourceSha256": "8786234c44200d2173b6089b4f6187fe0c085f07c9760c190c046cecdcd332c1",
+      "tag": "RecoveryCodeInput",
+      "consumers": [
+        "R019"
+      ],
+      "historicalLine": 82
+    },
+    {
+      "id": "B07",
+      "screen": "Password recovery → Reset Password",
+      "field": "New Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 71,
+      "sourceSha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040",
+      "tag": "TextField",
+      "consumers": [
+        "R020"
+      ],
+      "historicalLine": 71
+    },
+    {
+      "id": "B08",
+      "screen": "Password recovery → Reset Password",
+      "field": "Confirm New Password",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "line": 92,
+      "sourceSha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040",
+      "tag": "TextField",
+      "consumers": [
+        "R020"
+      ],
+      "historicalLine": 92
+    },
+    {
+      "id": "B09",
+      "screen": "Account setup / Complete Profile",
+      "field": "First Name",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 294,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 274
+    },
+    {
+      "id": "B10",
+      "screen": "Account setup / Complete Profile",
+      "field": "Last Name",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 304,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 284
+    },
+    {
+      "id": "B11",
+      "screen": "Account setup / Complete Profile",
+      "field": "Middle Name (optional)",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 316,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 296
+    },
+    {
+      "id": "B12",
+      "screen": "Account setup / Complete Profile",
+      "field": "Suffix (optional)",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 325,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 305
+    },
+    {
+      "id": "B13",
+      "screen": "Account setup / Complete Profile",
+      "field": "Mobile Number",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 382,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 362
+    },
+    {
+      "id": "B14",
+      "screen": "Account setup / Complete Profile",
+      "field": "House No.",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 405,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 385
+    },
+    {
+      "id": "B15",
+      "screen": "Account setup / Complete Profile",
+      "field": "Street",
+      "condition": "Same field definitions reused by account-setup and complete-profile; disabled in non-editable setup states.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 415,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 395
+    },
+    {
+      "id": "B16",
+      "screen": "Account setup / Complete Profile",
+      "field": "Occupation (optional)",
+      "condition": "Only shown for an employment status that permits occupation.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "line": 456,
+      "sourceSha256": "8db028bba15e8d5b93aaee470544d1ffc7249ec6890f60c91393f709aee9ed14",
+      "tag": "TextField",
+      "consumers": [
+        "R021",
+        "R022",
+        "R023"
+      ],
+      "historicalLine": 436
+    },
+    {
+      "id": "B17",
+      "screen": "Settings → Change/Manage Password",
+      "field": "Current Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 241,
+      "sourceSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "tag": "TextField",
+      "consumers": [
+        "R024"
+      ],
+      "historicalLine": 238
+    },
+    {
+      "id": "B18",
+      "screen": "Settings → Change/Manage Password",
+      "field": "New Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 263,
+      "sourceSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "tag": "TextField",
+      "consumers": [
+        "R024"
+      ],
+      "historicalLine": 260
+    },
+    {
+      "id": "B19",
+      "screen": "Settings → Change/Manage Password",
+      "field": "Confirm New Password",
+      "condition": "Existing-password form. First-password setup is a separate branch listed under C.",
+      "workPackage": "W4 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "line": 274,
+      "sourceSha256": "21119446a29013d077b1a6d9e421eb2b520cfe8892f4be5dbd65b458f6643104",
+      "tag": "TextField",
+      "consumers": [
+        "R024"
+      ],
+      "historicalLine": 271
+    },
+    {
+      "id": "B20",
+      "screen": "Settings → Email Verification",
+      "field": "Six-digit code",
+      "condition": "Standard editable form field.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "line": 140,
+      "sourceSha256": "fe76fa5b25537505c1f0093e5da3bb14e36875e71da85772b902dc7f3f621bfd",
+      "tag": "TextField",
+      "consumers": [
+        "R025"
+      ],
+      "historicalLine": 135
+    },
+    {
+      "id": "B21",
+      "screen": "Settings → Valid ID",
+      "field": "Specify ID type",
+      "condition": "Step 1, only when ID type is Other.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 264,
+      "sourceSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "tag": "TextField",
+      "consumers": [
+        "R026"
+      ],
+      "historicalLine": 259
+    },
+    {
+      "id": "B22",
+      "screen": "Settings → Valid ID",
+      "field": "Full name",
+      "condition": "Step 3; expanded from FIELDS.fullName.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 290,
+      "sourceSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "tag": "TextField",
+      "consumers": [
+        "R027",
+        "R028"
+      ],
+      "historicalLine": 285
+    },
+    {
+      "id": "B23",
+      "screen": "Settings → Valid ID",
+      "field": "ID number (if shown)",
+      "condition": "Step 3; expanded from FIELDS.idNumber.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 290,
+      "sourceSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "tag": "TextField",
+      "consumers": [
+        "R027",
+        "R028"
+      ],
+      "historicalLine": 285
+    },
+    {
+      "id": "B24",
+      "screen": "Settings → Valid ID",
+      "field": "Address (if shown)",
+      "condition": "Step 3; expanded from FIELDS.address; multiline.",
+      "workPackage": "W1 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "line": 290,
+      "sourceSha256": "8e926f83da79926e03c830cb757f77221459bc913ac3dc7919d7ea9c7916864a",
+      "tag": "TextField",
+      "consumers": [
+        "R027",
+        "R028"
+      ],
+      "historicalLine": 285
+    },
+    {
+      "id": "B25",
+      "screen": "Services → Charter request form",
+      "field": "Explain your purpose",
+      "condition": "Only when the selected purpose requires an explanation.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 419,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R029"
+      ],
+      "historicalLine": 419
+    },
+    {
+      "id": "B26",
+      "screen": "Services → Charter request form",
+      "field": "Business name",
+      "condition": "Business service only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 427,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R030"
+      ],
+      "historicalLine": 427
+    },
+    {
+      "id": "B27",
+      "screen": "Services → Charter request form",
+      "field": "Establishment address",
+      "condition": "Business service only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 428,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R030"
+      ],
+      "historicalLine": 428
+    },
+    {
+      "id": "B28",
+      "screen": "Services → Charter request form",
+      "field": "Record/document reference",
+      "condition": "Certified true copy only.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 459,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R031"
+      ],
+      "historicalLine": 459
+    },
+    {
+      "id": "B29",
+      "screen": "Services → Charter request form",
+      "field": "Number of copies",
+      "condition": "Certified true copy only; numeric.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 460,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R031"
+      ],
+      "historicalLine": 460
+    },
+    {
+      "id": "B30",
+      "screen": "Services → Charter request form",
+      "field": "Total pages across all copies",
+      "condition": "Certified true copy only; numeric.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 461,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R031"
+      ],
+      "historicalLine": 461
+    },
+    {
+      "id": "B31",
+      "screen": "Services → Charter request form",
+      "field": "Additional notes (optional)",
+      "condition": "Shared notes field; multiline.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "line": 479,
+      "sourceSha256": "75c6201701053f6d8b20229dc198eebc37481ac58eee87e604c90831b22a190b",
+      "tag": "Field",
+      "consumers": [
+        "R032",
+        "R033",
+        "R034"
+      ],
+      "historicalLine": 479
+    },
+    {
+      "id": "B32",
+      "screen": "Settings → Delete Account dialog",
+      "field": "Password",
+      "condition": "Resident presentation is used by Settings; Android behavior is undefined in this modal.",
+      "workPackage": "W8 / Phase 3",
+      "source": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "line": 79,
+      "sourceSha256": "29075fb33f13bded890985c9e9b54ce4a10a673f6b13d7284ffd10e5554456d5",
+      "tag": "TextField",
+      "consumers": [
+        "R035"
+      ],
+      "historicalLine": 79
+    },
+    {
+      "id": "C01",
+      "screen": "Account setup / Settings → Create/Set Password",
+      "field": "Password",
+      "condition": "Shared component used by account-setup and FirstPasswordFromSettings; ScrollView without KeyboardAvoidingView.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 84,
+      "sourceSha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150",
+      "tag": "TextField",
+      "consumers": [
+        "R036",
+        "R037",
+        "R038"
+      ],
+      "historicalLine": 84
+    },
+    {
+      "id": "C02",
+      "screen": "Account setup / Settings → Create/Set Password",
+      "field": "Confirm Password",
+      "condition": "Shared component used by account-setup and FirstPasswordFromSettings; ScrollView without KeyboardAvoidingView.",
+      "workPackage": "W2 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "line": 86,
+      "sourceSha256": "d872a5dc45d73199e29b359ff3ba37df6d5d1a22113497f4ba8016815ee6e150",
+      "tag": "TextField",
+      "consumers": [
+        "R036",
+        "R037",
+        "R038"
+      ],
+      "historicalLine": 86
+    },
+    {
+      "id": "C03",
+      "screen": "Settings → Profile",
+      "field": "First Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1022,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1018
+    },
+    {
+      "id": "C04",
+      "screen": "Settings → Profile",
+      "field": "Middle Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1031,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1027
+    },
+    {
+      "id": "C05",
+      "screen": "Settings → Profile",
+      "field": "Last Name",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1039,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1035
+    },
+    {
+      "id": "C06",
+      "screen": "Settings → Profile",
+      "field": "Suffix",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1048,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1044
+    },
+    {
+      "id": "C07",
+      "screen": "Settings → Profile",
+      "field": "Occupation",
+      "condition": "Conditional on employment status.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1088,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R040"
+      ],
+      "historicalLine": 1084
+    },
+    {
+      "id": "C08",
+      "screen": "Settings → Profile",
+      "field": "Email",
+      "condition": "Editable here, unlike the read-only account-setup email.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1093,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1089
+    },
+    {
+      "id": "C09",
+      "screen": "Settings → Profile",
+      "field": "Mobile Number",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1103,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1099
+    },
+    {
+      "id": "C10",
+      "screen": "Settings → Profile",
+      "field": "House No.",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1116,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1112
+    },
+    {
+      "id": "C11",
+      "screen": "Settings → Profile",
+      "field": "Street",
+      "condition": "Main Profile ScrollView has no KeyboardAvoidingView; its family-member sheet is separately covered under A.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1125,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R039"
+      ],
+      "historicalLine": 1121
+    },
+    {
+      "id": "C12",
+      "screen": "Settings → Profile",
+      "field": "City",
+      "condition": "Editable fallback only when barangay_localities is absent; otherwise a LockedField.",
+      "workPackage": "W3 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "line": 1138,
+      "sourceSha256": "9ccd97f10985c80c4fdf88b8231608ddf0f1559dcdda65b7e6876bee25271b3b",
+      "tag": "InlineFieldInput",
+      "consumers": [
+        "R041"
+      ],
+      "historicalLine": 1134
+    },
+    {
+      "id": "C13",
+      "screen": "Services → Legacy document request",
+      "field": "Purpose of Request",
+      "condition": "Fallback when catalogContract(doc) is absent; multiline. Charter documents take the other branch.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx",
+      "line": 214,
+      "sourceSha256": "2c8e4dc3fe575811aad2540e37994dcb817cf0e61aed88fec3b8a277e25e87b7",
+      "tag": "TextField",
+      "consumers": [
+        "R042"
+      ],
+      "historicalLine": 211
+    },
+    {
+      "id": "C14",
+      "screen": "Services → Payment / Pickup",
+      "field": "Total pages across all copies",
+      "condition": "Shown when fee_assessment_state is page_count_required and request is not completed/cancelled. Shared by payment and pickup routes; counted once.",
+      "workPackage": "W5 / Phase 2",
+      "source": "apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "line": 174,
+      "sourceSha256": "90920ec8b76825908925ab0bc3a9e71423a2d92b4431f1cd10b33df960a7f04a",
+      "tag": "TextInput",
+      "consumers": [
+        "R043",
+        "R044"
+      ],
+      "historicalLine": 171
+    },
+    {
+      "id": "C15",
+      "screen": "Resident header search",
+      "field": "Search services, announcements and your records",
+      "condition": "Shared header used across resident app tabs/search flow; editable when searching. Counted once across consumers.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "line": 138,
+      "sourceSha256": "288de53b5ad4876bd0252c2e7e1f5343fd7cd8844f8fe873b56f01fdd9bdbfe7",
+      "tag": "TextInput",
+      "consumers": [
+        "R045",
+        "R046",
+        "R047",
+        "R048",
+        "R049",
+        "R050",
+        "R051",
+        "R052",
+        "R053",
+        "R054",
+        "R055",
+        "R056",
+        "R057",
+        "R058",
+        "R059",
+        "R060",
+        "R061",
+        "R062"
+      ],
+      "historicalLine": 138
+    },
+    {
+      "id": "C16",
+      "screen": "Maps → Incidents",
+      "field": "Search incidents",
+      "condition": "Editable only on incidents tab; evacuation tab reuses a disabled version, not another editable field.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "line": 280,
+      "sourceSha256": "2933b45feccb340e16c33489493e3b35c80384827d25cda91b19b1af8d4d7f32",
+      "tag": "TextInput",
+      "consumers": [
+        "R063"
+      ],
+      "historicalLine": 249
+    },
+    {
+      "id": "C17",
+      "screen": "Evacuation centers search",
+      "field": "Search evacuation centers",
+      "condition": "Expanded centerSearch control shared by public emergency-centers and signed-in Emergency Info → Evacuation Centers; count once.",
+      "workPackage": "W9 / Phase 5",
+      "source": "apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "line": 477,
+      "sourceSha256": "ff4b9441003e9db8e5eb6a5f6b5794798edf195f7e25c34580978ff65b2008ee",
+      "tag": "TextInput",
+      "consumers": [
+        "R064",
+        "R065",
+        "R066",
+        "R067",
+        "R068",
+        "R069"
+      ],
+      "historicalLine": 427
+    }
+  ]
+}

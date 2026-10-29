@@ -26,6 +26,7 @@ describe.each(['light', 'dark'] as const)('resident %s contrast', (mode) => {
     expect(contrast(theme.accentText, theme.surface)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(theme.muted, theme.surface)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(theme.controlBorder, theme.surface)).toBeGreaterThanOrEqual(3);
+    expect(contrast(theme.controlBorder, theme.card)).toBeGreaterThanOrEqual(3);
     for (const [ink, surface] of [[theme.danger, theme.dangerSoft], [theme.success, theme.successSoft], [theme.warning, theme.warningSoft], [theme.info, theme.infoSoft]]) {
       expect(contrast(ink, surface)).toBeGreaterThanOrEqual(4.5);
     }

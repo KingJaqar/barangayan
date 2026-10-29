@@ -82,19 +82,22 @@ export function FormSection({
   icon,
   title,
   children,
+  compact,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   children: React.ReactNode;
+  /** Tighter padding/gaps for short sections that must fit above the keyboard. */
+  compact?: boolean;
 }) {
   const theme = useTheme();
   return (
-    <View style={[sectionStyles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+    <View style={[sectionStyles.card, compact && sectionStyles.cardCompact, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
       <View style={sectionStyles.titleRow}>
         <Ionicons name={icon} size={16} color={theme.primary} />
         <ThemedText style={sectionStyles.title}>{title}</ThemedText>
       </View>
-      <View style={sectionStyles.body}>{children}</View>
+      <View style={[sectionStyles.body, compact && sectionStyles.bodyCompact]}>{children}</View>
     </View>
   );
 }
@@ -106,6 +109,7 @@ const sectionStyles = StyleSheet.create({
     padding: Spacing.three,
     gap: Spacing.three,
   },
+  cardCompact: { padding: Spacing.three - 4, gap: Spacing.two },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -113,6 +117,7 @@ const sectionStyles = StyleSheet.create({
   },
   title: { fontSize: 14, fontWeight: '700' },
   body: { gap: Spacing.three },
+  bodyCompact: { gap: Spacing.two },
 });
 
 /**

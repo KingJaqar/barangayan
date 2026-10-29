@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-27T02:44:01.546Z",
+  "status": "pass",
+  "validJsonFiles": 54,
+  "uniqueCurrentCases": 339,
+  "editableCases": 330,
+  "definitions": 59,
+  "evidenceLinksExist": true,
+  "evidenceLinksUnique": true,
+  "unchangedBaselineInputs": 482,
+  "onlyOwnedBaselineEdit": "Selected Phase6 plan progress; separate boundary audit passes",
+  "ignoredInputsUnchanged": 3,
+  "productSourceChanges": 0
+}

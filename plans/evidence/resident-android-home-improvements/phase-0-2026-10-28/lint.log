@@ -1,0 +1,12 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\health\health-presentation.tsx
+  2:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\hooks\use-notification-hub.ts
+  54:3  warning  React Hook useCallback has missing dependencies: 'account', 'barangay', 'summary', and 'system'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  56:3  warning  React Hook useCallback has missing dependencies: 'account', 'barangay', 'summary', and 'system'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+

@@ -1,0 +1,1379 @@
+<repomix><file_summary>This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+The content has been processed where content has been formatted for parsing in xml style.<purpose>This file contains a packed representation of a subset of the repository&apos;s contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.</purpose><file_format>The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file</file_format><usage_guidelines>- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: supabase/migrations/0135_resident_notifications.sql, supabase/migrations/0118_resident_front_id_submission.sql, supabase/migrations/0109_invalidate_changed_profile_email_verification.sql, supabase/migrations/0122_resident_apple_account_setup.sql, supabase/functions/send-notifications/index.ts, packages/shared/src/types/service-foundations.ts, packages/shared/src/lib/request-status.ts, supabase/tests/resident_ios_phase17_notifications.test.sql
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Content has been formatted for parsing in xml style</notes></file_summary><directory_structure>packages/
+  shared/
+    src/
+      lib/
+        request-status.ts
+      types/
+        service-foundations.ts
+supabase/
+  functions/
+    send-notifications/
+      index.ts
+  migrations/
+    0109_invalidate_changed_profile_email_verification.sql
+    0118_resident_front_id_submission.sql
+    0122_resident_apple_account_setup.sql
+    0135_resident_notifications.sql
+  tests/
+    resident_ios_phase17_notifications.test.sql</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="packages/shared/src/lib/request-status.ts">export type ResidentRequestStatus =
+  | &apos;pending_payment&apos;
+  | &apos;paid&apos;
+  | &apos;processing&apos;
+  | &apos;ready_for_pickup&apos;
+  | &apos;completed&apos;
+  | &apos;cancelled&apos;;
+
+/**
+ * Derives the resident-facing status from the two underlying DB columns.
+ * service_requests.status alone can&apos;t distinguish &quot;submitted, awaiting payment&quot; from
+ * &quot;submitted, already paid&quot; — that distinction comes from payment_status.
+ */
+export function getResidentRequestStatus(status: string, paymentStatus: string): ResidentRequestStatus {
+  if (status === &apos;cancelled&apos;) return &apos;cancelled&apos;;
+  if (status === &apos;completed&apos;) return &apos;completed&apos;;
+  if (status === &apos;ready_for_pickup&apos;) return &apos;ready_for_pickup&apos;;
+  if (status === &apos;in_progress&apos;) return &apos;processing&apos;;
+  // status === &apos;submitted&apos;
+  return paymentStatus === &apos;paid&apos; || paymentStatus === &apos;waived&apos; ? &apos;paid&apos; : &apos;pending_payment&apos;;
+}
+
+export const RESIDENT_STATUS_LABEL: Record&lt;ResidentRequestStatus, string&gt; = {
+  pending_payment: &apos;Submitted (Pending Payment)&apos;,
+  paid: &apos;Submitted (Paid)&apos;,
+  processing: &apos;Processing&apos;,
+  ready_for_pickup: &apos;Ready for Pickup&apos;,
+  completed: &apos;Completed&apos;,
+  cancelled: &apos;Cancelled&apos;,
+};</file><file path="packages/shared/src/types/service-foundations.ts">import type { Json } from &apos;./database&apos;;
+import type { ResidentAccountSetupFunctions } from &apos;./resident-account-setup.database&apos;;
+
+export type CatalogFoundationFields = {
+  contract_version: number;
+  service_kind: string | null;
+  charter: Json | null;
+  purposes: NonNullable&lt;Json&gt;;
+  requirement_rules: NonNullable&lt;Json&gt;;
+  pricing_mode: string;
+  processing_target_minutes: number | null;
+}
+export type ProfileFoundationFields = {
+  province: string | null;
+  profile_completed_at: string | null;
+  current_id_submission_id: string | null;
+  approved_id_submission_id: string | null;
+  id_repair_required: boolean;
+}
+export type RequestFoundationFields = {
+  legacy_fee_centavos: number | null;
+  contract_version: number;
+  idempotency_key: string | null;
+  submission_payload: Json | null;
+  purpose_code: string | null;
+  purpose_label: string | null;
+  purpose_explanation: string | null;
+  supporting_details: Json | null;
+  approved_id_submission_id: string | null;
+  requirements_review_state: string;
+  eligibility_state: string;
+  requirements_reviewed_by: string | null;
+  requirements_reviewed_at: string | null;
+  requirements_review_note: string | null;
+  personal_appearance_recorded_by: string | null;
+  personal_appearance_required: boolean;
+  personal_appearance_at: string | null;
+  pricing_mode_snapshot: string | null;
+  fee_assessment_state: string;
+  assessed_amount_centavos: number | null;
+  fee_basis: string | null;
+  fee_assessed_by: string | null;
+  fee_assessed_at: string | null;
+  billable_pages: number | null;
+  timing_model: string;
+  target_minutes_snapshot: number | null;
+  sla_state: string;
+  accepted_at: string | null;
+  ready_at: string | null;
+  released_at: string | null;
+  cancelled_at: string | null;
+}
+export type IdSubmissionRow = {
+  evidence_origin: string;
+  id: string; resident_id: string; barangay_id: string; version: number; id_type: string;
+  front_path: string; back_path: string | null; submitted_at: string; decision: string;
+  confirmed_details: { fullName: string; idNumber: string; birthDate: string; address: string } | null;
+  reviewed_by: string | null; reviewed_at: string | null; rejection_reason: string | null;
+}
+export type RequestAttachmentRow = {
+  id: string; request_id: string; resident_id: string; barangay_id: string; requirement_code: string;
+  object_path: string; mime_type: string; size_bytes: number; created_at: string;
+}
+export type ServiceRequestPauseRow = {
+  id: string; request_id: string; reason: string; started_by: string; started_at: string;
+  resumed_by: string | null; resumed_at: string | null;
+}
+export type NotificationInboxRow = {
+  id: string; event_id: string; recipient_id: string; kind: string; title: string; body: string;
+  destination: Json; created_at: string; read_at: string | null;
+}
+/** Foundation tables are written exclusively through controlled operations. */
+type ReadOnlyTable&lt;Row, Relationships extends { foreignKeyName: string; columns: string[]; isOneToOne: boolean; referencedRelation: string; referencedColumns: string[] }[] = []&gt; = { Row: Row; Insert: never; Update: never; Relationships: Relationships };
+export type FoundationTables = {
+  // Migration 0135 (resident iOS Phase 17): a resident reads their own inbox and may change `read_at` only.
+  notification_inbox: {
+    Row: NotificationInboxRow; Insert: never; Update: { read_at?: string | null };
+    Relationships: [{ foreignKeyName: &apos;notification_inbox_recipient_id_fkey&apos;; columns: [&apos;recipient_id&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] }];
+  };
+  notification_preferences: ReadOnlyTable&lt;{ user_id: string; kinds: Json; updated_at: string }, [
+    { foreignKeyName: &apos;notification_preferences_user_id_fkey&apos;; columns: [&apos;user_id&apos;]; isOneToOne: true; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+  service_request_sla_alerts: ReadOnlyTable&lt;{
+    id: string; request_id: string; threshold: &apos;near_target&apos; | &apos;overdue&apos;;
+    evaluated_at: string; agency_seconds: number;
+  }, [
+    { foreignKeyName: &apos;service_request_sla_alerts_request_id_fkey&apos;; columns: [&apos;request_id&apos;]; isOneToOne: false; referencedRelation: &apos;service_requests&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+  barangay_localities: ReadOnlyTable&lt;{ barangay_id: string; display_name: string; city: string; province: string; resident_registration_enabled: boolean }, [
+    { foreignKeyName: &apos;barangay_localities_barangay_id_fkey&apos;; columns: [&apos;barangay_id&apos;]; isOneToOne: true; referencedRelation: &apos;barangays&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+  id_submissions: ReadOnlyTable&lt;IdSubmissionRow, [
+    { foreignKeyName: &apos;id_submissions_barangay_id_fkey&apos;; columns: [&apos;barangay_id&apos;]; isOneToOne: false; referencedRelation: &apos;barangays&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;id_submissions_resident_id_fkey&apos;; columns: [&apos;resident_id&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;id_submissions_reviewed_by_fkey&apos;; columns: [&apos;reviewed_by&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+  request_attachments: ReadOnlyTable&lt;RequestAttachmentRow, [
+    { foreignKeyName: &apos;request_attachments_barangay_id_fkey&apos;; columns: [&apos;barangay_id&apos;]; isOneToOne: false; referencedRelation: &apos;barangays&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;request_attachments_request_id_fkey&apos;; columns: [&apos;request_id&apos;]; isOneToOne: false; referencedRelation: &apos;service_requests&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;request_attachments_resident_id_fkey&apos;; columns: [&apos;resident_id&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+  service_request_pauses: ReadOnlyTable&lt;ServiceRequestPauseRow, [
+    { foreignKeyName: &apos;service_request_pauses_request_id_fkey&apos;; columns: [&apos;request_id&apos;]; isOneToOne: false; referencedRelation: &apos;service_requests&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;service_request_pauses_resumed_by_fkey&apos;; columns: [&apos;resumed_by&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+    { foreignKeyName: &apos;service_request_pauses_started_by_fkey&apos;; columns: [&apos;started_by&apos;]; isOneToOne: false; referencedRelation: &apos;profiles&apos;; referencedColumns: [&apos;id&apos;] },
+  ]&gt;;
+};
+type FoundationOperation = { Args: { p_input: Json }; Returns: string };
+export type FoundationFunctions = ResidentAccountSetupFunctions &amp; {
+  incomplete_profile_browsing_barangay: { Args: Record&lt;string, never&gt;; Returns: string | null };
+  service_request_sla_tracking: { Args: { p_request_id: string }; Returns: Json };
+  service_request_sla_metrics: { Args: { p_request_id: string; p_at?: string }; Returns: Json };
+  service_sla_report_rows: { Args: Record&lt;string, never&gt;; Returns: Json };
+  set_service_request_pages: { Args: { p_request_id: string; p_total_pages: number }; Returns: undefined };
+  collect_tax_code_pickup_payment: { Args: { p_request_id: string; p_amount_centavos: number }; Returns: string };
+  start_pickup_payment: { Args: { p_request_id: string }; Returns: string };
+  collect_pickup_payment: { Args: { p_request_id: string }; Returns: string };
+  complete_resident_profile: FoundationOperation;
+  publish_id_submission: FoundationOperation;
+  review_id_submission: FoundationOperation;
+  submit_service_request: FoundationOperation;
+  assess_service_request_fee: FoundationOperation;
+  review_service_request: FoundationOperation;
+  transition_service_request_sla: FoundationOperation;
+};</file><file path="supabase/functions/send-notifications/index.ts">// Notification sender (Resident iOS Phase 17, P17-T02). Run on a schedule by the operations owner
+// (for example every minute from pg_cron + pg_net, or an external scheduler).
+//
+// This is not a resident-callable function: it has no user JWT. Gateway JWT verification is off
+// (any signed-in resident&apos;s token would pass it), and the caller must present the shared secret
+// in `x-worker-secret`. Without NOTIFICATION_WORKER_SECRET configured the function refuses to run.
+//
+// Secrets (set by the operations owner, never committed):
+//   NOTIFICATION_WORKER_SECRET  shared secret with the scheduler
+//   EXPO_ACCESS_TOKEN           optional, when Expo &quot;enhanced push security&quot; is enabled
+// The service-role key and URL are provided by the Edge runtime. Push tokens, ticket ids and
+// message text are never logged or returned.
+import { createClient } from &apos;jsr:@supabase/supabase-js@2&apos;;
+import { runWorker, type Fetcher, type Rpc } from &apos;./worker.ts&apos;;
+
+const json = (body: unknown, status = 200) =&gt; new Response(JSON.stringify(body), { status, headers: { &apos;Content-Type&apos;: &apos;application/json&apos; } });
+
+function secretMatches(provided: string | null, expected: string): boolean {
+  if (!provided) return false;
+  const a = new TextEncoder().encode(provided);
+  const b = new TextEncoder().encode(expected);
+  // Constant-time comparison over the longer length; unequal lengths always fail.
+  let difference = a.length ^ b.length;
+  for (let index = 0; index &lt; Math.max(a.length, b.length); index++) difference |= (a[index] ?? 0) ^ (b[index] ?? 0);
+  return difference === 0;
+}
+
+Deno.serve(async (request: Request) =&gt; {
+  if (request.method !== &apos;POST&apos;) return json({ error: &apos;method_not_allowed&apos; }, 405);
+  const secret = Deno.env.get(&apos;NOTIFICATION_WORKER_SECRET&apos;);
+  if (!secret) return json({ error: &apos;not_configured&apos; }, 503);
+  if (!secretMatches(request.headers.get(&apos;x-worker-secret&apos;), secret)) return json({ error: &apos;unauthorized&apos; }, 401);
+
+  const url = Deno.env.get(&apos;SUPABASE_URL&apos;);
+  const serviceKey = Deno.env.get(&apos;SUPABASE_SERVICE_ROLE_KEY&apos;);
+  if (!url || !serviceKey) return json({ error: &apos;not_configured&apos; }, 503);
+  const client = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
+
+  const rpc: Rpc = async (name, args) =&gt; {
+    const { data, error } = await client.rpc(name, args ?? {});
+    return { data, error: error ? { message: error.message } : null };
+  };
+  const send: Fetcher = (target, init) =&gt; fetch(target, init);
+  const summary = await runWorker({ rpc, fetch: send, accessToken: Deno.env.get(&apos;EXPO_ACCESS_TOKEN&apos;) || undefined });
+  return json(summary, summary.errors.length ? 207 : 200);
+});</file><file path="supabase/migrations/0109_invalidate_changed_profile_email_verification.sql">begin;
+
+-- A previously confirmed address cannot lend its badge to an edited address.
+-- Run after guard_verification_fields: resident-written status changes still
+-- fail, while this server-owned trigger resets status on a permitted email edit.
+create function barangayan_private.reset_changed_profile_email_verification()
+returns trigger language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+ if lower(btrim(coalesce(new.email,&apos;&apos;))) is distinct from lower(btrim(coalesce(old.email,&apos;&apos;))) then
+  new.email_verification_status := &apos;unverified&apos;;
+  new.email_verification_requested_at := null;
+  new.email_verified_at := null;
+ end if;
+ return new;
+end $$;
+revoke all on function barangayan_private.reset_changed_profile_email_verification() from public,anon,authenticated,service_role;
+create trigger reset_changed_profile_email_verification before update of email on public.profiles
+for each row execute function barangayan_private.reset_changed_profile_email_verification();
+
+commit;</file><file path="supabase/migrations/0118_resident_front_id_submission.sql">begin;
+
+-- Front-only submissions carry the resident&apos;s confirmed, immutable review data.
+-- Existing two-sided versions and approval provenance remain intact.
+alter table public.id_submissions alter column back_path drop not null;
+alter table public.id_submissions add column confirmed_details jsonb;
+alter table public.id_submissions add constraint id_submissions_front_details_required
+  check (back_path is not null or confirmed_details is not null);
+
+create or replace function barangayan_private.publish_id_submission(p_input jsonb) returns uuid
+language plpgsql security definer set search_path = &apos;&apos; as $$
+declare v_actor public.profiles; v_profile public.profiles; v_old public.id_submissions;
+  v_id uuid; v_type text; v_front text; v_back text; v_prefix text; v_version integer;
+  v_details jsonb; v_name text; v_number text; v_birth text; v_address text;
+begin
+  v_actor := barangayan_private.assert_actor();
+  perform barangayan_private.check_keys(p_input,array[&apos;submissionId&apos;,&apos;idType&apos;,&apos;frontPath&apos;,&apos;backPath&apos;,&apos;confirmedDetails&apos;]);
+  v_id := barangayan_private.required_text(p_input,&apos;submissionId&apos;,36)::uuid;
+  v_type := barangayan_private.required_text(p_input,&apos;idType&apos;,200);
+  v_front := barangayan_private.required_text(p_input,&apos;frontPath&apos;,500);
+  v_back := barangayan_private.optional_text(p_input,&apos;backPath&apos;,500);
+  if p_input ? &apos;confirmedDetails&apos; then
+    v_details := p_input-&gt;&apos;confirmedDetails&apos;;
+    perform barangayan_private.check_keys(v_details,array[&apos;fullName&apos;,&apos;idNumber&apos;,&apos;birthDate&apos;,&apos;address&apos;]);
+    v_name := barangayan_private.required_text(v_details,&apos;fullName&apos;,200);
+    -- Optional front fields use empty strings, never invented profile values.
+    if not (v_details ?&amp; array[&apos;idNumber&apos;,&apos;birthDate&apos;,&apos;address&apos;]) then
+      raise exception &apos;invalid_confirmed_details&apos; using errcode=&apos;22023&apos;;
+    end if;
+    v_number := barangayan_private.optional_text(v_details,&apos;idNumber&apos;,200);
+    v_birth := barangayan_private.optional_text(v_details,&apos;birthDate&apos;,10);
+    v_address := barangayan_private.optional_text(v_details,&apos;address&apos;,1000);
+    if v_birth is not null then
+      if v_birth !~ &apos;^[0-9]{4}-[0-9]{2}-[0-9]{2}$&apos; or v_birth like &apos;0000-%&apos; then
+        raise exception &apos;invalid_birth_date&apos; using errcode=&apos;22023&apos;;
+      end if;
+      begin
+        if to_char(v_birth::date,&apos;YYYY-MM-DD&apos;) &lt;&gt; v_birth or v_birth::date &gt; current_date then
+          raise exception &apos;invalid_birth_date&apos; using errcode=&apos;22023&apos;;
+        end if;
+      exception when datetime_field_overflow or invalid_datetime_format then
+        raise exception &apos;invalid_birth_date&apos; using errcode=&apos;22023&apos;;
+      end;
+    end if;
+    v_details := jsonb_build_object(&apos;fullName&apos;,v_name,&apos;idNumber&apos;,coalesce(v_number,&apos;&apos;),&apos;birthDate&apos;,coalesce(v_birth,&apos;&apos;),&apos;address&apos;,coalesce(v_address,&apos;&apos;));
+  elsif v_back is null then
+    raise exception &apos;confirmed_details_required&apos; using errcode=&apos;22023&apos;;
+  end if;
+  v_prefix := v_actor.id::text || &apos;/versions/&apos; || v_id::text || &apos;/&apos;;
+  if v_front !~ (&apos;^&apos; || v_prefix || &apos;id-front\.(jpg|jpeg|png|webp)$&apos;) or
+    (v_back is not null and v_back !~ (&apos;^&apos; || v_prefix || &apos;id-back\.(jpg|jpeg|png|webp)$&apos;)) then
+    raise exception &apos;invalid_ID_version_path&apos; using errcode=&apos;22023&apos;;
+  end if;
+  select * into v_profile from public.profiles where id=v_actor.id and deleted_at is null for update;
+  if not found then raise exception &apos;forbidden&apos; using errcode=&apos;42501&apos;; end if;
+  select * into v_old from public.id_submissions where id=v_id;
+  if found then
+    if v_old.resident_id &lt;&gt; v_actor.id or v_old.id_type &lt;&gt; v_type or v_old.front_path &lt;&gt; v_front
+      or v_old.back_path is distinct from v_back or v_old.confirmed_details is distinct from v_details then
+      raise exception &apos;idempotency_conflict&apos; using errcode=&apos;22023&apos;;
+    end if;
+    return v_id;
+  end if;
+  perform barangayan_private.check_object(&apos;id-documents&apos;,v_front);
+  if v_back is not null then perform barangayan_private.check_object(&apos;id-documents&apos;,v_back); end if;
+  select coalesce(max(version),0)+1 into v_version from public.id_submissions where resident_id=v_actor.id;
+  insert into public.id_submissions(id,resident_id,barangay_id,version,id_type,front_path,back_path,confirmed_details)
+    values(v_id,v_actor.id,v_actor.barangay_id,v_version,v_type,v_front,v_back,v_details);
+  update public.profiles set current_id_submission_id=v_id,approved_id_submission_id=null,
+    id_type=v_type,id_photo_urls=array_remove(array[v_front,v_back],null),id_verification_status=&apos;pending&apos; where id=v_actor.id;
+  return v_id;
+end $$;
+
+-- Preserve the current service submission implementation (including later
+-- migrations), making only its back-evidence check conditional.
+do $$
+declare v_definition text;
+begin
+  v_definition := pg_get_functiondef(&apos;barangayan_private.submit_service_request(jsonb)&apos;::regprocedure);
+  if position(&apos;perform barangayan_private.check_object(&apos;&apos;id-documents&apos;&apos;,s.back_path);&apos; in v_definition) = 0 then
+    raise exception &apos;service_submission_back_check_not_found&apos;;
+  end if;
+  execute replace(v_definition,
+    &apos;perform barangayan_private.check_object(&apos;&apos;id-documents&apos;&apos;,s.back_path);&apos;,
+    &apos;if s.back_path is not null then perform barangayan_private.check_object(&apos;&apos;id-documents&apos;&apos;,s.back_path); end if;&apos;);
+end $$;
+
+-- Limit paid OCR requests atomically per resident. No image/text in this table.
+create table barangayan_private.id_extraction_limits (
+  resident_id uuid primary key references public.profiles(id) on delete cascade,
+  window_start timestamptz not null,
+  request_count integer not null check (request_count &gt; 0)
+);
+alter table barangayan_private.id_extraction_limits enable row level security;
+revoke all on barangayan_private.id_extraction_limits from public,anon,authenticated,service_role;
+create function public.consume_id_extraction_limit(p_resident_id uuid) returns boolean
+language plpgsql security definer set search_path = &apos;&apos; as $$
+declare v_window timestamptz := date_bin(&apos;1 minute&apos;,clock_timestamp(),timestamptz &apos;2000-01-01 00:00:00+00&apos;); v_count integer;
+begin
+  insert into barangayan_private.id_extraction_limits as l(resident_id,window_start,request_count)
+    values(p_resident_id,v_window,1)
+    on conflict(resident_id) do update set window_start=v_window,
+      request_count=case when l.window_start=v_window then l.request_count+1 else 1 end
+    returning request_count into v_count;
+  return v_count &lt;= 5;
+end $$;
+revoke all on function public.consume_id_extraction_limit(uuid) from public,anon,authenticated;
+grant execute on function public.consume_id_extraction_limit(uuid) to service_role;
+
+commit;</file><file path="supabase/migrations/0122_resident_apple_account_setup.sql">-- Resident iOS Phase 3 (P03-T03): provider-aware account setup for Sign in with Apple.
+--
+-- Additive. `public.get_resident_account_setup_status()` keeps its strict legacy shape
+-- (`registrationOrigin` email_otp | google | legacy) for Android/web; an Apple account
+-- is reported there as `legacy` with its true password state, which those clients treat
+-- as &quot;recover a password first&quot;. iOS consumes the new versioned
+-- `public.get_resident_account_setup_status_v2()`.
+--
+-- Apple Auth-managed identity rows (not editable user metadata) are the only input to
+-- profile provisioning, exactly as for Google. Tenant comes from the configured
+-- registration locality. No profile detail, completion or ID approval is invented.
+begin;
+
+alter table barangayan_private.resident_account_lifecycle
+ drop constraint resident_account_lifecycle_registration_origin_check;
+alter table barangayan_private.resident_account_lifecycle
+ add constraint resident_account_lifecycle_registration_origin_check
+ check (registration_origin in (&apos;email_otp&apos;,&apos;google&apos;,&apos;apple&apos;,&apos;legacy&apos;));
+
+-- Same observation logic as 0107 plus the Apple origin. An Apple sign-in carries no
+-- password, so its password state is &quot;absent&quot; until a server credential write.
+create or replace function barangayan_private.observe_resident_auth_password() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+ if tg_op=&apos;INSERT&apos; then
+  insert into barangayan_private.resident_account_lifecycle
+   (user_id,registration_origin,password_set,password_evidence,creation_transaction)
+  values(new.id,
+   case when new.raw_user_meta_data-&gt;&gt;&apos;resident_registration_origin&apos;=&apos;email_otp&apos; then &apos;email_otp&apos;
+    when new.raw_app_meta_data-&gt;&gt;&apos;provider&apos;=&apos;google&apos; then &apos;google&apos;
+    when new.raw_app_meta_data-&gt;&gt;&apos;provider&apos;=&apos;apple&apos; then &apos;apple&apos; else &apos;legacy&apos; end,
+   case when new.raw_user_meta_data-&gt;&gt;&apos;resident_registration_origin&apos;=&apos;email_otp&apos; or coalesce(new.encrypted_password,&apos;&apos;)=&apos;&apos; then false else null end,
+   case when new.raw_user_meta_data-&gt;&gt;&apos;resident_registration_origin&apos;=&apos;email_otp&apos; or coalesce(new.encrypted_password,&apos;&apos;)=&apos;&apos; then &apos;absent&apos; else &apos;unknown_initial_hash&apos; end,
+   pg_current_xact_id()) on conflict(user_id) do nothing;
+ elsif new.encrypted_password is distinct from old.encrypted_password then
+  update barangayan_private.resident_account_lifecycle
+  set password_set=coalesce(new.encrypted_password,&apos;&apos;)&lt;&gt;&apos;&apos;,
+   password_evidence=case when coalesce(new.encrypted_password,&apos;&apos;)=&apos;&apos; then &apos;absent&apos; else &apos;auth_password_write&apos; end,
+   password_observed_at=clock_timestamp()
+  where user_id=new.id and creation_transaction is distinct from pg_current_xact_id();
+ end if;
+ return new;
+end $$;
+
+-- Provider-managed identities never import user-editable registration metadata.
+create or replace function barangayan_private.guard_profile_locations() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare geometry jsonb; metadata jsonb; configured uuid;
+begin
+ select boundary into geometry from public.barangays where id=new.barangay_id;
+ if tg_op=&apos;INSERT&apos; and new.role=&apos;resident&apos; then
+  select raw_user_meta_data into metadata from auth.users where id=new.id;
+  if metadata ? &apos;barangay_id&apos; then
+   select barangay_id into configured from public.barangay_localities where resident_registration_enabled;
+   if (select count(*) from public.barangay_localities where resident_registration_enabled)&lt;&gt;1 or new.barangay_id is distinct from configured then
+    raise exception &apos;registration_locality_not_configured&apos; using errcode=&apos;22023&apos;;
+   end if;
+  end if;
+  if not exists(select 1 from auth.identities where user_id=new.id and provider in (&apos;google&apos;,&apos;apple&apos;)) then
+   if metadata ? &apos;registration_gps&apos; then new.registration_location:=nullif(metadata-&gt;&apos;registration_gps&apos;,&apos;null&apos;::jsonb); end if;
+   if metadata ? &apos;registration_home&apos; then new.registration_home_location:=nullif(metadata-&gt;&apos;registration_home&apos;,&apos;null&apos;::jsonb); end if;
+  end if;
+ elsif tg_op=&apos;UPDATE&apos; and current_setting(&apos;role&apos;,true) in (&apos;authenticated&apos;,&apos;anon&apos;)
+   and current_setting(&apos;barangayan.profile_location_operation&apos;,true) is distinct from new.id::text
+   and (new.registration_location is distinct from old.registration_location or new.registration_home_location is distinct from old.registration_home_location
+     or new.location_verified is distinct from old.location_verified) then
+  raise exception &apos;registration_location_operation_required&apos; using errcode=&apos;42501&apos;;
+ end if;
+ if not barangayan_private.valid_location(new.registration_location) or not barangayan_private.valid_location(new.registration_home_location)
+   or not barangayan_private.valid_location(new.verified_location) then raise exception &apos;invalid_coordinates&apos; using errcode=&apos;22023&apos;; end if;
+ if tg_op=&apos;INSERT&apos; then
+  new.location_verified:=barangayan_private.location_inside(coalesce(new.registration_home_location,new.registration_location),geometry);
+ end if;
+ if new.verified_location is not null and (tg_op=&apos;INSERT&apos; or new.verified_location is distinct from old.verified_location) then
+  if barangayan_private.location_inside(new.verified_location,geometry) is distinct from true then raise exception &apos;location_outside_or_unavailable&apos; using errcode=&apos;22023&apos;; end if;
+  new.location_verified_at:=clock_timestamp();
+ elsif tg_op=&apos;UPDATE&apos; and new.location_verified_at is distinct from old.location_verified_at and new.verified_location is not distinct from old.verified_location then
+  new.location_verified_at:=old.location_verified_at;
+ end if;
+ return new;
+end $$;
+
+-- Apple supplies the (possibly private-relay) email on the Auth user and names, when
+-- present, in identity data; subsequent sign-ins may omit names, which stay NULL until
+-- the resident completes their profile. Same advisory lock as completion/Google.
+create function barangayan_private.provision_apple_resident(p_uid uuid) returns uuid
+language plpgsql security invoker set search_path=&apos;&apos; as $$
+declare v_email text; v_metadata jsonb; v_profile public.profiles;
+ v_locality public.barangay_localities; v_first text; v_last text;
+begin
+ if p_uid is null then raise exception &apos;authentication_required&apos; using errcode=&apos;42501&apos;; end if;
+ perform pg_advisory_xact_lock(hashtextextended(p_uid::text,1));
+ select u.email,i.identity_data into v_email,v_metadata
+ from auth.users u join auth.identities i on i.user_id=u.id and i.provider=&apos;apple&apos;
+ where u.id=p_uid and not coalesce(u.is_anonymous,false)
+ order by i.created_at,i.id limit 1;
+ if not found then raise exception &apos;apple_identity_required&apos; using errcode=&apos;42501&apos;; end if;
+ select * into v_profile from public.profiles where id=p_uid for update;
+ if found then
+  if v_profile.deleted_at is not null then raise exception &apos;forbidden&apos; using errcode=&apos;42501&apos;; end if;
+  return p_uid;
+ end if;
+ begin
+  select * into strict v_locality from public.barangay_localities
+  where resident_registration_enabled for share;
+ exception when no_data_found or too_many_rows then
+  raise exception &apos;registration_locality_not_configured&apos; using errcode=&apos;22023&apos;;
+ end;
+ select first_name,last_name into v_first,v_last from barangayan_private.google_resident_names(coalesce(v_metadata,&apos;{}&apos;::jsonb));
+ insert into public.profiles(id,barangay_id,role,full_name,first_name,last_name,email,city,province)
+ values(p_uid,v_locality.barangay_id,&apos;resident&apos;,concat_ws(&apos; &apos;,v_first,v_last),v_first,v_last,v_email,v_locality.city,v_locality.province)
+ on conflict(id) do nothing;
+ return p_uid;
+end $$;
+
+create function barangayan_private.create_apple_resident_profile() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+ perform barangayan_private.provision_apple_resident(new.user_id);
+ return new;
+end $$;
+create trigger create_apple_resident_profile after insert on auth.identities
+for each row when (new.provider=&apos;apple&apos;)
+execute function barangayan_private.create_apple_resident_profile();
+
+create function barangayan_private.ensure_apple_resident_profile() returns uuid
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+ return barangayan_private.provision_apple_resident((select auth.uid()));
+end $$;
+create function public.ensure_apple_resident_profile() returns uuid
+language sql security invoker set search_path=&apos;&apos; as $$
+ select barangayan_private.ensure_apple_resident_profile()
+$$;
+revoke all on function barangayan_private.provision_apple_resident(uuid),barangayan_private.create_apple_resident_profile(),
+ barangayan_private.ensure_apple_resident_profile(),public.ensure_apple_resident_profile() from public,anon,authenticated;
+grant execute on function barangayan_private.ensure_apple_resident_profile(),public.ensure_apple_resident_profile() to authenticated;
+comment on function public.ensure_apple_resident_profile() is
+ &apos;Idempotently creates the authenticated Apple resident&apos;&apos;s minimal profile. Auth supplies identity/email; configuration supplies tenant. Does not complete required details or approve ID evidence.&apos;;
+
+-- v1 keeps its strict three-value origin. An Apple account has no Google identity, so
+-- the legacy clients&apos; derived mode remains conservative (recover a password first).
+create or replace function barangayan_private.get_resident_account_setup_status() returns jsonb
+language plpgsql stable security definer set search_path=&apos;&apos; as $$
+declare v_uid uuid:=(select auth.uid()); p public.profiles; lifecycle barangayan_private.resident_account_lifecycle;
+begin
+ if v_uid is null then raise exception &apos;authentication_required&apos; using errcode=&apos;42501&apos;; end if;
+ if not exists(select 1 from auth.users u where u.id=v_uid and not coalesce(u.is_anonymous,false)
+  and u.deleted_at is null and (u.banned_until is null or u.banned_until&lt;=now())) then
+  raise exception &apos;resident_identity_required&apos; using errcode=&apos;42501&apos;; end if;
+ select * into p from public.profiles where id=v_uid;
+ if found and (p.role&lt;&gt;&apos;resident&apos; or p.deleted_at is not null) then raise exception &apos;forbidden&apos; using errcode=&apos;42501&apos;; end if;
+ select * into lifecycle from barangayan_private.resident_account_lifecycle where user_id=v_uid;
+ if not found then raise exception &apos;resident_setup_state_unavailable&apos; using errcode=&apos;55000&apos;; end if;
+ return jsonb_build_object(&apos;registrationOrigin&apos;,case when lifecycle.registration_origin=&apos;apple&apos; then &apos;legacy&apos; else lifecycle.registration_origin end,
+  &apos;profileComplete&apos;,barangayan_private.resident_profile_complete(p),&apos;passwordSet&apos;,lifecycle.password_set,
+  &apos;hasGoogleIdentity&apos;,exists(select 1 from auth.identities i where i.user_id=v_uid and i.provider=&apos;google&apos;));
+end $$;
+
+-- v2: provider-aware contract for iOS. Unknown providers are surfaced, not hidden, so
+-- the client can fail closed on a value it does not understand.
+create function barangayan_private.get_resident_account_setup_status_v2() returns jsonb
+language plpgsql stable security definer set search_path=&apos;&apos; as $$
+declare v_uid uuid:=(select auth.uid()); p public.profiles; lifecycle barangayan_private.resident_account_lifecycle;
+ v_email text;
+begin
+ if v_uid is null then raise exception &apos;authentication_required&apos; using errcode=&apos;42501&apos;; end if;
+ select u.email into v_email from auth.users u where u.id=v_uid and not coalesce(u.is_anonymous,false)
+  and u.deleted_at is null and (u.banned_until is null or u.banned_until&lt;=now());
+ if not found then raise exception &apos;resident_identity_required&apos; using errcode=&apos;42501&apos;; end if;
+ select * into p from public.profiles where id=v_uid;
+ if found and (p.role&lt;&gt;&apos;resident&apos; or p.deleted_at is not null) then raise exception &apos;forbidden&apos; using errcode=&apos;42501&apos;; end if;
+ select * into lifecycle from barangayan_private.resident_account_lifecycle where user_id=v_uid;
+ if not found then raise exception &apos;resident_setup_state_unavailable&apos; using errcode=&apos;55000&apos;; end if;
+ return jsonb_build_object(&apos;contractVersion&apos;,2,
+  &apos;registrationOrigin&apos;,lifecycle.registration_origin,
+  &apos;profileComplete&apos;,barangayan_private.resident_profile_complete(p),
+  &apos;passwordSet&apos;,lifecycle.password_set,
+  &apos;identityProviders&apos;,coalesce((select jsonb_agg(distinct i.provider order by i.provider) from auth.identities i where i.user_id=v_uid),&apos;[]&apos;::jsonb),
+  &apos;hasGoogleIdentity&apos;,exists(select 1 from auth.identities i where i.user_id=v_uid and i.provider=&apos;google&apos;),
+  &apos;hasAppleIdentity&apos;,exists(select 1 from auth.identities i where i.user_id=v_uid and i.provider=&apos;apple&apos;),
+  &apos;emailIsPrivateRelay&apos;,coalesce(lower(v_email) like &apos;%@privaterelay.appleid.com&apos;,false));
+end $$;
+create function public.get_resident_account_setup_status_v2() returns jsonb
+language sql stable security invoker set search_path=&apos;&apos; as $$ select barangayan_private.get_resident_account_setup_status_v2() $$;
+revoke all on function barangayan_private.get_resident_account_setup_status_v2(),public.get_resident_account_setup_status_v2() from public,anon,authenticated,service_role;
+grant execute on function barangayan_private.get_resident_account_setup_status_v2(),public.get_resident_account_setup_status_v2() to authenticated;
+comment on function public.get_resident_account_setup_status_v2() is
+ &apos;Caller-only, provider-aware resident setup status for iOS (contractVersion 2). Null passwordSet means unresolved legacy provenance. The v1 function keeps its strict shape for Android/web.&apos;;
+
+notify pgrst,&apos;reload schema&apos;;
+commit;</file><file path="supabase/migrations/0135_resident_notifications.sql">-- Resident iOS Phase 17 (P17-T01/T02/T03/T07): durable server-backed notification inbox,
+-- delivery outbox, per-kind preferences and the worker contract for Expo Push / APNs.
+--
+-- Design (plan §3 &quot;Required notification architecture&quot;, P03-T07 contract):
+--   * An event row, its resident inbox row and its outbox row are created by the same
+--     statement that observes the source change (AFTER trigger), so none exists without
+--     the others. Events are de-duplicated per (recipient, dedupe_key).
+--   * The inbox is the resident-visible record. Its text is generic and written here, never
+--     copied from a source row (no titles, addresses, names or reporter data), and its
+--     destination is a versioned {v,kind,id} reference, never a URL or a snapshot.
+--   * Preferences are applied when the worker claims a row (send time), not when the event is
+--     created. They control phone alerts only; the inbox always records the event.
+--   * Events, outbox and delivery tickets live in barangayan_private (no API exposure). The
+--     sender runs as service_role and talks to them only through the notification_worker_*
+--     functions below, which no other role can execute.
+--   * Inbox read state is independent of announcement_reads and incidents.resolved_read_at.
+--   * Client realtime remains a refresh signal; nothing here is a background-delivery promise.
+
+-- ===== Preferences =====
+create table if not exists public.notification_preferences (
+  user_id uuid primary key references public.profiles(id) on delete cascade,
+  kinds jsonb not null default &apos;{}&apos;::jsonb check (jsonb_typeof(kinds)=&apos;object&apos;),
+  updated_at timestamptz not null default now()
+);
+alter table public.notification_preferences enable row level security;
+drop policy if exists &quot;residents read their notification preferences&quot; on public.notification_preferences;
+create policy &quot;residents read their notification preferences&quot; on public.notification_preferences
+  for select to authenticated using (user_id=(select auth.uid()));
+revoke all on public.notification_preferences from public,anon,authenticated;
+grant select on public.notification_preferences to authenticated;
+grant all on public.notification_preferences to service_role;
+
+-- ===== Events (private) =====
+create table if not exists barangayan_private.notification_events (
+  id uuid primary key default gen_random_uuid(),
+  barangay_id uuid not null references public.barangays(id),
+  recipient_id uuid not null references public.profiles(id) on delete cascade,
+  kind text not null check (kind in (&apos;request_status&apos;,&apos;payment&apos;,&apos;incident_status&apos;,&apos;announcement&apos;,&apos;medical_drive&apos;,&apos;health_registration&apos;)),
+  subject_type text not null check (subject_type in (&apos;request&apos;,&apos;incident&apos;,&apos;announcement&apos;,&apos;drive&apos;,&apos;registration&apos;)),
+  subject_id uuid not null,
+  dedupe_key text not null check (char_length(dedupe_key) between 1 and 200),
+  payload_version integer not null default 1 check (payload_version=1),
+  created_at timestamptz not null default now(),
+  unique (recipient_id, dedupe_key)
+);
+create index if not exists notification_events_created_idx on barangayan_private.notification_events(created_at);
+
+-- A destination is exactly {&quot;v&quot;:1,&quot;kind&quot;:&lt;allowlisted&gt;,&quot;id&quot;:&lt;uuid&gt;}.
+create or replace function barangayan_private.valid_notification_destination(d jsonb) returns boolean
+language sql immutable set search_path=&apos;&apos; as $$
+  select jsonb_typeof(d)=&apos;object&apos;
+     and (select count(*) from jsonb_object_keys(d))=3
+     and d-&gt;&gt;&apos;v&apos;=&apos;1&apos;
+     and d-&gt;&gt;&apos;kind&apos; in (&apos;request&apos;,&apos;incident&apos;,&apos;announcement&apos;,&apos;drive&apos;,&apos;registration&apos;)
+     and (d-&gt;&gt;&apos;id&apos;) ~ &apos;^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&apos;
+$$;
+
+-- ===== Inbox (resident-visible) =====
+create table if not exists public.notification_inbox (
+  id uuid primary key default gen_random_uuid(),
+  event_id uuid not null unique references barangayan_private.notification_events(id) on delete cascade,
+  recipient_id uuid not null references public.profiles(id) on delete cascade,
+  kind text not null check (kind in (&apos;request_status&apos;,&apos;payment&apos;,&apos;incident_status&apos;,&apos;announcement&apos;,&apos;medical_drive&apos;,&apos;health_registration&apos;)),
+  title text not null check (char_length(title) between 1 and 80),
+  body text not null check (char_length(body) between 1 and 200),
+  destination jsonb not null check (barangayan_private.valid_notification_destination(destination)),
+  created_at timestamptz not null default now(),
+  read_at timestamptz
+);
+create index if not exists notification_inbox_owner_idx on public.notification_inbox(recipient_id, created_at desc, id desc);
+create index if not exists notification_inbox_unread_idx on public.notification_inbox(recipient_id) where read_at is null;
+alter table public.notification_inbox enable row level security;
+drop policy if exists &quot;residents read their inbox&quot; on public.notification_inbox;
+drop policy if exists &quot;residents mark their inbox read&quot; on public.notification_inbox;
+create policy &quot;residents read their inbox&quot; on public.notification_inbox for select to authenticated
+  using (recipient_id=(select auth.uid()) and exists(select 1 from public.profiles p where p.id=recipient_id and p.deleted_at is null));
+create policy &quot;residents mark their inbox read&quot; on public.notification_inbox for update to authenticated
+  using (recipient_id=(select auth.uid()) and exists(select 1 from public.profiles p where p.id=recipient_id and p.deleted_at is null))
+  with check (recipient_id=(select auth.uid()));
+-- Residents may change read_at and nothing else: the privilege is column-level.
+revoke all on public.notification_inbox from public,anon,authenticated;
+grant select on public.notification_inbox to authenticated;
+grant update (read_at) on public.notification_inbox to authenticated;
+grant all on public.notification_inbox to service_role;
+
+-- ===== Outbox and delivery tickets (private) =====
+create table if not exists barangayan_private.notification_outbox (
+  id uuid primary key default gen_random_uuid(),
+  inbox_id uuid not null unique references public.notification_inbox(id) on delete cascade,
+  recipient_id uuid not null references public.profiles(id) on delete cascade,
+  state text not null default &apos;pending&apos; check (state in (&apos;pending&apos;,&apos;sending&apos;,&apos;sent&apos;,&apos;skipped&apos;,&apos;dead&apos;)),
+  attempt_count integer not null default 0,
+  next_attempt_at timestamptz not null default now(),
+  claimed_at timestamptz,
+  last_error text check (char_length(last_error)&lt;=200),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  finished_at timestamptz
+);
+create index if not exists notification_outbox_due_idx on barangayan_private.notification_outbox(next_attempt_at) where state in (&apos;pending&apos;,&apos;sending&apos;);
+create index if not exists notification_outbox_finished_idx on barangayan_private.notification_outbox(finished_at) where finished_at is not null;
+
+create table if not exists barangayan_private.notification_deliveries (
+  id uuid primary key default gen_random_uuid(),
+  outbox_id uuid not null references barangayan_private.notification_outbox(id) on delete cascade,
+  expo_push_token text not null,
+  ticket_id text,
+  -- accepted: Expo took the message (ticket ok). provider_ok: Expo&apos;s receipt says APNs took it.
+  -- Neither means the phone showed it. expired: no receipt within the retention window.
+  state text not null default &apos;accepted&apos; check (state in (&apos;accepted&apos;,&apos;provider_ok&apos;,&apos;error&apos;,&apos;expired&apos;)),
+  error_code text check (char_length(error_code)&lt;=60),
+  sent_at timestamptz not null default now(),
+  receipt_checked_at timestamptz
+);
+create index if not exists notification_deliveries_receipt_idx on barangayan_private.notification_deliveries(sent_at) where state=&apos;accepted&apos;;
+
+revoke all on all tables in schema barangayan_private from public,anon,authenticated;
+grant all on barangayan_private.notification_events, barangayan_private.notification_outbox, barangayan_private.notification_deliveries to service_role;
+
+-- ===== Event creation =====
+-- One statement writes the event, the inbox row and the outbox row for every eligible
+-- recipient. A recipient is a non-deleted resident of the given barangay; anyone else is
+-- dropped. Re-emitting the same dedupe key for the same recipient writes nothing.
+create or replace function barangayan_private.emit_notification(
+  p_recipients uuid[], p_barangay_id uuid, p_kind text, p_subject_type text, p_subject_id uuid,
+  p_dedupe_key text, p_title text, p_body text) returns integer
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare v_count integer;
+begin
+  with targets as (
+    select p.id from public.profiles p
+     where p.id=any(p_recipients) and p.role=&apos;resident&apos; and p.deleted_at is null and p.barangay_id=p_barangay_id
+  ), ev as (
+    insert into barangayan_private.notification_events(barangay_id,recipient_id,kind,subject_type,subject_id,dedupe_key)
+    select p_barangay_id,t.id,p_kind,p_subject_type,p_subject_id,p_dedupe_key from targets t
+    on conflict (recipient_id,dedupe_key) do nothing
+    returning id,recipient_id
+  ), ib as (
+    insert into public.notification_inbox(event_id,recipient_id,kind,title,body,destination)
+    select e.id,e.recipient_id,p_kind,p_title,p_body,jsonb_build_object(&apos;v&apos;,1,&apos;kind&apos;,p_subject_type,&apos;id&apos;,p_subject_id) from ev e
+    returning id,recipient_id
+  )
+  insert into barangayan_private.notification_outbox(inbox_id,recipient_id) select i.id,i.recipient_id from ib i;
+  get diagnostics v_count = row_count;
+  return v_count;
+end $$;
+
+-- A failed notification must never roll back the operational change that caused it.
+create or replace function barangayan_private.notify_request_change() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare v_actor uuid:=(select auth.uid()); v_title text; v_body text; v_kind text; v_key text;
+begin
+  if new.deleted_at is not null or v_actor is not distinct from new.resident_id then return null; end if;
+  if new.payment_status is distinct from old.payment_status and new.payment_status in (&apos;paid&apos;,&apos;waived&apos;) then
+    v_kind:=&apos;payment&apos;; v_title:=&apos;Payment update&apos;;
+    v_body:=case new.payment_status when &apos;paid&apos; then &apos;Your payment was received.&apos; else &apos;No payment is due for your request.&apos; end;
+    v_key:=&apos;request:&apos;||new.id||&apos;:payment:&apos;||new.payment_status;
+    perform barangayan_private.emit_notification(array[new.resident_id],new.barangay_id,v_kind,&apos;request&apos;,new.id,v_key,v_title,v_body);
+  end if;
+  if new.status is distinct from old.status and new.status in (&apos;in_progress&apos;,&apos;ready_for_pickup&apos;,&apos;completed&apos;,&apos;cancelled&apos;) then
+    v_kind:=&apos;request_status&apos;;
+    v_title:=case new.status when &apos;ready_for_pickup&apos; then &apos;Request ready&apos; else &apos;Request update&apos; end;
+    v_body:=case new.status
+      when &apos;in_progress&apos; then &apos;Your document request is being processed.&apos;
+      when &apos;ready_for_pickup&apos; then &apos;Your document is ready for pickup.&apos;
+      when &apos;completed&apos; then &apos;Your document request is complete.&apos;
+      else &apos;Your document request was cancelled.&apos; end;
+    v_key:=&apos;request:&apos;||new.id||&apos;:status:&apos;||new.status;
+    perform barangayan_private.emit_notification(array[new.resident_id],new.barangay_id,v_kind,&apos;request&apos;,new.id,v_key,v_title,v_body);
+  end if;
+  return null;
+exception when others then
+  raise warning &apos;notify_request_change failed: %&apos;,sqlstate;
+  return null;
+end $$;
+
+create or replace function barangayan_private.notify_incident_change() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  if new.deleted_at is not null or new.reporter_id is null or new.reporter_id is not distinct from (select auth.uid())
+     or new.status not in (&apos;in_progress&apos;,&apos;resolved&apos;,&apos;unresolved&apos;) then return null; end if;
+  perform barangayan_private.emit_notification(array[new.reporter_id],new.barangay_id,&apos;incident_status&apos;,&apos;incident&apos;,new.id,
+    &apos;incident:&apos;||new.id||&apos;:status:&apos;||new.status,&apos;Report update&apos;,&apos;Your report has a new status.&apos;);
+  return null;
+exception when others then
+  raise warning &apos;notify_incident_change failed: %&apos;,sqlstate;
+  return null;
+end $$;
+
+create or replace function barangayan_private.notify_announcement() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  if new.deleted_at is not null or new.published_at&gt;now() then return null; end if;
+  perform barangayan_private.emit_notification(
+    (select coalesce(array_agg(p.id),&apos;{}&apos;) from public.profiles p where p.barangay_id=new.barangay_id and p.role=&apos;resident&apos; and p.deleted_at is null),
+    new.barangay_id,&apos;announcement&apos;,&apos;announcement&apos;,new.id,&apos;announcement:&apos;||new.id,&apos;New announcement&apos;,&apos;Your barangay posted a new announcement.&apos;);
+  return null;
+exception when others then
+  raise warning &apos;notify_announcement failed: %&apos;,sqlstate;
+  return null;
+end $$;
+
+create or replace function barangayan_private.notify_medical_drive() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  if new.deleted_at is not null or not new.is_active then return null; end if;
+  perform barangayan_private.emit_notification(
+    (select coalesce(array_agg(p.id),&apos;{}&apos;) from public.profiles p where p.barangay_id=new.barangay_id and p.role=&apos;resident&apos; and p.deleted_at is null),
+    new.barangay_id,&apos;medical_drive&apos;,&apos;drive&apos;,new.id,&apos;drive:&apos;||new.id,&apos;New medical drive&apos;,&apos;A new medical drive is open in your barangay.&apos;);
+  return null;
+exception when others then
+  raise warning &apos;notify_medical_drive failed: %&apos;,sqlstate;
+  return null;
+end $$;
+
+create or replace function barangayan_private.notify_drive_registration() returns trigger
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare v_barangay uuid;
+begin
+  if new.status not in (&apos;confirmed&apos;,&apos;attended&apos;,&apos;cancelled&apos;) or new.user_id is not distinct from (select auth.uid()) then return null; end if;
+  select d.barangay_id into v_barangay from public.medical_drives d where d.id=new.drive_id;
+  if v_barangay is null then return null; end if;
+  perform barangayan_private.emit_notification(array[new.user_id],v_barangay,&apos;health_registration&apos;,&apos;registration&apos;,new.id,
+    &apos;registration:&apos;||new.id||&apos;:status:&apos;||new.status,&apos;Registration update&apos;,&apos;Your medical drive registration has a new status.&apos;);
+  return null;
+exception when others then
+  raise warning &apos;notify_drive_registration failed: %&apos;,sqlstate;
+  return null;
+end $$;
+
+drop trigger if exists z_notify_request_change on public.service_requests;
+create trigger z_notify_request_change after update of status,payment_status on public.service_requests
+  for each row when (old.status is distinct from new.status or old.payment_status is distinct from new.payment_status)
+  execute function barangayan_private.notify_request_change();
+drop trigger if exists z_notify_incident_change on public.incidents;
+create trigger z_notify_incident_change after update of status on public.incidents
+  for each row when (old.status is distinct from new.status)
+  execute function barangayan_private.notify_incident_change();
+drop trigger if exists z_notify_announcement on public.announcements;
+create trigger z_notify_announcement after insert on public.announcements
+  for each row execute function barangayan_private.notify_announcement();
+drop trigger if exists z_notify_medical_drive on public.medical_drives;
+create trigger z_notify_medical_drive after insert on public.medical_drives
+  for each row execute function barangayan_private.notify_medical_drive();
+drop trigger if exists z_notify_drive_registration on public.drive_registrations;
+create trigger z_notify_drive_registration after update of status on public.drive_registrations
+  for each row when (old.status is distinct from new.status)
+  execute function barangayan_private.notify_drive_registration();
+
+revoke all on function barangayan_private.emit_notification(uuid[],uuid,text,text,uuid,text,text,text) from public,anon,authenticated;
+revoke all on function barangayan_private.notify_request_change(),barangayan_private.notify_incident_change(),barangayan_private.notify_announcement(),
+  barangayan_private.notify_medical_drive(),barangayan_private.notify_drive_registration() from public,anon,authenticated;
+
+-- ===== Resident operations =====
+-- Preferences: the global switch stays on profiles.push_notifications_enabled (migration 0063);
+-- per-kind switches are merged into notification_preferences.kinds. Both only ever change the
+-- caller&apos;s own rows.
+create or replace function public.set_notification_preferences(p_push_enabled boolean default null, p_kinds jsonb default null)
+returns table(push_enabled boolean, kinds jsonb)
+language plpgsql security definer set search_path=&apos;&apos; as $$
+#variable_conflict use_column
+declare v_uid uuid:=(select auth.uid()); v_key text; v_val jsonb;
+begin
+  if v_uid is null then raise exception &apos;authentication_required&apos; using errcode=&apos;42501&apos;; end if;
+  if not exists(select 1 from public.profiles p where p.id=v_uid and p.role=&apos;resident&apos; and p.deleted_at is null) then
+    raise exception &apos;forbidden&apos; using errcode=&apos;42501&apos;;
+  end if;
+  if p_kinds is not null then
+    if jsonb_typeof(p_kinds)&lt;&gt;&apos;object&apos; or (select count(*) from jsonb_object_keys(p_kinds))&gt;10 then
+      raise exception &apos;invalid_notification_preferences&apos; using errcode=&apos;22023&apos;;
+    end if;
+    for v_key,v_val in select * from jsonb_each(p_kinds) loop
+      if v_key not in (&apos;request_status&apos;,&apos;payment&apos;,&apos;incident_status&apos;,&apos;announcement&apos;,&apos;medical_drive&apos;,&apos;health_registration&apos;)
+         or jsonb_typeof(v_val)&lt;&gt;&apos;boolean&apos; then
+        raise exception &apos;invalid_notification_preferences&apos; using errcode=&apos;22023&apos;;
+      end if;
+    end loop;
+    insert into public.notification_preferences as np(user_id,kinds) values (v_uid,p_kinds)
+    on conflict (user_id) do update set kinds=np.kinds||excluded.kinds, updated_at=now();
+  end if;
+  if p_push_enabled is not null then
+    update public.profiles set push_notifications_enabled=p_push_enabled where id=v_uid;
+  end if;
+  return query select p.push_notifications_enabled,coalesce((select np.kinds from public.notification_preferences np where np.user_id=v_uid),&apos;{}&apos;::jsonb)
+    from public.profiles p where p.id=v_uid;
+end $$;
+
+-- Offline-logout recovery. A device that signed out without reaching the server has no session to
+-- remove its token with, so this is callable without one: possession of the token is the proof, and
+-- a push token is delivered only to the app on the device that owns it and to this server. It can
+-- only ever remove a delivery address (never read or change anything else), it answers the same
+-- whether or not the token existed (no oracle), and a token&apos;s format is checked so it cannot be
+-- used to probe. The app re-registers its token on the next eligible session, so a wrongly removed
+-- token costs at most alerts until the device is next opened.
+create or replace function public.release_push_token(p_expo_push_token text) returns void
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  if p_expo_push_token is null or char_length(p_expo_push_token)&gt;200
+     or p_expo_push_token !~ &apos;^Expo(nent)?PushToken\[[A-Za-z0-9_-]+\]$&apos; then
+    raise exception &apos;invalid_push_token&apos; using errcode=&apos;22023&apos;;
+  end if;
+  delete from public.push_tokens where expo_push_token=p_expo_push_token;
+end $$;
+
+revoke all on function public.set_notification_preferences(boolean,jsonb) from public,anon;
+revoke all on function public.release_push_token(text) from public;
+grant execute on function public.set_notification_preferences(boolean,jsonb) to authenticated,service_role;
+grant execute on function public.release_push_token(text) to anon,authenticated,service_role;
+
+-- ===== Sender (service_role only) =====
+-- The sender claims due rows, applies the resident&apos;s preferences at that moment, sends to the
+-- resident&apos;s current tokens through Expo Push, and reports tickets, failures and receipts back.
+
+create or replace function barangayan_private.notification_retry(p_outbox_id uuid, p_error text) returns text
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare v_attempts integer; v_state text;
+begin
+  select attempt_count into v_attempts from barangayan_private.notification_outbox where id=p_outbox_id;
+  if not found then return null; end if;
+  if v_attempts&gt;=5 then
+    update barangayan_private.notification_outbox set state=&apos;dead&apos;,last_error=left(p_error,200),finished_at=now(),updated_at=now() where id=p_outbox_id;
+    return &apos;dead&apos;;
+  end if;
+  update barangayan_private.notification_outbox
+     set state=&apos;pending&apos;,last_error=left(p_error,200),claimed_at=null,updated_at=now(),
+         next_attempt_at=now()+make_interval(secs=&gt;(array[60,300,900,3600])[least(greatest(v_attempts,1),4)])
+   where id=p_outbox_id;
+  return &apos;pending&apos;;
+end $$;
+
+create or replace function public.notification_worker_claim(p_limit integer default 50)
+returns table(outbox_id uuid, inbox_id uuid, kind text, title text, body text, destination jsonb, tokens text[], attempt integer)
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare r record; v_tokens text[]; v_reason text;
+begin
+  for r in
+    select o.id as oid,o.inbox_id as iid,o.recipient_id as rid,o.attempt_count as tries,o.created_at as made,i.kind as ikind,i.title as ititle,i.body as ibody,i.destination as idest
+      from barangayan_private.notification_outbox o join public.notification_inbox i on i.id=o.inbox_id
+     where (o.state=&apos;pending&apos; and o.next_attempt_at&lt;=now()) or (o.state=&apos;sending&apos; and o.claimed_at&lt;now()-interval &apos;5 minutes&apos;)
+     order by o.next_attempt_at
+     limit greatest(1,least(coalesce(p_limit,50),100))
+     for update of o skip locked
+  loop
+    v_reason:=null; v_tokens:=null;
+    if r.tries&gt;=5 then
+      update barangayan_private.notification_outbox set state=&apos;dead&apos;,last_error=&apos;abandoned&apos;,finished_at=now(),updated_at=now() where id=r.oid;
+      continue;
+    end if;
+    if r.made&lt;now()-interval &apos;24 hours&apos; then v_reason:=&apos;stale&apos;;
+    elsif not exists(select 1 from public.profiles p where p.id=r.rid and p.role=&apos;resident&apos; and p.deleted_at is null and p.push_notifications_enabled) then v_reason:=&apos;opted_out&apos;;
+    elsif exists(select 1 from public.notification_preferences np where np.user_id=r.rid and np.kinds-&gt;&gt;r.ikind=&apos;false&apos;) then v_reason:=&apos;kind_off&apos;;
+    else
+      select array_agg(x.t) into v_tokens from (
+        select t.expo_push_token as t from public.push_tokens t
+         where t.user_id=r.rid and t.last_used_at&gt;now()-interval &apos;60 days&apos;
+         order by t.last_used_at desc limit 10) x;
+      if v_tokens is null then v_reason:=&apos;no_token&apos;; end if;
+    end if;
+    if v_reason is not null then
+      update barangayan_private.notification_outbox set state=&apos;skipped&apos;,last_error=v_reason,finished_at=now(),updated_at=now() where id=r.oid;
+      continue;
+    end if;
+    update barangayan_private.notification_outbox set state=&apos;sending&apos;,claimed_at=now(),attempt_count=attempt_count+1,updated_at=now() where id=r.oid;
+    outbox_id:=r.oid; inbox_id:=r.iid; kind:=r.ikind; title:=r.ititle; body:=r.ibody; destination:=r.idest; tokens:=v_tokens; attempt:=r.tries+1;
+    return next;
+  end loop;
+end $$;
+
+-- p_tickets: [{&quot;token&quot;:&quot;...&quot;,&quot;status&quot;:&quot;ok&quot;,&quot;id&quot;:&quot;...&quot;} | {&quot;token&quot;:&quot;...&quot;,&quot;status&quot;:&quot;error&quot;,&quot;error&quot;:&quot;DeviceNotRegistered&quot;}]
+create or replace function public.notification_worker_record_tickets(p_outbox_id uuid, p_tickets jsonb) returns text
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare t jsonb; v_ok integer:=0; v_gone integer:=0; v_total integer:=0; v_error text;
+begin
+  if jsonb_typeof(p_tickets)&lt;&gt;&apos;array&apos; or jsonb_array_length(p_tickets)&gt;20 then raise exception &apos;invalid_tickets&apos; using errcode=&apos;22023&apos;; end if;
+  perform 1 from barangayan_private.notification_outbox where id=p_outbox_id and state=&apos;sending&apos; for update;
+  if not found then raise exception &apos;outbox_not_claimed&apos; using errcode=&apos;P0002&apos;; end if;
+  for t in select * from jsonb_array_elements(p_tickets) loop
+    if jsonb_typeof(t)&lt;&gt;&apos;object&apos; or jsonb_typeof(t-&gt;&apos;token&apos;)&lt;&gt;&apos;string&apos; or t-&gt;&gt;&apos;status&apos; not in (&apos;ok&apos;,&apos;error&apos;) then
+      raise exception &apos;invalid_tickets&apos; using errcode=&apos;22023&apos;;
+    end if;
+    v_total:=v_total+1;
+    if t-&gt;&gt;&apos;status&apos;=&apos;ok&apos; then
+      v_ok:=v_ok+1;
+      insert into barangayan_private.notification_deliveries(outbox_id,expo_push_token,ticket_id,state) values (p_outbox_id,t-&gt;&gt;&apos;token&apos;,left(t-&gt;&gt;&apos;id&apos;,100),&apos;accepted&apos;);
+    else
+      v_error:=left(coalesce(t-&gt;&gt;&apos;error&apos;,&apos;unknown&apos;),60);
+      insert into barangayan_private.notification_deliveries(outbox_id,expo_push_token,state,error_code) values (p_outbox_id,t-&gt;&gt;&apos;token&apos;,&apos;error&apos;,v_error);
+      if v_error=&apos;DeviceNotRegistered&apos; then
+        v_gone:=v_gone+1;
+        delete from public.push_tokens where expo_push_token=t-&gt;&gt;&apos;token&apos;;
+      end if;
+    end if;
+  end loop;
+  if v_ok&gt;0 then
+    update barangayan_private.notification_outbox set state=&apos;sent&apos;,last_error=null,finished_at=now(),updated_at=now() where id=p_outbox_id;
+    return &apos;sent&apos;;
+  elsif v_total&gt;0 and v_gone=v_total then
+    update barangayan_private.notification_outbox set state=&apos;skipped&apos;,last_error=&apos;device_not_registered&apos;,finished_at=now(),updated_at=now() where id=p_outbox_id;
+    return &apos;skipped&apos;;
+  end if;
+  return barangayan_private.notification_retry(p_outbox_id,&apos;ticket_error:&apos;||coalesce(v_error,&apos;none&apos;));
+end $$;
+
+create or replace function public.notification_worker_fail(p_outbox_id uuid, p_error text) returns text
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  perform 1 from barangayan_private.notification_outbox where id=p_outbox_id and state=&apos;sending&apos; for update;
+  if not found then raise exception &apos;outbox_not_claimed&apos; using errcode=&apos;P0002&apos;; end if;
+  return barangayan_private.notification_retry(p_outbox_id,regexp_replace(coalesce(p_error,&apos;unknown&apos;),&apos;Expo(nent)?PushToken\[[^]]*\]&apos;,&apos;[token]&apos;,&apos;g&apos;));
+end $$;
+
+-- Tickets whose receipt is due (at least 15 minutes old, inside Expo&apos;s 24 hour retention).
+create or replace function public.notification_worker_due_receipts(p_limit integer default 300)
+returns table(delivery_id uuid, ticket_id text)
+language plpgsql security definer set search_path=&apos;&apos; as $$
+begin
+  update barangayan_private.notification_deliveries set state=&apos;expired&apos;,receipt_checked_at=now()
+   where state=&apos;accepted&apos; and sent_at&lt;=now()-interval &apos;23 hours&apos;;
+  return query select d.id,d.ticket_id from barangayan_private.notification_deliveries d
+   where d.state=&apos;accepted&apos; and d.ticket_id is not null and d.sent_at&lt;=now()-interval &apos;15 minutes&apos;
+   order by d.sent_at limit greatest(1,least(coalesce(p_limit,300),1000));
+end $$;
+
+-- p_receipts: [{&quot;delivery_id&quot;:&quot;&lt;uuid&gt;&quot;,&quot;status&quot;:&quot;ok&quot;} | {&quot;delivery_id&quot;:&quot;&lt;uuid&gt;&quot;,&quot;status&quot;:&quot;error&quot;,&quot;error&quot;:&quot;DeviceNotRegistered&quot;}]
+create or replace function public.notification_worker_record_receipts(p_receipts jsonb) returns integer
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare r jsonb; v_count integer:=0; v_error text; v_token text; v_updated integer;
+begin
+  if jsonb_typeof(p_receipts)&lt;&gt;&apos;array&apos; or jsonb_array_length(p_receipts)&gt;1000 then raise exception &apos;invalid_receipts&apos; using errcode=&apos;22023&apos;; end if;
+  for r in select * from jsonb_array_elements(p_receipts) loop
+    if jsonb_typeof(r)&lt;&gt;&apos;object&apos; or r-&gt;&gt;&apos;status&apos; not in (&apos;ok&apos;,&apos;error&apos;)
+       or (r-&gt;&gt;&apos;delivery_id&apos;) !~ &apos;^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&apos; then
+      raise exception &apos;invalid_receipts&apos; using errcode=&apos;22023&apos;;
+    end if;
+    if r-&gt;&gt;&apos;status&apos;=&apos;ok&apos; then
+      update barangayan_private.notification_deliveries set state=&apos;provider_ok&apos;,receipt_checked_at=now()
+       where id=(r-&gt;&gt;&apos;delivery_id&apos;)::uuid and state=&apos;accepted&apos;;
+    else
+      v_error:=left(coalesce(r-&gt;&gt;&apos;error&apos;,&apos;unknown&apos;),60);
+      update barangayan_private.notification_deliveries set state=&apos;error&apos;,error_code=v_error,receipt_checked_at=now()
+       where id=(r-&gt;&gt;&apos;delivery_id&apos;)::uuid and state=&apos;accepted&apos; returning expo_push_token into v_token;
+      if v_error=&apos;DeviceNotRegistered&apos; and v_token is not null then
+        delete from public.push_tokens where expo_push_token=v_token;
+      end if;
+    end if;
+    get diagnostics v_updated = row_count;
+    v_count:=v_count+v_updated;
+  end loop;
+  return v_count;
+end $$;
+
+-- Operational counts the sender returns on every run so a monitor can alert on them.
+create or replace function public.notification_worker_health()
+returns table(pending_total integer, oldest_pending_seconds integer, dead_last_24h integer, ticket_errors_last_24h integer, unreceipted_over_1h integer)
+language sql security definer set search_path=&apos;&apos; as $$
+  select (select count(*)::int from barangayan_private.notification_outbox where state in (&apos;pending&apos;,&apos;sending&apos;)),
+         (select coalesce(extract(epoch from now()-min(next_attempt_at))::int,0) from barangayan_private.notification_outbox where state in (&apos;pending&apos;,&apos;sending&apos;) and next_attempt_at&lt;=now()),
+         (select count(*)::int from barangayan_private.notification_outbox where state=&apos;dead&apos; and finished_at&gt;now()-interval &apos;24 hours&apos;),
+         (select count(*)::int from barangayan_private.notification_deliveries where state=&apos;error&apos; and sent_at&gt;now()-interval &apos;24 hours&apos;),
+         (select count(*)::int from barangayan_private.notification_deliveries where state=&apos;accepted&apos; and sent_at&lt;now()-interval &apos;1 hour&apos;)
+$$;
+
+-- Retention (P03-T07): read inbox rows 90 days after reading, finished outbox rows 30 days, events 180 days.
+create or replace function public.notification_worker_purge() returns table(inbox_deleted integer, outbox_deleted integer, events_deleted integer)
+language plpgsql security definer set search_path=&apos;&apos; as $$
+declare a integer; b integer; c integer;
+begin
+  delete from barangayan_private.notification_outbox where finished_at&lt;now()-interval &apos;30 days&apos;;
+  get diagnostics b = row_count;
+  delete from public.notification_inbox where read_at&lt;now()-interval &apos;90 days&apos;;
+  get diagnostics a = row_count;
+  delete from barangayan_private.notification_events e where e.created_at&lt;now()-interval &apos;180 days&apos;
+    and not exists(select 1 from public.notification_inbox i where i.event_id=e.id);
+  get diagnostics c = row_count;
+  return query select a,b,c;
+end $$;
+
+revoke all on function barangayan_private.notification_retry(uuid,text) from public,anon,authenticated;
+revoke all on function public.notification_worker_claim(integer),public.notification_worker_record_tickets(uuid,jsonb),
+  public.notification_worker_fail(uuid,text),public.notification_worker_due_receipts(integer),
+  public.notification_worker_record_receipts(jsonb),public.notification_worker_health(),public.notification_worker_purge() from public,anon,authenticated;
+grant execute on function public.notification_worker_claim(integer),public.notification_worker_record_tickets(uuid,jsonb),
+  public.notification_worker_fail(uuid,text),public.notification_worker_due_receipts(integer),
+  public.notification_worker_record_receipts(jsonb),public.notification_worker_health(),public.notification_worker_purge() to service_role;
+
+-- ===== Realtime: refresh signal for the resident&apos;s own inbox rows =====
+do $$ begin
+  if not exists(select 1 from pg_publication_tables where pubname=&apos;supabase_realtime&apos; and schemaname=&apos;public&apos; and tablename=&apos;notification_inbox&apos;) then
+    alter publication supabase_realtime add table public.notification_inbox;
+  end if;
+end $$;</file><file path="supabase/tests/resident_ios_phase17_notifications.test.sql">-- Resident iOS Phase 17 (P17-T01/T02/T03/T07): inbox, outbox, preferences, event creation and
+-- the sender (worker) contract of migration 0135. Everything, fixtures included, lives in one
+-- transaction that is rolled back.
+begin;
+select plan(121);
+
+-- ===== Fixtures (run as the connecting owner role) =====
+insert into public.barangays (id, name) values
+  (&apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Barangay A&apos;),
+  (&apos;a1700000-0000-0000-0000-000000000002&apos;, &apos;P17 Barangay B&apos;);
+
+insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, confirmation_token, recovery_token, email_change_token_new, email_change, raw_app_meta_data, raw_user_meta_data, is_super_admin, created_at, updated_at) values
+  (&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;00000000-0000-0000-0000-000000000000&apos;, &apos;authenticated&apos;, &apos;authenticated&apos;, &apos;p17-a@test.local&apos;, &apos;&apos;, now(), &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;{}&apos;::jsonb, &apos;{}&apos;::jsonb, false, now(), now()),
+  (&apos;b1700000-0000-0000-0000-0000000000a2&apos;, &apos;00000000-0000-0000-0000-000000000000&apos;, &apos;authenticated&apos;, &apos;authenticated&apos;, &apos;p17-a2@test.local&apos;, &apos;&apos;, now(), &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;{}&apos;::jsonb, &apos;{}&apos;::jsonb, false, now(), now()),
+  (&apos;b1700000-0000-0000-0000-00000000000b&apos;, &apos;00000000-0000-0000-0000-000000000000&apos;, &apos;authenticated&apos;, &apos;authenticated&apos;, &apos;p17-b@test.local&apos;, &apos;&apos;, now(), &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;{}&apos;::jsonb, &apos;{}&apos;::jsonb, false, now(), now()),
+  (&apos;b1700000-0000-0000-0000-00000000000c&apos;, &apos;00000000-0000-0000-0000-000000000000&apos;, &apos;authenticated&apos;, &apos;authenticated&apos;, &apos;p17-admin@test.local&apos;, &apos;&apos;, now(), &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;{}&apos;::jsonb, &apos;{}&apos;::jsonb, false, now(), now()),
+  (&apos;b1700000-0000-0000-0000-00000000000d&apos;, &apos;00000000-0000-0000-0000-000000000000&apos;, &apos;authenticated&apos;, &apos;authenticated&apos;, &apos;p17-deleted@test.local&apos;, &apos;&apos;, now(), &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;&apos;, &apos;{}&apos;::jsonb, &apos;{}&apos;::jsonb, false, now(), now());
+
+insert into public.profiles (id, barangay_id, role, full_name) values
+  (&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;resident&apos;, &apos;P17 Resident A&apos;),
+  (&apos;b1700000-0000-0000-0000-0000000000a2&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;resident&apos;, &apos;P17 Resident A2&apos;),
+  (&apos;b1700000-0000-0000-0000-00000000000b&apos;, &apos;a1700000-0000-0000-0000-000000000002&apos;, &apos;resident&apos;, &apos;P17 Resident B&apos;),
+  (&apos;b1700000-0000-0000-0000-00000000000c&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;admin&apos;, &apos;P17 Admin A&apos;),
+  (&apos;b1700000-0000-0000-0000-00000000000d&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;resident&apos;, &apos;P17 Deleted Resident&apos;);
+
+update public.profiles set first_name=&apos;Test&apos;,last_name=&apos;Resident&apos;,house_no=&apos;1&apos;,street=&apos;Fixture Street&apos;,
+  sex=&apos;female&apos;,employment_status=&apos;student&apos;,mobile_number=&apos;09171234567&apos;,birth_date=&apos;2000-01-01&apos;
+  where id in (&apos;b1700000-0000-0000-0000-00000000000a&apos;,&apos;b1700000-0000-0000-0000-0000000000a2&apos;,
+               &apos;b1700000-0000-0000-0000-00000000000b&apos;,&apos;b1700000-0000-0000-0000-00000000000d&apos;);
+update public.profiles set deleted_at = now() where id = &apos;b1700000-0000-0000-0000-00000000000d&apos;;
+
+insert into public.document_types (id, barangay_id, name, fee_centavos, processing_target_hours, is_active) values
+  (&apos;c1700000-0000-0000-0000-000000000001&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Doc A&apos;, 1000, 24, true);
+insert into public.service_requests (id, barangay_id, resident_id, document_type_id) values
+  (&apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;c1700000-0000-0000-0000-000000000001&apos;),
+  (&apos;d1700000-0000-0000-0000-000000000002&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;c1700000-0000-0000-0000-000000000001&apos;);
+insert into public.incident_categories (id, barangay_id, name) values
+  (&apos;e1700000-0000-0000-0000-0000000000a1&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Category A&apos;);
+insert into public.incidents (id, barangay_id, reporter_id, category_id, title, location, status) values
+  (&apos;a1710000-0000-0000-0000-0000000000a1&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;e1700000-0000-0000-0000-0000000000a1&apos;, &apos;P17 A incident&apos;, &apos;{&quot;lat&quot;:14.6,&quot;lng&quot;:121.1}&apos;, &apos;open&apos;);
+
+create or replace function pg_temp.denied(p_sql text) returns boolean language plpgsql as $$
+begin
+  execute p_sql;
+  return false;
+exception when others then
+  return true;
+end $$;
+grant execute on function pg_temp.denied(text) to public;
+
+create or replace function pg_temp.inbox_count(p_recipient uuid, p_key text) returns integer language sql as $$
+  select count(*)::int from barangayan_private.notification_events e join public.notification_inbox i on i.event_id = e.id
+   where e.recipient_id = p_recipient and e.dedupe_key = p_key
+$$;
+grant execute on function pg_temp.inbox_count(uuid, text) to public;
+
+-- ===== 1. Schema surface =====
+select is((select relrowsecurity from pg_class where oid = &apos;public.notification_inbox&apos;::regclass), true, &apos;Inbox has row level security&apos;);
+select is((select relrowsecurity from pg_class where oid = &apos;public.notification_preferences&apos;::regclass), true, &apos;Preferences have row level security&apos;);
+select is((select count(*)::int from information_schema.tables where table_schema = &apos;barangayan_private&apos; and table_name in (&apos;notification_events&apos;,&apos;notification_outbox&apos;,&apos;notification_deliveries&apos;)), 3, &apos;Events, outbox and deliveries are private&apos;);
+select is((select has_table_privilege(&apos;authenticated&apos;, &apos;barangayan_private.notification_outbox&apos;, &apos;select&apos;)), false, &apos;Residents cannot read the outbox&apos;);
+select is((select has_table_privilege(&apos;anon&apos;, &apos;public.notification_inbox&apos;, &apos;select&apos;)), false, &apos;Anonymous cannot read the inbox&apos;);
+select is((select has_column_privilege(&apos;authenticated&apos;, &apos;public.notification_inbox&apos;, &apos;title&apos;, &apos;update&apos;)), false, &apos;Residents cannot change inbox text&apos;);
+select is((select has_column_privilege(&apos;authenticated&apos;, &apos;public.notification_inbox&apos;, &apos;read_at&apos;, &apos;update&apos;)), true, &apos;Residents can change inbox read state&apos;);
+select is((select has_table_privilege(&apos;authenticated&apos;, &apos;public.notification_inbox&apos;, &apos;insert&apos;)), false, &apos;Residents cannot create inbox rows&apos;);
+select is((select has_table_privilege(&apos;authenticated&apos;, &apos;public.notification_inbox&apos;, &apos;delete&apos;)), false, &apos;Residents cannot delete inbox rows&apos;);
+select is((select count(*)::int from pg_proc p where p.pronamespace = &apos;public&apos;::regnamespace and p.proname like &apos;notification_worker_%&apos;
+  and (has_function_privilege(&apos;anon&apos;, p.oid, &apos;execute&apos;) or has_function_privilege(&apos;authenticated&apos;, p.oid, &apos;execute&apos;))), 0, &apos;Sender functions are not executable through the API roles&apos;);
+select is((select count(*)::int from pg_proc p where p.pronamespace = &apos;public&apos;::regnamespace and p.proname like &apos;notification_worker_%&apos;
+  and has_function_privilege(&apos;service_role&apos;, p.oid, &apos;execute&apos;)), 7, &apos;Sender functions are executable by service_role&apos;);
+select is((select has_function_privilege(&apos;anon&apos;, &apos;public.set_notification_preferences(boolean,jsonb)&apos;, &apos;execute&apos;)), false, &apos;Anonymous cannot set preferences&apos;);
+select is((select has_function_privilege(&apos;anon&apos;, &apos;public.release_push_token(text)&apos;, &apos;execute&apos;)), true, &apos;A signed-out device can release its push token (offline-logout recovery)&apos;);
+select is((select count(*)::int from pg_proc p where p.pronamespace = &apos;public&apos;::regnamespace and p.prosecdef and has_function_privilege(&apos;anon&apos;, p.oid, &apos;execute&apos;)
+  and (p.proname in (&apos;set_notification_preferences&apos;) or p.proname like &apos;notification_worker_%&apos;)), 0, &apos;No other notification routine in the public schema is anonymous-executable&apos;);
+select is((select has_function_privilege(&apos;authenticated&apos;, &apos;barangayan_private.emit_notification(uuid[],uuid,text,text,uuid,text,text,text)&apos;, &apos;execute&apos;)), false, &apos;Residents cannot emit notifications&apos;);
+
+-- ===== 2. Event creation (source changes made by the owner role, as a staff/webhook path) =====
+update public.service_requests set status = &apos;in_progress&apos; where id = &apos;d1700000-0000-0000-0000-000000000001&apos;;
+select is(pg_temp.inbox_count(&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;request:d1700000-0000-0000-0000-000000000001:status:in_progress&apos;), 1, &apos;A request status change notifies the requester once&apos;);
+select is((select destination from public.notification_inbox where recipient_id = &apos;b1700000-0000-0000-0000-00000000000a&apos; and kind = &apos;request_status&apos; order by created_at limit 1),
+  &apos;{&quot;v&quot;:1,&quot;kind&quot;:&quot;request&quot;,&quot;id&quot;:&quot;d1700000-0000-0000-0000-000000000001&quot;}&apos;::jsonb, &apos;The destination is a versioned reference only&apos;);
+select is((select count(*)::int from public.notification_inbox where recipient_id &lt;&gt; &apos;b1700000-0000-0000-0000-00000000000a&apos; and kind = &apos;request_status&apos;), 0, &apos;Nobody else is notified of a request change&apos;);
+select is((select state from barangayan_private.notification_outbox o join public.notification_inbox i on i.id = o.inbox_id where i.recipient_id = &apos;b1700000-0000-0000-0000-00000000000a&apos; and i.kind = &apos;request_status&apos;), &apos;pending&apos;, &apos;A pending outbox row is created with the inbox row&apos;);
+update public.service_requests set status = &apos;in_progress&apos; where id = &apos;d1700000-0000-0000-0000-000000000001&apos;;
+select is(pg_temp.inbox_count(&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;request:d1700000-0000-0000-0000-000000000001:status:in_progress&apos;), 1, &apos;An unchanged status does not repeat the notification&apos;);
+update public.service_requests set status = &apos;ready_for_pickup&apos; where id = &apos;d1700000-0000-0000-0000-000000000001&apos;;
+select is((select title from public.notification_inbox where recipient_id = &apos;b1700000-0000-0000-0000-00000000000a&apos; and kind = &apos;request_status&apos; and body like &apos;%pickup%&apos;), &apos;Request ready&apos;, &apos;Ready for pickup has its own generic text&apos;);
+select is((select count(*)::int from public.notification_inbox where kind = &apos;request_status&apos; and (title ~* &apos;P17&apos; or body ~* &apos;P17&apos;)), 0, &apos;Inbox text never copies source record text&apos;);
+update public.service_requests set payment_status = &apos;paid&apos; where id = &apos;d1700000-0000-0000-0000-000000000001&apos;;
+select is(pg_temp.inbox_count(&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;request:d1700000-0000-0000-0000-000000000001:payment:paid&apos;), 1, &apos;A payment received notifies the requester&apos;);
+select is((select i.kind from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;request:d1700000-0000-0000-0000-000000000001:payment:paid&apos;), &apos;payment&apos;, &apos;Payment events have the payment kind&apos;);
+
+update public.incidents set status = &apos;in_progress&apos; where id = &apos;a1710000-0000-0000-0000-0000000000a1&apos;;
+select is(pg_temp.inbox_count(&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;incident:a1710000-0000-0000-0000-0000000000a1:status:in_progress&apos;), 1, &apos;An incident status change notifies the reporter&apos;);
+select is((select body from public.notification_inbox where recipient_id = &apos;b1700000-0000-0000-0000-00000000000a&apos; and kind = &apos;incident_status&apos;), &apos;Your report has a new status.&apos;, &apos;Incident text carries no title, address or reporter data&apos;);
+update public.incidents set status = &apos;withdrawn&apos; where id = &apos;a1710000-0000-0000-0000-0000000000a1&apos;;
+select is((select count(*)::int from public.notification_inbox where kind = &apos;incident_status&apos;), 1, &apos;A withdrawal is the resident&apos;&apos;s own action and is not notified&apos;);
+
+insert into public.announcements (id, barangay_id, title, body, category) values
+  (&apos;f1700000-0000-0000-0000-0000000000a1&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Secret Title&apos;, &apos;Body&apos;, &apos;general&apos;);
+select is((select count(*)::int from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;announcement:f1700000-0000-0000-0000-0000000000a1&apos;), 2, &apos;An announcement reaches the two active residents of its barangay&apos;);
+select is((select count(*)::int from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;announcement:f1700000-0000-0000-0000-0000000000a1&apos; and i.recipient_id in (&apos;b1700000-0000-0000-0000-00000000000b&apos;,&apos;b1700000-0000-0000-0000-00000000000c&apos;,&apos;b1700000-0000-0000-0000-00000000000d&apos;)), 0, &apos;Other barangays, staff and deleted accounts receive nothing&apos;);
+select is((select count(*)::int from public.notification_inbox where title ~* &apos;Secret&apos; or body ~* &apos;Secret&apos;), 0, &apos;An announcement preview never contains its title&apos;);
+insert into public.announcements (id, barangay_id, title, body, category, published_at) values
+  (&apos;f1700000-0000-0000-0000-0000000000a2&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;Future&apos;, &apos;Body&apos;, &apos;general&apos;, now() + interval &apos;1 day&apos;);
+select is((select count(*)::int from barangayan_private.notification_events where dedupe_key = &apos;announcement:f1700000-0000-0000-0000-0000000000a2&apos;), 0, &apos;A not-yet-published announcement creates no event&apos;);
+
+insert into public.medical_drives (id, barangay_id, title, type, drive_date, time_start, time_end, eligible_criteria, stock_total, stock_remaining) values
+  (&apos;f1700000-0000-0000-0000-0000000000d1&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Drive&apos;, &apos;vaccination&apos;, current_date + 1, &apos;08:00&apos;, &apos;12:00&apos;, &apos;Residents&apos;, 5, 5);
+select is((select count(*)::int from barangayan_private.notification_events where dedupe_key = &apos;drive:f1700000-0000-0000-0000-0000000000d1&apos;), 2, &apos;A new active drive notifies the barangay&apos;&apos;s two active residents&apos;);
+insert into public.medical_drives (id, barangay_id, title, type, drive_date, time_start, time_end, eligible_criteria, stock_total, stock_remaining, is_active) values
+  (&apos;f1700000-0000-0000-0000-0000000000d2&apos;, &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;P17 Inactive&apos;, &apos;vaccination&apos;, current_date + 1, &apos;08:00&apos;, &apos;12:00&apos;, &apos;Residents&apos;, 5, 5, false);
+select is((select count(*)::int from barangayan_private.notification_events where dedupe_key = &apos;drive:f1700000-0000-0000-0000-0000000000d2&apos;), 0, &apos;An inactive drive creates no event&apos;);
+
+insert into public.drive_registrations (id, drive_id, user_id, applicant_number, age, is_pwd, comorbidities) values
+  (&apos;f1700000-0000-0000-0000-0000000000e1&apos;, &apos;f1700000-0000-0000-0000-0000000000d1&apos;, &apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;P17-0001&apos;, 30, false, &apos;{}&apos;);
+select is((select count(*)::int from barangayan_private.notification_events where subject_id = &apos;f1700000-0000-0000-0000-0000000000e1&apos;), 0, &apos;Creating a registration creates no event&apos;);
+update public.drive_registrations set status = &apos;confirmed&apos; where id = &apos;f1700000-0000-0000-0000-0000000000e1&apos;;
+select is(pg_temp.inbox_count(&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;registration:f1700000-0000-0000-0000-0000000000e1:status:confirmed&apos;), 1, &apos;A registration update notifies the applicant&apos;);
+select is((select destination-&gt;&gt;&apos;kind&apos; from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.subject_id = &apos;f1700000-0000-0000-0000-0000000000e1&apos;), &apos;registration&apos;, &apos;Registration events point at the registration&apos;);
+
+-- The helper rejects bad input at the boundary.
+select throws_ok($$ select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000a&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;unknown_kind&apos;, &apos;request&apos;, gen_random_uuid(), &apos;k&apos;, &apos;t&apos;, &apos;b&apos;) $$, &apos;23514&apos;, null, &apos;An unknown kind is refused&apos;);
+select throws_ok($$ select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000a&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;url&apos;, gen_random_uuid(), &apos;k2&apos;, &apos;t&apos;, &apos;b&apos;) $$, &apos;23514&apos;, null, &apos;An unknown destination kind is refused&apos;);
+select is(barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000a&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000002&apos;, &apos;payment&apos;, &apos;request&apos;, gen_random_uuid(), &apos;k3&apos;, &apos;t&apos;, &apos;b&apos;), 0, &apos;A recipient from another barangay is dropped&apos;);
+select is(barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000d&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, gen_random_uuid(), &apos;k4&apos;, &apos;t&apos;, &apos;b&apos;), 0, &apos;A deleted recipient is dropped&apos;);
+select is(barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000c&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, gen_random_uuid(), &apos;k5&apos;, &apos;t&apos;, &apos;b&apos;), 0, &apos;A staff recipient is dropped&apos;);
+
+-- ===== 3. Resident: own inbox only =====
+set local role authenticated;
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-00000000000a&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+
+select is((select count(*)::int from public.notification_inbox where recipient_id &lt;&gt; &apos;b1700000-0000-0000-0000-00000000000a&apos;), 0, &apos;A resident sees only their own inbox rows&apos;);
+select cmp_ok((select count(*)::int from public.notification_inbox), &apos;&gt;&apos;, 4, &apos;A resident sees their own rows&apos;);
+select is((select count(*)::int from public.notification_inbox where read_at is not null), 0, &apos;Nothing starts read&apos;);
+select lives_ok($$ update public.notification_inbox set read_at = now() where id = (select id from public.notification_inbox where kind = &apos;payment&apos;) $$, &apos;A resident can mark their own row read&apos;);
+select is((select count(*)::int from public.notification_inbox where read_at is not null), 1, &apos;The read state is stored&apos;);
+select is((select count(*)::int from public.announcement_reads), 0, &apos;Inbox read state does not touch announcement reads&apos;);
+select is((select count(*)::int from public.incidents where resolved_read_at is not null), 0, &apos;Inbox read state does not touch resolved report reads&apos;);
+select lives_ok($$ update public.notification_inbox set read_at = null where kind = &apos;payment&apos; $$, &apos;A resident can mark their own row unread&apos;);
+select throws_ok($$ update public.notification_inbox set title = &apos;edited&apos; where kind = &apos;payment&apos; $$, &apos;42501&apos;, null, &apos;A resident cannot edit inbox text&apos;);
+select throws_ok($$ update public.notification_inbox set destination = &apos;{&quot;v&quot;:1,&quot;kind&quot;:&quot;request&quot;,&quot;id&quot;:&quot;d1700000-0000-0000-0000-000000000002&quot;}&apos; where kind = &apos;payment&apos; $$, &apos;42501&apos;, null, &apos;A resident cannot redirect a notification&apos;);
+select throws_ok($$ insert into public.notification_inbox(event_id, recipient_id, kind, title, body, destination) values (gen_random_uuid(), &apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;payment&apos;, &apos;t&apos;, &apos;b&apos;, &apos;{&quot;v&quot;:1,&quot;kind&quot;:&quot;request&quot;,&quot;id&quot;:&quot;d1700000-0000-0000-0000-000000000002&quot;}&apos;) $$, &apos;42501&apos;, null, &apos;A resident cannot create an inbox row&apos;);
+select throws_ok($$ delete from public.notification_inbox $$, &apos;42501&apos;, null, &apos;A resident cannot delete inbox rows&apos;);
+select throws_ok($$ select count(*) from barangayan_private.notification_outbox $$, &apos;42501&apos;, null, &apos;A resident cannot read the outbox&apos;);
+select throws_ok($$ select * from public.notification_worker_claim(10) $$, &apos;42501&apos;, null, &apos;A resident cannot claim outbox rows&apos;);
+
+-- Another resident cannot touch these rows.
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-0000000000a2&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-0000000000a2&apos;;
+select is((select count(*)::int from public.notification_inbox where kind in (&apos;payment&apos;,&apos;request_status&apos;,&apos;incident_status&apos;)), 0, &apos;Another resident cannot see these rows&apos;);
+update public.notification_inbox set read_at = now() where kind = &apos;payment&apos;;
+select is((select count(*)::int from (select 1 from public.notification_inbox where read_at is not null) x), 0, &apos;Another resident&apos;&apos;s update matches nothing&apos;);
+reset role;
+select is((select count(*)::int from public.notification_inbox where kind = &apos;payment&apos; and read_at is not null), 0, &apos;The owner&apos;&apos;s row was not changed by another resident&apos;);
+
+-- Cross-tenant resident sees none of barangay A&apos;s announcement rows.
+set local role authenticated;
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-00000000000b&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-00000000000b&apos;;
+select is((select count(*)::int from public.notification_inbox), 0, &apos;A resident of another barangay has an empty inbox&apos;);
+reset role;
+
+-- Own actions are not notified.
+set local role authenticated;
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-00000000000a&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+select lives_ok($$ update public.drive_registrations set status = &apos;cancelled&apos; where id = &apos;f1700000-0000-0000-0000-0000000000e1&apos; $$, &apos;A resident can cancel their own registration&apos;);
+reset role;
+select is((select count(*)::int from barangayan_private.notification_events where dedupe_key = &apos;registration:f1700000-0000-0000-0000-0000000000e1:status:cancelled&apos;), 0, &apos;The resident&apos;&apos;s own cancellation is not notified&apos;);
+
+-- ===== 4. Preferences =====
+set local role authenticated;
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-00000000000a&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+select is((select push_enabled from public.set_notification_preferences(true, &apos;{&quot;announcement&quot;:false}&apos;)), true, &apos;Preferences can be saved&apos;);
+select is((select kinds from public.set_notification_preferences(null, &apos;{&quot;payment&quot;:false}&apos;)), &apos;{&quot;announcement&quot;:false,&quot;payment&quot;:false}&apos;::jsonb, &apos;Kinds merge with earlier choices&apos;);
+select is((select kinds from public.notification_preferences where user_id = &apos;b1700000-0000-0000-0000-00000000000a&apos;), &apos;{&quot;announcement&quot;:false,&quot;payment&quot;:false}&apos;::jsonb, &apos;The resident can read their saved kinds&apos;);
+select is((select push_enabled from public.set_notification_preferences(false, null)), false, &apos;The global switch can be turned off&apos;);
+select is((select push_notifications_enabled from public.profiles where id = &apos;b1700000-0000-0000-0000-00000000000a&apos;), false, &apos;The switch is stored on the profile&apos;);
+select throws_ok($$ select * from public.set_notification_preferences(null, &apos;{&quot;surprise&quot;:true}&apos;) $$, &apos;22023&apos;, null, &apos;An unknown kind is refused&apos;);
+select throws_ok($$ select * from public.set_notification_preferences(null, &apos;{&quot;payment&quot;:&quot;yes&quot;}&apos;) $$, &apos;22023&apos;, null, &apos;A non-boolean value is refused&apos;);
+select throws_ok($$ select * from public.set_notification_preferences(null, &apos;[1]&apos;) $$, &apos;22023&apos;, null, &apos;A non-object is refused&apos;);
+select is((select count(*)::int from public.notification_preferences where user_id &lt;&gt; &apos;b1700000-0000-0000-0000-00000000000a&apos;), 0, &apos;Preferences of others are not visible&apos;);
+select throws_ok($$ insert into public.notification_preferences(user_id, kinds) values (&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;{}&apos;) $$, &apos;42501&apos;, null, &apos;Preferences cannot be written directly&apos;);
+select lives_ok($$ select public.upsert_push_token(&apos;ExponentPushToken[p17-device-a]&apos;, &apos;ios&apos;) $$, &apos;Token registration still works&apos;);
+select lives_ok($$ select public.release_push_token(&apos;ExponentPushToken[p17-device-a]&apos;) $$, &apos;A signed-in resident can release a token&apos;);
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-device-a]&apos;), 0, &apos;The released token is gone&apos;);
+select lives_ok($$ select public.upsert_push_token(&apos;ExponentPushToken[p17-device-a]&apos;, &apos;ios&apos;) $$, &apos;Token can be registered again&apos;);
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-0000000000a2&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-0000000000a2&apos;;
+select lives_ok($$ select public.release_push_token(&apos;ExponentPushToken[p17-device-a]&apos;) $$, &apos;A token can be released by whoever holds it, whichever account owned it&apos;);
+reset role;
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-device-a]&apos;), 0, &apos;The token is gone&apos;);
+set local role authenticated;
+set local request.jwt.claims = &apos;{&quot;sub&quot;:&quot;b1700000-0000-0000-0000-00000000000d&quot;,&quot;role&quot;:&quot;authenticated&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;b1700000-0000-0000-0000-00000000000d&apos;;
+select throws_ok($$ select * from public.set_notification_preferences(true, null) $$, &apos;42501&apos;, null, &apos;A deleted account cannot save preferences&apos;);
+reset role;
+set local role anon;
+set local request.jwt.claims = &apos;{&quot;role&quot;:&quot;anon&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;&apos;;
+select is((select pg_temp.denied($$ select * from public.set_notification_preferences(true, null) $$)), true, &apos;Anonymous cannot save preferences&apos;);
+reset role;
+
+-- A signed-out device removes its own token by holding it.
+insert into public.push_tokens(user_id, expo_push_token, device_type) values (&apos;b1700000-0000-0000-0000-00000000000a&apos;, &apos;ExponentPushToken[p17-signed-out]&apos;, &apos;ios&apos;);
+set local role anon;
+set local request.jwt.claims = &apos;{&quot;role&quot;:&quot;anon&quot;}&apos;;
+set local request.jwt.claim.sub = &apos;&apos;;
+select lives_ok($$ select public.release_push_token(&apos;ExponentPushToken[p17-signed-out]&apos;) $$, &apos;A signed-out device can release its token&apos;);
+select lives_ok($$ select public.release_push_token(&apos;ExponentPushToken[p17-never-registered]&apos;) $$, &apos;An unknown token answers the same way (no oracle)&apos;);
+select throws_ok($$ select public.release_push_token(&apos;not-a-token&apos;) $$, &apos;22023&apos;, null, &apos;A malformed token is refused&apos;);
+select throws_ok($$ select public.release_push_token(null) $$, &apos;22023&apos;, null, &apos;A missing token is refused&apos;);
+reset role;
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-signed-out]&apos;), 0, &apos;The anonymous release removed the token&apos;);
+
+-- ===== 5. Sender: claim applies preferences at send time =====
+-- Resident A is opted out (global switch off above); A2 has no token; give A2 a token and an event.
+update public.profiles set push_notifications_enabled = true where id = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+delete from public.push_tokens where user_id = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+update public.notification_preferences set kinds = &apos;{&quot;announcement&quot;:false}&apos; where user_id = &apos;b1700000-0000-0000-0000-00000000000a&apos;;
+insert into public.push_tokens(user_id, expo_push_token, device_type) values
+  (&apos;b1700000-0000-0000-0000-0000000000a2&apos;, &apos;ExponentPushToken[p17-device-a2]&apos;, &apos;ios&apos;);
+-- Hold every other outbox row back so the claim below only sees what this test creates.
+update barangayan_private.notification_outbox set next_attempt_at = now() + interval &apos;1 day&apos;;
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-0000000000a2&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;claim:1&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000a&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;claim:2&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-00000000000a&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;announcement&apos;, &apos;announcement&apos;, &apos;f1700000-0000-0000-0000-0000000000a1&apos;, &apos;claim:3&apos;, &apos;New announcement&apos;, &apos;Your barangay posted a new announcement.&apos;);
+
+set local role service_role;
+create temp table claimed on commit drop as select * from public.notification_worker_claim(50);
+reset role;
+select is((select count(*)::int from claimed), 1, &apos;Only the deliverable row is claimed&apos;);
+select is((select tokens from claimed), array[&apos;ExponentPushToken[p17-device-a2]&apos;], &apos;The claim carries the resident&apos;&apos;s current tokens&apos;);
+select is((select attempt from claimed), 1, &apos;The first claim is attempt one&apos;);
+select is((select state from barangayan_private.notification_outbox o join public.notification_inbox i on i.id = o.inbox_id join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:2&apos;), &apos;skipped&apos;, &apos;A resident without a token is skipped&apos;);
+select is((select last_error from barangayan_private.notification_outbox o join public.notification_inbox i on i.id = o.inbox_id join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:2&apos;), &apos;no_token&apos;, &apos;The skip reason is recorded&apos;);
+select is((select last_error from barangayan_private.notification_outbox o join public.notification_inbox i on i.id = o.inbox_id join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:3&apos;), &apos;kind_off&apos;, &apos;A kind the resident turned off is skipped at send time&apos;);
+update public.profiles set push_notifications_enabled = false where id = &apos;b1700000-0000-0000-0000-0000000000a2&apos;;
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-0000000000a2&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;claim:4&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+set local role service_role;
+select is((select count(*)::int from public.notification_worker_claim(50)), 0, &apos;An opted-out resident is not claimed&apos;);
+reset role;
+select is((select last_error from barangayan_private.notification_outbox o join public.notification_inbox i on i.id = o.inbox_id join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:4&apos;), &apos;opted_out&apos;, &apos;The opt-out is applied when the row is claimed&apos;);
+select is((select count(*)::int from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:4&apos;), 1, &apos;The opted-out resident still has the inbox row&apos;);
+
+-- ===== 6. Sender: tickets, retries, receipts =====
+update public.profiles set push_notifications_enabled = true where id = &apos;b1700000-0000-0000-0000-0000000000a2&apos;;
+insert into public.push_tokens(user_id, expo_push_token, device_type) values
+  (&apos;b1700000-0000-0000-0000-0000000000a2&apos;, &apos;ExponentPushToken[p17-device-a2b]&apos;, &apos;ios&apos;);
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-0000000000a2&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;ticket:1&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+set local role service_role;
+create temp table claimed2 on commit drop as select * from public.notification_worker_claim(50);
+select is((select count(*)::int from claimed2), 1, &apos;A second deliverable row is claimed&apos;);
+select is((select cardinality(tokens) from claimed2), 2, &apos;All of the resident&apos;&apos;s tokens are included&apos;);
+select is((select public.notification_worker_record_tickets((select outbox_id from claimed2), jsonb_build_array(
+  jsonb_build_object(&apos;token&apos;,&apos;ExponentPushToken[p17-device-a2]&apos;,&apos;status&apos;,&apos;ok&apos;,&apos;id&apos;,&apos;ticket-1&apos;),
+  jsonb_build_object(&apos;token&apos;,&apos;ExponentPushToken[p17-device-a2b]&apos;,&apos;status&apos;,&apos;error&apos;,&apos;error&apos;,&apos;DeviceNotRegistered&apos;)))), &apos;sent&apos;, &apos;One accepted ticket marks the row sent&apos;);
+reset role;
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-device-a2b]&apos;), 0, &apos;A DeviceNotRegistered ticket removes that token&apos;);
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-device-a2]&apos;), 1, &apos;The accepted token stays&apos;);
+select is((select count(*)::int from barangayan_private.notification_deliveries where state = &apos;accepted&apos;), 1, &apos;The accepted ticket is stored for the receipt check&apos;);
+set local role service_role;
+select throws_ok($$ select public.notification_worker_record_tickets((select outbox_id from claimed2), &apos;[]&apos;::jsonb) $$, &apos;P0002&apos;, null, &apos;Tickets cannot be recorded twice for a finished row&apos;);
+select is((select count(*)::int from public.notification_worker_due_receipts(10)), 0, &apos;A fresh ticket has no receipt due yet&apos;);
+reset role;
+update barangayan_private.notification_deliveries set sent_at = now() - interval &apos;20 minutes&apos; where state = &apos;accepted&apos;;
+set local role service_role;
+create temp table due on commit drop as select * from public.notification_worker_due_receipts(10);
+select is((select ticket_id from due), &apos;ticket-1&apos;, &apos;A receipt is due after fifteen minutes&apos;);
+select is((select public.notification_worker_record_receipts(jsonb_build_array(jsonb_build_object(&apos;delivery_id&apos;,(select delivery_id from due),&apos;status&apos;,&apos;ok&apos;)))), 1, &apos;A receipt is recorded&apos;);
+reset role;
+select is((select state from barangayan_private.notification_deliveries where ticket_id = &apos;ticket-1&apos;), &apos;provider_ok&apos;, &apos;An ok receipt means the provider took it, not that the phone showed it&apos;);
+select is((select count(*)::int from public.notification_inbox where read_at is not null), 0, &apos;Delivery never changes inbox read state&apos;);
+
+-- A receipt error removes the dead token.
+insert into public.push_tokens(user_id, expo_push_token, device_type) values (&apos;b1700000-0000-0000-0000-0000000000a2&apos;, &apos;ExponentPushToken[p17-device-a2c]&apos;, &apos;ios&apos;);
+insert into barangayan_private.notification_deliveries(outbox_id, expo_push_token, ticket_id, state, sent_at)
+  select outbox_id, &apos;ExponentPushToken[p17-device-a2c]&apos;, &apos;ticket-2&apos;, &apos;accepted&apos;, now() - interval &apos;20 minutes&apos; from claimed2;
+create temp table ticket2 on commit drop as select id from barangayan_private.notification_deliveries where ticket_id = &apos;ticket-2&apos;;
+grant select on ticket2 to public;
+set local role service_role;
+select is((select public.notification_worker_record_receipts(jsonb_build_array(jsonb_build_object(&apos;delivery_id&apos;,(select id from ticket2),&apos;status&apos;,&apos;error&apos;,&apos;error&apos;,&apos;DeviceNotRegistered&apos;)))), 1, &apos;An error receipt is recorded&apos;);
+reset role;
+select is((select count(*)::int from public.push_tokens where expo_push_token = &apos;ExponentPushToken[p17-device-a2c]&apos;), 0, &apos;A DeviceNotRegistered receipt removes the token&apos;);
+set local role service_role;
+select throws_ok($$ select public.notification_worker_record_receipts(&apos;[{&quot;delivery_id&quot;:&quot;not-a-uuid&quot;,&quot;status&quot;:&quot;ok&quot;}]&apos;::jsonb) $$, &apos;22023&apos;, null, &apos;A malformed receipt is refused&apos;);
+select throws_ok($$ select public.notification_worker_record_tickets(gen_random_uuid(), &apos;{}&apos;::jsonb) $$, &apos;22023&apos;, null, &apos;Tickets must be an array&apos;);
+reset role;
+
+-- Retries back off and stop at five attempts.
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-0000000000a2&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;retry:1&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+update barangayan_private.notification_outbox set next_attempt_at = now() + interval &apos;1 day&apos; where state = &apos;pending&apos; and inbox_id not in (select i.id from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;retry:1&apos;);
+set local role service_role;
+create temp table retry1 on commit drop as select * from public.notification_worker_claim(50);
+select is((select public.notification_worker_fail((select outbox_id from retry1), &apos;provider_unreachable&apos;)), &apos;pending&apos;, &apos;A failed send goes back to pending&apos;);
+reset role;
+select is((select next_attempt_at &gt; now() + interval &apos;30 seconds&apos; and next_attempt_at &lt; now() + interval &apos;5 minutes&apos; from barangayan_private.notification_outbox where id = (select outbox_id from retry1)), true, &apos;The first retry waits about a minute&apos;);
+update barangayan_private.notification_outbox set next_attempt_at = now() where id = (select outbox_id from retry1);
+set local role service_role;
+select is((select count(*)::int from public.notification_worker_claim(50)), 1, &apos;It is claimed again when due&apos;);
+select is((select public.notification_worker_fail((select outbox_id from retry1), &apos;provider_unreachable&apos;)), &apos;pending&apos;, &apos;The second failure retries again&apos;);
+reset role;
+update barangayan_private.notification_outbox set attempt_count = 5, state = &apos;sending&apos;, claimed_at = now() where id = (select outbox_id from retry1);
+set local role service_role;
+select is((select public.notification_worker_fail((select outbox_id from retry1), &apos;provider_unreachable ExponentPushToken[p17-secret]&apos;)), &apos;dead&apos;, &apos;The fifth failure ends in dead&apos;);
+reset role;
+select is((select last_error from barangayan_private.notification_outbox where id = (select outbox_id from retry1)), &apos;provider_unreachable [token]&apos;, &apos;Stored errors never contain a token&apos;);
+
+-- A crashed worker&apos;s claim is picked up again after five minutes.
+select barangayan_private.emit_notification(array[&apos;b1700000-0000-0000-0000-0000000000a2&apos;]::uuid[], &apos;a1700000-0000-0000-0000-000000000001&apos;, &apos;payment&apos;, &apos;request&apos;, &apos;d1700000-0000-0000-0000-000000000001&apos;, &apos;stale:1&apos;, &apos;Payment update&apos;, &apos;Your payment was received.&apos;);
+update barangayan_private.notification_outbox set next_attempt_at = now() + interval &apos;1 day&apos; where state = &apos;pending&apos; and inbox_id not in (select i.id from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;stale:1&apos;);
+set local role service_role;
+create temp table stale1 on commit drop as select * from public.notification_worker_claim(50);
+select is((select count(*)::int from public.notification_worker_claim(50)), 0, &apos;A row being sent is not claimed twice&apos;);
+reset role;
+update barangayan_private.notification_outbox set claimed_at = now() - interval &apos;10 minutes&apos; where id = (select outbox_id from stale1);
+set local role service_role;
+select is((select attempt from public.notification_worker_claim(50)), 2, &apos;An abandoned claim is retried as the next attempt&apos;);
+
+-- Health and retention.
+select is((select pending_total &gt;= 0 and dead_last_24h &gt;= 1 from public.notification_worker_health()), true, &apos;Health reports dead rows&apos;);
+reset role;
+update public.notification_inbox set read_at = now() - interval &apos;100 days&apos; where id = (select i.id from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:4&apos;);
+update barangayan_private.notification_outbox set finished_at = now() - interval &apos;40 days&apos; where state in (&apos;skipped&apos;,&apos;dead&apos;);
+set local role service_role;
+select is((select inbox_deleted from public.notification_worker_purge()), 1, &apos;Read inbox rows are purged ninety days after reading&apos;);
+reset role;
+select is((select count(*)::int from barangayan_private.notification_outbox where state in (&apos;skipped&apos;,&apos;dead&apos;) and finished_at &lt; now() - interval &apos;30 days&apos;), 0, &apos;Old finished outbox rows are purged&apos;);
+select is((select count(*)::int from public.notification_inbox i join barangayan_private.notification_events e on e.id = i.event_id where e.dedupe_key = &apos;claim:1&apos;), 1, &apos;Unread inbox rows are kept&apos;);
+
+select * from finish();
+rollback;</file></files></repomix>

@@ -1,0 +1,15 @@
+{
+  "id": "android-types",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "deadline": 300000,
+  "start": "2026-10-28T05:37:28.362Z",
+  "end": "2026-10-28T05:38:08.456Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-1-2026-10-28\\baseline-android-types.log"
+}

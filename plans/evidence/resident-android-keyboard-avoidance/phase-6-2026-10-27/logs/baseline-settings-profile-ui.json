@@ -1,0 +1,11 @@
+{
+  "name": "settings-profile-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/settings-profile-ui.mjs"
+  ],
+  "start": "2026-10-27T02:02:38.598Z",
+  "end": "2026-10-27T02:03:22.524Z",
+  "status": 0
+}

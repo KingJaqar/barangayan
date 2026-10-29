@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "read-only theme/layout review with actual workspace surface variables"
+  ],
+  "errors": [],
+  "expectedDiagnostics": [],
+  "limitations": [
+    "Synthetic local session/connection/routing adapters; actual publisher, Supabase JS, audit action, PostgreSQL RLS and event triggers. No production login or hosted access."
+  ],
+  "browser": "156.0.8078.48",
+  "pass": true
+}

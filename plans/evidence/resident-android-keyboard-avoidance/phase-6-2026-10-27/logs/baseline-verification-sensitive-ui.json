@@ -1,0 +1,11 @@
+{
+  "name": "verification-sensitive-ui",
+  "stage": "baseline",
+  "command": [
+    "node",
+    "tests/verification-sensitive-ui.mjs"
+  ],
+  "start": "2026-10-27T02:04:19.851Z",
+  "end": "2026-10-27T02:04:20.782Z",
+  "status": 1
+}

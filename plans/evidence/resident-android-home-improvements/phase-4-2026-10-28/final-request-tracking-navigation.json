@@ -1,0 +1,15 @@
+{
+  "id": "request-tracking-navigation",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "tests/request-tracking-navigation.mjs"
+  ],
+  "deadline": 600000,
+  "start": "2026-10-28T13:06:44.726Z",
+  "end": "2026-10-28T13:06:44.970Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-4-2026-10-28\\final-request-tracking-navigation.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase4-20261028\\final-request-tracking-navigation"
+}

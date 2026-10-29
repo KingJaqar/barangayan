@@ -49,6 +49,9 @@ export function useMyIncidents(options: { status?: IncidentStatus | IncidentStat
     const channel = supabase.channel(uniqueChannelName('my-incidents:' + userId + ':' + instanceId))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents', filter: 'reporter_id=eq.' + userId },
         () => { if (active) void invalidate(); })
+      // Filtered subscriptions never receive DELETE events, so permanent deletes need their own listener.
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'incidents' },
+        () => { if (active) void invalidate(); })
       .subscribe(status => {
         if (!active || status !== 'SUBSCRIBED') return;
         if (subscribed) void invalidate(); else void refresh();

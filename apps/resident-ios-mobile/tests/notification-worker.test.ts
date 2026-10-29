@@ -37,6 +37,7 @@ function provider(replies: ({ status: number; body?: unknown } | 'network-error'
 const okTickets = (count: number) => ({ status: 200, body: { data: Array.from({ length: count }, (_, index) => ({ status: 'ok', id: `ticket-${index}` })) } });
 const noSleep = async () => undefined;
 const emptyAnswers = {
+  notification_publish_due_notices: () => [{ published: 0, delivered: 0, pending_notices: 0 }],
   notification_worker_due_receipts: () => [],
   notification_worker_purge: () => [{ inbox_deleted: 0, outbox_deleted: 0, events_deleted: 0 }],
   notification_worker_health: () => [{ pending_total: 0, oldest_pending_seconds: 0, dead_last_24h: 0, ticket_errors_last_24h: 0, unreceipted_over_1h: 0 }],
@@ -49,6 +50,23 @@ describe('claimed rows and messages (P17-T02)', () => {
     for (const bad of [null, {}, [null], [{ ...claimedRow(1), tokens: [] }], [{ ...claimedRow(1), outbox_id: 'x' }], [{ ...claimedRow(1), destination: { v: 2, kind: 'request', id: 'x' } }], [{ ...claimedRow(1), tokens: [3] }], [{ ...claimedRow(1), attempt: '1' }]]) {
       expect(() => parseClaimed(bad)).toThrow('claim_malformed');
     }
+  });
+  it('accepts the version-2 notice and account destinations and rejects anything else', () => {
+    const notice = { ...claimedRow(1), destination: { v: 2 as const, kind: 'notice' as const, id: uuidFor(300) } };
+    const account = { ...claimedRow(2), destination: { v: 2 as const, kind: 'account' as const, screen: 'valid_id' } };
+    expect(parseClaimed([notice, account])).toEqual([notice, account]);
+    const bad = [
+      { v: 2, kind: 'notice', id: 'not-a-uuid' }, { v: 2, kind: 'notice', id: uuidFor(300), extra: 1 }, { v: 2, kind: 'account', screen: 'https://example.test' },
+      { v: 2, kind: 'account', screen: 'admin' }, { v: 2, kind: 'account' }, { v: 2, kind: 'request', id: uuidFor(300) }, { v: 3, kind: 'notice', id: uuidFor(300) }, { v: 1, kind: 'request' },
+    ];
+    for (const destination of bad) expect(() => parseClaimed([{ ...claimedRow(1), destination }])).toThrow('claim_malformed');
+  });
+  it('builds version-2 messages that carry only the allowlisted reference', () => {
+    const notice = buildMessage({ ...claimedRow(1), destination: { v: 2, kind: 'notice', id: uuidFor(300) } }, token(1));
+    expect(notice.data).toEqual({ v: 2, kind: 'notice', id: uuidFor(300), inbox: uuidFor(101) });
+    const account = buildMessage({ ...claimedRow(1), destination: { v: 2, kind: 'account', screen: 'change_password' } }, token(1));
+    expect(account.data).toEqual({ v: 2, kind: 'account', screen: 'change_password', inbox: uuidFor(101) });
+    expect(JSON.stringify([notice, account])).not.toMatch(/https?:/);
   });
   it('builds a generic message whose data is only a versioned pointer', () => {
     const message = buildMessage(claimedRow(1), token(1));
@@ -151,7 +169,29 @@ describe('the sender run (G13, F11)', () => {
     const summary = await runWorker({ rpc: db.rpc, fetch: push.fetch, sleep: noSleep });
     expect(push.sent).toHaveLength(0);
     expect(summary).toMatchObject({ claimed: 0, purged: { inbox: 0, outbox: 0, events: 0 } });
-    expect(db.calls.map((call) => call.name)).toEqual(['notification_worker_claim', 'notification_worker_due_receipts', 'notification_worker_purge', 'notification_worker_health']);
+    expect(db.calls.map((call) => call.name)).toEqual(['notification_publish_due_notices', 'notification_worker_claim', 'notification_worker_due_receipts', 'notification_worker_purge', 'notification_worker_health']);
+  });
+  it('publishes due notices before it claims, in one bounded call, and reports the counts', async () => {
+    const db = database({ ...emptyAnswers, notification_publish_due_notices: () => [{ published: 1, delivered: 40, pending_notices: 2 }], notification_worker_claim: () => [] });
+    const summary = await runWorker({ rpc: db.rpc, fetch: provider([]).fetch, sleep: noSleep });
+    expect(db.calls[0]).toEqual({ name: 'notification_publish_due_notices', args: { p_limit: 100 } });
+    expect(db.of('notification_publish_due_notices')).toHaveLength(1);
+    expect(summary.notices).toEqual({ published: 1, delivered: 40, pending: 2 });
+    expect(summary.errors).toEqual([]);
+  });
+  it('still sends what is already due when the notice step fails, and reports the failure once', async () => {
+    const db = database({ ...emptyAnswers, notification_publish_due_notices: () => new Error('function does not exist'), notification_worker_claim: () => [claimedRow(1)], notification_worker_record_tickets: () => 'sent' });
+    const summary = await runWorker({ rpc: db.rpc, fetch: provider([okTickets(1)]).fetch, sleep: noSleep });
+    expect(summary.sent).toBe(1);
+    expect(summary.notices).toBeNull();
+    expect(summary.errors).toEqual(['notification_publish_due_notices_failed']);
+  });
+  it('sends a claimed version-2 row with its allowlisted data', async () => {
+    const row = { ...claimedRow(1), destination: { v: 2 as const, kind: 'notice' as const, id: uuidFor(300) } };
+    const db = database({ ...emptyAnswers, notification_worker_claim: () => [row], notification_worker_record_tickets: () => 'sent' });
+    const push = provider([okTickets(1)]);
+    await runWorker({ rpc: db.rpc, fetch: push.fetch, sleep: noSleep });
+    expect((push.sent[0].body as { data: unknown }[])[0].data).toEqual({ v: 2, kind: 'notice', id: uuidFor(300), inbox: uuidFor(101) });
   });
   it('keeps going and reports an error when one database step fails', async () => {
     const db = database({ ...emptyAnswers, notification_worker_claim: () => new Error('permission denied') });

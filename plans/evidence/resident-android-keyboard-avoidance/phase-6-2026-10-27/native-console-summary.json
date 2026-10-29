@@ -1,0 +1,11 @@
+{
+  "start": "2026-10-27T02:04:28.490Z",
+  "end": "2026-10-27T02:39:33.361Z",
+  "nativePid": 27670,
+  "method": "adb logcat for the identified native process; warning/error tags only",
+  "knownPushTokenWarningLines": 5,
+  "androidRuntimeErrorLines": 0,
+  "unexpectedLines": 0,
+  "readerStopped": true,
+  "limitation": "Filtered ReactNativeJS warning/AndroidRuntime error sample includes buffered startup entries; Runtime.enable unavailable. No complete live-console claim."
+}

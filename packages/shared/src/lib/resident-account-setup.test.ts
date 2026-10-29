@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { profileCompletionSchema } from '../schemas/service-foundations';
-import { getResidentAccountSetupStatus, residentCodeStepSchema, residentDetailsStepSchema, residentPasswordStepSchema, residentSetupFailure, residentSetupRoute, type ResidentAccountSetupStatus } from './resident-account-setup';
+import { getResidentAccountSetupStatus, residentAccountSetupStatusSchema, residentCodeStepSchema, residentDetailsStepSchema, residentPasswordStepSchema, residentSetupFailure, residentSetupRoute, type ResidentAccountSetupStatus } from './resident-account-setup';
 
 const status: ResidentAccountSetupStatus = { registrationOrigin: 'email_otp', profileComplete: false, passwordSet: false, hasGoogleIdentity: false };
 const route = (changes: Partial<ResidentAccountSetupStatus> = {}, intent: Parameters<typeof residentSetupRoute>[0]['intent'] = 'sign_in') => residentSetupRoute({ session: 'authenticated', intent, setup: { state: 'ready', status: { ...status, ...changes } } });
@@ -23,6 +23,27 @@ describe('resident setup contracts', () => {
     expect(route({ profileComplete: true })).toEqual({ destination: 'password', required: true, returnTo: 'home' });
     expect(route({ profileComplete: true, passwordSet: null }).destination).toBe('manage_password');
     expect(route({ profileComplete: true, passwordSet: true }).destination).toBe('home');
+  });
+  it('requires proof of residency between details and password for an unsubmitted email registrant only', () => {
+    const idStep = { destination: 'id_verification', required: true, returnTo: 'home' };
+    expect(route({ profileComplete: true, idSubmitted: false })).toEqual(idStep);
+    expect(route({ profileComplete: true, idSubmitted: false, hasGoogleIdentity: true }, 'settings_password')).toEqual(idStep);
+    expect(route({ profileComplete: false, idSubmitted: false }).destination).toBe('details');
+    expect(route({ profileComplete: true, idSubmitted: true })).toEqual({ destination: 'password', required: true, returnTo: 'home' });
+    expect(route({ profileComplete: true, idSubmitted: undefined }).destination).toBe('password');
+    for (const origin of ['google', 'legacy'] as const) {
+      expect(route({ registrationOrigin: origin, profileComplete: true, idSubmitted: false, hasGoogleIdentity: true }, 'google_details_saved')).toEqual({ destination: 'password', required: false, returnTo: 'home' });
+      expect(route({ registrationOrigin: origin, profileComplete: true, idSubmitted: false }).destination).toBe('home');
+    }
+  });
+  it('does not retroactively gate email registrants who already finished setup', () => {
+    expect(route({ profileComplete: true, passwordSet: true, idSubmitted: false }).destination).toBe('home');
+    expect(route({ profileComplete: true, passwordSet: null, idSubmitted: false }).destination).toBe('manage_password');
+  });
+  it('accepts the status with or without the ID flag and rejects a non-boolean one', () => {
+    expect(residentAccountSetupStatusSchema.parse({ ...status, idSubmitted: false }).idSubmitted).toBe(false);
+    expect(residentAccountSetupStatusSchema.parse(status).idSubmitted).toBeUndefined();
+    expect(residentAccountSetupStatusSchema.safeParse({ ...status, idSubmitted: 'no' }).success).toBe(false);
   });
   it('keeps Google completion/password optional and legacy uncertainty safe', () => {
     expect(route({ registrationOrigin: 'google', hasGoogleIdentity: true }).destination).toBe('home');

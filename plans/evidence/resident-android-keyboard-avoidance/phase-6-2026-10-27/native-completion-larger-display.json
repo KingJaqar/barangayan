@@ -1,0 +1,250 @@
+{
+  "at": "2026-10-27T02:33:44.940Z",
+  "configuration": "larger-display",
+  "route": "/complete-profile",
+  "scope": "Optional completion only; required account-setup and first-password branches remain separate",
+  "saved": false,
+  "fields": [
+    {
+      "id": "B09",
+      "label": "First Name",
+      "focus": {
+        "tag": "completion-larger-display-B09-focus",
+        "editor": [
+          138,
+          811,
+          527,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B09-editing",
+        "editor": [
+          138,
+          731,
+          527,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B10",
+      "label": "Last Name",
+      "focus": {
+        "tag": "completion-larger-display-B10-focus",
+        "editor": [
+          553,
+          730,
+          942,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B10-editing",
+        "editor": [
+          553,
+          730,
+          942,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B11",
+      "label": "Middle Name (optional)",
+      "focus": {
+        "tag": "completion-larger-display-B11-focus",
+        "editor": [
+          138,
+          730,
+          527,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B11-editing",
+        "editor": [
+          138,
+          730,
+          527,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B12",
+      "label": "Suffix (optional)",
+      "focus": {
+        "tag": "completion-larger-display-B12-focus",
+        "editor": [
+          553,
+          730,
+          942,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B12-editing",
+        "editor": [
+          553,
+          730,
+          942,
+          887
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B13",
+      "label": "Mobile Number",
+      "focus": {
+        "tag": "completion-larger-display-B13-focus",
+        "editor": [
+          138,
+          728,
+          942,
+          884
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B13-editing",
+        "editor": [
+          138,
+          728,
+          942,
+          884
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": false,
+      "atMaxLength": true
+    },
+    {
+      "id": "B14",
+      "label": "House No.",
+      "focus": {
+        "tag": "completion-larger-display-B14-focus",
+        "editor": [
+          138,
+          600,
+          398,
+          756
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B14-editing",
+        "editor": [
+          138,
+          600,
+          398,
+          756
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B15",
+      "label": "Street",
+      "focus": {
+        "tag": "completion-larger-display-B15-focus",
+        "editor": [
+          424,
+          512,
+          942,
+          668
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B15-editing",
+        "editor": [
+          424,
+          512,
+          942,
+          668
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    },
+    {
+      "id": "B16",
+      "label": "Occupation (optional)",
+      "focus": {
+        "tag": "completion-larger-display-B16-focus",
+        "editor": [
+          138,
+          453,
+          942,
+          610
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "editing": {
+        "tag": "completion-larger-display-B16-editing",
+        "editor": [
+          138,
+          453,
+          942,
+          610
+        ],
+        "focused": true,
+        "imeTop": 887,
+        "ime": true
+      },
+      "syntheticEditRestored": true,
+      "atMaxLength": false
+    }
+  ],
+  "status": "pass stated optional-completion focus/edit/status subset"
+}

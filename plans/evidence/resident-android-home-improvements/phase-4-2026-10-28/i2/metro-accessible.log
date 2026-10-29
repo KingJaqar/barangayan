@@ -1,0 +1,6 @@
+Starting project at C:\Users\User\barangayan\.home-i2-native
+› Port 8099 is being used by another process
+› Skipping dev server
+Input is required, but 'npx expo' is in non-interactive mode.
+Required input:
+> Use port 8100 instead?

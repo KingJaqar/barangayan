@@ -1,0 +1,14 @@
+{
+  "scope": "Document validation only; product acceptance remains pending",
+  "local_links_checked": 9,
+  "catalog_ids": 69,
+  "account_ids": 52,
+  "system_ids": 17,
+  "execution_phases": 7,
+  "acceptance_gates": 18,
+  "preserved_source_identities": 16,
+  "packet_entries": 11,
+  "issues": [
+    "Planning baseline changed: ['apps/resident-android-mobile/src/components/services/requests-list.tsx']"
+  ]
+}

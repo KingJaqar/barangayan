@@ -25,9 +25,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Wide enough that the "99+" pill is never squeezed to the icon's width; the badge stays right-aligned to its anchor.
   badge: {
     position: 'absolute',
     top: -4,
     right: -6,
+    width: 48,
+    alignItems: 'flex-end',
   },
 });

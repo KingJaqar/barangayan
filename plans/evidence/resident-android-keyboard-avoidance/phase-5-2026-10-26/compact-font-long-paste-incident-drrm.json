@@ -3,7 +3,7 @@
   "status": "pass native paste/long horizontal caret and cleanup",
   "config": "compact-font",
   "kind": "incident",
-  "route": "drrm",
+  "route": "maps",
   "paste": [
     {
       "tag": "compact-font-long-paste-incident-drrm-native-cut",
@@ -35,5 +35,7 @@
   "longCharacterCount": 162,
   "maximum": null,
   "imeSubmissionVerified": false,
-  "syntheticTextCleared": true
+  "syntheticTextCleared": true,
+  "tagRouteSuffix": "drrm",
+  "metadataCorrection": "Header finisher always opens Home; incident finisher always opens Maps. Filename retains the historical default suffix."
 }

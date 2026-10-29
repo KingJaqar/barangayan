@@ -1,6 +1,7 @@
 import type { CatalogFoundationFields, ProfileFoundationFields, RequestFoundationFields, FoundationTables, FoundationFunctions } from './service-foundations';
 import type { RoutingConditionsFunctions, RoutingConditionsTables } from './routing-conditions.database';
 import type { HouseholdAttendanceFunctions, HouseholdAttendanceTables, HouseholdAttendanceViews } from './household-attendance.database';
+import type { HomeRequestRow } from '../lib/home-request-priority';
 
 export type Json =
   | string
@@ -193,6 +194,7 @@ export type Database = {
       }
       announcements: {
         Row: {
+          alert_expires_at: string | null
           barangay_id: string
           body: string
           category: string
@@ -206,6 +208,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          alert_expires_at?: string | null
           barangay_id: string
           body: string
           category?: string
@@ -219,6 +222,7 @@ export type Database = {
           title: string
         }
         Update: {
+          alert_expires_at?: string | null
           barangay_id?: string
           body?: string
           category?: string
@@ -1654,6 +1658,7 @@ export type Database = {
     }
     Views: HouseholdAttendanceViews
     Functions: FoundationFunctions & RoutingConditionsFunctions & HouseholdAttendanceFunctions & {
+      resident_home_requests: { Args: { p_qrph_settlement_ready?: boolean }; Returns: HomeRequestRow[] };
       ensure_google_resident_profile: { Args: Record<string, never>; Returns: string };
       admin_add_household_member: {
         Args: {

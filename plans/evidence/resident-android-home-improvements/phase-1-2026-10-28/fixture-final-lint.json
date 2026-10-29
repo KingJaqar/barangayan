@@ -1,0 +1,7 @@
+{
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\admin-web",
+  "exit": 0,
+  "end": "2026-10-28T06:29:20.8430475Z",
+  "command": "node ../../node_modules/eslint/bin/eslint.js tests/content-workspace/announcement-lifetime.mjs",
+  "start": "2026-10-28T06:29:04.8045339Z"
+}

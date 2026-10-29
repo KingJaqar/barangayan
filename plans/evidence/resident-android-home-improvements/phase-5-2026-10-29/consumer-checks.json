@@ -1,0 +1,17 @@
+[
+  {
+    "id": "announcement-consumer",
+    "cwd": "apps/resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/notification-hub-ui.mjs"
+    ],
+    "deadline": 300000,
+    "start": "2026-10-29T08:22:28.842Z",
+    "end": "2026-10-29T08:23:28.427Z",
+    "code": 0,
+    "signal": null,
+    "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\consumer-announcement-consumer.log",
+    "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\consumer-announcement-consumer"
+  }
+]

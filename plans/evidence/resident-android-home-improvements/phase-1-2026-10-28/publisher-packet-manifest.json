@@ -1,0 +1,36 @@
+{
+  "included": [
+    "apps/admin-web/src/actions/admin-audit-actions.ts",
+    "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+    "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+    "apps/admin-web/AGENTS.md",
+    "apps/admin-web/CLAUDE.md",
+    "packages/shared/src/schemas/announcement.test.ts",
+    "packages/shared/src/schemas/announcement.ts",
+    "supabase/migrations/0011_announcements_admin_write.sql",
+    "supabase/migrations/0019_fix_announcement_soft_delete.sql"
+  ],
+  "chunks": [
+    {
+      "path": "publisher-read-1.txt",
+      "characters": 7128,
+      "lines": 195
+    },
+    {
+      "path": "publisher-read-2.txt",
+      "characters": 7015,
+      "lines": 195
+    },
+    {
+      "path": "publisher-read-3.txt",
+      "characters": 7208,
+      "lines": 195
+    },
+    {
+      "path": "publisher-read-4.txt",
+      "characters": 7102,
+      "lines": 181
+    }
+  ],
+  "hash": "3813C9E9D0A7A34CDF2E0E78D9B13ED0540870F0B1F2DF34B98278C6E5EE9287"
+}

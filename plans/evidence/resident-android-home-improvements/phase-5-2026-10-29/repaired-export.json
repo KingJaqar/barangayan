@@ -1,0 +1,22 @@
+{
+  "id": "export",
+  "cwd": "apps/resident-android-mobile",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "../../node_modules/expo/bin/cli",
+    "export",
+    "--platform",
+    "android",
+    "--max-workers",
+    "2",
+    "--output-dir",
+    "../../tmp/resident-home-phase5-20261029/export-repaired"
+  ],
+  "deadline": 1200000,
+  "start": "2026-10-29T08:18:20.185Z",
+  "end": "2026-10-29T08:19:24.227Z",
+  "code": 0,
+  "signal": null,
+  "log": "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-home-improvements\\phase-5-2026-10-29\\repaired-export.log",
+  "artifacts": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase5-20261029\\repaired-export"
+}

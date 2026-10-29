@@ -1,0 +1,19 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts" b/apps/resident-android-mobile/src/lib/home-request.test.ts
+index 71778485..6a9644da 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import { homeGreeting, homeRequestSummary, homeTimestamp } from './home-request';
++import { homeRequestSummary, homeTimestamp } from './home-request';
+ 
+ const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+ 
+@@ -40,7 +40,4 @@ describe('Home loaded-data summary', () => {
+     expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+   });
+ 
+-  it('changes greeting at noon and evening boundaries', () => {
+-    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual(['Good morning', 'Good morning', 'Good afternoon', 'Good afternoon', 'Good evening', 'Good evening']);
+-  });
+ });

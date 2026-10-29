@@ -9,9 +9,12 @@ import { ThemedText } from '@/components/themed-text';
 import { useReportModalMotion } from '@/hooks/use-report-modal-motion';
 import { useTheme } from '@/hooks/use-theme';
 
+import { useAdvisoryExpired } from '@/hooks/use-advisory-expired';
+
 export function AnnouncementModal({ visible, announcement, onClose, readError = false }: {
   visible: boolean; announcement: Tables<'announcements'> | null; onClose: () => void; readError?: boolean;
 }) {
+  const expired = useAdvisoryExpired(announcement, visible);
   const { resident } = useTheme();
   const insets = useSafeAreaInsets();
   const { mounted, panel, scrim, reduced } = useReportModalMotion(visible);
@@ -31,7 +34,7 @@ export function AnnouncementModal({ visible, announcement, onClose, readError = 
           <View style={styles.header}>
             <View style={[styles.category, { backgroundColor: tone.soft }]}>
               <Ionicons name={meta.icon as keyof typeof Ionicons.glyphMap} size={14} color={tone.ink} accessible={false} />
-              <ThemedText style={{ color: tone.ink, fontSize: 13, lineHeight: 18, fontWeight: '700' }}>{meta.label}</ThemedText>
+              <ThemedText style={{ color: tone.ink, fontSize: 13, lineHeight: 18, fontWeight: '700' }}>{expired ? `${meta.label} · Expired` : meta.label}</ThemedText>
             </View>
             <Pressable accessibilityRole="button" accessibilityLabel="Close" onPress={onClose} style={[styles.close, { backgroundColor: resident.surface }]}>
               <Ionicons name="close" size={18} color={resident.text} />
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   body: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
   category: { flexDirection: 'row', alignItems: 'center', flexShrink: 1, gap: 6, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 100 },
-  close: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  close: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 21, lineHeight: 26, fontWeight: '800', letterSpacing: -0.4, marginTop: 12 },
   stamp: { flexDirection: 'row', gap: 6, marginTop: 6, alignItems: 'center' },
   detail: { fontSize: 15, lineHeight: 23, borderTopWidth: 1, marginTop: 16, paddingTop: 16 },

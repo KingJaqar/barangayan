@@ -1,0 +1,101 @@
+{
+  "status": 200,
+  "rows": [
+    {
+      "id": "d3000000-0000-4000-8000-000000000101",
+      "reference_number": "REQ-2026-00025",
+      "status": "ready_for_pickup",
+      "payment_status": "paid",
+      "payment_method": "pickup",
+      "created_at": "2026-10-27T00:00:00+00:00",
+      "updated_at": "2026-10-28T10:05:28.572896+00:00",
+      "status_history": [
+        {
+          "at": "2026-10-28T10:05:28.572896+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-28T10:05:28.572896+00:00",
+          "note": null,
+          "status": "ready_for_pickup"
+        }
+      ],
+      "cancelled_at": null,
+      "contract_version": 1,
+      "fee_assessment_state": "legacy",
+      "assessed_amount_centavos": null,
+      "legacy_fee_centavos": null,
+      "sla_state": "legacy",
+      "document_name": "Unlisted service with a deliberately long official title that must wrap completely",
+      "service_kind": null,
+      "resolved_fee_centavos": 3100,
+      "next_action": "collect"
+    },
+    {
+      "id": "d3000000-0000-4000-8000-000000000001",
+      "reference_number": "REQ-2026-00001",
+      "status": "submitted",
+      "payment_status": "pending",
+      "payment_method": null,
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "updated_at": "2026-10-28T10:05:28.572896+00:00",
+      "status_history": [
+        {
+          "at": "2026-10-28T10:05:28.572896+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        }
+      ],
+      "cancelled_at": null,
+      "contract_version": 2,
+      "fee_assessment_state": "assessed",
+      "assessed_amount_centavos": 1000,
+      "legacy_fee_centavos": null,
+      "sla_state": "pre_processing",
+      "document_name": "Business Barangay Clearance",
+      "service_kind": "business",
+      "resolved_fee_centavos": 1000,
+      "next_action": "choose_payment"
+    },
+    {
+      "id": "d3000000-0000-4000-8000-000000000102",
+      "reference_number": "REQ-2026-00026",
+      "status": "in_progress",
+      "payment_status": "paid",
+      "payment_method": "pickup",
+      "created_at": "2026-10-27T00:00:00+00:00",
+      "updated_at": "2026-10-28T10:05:28.572896+00:00",
+      "status_history": [
+        {
+          "at": "2026-10-28T10:05:28.572896+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-28T10:05:28.572896+00:00",
+          "note": null,
+          "status": "in_progress"
+        }
+      ],
+      "cancelled_at": null,
+      "contract_version": 1,
+      "fee_assessment_state": "legacy",
+      "assessed_amount_centavos": null,
+      "legacy_fee_centavos": null,
+      "sla_state": "legacy",
+      "document_name": "Unlisted service with a deliberately long official title that must wrap completely",
+      "service_kind": null,
+      "resolved_fee_centavos": 3100,
+      "next_action": null
+    }
+  ],
+  "anonymousStatus": 401,
+  "assertions": [
+    "actual RPC priority before three; old January actionable work outranks newer inactive October requests",
+    "three unique owner-scoped rows; known short/full title and current processing stage",
+    "actual response → production summary/action helpers; no payment mutation",
+    "anonymous denied"
+  ],
+  "synthetic": true
+}

@@ -1,0 +1,11 @@
+{
+  "pid": 62584,
+  "started": "2026-10-29T02:29:23.427Z",
+  "deadlineMinutes": 60,
+  "containers": [
+    "resident_home_i2_rest_keys",
+    "resident_home_i2_auth"
+  ],
+  "proxy": 58472,
+  "priorProxyDelayIssue": "The earlier test proxy piped a body after delay; resumed proxy buffers before delay. Production source unchanged."
+}

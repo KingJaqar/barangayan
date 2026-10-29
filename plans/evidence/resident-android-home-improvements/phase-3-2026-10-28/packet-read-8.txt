@@ -1,0 +1,101 @@
+de-descendants">
+                    {summary.steps.map((step, index) => <View key={step.status} style={[styles.segment, { backgroundColor: !summary.cancelled && index <= summary.stepIndex ? resident.accentText : resident.border }]} />)}
+                  </View>
+                  <ThemedText style={[styles.status, { color: summary.cancelled ? resident.danger : resident.text }]}>{summary.statusLabel}</ThemedText>
+                </View>
+              </HomeAction>;
+            })}
+          </ScrollableChevronRow>}
+      </View>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionHeading}>
+            <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Around the barangay</ThemedText>
+            <ThemedText style={[styles.subtitle, { color: resident.muted }]}>Latest announcements</ThemedText>
+          </View>
+          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all announcements" onPress={() => router.push('/announcements')} style={styles.seeAll}>
+            <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+          </HomeAction>
+        </View>
+        {!news ? <HomeListState loading label="Loading announcements…" />
+          : news.error ? <HomeListState label={news.error} onRetry={() => setAnnouncementRetry(value => value + 1)} />
+          : announcement ? <View style={styles.shelf}>
+            <HomeAction reducedMotion={reducedMotion} accessibilityLabel={`Read announcement: ${announcement.title}`}
+              onPress={() => router.push({ pathname: '/announcements', params: { announcementId: announcement.id } })}
+              style={({ pressed }) => [styles.announcementCard, styles.card, { backgroundColor: pressed ? resident.pressed : resident.card, borderColor: resident.border }]}>
+              <View style={styles.newsMeta}>
+                <View style={styles.categoryGroup}>
+                  <View style={[styles.categoryDot, { backgroundColor: announcementTone }]} />
+                  <ThemedText style={[styles.category, { color: announcementTone }]}>{announcement.category}</ThemedText>
+                </View>
+                <ThemedText style={[styles.newsDate, { color: resident.muted }]}>{homeTimestamp(announcement.published_at)}</ThemedText>
+              </View>
+              {announcement.image_url ? failedImage === announcement.image_url
+                ? <ThemedText style={[styles.reference, { color: resident.muted }]}>Announcement image unavailable.</ThemedText>
+                : <Image source={{ uri: announcement.image_url }} contentFit="cover" style={styles.announcementImage}
+                    accessibilityLabel={`${announcement.title} image`} onError={() => setFailedImage(announcement.image_url)} />
+                : null}
+              <ThemedText style={[styles.cardTitle, styles.newsTitle, { color: resident.text }]}>{announcement.title}</ThemedText>
+            </HomeAction>
+          </View> : <HomeListState label="No announcements yet." />}
+      </View>
+    </ScrollView>
+    {selected ? <RequestSummarySheet request={selected} visible={sheetOpen} reducedMotion={reducedMotion} onClose={closeSheet} onDismiss={afterDismiss}
+      onViewFull={() => { pendingTracking.current = selected.id; setSheetOpen(false); }} /> : null}
+  </SafeAreaView>;
+}
+
+function HomeListState({ label, loading = false, onRetry, action }: { label: string; loading?: boolean; onRetry?: () => void; action?: { label: string; onPress: () => void } }) {
+  const { resident } = useTheme();
+  return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+    {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+    <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+    {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
+    {action ? <PrimaryButton presentation="resident" variant="secondary" label={action.label} onPress={action.onPress} /> : null}
+  </View>;
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+  inset: { paddingHorizontal: 20 },
+  identitySection: { paddingHorizontal: 20, paddingVertical: 16 },
+  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48 },
+  locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 16, rowGap: 8 },
+  quickAction: { alignItems: 'center', paddingVertical: 4, gap: 8, minWidth: 0, minHeight: 48 },
+  quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+  section: { marginBottom: 16 },
+  sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+  sectionHeading: { flex: 1, minWidth: 0 },
+  sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+  subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+  seeAll: { minHeight: 48, minWidth: 48, alignItems: 'flex-end', justifyContent: 'center' },
+  seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+  card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+  requestCard: { width: 244, flexGrow: 1 },
+  requestTop: { flexDirection: 'row', gap: 10 },
+  requestIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  requestInfo: { flex: 1, minWidth: 0 },
+  cardTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', minHeight: 36 },
+  reference: { fontSize: 11.5, lineHeight: 17.25, marginTop: 2 },
+  requestProgress: { marginTop: 'auto', paddingTop: 10 },
+  segments: { flexDirection: 'row', gap: 4 },
+  segment: { flex: 1, height: 4, borderRadius: 2 },
+  status: { marginTop: 6, fontSize: 11.5, lineHeight: 17.25, fontWeight: '700' },
+  announcementCard: { width: 232, maxWidth: '100%', gap: 6 },
+  announcementImage: { width: '100%', aspectRatio: 2.4, borderRadius: 8 },
+  newsTitle: { fontWeight: '600' },
+  newsMeta: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  categoryGroup: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  newsDate: { fontSize: 11.5, lineHeight: 17.25, textAlign: 'right', flexShrink: 1 },
+  categoryDot: { width: 6, height: 6, borderRadius: 3 },
+  category: { fontSize: 11.5, lineHeight: 17.25, fontWeight: '700', textTransform: 'capitalize', flexShrink: 1 },
+  listState: { marginHorizontal: 20, borderRadius: 12, padding: 16, gap: 12 },
+});
+</file>
+
+</files>

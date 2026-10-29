@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByText('3 of 3', { exact: true }) to be visible
+
+    at C:\Users\User\barangayan\apps\resident-android-mobile\tests\home-presentation-ui.mjs:129:47 {
+  log: [
+    "  - waiting for getByText('3 of 3', { exact: true }) to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

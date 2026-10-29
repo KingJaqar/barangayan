@@ -1,0 +1,83 @@
+{
+  "time": "2026-10-28T12:16:25.598Z",
+  "owned": [
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "cb8ab230a8943e174169e1aa511ac8a831737d01cfddffde4c49959ebe51905d",
+      "mtime": "2026-10-28T10:19:47.721Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "sha256": "2b7bf4be7ea0cf1079d3361619c43dea4a4fc5f808f57b7b365775e50ca323d8",
+      "mtime": "2026-10-28T09:52:13.843Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "sha256": "1ecc8964ab17b0abc1f0ab33f550735f42fb4d9997a7a4363ea42abc8a169ddf",
+      "mtime": "2026-10-28T10:19:47.718Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "sha256": "229458071b5d93347dbbe35c0e10ec442cf150e89c7137681aa642c7ba8bcd38",
+      "mtime": "2026-10-28T10:17:03.393Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "sha256": "ecdaf99581cfce237727cba880653190c58c191f88c2ad35ecebee62964859e4",
+      "mtime": "2026-10-28T10:17:03.396Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "sha256": "09dc2ec001ea74e10fcbd7108b48c1d0e943879557700092d0ba85918f781cb1",
+      "mtime": "2026-10-28T09:51:23.979Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+      "sha256": "f5503bcfad64c1583baa039c96adc4ecdf81a4c75727a17835d21350390f408d",
+      "mtime": "2026-10-28T09:56:21.887Z",
+      "unchangedSinceReviewedChecks": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "sha256": "b49c38bdf79b69f90634be010970e9ddae0d944860ad4b4f8c19365b48df98b2",
+      "mtime": "2026-10-28T10:20:42.518Z",
+      "unchangedSinceReviewedChecks": true
+    }
+  ],
+  "inputs": [
+    {
+      "path": "AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/home-action.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/lib/home-request-priority.ts",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0148_resident_home_request_priority.sql",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "unchanged": true
+    }
+  ]
+}

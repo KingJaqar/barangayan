@@ -1,0 +1,12 @@
+{
+  "pass": true,
+  "failedImageFallback": true,
+  "longPlainPreview": true,
+  "exactDetail": true,
+  "nativeBack": true,
+  "timeoutRetainsActive": true,
+  "timeoutMessage": "Existing resource uses the same user-facing source error for timeout",
+  "attemptsBefore": 1,
+  "attemptsAfter": 1,
+  "explicitRetry": true
+}

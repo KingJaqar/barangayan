@@ -1,0 +1,62 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'Edit Synthetic lifetime advisory', exact: true })
+    - locator resolved to <button type="button" aria-haspopup="dialog" class="content_workspace_primaryAction" aria-label="Edit Synthetic lifetime advisory">Edit announcement</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    19 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+    at C:\Users\User\barangayan\apps\admin-web\tests\content-workspace\announcement-lifetime.mjs:91:87 {
+  log: [
+    "  - waiting for getByRole('button', { name: 'Edit Synthetic lifetime advisory', exact: true })",
+    '    - locator resolved to <button type="button" aria-haspopup="dialog" class="content_workspace_primaryAction" aria-label="Edit Synthetic lifetime advisory">Edit announcement</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    19 × waiting for element to be visible, enabled and stable',
+    '       - element is visible, enabled and stable',
+    '       - scrolling into view if needed',
+    '       - done scrolling',
+    '       - <div aria-hidden="true" class="content_forms_backdrop transition-opacity duration-300 ease-out motion-reduce:transition-none opacity-100"></div> from <div class="content_forms_workspace">…</div> subtree intercepts pointer events',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

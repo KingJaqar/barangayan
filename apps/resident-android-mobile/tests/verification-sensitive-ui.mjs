@@ -47,7 +47,7 @@ const mocks = {
   '@/lib/image-upload': `export const ACCEPTED_IMAGE_MIME_TYPES=['image/jpeg','image/png','image/webp'];export const imageExtension=()=> 'jpg';export const pickImageAsset=async()=>window.fixture.picked;export const readImageBytes=async()=>new Uint8Array([1,2,3]);`,
   '@/lib/supabase': `export const supabase={storage:{from:()=>({upload:async(...args)=>{window.fixture.uploads.push(args);if(window.fixture.uploadError)return {error:new Error('upload')};return {error:null}}})},from:()=>({update:values=>({eq:async(column,id)=>{window.fixture.writes.push({values,id});await new Promise(r=>setTimeout(r,window.fixture.delay));if(window.fixture.saveError)throw new Error('offline');return {error:null}}})}),auth:{signInWithPassword:async input=>{window.fixture.reauths.push(input);return {data:{user:{id:window.fixture.reauthOwner??window.fixture.auth.session.user.id}},error:window.fixture.passwordError?{message:window.fixture.passwordError}:null}},updateUser:async values=>{window.fixture.passwordWrites.push(values);await new Promise(r=>setTimeout(r,window.fixture.delay));return {error:null}}}};`,
   '@supabase/supabase-js': `export const createClient=()=>({auth:{signInWithPassword:async()=>({data:{user:{id:window.fixture.auth.session.user.id}},error:null}),signOut:async()=>{}}});`,
-  '@barangayan/shared': `export {ACCENT_COLORS} from '${shared}/constants/theme-colors';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts';export {ID_TYPES,OTHER_ID_TYPE_PREFIX} from '${shared}/constants/id-verification';export {idConfirmedDetailsSchema} from '${shared}/schemas/service-foundations';export {idVerificationState} from '${shared}/lib/service-catalog';export {changePasswordSchema,PASSWORD_COMPLEXITY_REGEX} from '${shared}/schemas/auth';export {residentPasswordStepSchema,residentSetupFailure} from '${shared}/lib/resident-account-setup';export {isPointInPolygon} from '${shared}/lib/point-in-polygon';
+  '@barangayan/shared': `export {ACCENT_COLORS} from '${shared}/constants/theme-colors';export {FONT_OPTIONS,DEFAULT_FONT_ID} from '${shared}/constants/theme-fonts';export {DRIVE_TYPE_CONFIG} from '${shared}/constants/drive-types';export {ID_TYPES,OTHER_ID_TYPE_PREFIX,idTypeRequiresBack} from '${shared}/constants/id-verification';export {idConfirmedDetailsSchema} from '${shared}/schemas/service-foundations';export {idVerificationState} from '${shared}/lib/service-catalog';export {changePasswordSchema,PASSWORD_COMPLEXITY_REGEX} from '${shared}/schemas/auth';export {residentPasswordStepSchema,residentSetupFailure} from '${shared}/lib/resident-account-setup';export {isPointInPolygon} from '${shared}/lib/point-in-polygon';
     export const getResidentAccountSetupStatus=async()=>window.fixture.auth.setup.status;
     export const publishIdEvidence=async(client,input)=>{window.fixture.publications.push(input);await new Promise(r=>setTimeout(r,window.fixture.delay));if(window.fixture.publishError)throw new Error('Submission failed');return input};
     export const reverseGeocode=point=>new Promise(resolve=>window.fixture.geocodes.push({point,resolve}));
@@ -85,9 +85,9 @@ try {
   await button('Continue').waitFor();
   assert.equal(await button('Continue').isDisabled(), true);
   await button('Select ID type').click();
-  await page.getByRole('radio', { name: 'Other', exact: true }).click(); await settle();
-  await page.getByRole('textbox', { name: 'Specify ID type', exact: true }).fill('Synthetic ID');
+  await page.getByRole('radio', { name: 'Passport', exact: true }).click(); await settle();
   await button('Continue').click(); await button('Upload a photo').waitFor();
+  assert.equal(await button('Upload a back photo').count(), 0);
   await button('Upload a photo').click(); assert.equal(await page.evaluate(() => window.fixture.uploads.length), 0);
   await set({ picked: { uri: 'synthetic.jpg', mimeType: 'application/pdf', size: 3, name: 'synthetic.pdf' } });
   await button('Upload a photo').click(); await page.getByText('Choose a JPG, PNG, or WebP photo.', { exact: true }).waitFor();
@@ -115,8 +115,8 @@ try {
   for (let i = 0; i < 5; i++) {
     await button('Select ID type').click(); await back(); assert.equal(await page.getByRole('dialog').count(), 0);
   }
-  await button('Select ID type').click(); await page.getByRole('radio', { name: 'Other', exact: true }).click(); await settle();
-  await page.getByRole('textbox', { name: 'Specify ID type', exact: true }).fill('Synthetic camera ID'); await button('Continue').click();
+  await button('Select ID type').click(); await page.getByRole('radio', { name: 'Passport', exact: true }).click(); await settle();
+  await button('Continue').click();
   await set({ permission: { granted: false, canAskAgain: false } }); await button('Take a photo').click();
   await page.getByText('Allow camera access to take an ID photo, or upload an existing photo.', { exact: true }).waitFor();
   assert.equal(await page.getByRole('dialog').count(), 0);
@@ -125,6 +125,25 @@ try {
   await button('Take a photo').click(); await button('Take photo').click(); await button('Upload a different photo').waitFor();
   await button('Continue').click(); assert.equal(await page.getByRole('textbox', { name: 'Full name', exact: true }).inputValue(), 'Synthetic Resident');
   passed.push('five picker/Back cycles and synthetic camera deny/cancel/ready/capture with actual OCR-success rendering');
+
+  // Two-sided types (every type except Passport, including Other) need front AND back.
+  await page.evaluate(() => { window.fixture.publications.length = 0; window.fixture.uploads.length = 0; window.fixture.picked = { uri: 'synthetic.jpg', mimeType: 'image/jpeg', size: 3, name: 'synthetic.jpg' }; });
+  await reset('id');
+  await button('Select ID type').click(); await page.getByRole('radio', { name: 'Other', exact: true }).click(); await settle();
+  await page.getByRole('textbox', { name: 'Specify ID type', exact: true }).fill('Synthetic two-sided ID'); await button('Continue').click();
+  await button('Upload a front photo').waitFor(); await button('Upload a back photo').waitFor();
+  await button('Upload a front photo').click(); await button('Upload a different front photo').waitFor();
+  assert.equal(await button('Continue').isDisabled(), true);
+  await page.getByText('Add the back of your ID to continue.', { exact: true }).waitFor();
+  await button('Take a back photo').click(); await button('Take photo').click(); await button('Upload a different back photo').waitFor();
+  assert.equal(await button('Continue').isDisabled(), false);
+  assert.deepEqual(await page.evaluate(() => window.fixture.uploads.map(u => u[0].split('/').pop().split('.')[0])), ['id-front', 'id-back']);
+  await button('Continue').click(); await button('Continue').click(); await button('Submit').waitFor();
+  await page.getByLabel('Back ID photo to submit').waitFor();
+  await button('Submit').click(); await page.getByText('Valid ID is pending verification', { exact: true }).waitFor();
+  const twoSided = await page.evaluate(() => window.fixture.publications.at(-1));
+  assert.match(twoSided.backPath, /id-back\./); assert.match(twoSided.frontPath, /id-front\./);
+  passed.push('two-sided ID types require front and back before Continue and publish both paths');
 
   await page.evaluate(() => { Object.assign(window.fixture.profile, { id_verification_status: 'verified', approved_id_submission_id: 'approved', current_id_submission_id: 'approved' }); });
   await reset('id'); await page.getByText('Your valid ID has been verified', { exact: true }).waitFor();

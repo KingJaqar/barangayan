@@ -1,0 +1,150 @@
+[
+  {
+    "id": "typecheck",
+    "start": "2026-10-28T04:21:49.558Z",
+    "end": "2026-10-28T04:22:34.166Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 300000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "log": "typecheck.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\typecheck"
+  },
+  {
+    "id": "lint",
+    "start": "2026-10-28T04:21:49.577Z",
+    "end": "2026-10-28T04:22:33.812Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 300000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "lint"
+    ],
+    "log": "lint.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\lint"
+  },
+  {
+    "id": "home-unit",
+    "start": "2026-10-28T04:21:49.591Z",
+    "end": "2026-10-28T04:21:59.066Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/lib/home-request.test.ts"
+    ],
+    "log": "home-unit.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\home-unit"
+  },
+  {
+    "id": "schema-unit",
+    "start": "2026-10-28T04:21:49.607Z",
+    "end": "2026-10-28T04:21:56.706Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\packages\\shared",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/vitest/vitest.mjs",
+      "run",
+      "src/schemas/announcement.test.ts"
+    ],
+    "log": "schema-unit.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\schema-unit"
+  },
+  {
+    "id": "home-ui",
+    "start": "2026-10-28T04:21:49.621Z",
+    "end": "2026-10-28T04:22:22.082Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/home-presentation-ui.mjs"
+    ],
+    "log": "home-ui.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\home-ui"
+  },
+  {
+    "id": "reports-ui",
+    "start": "2026-10-28T04:21:49.636Z",
+    "end": "2026-10-28T04:22:29.949Z",
+    "code": 1,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/reports-announcements-ui.mjs"
+    ],
+    "log": "reports-ui.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\reports-ui"
+  },
+  {
+    "id": "navigation",
+    "start": "2026-10-28T04:21:49.651Z",
+    "end": "2026-10-28T04:21:49.915Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/request-tracking-navigation.mjs"
+    ],
+    "log": "navigation.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\navigation"
+  },
+  {
+    "id": "services-entry",
+    "start": "2026-10-28T04:21:49.670Z",
+    "end": "2026-10-28T04:21:59.233Z",
+    "code": 0,
+    "signal": null,
+    "deadlineMs": 600000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "tests/services-tab-stability.mjs"
+    ],
+    "log": "services-entry.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\services-entry"
+  },
+  {
+    "id": "android-export",
+    "start": "2026-10-28T04:22:34.168Z",
+    "end": "2026-10-28T04:24:57.193Z",
+    "code": 1,
+    "signal": null,
+    "deadlineMs": 1200000,
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase0-20261028/android-export"
+    ],
+    "log": "android-export.log",
+    "artifact": "C:\\Users\\User\\barangayan\\tmp\\resident-home-phase0-20261028\\android-export"
+  }
+]

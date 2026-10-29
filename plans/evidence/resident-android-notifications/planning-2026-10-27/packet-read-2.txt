@@ -1,0 +1,200 @@
+export function useNotificationRealtime(
+  enabled: boolean,
+  userId: string | null,
+  barangayId: string | null,
+)
+FILE apps/resident-android-mobile/src/hooks/use-unread-counts.tsx
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+⋮----
+import { useAuth } from '@/hooks/use-auth';
+import { useRefreshResource } from '@/hooks/use-refresh-resource';
+import { supabase } from '@/lib/supabase';
+import { uniqueChannelName } from '@/lib/realtime-channel';
+⋮----
+interface UnreadCountsValue {
+  readStateError: boolean;
+  retryReadState: () => void;
+  /** Live status count — the resident's own open + in_progress incidents. Not an
+   * unread/notification count, so there's no mark-as-read for it. */
+  activeReportsCount: number;
+  /** The resident's own resolved incidents they haven't acknowledged yet. */
+  resolvedUnreadCount: number;
+  /** Announcements for the resident's barangay they haven't acknowledged yet. Also
+   * drives the Home screen bell — same number, same source of truth. */
+  announcementsUnreadCount: number;
+  /** Ids of announcements not yet marked read by this resident — lets a single
+   * AnnouncementCard check its own read state without a separate query. */
+  unreadAnnouncementIds: string[];
+  /** Marks every currently-unread resolved incident as read (bulk, per the Resolved
+   * Reports segment's single "Mark all as read" button). */
+  markResolvedRead: () => Promise<void>;
+  /** Marks a single resolved incident read — the per-card "mark as read" icon. */
+  markIncidentRead: (incidentId: string) => Promise<void>;
+  /** Marks a single resolved incident unread again — the per-card "mark as unread" icon. */
+  markIncidentUnread: (incidentId: string) => Promise<void>;
+  /** Marks every currently-unread announcement as read (bulk — shared by the
+   * Announcements screen's button and the shared header bell it clears). */
+  markAnnouncementsRead: () => Promise<void>;
+  /** Marks a single announcement read — the per-card "mark as read" icon. */
+  markAnnouncementRead: (announcementId: string) => Promise<void>;
+  /** Marks a single announcement unread again — the per-card "mark as unread" icon. */
+  markAnnouncementUnread: (announcementId: string) => Promise<void>;
+}
+⋮----
+/** Live status count — the resident's own open + in_progress incidents. Not an
+   * unread/notification count, so there's no mark-as-read for it. */
+⋮----
+/** The resident's own resolved incidents they haven't acknowledged yet. */
+⋮----
+/** Announcements for the resident's barangay they haven't acknowledged yet. Also
+   * drives the Home screen bell — same number, same source of truth. */
+⋮----
+/** Ids of announcements not yet marked read by this resident — lets a single
+   * AnnouncementCard check its own read state without a separate query. */
+⋮----
+/** Marks every currently-unread resolved incident as read (bulk, per the Resolved
+   * Reports segment's single "Mark all as read" button). */
+⋮----
+/** Marks a single resolved incident read — the per-card "mark as read" icon. */
+⋮----
+/** Marks a single resolved incident unread again — the per-card "mark as unread" icon. */
+⋮----
+/** Marks every currently-unread announcement as read (bulk — shared by the
+   * Announcements screen's button and the shared header bell it clears). */
+⋮----
+/** Marks a single announcement read — the per-card "mark as read" icon. */
+⋮----
+/** Marks a single announcement unread again — the per-card "mark as unread" icon. */
+⋮----
+/**
+ * Single source of truth for the Reports tab's incident badges and the shared header
+ * bell's announcement count. Mounted once in (app)/_layout.tsx — alongside AppTabs, not
+ * inside the Reports screen — so the counts (and their Realtime subscriptions) stay live
+ * while the resident is on any tab, not just while Reports is focused.
+ */
+export function UnreadCountsProvider(
+⋮----
+// Announcement ids not yet marked read by this resident — kept around so
+// markAnnouncementsRead() knows exactly which ids to upsert without a second round-trip.
+⋮----
+// Single-item counterparts of markResolvedRead — the per-card "mark as read" / "mark
+// as unread" icons on a resolved IncidentCard. `resolved_read_at` lives on the
+// incident row itself (not a join table, since only the reporter ever sees their own
+// report — see 0080's comment), so these are plain single-row updates; RLS scopes them
+// to the caller's own resolved incidents (0085_resident_mark_resolved_incident_read.sql).
+⋮----
+// Single-item counterparts of the bulk actions above — the "mark as read" / "mark as
+// unread" icons on each AnnouncementCard. Both just upsert/delete the one
+// announcement_reads row for this resident + announcement; RLS already scopes writes
+// to the caller's own resident_id (0080_reports_unread_counts.sql).
+⋮----
+retryReadState: () =>
+FILE apps/resident-android-mobile/src/lib/push-notifications.ts
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+⋮----
+import { Platform } from 'react-native';
+⋮----
+import { supabase } from '@/lib/supabase';
+⋮----
+// Remote push notifications were removed from Expo Go on Android in SDK 53 — merely
+// *importing* expo-notifications there throws (its module-level auto-registration code
+// runs on import, before any of our own guards get a chance to run). So the module must
+// never be statically imported; it's lazy-required, and only outside Expo Go.
+⋮----
+function getNotifications(): typeof NotificationsType | null
+⋮----
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+⋮----
+// Foreground presentation — realtime events arrive instantly via Supabase channels, so
+// we always want the banner/sound to show immediately rather than being queued/suppressed.
+⋮----
+/**
+ * Requests OS permission (if not already granted) and returns the Expo push token for this
+ * device. Returns null on simulators/emulators (no push capability), in Expo Go (remote
+ * push unsupported there since SDK 53 — needs a development build), or if permission is
+ * denied — callers should treat null as "can't register a token right now", not throw.
+ */
+export async function getExpoPushToken(): Promise<string | null>
+⋮----
+/**
+ * Registers (or refreshes) this device's push token with the backend via the
+ * upsert_push_token RPC — idempotent, safe to call on every app foreground.
+ */
+export async function registerPushToken(): Promise<void>
+⋮----
+/**
+ * Removes this device's token from the backend (e.g. when the user toggles push off or
+ * logs out) so it stops receiving deliveries.
+ */
+export async function unregisterPushToken(): Promise<void>
+⋮----
+/**
+ * Immediately presents a local notification — used for realtime-triggered alerts. Local
+ * (non-remote) scheduling still works in Expo Go, but we no-op there for consistency since
+ * getNotifications() is the single gate for the whole module.
+ */
+export async function presentNotification(title: string, body: string): Promise<void>
+FILE apps/resident-android-mobile/package.json
+{
+  "name": "@barangayan/mobile",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "~57.0.8",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@supabase/supabase-js": "^2.112.1",
+    "expo": "^57.0.10",
+    "expo-camera": "~57.0.3",
+    "expo-constants": "~57.0.9",
+    "expo-crypto": "57.0.3",
+    "expo-dev-client": "57.0.19",
+    "expo-device": "~57.0.1",
+    "expo-document-picker": "~57.0.1",
+    "expo-file-system": "~57.0.2",
+    "expo-font": "~57.0.1",
+    "expo-glass-effect": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-linking": "~57.0.4",
+    "expo-location": "~57.0.8",
+    "expo-media-library": "^57.0.3",
+    "expo-notifications": "~57.0.11",
+    "expo-print": "~57.0.1",
+    "expo-router": "~57.0.9",
+    "expo-sharing": "~57.0.13",
+    "expo-splash-screen": "^57.0.5",
+    "expo-status-bar": "~57.0.1",
+    "expo-symbols": "~57.0.1",
+    "expo-system-ui": "~57.0.2",
+    "expo-task-manager": "~57.0.10",
+    "expo-web-browser": "~57.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-markdown-display": "^7.0.2",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-view-shot": "5.1.0",
+    "react-native-web": "~0.21.0",
+    "react-native-webview": "13.16.1",
+    "react-native-worklets": "0.10.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint",

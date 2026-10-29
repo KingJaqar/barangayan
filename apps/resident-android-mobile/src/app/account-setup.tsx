@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountSetupStatus } from '@/components/account-setup-status';
 import { EmergencyEntryLink } from '@/components/emergency-entry-link';
 import { ResidentDetailsForm } from '@/components/resident-details-form';
+import { ResidentIdCaptureStep } from '@/components/resident-id-capture-step';
 import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
 import { ThemedText } from '@/components/themed-text';
 import { useAuth } from '@/hooks/use-auth';
@@ -41,6 +42,8 @@ function OwnedAccountSetup() {
     setNotice('Your email is verified. Finish setup to continue, or sign out below.');
   }
   useEffect(() => {
+    // The ID wizard registers its own hardware back handler (steps, camera, pickers); this one would shadow it.
+    if (route.destination === 'id_verification') return undefined;
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => { back(); return true; });
     return () => subscription.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +54,7 @@ function OwnedAccountSetup() {
     await setSetupIntent('google_details_saved');
     await refreshCompletion();
   }
-  async function savedPassword() { await setSetupIntent('sign_in'); await refreshCompletion(); }
+  async function savedStep() { await setSetupIntent('sign_in'); await refreshCompletion(); }
   if (route.destination === 'home' || route.destination === 'existing_access') return <Redirect href="/home" />;
   if (route.destination === 'recovery') return <Redirect href="/(auth)/forgot-password" />;
   if (!session) return <Redirect href={signedOutEntry ? '/(auth)/login' : '/(auth)/auth-choice'} />;
@@ -59,8 +62,12 @@ function OwnedAccountSetup() {
     <ResidentDetailsForm key={session.user.id} required={route.required} onSaved={savedDetails} onSkip={() => { void skip(); }} onBack={back} />
     {notice && <ThemedText accessibilityLiveRegion="polite" style={{ padding: 16, backgroundColor: theme.background }}>{notice}</ThemedText>}
   </>;
+  if (route.destination === 'id_verification') return <>
+    <ResidentIdCaptureStep key={session.user.id} exitLabel="Back" onExit={back} onSubmitted={() => { void savedStep(); }} />
+    {notice && <ThemedText accessibilityLiveRegion="polite" style={{ padding: 16, backgroundColor: theme.background }}>{notice}</ThemedText>}
+  </>;
   if (route.destination === 'password') return <>
-    <ResidentPasswordStep key={session.user.id} required={route.required} draft={passwordDraft} onDraftChange={setPasswordDraft} onSaved={savedPassword} onSkip={() => { void skip(); }} onBack={back} />
+    <ResidentPasswordStep key={session.user.id} required={route.required} draft={passwordDraft} onDraftChange={setPasswordDraft} onSaved={savedStep} onSkip={() => { void skip(); }} onBack={back} />
     {notice && <ThemedText accessibilityLiveRegion="polite" style={{ padding: 16, backgroundColor: theme.background }}>{notice}</ThemedText>}
   </>;
   return <AccountSetupStatus

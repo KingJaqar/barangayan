@@ -1,0 +1,402 @@
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\home\\index.tsx" b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+index 7d2d08a4..c1fd8aea 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\home\\index.tsx"
++++ b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+@@ -9,7 +9,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
+ import { Avatar } from '@/components/avatar';
+ import { DrrmTabIcon } from '@/components/drrm-tab-icon';
+ import { ServicesTabIcon } from '@/components/services-tab-icon';
+-import { GuestPrompt } from '@/components/guest-prompt';
+ import { HomeAction } from '@/components/home/home-action';
+ import { RequestSummarySheet } from '@/components/home/request-summary-sheet';
+ import { PrimaryButton } from '@/components/primary-button';
+@@ -25,13 +24,13 @@ import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
+ import { useProfile } from '@/hooks/use-profile';
+ import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ import { useTheme } from '@/hooks/use-theme';
+-import { homeGreeting, homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
++import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
+ import { supabase } from '@/lib/supabase';
+ 
+ type Announcement = Tables<'announcements'>;
+ const QUICK_ACTIONS = [
+-  { label: 'Documents', description: 'Request a document', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
+-  { label: 'Report', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
++  { label: 'Services', description: 'Browse documents and services', href: '/services', icon: 'clipboard-outline', tone: 'accent', foreground: 'onAccent' },
++  { label: 'Reports', description: 'Report an issue', href: '/reports', icon: 'warning-outline', tone: 'warning', foreground: 'onWarning' },
+   { label: 'Emergency', description: 'Emergency information', href: '/drrm', icon: 'drrm', tone: 'danger', foreground: 'onDanger' },
+   { label: 'Maps', description: 'Open barangay maps', href: '/maps', icon: 'location-outline', tone: 'info', foreground: 'onInfo' },
+   { label: 'Health', description: 'Open health services', href: '/health', icon: 'heart-outline', tone: 'rose', foreground: 'onRose' },
+@@ -47,6 +46,7 @@ export default function HomeScreen() {
+   const reducedMotion = useResidentReducedMotion(true);
+   const { width, fontScale } = useWindowDimensions();
+   const compactActions = (Math.min(width, MaxContentWidth) - 24) / 5 < 64 * fontScale;
++  const actionColumns = compactActions ? Math.max(1, Math.min(3, Math.floor((Math.min(width, MaxContentWidth) - 24) / (64 * fontScale)))) : 5;
+   const [requestRetry, setRequestRetry] = useState(0);
+   const [announcementRetry, setAnnouncementRetry] = useState(0);
+   const [failedImage, setFailedImage] = useState<string | null>(null);
+@@ -115,7 +115,6 @@ export default function HomeScreen() {
+   const requests = requestResult?.key === requestKey ? requestResult : null;
+   const news = newsResult?.retry === announcementRetry ? newsResult : null;
+   const selected = selectedRequest?.resident_id === userId && userId ? selectedRequest : null;
+-  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || 'Resident';
+   const announcement = news?.item;
+   const announcementTone = announcement?.category === 'emergency' ? resident.danger
+     : announcement?.category === 'health' ? resident.rose : resident.accentText;
+@@ -148,11 +147,12 @@ export default function HomeScreen() {
+           <Avatar icon="person" size={36} foregroundColor={resident.onAccent} />
+           <ThemedText style={[styles.location, { color: resident.text }]}>Log in</ThemedText>
+         </HomeAction>}
+-        <ThemedText accessibilityRole="header" style={[styles.greeting, { color: resident.text }]}>{homeGreeting(new Date().getHours())}, {userId ? firstName : 'neighbor'}</ThemedText>
+       </View>
+       <View style={styles.quickActions}>
+         {QUICK_ACTIONS.map(action => <HomeAction key={action.label} reducedMotion={reducedMotion} pressScale={0.95}
+-          accessibilityLabel={action.label} accessibilityHint={action.description} onPress={() => router.push(action.href)} style={[styles.quickAction, compactActions && styles.compactAction]}>
++          accessibilityLabel={action.label} accessibilityHint={action.description}
++          onPress={() => router.push(action.href === '/services' ? { pathname: '/services', params: { segment: 'documents' } } : action.href)}
++          style={[styles.quickAction, { width: `${100 / actionColumns}%` }]}>
+           <View style={[styles.quickIcon, { backgroundColor: resident[action.tone], borderColor: resident.controlBorder, borderWidth: action.tone === 'accent' && resident.accentNeedsOutline ? 1 : 0 }]}>
+             {action.href === '/services'
+               ? <ServicesTabIcon size={24} color={resident[action.foreground]} />
+@@ -169,14 +169,14 @@ export default function HomeScreen() {
+             <ThemedText accessibilityRole="header" style={[styles.sectionTitle, { color: resident.text }]}>Your requests</ThemedText>
+             <ThemedText style={[styles.subtitle, { color: resident.muted }]}>{requests && !requests.error ? `${requests.items.length} recent ${requests.items.length === 1 ? 'request' : 'requests'}` : 'Your latest requests'}</ThemedText>
+           </View>
+-          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push('/services')} style={styles.seeAll}>
++          <HomeAction reducedMotion={reducedMotion} accessibilityLabel="View all requests" onPress={() => router.push({ pathname: '/services', params: { segment: 'requests' } })} style={styles.seeAll}>
+             <ThemedText style={[styles.seeAllText, { color: resident.text }]}>See all</ThemedText>
+           </HomeAction>
+         </View>
+-        {!userId ? <View style={styles.inset}><GuestPrompt label="Log in to see your requests." /></View>
++        {!userId ? <HomeListState label="Log in to see your requests." action={{ label: 'Log in', onPress: () => router.push('/(auth)/login') }} />
+           : !requests ? <HomeListState loading label="Loading your requests…" />
+           : requests.error ? <HomeListState label={requests.error} onRetry={() => setRequestRetry(value => value + 1)} />
+-          : requests.items.length === 0 ? <HomeListState label="Your requests will appear here. Tap Documents to request a document." />
++          : requests.items.length === 0 ? <HomeListState label="No requests yet" action={{ label: 'Request a document', onPress: () => router.push({ pathname: '/services', params: { segment: 'documents' } }) }} />
+           : <ScrollableChevronRow label="requests" snapToItems contentContainerStyle={styles.shelf}>
+             {requests.items.map(request => {
+               const summary = homeRequestSummary(request);
+@@ -243,12 +243,13 @@ export default function HomeScreen() {
+   </SafeAreaView>;
+ }
+ 
+-function HomeListState({ label, loading = false, onRetry }: { label: string; loading?: boolean; onRetry?: () => void }) {
++function HomeListState({ label, loading = false, onRetry, action }: { label: string; loading?: boolean; onRetry?: () => void; action?: { label: string; onPress: () => void } }) {
+   const { resident } = useTheme();
+   return <View style={[styles.listState, { backgroundColor: resident.surface }]} accessibilityLiveRegion="polite" accessibilityState={{ busy: loading }}>
+     {loading ? <ActivityIndicator color={resident.accentText} /> : null}
+     <ThemedText style={[styles.subtitle, { color: onRetry ? resident.danger : resident.muted }]}>{label}</ThemedText>
+     {onRetry ? <PrimaryButton presentation="resident" variant="secondary" label="Try again" onPress={onRetry} /> : null}
++    {action ? <PrimaryButton presentation="resident" variant="secondary" label={action.label} onPress={action.onPress} /> : null}
+   </View>;
+ }
+ 
+@@ -256,22 +257,20 @@ const styles = StyleSheet.create({
+   safeArea: { flex: 1 },
+   content: { width: '100%', maxWidth: MaxContentWidth, alignSelf: 'center' },
+   inset: { paddingHorizontal: 20 },
+-  identitySection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20 },
+-  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 36 },
++  identitySection: { paddingHorizontal: 20, paddingVertical: 16 },
++  identity: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48 },
+   locationGroup: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 4 },
+   location: { fontSize: 14, lineHeight: 20, fontWeight: '600', flexShrink: 1 },
+-  greeting: { marginTop: 12, fontSize: 28, lineHeight: 35, fontWeight: '800', letterSpacing: -0.7 },
+-  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 28 },
+-  quickAction: { flex: 1, alignItems: 'center', paddingVertical: 4, gap: 6, minWidth: 0 },
+-  compactAction: { flex: 0, width: '33.333333%' },
++  quickActions: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 12, marginBottom: 16, rowGap: 8 },
++  quickAction: { alignItems: 'center', paddingVertical: 4, gap: 8, minWidth: 0, minHeight: 48 },
+   quickIcon: { width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+   quickLabel: { fontSize: 12, lineHeight: 18, fontWeight: '600', textAlign: 'center', alignSelf: 'stretch' },
+-  section: { marginBottom: 28 },
++  section: { marginBottom: 16 },
+   sectionHeader: { paddingHorizontal: 20, flexDirection: 'row', alignItems: 'flex-end', gap: 16, marginBottom: 12 },
+   sectionHeading: { flex: 1, minWidth: 0 },
+   sectionTitle: { fontSize: 21, lineHeight: 26.25, fontWeight: '800', letterSpacing: -0.525 },
+   subtitle: { fontSize: 13, lineHeight: 19.5, marginTop: 2 },
+-  seeAll: { minHeight: 44, justifyContent: 'flex-end' },
++  seeAll: { minHeight: 48, minWidth: 48, alignItems: 'flex-end', justifyContent: 'center' },
+   seeAllText: { fontSize: 14, lineHeight: 20, fontWeight: '600', textDecorationLine: 'underline' },
+   shelf: { flexDirection: 'row', paddingHorizontal: 20, paddingBottom: 12, gap: 12, alignItems: 'stretch' },
+   card: { borderRadius: 12, borderWidth: 1, padding: 12, shadowColor: '#000', shadowOpacity: 0.035, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 1 },
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\services\\index.tsx" b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+index 43852991..e146554c 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\app\\(app)\\services\\index.tsx"
++++ b/apps/resident-android-mobile/src/app/(app)/services/index.tsx
+@@ -5,8 +5,8 @@ import { useProfile } from '@/hooks/use-profile';
+ import { PrimaryButton } from '@/components/primary-button';
+ import { PullRefreshControl, PullRefreshScope, usePullRefresh } from '@/components/pull-refresh';
+ import { Ionicons } from '@expo/vector-icons';
+-import { useLocalSearchParams, useRouter } from 'expo-router';
+-import { useRef, useState } from 'react';
++import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
++import { useCallback, useRef, useState } from 'react';
+ import { Image, Modal, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ 
+@@ -22,7 +22,9 @@ import { useTheme } from '@/hooks/use-theme';
+ 
+ type ServicesSegment = 'documents' | 'requests' | 'logs';
+ 
+-const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
++function isServicesSegment(value: unknown): value is ServicesSegment {
++  return value === 'documents' || value === 'requests' || value === 'logs';
++}
+ 
+ const TABS: { key: ServicesSegment; label: string }[] = [
+   { key: 'documents', label: 'Documents' },
+@@ -43,15 +45,26 @@ export default function ServicesScreen() {
+   const bottomTabInset = useFloatingTabInset();
+   const pull = usePullRefresh([refetch]);
+ 
+-  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
++  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string | string[] }>();
+   const initialSegment: ServicesSegment =
+-    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+-      ? (segmentParam as ServicesSegment)
++    session && isServicesSegment(segmentParam)
++      ? segmentParam
+       : 'documents';
+ 
+   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
+   const [verificationAnchor, setVerificationAnchor] = useState<{ x: number; y: number } | null>(null);
+   const verificationButton = useRef<View>(null);
++  const signedIn = Boolean(session);
++  useFocusEffect(useCallback(() => {
++    if (segmentParam === undefined) return;
++    if (isServicesSegment(segmentParam)) {
++      setVerificationAnchor(null);
++      setSegment(signedIn ? segmentParam : 'documents');
++    }
++    // Consume the entry once. Manual selection and normal tab refocus then stay intact,
++    // while another Home entry can request even the same segment again.
++    router.setParams({ segment: undefined });
++  }, [router, segmentParam, signedIn]));
+   const verified = Boolean(session && !error && idVerificationState(profile) === 'verified');
+   const verifiedIcon = verified ? (
+     <Pressable ref={verificationButton} accessibilityRole="button" accessibilityLabel="Show ID verification status"
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\app-tabs.tsx" b/apps/resident-android-mobile/src/components/app-tabs.tsx
+index a7f032ed..cbefe830 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\components\\app-tabs.tsx"
++++ b/apps/resident-android-mobile/src/components/app-tabs.tsx
+@@ -22,7 +22,7 @@ import { beginDiagnosticNavigation, diagnosticRoute, navigationDiagnosticsAvaila
+ const TABS = [
+   { name: 'home', label: 'Home', icon: 'home' },
+   { name: 'services', label: 'Services', icon: 'clipboard' },
+-  { name: 'drrm', label: 'DRRM' },
++  { name: 'drrm', label: 'Emergency' },
+   { name: 'maps', label: 'Maps', icon: 'location' },
+   { name: 'health', label: 'Health', icon: 'heart' },
+   { name: 'reports', label: 'Reports', icon: 'warning' },
+@@ -66,7 +66,8 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
+   const barMotion = useAnimatedStyle(() => ({ transform: [{ translateY: mapRoute ? (mapNavProgress?.value ?? 0) * (barHeight + Math.max(insets.bottom, 12) + 8) : 0 }] }));
+   const reducedMotion = useResidentReducedMotion(true);
+   const [width, setWidth] = useState(0);
+-  const { fontScale } = useWindowDimensions();
++  const { fontScale, width: windowWidth } = useWindowDimensions();
++  const sidePadding = windowWidth - insets.left - insets.right < 326 ? 8 : 12;
+   const { fontId } = useFontPreference();
+   const measurementKey = `${fontId}:${fontScale}`;
+   const [labelMeasurements, setLabelMeasurements] = useState<{ key: string; widths: number[] }>({ key: '', widths: [] });
+@@ -94,8 +95,8 @@ function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
+     backgroundColor: 'transparent',
+     position: 'absolute', bottom: 0, left: 0, right: 0,
+     paddingBottom: Math.max(insets.bottom, 12),
+-    paddingLeft: 12 + insets.left,
+-    paddingRight: 12 + insets.right,
++    paddingLeft: sidePadding + insets.left,
++    paddingRight: sidePadding + insets.right,
+     paddingTop: 8,
+   }, barMotion]}>
+     {/* Root screens scroll beneath the bar and reserve clearance for their controls. */}
+
+
+
+
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts" b/apps/resident-android-mobile/src/lib/home-request.ts
+index 33748edf..f68b1046 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.ts
+@@ -34,10 +34,6 @@ export function homeRequestSummary(request: Pick<HomeRequest, 'status' | 'paymen
+   return { stepIndex, cancelled, statusLabel, steps };
+ }
+ 
+-export function homeGreeting(hour: number) {
+-  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+-}
+-
+ export function homeTimestamp(value: string): string {
+   if (!validDate(value)) return 'Date unavailable';
+   return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts" b/apps/resident-android-mobile/src/lib/home-request.test.ts
+index 71778485..6a9644da 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\src\\lib\\home-request.test.ts"
++++ b/apps/resident-android-mobile/src/lib/home-request.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import { homeGreeting, homeRequestSummary, homeTimestamp } from './home-request';
++import { homeRequestSummary, homeTimestamp } from './home-request';
+ 
+ const request = { status: 'in_progress', payment_status: 'paid', created_at: '2026-10-18T01:00:00Z', status_history: null };
+ 
+@@ -40,7 +40,4 @@ describe('Home loaded-data summary', () => {
+     expect(homeRequestSummary({ ...request, status: 'completed' }).stepIndex).toBe(3);
+   });
+ 
+-  it('changes greeting at noon and evening boundaries', () => {
+-    expect([0, 11, 12, 17, 18, 23].map(homeGreeting)).toEqual(['Good morning', 'Good morning', 'Good afternoon', 'Good afternoon', 'Good evening', 'Good evening']);
+-  });
+ });
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\services-tab-stability.mjs" b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+index 00cdd4b4..b0a9024a 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\services-tab-stability.mjs"
++++ b/apps/resident-android-mobile/tests/services-tab-stability.mjs
+@@ -18,9 +18,9 @@ fs.mkdirSync(out, { recursive: true });
+ const mocks = {
+   // Exercise selection even when native tab layout reports an unusable x coordinate.
+   'react-native': `import React from 'react';import {Pressable as WebPressable} from 'react-native-web';export * from 'react-native-web';export const Pressable=React.forwardRef(({accessibilityState,onLayout,...props},ref)=><WebPressable {...props} ref={ref} aria-selected={accessibilityState?.selected} onLayout={onLayout?event=>onLayout({nativeEvent:{layout:{...event.nativeEvent.layout,x:0}}}):undefined}/>);`,
+-  'expo-router': `import React from 'react';export const useRouter=()=>({push:()=>{}});export const useLocalSearchParams=()=>({});export const useFocusEffect=fn=>React.useEffect(fn,[fn]);`,
++  'expo-router': `import React from 'react';const router={push:()=>{},setParams:params=>{window.paramWrites++;window.routeParams={...window.routeParams,...params};window.renderServices()}};export const useRouter=()=>router;export const useLocalSearchParams=()=>window.routeParams;export const useFocusEffect=fn=>React.useEffect(()=>window.focused?fn():undefined,[fn,window.focused]);`,
+   '@barangayan/shared': `export {idVerificationState,idVerificationMessages} from '${shared}';`,
+-  '@/hooks/use-auth': `export const useAuth=()=>({session:{user:{id:'resident'}},needsCompletion:false});`,
++  '@/hooks/use-auth': `export const useAuth=()=>({session:window.session,needsCompletion:false});`,
+   '@/hooks/use-profile': `export const useProfile=()=>({...window.profileState,refetch:()=>{window.profileRefetches=(window.profileRefetches??0)+1;window.profileState.refetch()}});`,
+   '@/hooks/use-theme': `import {getResidentTheme} from '${root}/constants/resident-theme.ts';export const useTheme=()=>({background:'#fff',backgroundElement:'#f2f3f6',backgroundSelected:'#ddd',text:'#111',textSecondary:'#666',primary:'#0f6e5b',onPrimary:'#fff',resident:getResidentTheme('light','#0f6e5b')});`,
+   '@/hooks/use-resident-reduced-motion': `export const useResidentReducedMotion=()=>true;`,
+@@ -38,7 +38,7 @@ const mocks = {
+ };
+ 
+ await build({
+-  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));window.renderServices=()=>root.render(<Services/>);window.renderServices();`, resolveDir: app, loader: 'tsx' },
++  stdin: { contents: `import React from 'react';import {createRoot} from 'react-dom/client';import Services from '${root}/app/(app)/services/index.tsx';window.routeParams={};window.paramWrites=0;window.focused=true;window.session={user:{id:'resident'}};window.profileState={profile:{id:'resident',id_verification_status:'verified',approved_id_submission_id:'id-1',current_id_submission_id:'id-1',id_repair_required:false},isLoading:false,error:null,refetch:()=>{}};const root=createRoot(document.getElementById('root'));let generation=0;window.renderServices=()=>root.render(<Services key={generation}/>);window.resetServices=()=>{generation++;window.renderServices()};window.renderServices();`, resolveDir: app, loader: 'tsx' },
+   outfile: path.join(out, 'bundle.js'), bundle: true, format: 'iife', jsx: 'automatic', loader: { '.png': 'dataurl' },
+   define: { __DEV__: 'false', 'process.env.NODE_ENV': '"production"' },
+   plugins: [{ name: 'fixtures', setup(b) {
+@@ -117,6 +117,38 @@ try {
+   await page.evaluate(() => { window.profileState = { ...window.profileState, error: null, profile: { ...window.profileState.profile, id_verification_status: 'pending' } }; window.renderServices(); });
+   await page.getByText('Your ID is awaiting verification. Requests are available after approval.', { exact: true }).waitFor();
+   await page.getByText('Verify Now', { exact: true }).waitFor({ state: 'attached' });
++  // Entry intents are consumed once, including when Services is already mounted.
++  const selected = name => page.getByRole('tab', { name, exact: true });
++  const expectSelected = async name => assert.equal(await selected(name).getAttribute('aria-selected'), 'true');
++  for (const segment of ['requests', 'documents']) {
++    await page.evaluate(segment => { window.routeParams={segment};window.resetServices(); }, segment);
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected(segment === 'requests' ? 'Requests' : 'Documents');
++  }
++  for (const segment of ['requests', 'requests', 'documents', 'documents']) {
++    await selected('Logs').click();
++    await page.evaluate(segment => { window.focused=false;window.routeParams={segment};window.renderServices(); }, segment);
++    await expectSelected('Logs');
++    await page.evaluate(() => {window.focused=true;window.renderServices()});
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected(segment === 'requests' ? 'Requests' : 'Documents');
++    await selected('Logs').click();
++    await page.evaluate(() => {window.focused=false;window.renderServices()});
++    await page.evaluate(() => {window.focused=true;window.renderServices()});
++    await expectSelected('Logs');
++  }
++  for (const segment of ['invalid', ['requests', 'documents']]) {
++    await page.evaluate(segment => {window.routeParams={segment};window.renderServices()}, segment);
++    await page.waitForFunction(() => window.routeParams.segment === undefined);
++    await expectSelected('Logs');
++  }
++  await page.evaluate(() => {window.session=null;window.routeParams={segment:'requests'};window.resetServices()});
++  await page.waitForFunction(() => window.routeParams.segment === undefined);
++  await expectSelected('Documents');
++  assert.equal(await selected('Requests').count(),0,'Guest entry cannot reveal private tabs');
++  await page.evaluate(() => {window.session={user:{id:'resident'}};window.renderServices()});
++  await expectSelected('Documents');
++  assert.equal(await page.evaluate(() => window.paramWrites),9,'Each explicit intent is consumed once; refocus and manual tabs cause no route writes');
+   assert.deepEqual(errors, []);
+-  console.log(JSON.stringify({ passed: ['Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements', 'Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list and selected underline at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance'], documentListY: before.y }));
++  console.log(JSON.stringify({ passed: ['Selected underline follows Documents/Requests/Logs at 320/360/412 widths despite zero native x measurements', 'Services focus constructs zero redundant profile reads; explicit retry still refreshes', 'Three background refreshes keep the document list and selected underline at the same position', 'Refresh failures still show retry guidance', 'Changed verification status still shows verification guidance', 'Fresh, mounted and repeated Requests/Documents entry consumes once; manual selection survives refocus; malformed and guest private entry stay safe'], documentListY: before.y, browser:await browser.version() }));
+ } finally { await browser.close(); }
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs" b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+index 170ef55c..76b70477 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\home-presentation-ui.mjs"
++++ b/apps/resident-android-mobile/tests/home-presentation-ui.mjs
+@@ -144,7 +144,7 @@ try {
+   await page.evaluate(() => { window.fixture.session = { user: { id: 'different-resident' } }; window.renderHome(); });
+   await page.evaluate(() => { window.fixture.hold = false; window.fixture.waiting.splice(0).forEach(resolve => resolve()); });
+   await page.waitForFunction(() => ![...window.pullControls][0].current.refreshing);
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.').waitFor();
++  await page.getByText('No requests yet').waitFor();
+   assert.equal(await page.getByText('Pulled service', { exact: true }).count(), 0, 'a pull started for the previous account never writes after a switch');
+   await page.evaluate(() => { window.fixture.hold = true; });
+   await page.evaluate(() => [...window.pullControls][0].current.onRefresh());
+@@ -188,9 +188,10 @@ try {
+   assert.ok(await page.evaluate(() => window.fixture.focusEvents.length > 1), 'Close returns accessibility focus to a request');
+   passed.push('Loaded history, five backdrop cycles, close/Escape, focus return and one tracking navigation without queries');
+ 
+-  for (const [name,route] of [['Documents','/services'],['Report','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests','/services'],['View all announcements','/announcements']]) {
++  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0,'Home has no greeting');
++  for (const [name,route] of [['Services',{pathname:'/services',params:{segment:'documents'}}],['Reports','/reports'],['Emergency','/drrm'],['Maps','/maps'],['Health','/health'],['View all requests',{pathname:'/services',params:{segment:'requests'}}],['View all announcements','/announcements']]) {
+     await page.getByRole('button', { name, exact: true }).click();
+-    assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)), route);
++    assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), route);
+   }
+   await page.getByRole('button', { name: /^Read announcement:/ }).click();
+   assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)), {pathname:'/announcements',params:{announcementId:'news'}});
+@@ -259,12 +260,21 @@ try {
+   await page.evaluate(() => { window.fixture.needsCompletion=true;window.renderHome(); });
+   await page.getByText(/Complete your profile before requesting/).waitFor();
+   await page.evaluate(() => {window.fixture.requests=[];window.fixture.announcements=[];window.resetHome();});
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   await page.getByText('No announcements yet.',{exact:true}).waitFor();
++  await page.getByRole('button',{name:'Request a document',exact:true}).click();
++  assert.deepEqual(await page.evaluate(() => window.fixture.routes.at(-1)),{pathname:'/services',params:{segment:'documents'}});
+   assert.equal(await right().count(), 0);
+   await page.evaluate(() => {window.fixture.session=null;window.resetHome();});
+   await page.getByText('Log in to see your requests.',{exact:true}).waitFor();
+   assert.equal(await cards().count(), 0);
++  assert.equal(await page.getByText(/Good morning|Good afternoon|Good evening/).count(),0);
++  for (const login of await page.getByRole('button',{name:'Log in',exact:true}).all()) {
++    await login.click();
++    assert.equal(await page.evaluate(() => window.fixture.routes.at(-1)),'/(auth)/login');
++    const bounds=await login.boundingBox();
++    assert.ok(bounds.width>=48 && bounds.height>=48,'Both Home sign-in controls retain 48dp targets');
++  }
+   passed.push('Profile-completion, authenticated empty and guest states');
+ 
+   await page.evaluate(() => {window.fixture.session={user:{id:'synthetic-resident'}};window.fixture.fail={service_requests:true,announcements:true};window.resetHome();});
+@@ -275,7 +285,7 @@ try {
+   await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+   await page.getByRole('button',{name:'Try again',exact:true}).first().click();
+   await page.getByText('No announcements yet.',{exact:true}).waitFor();
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   await page.evaluate(() => {window.fixture.reject={service_requests:true};window.resetHome();});
+   await page.getByText('Your requests could not be loaded. Please try again.',{exact:true}).waitFor();
+   passed.push('Visible database/transport failures and explicit independent retry recovery');
+@@ -285,7 +295,7 @@ try {
+   await page.evaluate(() => {window.fixture.session={user:{id:'different-resident'}};window.renderHome();});
+   await page.waitForFunction(() => window.fixture.waiting.length===3);
+   await page.evaluate(() => {window.fixture.hold=false;window.fixture.waiting.splice(0).forEach(resolve=>resolve());});
+-  await page.getByText('Your requests will appear here. Tap Documents to request a document.',{exact:true}).waitFor();
++  await page.getByText('No requests yet',{exact:true}).waitFor();
+   assert.equal(await page.getByText('Stale private request',{exact:true}).count(),0);
+   await page.evaluate(() => {window.fixture.focused=false;window.renderHome();});
+   await page.waitForFunction(() => window.fixture.listeners.size===0);
+
+diff --git "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\resident-shell-lifecycle.mjs" b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+index 2a9f0537..e763aae0 100644
+--- "a/plans\\evidence\\resident-android-home-improvements\\phase-2-2026-10-28\\before\\apps\\resident-android-mobile\\tests\\resident-shell-lifecycle.mjs"
++++ b/apps/resident-android-mobile/tests/resident-shell-lifecycle.mjs
+@@ -60,7 +60,7 @@ try {
+   await page.addScriptTag({ path: path.join(out, 'bundle.js') });
+   const primary = page.getByRole('tablist', { name: 'Primary navigation' });
+   await primary.waitFor();
+-  for (const name of ['Services', 'DRRM', 'Maps', 'Health', 'Reports', 'Home']) {
++  for (const name of ['Services', 'Emergency', 'Maps', 'Health', 'Reports', 'Home']) {
+     await primary.getByRole('tab', { name: new RegExp(`^${name}(,|$)`) }).click();
+     await page.waitForFunction(name => [...document.querySelectorAll('[role="tab"]')].some(tab => tab.getAttribute('aria-label')?.startsWith(name) && tab.getAttribute('aria-selected') === 'true'), name);
+     assert.equal(await primary.getByRole('tab', { selected: true }).count(), 1);

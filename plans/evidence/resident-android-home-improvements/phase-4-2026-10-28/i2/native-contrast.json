@@ -1,0 +1,69 @@
+{
+  "pass": true,
+  "sourcePath": "apps/resident-android-mobile/src/constants/resident-theme.ts",
+  "sourceSha256": "f0b782a76c8b5964ef628bf1a7671aa392a2696d4ba2565a5fe3d30c18ab64b1",
+  "results": [
+    {
+      "mode": "dark",
+      "accent": "#7C3AED",
+      "file": "dark-320-1.3-advisory-visible",
+      "bounds": [
+        68,
+        640,
+        1013,
+        1602
+      ],
+      "colors": {
+        "surface": "#24272B",
+        "text": "#F5F5F5",
+        "muted": "#BDC0C5",
+        "danger": "#e06767",
+        "accentText": "#a275f0"
+      },
+      "ratios": {
+        "text": 13.757522145716798,
+        "muted": 8.220714271870895,
+        "danger": 4.5035288034522205,
+        "accentText": 4.527551344615716
+      },
+      "paintedPixelCounts": {
+        "surface": 804241,
+        "text": 34484,
+        "muted": 11124,
+        "danger": 6279,
+        "accentText": 4703
+      }
+    },
+    {
+      "mode": "light",
+      "accent": "#0F6E5B",
+      "file": "light-360-1-advisory",
+      "bounds": [
+        60,
+        499,
+        1020,
+        1145
+      ],
+      "colors": {
+        "surface": "#F4F4F4",
+        "text": "#222222",
+        "muted": "#6A6A6A",
+        "danger": "#c73737",
+        "accentText": "#0F6E5B"
+      },
+      "ratios": {
+        "text": 14.465375640172933,
+        "muted": 4.917677299839113,
+        "danger": 4.737695905988114,
+        "accentText": 5.612765132748528
+      },
+      "paintedPixelCounts": {
+        "surface": 559700,
+        "text": 16073,
+        "muted": 6390,
+        "danger": 2786,
+        "accentText": 2568
+      }
+    }
+  ]
+}

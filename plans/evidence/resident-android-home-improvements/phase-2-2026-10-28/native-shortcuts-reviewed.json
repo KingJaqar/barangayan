@@ -1,0 +1,29 @@
+{
+  "shortcuts": [
+    {
+      "label": "Reports",
+      "title": "Reports",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Emergency",
+      "title": "Emergency & DRRM Info",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Maps",
+      "title": "Maps",
+      "reached": true,
+      "backToHome": true
+    },
+    {
+      "label": "Health",
+      "title": "Health",
+      "reached": true,
+      "backToHome": true
+    }
+  ],
+  "note": "Existing raw XML ampersand entity decoded; initial Emergency title false-negative corrected from recorded hierarchy/screenshot without rerunning the journey."
+}

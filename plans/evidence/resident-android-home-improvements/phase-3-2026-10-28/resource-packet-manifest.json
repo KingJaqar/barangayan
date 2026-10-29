@@ -1,0 +1,43 @@
+{
+  "version": "1.18.1",
+  "security": "No suspicious files detected",
+  "compressed": false,
+  "sha256": "3c36581f84f7fe7f359b32efbfe8f7d2b13d9eba5de9f5144210e891fffededd",
+  "selectors": [
+    "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+    "apps/resident-android-mobile/src/lib/refresh-resource.test.ts"
+  ],
+  "actual": [
+    "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+    "apps/resident-android-mobile/src/lib/refresh-resource.ts"
+  ],
+  "omissions": [],
+  "sources": [
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.ts",
+      "sha256": "cf7804cd438c8299bbc532f0a55fc3cf854ddcd7028be5968f41d7f6da20d391"
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/refresh-resource.test.ts",
+      "sha256": "91549507f06dc0df82c2f33165e23f11f7bf2952354685bf1b7560d873e14313"
+    }
+  ],
+  "chunks": [
+    {
+      "start": 0,
+      "end": 8558,
+      "chars": 8558,
+      "lines": 191,
+      "read": "Completely read; bounded original extractions lines1–190 and191–end",
+      "analysis": "R9: reuse existing same-key joining, cancellation, late-scope rejection and retention; extend only optional timeout; default remains30s"
+    },
+    {
+      "start": 8558,
+      "end": 12089,
+      "chars": 3531,
+      "lines": 96,
+      "read": "Completely read; bounded original extractions lines1–190 and191–end",
+      "analysis": "R9: reuse existing same-key joining, cancellation, late-scope rejection and retention; extend only optional timeout; default remains30s"
+    }
+  ]
+}

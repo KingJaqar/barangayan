@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, Animated, Easing, Modal, Platform, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PrimaryButton } from '@/components/primary-button';
@@ -9,9 +9,10 @@ import { useTheme } from '@/hooks/use-theme';
 import { homeRequestSummary, homeTimestamp, type HomeRequest } from '@/lib/home-request';
 
 /** Retains loaded content through exit; no request, subscription or business action owns this sheet. */
-export function RequestSummarySheet({ request, visible, reducedMotion, onClose, onDismiss, onViewFull }: {
+export function RequestSummarySheet({ request, visible, available, reducedMotion, onClose, onDismiss, onViewFull }: {
   request: HomeRequest;
   visible: boolean;
+  available: boolean;
   reducedMotion: boolean;
   onClose: () => void;
   onDismiss: () => void;
@@ -63,13 +64,23 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose, 
   }, [visible, mounted, sheetHeight, reducedMotion, progress, scrim]);
 
   useEffect(() => {
+    // RN Web owns an additional render/cleanup cycle for its focus trap.
+    // Its actual dismissal event is the reliable point to restore focus.
+    if (Platform.OS === 'web') return;
     if (!mounted && !visible && dismissPending.current) {
-      dismissPending.current = false;
-      dismiss.current();
+      // Let the modal release its focus trap/native window before restoring focus or routing.
+      const frame = requestAnimationFrame(() => {
+        dismissPending.current = false;
+        dismiss.current();
+      });
+      return () => cancelAnimationFrame(frame);
     }
   }, [mounted, visible]);
 
   return <Modal visible={mounted} transparent animationType="none" statusBarTranslucent
+    onDismiss={Platform.OS === 'web' ? () => {
+      if (dismissPending.current) { dismissPending.current = false; dismiss.current(); }
+    } : undefined}
     onRequestClose={onClose}>
     <View style={styles.root}>
       <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: resident.scrim, opacity: scrim }]}>
@@ -92,30 +103,38 @@ export function RequestSummarySheet({ request, visible, reducedMotion, onClose, 
         <View style={styles.header}>
           <View style={styles.titleGroup}>
             <ThemedText style={[styles.category, { color: resident.muted }]}>Document request</ThemedText>
-            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_types?.name ?? 'Document request'}</ThemedText>
+            <ThemedText type="residentHeader" accessibilityRole="header" style={[styles.title, { color: resident.text }]}>{request.document_name ?? 'Document request'}</ThemedText>
             <ThemedText style={[styles.reference, { color: resident.muted }]}>Ref #{request.reference_number}</ThemedText>
           </View>
         </View>
         <View style={styles.timeline}>
-          {summary.stepIndex <= 0 ? <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.statusLabel}</ThemedText> : null}
-          {summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
+          <ThemedText accessibilityLiveRegion="polite" style={[styles.status, { color: summary.cancelled ? resident.danger : resident.accentText }]}>{summary.progressLabel ?? summary.statusLabel}</ThemedText>
+          <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.updatedLabel}</ThemedText>
+          {summary.cancelled ? <>
+            <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.cancellationLabel}</ThemedText>
+            {summary.cancellationNote ? <ThemedText style={[styles.status, { color: resident.text }]}>{summary.cancellationNote}</ThemedText> : null}
+          </> : <>
+          <ThemedText style={[styles.status, { color: resident.muted }]}>{summary.paymentLabel}</ThemedText>
+          {summary.nextAction ? <ThemedText style={[styles.status, { color: resident.accentText }]}>{summary.nextAction}</ThemedText> : null}
+          {summary.stepIndex >= 0 ? summary.steps.map((step, index) => <View key={step.status} style={styles.step}>
             <View style={styles.indicator} accessible={false} importantForAccessibility="no-hide-descendants">
-              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.border, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
+              <View style={[styles.dot, { borderColor: step.reached ? resident.accentText : resident.controlBorder, backgroundColor: step.reached && !step.current ? resident.accent : resident.card }]}>
                 {step.current ? <View style={[styles.currentDot, { backgroundColor: resident.accentText }]} />
                   : step.reached ? <Ionicons name="checkmark" size={14} color={resident.onAccent} /> : null}
               </View>
-              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.border }]} /> : null}
+              {index < summary.steps.length - 1 ? <View style={[styles.line, { backgroundColor: step.reached && !step.current ? resident.accentText : resident.controlBorder }]} /> : null}
             </View>
             <View style={styles.stepBody}>
               <ThemedText accessibilityLabel={step.current ? `${step.label}, current stage` : step.label}
                 style={[styles.stepLabel, { color: step.reached ? resident.text : resident.muted, fontWeight: step.current ? '700' : step.reached ? '600' : '500' }]}>{step.label}</ThemedText>
               <ThemedText style={[styles.date, { color: resident.muted }]}>{step.date ? homeTimestamp(step.date) : step.detail}</ThemedText>
             </View>
-          </View>)}
+          </View>) : null}
+          </>}
         </View>
         </ScrollView>
         <View style={styles.footer}>
-          <PrimaryButton presentation="resident" label="View full request" disabled={!visible} onPress={onViewFull} />
+          <PrimaryButton presentation="resident" label="View full request" disabled={!visible || !available} onPress={onViewFull} />
         </View>
       </Animated.View>
     </View>
@@ -131,9 +150,9 @@ const styles = StyleSheet.create({
   category: { fontSize: 12.5, lineHeight: 18.75 },
   title: { fontSize: 19, lineHeight: 26.125, fontWeight: '800', marginTop: 2 },
   reference: { fontSize: 13, lineHeight: 19.5, marginTop: 4 },
-  close: { position: 'absolute', top: 32, right: 20, zIndex: 1, elevation: 4, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
+  close: { position: 'absolute', top: 24, right: 20, zIndex: 1, elevation: 4, width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   body: { flexShrink: 1, marginTop: 16 },
-  timeline: { gap: 0, marginTop: 24, paddingRight: 48 },
+  timeline: { gap: 0, marginTop: 16 },
   status: { fontSize: 12.5, lineHeight: 18, fontWeight: '600', marginBottom: 16 },
   step: { flexDirection: 'row', gap: 14 },
   indicator: { width: 24, alignItems: 'center' },

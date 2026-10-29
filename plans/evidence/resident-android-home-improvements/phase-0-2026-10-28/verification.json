@@ -1,0 +1,434 @@
+{
+  "date": "2026-10-28",
+  "timezone": "Asia/Manila",
+  "phase": 0,
+  "status": "Complete / Verified",
+  "productSourcesPreserved": [
+    {
+      "path": "AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/services/request-tracking-screen.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/home-request.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-history-pages.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/vitest.config.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.test.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/lib/service-catalog.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/src/types/service-foundations.ts",
+      "unchanged": true
+    },
+    {
+      "path": "packages/shared/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/package.json",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0011_announcements_admin_write.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0019_fix_announcement_soft_delete.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0144_admin_request_optional_status_reason.sql",
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "path": "package.json",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tsconfig.json",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/home-presentation-ui.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/reports-announcements-ui.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/request-tracking-navigation.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/tests/services-tab-stability.mjs",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/home/request-summary-sheet.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/notification-hub-data.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/lib/notification-hub.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/hooks/use-notification-hub.ts",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0139_remote_schema.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0126_restore_automatic_request_submission.sql",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/0145_notification_hub_contracts.sql",
+      "unchanged": true
+    }
+  ],
+  "planOnlySelectedPhaseChanged": true,
+  "packet": {
+    "entries": 18,
+    "completedChunks": 7,
+    "decodedChars": 63409,
+    "omissions": 0,
+    "identityVerified": true
+  },
+  "baselineChecks": [
+    {
+      "id": "typecheck",
+      "code": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "id": "lint",
+      "code": 0,
+      "log": "lint.log"
+    },
+    {
+      "id": "home-unit",
+      "code": 0,
+      "log": "home-unit.log"
+    },
+    {
+      "id": "schema-unit",
+      "code": 0,
+      "log": "schema-unit.log"
+    },
+    {
+      "id": "home-ui",
+      "code": 0,
+      "log": "home-ui.log"
+    },
+    {
+      "id": "reports-ui",
+      "code": 1,
+      "log": "reports-ui.log"
+    },
+    {
+      "id": "navigation",
+      "code": 0,
+      "log": "navigation.log"
+    },
+    {
+      "id": "services-entry",
+      "code": 0,
+      "log": "services-entry.log"
+    },
+    {
+      "id": "android-export",
+      "code": 1,
+      "log": "android-export.log"
+    }
+  ],
+  "diagnosedExportRetry": {
+    "id": "android-export-workspace-temp",
+    "start": "2026-10-28T04:26:50.939Z",
+    "end": "2026-10-28T04:28:25.666Z",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "../../node_modules/expo/bin/cli",
+      "export",
+      "--platform",
+      "android",
+      "--max-workers",
+      "2",
+      "--output-dir",
+      "../../tmp/resident-home-phase0-20261028/android-export-workspace-temp"
+    ],
+    "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+    "deadlineMs": 1200000,
+    "code": 0,
+    "signal": null,
+    "reason": "Diagnosed Hermes output permission denial in restricted system temp; move only task-owned temporary output into writable workspace. No product changes."
+  },
+  "native": {
+    "phase": 0,
+    "status": "Verified",
+    "date": "2026-10-28",
+    "timezone": "Asia/Manila",
+    "authorization": "User approved installation of anything necessary after the specific development APK proposal.",
+    "instance": {
+      "name": "Android Device test 2",
+      "index": 1,
+      "serial": "127.0.0.1:16416",
+      "android": "12",
+      "model": "ASUS_AI2201_A",
+      "physicalPixels": [
+        1080,
+        1920
+      ],
+      "densityDpi": 480,
+      "nominalDp": [
+        360,
+        640
+      ],
+      "runtimeAppDp": [
+        360,
+        616
+      ],
+      "fontScale": 1,
+      "systemNightMode": true,
+      "observedAppAppearance": "light surface, teal accent; guest defaults; no appearance changes"
+    },
+    "app": {
+      "package": "com.barangayan.resident.dev",
+      "versionName": "1.0.0",
+      "versionCode": 1,
+      "pid": 14903,
+      "apkSha256": "9828659e5c4a24ddbd097fcbed7ab7b5ba185e6dd01242b912e9933420726f21",
+      "installResult": "Success; installed only on selected instance",
+      "runtime": "exposdk:57.0.0",
+      "currentSource": "source-manifest.json plus native-resume-inputs.json unchanged; task Metro compiled 2737 modules",
+      "metroUrl": "http://127.0.0.1:8087",
+      "backend": "http://127.0.0.1:54321 (existing local Docker anon credential; in-memory override; .env not modified)",
+      "nativeRebuild": false
+    },
+    "flow": {
+      "steps": [
+        "Open local current-source development link",
+        "Dismiss development menu introduction and menu",
+        "Browse as guest",
+        "Observe Home identity/greeting/shortcuts/request sign-in guidance/navigation",
+        "Scroll to loaded local announcement preview"
+      ],
+      "homeRendered": true,
+      "localAnnouncementLoaded": true,
+      "announcementOpened": false,
+      "authenticated": false,
+      "modelOrRemoteDataWrites": false
+    },
+    "evidence": [
+      "native-home.png",
+      "native-home.xml",
+      "native-home-lower.png",
+      "native-home-lower.xml",
+      "native-package.txt",
+      "native-runtime-config.txt",
+      "native-app-logcat-final.log",
+      "native-metro.log"
+    ],
+    "warnings": "Baseline app launch contains nonfatal ReactHost context-not-ready SoftException, two edge-to-edge StatusBar warnings and emulator/platform diagnostics. No FATAL EXCEPTION or JS error/warning observed in captured process window. Not an error-free-runtime claim.",
+    "limits": "Guest/default-font single-device baseline only; resident summary/tracking, TalkBack, large fonts, other widths/themes and integrated R1-R10 remain later-phase gates."
+  },
+  "ownedPaths": [
+    "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+    "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+    "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/**",
+    "tmp/resident-home-phase0-20261028/**"
+  ],
+  "dependenciesAdded": [],
+  "productWrites": [],
+  "migrationsApplied": [],
+  "remaining": [
+    "Phase 1 model/publisher approval remains required before that future change",
+    "Disposable integration backend reconciliation before I1/I2",
+    "Existing lint warnings, Reports fixture failure and observed native startup diagnostics retained in baseline",
+    "Authenticated/TalkBack/large-font/other-theme/native integration acceptance belongs to later phases"
+  ],
+  "currentDocumentIdentities": [
+    {
+      "path": "plans/Resident_Android_Home_Screen_Implementation_Plan_2026_10_28.md",
+      "sha256": "96022285dfff385d82244d7ff340cb511aab081f7ee3341b59666c03c684ffdc"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/planning-2026-10-28/context-index.md",
+      "sha256": "31c61d8693b386a394309004c6edf244e1141764843d79a771c10f0b3fb1682a"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/report.md",
+      "sha256": "79c07efc891baa92015eb6108ad79eea4da66d640161982ef0ccf84f586f0008"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/reader-ledger.json",
+      "sha256": "13fdb1f2ed3fcd7629838b6420ca8b37fdf2ef55d99178b68d3206a59332dcaf"
+    }
+  ],
+  "nativeCleanup": {
+    "checkedAt": "2026-10-28T05:00:39.193Z",
+    "appForceStopped": true,
+    "installedAppRetained": true,
+    "metroStop": {
+      "pid": 37432,
+      "end": "2026-10-28T04:58:31.068Z",
+      "code": 1,
+      "signal": null
+    },
+    "taskPortReversalsRemoved": true,
+    "remainingReverseMappings": "",
+    "otherInstancesAndServers": "Not stopped or modified"
+  },
+  "nativeContext": "native-packet-manifest.json",
+  "localInstallationAuthorized": true,
+  "phase0Acceptance": {
+    "ownership": "met",
+    "discoveryAndRepomix": "met",
+    "requestAndAudienceContracts": "met",
+    "expiryReviewPackage": "met",
+    "routeBaselineDiagnosis": "met",
+    "commandAndDiagnosticLedger": "met",
+    "selectedNativeIdentity": "met",
+    "selectedNativeHomeBaseline": "met"
+  },
+  "nativeArtifactIdentities": [
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-home.png",
+      "sha256": "117c93890c41c85d13f504af6933e3facc9ab032f231799a42c586a8bd05e426"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-home.xml",
+      "sha256": "70a30333695eb74bdf1309fe52d69c675a26001a10f1313f1f3bce29df8c1785"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-home-lower.png",
+      "sha256": "4ade82df46df0294262c8e97d2c0bdae2e37443d8f66e89573087a3c4ef5aedb"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-home-lower.xml",
+      "sha256": "16fec9a93a92c572db4e8824d1c56a5257967c48912b1420bacb0e1b9dfbfaac"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-package.txt",
+      "sha256": "9eb7cd1c801f96ec5fb0bca2f6b7abf944b668205cbf9c66109056fae5b0fa4d"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-runtime-config.txt",
+      "sha256": "7bff1e278e75c9766766acf1ab8e7e585bfcfda8cea6b1de6b8280de6ea03ae0"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-app-logcat-final.log",
+      "sha256": "b121c7fa7135d44f5369753f209e63065dfbe50b34b879c7b8e5dc30a451a214"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-metro.log",
+      "sha256": "0afe790a41f1750837e31bdd5088a2a5a5fb2a57ee8f83a9b8e0b79264b6dbc3"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-baseline.json",
+      "sha256": "00106e303ac7bc4fcb2b5a99a9394e2e182b5543894347f942af290f88b1257b"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-cleanup.json",
+      "sha256": "5f01459cd5d1c49431be0fde5d122c7e562b8bbddac9e8d3ffc44d0bcc46386e"
+    },
+    {
+      "path": "plans/evidence/resident-android-home-improvements/phase-0-2026-10-28/native-packet-manifest.json",
+      "sha256": "1f36cbc3a1c85e0e068c0704c3ccd74237159ea6553023bd0fd56be536c5c3d1"
+    }
+  ]
+}

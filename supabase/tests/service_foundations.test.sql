@@ -214,6 +214,12 @@ set local role authenticated;
 set local request.jwt.claim.sub='b4000000-0000-0000-0000-000000000001';
 select lives_ok($$ update public.profiles set mobile_number='09171234567' where id=auth.uid() $$,'Unrelated profile edit preserves versioned approval');
 select is((select id_verification_status from public.profiles where id=auth.uid()),'verified','Unrelated edit retains approval');
+-- One version per hour: age the first version so the replacement is allowed.
+reset role;
+set local session_replication_role = replica;
+update public.id_submissions set submitted_at = submitted_at - interval '61 minutes' where resident_id='b4000000-0000-0000-0000-000000000001';
+set local session_replication_role = origin;
+set local role authenticated;
 select lives_ok($$ select public.publish_id_submission('{"submissionId":"c4000000-0000-0000-0000-000000000002","idType":"PhilSys","frontPath":"b4000000-0000-0000-0000-000000000001/versions/c4000000-0000-0000-0000-000000000002/id-front.jpg","backPath":"b4000000-0000-0000-0000-000000000001/versions/c4000000-0000-0000-0000-000000000002/id-back.jpg"}') $$,'Replacement publishes a distinct immutable evidence version');
 select is((select id_verification_status from public.profiles where id=auth.uid()),'pending','Replacement clears approval');
 select throws_ok($$ select public.submit_service_request((select payload || '{"idempotencyKey":"e4000000-0000-0000-0000-000000000005"}' from foundation_input)) $$,'42501',null,'Replacement pending evidence blocks new requests');

@@ -1,0 +1,27 @@
+{
+  "parts": [
+    {
+      "n": 1,
+      "start": 0,
+      "end": 8469
+    },
+    {
+      "n": 2,
+      "start": 8469,
+      "end": 17764
+    },
+    {
+      "n": 3,
+      "start": 17764,
+      "end": 28472
+    },
+    {
+      "n": 4,
+      "start": 28472,
+      "end": 33596
+    }
+  ],
+  "sha256": "0c3bbc2b55588be92e68346804f9250fa76f36fde1febcdd92e09862f2a4147b",
+  "completedReads": true,
+  "findings": "Full auth provider owns real password session and setup-status route; full root provider tree mounts preferences/profile and app layouts; original login has no manual Home redirect; shared client accepts custom auth storage for isolation."
+}

@@ -1,0 +1,697 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: apps/resident-android-mobile/src/app/_layout.tsx, apps/resident-android-mobile/src/hooks/use-auth.tsx, apps/resident-android-mobile/src/app/(auth)/login.tsx, packages/shared/src/lib/supabase-client.ts
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+apps/
+  resident-android-mobile/
+    src/
+      app/
+        (auth)/
+          login.tsx
+        _layout.tsx
+      hooks/
+        use-auth.tsx
+packages/
+  shared/
+    src/
+      lib/
+        supabase-client.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="packages/shared/src/lib/supabase-client.ts">
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+
+import type { Database } from '../types/database';
+import { boundedAuthFetch } from './auth-fetch';
+
+export interface SupabaseAuthStorage {
+  getItem: (key: string) => Promise<string | null> | string | null;
+  setItem: (key: string, value: string) => Promise<void> | void;
+  removeItem: (key: string) => Promise<void> | void;
+}
+
+export interface SupabaseClientConfig {
+  url: string;
+  anonKey: string;
+  /** Custom auth storage adapter — e.g. AsyncStorage on React Native. Omit on web (browser default). */
+  authStorage?: SupabaseAuthStorage;
+  flowType?: 'pkce' | 'implicit';
+}
+
+/**
+ * Platform-agnostic Supabase client factory used directly by apps/resident-android-mobile and by
+ * apps/admin-web's client components. apps/admin-web additionally has its own server-side helpers
+ * (via @supabase/ssr, under apps/admin-web/src/lib) for Server Components/Route Handlers —
+ * those are NOT built on this factory, since SSR cookie handling is Next.js-specific.
+ *
+ * Always constructed with the public `anon` key only (AGENTS.md §5 — Secrets & Payment
+ * Trust Boundary). Never pass a service_role key here.
+ */
+export function createSupabaseClient({
+  url,
+  anonKey,
+  authStorage,
+  flowType,
+}: SupabaseClientConfig): SupabaseClient<Database> {
+  return createClient<Database>(url, anonKey, {
+    ...(flowType === 'pkce' ? { global: { fetch: boundedAuthFetch } } : {}),
+    auth: authStorage
+      ? {
+          storage: authStorage,
+          autoRefreshToken: true,
+          persistSession: true,
+          detectSessionInUrl: false,
+          ...(flowType ? { flowType } : {}),
+        }
+      : undefined,
+  });
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/(auth)/login.tsx">
+import { GoogleButton } from '@/components/google-button';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { AuthHeader } from '@/components/auth-header';
+import { GuestBrowseButton } from '@/components/guest-browse-button';
+import { LogoutToast } from '@/components/logout-toast';
+import { PrimaryButton } from '@/components/primary-button';
+import { TextField } from '@/components/text-field';
+import { ThemedText } from '@/components/themed-text';
+import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/use-auth';
+import { authSetupRequests, SetupTimeout, SetupOwner } from '@/lib/setup-request';
+import { residentEmailStepSchema } from '@barangayan/shared';
+import { loginErrorMessage } from '@/lib/login-error';
+
+type LoginParams = {
+  /** Prefills the email field when coming from the registration flow. */
+  email?: string;
+};
+
+export default function LoginScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<LoginParams>();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const compact = height - insets.top - insets.bottom < 640;
+  const { setSetupIntent } = useAuth();
+  const owner = useRef(new SetupOwner());
+  useEffect(() => { const scope = owner.current; return () => scope.invalidate(); }, []);
+
+  const [email, setEmail] = useState(params.email ?? '');
+  const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin() {
+    if (loading) return;
+    const parsedEmail = residentEmailStepSchema.safeParse({ email });
+    if (!parsedEmail.success) { setError('Enter a valid email address.'); return; }
+    if (!password) { setError('Enter your password.'); return; }
+    const owns = owner.current.ticket();
+    setError(null);
+    setLoading(true);
+    try {
+      await setSetupIntent('sign_in');
+      await authSetupRequests.run(async () => {
+        if (!owns()) return;
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email: parsedEmail.data.email, password });
+        if (signInError) throw signInError;
+      });
+      if (owns()) setPassword('');
+    } catch (cause) { if (owns()) setError(cause instanceof SetupTimeout ? cause.message : loginErrorMessage(cause)); }
+    finally { if (owns()) setLoading(false); }
+    // No explicit navigation needed — the session update flows into AuthProvider and
+    // Stack.Protected in the root layout routes into (app) automatically.
+  }
+
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['left', 'right']}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
+        <AuthHeader title="Log In" onBack={() => { if (authSetupRequests.busy) { setError('Please wait for the earlier sign-in request to finish.'); return; } owner.current.invalidate(); setPassword(''); router.replace('/(auth)/auth-choice'); }} />
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.kav}>
+          <ScrollView
+            contentContainerStyle={[styles.content, { gap: compact ? 6 : 12, paddingTop: compact ? 8 : 16, paddingBottom: insets.bottom + Spacing.one }]}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+            alwaysBounceVertical={false}
+            overScrollMode="never"
+            showsVerticalScrollIndicator={false}>
+            <View style={styles.intro}>
+            <ThemedText style={styles.welcomeTitle}>Welcome back</ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.welcomeSubtitle}>
+              Connect with your barangay.
+            </ThemedText>
+            </View>
+            <View
+              style={[
+                styles.formCard,
+                compact && styles.compactFormCard,
+                { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
+              ]}>
+              <TextField
+                label="Email"
+                placeholder="you@example.com"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={value => { setEmail(value); setError(null); }}
+                style={styles.input}
+              />
+              <TextField
+                label="Password"
+                placeholder="Password"
+                secureTextEntry={!isPasswordVisible}
+                value={password}
+                onChangeText={value => { setPassword(value); setError(null); }}
+                style={styles.input}
+                passwordVisibility={{
+                  visible: isPasswordVisible,
+                  onToggle: () => setIsPasswordVisible((visible) => !visible),
+                }}
+              />
+
+              {error ? (
+                <ThemedText type="small" themeColor="accentRed" accessibilityLiveRegion="polite">
+                  {error}
+                </ThemedText>
+              ) : null}
+
+              <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
+                <ThemedText type="link" style={{ color: theme.primary, fontWeight: '600', lineHeight: 22 }}>
+                  Forgot Password?
+                </ThemedText>
+              </Link>
+            </View>
+
+            <PrimaryButton label="Log In" loading={loading} onPress={handleLogin} />
+
+            <GoogleButton label="Sign in with Google" disabled={loading} />
+
+            <View style={styles.footerRow}>
+              <ThemedText themeColor="textSecondary" style={styles.footerText}>
+                Don&apos;t have an account?{' '}
+              </ThemedText>
+              <ThemedText
+                onPress={() => router.push('/(auth)/register')}
+                style={[styles.footerText, { color: theme.primary, fontWeight: '700' }]}>
+                Create one
+              </ThemedText>
+            </View>
+            <GuestBrowseButton disabled={loading} />
+          </ScrollView>
+        </KeyboardAvoidingView>
+        <LogoutToast />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  root: { flex: 1 },
+  kav: { flex: 1 },
+  content: {
+    paddingHorizontal: Spacing.four,
+  },
+  intro: { gap: 4 },
+  welcomeTitle: { fontSize: 24, lineHeight: 30, fontWeight: '700' },
+  welcomeSubtitle: { fontSize: 14, lineHeight: 20 },
+  input: { minHeight: 44 },
+  formCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 12,
+    gap: 10,
+  },
+  compactFormCard: { padding: 10, gap: 8 },
+  forgotLink: {
+    alignSelf: 'flex-end',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  footerText: { fontSize: 14 },
+});
+</file>
+
+<file path="apps/resident-android-mobile/src/hooks/use-auth.tsx">
+import type { Session } from '@supabase/supabase-js';
+import { residentSetupRoute, residentSetupFailure, type ResidentSetupIntent, type ResidentSetupLoad, type ResidentSetupRoute } from '@barangayan/shared';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import { SetupRequestGate, SetupOwner, authSetupRequests, profileSetupRequests } from '@/lib/setup-request';
+import { pendingGoogleAuth } from '@/lib/google-auth';
+import { isBackgroundRefresh, refreshFailureOutcome, type OwnedSetup } from '@/lib/setup-refresh';
+import { loadAccountSetupStatus } from '@/lib/account-setup-status';
+
+const INTENT_KEY = 'resident-setup-intent-v1';
+const RECOVERY_KEY = 'resident-recovery-intent-v1';
+const intents: ResidentSetupIntent[] = ['sign_in', 'email_signup', 'google_signup', 'resume_profile', 'google_details_saved', 'settings_profile', 'settings_password'];
+interface AuthContextValue {
+  session: Session | null;
+  needsCompletion: boolean | null;
+  completionError: string | null;
+  /** A failed refresh over an earlier server-confirmed status; that status is kept. */
+  setupRefreshError: string | null;
+  refreshCompletion: () => Promise<void>;
+  isLoading: boolean;
+  restorationError: string | null;
+  retryRestoration: () => void;
+  isPasswordRecovery: boolean;
+  setPasswordRecovery: (value: boolean) => void;
+  isGuest: boolean;
+  setGuest: (value: boolean) => void;
+  signedOutEntry: boolean;
+  logoutNotice: boolean;
+  dismissLogoutNotice: () => void;
+  setup: ResidentSetupLoad;
+  setupRoute: ResidentSetupRoute;
+  setSetupIntent: (intent: ResidentSetupIntent, expectedUserId?: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<Session | null>(null);
+  const sessionRef = useRef<Session | null>(null);
+  const ownership = useRef(new SetupOwner());
+  const [isLoading, setIsLoading] = useState(true);
+  const [restorationError, setRestorationError] = useState<string | null>(null);
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  const [isPasswordRecovery, setRecovery] = useState(false);
+  const [isGuest, setGuestState] = useState(false);
+  const [signedOutEntry, setSignedOutEntry] = useState(false);
+  const [logoutNotice, setLogoutNotice] = useState(false);
+  const dismissLogoutNotice = useCallback(() => setLogoutNotice(false), []);
+  const setGuest = useCallback((value: boolean) => {
+    setGuestState(value);
+    if (value) { setSignedOutEntry(false); setLogoutNotice(false); }
+  }, []);
+  const [intent, setIntent] = useState<ResidentSetupIntent>('sign_in');
+  const intentRef = useRef<ResidentSetupIntent>('sign_in');
+  const [actor, setActor] = useState<'resident' | 'staff' | 'blocked'>('resident');
+  const [ownedSetup, setOwnedSetupState] = useState<OwnedSetup>(null);
+  const ownedSetupRef = useRef<OwnedSetup>(null);
+  const setOwnedSetup = useCallback((value: OwnedSetup) => { ownedSetupRef.current = value; setOwnedSetupState(value); }, []);
+  const [refreshFailure, setRefreshFailure] = useState<{ uid: string; message: string } | null>(null);
+  const rerunStatus = useRef(false);
+  const statusGate = useRef(new SetupRequestGate());
+  const restoreGate = useRef(new SetupRequestGate());
+  const setup: ResidentSetupLoad = session && ownedSetup?.uid === session.user.id ? ownedSetup.value : { state: 'loading' };
+  const setPasswordRecovery = useCallback((value: boolean) => {
+    setRecovery(value);
+    const uid = sessionRef.current?.user.id;
+    if (!value) void AsyncStorage.removeItem(RECOVERY_KEY).catch(() => {});
+    else if (uid) void AsyncStorage.setItem(RECOVERY_KEY, JSON.stringify({ uid, until: Date.now() + 3_600_000 })).catch(() => {});
+  }, []);
+
+  const setSetupIntent = useCallback(async (value: ResidentSetupIntent, expectedUserId?: string) => {
+    if (expectedUserId && sessionRef.current?.user.id !== expectedUserId) throw new Error('The account changed. Please start this action again.');
+    intentRef.current = value; setIntent(value);
+    const uid = sessionRef.current?.user.id;
+    if (uid) await AsyncStorage.setItem(INTENT_KEY, JSON.stringify({ uid, intent: value }));
+  }, []);
+
+  const refreshCompletion = useCallback(async function refreshCurrentCompletion() {
+    const current = sessionRef.current;
+    if (!current) return;
+    const uid = current.user.id, ticket = ownership.current.ticket();
+    const owns = () => ticket() && sessionRef.current?.user.id === uid;
+    // A refresh requested mid-flight (e.g. right after a save) runs again afterwards,
+    // so a read that started before the write cannot leave a stale warning.
+    if (statusGate.current.busy) { rerunStatus.current = true; return; }
+    // Background refresh: keep this user's server-confirmed status while reloading, so
+    // Settings is not unmounted by a transient loading state; never downgrade it on error.
+    const background = isBackgroundRefresh(ownedSetupRef.current, uid);
+    if (!background) setOwnedSetup({ uid, value: { state: 'loading' } });
+    try {
+      const value = await statusGate.current.run(async () => {
+        const pendingGoogle = await pendingGoogleAuth();
+        if (pendingGoogle?.phase === 'exchanging' && pendingGoogle.expectedUserId && pendingGoogle.expectedUserId !== uid) {
+          // Auth emits the exchanged session before the callback owner check.
+          // Do not provision or admit that unintended account in the meantime.
+          throw { code: '42501' };
+        }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10_000);
+        try {
+          return await loadAccountSetupStatus(supabase, current.user, controller.signal);
+        } finally {
+          clearTimeout(timer);
+          if (sessionRef.current && sessionRef.current.user.id !== uid) setTimeout(() => { void refreshCurrentCompletion(); }, 0);
+        }
+      });
+      if (!owns()) return;
+      setActor(value.actor); setRefreshFailure(null);
+      setOwnedSetup({ uid, value: { state: 'ready', status: value.status } });
+    } catch (cause) {
+      if (owns()) {
+        const failure = residentSetupFailure(cause as { code?: string; name?: string });
+        // Deleted/forbidden accounts never keep earlier access through a background read.
+        const outcome = refreshFailureOutcome(background, failure);
+        if (outcome.type === 'keep_status') setRefreshFailure({ uid, message: outcome.message });
+        else { setActor('resident'); setOwnedSetup({ uid, value: { state: 'error', failure } }); }
+      }
+    } finally {
+      if (rerunStatus.current && !statusGate.current.busy) { rerunStatus.current = false; if (owns()) setTimeout(() => { void refreshCurrentCompletion(); }, 0); }
+    }
+  }, [setOwnedSetup]);
+
+  useEffect(() => {
+    let active = true, eventRevision = 0;
+    const scope = ownership.current;
+    const install = (next: Session | null) => {
+      const previousId = sessionRef.current?.user.id;
+      if (previousId !== next?.user.id) {
+        scope.invalidate(); setOwnedSetup(null); setActor('resident'); setRefreshFailure(null); rerunStatus.current = false;
+        if (previousId) { intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false); }
+      }
+      sessionRef.current = next; setSession(next);
+      if (next) { setGuestState(false); setSignedOutEntry(false); setLogoutNotice(false); }
+    };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, next) => {
+      // No network/storage awaits in the SDK's Auth callback (it holds its lock).
+      eventRevision++; install(next);
+      if (event === 'PASSWORD_RECOVERY') setPasswordRecovery(true);
+    });
+    const revision = eventRevision;
+    void restoreGate.current.run(async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      const raw = await AsyncStorage.getItem(INTENT_KEY);
+      const recoveryRaw = await AsyncStorage.getItem(RECOVERY_KEY);
+      const pendingGoogle = await pendingGoogleAuth();
+      if (active && revision === eventRevision) install(data.session);
+      let restored: { uid?: string; intent?: ResidentSetupIntent } | null = null;
+      try { restored = raw ? JSON.parse(raw) : null; } catch { /* Ignore corrupt non-secret intent, never session state. */ }
+      if (active && restored?.uid === sessionRef.current?.user.id && restored?.intent && intents.includes(restored.intent)) {
+        intentRef.current = restored.intent; setIntent(restored.intent);
+      } else if (active && pendingGoogle?.userId === sessionRef.current?.user.id && pendingGoogle?.intent === 'sign_up') {
+        intentRef.current = 'google_signup'; setIntent('google_signup');
+      }
+      try {
+        const recovery = recoveryRaw ? JSON.parse(recoveryRaw) : null;
+        if (active && recovery?.uid === sessionRef.current?.user.id && recovery.until > Date.now() && recovery.until <= Date.now() + 3_600_000) setRecovery(true);
+      } catch { /* Invalid recovery hint never establishes an Auth session. */ }
+    }).then(() => { if (active) { setRestorationError(null); setIsLoading(false); } })
+      .catch(() => { if (active) { setRestorationError('Unable to restore your session. Check your connection and retry.'); setIsLoading(false); } });
+    return () => { active = false; scope.invalidate(); subscription.unsubscribe(); };
+  }, [restoreAttempt, setPasswordRecovery, setOwnedSetup]);
+
+  const userId = session?.user.id;
+  useEffect(() => {
+    if (!userId || isLoading || restorationError) return;
+    // Token refresh changes the Session object, not ownership. No repeated RPC on it.
+    void AsyncStorage.setItem(INTENT_KEY, JSON.stringify({ uid: userId, intent: intentRef.current })).catch(() => {});
+    void refreshCompletion();
+  }, [userId, isLoading, restorationError, refreshCompletion]);
+  useEffect(() => {
+    if (userId && isPasswordRecovery) void AsyncStorage.setItem(RECOVERY_KEY, JSON.stringify({ uid: userId, until: Date.now() + 3_600_000 })).catch(() => {});
+  }, [userId, isPasswordRecovery]);
+
+  async function logout() {
+    if (authSetupRequests.busy || profileSetupRequests.busy) return;
+    try {
+      await authSetupRequests.run(async () => {
+        ownership.current.invalidate(); const previousId = sessionRef.current?.user.id;
+        setSignedOutEntry(true); setLogoutNotice(false); setGuestState(false);
+        sessionRef.current = null; setSession(null); setOwnedSetup(null); setRefreshFailure(null);
+        intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false);
+        await AsyncStorage.multiRemove([INTENT_KEY, RECOVERY_KEY, 'resident-google-pkce-v2', 'emergency_cache_resident_profile', ...(previousId ? [`resident_profile_v2:${previousId}`] : [])]).catch(() => {});
+        const { error } = await supabase.auth.signOut({ scope: 'local' });
+        if (error) throw error;
+      });
+      setLogoutNotice(true);
+    }
+    catch { setRestorationError('Sign-out could not be confirmed. Retry session restoration before signing in again.'); }
+  }
+  const setupRoute = residentSetupRoute({ session: isLoading || restorationError ? 'restoring' : session ? 'authenticated' : 'signed_out', intent, recovery: isPasswordRecovery, guest: !session && isGuest, actor, setup });
+  return <AuthContext.Provider value={{ session, setup, setupRoute, setSetupIntent,
+    needsCompletion: !session ? false : setup.state === 'ready' ? !setup.status.profileComplete : actor === 'staff' ? false : null,
+    completionError: setup.state === 'error' ? setup.failure.message : null,
+    setupRefreshError: session && refreshFailure?.uid === session.user.id ? refreshFailure.message : null,
+    refreshCompletion, isLoading, restorationError,
+    retryRestoration: () => { setIsLoading(true); setRestoreAttempt(value => value + 1); },
+    isPasswordRecovery, setPasswordRecovery, isGuest, setGuest, signedOutEntry, logoutNotice, dismissLogoutNotice, logout }}>{children}</AuthContext.Provider>;
+}
+export function useAuth() {
+  const value = useContext(AuthContext);
+  if (!value) throw new Error('useAuth requires AuthProvider');
+  return value;
+}
+</file>
+
+<file path="apps/resident-android-mobile/src/app/_layout.tsx">
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname, useRouter } from 'expo-router';
+import * as Linking from 'expo-linking';
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import { useEffect, useState, type ReactNode } from 'react';
+
+import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { AuthProvider, useAuth } from '@/hooks/use-auth';
+import {
+  NotificationPreferencesProvider,
+  useNotificationPreferences,
+} from '@/hooks/use-notification-preferences';
+import { useNotificationRealtime } from '@/hooks/use-notification-realtime';
+import { usePushRegistration } from '@/hooks/use-push-registration';
+import { FontPreferenceProvider } from '@/hooks/use-font-preference';
+import { ProfileProvider, useProfile } from '@/hooks/use-profile';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
+import { NotificationTapHandler } from '@/components/notification-tap-handler';
+import { View } from 'react-native';
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { Fonts } from '@/constants/theme';
+import { EmergencyEntryLink } from '@/components/emergency-entry-link';
+import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from '@/lib/setup-navigation';
+import { useTheme } from '@/hooks/use-theme';
+
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    GideonRoman: require('@/assets/fonts/GideonRoman-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  return (
+    <SafeAreaProvider>
+      <AuthProvider>
+      {/* ProfileProvider sits inside AuthProvider so it can access the session for its
+          initial fetch, and outside ThemePreferenceProvider / ThemedRoot so every screen
+          in the tree shares one cached profile — avatar updates propagate immediately. */}
+      <ProfileProvider>
+      {/* Needs both session (AuthProvider) and profile (ProfileProvider), and must stay
+          outside ThemePreferenceProvider since it has no dependency on theme state. */}
+      <NotificationPreferencesProvider>
+      <NotificationProvider>
+      {/* Needs session/profile (via useAuth/useProfile inside), so it has to nest under
+          AuthProvider — everything below, including React Navigation's own DarkTheme/
+          DefaultTheme, resolves through this instead of the raw OS scheme, so "App
+          Theme" in Settings is genuinely app-wide, not just our own ThemedView/ThemedText
+          components. */}
+      <ThemePreferenceProvider>
+      {/* Font style, same session-scoping rules as accent color — needs profile/session,
+          nests wherever in this tree as long as it's above ThemedText's consumers. */}
+      <FontPreferenceProvider>
+        <ThemedRoot />
+      </FontPreferenceProvider>
+      </ThemePreferenceProvider>
+      </NotificationProvider>
+      </NotificationPreferencesProvider>
+      </ProfileProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
+  );
+}
+
+/**
+ * Keeps the push-notification machinery alive for the whole app session: the device's push registration follows the session
+ * (`usePushRegistration`) and the realtime channels present the Health alerts. Renders nothing of its own.
+ */
+function NotificationProvider({ children }: { children: ReactNode }) {
+  const { session } = useAuth();
+  const { profile } = useProfile();
+  const { pushEnabled } = useNotificationPreferences();
+  const userId = session?.user.id ?? null;
+
+  usePushRegistration(userId, pushEnabled);
+  useNotificationRealtime(pushEnabled, userId, profile?.barangay_id ?? null);
+
+  return children;
+}
+
+function ThemedRoot() {
+  const { scheme } = useThemePreference();
+
+  return (
+    <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <SplashGatedNavigator />
+    </ThemeProvider>
+  );
+}
+
+// Session restoration can wait on a token refresh while offline. After this long the splash
+// lifts so the public evacuation-centers entry is reachable (DRRM routing plan R6).
+const SLOW_RESTORATION_MS = 3000;
+const PUBLIC_EMERGENCY_PATH = '/emergency-centers';
+
+// Gates (app) vs (auth) on real Supabase session state — Expo Router's current
+// recommended auth pattern (Stack.Protected), not a manual redirect effect. The splash
+// overlay stays up until the initial session check resolves, so the app never flashes
+// signed-out content before we actually know the answer.
+function SplashGatedNavigator() {
+  return <><RootNavigator /><NotificationTapHandler /><RestorationOverlay /></>;
+}
+
+/** Route-sensitive restoration chrome stays outside the stable navigation subtree. */
+function RestorationOverlay() {
+  const { isLoading, restorationError, retryRestoration } = useAuth();
+  const theme = useTheme();
+  // The public emergency screen is never covered by the splash or the restoration error.
+  const onPublicEmergency = usePathname() === PUBLIC_EMERGENCY_PATH;
+  const [restorationSlow, setRestorationSlow] = useState(false);
+  useEffect(() => {
+    if (!isLoading) return;
+    const timer = setTimeout(() => setRestorationSlow(true), SLOW_RESTORATION_MS);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
+  return (
+    <>
+      <AnimatedSplashOverlay ready={!isLoading || onPublicEmergency || restorationSlow} />
+      {!isLoading && restorationError && !onPublicEmergency ? <View style={{ position: 'absolute', inset: 0, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}><ThemedText accessibilityLiveRegion="polite">{restorationError}</ThemedText><PrimaryButton label="Retry session restoration" onPress={retryRestoration} /><EmergencyEntryLink /></View> : null}
+    </>
+  );
+}
+
+function RootNavigator() {
+  const { session, isPasswordRecovery, isGuest, setupRoute, setup, isLoading } = useAuth();
+  const nativeUrl = Linking.useLinkingURL();
+  const router = useRouter();
+  useEffect(() => {
+    // Other/malformed links use the existing Router handling.
+    if (isLoading || !nativeCallbackPending(nativeUrl)) return;
+    // Android may restore the previous task route on process death, and a cold start
+    // into the existing task starts Expo Router at the root. Hand the actual native
+    // callback to its existing validated, deduplicated handler.
+    markNativeCallbackHandedOff(nativeUrl);
+    router.replace('/auth/callback');
+  }, [isLoading, nativeUrl, router]);
+  // Recovery retains its own auth stack; resident setup comes from fresh server
+  // state and creation origin, including after a cold restart or token refresh.
+  const holdInAuthGroup = isPasswordRecovery;
+
+  // Deliberately NOT symmetric (authReachable is not just "!appReachable"). Guest
+  // browsing ("I'll Sign In Later") needs (app) reachable with no session, AND (auth)
+  // to stay reachable too (a guest has no session, so `!session` already covers this —
+  // isGuest doesn't need to appear in this half at all). That's what keeps the existing
+  // auto-redirect behavior intact: the moment a guest actually logs in, session becomes
+  // truthy, authReachable flips to false while (auth)/login is the active route, and
+  // Stack.Protected redirects them into (app) automatically — same mechanism the
+  // Recovery flow already relies on, no extra plumbing needed. If this were written as
+  // `!appReachable` instead, isGuest would make (auth) permanently unreachable the
+  // instant guest mode starts, breaking guest -> login entirely.
+  const appReachable = !holdInAuthGroup && (session ? setupAllowsApp(setupRoute, setup) : isGuest);
+  const authReachable = !session || holdInAuthGroup;
+
+  return (
+    <Stack screenOptions={{ headerShown: false, headerTitleStyle: { fontFamily: Fonts.gideonRoman, fontWeight: '400' } }}>
+      {/* Unconditionally reachable — it only redirects into whichever of (app)/(auth) is
+          actually reachable below, so it doesn't need its own guard. */}
+      <Stack.Screen name="index" />
+      <Stack.Screen name="auth/callback" />
+      {/* Public emergency entry: outside every guard, so emergency access never depends on
+          authentication (DRRM routing plan R6, invariant 9). */}
+      <Stack.Screen name="emergency-centers" />
+      <Stack.Protected guard={!!session && !holdInAuthGroup && !appReachable}>
+        <Stack.Screen name="account-setup" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && !holdInAuthGroup && appReachable}>
+        <Stack.Screen name="complete-profile" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={appReachable}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={authReachable}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+</file>
+
+</files>

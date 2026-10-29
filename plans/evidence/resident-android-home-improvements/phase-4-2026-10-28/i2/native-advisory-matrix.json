@@ -1,0 +1,52 @@
+{
+  "pass": true,
+  "before": {
+    "density": "Physical density: 480",
+    "font": "1.0"
+  },
+  "restored": {
+    "density": "Physical density: 480",
+    "font": "1.0"
+  },
+  "results": [
+    {
+      "widthDp": 360,
+      "fontScale": 1,
+      "theme": "dark",
+      "font": "georgia",
+      "accent": "#7C3AED",
+      "advisoryBounds": "[60,423][1020,1069]",
+      "fullTextPresent": true
+    },
+    {
+      "widthDp": 320,
+      "fontScale": 1.3,
+      "theme": "dark",
+      "font": "georgia",
+      "accent": "#7C3AED",
+      "advisoryBounds": [
+        68,
+        640,
+        1013,
+        1602
+      ],
+      "actionBounds": "[111,1469][969,1557]",
+      "fullTextPresent": true
+    },
+    {
+      "widthDp": 411.42857142857144,
+      "fontScale": 1.3,
+      "theme": "dark",
+      "font": "georgia",
+      "accent": "#7C3AED",
+      "advisoryBounds": [
+        53,
+        610,
+        1028,
+        1330
+      ],
+      "actionBounds": "[87,1226][995,1295]",
+      "fullTextPresent": true
+    }
+  ]
+}

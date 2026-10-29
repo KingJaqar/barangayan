@@ -1,0 +1,32 @@
+[
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:41:22.751Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/announcements?select=*&order=published_at.desc&limit=1",
+    "time": "2026-10-28T12:41:23.072Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/service_requests?select=*%2Cdocument_types%28name%2Cprocessing_target_hours%2Cfee_centavos%29%2Cpayments%28document_fee_centavos%2Camount_centavos%2Cstatus%29&id=eq.d3000000-0000-4000-8000-000000000101",
+    "time": "2026-10-28T12:44:49.686Z",
+    "status": 200
+  },
+  {
+    "method": "GET",
+    "path": "/rest/v1/payments?select=id%2Cexpires_at&service_request_id=eq.d3000000-0000-4000-8000-000000000101&method=eq.qrph&status=eq.pending&order=created_at.desc&limit=1",
+    "time": "2026-10-28T12:44:49.771Z",
+    "status": 200
+  },
+  {
+    "method": "POST",
+    "path": "/rest/v1/rpc/resident_home_requests",
+    "time": "2026-10-28T12:47:17.588Z",
+    "status": 200
+  }
+]

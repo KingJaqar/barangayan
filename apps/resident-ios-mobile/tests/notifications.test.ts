@@ -72,6 +72,13 @@ describe('destinations (A52-009, P17-T05)', () => {
     expect(kindPresentation('brand_new_kind')).toEqual({ label: 'Notification', icon: 'bell' });
     expect(inboxEntry(inboxRowFor(2, { read_at: '2026-10-20T09:00:00Z' })).read).toBe(true);
   });
+  it('falls back to a plain entry for the version-2 Account and System rows of migration 0145', () => {
+    const notice = inboxEntry(inboxRowFor(3, { kind: 'system_service', destination: { v: 2, kind: 'notice', id } }));
+    const account = inboxEntry(inboxRowFor(4, { kind: 'account_security', destination: { v: 2, kind: 'account', screen: 'change_password' } }));
+    expect([notice.destination, account.destination]).toEqual([null, null]);
+    expect([kindPresentation('system_service'), kindPresentation('account_security')]).toEqual([{ label: 'Notification', icon: 'bell' }, { label: 'Notification', icon: 'bell' }]);
+    expect(parsePushData({ v: 2, kind: 'notice', id, inbox: uuidFor(8) })).toBeNull();
+  });
   it('treats a kind as on unless the resident turned it off', () => {
     expect(kindEnabled({}, 'payment')).toBe(true);
     expect(kindEnabled({ payment: false }, 'payment')).toBe(false);
