@@ -1,77 +1,0 @@
-
-📦 Repomix v1.18.1
-
-No custom config found at repomix.config.ts, repomix.config.mts, repomix.config.cts, repomix.config.js, repomix.config.mjs, repomix.config.cjs, repomix.config.json5, repomix.config.jsonc, repomix.config.json or global config at C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.ts, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.mts, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.cts, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.js, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.mjs, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.cjs, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.json5, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.jsonc, C:\Users\User\AppData\Local\Packages\sandbox.{3bcfb985-d0a3-4dc5-acf0-7959c062d1b9}\AC\Repomix\repomix.config.json.
-You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
-[K[?25l⠋ Initializing...
-[K[1A[K[?25l⠙ Searching for files...
-[K[1A[K[?25l⠹ Searching for files...
-[K[1A[K[?25l⠸ Searching for files...
-[K[1A[K[?25l⠼ Searching for files...
-[K[1A[K[?25l⠴ Searching for files...
-[K[1A[K[?25l⠦ Searching for files...
-[K[1A[K[?25l⠧ Searching for files...
-[K[1A[K[?25l⠇ Searching for files...
-[K[1A[K[?25l⠏ Searching for files...
-[K[1A[K[?25l⠋ Searching for files...
-[K[1A[K[?25l⠙ Searching for files...
-[K[1A[K[?25l⠹ Searching for files...
-[K[1A[K[?25l⠸ Processing files...
-[K[1A[K[?25l⠼ Processing files...
-[K[1A[K[?25l⠴ Processing files...
-[K[1A[K[?25l⠦ Processing files...
-[K[1A[K[?25l⠧ Processing files...
-[K[1A[K[?25l⠇ Processing files...
-[K[1A[K[?25l⠏ Processing files...
-[K[1A[K[?25l⠋ Processing files...
-[K[1A[K[?25l⠙ Processing files...
-[K[1A[K[?25l⠹ Processing files...
-[K[1A[K[?25l⠸ Processing files...
-[K[1A[K[?25l⠼ Processing files...
-[K[1A[K[?25l⠴ Processing files...
-[K[1A[K[?25l⠦ Processing files...
-[K[1A[K[?25l⠧ Processing files...
-[K[1A[K[?25l⠇ Processing files...
-[K[1A[K[?25l⠏ Processing files...
-[K[1A[K[?25l⠋ Processing files...
-[K[1A[K[?25l⠙ Processing files...
-[K[1A[K[?25l⠹ Processing files...
-[K[1A[K[?25l⠸ Processing files...
-[K[1A[K[?25l⠼ Processing files...
-[K[1A[K[?25l⠴ Processing files...
-[K[1A[K[?25l⠦ Running security check... (6/6) apps/resident-android-mobile/src/lib/navigation-diagnostics.ts
-[K[1A[K[?25l⠧ Running security check... (6/6) apps/resident-android-mobile/src/lib/navigation-diagnostics.ts
-[K[1A[K[?25l⠇ Processing file... (1/6) apps/resident-android-mobile/src/components/services/agency-sla-status.tsx
-[K[1A[K[?25l⠏ Processing file... (6/6) apps/resident-android-mobile/src/lib/navigation-diagnostics.ts
-[K[1A[K[?25l⠋ Processing file... (6/6) apps/resident-android-mobile/src/lib/navigation-diagnostics.ts
-[K[1A[K[?25l⠙ Processing file... (6/6) apps/resident-android-mobile/src/lib/navigation-diagnostics.ts
-[K[1A[K[?25l⠹ Generating output...
-[K[1A[K[?25l⠸ Generating output...
-[K[1A[K[?25l⠼ Calculating metrics... (6/6) apps/resident-android-mobile/src/components/map-view.tsx
-[K[1A[K[?25l✔ Packing completed successfully!
-[?25h
-📈 Top 5 Files by Token Count:
-──────────────────────────────
-1.  apps/resident-android-mobile/src/components/map-view.tsx (2,637 tokens, 11,193 chars, 58.5%)
-2.  apps/resident-android-mobile/src/components/app-tabs.tsx (445 tokens, 2,082 chars, 9.9%)
-3.  apps/resident-android-mobile/src/lib/navigation-diagnostics.ts (400 tokens, 1,544 chars, 8.9%)
-4.  apps/resident-android-mobile/src/components/services/agency-sla-status.tsx (195 tokens, 841 chars, 4.3%)
-5.  apps/resident-android-mobile/src/components/navigation-diagnostic-screen.tsx (93 tokens, 423 chars, 2.1%)
-
-🔎 Security Check:
-──────────────────
-✔ No suspicious files detected.
-
-
-📊 Pack Summary:
-────────────────
-  Total Files: 6 files
- Total Tokens: 4,509 tokens
-  Total Chars: 19,542 chars
-       Output: repomix output files\resident-nav-phase0-20261022-final.xml
-     Security: ✔ No suspicious files detected
-
-🎉 All Done!
-Your repository has been successfully packed.
-
-💡 Repomix is now available in your browser! Try it at https://repomix.com
