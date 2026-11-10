@@ -9,6 +9,7 @@ export type AdminRecordDatabase = Omit<AdminBrowseDatabase, 'public'> & {
     };
     Functions: Database['public']['Functions'] & {
       admin_mutate_record: { Args: { p_screen: string; p_id: string; p_operation: string; p_patch: Json; p_expected: string }; Returns: Json };
+      admin_erase_resident: { Args: { p_id: string }; Returns: Json };
     };
   };
 };

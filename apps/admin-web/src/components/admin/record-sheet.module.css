@@ -42,10 +42,12 @@
 .sheet.sheet .actions.actions button.edit { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
 .sheet.sheet .actions.actions button.archive { background: #fef3c7; border-color: #b45309; color: #78350f; }
 .sheet.sheet .actions.actions button.delete { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+.sheet.sheet .actions.actions button.erase { background: #b91c1c; border-color: #991b1b; color: #fff; }
 .sheet.sheet .actions.actions button:hover:not(:disabled) { filter: brightness(.94); }
 .sheet.sheet .actions.actions button:disabled { cursor: not-allowed; opacity: .5; }
 :global(.dark) .sheet.sheet .actions.actions button.archive { background: #451a03; border-color: #f59e0b; color: #fde68a; }
 :global(.dark) .sheet.sheet .actions.actions button.delete { background: #450a0a; border-color: #f87171; color: #fecaca; }
+:global(.dark) .sheet.sheet .actions.actions button.erase { background: #b91c1c; border-color: #f87171; color: #fff; }
 @media (max-width: 639px) {
   .navigation { gap: 6px; }
   .navigation a { padding-inline: 10px; }

@@ -1,8 +1,9 @@
 'use server';
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { householdAttendanceErrorMessage, type Json } from '@barangayan/shared';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { removeOwnedStorageObjects, RESIDENT_STORAGE_BUCKETS } from '@/lib/storage-cleanup';
 import { RECORD_CONFIG, editableFields, fieldValue, recordLabel, validateRecordPatch, type RecordData } from '@/lib/admin-tables/record-config';
 import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
 import type { TableName } from '@/lib/admin-tables/table-configs';
@@ -71,4 +72,34 @@ export async function mutateAdminRecord(name: TableName, id: string, operation: 
     const updated = typeof result.data === 'object' && !Array.isArray(result.data) ? result.data.row : null;
     return { error: null, ...(updated && typeof updated === 'object' && !Array.isArray(updated) && updated.id === id ? { row: updated as unknown as RecordData } : {}) };
   } catch (cause) { return { error: cause instanceof Error ? cause.message : 'The action failed. Please retry.' }; }
+}
+
+/** Erase: delete the resident's sign-in, profile, requests, payments, reports, registrations and files. Cannot be undone. */
+export async function eraseResident(id: string): Promise<{ error: string | null; storageFailed?: string[] }> {
+  try {
+    if (!/^[0-9a-f-]{36}$/i.test(id)) throw new Error('Invalid record action. Reload the details.');
+    const session = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await session.auth.getUser();
+    if (authError || !user) throw new Error('Your session expired. Sign in again.');
+    // The database function re-checks the administrator, tenant and resident role under its own locks.
+    const db = session as unknown as SupabaseClient<AdminRecordDatabase>;
+    const result = await db.rpc('admin_erase_resident', { p_id: id });
+    if (result.error) {
+      if (result.error.code === '42501') throw new Error(result.error.message === 'Only resident accounts can be erased'
+        ? 'Only resident accounts can be erased. Manage admin accounts through Staff.' : 'You do not have permission to erase this resident.');
+      if (result.error.code === '23503') throw new Error('This resident still has records that could not be erased. Contact support.');
+      throw new Error(result.error.message);
+    }
+    // Files cannot be removed from SQL. The account is already gone, so a failure here is reported, not rolled back.
+    const storage = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } }).storage;
+    const storageFailed: string[] = [];
+    for (const bucket of RESIDENT_STORAGE_BUCKETS) {
+      try { await removeOwnedStorageObjects(storage.from(bucket), id); } catch { storageFailed.push(bucket); }
+    }
+    // The label stays generic so the audit trail does not keep the erased resident's name.
+    await logAdminAction({ action: 'delete', entityType: RECORD_CONFIG.residents.entity, entityId: id, entityLabel: 'Erased resident',
+      metadata: { operation: 'erase', ...(storageFailed.length ? { storage_failed: storageFailed } : {}) } }).catch(() => {});
+    return { error: null, ...(storageFailed.length ? { storageFailed } : {}) };
+  } catch (cause) { return { error: cause instanceof Error ? cause.message : 'The resident could not be erased. Please retry.' }; }
 }

@@ -1,0 +1,247 @@
+[
+  {
+    "find": "This study covers the design, development, and pilot evaluation of BARANGAYAN, a mobile and web-based digital barangay management system for Barangay Ampid I, San Mateo, Rizal only. The main feature of the study, its novelty, is disaster response: community incident reporting, the emergency and DRRM information module with an Open-Meteo rainfall advisory, and Dijkstra-based evacuation routing that recommends the safest route to the nearest available evacuation center. The mobile application is developed using React Native and Expo, while the backend, comprising the database, authentication, real-time data synchronization, and server-side functions, is developed using Supabase. The novelty is supported by the following modules, developed to a fully functional and tested state: the digital service and document request module, the automated service tracking module, the digital payment module, the medical and vaccination drive module, the administrative analytics dashboard, the account, security, and privacy compliance module, and the help and support module. The QR code check-in and family status feature of the emergency module is developed to a working, prototype level rather than a fully tested production feature, given the six-month period allotted for development.",
+    "replacement": "This study covers the design, development, and pilot evaluation of BARANGAYAN for Barangay Ampid I, San Mateo, Rizal. It provides a resident Android application, a resident website, and a staff and administrator website using React Native, Expo, Next.js, and Supabase. Its main contribution combines flood-weighted Dijkstra evacuation routing with a separate Open-Meteo rainfall advisory. Supporting modules cover profiles, document requests, payments, incident reports, medical drives, announcements, and administration. Features are accepted only after the specified tests pass; prototype screens alone do not establish completion.",
+    "expected": 1
+  },
+  {
+    "find": "The Digital Service and Document Request Module offers a document and service catalog that is easy to configure for Barangay Ampid I so that the administrator can establish its own document types, requirements, fees and pick-up timelines in one interface and replace the separate and static \"document admission guide\" with detailed pages that get updated with the administrator's changes. Document picking and appointments with barangay health centers (check-ups, prenatal care, vaccinations) share the same appointment scheduling system, with a maximum number of appointments per day, eliminating the need to create a separate system. Also, the module offers resident management for resident profiles, so that residents can keep an up-to-date profile with information about their household and a valid identification document that administrators can view and verify electronically.",
+    "replacement": "Residents view document requirements, fees, and processing targets; submit applications; and track pickup status. Profile records use separate first-name and last-name fields. Residents submit identification and proof of residency for authorized staff review; GPS is a preliminary check only. Household records identify one designated household head for coordination. Relationship choices depend on the selected member, and duplicate spouse links for the same person are rejected. These rules remain subject to functional verification.",
+    "expected": 1
+  },
+  {
+    "find": "The same tracking is shared across all documents, incident reports and appointments tracking their status from submitted, in progress to completed or resolved. There can be different target processing times for each kind of request, and the system will automatically identify requests approaching or exceeding the target. This is fed via Supabase's real-time database, so that residents can see status updates in real-time without requiring their app to refresh.",
+    "replacement": "Residents track document requests, incident reports, and health registrations through their approved status stages. Processing targets identify overdue requests. Status changes must appear in the resident and staff interfaces without a manual page refresh; this behavior is verified through integration tests.",
+    "expected": 1
+  },
+  {
+    "find": "The Community Incident Reporting and Mapping Module allows residents to report an incident (or provide a photo), and identify the type of incident (e.g. damaged light post, uneven road, blocked drainage, illegal dumping, or other incident categories that can be added by the administrator). An interactive map is created with the open-source Leaflet.js library and made available with OpenStreetmap data with no need to pay for using it, with reported incidents clustered on the map by category and resolution status. The device- based location verification is not a mandatory requirement when registering an account, but considered as a ‘check’ only in light of the fact that the location data provided by consumers is not accurate enough; therefore, registered addresses outside the barangay are marked for manual review by an account administrator.",
+    "replacement": "Residents submit an incident category, description, location, and supporting photos. Leaflet displays OpenStreetMap data with attribution. Upload validation checks supported image formats, file size, and readability; authorized staff review relevance. Image upload does not imply automated image recognition. Blocked-road reports retain their source, time, and verification status for DRRM review.",
+    "expected": 1
+  },
+  {
+    "find": "The Emergency and Disaster Information Module includes an announcement system broken down into categories for issuing routine community information and emergency alerts to residents via push notification. The disaster preparedness guide and directory of emergency contacts contain first-aid instructions, evacuation checklists and hotline phone numbers, and can be used offline without the need for an internet connection. The map contains a list of evacuation centers, each with a name and a current occupancy status (defined by an administrator), and tapping a center shows the safest route computed by the Evacuation Route Module. In addition, a QR code check-in and family status check-in feature are merged and residents can check-in by scanning a QR code when they arrive at an evacuation center and the family status will be displayed to other family members who have checked-in under the same family check-in number at the same evacuation center.",
+    "replacement": "The emergency module provides preparedness guides, hotlines, evacuation-center information, announcements, and family check-in. Announcements require start and end dates and may include a banner; expired items move to archives. Emergency notifications should play sound when notification permissions and device settings allow it. QR check-in must validate the code, selected family members, center, and attendance record, with clear invalid-code and duplicate-scan responses. Offline access is limited to previously stored guides and contacts; scanning and attendance updates require verification under the supported network conditions.",
+    "expected": 1
+  },
+  {
+    "find": "Emergency and DRRM Information Module. The rainfall advisory reads the Open-Meteo Forecast API once every hour for one point in Ampid I and computes the rain in the last hour (R1) and the heaviest hourly rain forecast for the next 3 hours (F3). It publishes Level 1 when R1 or F3 reaches 7.5 mm, Level 2 when either reaches 15 mm and Level 3 when either reaches 30 mm, following the PAGASA yellow, orange and red rainfall warning bands; all limits are starting values that an administrator can change. The level rises at once and falls by one level only after two lower hourly readings, and a reading older than 3 hours is shown as not current. The Centers card in the resident app shows the level as one warning line. The rain level never changes a route; routes are decided only by the Dijkstra algorithm, the recorded flood depths, the road closures published by the barangay, the availability of the centers and the roads marked as blocked.",
+    "replacement": "The rainfall advisory requests hourly model-estimated precipitation for Ampid I. It compares the latest completed hour (R1) and the heaviest forecast hour of the next three hours (F3) with configurable application thresholds of 7.5, 15, and 30 mm. These thresholds are informed by PAGASA rainfall-intensity classes; the app does not issue official PAGASA warnings. Stale or unavailable readings are labelled clearly. The advisory is displayed beside the route and does not change its weights.",
+    "expected": 1
+  },
+  {
+    "find": "Using Dijkstra’s algorithm on the road network of Barangay Ampid I, the system recommends the safest route from the resident’s location to the nearest available evacuation center. The resident first chooses a transportation mode: walking, motorcycle or tricycle, or car. Each road segment is weighted by its length and by the flood depth that the barangay DRRM has recorded on it, compared with the passability limit of the chosen mode (0.43 m for walking, 0.25 m for a motorcycle or tricycle and 0.33 m for a car). Segments deeper than the limit, roads that DRRM has published as closed and roads that residents mark as blocked are removed from the route. The recommended route is the one with the lowest total weight, so a longer dry route is chosen over a shorter flooded one whenever its extra length is smaller than the flood penalty it avoids. The app also shows the shortest-distance route for comparison and up to three routes to other reachable centers with their distances and, for walking, their walking times. Inactive, unavailable or unmapped centers do not receive a route. The route is recomputed when the location, a closure, the status of a center or a blocked-road mark changes, and a selected center stays selected until the resident chooses another one. The Open-Meteo rainfall advisory is shown beside the route but never changes it.",
+    "replacement": "Dijkstra selects the available evacuation center with the lowest flood-weighted route cost for walking, motorcycle or tricycle, or car. Recorded flood depths, published closures, blocked-road marks, and center availability determine usable segments. Distances and walking estimates are shown with alternative routes. Route recalculation after changed conditions must be tested separately from automatic destination switching; the resident retains the selected destination. The route is guidance based on recorded conditions, not a guarantee of safety.",
+    "expected": 1
+  },
+  {
+    "find": "Registration. The resident submits basic eligibility information (age, PWD status, comorbidities and prior doses for multi-dose vaccines), and the system computes a priority score. Registration is slot-controlled and uses weighted priority scoring, giving higher placement to PWDs (+30), senior citizens aged 60 and above (+20), infant or toddler under 5 (+15), each comorbidity (+5, capped at +20), and prior dose on record (+10), ensuring the most vulnerable residents are served first.",
+    "replacement": "Registration. Residents review the drive schedule, eligibility requirements, and available slots before applying for themselves or an eligible family member. The application records the selected applicant and returns a reference number. Any priority or waitlist rule must be approved by the responsible health staff and verified before use.",
+    "expected": 1
+  },
+  {
+    "find": "Status tracking. Each registration moves from registered to confirmed to dispensed, using the same status tracking as the other service requests.",
+    "replacement": "Status tracking. Residents view their registration status and history. Duplicate applications and conflicting records are checked against the approved drive rules.",
+    "expected": 1
+  },
+  {
+    "find": "By utilising QR Ph, the Digital Payment Module enables residents to make payments through the PayMongo service by following a single, standardised QR code that can be recognised by the participating banks and e-wallets. The status of the corresponding request is automatically changed when payment has been confirmed, which simplifies the process of the transaction.",
+    "replacement": "Residents choose pay at pickup or QR Ph through PayMongo. Participating banks and e-wallets may pay the generated QR code. The request status changes only after a verified payment confirmation. Development and pilot payments remain in sandbox mode; live settlement is outside the evaluated scope.",
+    "expected": 1
+  },
+  {
+    "find": "ADMINISTRATOR (WEBSITE MODULE)",
+    "replacement": "STAFF AND ADMINISTRATOR WEBSITE",
+    "expected": 1
+  },
+  {
+    "find": "The Administrative Analytics Dashboard gives administrators a live summary of how many residents are in the system, what types and status of requests are pending, how often processing time targets are met, and a summary of the incident categories, all of them with the aim of enabling the administrator to make informed decisions in the barangay.",
+    "replacement": "Authorized staff view pending requests, ready-for-pickup documents, collections, registered residents, and incident summaries. Document staff review applications and residency evidence, update status, and preview the approved document before printing. Treasurer-assigned staff review transactions. Changes must update the displayed records without a manual refresh.",
+    "expected": 1
+  },
+  {
+    "find": "The Account, Security, and Privacy Compliance Module are implemented with role-based access control and secure access to privileged account operations via Supabase's server-side functions, ensuring that the mobile application remains free from such sensitive operations. A one-time password is given to the resident's registered information for password recovery. The module also meets the requirements of the Data Privacy Act of 2012 (Republic Act No. 10173), which enables residents to request a copy of their personal data or for their account to be permanently deleted.",
+    "replacement": "Role-based access limits each account to its assigned records and actions. Privileged operations use server-side functions and database policies. Authorized staff may register residents and send account invitations; delivery and activation require testing. Privacy controls support data access and deletion requests, but legal compliance also requires approved notices, retention rules, consent procedures, and staff accountability (Republic Act No. 10173, 2012).",
+    "expected": 1
+  },
+  {
+    "find": "Drive creation. The administrator creates a drive with the medicine or vaccine name, total stock, date, venue and priority weighting rules.",
+    "replacement": "Drive creation. Authorized health staff set the category, date, start and end times, venue, eligibility, and capacity. The system must reject a same-category event that conflicts with an existing date and time slot.",
+    "expected": 1
+  },
+  {
+    "find": "Priority queue dashboard. Registrants are sorted by their computed score, and the administrator can see who has been allocated a slot and who is waitlisted.",
+    "replacement": "Registration monitoring. Authorized health staff review applicants, eligibility, available slots, and application status.",
+    "expected": 1
+  },
+  {
+    "find": "Live inventory. The remaining stock decreases in real time as QR codes are scanned and doses are dispensed.",
+    "replacement": "Attendance and stock. Attendance and stock adjustments require authorized confirmation and test evidence; a displayed QR code alone does not confirm dispensing.",
+    "expected": 1
+  },
+  {
+    "find": "Waitlist and no-show handling. If a registrant does not arrive by the cutoff time, the slot is released to the highest-priority waitlisted resident.",
+    "replacement": "Waitlist and no-show handling. Any slot-release or waitlist process follows the approved health-office rule and is verified before being described as automatic.",
+    "expected": 1
+  },
+  {
+    "find": "The Help and Support Module provides a set of frequently asked questions that can be expanded and it contains contact details: hotline number, e-mail, office hours, and physical address to help residents who need additional support to use the platform or address issues about their requests.",
+    "replacement": "Residents access published FAQs and barangay contact details. Assigned content staff maintain this information through the website.",
+    "expected": 1
+  },
+  {
+    "find": "The system allows the administrator to show the user if their request has been denied or if their request has been processed. With this real-time feature the users do not have to go to the barangay hall to get their document. This feature allows a real-time update to show the user about the status of their request and this is implied to all of the features of the system.",
+    "replacement": "Staff update approved request stages, including rejection, processing, ready for pickup, and completion. Residents still collect physical documents at the barangay. An integration test verifies that both interfaces display the same saved status without manual refresh.",
+    "expected": 1
+  },
+  {
+    "find": "The administrator can archive past events so that staff work only with current records.",
+    "replacement": "Expired announcements move to archives and leave active lists. Authorized staff may view and restore archived records, subject to retention rules. Archiving is distinct from permanent deletion, and restored announcements must satisfy valid publication dates.",
+    "expected": 1
+  },
+  {
+    "find": "The evacuation route module can only be used for Barangay Ampid I, so no route is generated outside the barangay or more than 50 m from a usable road. It supports three transportation modes, walking, motorcycle or tricycle, and car, but gives travel times only for walking, using fixed speeds of 1.2 m/s on streets and 0.6 m/s on stairs that do not slow down for floodwater, rain or crowding. In this study, the “safest” route means the route with the lowest flood-weighted cost: it never uses a road published as closed, marked as blocked or recorded deeper than the limit of the chosen mode, and it uses a flooded street only when avoiding it would add more travel than the flood penalty (α = 10) saves. The routing uses only manual inputs: the flood depths that DRRM has recorded on each street from past floods, the road closures DRRM publishes and the blocked roads residents report. The system has no real-time IoT water-level sensors, river gauges or live street measurements, so the recorded depths are fixed values and not live readings. Until DRRM supplies the recorded depths, every depth is zero and the recommended route is the shortest route on open roads. For this reason, the routing acceptance tests in Chapter 3 use synthetic test road networks and synthetic flood depths; how the routes behave with the real depths recorded by DRRM can only be checked after DRRM supplies them.",
+    "replacement": "Routing is limited to the mapped Ampid I network and the approved transport modes. Recorded depths are historical inputs, not live street measurements. A missing depth is unknown; the current zero fallback must not be presented as a confirmed dry road. Routes using incomplete data require a visible limitation and DRRM review. No verified elevation model is assumed. Synthetic networks and depths test the algorithm; they do not establish local flood accuracy. Walking times use fixed speeds and exclude changes caused by rain, crowding, or floodwater.",
+    "expected": 1
+  },
+  {
+    "find": "The rainfall advisory uses only the data of the Open-Meteo Forecast API. The study does not create, train or predict with its own weather or flood model, and it does not test how accurately Open-Meteo forecasts rain. Open-Meteo gives one value for a grid cell about 9 km wide, so the advisory cannot distinguish between streets; it is only a warning shown beside the route and never changes a route. The R1 and F3 limits follow the PAGASA hourly rainfall warning bands and are starting values that DRRM must confirm and that the administrator can adjust. The advisory does not use the rain of the last 24 hours, so a flood caused by long, steady rain that never reaches the hourly limits may not raise it. The suggested path is a guide based on the flood depths DRRM has recorded and the closures it has published, and it is not a safety guarantee in the event of a flood. The module does not support offline routing, turn-by-turn voice navigation, live tracking, push notifications for routes or automatic re-routing of a selected center. The implementation of the pilot and the user acceptance test is carried out with one partner barangay (Barangay Ampid I, San Mateo, Rizal), where additional user evaluation of the implementation is recommended in future studies in order to have a wider assessment of the use of the program. The study does not use any payment system other than PayMongo. All residents are alerted to announcements and emergencies through in-app push notifications only, so residents who have not installed the app or have no internet connection do not receive them. Lastly, the crime reporting study is used only as a basis for the incident reporting module; BARANGAYAN does not include crime reporting. The resident mobile application supports Android devices only, because iOS distribution requires a paid Apple developer account, while an Android application can be distributed directly as an APK file.",
+    "replacement": "The advisory uses model-estimated rainfall and does not predict street flood depth or river stage. Its thresholds require DRRM review and do not replace official warnings. Network access is required for current weather, transactions, notifications, and shared updates. Only stored guides and contacts may be read offline. The routing design excludes turn-by-turn voice navigation, live tracking, and automatic destination switching; recalculation behavior must match its test record. Android is the evaluated mobile platform. Pilot evaluation covers one partner barangay and does not establish performance elsewhere.",
+    "expected": 1
+  },
+  {
+    "find": "The live input of the rainfall advisory model is the Open-Meteo Forecast API (https://api.open-meteo.com/v1/forecast), an open weather service that returns computer-model estimates of rainfall for a map grid cell. It is free for non-commercial use without an API key, and its data are licensed under CC BY 4.0 (Zippenfenig, 2023). Only a server-side scheduled function calls it, never the phone, and no resident location is sent. The ECMWF IFS model is used as the base model because its performance over East Asia and the Western Pacific, including typhoon rainfall, lies within the range of five global AI weather models (Liu et al., 2024). Table 7 lists the request parameters.",
+    "replacement": "Open-Meteo is selected because its hourly precipitation, explicit model selection, and historical datasets support the project’s advisory and controlled tests without a free-tier API key. OpenWeather and WeatherAPI also provide weather services, but require API-key management; their inclusion here is a design comparison, not an accuracy ranking (Open-Meteo, n.d.; OpenWeather, n.d.; WeatherAPI.com, n.d.). A scheduled server function requests one fixed barangay location. Data are model estimates, not rain-gauge observations, river-stage readings, or street-flood measurements. The free service has no uptime guarantee; stale or failed requests must display an unavailable-data message. Table 7 identifies the variables used.",
+    "expected": 1
+  },
+  {
+    "find": "The function polls the API once every 60 minutes, which is 24 calls a day and far below the free-tier limit of 10,000 calls a day; faster polling gains nothing because ECMWF IFS is updated only every 6 hours. A reading is rejected, and never stored as zero, if the request fails, times out, or returns a missing, negative or implausible value.",
+    "replacement": "The function requests an update every 60 minutes. Failed, timed-out, missing, negative, or implausible readings are rejected rather than stored as zero. The last accepted reading retains its timestamp; after three hours it is labelled stale. The advisory links residents to official PAGASA information while routes continue to use recorded road conditions (Open-Meteo, n.d.).",
+    "expected": 1
+  },
+  {
+    "find": "Evacuation routing inputs: hourly rainfall from the Open-Meteo Forecast API, past hourly rainfall from the Historical Weather API (analyzed during development only), DRRM road closures and flood-prone streets, roads marked as blocked by residents, and evacuation-center availability.",
+    "replacement": "Routing inputs are the road graph, recorded flood depths, approved closures, blocked-road marks, and center availability. Open-Meteo rainfall is a separate advisory input. Historical rainfall supports test preparation only. A local geographic layer must retain its source, issue date, scale, licence, and DRRM review status.",
+    "expected": 1
+  },
+  {
+    "find": "These inputs are gathered through forms, in both applications. Then these inputs are compared with the shared schemas that live in packages/shared/src/schemas. The shared schemas contain the request‑form schema, the incident‑report schema and the staff schema. After that these inputs are written into their matching Supabase tables.",
+    "replacement": "Forms and server functions validate inputs before storage. For flood reports, the required record fields are report ID, reporter role, road-segment ID, coordinates, reported time, depth in metres or unknown, evidence, verification status, reviewer, review time, valid-until time, and closure status. Unknown depth is stored distinctly from measured zero. Access and retention follow the assigned role and approved policy.",
+    "expected": 1
+  },
+  {
+    "find": "Placing incident reports on the map makes it easier to see where issues arise.",
+    "replacement": "Flood-data flow: resident or field staff report → DRRM verification → approved road-segment update → shared conditions → Dijkstra recalculation. Unverified reports remain labelled and must not be described as confirmed flood depth. DRRM reviews closures and expiry times before clearing a restriction.",
+    "expected": 1
+  },
+  {
+    "find": "The codebase executes every step of the flow. From the user interface through validation and application logic to the database and backend. For the modules described in this chapter. The flow’s reliability under real‑world load, the choice of hosting location, the deployment process and the full configuration of services such as PayMongo, for production are not guaranteed by the source code alone. These aspects must be verified with testing.",
+    "replacement": "Figure 2.2 is read with the flood-data flow above. The deployment design uses separate Next.js resident and staff websites on Vercel, a hosted Supabase database, authentication, storage and server functions, and an Android APK distributed for pilot use. Actual deployment URLs and release versions are recorded during verification. Current transactions, weather, maps, and synchronized updates require internet access; cached guides are the limited offline exception.",
+    "expected": 1
+  },
+  {
+    "find": "The study uses Technical Developmental Research, a research method used for designing, developing, testing, and evaluating Barangay, which is a Mobile and Web based Barangay Management System. It is based on the problem statement, objectives, scope, conceptual framework and system architecture that were developed in Chapter 1 and 2. The study concentrates on creating a usable development build for Barangay Ampid I, San Mateo, Rizal, and capturing the necessary evidence to assess the system.",
+    "replacement": "The study uses developmental research to design, implement, and evaluate BARANGAYAN. Functional tests assess specified workflows; task-based evaluation measures usability for the assigned user groups. Planned functions, implemented features, and passed tests are reported separately.",
+    "expected": 1
+  },
+  {
+    "find": "Rainfall, flood and road records. The barangay DRRM supplies the streets it records as flooded with their typical flood depths, the published road closures and the evacuation-center status. These records are used to build the test road networks of the routing tests. Hourly rainfall from the Open-Meteo Historical Weather API was analyzed during development only to choose realistic rainfall values for the injected-rainfall tests; no storm is replayed and no forecast is scored.",
+    "replacement": "Rainfall, flood, and road records. Residents or authorized field staff submit geolocated reports through the incident form or an approved DRRM reporting channel. DRRM checks the location and evidence, confirms the depth or closure, and records the reviewer, time, and expiry before publishing a road update. Historical susceptibility is checked against government hazard information through HazardHunterPH and DRRM records (Philippine Institute of Volcanology and Seismology [PHIVOLCS], n.d.). A verified Ampid I map must distinguish mapped hazard classes and relative elevation; no street classification or elevation value is assumed before this review. Susceptibility provides context; verified segment depth and closure rules determine the implemented route weights.",
+    "expected": 1
+  },
+  {
+    "find": "Preparation of evacuation routing test scenarios. Researchers create test scenarios that mimic the actual road network, including intersections, road segments, distances, flood depth measurements, road conditions and the location of evacuation centers. The first evacuation location recommended from a chosen starting point to a point of safety in an evacuation center is noted. The researchers then simulate the changes to the road conditions, such as by making a road inaccessible due to the Barangay DRRM, an inaccessible road due to the residents' report, or a flood depth that the selected transportation mode does not have the capability to pass. Changes in evacuation center availability are also prepared to see if unavailable centers are not included in the route recommendations.",
+    "replacement": "Routing tests use synthetic networks with known distances, depths, closures, and center status. Tests cover changed conditions, unknown depths, unavailable centers, and no-route cases. Hand calculations verify route cost. Results establish software correctness only; local geographic accuracy requires separate DRRM validation.",
+    "expected": 1
+  },
+  {
+    "find": "The project scope consists of the following functional components:",
+    "replacement": "Table 12 summarizes the platform scope. Resident Android and web accounts access their own profiles, requests, reports, payments, health registrations, and emergency information. Staff use the website for assigned workflows; administrators manage configuration and access. Equivalent resident services share records across platforms, while camera, notification, and offline behavior are tested separately.",
+    "expected": 1
+  },
+  {
+    "find": "Responsibilities in the system",
+    "replacement": "Platform and permitted actions",
+    "expected": 1
+  },
+  {
+    "find": "Manage account and profile; submit requests and incidents; view status and emergency information; register for health activities; use privacy functions",
+    "replacement": "Android and resident web: manage own profile, household, requests, incidents, payments, registrations, and privacy requests; no staff administration",
+    "expected": 1
+  },
+  {
+    "find": "Supervise service, emergency, incident, and administrative decisions",
+    "replacement": "Staff web: review authorized summaries and oversight information; changes require an assigned operational permission",
+    "expected": 1
+  },
+  {
+    "find": "Administrative or auxiliary support staff",
+    "replacement": "Assigned staff and administrator",
+    "expected": 1
+  },
+  {
+    "find": "Process requests, update records, manage content, review incidents, configure services, and support residents",
+    "replacement": "Staff web permission matrix: Clerk/secretary—residency review, requests and print preview; health worker—drives and registrations; tanod/incident staff—incident review; treasurer—payment records; content staff—announcements and archives; administrator—accounts and configuration. Each assignment requires server and database enforcement; unassigned actions are denied.",
+    "expected": 1
+  },
+  {
+    "find": "Publish road closures, recorded flood depths and evacuation-center status; review incident reports and the rainfall advisory",
+    "replacement": "Staff web: verify flood reports; publish depths, closures and center availability; review advisory status; retain reviewer and expiry records",
+    "expected": 1
+  },
+  {
+    "find": "Requirements are grouped by User Role, Workflow, Data Object, Access Requirement, Interface and Test Case. The purpose, result, user group and evidence of expected functionality of each feature is identified in the requirements matrix. There are a couple of project boundaries that were still evident during the planning phase. Payment processing is in sandbox or test status until the formal requirements of the provider and settlement are met. The content of the Emergency, hotline and evacuation center data should be reviewed and owned by authorized barangay personnel. All map, notification, messaging and routing functions rely on external services and network connectivity.",
+    "replacement": "Each requirement is linked to its platform, role, module, data fields, permission, and test ID. The SIA 2 list is treated as a dated defect baseline; a later screenshot or code change does not close a defect without a retest result. Payments remain in sandbox, and DRRM owns the approval of emergency content and local geographic data.",
+    "expected": 1
+  },
+  {
+    "find": "This project leverages existing development tools such as Expo and React Native for the mobile application, Next.js for the web application, and TypeScript with shared schemas for data validation. The Deno-based Edge Functions are used for sensitive server-side operations, while Supabase is used for authentication, PostgreSQL data storage, Row-Level Security, storage, Realtime functionality, database functions, and migrations. New services such as PayMongo, QR Ph, Mapping & Routing, Notifications & Messaging are built-in within the limits of the approved services. Implementation records will include feature specifications, interface changes, data changes, test cases, defects, revisions, dependency versions, and environment instructions. The research report will not contain sensitive configuration values and provider keys.",
+    "replacement": "The implementation uses React Native and Expo for Android, Next.js for the resident and staff websites, and Supabase for authentication, database policies, storage, real-time updates, and server functions. Vercel configuration is included for both websites. Verification records identify the deployed URL, build version, network conditions, and provider mode without exposing credentials. A hosted configuration is not proof of production readiness.",
+    "expected": 1
+  },
+  {
+    "find": "The tester records the Test ID, User role, Environment, Precondition, Input, Expected result, Observed result, Status, Supporting evidence and Corrective action for each task. Once a defect is fixed the impacted workflow will be retested prior to the defect being resolved. The following tasks have been approved for use by the resident operating procedure: Account access, profile completion, submission of a service or document request, review of the service's status, reporting of an incident, viewing of emergency information, etc. The administrative operating procedure consists of authentication, service configuration, request processing, incident review, content management, dashboard review and role-specific privacy operations.",
+    "replacement": "Each test records its ID, platform, role, precondition, input, expected result, observed result, status, evidence, and corrective action. The SIA 2 acceptance checks below are requirements for retesting, not claims that defects are already resolved.",
+    "expected": 1
+  },
+  {
+    "find": "Requirements traceability is used to support the testing strategy. These are connected with a workflow, test case and result for each project objective. A defect is noted where the observed outcome is different from the expected outcome or when a participant recognises an obstacle to completing an approved task.",
+    "replacement": "Requirements traceability links each revision to a test and result. SIA 2 retesting must verify: QR scan validity and duplicate handling; separate name fields and relationship/spouse rules; announcement dates, banners and expiry; emergency sound under supported settings; conflicting event rejection; automatic request-status refresh; residency review; archive and restore; correct print preview; image format, size and relevance review; invitation delivery and activation; weather, map and network failures; and verified QR Ph or pay-at-pickup status. A defect closes only after the expected result is reproduced and evidence is recorded.",
+    "expected": 1
+  },
+  {
+    "find": "All changes to a workflow, data structure, policy, provider integration, or claim to the users should be documented. For the project documentation, the relevant requirement, the affected module, the description of the change, the result of the test, the reference to the defect, the decision of the revision and the responsible project document are indicated. The documentation also identifies functions that are completed from those dependent on the provider, content that needs the approval of the barangay, and those that are not part of the project. This helps to prevent the paper from claiming that features that are not implemented or evaluated are complete.",
+    "replacement": "Revision records identify the requirement, affected section, implemented change, test result, evidence, and remaining limitation. Completed, pending, provider-dependent, and excluded functions are labelled consistently. Appendix C records interface examples; it does not replace functional test evidence.",
+    "expected": 1
+  },
+  {
+    "find": "Piamonte, C. N., Curada, J. P. M., & ZaragozaPhilippine Statistics Authority. (2025, July 17). 2024 Census of Population (POPCEN) population counts declared official by the President. https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president",
+    "replacement": "Philippine Statistics Authority. (2025, July 17). 2024 Census of Population (POPCEN) population counts declared official by the President. https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president",
+    "expected": 1
+  },
+  {
+    "find": ", M. C. (2026). Project Bantay: Breadth-first search and Dijkstra implementation for community-accessible disaster response. Proceedings of WCTP 2025, Atlantis Highlights in Computer Sciences, 24, 629-645. https://doi.org/10.2991/978-94-6239-638-8_33",
+    "replacement": "Piamonte, C. N., Curada, J. P. M., & Zaragoza, M. C. (2026). Project Bantay: Breadth-first search and Dijkstra implementation for community-accessible disaster response. In Proceedings of WCTP 2025 (Atlantis Highlights in Computer Sciences, Vol. 24, pp. 629–645). https://doi.org/10.2991/978-94-6239-638-8_33",
+    "expected": 1
+  },
+  {
+    "find": "This study is the first one to combine Dijkstra routing with the Open-Meteo Forecast and Historical Weather APIs in a single residential mobile application.",
+    "replacement": "The contribution is the integration of flood-weighted routing and a separate rainfall advisory with resident services for Barangay Ampid I.",
+    "expected": 1
+  },
+  {
+    "find": "nearest available evacuation center",
+    "replacement": "available evacuation center with the lowest flood-weighted route cost",
+    "expected": 7
+  },
+  {
+    "find": "latest observed hour",
+    "replacement": "latest model-estimated hour",
+    "expected": 1
+  },
+  {
+    "find": "latest observed hourly rain",
+    "replacement": "latest model-estimated hourly rain",
+    "expected": 0
+  }
+]

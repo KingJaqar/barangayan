@@ -17,10 +17,13 @@
 import type { LatLng, MapBridgeInboundMessage, MapLngLat, MapMarker } from '@barangayan/shared';
 import { isPointInPolygon } from '@barangayan/shared';
 import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { useIsFocused } from 'expo-router';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import type NativeWebView from 'react-native-webview';
+import { useAppForeground } from '@/hooks/use-app-foreground';
+import { MAP_RELEASE_GRACE_MS, MapRendererRecovery, mapRetained } from '@/lib/map-renderer-recovery';
 import { mountDiagnosticOwner, navigationDiagnosticsAvailable, recordNavigationDiagnostic } from '@/lib/navigation-diagnostics';
 
 import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from '@/components/leaflet-assets';
@@ -675,6 +678,30 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
   // (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
   const lastAcceptedPickerPosRef = useRef<LatLng | null>(picker?.position ?? null);
 
+  // A hidden screen's map gives its WebView back (see map-renderer-recovery.ts); it reloads
+  // and receives its full state again on MAP_READY when the screen is focused.
+  const focused = useIsFocused();
+  const foreground = useAppForeground();
+  const [graceExpired, setGraceExpired] = useState(false);
+  if (focused && graceExpired) setGraceExpired(false);
+  if (!focused && !foreground && !graceExpired) setGraceExpired(true);
+  useEffect(() => {
+    if (focused || graceExpired) return;
+    const timer = setTimeout(() => setGraceExpired(true), MAP_RELEASE_GRACE_MS);
+    return () => clearTimeout(timer);
+  }, [focused, graceExpired]);
+
+  // A dead renderer is replaced with a new WebView once the app is in the foreground again.
+  const recovery = useRef<MapRendererRecovery | null>(null);
+  const [renderer, setRenderer] = useState<{ generation: number; state: 'live' | 'gone' | 'failed' }>({ generation: 0, state: 'live' });
+  if (renderer.state === 'gone' && foreground) setRenderer({ generation: renderer.generation + 1, state: 'live' });
+  const live = mapRetained({ focused, foreground, graceExpired }) && renderer.state === 'live';
+  useEffect(() => {
+    if (live) return;
+    isReadyRef.current = false;
+    sentStateRef.current.clear();
+  }, [live]);
+
   function resetDocument() {
     isReadyRef.current = false;
     sentStateRef.current.clear();
@@ -870,8 +897,11 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
   }
 
   // ── Native render ────────────────────────────────────────────────────────
+  // Android requires a WebView whose renderer died to leave the view hierarchy.
+  if (!live) return <View style={[styles.webView, style]} />;
   return (
     <WebView
+      key={renderer.generation}
       ref={webViewRef}
       style={[styles.webView, style]}
       source={{ html: LEAFLET_HTML }}
@@ -881,7 +911,16 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
         if (navigationDiagnosticsAvailable) recordNavigationDiagnostic('map-load', 'map');
       }}
       onError={() => { resetDocument(); onMapError?.(); }}
-      onRenderProcessGone={() => { resetDocument(); onMapError?.(); }}
+      onRenderProcessGone={() => {
+        resetDocument();
+        recovery.current ??= new MapRendererRecovery();
+        if (recovery.current.record(Date.now()) === 'recreate') {
+          setRenderer(current => ({ ...current, state: 'gone' }));
+        } else {
+          setRenderer(current => ({ ...current, state: 'failed' }));
+          onMapError?.();
+        }
+      }}
       injectedJavaScript={
         zoomControlTop !== undefined
           ? `(function(){var s=document.createElement('style');s.textContent='.leaflet-top.leaflet-left{margin-top:${Math.round(zoomControlTop)}px !important;}';document.head.appendChild(s);})();true;`

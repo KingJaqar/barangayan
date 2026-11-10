@@ -365,9 +365,9 @@ const EMPLOYMENT_STATUS_OPTIONS = [
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export function ResidentDirectory({ result, summary, requestedState, barangayId }: {
+export function ResidentDirectory({ result, summary, requestedState, barangayId, adminIds }: {
   result: QueryOutcome<BrowseResult<ResidentRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
-  barangayId: string;
+  barangayId: string; adminIds: string[] | null;
 }) {
   const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.residents, requestedState, result, true);
   const { state, value } = browse;
@@ -409,7 +409,9 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     return { error: null, row: updated };
   }
 
-  const lifecycle = useRecordWorkspace<ResidentRow>('residents', browse.refresh, browse.settle, { editHandle: browse.editHandle, extra: (row, close) => <ResidentDetailContent resident={row} onClose={close} onIdStatusChange={browse.refresh} /> });
+  // Without the admin list (lookup failed), Erase is not offered rather than guessed.
+  const adminIdSet = useMemo(() => adminIds ? new Set(adminIds) : undefined, [adminIds]);
+  const lifecycle = useRecordWorkspace<ResidentRow>('residents', browse.refresh, browse.settle, { editHandle: browse.editHandle, adminIds: adminIdSet, extra: (row, close) => <ResidentDetailContent resident={row} onClose={close} onIdStatusChange={browse.refresh} /> });
 
   const columns: EditableDataTableColumn<ResidentRow>[] = [
     {

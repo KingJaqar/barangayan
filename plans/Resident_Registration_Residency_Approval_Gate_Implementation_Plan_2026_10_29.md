@@ -1,7 +1,7 @@
 # Resident registration: residency approval gate implementation plan
 
 **Date:** 29 October 2026 (Asia/Manila)
-**Status:** Implementation **not started** · Deployment **not started** · Production validation **not started**. Planning complete except open decision Q1 (blocks Phase 5 only).
+**Status:** Implementation **not started** · Deployment **not started** · Production validation **not started**. Planning complete; no open decisions.
 **App(s):** `apps/resident-android-mobile`, `packages/shared`, `supabase/migrations`, plus a pending message in `apps/resident-web` and `apps/resident-ios-mobile`.
 **Builds on:** `plans/Resident_Registration_Proof_of_Residency_Implementation_Plan_2026_10_28.md` (ID step, `0150`, `0151`) and `plans/Resident_Android_Notifications_and_Announcements_Implementation_Plan_2026_10_27.md` (A08/A09 in `0146`; worker and pg_cron live on hosted).
 **Precedence:** repository instructions and the owner's requirements override this plan and any tool recommendation. Root `AGENTS.md` is empty; `apps/admin-web/AGENTS.md` only concerns its Next.js version, and admin-web is not touched.
@@ -74,7 +74,7 @@ No checklist guarantees zero defects, and none is claimed. A phase is **verified
 | D16 | Phase 1 needs no deleted test: none asserts rejection of unknown keys. | [F: `resident-account-setup.test.ts:29-40` covers routing only] |
 
 **Open:**
-- **[Q] Q1 — blocks Phase 5 only.** May a pending resident still delete their account (the existing deletion RPC stays allowed)? Proposed yes, for privacy. No delete button is added to the Waiting screen either way.
+- **D17 (was Q1, owner 2026-10-29: "Yes, allow it").** A pending resident may still delete their account: the existing deletion RPC stays on the allow-list. Rationale: privacy; a resident is never stuck holding data they cannot remove. No delete button is added to the Waiting screen; deletion stays reachable only where it is today.
 
 ## 4. Design
 
@@ -143,7 +143,7 @@ The insert path sets `pending` only while the switch is on. Every check also req
 - push token upsert/release;
 - sign-out;
 - public content;
-- deletion, if Q1 is yes.
+- account deletion (D17).
 
 Everything else resident-only is refused.
 
@@ -206,7 +206,7 @@ Everything else resident-only is refused.
   - baselines recorded: the pgTAP set (hub, producers, session notifications, registration ID notifications, account setup, Apple setup, front ID, `service_foundations`), shared + Android vitest, Android/web/iOS lint and typecheck;
   - pre-existing failures confirmed, not fixed (`service_foundations` 7, `admin_request_row_workflows` 1).
 - **Recovery:** none needed (read-only; the clone is disposable).
-- **Exit:** inventory complete; Q1 may still be open.
+- **Exit:** inventory complete.
 
 ### Phase 1 — Tolerant status parsing
 - **Objective:** status parsers strip unknown keys; nothing else.
@@ -282,7 +282,7 @@ Everything else resident-only is refused.
 
 ### Phase 5 — Server-side block (`0153` part 2)
 - **Objective:** the predicate, D13 and the explicit checks from the inventory.
-- **Entry:** Phase 2; **Q1 settled**.
+- **Entry:** Phase 2 (D17 settles the deletion allow-list).
 - **Consumers:** every inventoried policy and function, read from the clone rather than old migration files; admin and staff paths that call `current_barangay_id()`.
 - **Risks:**
   - authorization: over- and under-blocking;

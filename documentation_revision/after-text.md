@@ -1,0 +1,1234 @@
+# BARANGAYAN: A Digital Barangay Management System with Dijkstra-Based Safest-Path Evacuation Routing and an Open-Meteo Rainfall Advisory for Barangay Ampid I, San Mateo, Rizal
+
+Alcantara, Ian Darick S., Arrojado, Lorenzo Miguel P., Enzon, Alex Arthur P.,   
+Muega, Gabriel Ellis P.
+
+College of Computer Studies, Technological Institute of the Philippines \- Quezon City  
+IT 304 \- Capstone Project 1  
+Mr. Juvert De Los Reyes  
+November 2026
+
+# 
+
+# **Table of Contents** {#table-of-contents}
+
+| [Table of Contents](#table-of-contents) | 2 |
+| :---- | ----: |
+| [**List of Figures**](#list-of-figures) | **4** |
+| [**List of Tables**](#list-of-tables) | **9** |
+| [**Chapter 1**](#chapter-1) | **10** |
+| [**Introduction**](#chapter-1) | **10** |
+| [Background of the Study](#background-of-the-study) | 10 |
+| [Project Objectives](#project-objectives) | 12 |
+| [Significance of the Study](#heading=h.6mwvty8esw73) | 13 |
+| [Scope](#scope) | 16 |
+| [Delimitations](#delimitations) | 23 |
+| [Storytelling UI Design](#heading=h.2u1t0q3w4lvu) | 26 |
+| [**Chapter 2**](#chapter-2) | **92** |
+| [**Theoretical Framework**](#theoretical-framework) | **92** |
+| [Conceptual Framework](#conceptual-framework) | 126 |
+| [Research Paradigm](#research-paradigm) | 129 |
+| [Review of Related Literature](#review-of-related-literature) | 130 |
+| [System Architecture](#system-architecture) | 141 |
+| [Definition of Terms](#definition-of-terms) | 144 |
+| [**Chapter 3**](#chapter-3) | **149** |
+| [**Research Methodology**](#chapter-3) | **149** |
+| [Research Design](#research-design) | 149 |
+| [Project Design](#project-design) | 158 |
+| [Project Development](#project-development) | 170 |
+| [Testing and Operating Procedure](#testing-and-operating-procedure) | 174 |
+| [Project Evaluation](#project-evaluation) | 180 |
+| [Work Plan](#work-plan) | 186 |
+| [Potential for Commercialization](#potential-for-commercialization) | 193 |
+| [**References**](#references) | 203 |
+| **Appendix A** |  |
+| **Appendix B** |  |
+| **Appendix C** |  |
+| **Appendix D** |  |
+
+# 
+
+# 
+
+# 
+
+# 
+
+# **List of Figures** {#list-of-figures}
+
+| [Figure 2.1 Research paradigm of the Barangayan development build, following a developmental Input–Process–Output model.](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.u04026sg9v04) | 127 |
+| :---- | ----: |
+| [Figure 2.2 Architectural data flow of the Barangayan development builds across the presentation, application logic, and data tiers.](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.u1soe0rn1eph) | 140 |
+| Figure 3.1 Three-tier system architecture of BARANGAYAN highlighting evacuation routing, rainfall advisory, and supporting barangay services. | 153 |
+
+# 
+
+# 
+
+# 
+
+# **List of Tables** {#list-of-tables}
+
+| [Table 1\. Passability limit Dmax,m of each transportation mode with the corresponding conditions](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.do0ovils35l5) | 92 |
+| :---- | ----: |
+| [Table 2\. Flood-hazard score fm(e) of each transportation mode with the corresponding recorded flood depth](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.cmudpo5mbr7p) | 93 |
+| [Table 3\. Road segments that each transportation mode may use with the corresponding conditions](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.vkgqkgwhp4sm) | 94 |
+| [Table 4\. Example segments and their weights wm(e) for each transportation mode](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.212lw8qdsh9f) | 98 |
+| [Table 5\. Dijkstra computation for walking from node S](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.d9lelhsgcf0p) | 99 |
+| [Table 6\. Recommended route for each transportation mode in the example](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.xo9rpot27mtk) | 100 |
+| [Table 7\. Request parameters of the Open-Meteo Forecast API with their purpose](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.z5xqefgchgey) | 101 |
+| [Table 8\. Advisory level of the R1 and F3 metrics with the corresponding conditions](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.yqdpgraqli1c) | 104 |
+| [Table 9\. Unit test cases of the rainfall advisory with injected rainfall values](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.ykdjq9mggir8) | 106 |
+| [Table 10\. Participant Groups and Sampling Procedure](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.ve1xfdj94jgm) | 149 |
+| [Table 11\. Interpretation of Weighted Mean Scores](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.s9k3sh696bp6) | 153 |
+| [Table 12\. Functional Components of the Project](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.fydla0jyv2s3) | 157 |
+| [Table 13\. User Roles and Responsibilities](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.o8kwv8o81a95) | 159 |
+| [Table 14\. Project Development Phases](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.b971glsdaocs) | 161 |
+| [Table 15\. Testing Levels and Acceptance Criteria](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.7fwe14s3i8l0) | 165 |
+| [Table 16\. Defect Severity Classification](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.pioxr4nt0ezx) | 169 |
+| [Table 17\. ISO/IEC 25010:2023 Quality Areas Used in the Evaluation](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.w9vgewrmo6on) | 170 |
+| [Table 18\. Evaluation Tasks per Participant Group](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.a42v3hpdl3e6) | 171 |
+| Table 19\. Work Plan Schedule | 179 |
+| [Table 20\. Computing Standards and Modern Tools and Techniques](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.1y40x1360opr) | 174 |
+| [Table 21\. Market Model of the Study](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.ohdrdo3bytud) | 179 |
+| [Table 22\. Measurable Benefits per Period](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.fjmqlky2bybp) | 180 |
+| [Table 23\. Cost and Expense Model](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.51ksezete2dv) | 184 |
+| [Table 24\. Success Metrics](https://docs.google.com/document/d/1zFEYD2CJqaPm2BJ3Lpd3K7n0RjTc8OaA9oCirhbWYaw/edit?tab=t.0#heading=h.2jew5j3h2ndk) | 185 |
+
+# 
+
+# **Chapter 1** {#chapter-1}
+
+## **Background of the Study** {#background-of-the-study}
+
+	In the Philippines, the basic level of local governance is at the barangay, where the smallest unit of administration can provide frontline services such as document processing, incident response, and even community communication. Many of the Philippines' more than 42,000 barangays (42,004 as of March 31, 2024; Philippine Statistics Authority, 2024\) still use manual systems of paper-based process and face to face queues for barangay clearances, certificates of indigency and residency certificates. Those with a need for these will often wait for a long time, and there is seldom any clear sign as to how long it will take, if it will even get to the right office for consideration. But not only that, barangays are also notified of what is happening and what potential dangers are there in the area, such as flooding, damaged roads, and illegal dumping. Usually these reports are recorded on paper, or shared informally through messaging systems, making it difficult for barangay officials to remember which issue truly requires their attention, or how they can prioritize issues for response  particularly during emergencies like typhoons or the occasional flooding. If they don’t have a well organized, real time reporting process, they simply can’t keep up with the demands of the community.   
+These constraints have been also reported elsewhere. Brillo et al. (2023) came up with REPORTIT, a crime incident reporting and mapping system for Calamba. It did help with the delays in police response, but this was limited in scope, to mainly crime related reports and within the city. Barredo et al. (2023) built LBigayAksyon, an emergency response coordination app for the Municipal Disaster Risk Reduction and Management Office of Los Baños, Laguna. Somewhat facilitated emergency response, but never really got to routine document processing. Dela Peña (2025) studied an existing e-governance platform in Paracale, and found that, despite its overall good performance, response time and software reusability continued to be areas of weakness. Later, Webyu, a web-based barangay information management system for Barangay Yuson and automated administrative workflows was introduced by Gasmido et al. (2025), but mostly limited to records management for Barangay Yuson. Also it was not equipped with a mobile application part. Combined, these studies highlight that the ongoing barangay-level digitisation activity in the Philippines primarily addresses one of these functions, e.g., crime reporting, emergency coordination, records keeping and/or general service delivery. None of them combines these services with an evacuation route that avoids flooded and closed roads.   
+These problems are most serious during floods. When heavy rain comes, residents must know which roads are still passable and which evacuation center is open, but this information is usually spread only through announcements and word of mouth. Routing studies show that Dijkstra’s algorithm can give a flood-aware route to the nearest shelter when flooded roads are given a higher cost or removed (Piamonte et al., 2026; Ogawa et al., 2023), and open weather services such as Open-Meteo give free hourly rainfall forecasts for any location (Zippenfenig, 2023). These conditions illustrate the need for a digital barangay management system for Barangay Ampid I that digitizes service requests and incident reports and, as its novelty, uses the flood depths recorded by the barangay, the road closures of the Barangay DRRM and the blocked roads reported by residents to recommend the safest route to an available evacuation center, with an Open-Meteo rainfall advisory shown beside it. This need makes up the concept for BARANGAYAN, a mobile and web-based digital barangay management system with Dijkstra-based safest-path evacuation routing.
+
+## **Project Objectives**  {#project-objectives}
+
+     The main purpose of this study is to develop and test BARANGAYAN, a digital barangay management system for Barangay Ampid I whose resident profiles, incident reports and DRRM records feed one evacuation map. On this map, Dijkstra’s algorithm recommends the safest route to the available evacuation center with the lowest flood-weighted route cost, and an Open-Meteo rainfall advisory warns residents and officials when heavy rain is expected. In particular, the study will:
+
+* Develop an evacuation routing module that uses Dijkstra’s algorithm to recommend the safest route from the resident’s location to the available evacuation center with the lowest flood-weighted route cost for walking, motorcycle or tricycle, or car, using the flood depths recorded by the barangay DRRM, the road closures it publishes, the availability of the centers and the roads reported as blocked by residents, with an hourly Open-Meteo rainfall advisory shown beside the route.  
+* Develop the supporting barangay management features, namely resident profiles, document requests, medical drive registration and photo-based incident reporting, so that resident locations, reported incidents and DRRM updates feed the same evacuation map, with role-based access in line with the Data Privacy Act of 2012 (RA 10173).  
+* Evaluate the application using ISO 25010 in terms of functional suitability, performance efficiency, compatibility, interaction capability, reliability, and security.  
+    
+    
+  **Significance of the Study** 
+
+               This study contributes to the field of mobile computing and electronic governance by joining a digital barangay management system with flood-aware evacuation routing for Barangay Ampid I. Existing systems such as REPORTIT (Brillo et al., 2023), LBigayAksyon (Barredo et al., 2023), and Webyu (Gasmido et al., 2025\) handle crime reporting, emergency coordination or records, but none of them gives residents a route that avoids flooded and closed roads. In BARANGAYAN, the blocked roads reported by residents, the road closures published by the Barangay DRRM and the flood depths it has recorded are used by Dijkstra’s algorithm to recommend the safest route to an available evacuation center, and an Open-Meteo rainfall advisory tells residents and officials when heavy rain is estimated. The study also provides a documented example of applying an established algorithm and open weather data to barangay disaster response.  
+              This study is likely to have implications for a number of groups. With the new system, Barangay residents will enjoy saving their time and assure in requesting documents or reporting incidents in the Barangay and also having access to a single application for transactions and for any documents regarding emergencies. The officials and administrators of the barangay will benefit from the reduction of manual record keeping, enhanced service compliance tracking and quicker access to geographic information in incident response. Most importantly, residents receive a route to an available evacuation center that avoids flooded and closed roads, which can save lives during floods. Lastly, future researchers and developers will benefit from a documented reference of the application of configurable system design and known computer science algorithms to local governance in the Philippines which can serve as a basis for their future capstone projects or research.  
+**Barangay Residents**  
+The platform is a comprehensive tool for the constituents for their convenience, transparency and engagement to the citizens. Most importantly, it dispenses with the necessity of a person to stand in line to get official documents and barangay IDs, thus saving them time and transportation expenses. In addition, it allows residents to play a more active role in the safe and secure communities they live in by enabling them to file reports on the infrastructure damage, or public disturbances in their communities, with photographic evidence to ensure accurate documentation. One of the good things to the barangay's residents is the transparency to be provided by the automated service tracking module. where they can easily keep track of the progress of their document requests and incident reports, without having to go to the barangay hall for updates. Finally, the platform will keep residents informed and prepared, with instant community announcements and important emergency messages straight to their mobile devices, making it a safer and more connected community.  
+**Barangay Officials and Administrators**  
+The system is meant to act as a catalyst to increase the efficiency of the operations, inform decision making and to make crisis management for the local government unit easier. Admins will have a secure and consolidated on-line data storage space for residents' records, significantly reducing paper build-up, misplaced data, damaged records, and ensuring compliance with information personal privacy guidelines. Automating and streamlining the workflow of document requests and the status of incident reports helps to cut down on administrative time for staff and help them focus on more critical community services. Importantly, the combination of geospatial information in the interactive incident map enables officials to visually investigate community concerns, pinpoint problem areas and allocate resources to them more effectively. Moreover, the system modernizes the communication in the barangay which is conducted in just one broadcast channel, allowing the easy and timely dissemination of community information and life-saving emergency instructions to the entire population of the barangay at once. During floods, officials and the Barangay DRRM can publish road closures and evacuation-center status that change residents’ routes at once, and they can use the rainfall advisory and the evacuation map to decide where to send rescuers and which roads to close.	
+
+## 
+
+## 
+
+## **Scope and Delimitations** 
+
+###                **Scope** {#scope}
+
+This study covers the design, development, and pilot evaluation of BARANGAYAN for Barangay Ampid I, San Mateo, Rizal. It provides a resident Android application, a resident website, and a staff and administrator website using React Native, Expo, Next.js, and Supabase. Its main contribution combines flood-weighted Dijkstra evacuation routing with a separate Open-Meteo rainfall advisory. Supporting modules cover profiles, document requests, payments, incident reports, medical drives, announcements, and administration. Features are accepted only after the specified tests pass; prototype screens alone do not establish completion.  
+**RESIDENTS (MOBILE MODULE)**
+
+* Digital Service and Document Request Module
+
+  Residents view document requirements, fees, and processing targets; submit applications; and track pickup status. Profile records use separate first-name and last-name fields. Residents submit identification and proof of residency for authorized staff review; GPS is a preliminary check only. Household records identify one designated household head for coordination. Relationship choices depend on the selected member, and duplicate spouse links for the same person are rejected. These rules remain subject to functional verification.
+
+* Automated Service Tracking Module (SLA)
+
+  Residents track document requests, incident reports, and health registrations through their approved status stages. Processing targets identify overdue requests. Status changes must appear in the resident and staff interfaces without a manual page refresh; this behavior is verified through integration tests.
+
+* Community Incident Reporting and Mapping Module
+
+  Residents submit an incident category, description, location, and supporting photos. Leaflet displays OpenStreetMap data with attribution. Upload validation checks supported image formats, file size, and readability; authorized staff review relevance. Image upload does not imply automated image recognition. Blocked-road reports retain their source, time, and verification status for DRRM review.
+
+* Emergency and Disaster Information Module
+
+  The emergency module provides preparedness guides, hotlines, evacuation-center information, announcements, and family check-in. Announcements require start and end dates and may include a banner; expired items move to archives. Emergency notifications should play sound when notification permissions and device settings allow it. QR check-in must validate the code, selected family members, center, and attendance record, with clear invalid-code and duplicate-scan responses. Offline access is limited to previously stored guides and contacts; scanning and attendance updates require verification under the supported network conditions.
+
+  The rainfall advisory requests hourly model-estimated precipitation for Ampid I. It compares the latest completed hour (R1) and the heaviest forecast hour of the next three hours (F3) with configurable application thresholds of 7.5, 15, and 30 mm. These thresholds are informed by PAGASA rainfall-intensity classes; the app does not issue official PAGASA warnings. Stale or unavailable readings are labelled clearly. The advisory is displayed beside the route and does not change its weights.
+
+* Evacuation Route Module
+
+  Dijkstra selects the available evacuation center with the lowest flood-weighted route cost for walking, motorcycle or tricycle, or car. Recorded flood depths, published closures, blocked-road marks, and center availability determine usable segments. Distances and walking estimates are shown with alternative routes. Route recalculation after changed conditions must be tested separately from automatic destination switching; the resident retains the selected destination. The route is guidance based on recorded conditions, not a guarantee of safety.
+
+* Medical and Vaccination Drive Module
+
+  Resident side
+
+  * Registration. Residents review the drive schedule, eligibility requirements, and available slots before applying for themselves or an eligible family member. The application records the selected applicant and returns a reference number. Any priority or waitlist rule must be approved by the responsible health staff and verified before use.   
+  * Status tracking. Residents view their registration status and history. Duplicate applications and conflicting records are checked against the approved drive rules.  
+* Digital Payment Module
+
+  Residents choose pay at pickup or QR Ph through PayMongo. Participating banks and e-wallets may pay the generated QR code. The request status changes only after a verified payment confirmation. Development and pilot payments remain in sandbox mode; live settlement is outside the evaluated scope.
+
+**STAFF AND ADMINISTRATOR WEBSITE**
+
+* Administrative Analytics Dashboard
+
+  Authorized staff view pending requests, ready-for-pickup documents, collections, registered residents, and incident summaries. Document staff review applications and residency evidence, update status, and preview the approved document before printing. Treasurer-assigned staff review transactions. Changes must update the displayed records without a manual refresh.
+
+* Account, Security, and Privacy Compliance Module
+
+  Role-based access limits each account to its assigned records and actions. Privileged operations use server-side functions and database policies. Authorized staff may register residents and send account invitations; delivery and activation require testing. Privacy controls support data access and deletion requests, but legal compliance also requires approved notices, retention rules, consent procedures, and staff accountability (Republic Act No. 10173, 2012).
+
+* Medical and Vaccination Drive Module
+
+  Admin 
+
+  * Drive creation. Authorized health staff set the category, date, start and end times, venue, eligibility, and capacity. The system must reject a same-category event that conflicts with an existing date and time slot.  
+  * Registration monitoring. Authorized health staff review applicants, eligibility, available slots, and application status.  
+  * Attendance and stock. Attendance and stock adjustments require authorized confirmation and test evidence; a displayed QR code alone does not confirm dispensing.  
+  * Waitlist and no-show handling. Any slot-release or waitlist process follows the approved health-office rule and is verified before being described as automatic.  
+* Help and Support Module
+
+  Residents access published FAQs and barangay contact details. Assigned content staff maintain this information through the website.
+
+* Automated Service Tracking Module (SLA) 
+
+  Staff update approved request stages, including rejection, processing, ready for pickup, and completion. Residents still collect physical documents at the barangay. An integration test verifies that both interfaces display the same saved status without manual refresh. 
+
+* Archives
+
+  Expired announcements move to archives and leave active lists. Authorized staff may view and restore archived records, subject to retention rules. Archiving is distinct from permanent deletion, and restored announcements must satisfy valid publication dates. 
+
+### **Delimitations**  {#delimitations}
+
+             The study is confined as follows. Resident registration uses the device location only as a preliminary check of whether the resident is inside Barangay Ampid I; it is not a requirement for registration and is subject to the accuracy limitations of consumer GPS, so addresses outside the barangay are reviewed manually by an administrator. The payment processing process (PayMongo and QR Ph) is in sandbox or test mode during development and pilot testing, and would need a separate account verification process with PayMongo for live or production payment processing, which is not part of this study. The incident map and the evacuation-center map are created using Leaflet.js and OpenStreetMap data, both of which are free to use for this study and do not require a paid subscription or access key; a production deployment would need a tile provider whose usage policy permits its traffic, because the public OpenStreetMap tile servers allow only light use (OpenStreetMap Foundation, n.d.).   
+Routing is limited to the mapped Ampid I network and the approved transport modes. Recorded depths are historical inputs, not live street measurements. A missing depth is unknown; the current zero fallback must not be presented as a confirmed dry road. Routes using incomplete data require a visible limitation and DRRM review. No verified elevation model is assumed. Synthetic networks and depths test the algorithm; they do not establish local flood accuracy. Walking times use fixed speeds and exclude changes caused by rain, crowding, or floodwater.  
+The advisory uses model-estimated rainfall and does not predict street flood depth or river stage. Its thresholds require DRRM review and do not replace official warnings. Network access is required for current weather, transactions, notifications, and shared updates. Only stored guides and contacts may be read offline. The routing design excludes turn-by-turn voice navigation, live tracking, and automatic destination switching; recalculation behavior must match its test record. Android is the evaluated mobile platform. Pilot evaluation covers one partner barangay and does not establish performance elsewhere.
+
+# 
+
+# **Chapter 2** {#chapter-2}
+
+## **Theoretical Framework**	 {#theoretical-framework}
+
+This chapter describes the concepts that have been established and previous studies that have been related that will support Barangayan's design choices. The novelty of the study is the central concept of the study that is presented first together with the formulas, parameters, algorithm and thresholds of Dijkstra routing, and then the central concept of the study that incorporates the Open-Meteo Forecast API and the Historical Weather API rainfall advisory model. The other concepts are implemented in support of the sub-features of the platform. These ideas are found in theory and in literature and Barangayan's design directly addresses these  
+Dijkstra-Based Safest-Path Evacuation Routing with an Open-Meteo Rainfall Advisory (Novelty of the Study)  
+BARANGAYAN's innovative feature is its evacuation routing module which consists of two modules. The first is Dijkstra's shortest path algorithm which is used to find the safest path for the chosen transportation mode (walking, motorcycle or tricycle, or car) from the resident's phone location to the nearest available Barangay Ampid I evacuation center, along with the paths to the other evacuation centers that are reachable. The second is a rainfall advisory model developed using the Open-Meteo Forecast API and Historical Weather API (Zippenfenig, 2023; Open-Meteo, 2026\) which informs the resident, adjacent to the route, of the estimated time of heavy rainfall in the barangay. The Forecast API provides the live advisory and the Historical Weather API was analyzed during development to see the hourly rain of past storms at Ampid I and to choose realistic values for the software tests. Both parts are based on published works, including Dijkstra-based flood evacuation routing (Piamonte et al., 2026; Ogawa et al., 2023; Zhu et al., 2022; An et al., 2025; Jeon et al., 2023), rainfall-threshold early warning (Young et al., 2021; Gambini et al., 2024; Dao et al., 2021; Tsai et al., 2022), and Open-Meteo weather data for flood studies and applications (Zhou et al., 2026; Vhajage, 2025; de Lima et al., 2026). The contribution is the integration of flood-weighted routing and a separate rainfall advisory with resident services for Barangay Ampid I. Below are the formulas, parameters, algorithm and thresholds of each part, and how each are utilized in the BARANGAYAN mobile app. 
+
+### **A. Road Network, Transportation Modes and Edge Weight of the Routing Model**
+
+The road network of Ampid I is modeled as a weighted graph, G \= (V, E), where V is the set of street ends and intersections and E is the set of road segments between them. Each segment e has a length d(e) in meters and a recorded flood depth D(e). Before a route is computed, the resident chooses one transportation mode m: walking, motorcycle or tricycle, or car. Following the weight model of Project Bantay (Piamonte et al., 2026), the cost of using a segment is:
+
+| wm(e) \= d(e) × (1 \+ (α × fm(e))),   if e is passable for mode m wm(e) \= ∞,   otherwise |  |
+| :---: | ----: |
+
+where,  
+wm(e) \= weight (cost) of segment e for transportation mode m  
+d(e) \= length of segment e in meters  
+fm(e) \= flood-hazard score of segment e for mode m, from 0 to 1 (Equation 2\)  
+α \= flood penalty weight, set to 10  
+m \= transportation mode of the resident: walking, motorcycle or tricycle, or car  
+The flood penalty α \= 10 is the value that Project Bantay set through testing for the same formula, which also had a traffic term β·t(e) with β \= 0.5 (Piamonte et al., 2026); BARANGAYAN leaves out the traffic term because no verified traffic feed exists for the barangay, so the term would always be zero. With α \= 10, a segment costs at most 11 times its length: a fully flood-prone 100 m segment counts as 1,100 m, so a route accepts up to 10 m of extra travel for every flood-prone meter it avoids. Raising the cost of a hazardous segment, instead of removing it, follows Ogawa et al. (2023), whose virtual-cost routing increased the number of successful evacuees by up to 2.16 times. The flood-hazard score of a segment depends on its recorded flood depth and on the transportation mode:
+
+| fm(e) \= D(e) / Dmax,m |  |
+| :---: | ----: |
+
+where,  
+fm(e) \= flood-hazard score of segment e for mode m (0 \= no recorded flood; 1 \= at the passability limit of the mode)  
+D(e) \= recorded flood depth of segment e in meters, the typical highest depth that the barangay DRRM has recorded on the street in past floods (D(e) \= 0 if no flood is recorded); these values form a historical flood-risk map and are not real-time measurements  
+Dmax,m \= passability limit of mode m in meters (Table 1\)  
+A segment is passable for a mode only when its recorded depth is within the limit of that mode in Table 1\. Segments deeper than the limit, segments that DRRM has published as closed and segments that the resident has marked as blocked receive wm(e) \= ∞ and are never part of a route, in the same way that Project Bantay gives roads at critical flood levels an infinite weight (Piamonte et al., 2026). The limit for walking is knee height, because walking speed falls steadily as floodwater rises from ankle to knee to waist height (Dias et al., 2021). The limits for vehicles follow the flood gauge of the Metropolitan Manila Development Authority (MMDA), under which floods up to 10 inches (half-knee) are passable to all vehicles and floods from 13 inches (half-tire) are not passable to light vehicles (Malasig, 2024). Motorcycles and tricycles use the lower 0.25 m limit because they are lighter and less stable than cars, and the car limit of 0.33 m stays below the 0.38 m depth at which a moving passenger car begins to float (Al-Qadami et al., 2022).
+
+###### Table 1\. Passability limit Dmax,m of each transportation mode with the corresponding conditions
+
+| Transportation mode (m) | Dmax,m | Condition for a passable segment | Reference depth |
+| ----- | :---: | :---: | ----- |
+| Walking | 0.43 m | D(e) \< 0.43 m | Knee height in floodwater |
+| Motorcycle or tricycle | 0.25 m | D(e) ≤ 0.25 m | Half-knee (10 in); passable to all vehicles |
+| Car | 0.33 m | D(e) \< 0.33 m | Half-tire (13 in); not passable to light vehicles; below the 0.38 m floating depth of a moving car |
+
+Dias et al. (2021); Malasig (2024); Al-Qadami et al. (2022).
+
+Table 2 lists the flood-hazard score from Equation 2 for typical recorded depths. The same depth gives a higher score to a mode with a lower limit, so a vehicle avoids a flooded street more strongly than a person on foot, and a depth beyond the limit removes the segment for that mode.
+
+###### Table 2\. Flood-hazard score fm(e) of each transportation mode with the corresponding recorded flood depth
+
+| Recorded flood depth D(e) | Walking | Motorcycle or tricycle | Car |
+| ----- | :---: | :---: | :---: |
+| 0 m (no recorded flood) | 0 | 0 | 0 |
+| 0.08 m (ankle) | 0.19 | 0.32 | 0.24 |
+| 0.20 m (gutter, 8 in) | 0.47 | 0.80 | 0.61 |
+| 0.25 m (half-knee, 10 in) | 0.58 | 1.00 | 0.76 |
+| 0.33 m (half-tire, 13 in) | 0.77 | Not passable (∞) | Not passable (∞) |
+| 0.43 m (knee) or deeper | Not passable (∞) | Not passable (∞) | Not passable (∞) |
+
+Scores computed with Equation 2; depths from Dias et al. (2021) and Malasig (2024).  
+The transportation mode also decides which kinds of segments can be used at all. Footpaths and stairs can only be walked, and narrow alleys cannot be entered by a car. Ogawa et al. (2023) assumed evacuation on foot because evacuating by car during a flood risks engine failure and being trapped by rising water; BARANGAYAN therefore keeps walking as the default mode and gives vehicles stricter depth limits.
+
+###### Table 3\. Road segments that each transportation mode may use with the corresponding conditions
+
+| Segment condition | Walking | Motorcycle or tricycle | Car |
+| ----- | :---: | :---: | :---: |
+| Street or road | Yes | Yes | Yes |
+| Narrow alley | Yes | Yes | No |
+| Footpath or stairs | Yes | No | No |
+| Recorded depth beyond the limit of the mode (Table 1\) | No | No | No |
+| Closed by DRRM or marked as blocked by the resident | No | No | No |
+
+Road types from the BARANGAYAN road pack; closure and passability rule from Piamonte et al. (2026) and Ogawa et al. (2023).
+
+Walking time is computed from distance and a fixed pedestrian speed, as in the pedestrian evacuation model of Zhu et al. (2022):
+
+| t(p) \= Σ d(e) / v |  |
+| :---: | ----: |
+
+where,  
+t(p) \= walking time of route p in seconds  
+d(e) \= length of each segment e of route p in meters  
+v \= walking speed: 1.2 m/s on streets and 0.6 m/s on stairs  
+The street speed of 1.2 m/s is close to the 4 km/h (about 1.1 m/s) used by Ogawa et al. (2023), so 500 m of street takes about 7 minutes. For motorcycles, tricycles and cars the app shows the route distance but no travel time, because vehicle speed in floodwater falls with depth and with lane closures in a way that one fixed speed cannot capture (Mamuyac et al., 2025). Speed is also not part of the weight: dividing every segment by the same speed multiplies every route cost by the same constant, which cannot change which route is cheapest. The transportation mode therefore changes the best path only through Tables 1 to 3, that is, through which segments can be used and how strongly each flooded segment is penalized.
+
+### **B. Dijkstra's Algorithm and the Best-Path Recommendation**
+
+Dijkstra's algorithm is a classic algorithm for solving evacuation routes (Li et al., 2025). It finds the least-cost path from one node to all other nodes of a graph whose weights are not negative, which holds for every wm(e) in Equation 1\. The cost of a route is the sum of the weights of its segments:
+
+| Cm(p) \= Σ wm(e),   for every segment e in route p |  |
+| :---: | ----: |
+
+where,  
+Cm(p) \= total cost of route p for transportation mode m  
+p \= a route from the resident to an evacuation center  
+wm(e) \= weight of segment e for mode m (Equation 1\)  
+Dijkstra keeps a tentative cost dist(v) for every node, always settles the unsettled node with the lowest tentative cost, and then updates the nodes next to it with the relaxation rule:
+
+| dist(s) \= 0;   dist(v) \= min( dist(v), dist(u) \+ wm(u, v) ) |  |
+| :---: | ----: |
+
+where,  
+s \= node nearest to the resident, where the search starts  
+u \= node that has just been settled (lowest tentative cost)  
+v \= node next to u along a passable segment  
+dist(v) \= lowest cost found so far from s to v (∞ before v is reached)  
+wm(u, v) \= weight of the segment from u to v for mode m  
+One search gives the least cost to every evacuation center. The recommended route is the one with the lowest cost among the usable centers:
+
+| p\* \= arg min Cm(pc),   for c ∈ K |  |
+| :---: | ----: |
+
+where,  
+p\* \= recommended (best) route  
+pc \= least-cost route from the resident to evacuation center c  
+K \= set of reachable centers: centers confirmed as available, or, only if none of them can be reached, centers whose availability is unknown.  
+The parameters decide the best path in three ways. First, the passability limits and segment rules (Tables 1 and 3\) decide which segments exist for the chosen mode, so a closed, blocked or too-deep street can never be recommended. Second, the flood penalty α \= 10 and the flood-hazard score (Equation 2 and Table 2\) make every passable but flooded segment cost more than its length, in proportion to how deep it floods for that mode. Third, Equation 6 picks the center whose route has the lowest total cost, so the best path is the one that balances distance against recorded flood depth: a longer dry route is chosen whenever its extra length is smaller than the flood penalty it avoids. The binary min-heap version of Dijkstra runs in O((\|V\| \+ \|E\|) log \|V\|) time, which is small enough to run on a phone for a barangay-sized network.   
+In BARANGAYAN the routing is produced in the following steps:  
+1\. The resident's location is matched to the nearest segment that the chosen mode can use. No route is produced outside Ampid I or more than 50 m away from a usable segment.  
+2\. Segments that are not passable for the mode (Tables 1 and 3), closed or blocked are removed, and the remaining segments are weighted with Equation 1\.  
+3\. A single search from the resident (Equation 5\) computes the cost, the distance and, for walking, the walking time to every evacuation center.  
+4\. The route with the lowest cost (Equation 6\) is drawn as the main line and labelled as recommended. Up to three other reachable centers are shown as alternative lines, ordered by cost, with their distances, and the pure shortest-distance route is computed for comparison.  
+5\. If no center can be reached with the chosen mode, the app says so and recommends the mode that still has a passable route, for example walking when the streets are too deep for a car. If no mode has a passable route, the app tells the resident that no safe route is available and shows the contact of the barangay DRRM.  
+6\. A selected center stays selected until the resident chooses another one. The route is recomputed when the location, a closure, the status of a center or a blocked-road mark changes.  
+This design follows the closest routing studies. Project Bantay combines the Dijkstra core with a breadth-first search (BFS) model of flood spread driven by water-level readings, whereas BARANGAYAN keeps the Dijkstra core and uses recorded flood depths and the Open-Meteo rainfall advisory instead of water-level readings. Jeon et al. (2023) route a user to the nearest shelter and then to the next nearest shelter if the first route is unavailable, which supports the main and alternative routes; An et al. (2025) re-plan Dijkstra routes as flood scenarios change, and Tran et al. (2026) show that a router which only checks conditions at departure sends 7.8 per cent of trips onto roads flooded before arrival, which supports recomputing the route when conditions change. Alizadeh et al. (2021) similarly used A\*, a heuristic version of Dijkstra, to find shortest paths that avoid flooding.  
+To show the computation, consider a resident at node S with two evacuation centers, C1 and C2, connected through the junctions J1 and J2. Table 4 lists the segments, their recorded depths and their weights from Equations 1 and 2\.
+
+###### Table 4\. Example segments and their weights wm(e) for each transportation mode
+
+| Segment | Length d(e) | Recorded depth D(e) | Type | Walking | Motorcycle or tricycle | Car |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| S – J1 | 100 m | 0 m | Street | 100.0 | 100.0 | 100.0 |
+| J1 – C1 | 80 m | 0.30 m | Street | 638.1 | ∞ | 807.3 |
+| S – J2 | 150 m | 0 m | Street | 150.0 | 150.0 | 150.0 |
+| J2 – C2 | 120 m | 0.10 m | Street | 399.1 | 600.0 | 483.6 |
+| J1 – J2 | 60 m | 0 m | Street | 60.0 | 60.0 | 60.0 |
+| J1 – C2 | 90 m | 0 m | Footpath | 90.0 | ∞ | ∞ |
+
+Computed by this study with Equations 1 and 2 and the limits in Table 1\. For example, J1 – C1 for walking: 80 × (1 \+ 10 × 0.30 / 0.43) \= 638.1.  
+For walking, Dijkstra first settles S and reaches J1 at 100 and J2 at 150\. Settling J1 gives C1 \= 100 \+ 638.1 \= 738.1 and C2 \= 100 \+ 90 \= 190.0; reaching J2 through J1 would cost 100 \+ 60 \= 160, which is not lower than 150, so J2 keeps 150\. Settling J2 would give C2 \= 150 \+ 399.1 \= 549.1, which is not lower than 190.0, so C2 keeps 190.0. Table 5 shows each step.
+
+###### Table 5\. Dijkstra computation for walking from node S
+
+| Step | Node settled (cost) | dist(J1) | dist(J2) | dist(C1) | dist(C2) |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| 1 | S (0) | 100.0 | 150.0 | ∞ | ∞ |
+| 2 | J1 (100.0) | 100.0 | 150.0 | 738.1 | 190.0 |
+| 3 | J2 (150.0) | 100.0 | 150.0 | 738.1 | 190.0 |
+| 4 | C2 (190.0) | 100.0 | 150.0 | 738.1 | 190.0 |
+| 5 | C1 (738.1) | 100.0 | 150.0 | 738.1 | 190.0 |
+
+Computed by this study with Equation 5, the relaxation rule of Dijkstra's algorithm (Li et al., 2025; Piamonte et al., 2026).
+
+###### Table 6\. Recommended route for each transportation mode in the example
+
+| Transportation mode | Cost to C1 | Cost to C2 | Recommended route | Distance | Reason |
+| ----- | :---: | :---: | :---: | :---: | ----- |
+| Walking | 738.1 | 190.0 | S → J1 → C2 | 190 m (about 2.6 min) | Avoids the 0.30 m flooded segment for only 10 m more than the shortest route |
+| Motorcycle or tricycle | Not reachable | 750.0 | S → J2 → C2 | 270 m | J1 – C1 is deeper than 0.25 m and the footpath cannot be used |
+| Car | 907.3 | 633.6 | S → J2 → C2 | 270 m | J1 – C1 is passable but costly (score 0.91) and the footpath cannot be used |
+
+Computed by this study with Equations 4 to 6\.  
+The shortest route by distance leads to C1 in 180 m, but it passes through a street that floods to 0.30 m. For every mode the recommended route leads to C2 instead, and each mode reaches it differently: a person on foot uses the dry footpath, while vehicles, which cannot use the footpath, take the longer street through J2.
+
+### **C. Open-Meteo Forecast API: Parameters of the Rainfall Advisory Model**
+
+Open-Meteo is selected because its hourly precipitation, explicit model selection, and historical datasets support the project’s advisory and controlled tests without a free-tier API key. OpenWeather and WeatherAPI also provide weather services, but require API-key management; their inclusion here is a design comparison, not an accuracy ranking (Open-Meteo, n.d.; OpenWeather, n.d.; WeatherAPI.com, n.d.). A scheduled server function requests one fixed barangay location. Data are model estimates, not rain-gauge observations, river-stage readings, or street-flood measurements. The free service has no uptime guarantee; stale or failed requests must display an unavailable-data message. Table 7 identifies the variables used.
+
+###### Table 7\. Request parameters of the Open-Meteo Forecast API with their purpose
+
+| Parameter | Value | Purpose |
+| ----- | ----- | ----- |
+| latitude, longitude | 14.6775, 121.1150 | One fixed point inside Ampid I; the returned grid-cell center (14.657293, 121.11524, elevation 18 m) is about 2.2 km south, and the whole barangay (about 1.83 km by 1.41 km) falls in this one cell |
+| models | ecmwf\_ifs | Pins the ECMWF IFS 9 km model so that Open-Meteo cannot switch models without notice |
+| hourly | precipitation, precipitation\_probability | Precipitation (mm, sum of the preceding hour) is the main series; the probability of more than 0.1 mm is stored as context only |
+| current | precipitation, rain, showers | Recorded with each reading but not used for the level, because outside Europe and North America the 15-minute values are interpolated from hourly data |
+| past\_hours, forecast\_hours | 1, 3 | Returns in one call the 4 hourly values that R1 and F3 need |
+| timezone | Asia/Manila | Time stamps in Philippine local time (UTC+8) |
+
+Zippenfenig (2023); Liu et al. (2024).  
+The function requests an update every 60 minutes. Failed, timed-out, missing, negative, or implausible readings are rejected rather than stored as zero. The last accepted reading retains its timestamp; after three hours it is labelled stale. The advisory links residents to official PAGASA information while routes continue to use recorded road conditions (Open-Meteo, n.d.).
+
+### **D. Formulas of the Rainfall Advisory Model**
+
+Let P\[k\] be the hourly precipitation in millimeters for the hour ending at hourly time k, and let k0 be the latest completed hour before the present hour. The model computes two metrics:
+
+| R1 \= P\[k0\] |  |
+| :---: | ----- |
+| F3 \= max( P\[k0 \+ 1\], P\[k0 \+ 2\], P\[k0 \+ 3\] ) |  |
+
+where,  
+R1 \= rain in the latest completed hour, in mm  
+F3 \= heaviest hourly rain forecast for the next 3 hours, in mm  
+P\[k\] \= hourly precipitation for the hour ending at time k, in mm  
+k0 \= latest completed hour before the present hour  
+R1 captures short, intense bursts, and F3 lets the advisory appear before the heaviest rain arrives.   
+Applying the warning limits to forecast rainfall, and not only to observed rainfall, follows Young et al. (2021) and Young et al. (2025), so that the advisory can appear before the heaviest rain arrives. No other rainfall metric, such as the rain of the last 3 or 24 hours, is used, because rainfall thresholds for such totals depend on the local catchment (Dao et al., 2021; Gambini et al., 2024\) and this study does not build its own weather or flood model.  
+A metric is treated as missing, not as zero, if any value it needs is null or negative, because missing information is unknown, never dry. In the live response of November 1, 2026, the model gave R1 \= 0.0 mm and F3 \= 0.0 mm, so the advisory level was 0\.
+
+### **E. Rainfall Thresholds and Advisory Levels**
+
+The two metrics are compared with thresholds T to publish one advisory level, from 0 (no advisory) to 3 (highest advisory):
+
+| level \= max { L ∈ {1, 2, 3} : R1 ≥ TR1\[L\] or F3 ≥ TF3\[L\] };   level \= 0 if no L qualifies |  |
+| :---: | ----: |
+
+where,  
+level \= published advisory level, from 0 to 3  
+L \= candidate advisory level (1, 2 or 3\)  
+TR1\[L\] \= threshold of R1 for level L, in mm (Table 8\)  
+TF3\[L\] \= threshold of F3 for level L, in mm (Table 8\)  
+The thresholds increase with the level, Tx\[1\] \< Tx\[2\] \< Tx\[3\] for each metric x, and a metric with no threshold set for a level is skipped for that level. A level applies as soon as either of its limits is reached.
+
+###### Table 8\. Advisory level of the R1 and F3 metrics with the corresponding conditions
+
+| Advisory level | Condition on R1 (latest hour) | Condition on F3 (heaviest hour of the next 3 hours) | PAGASA warning colour |
+| :---: | :---: | :---: | :---: |
+| 3 | R1 ≥ 30 mm | F3 ≥ 30 mm | Red |
+| 2 | 15 mm ≤ R1 \< 30 mm | 15 mm ≤ F3 \< 30 mm | Orange |
+| 1 | 7.5 mm ≤ R1 \< 15 mm | 7.5 mm ≤ F3 \< 15 mm | Yellow |
+| 0 | R1 \< 7.5 mm | F3 \< 7.5 mm | None |
+
+PAGASA (2019) for the hourly rainfall bands and Pesa & Urag (2025) for the warning colours; Young et al. (2021, 2025\) for applying limits to forecast rainfall. The published level is the highest level reached by either metric.  
+The R1 and F3 limits are the PAGASA heavy rainfall warning bands, in which yellow is 7.5 to 15 mm of rain in one hour, orange is 15 to 30 mm and red is more than 30 mm. These are PAGASA's hourly rainfall intensity classes, heavy (7.5 to 15 mm per hour), intense (15 to 30 mm per hour) and torrential (more than 30 mm per hour), set by the PAGASA Memorandum of 20 June 2012, and PAGASA issues its colour-coded heavy rainfall warnings for hourly and 3-hourly rainfall (PAGASA, 2019; Pesa & Urag, 2025). R1 compares the latest model-estimated hour with these bands, and F3 compares the heaviest forecast hour of the next 3 hours with the same bands, so the advisory can rise before the heavy hour arrives; no new limit is derived by this study. All thresholds are starting values only and can be changed by the administrator in the admin website, because rainfall thresholds depend on the local catchment and drainage and cannot be copied from another place (Dao et al., 2021; Gambini et al., 2024). Grading a warning into colour-coded levels from rainfall limits is the same structure Young et al. (2021) used for pluvial flood warning in Alexandria, Egypt.  
+To keep the warning line from flickering, the published level uses hysteresis: it rises at once and falls by one level only after two consecutive lower evaluations:
+
+| published(n) \= level(n),   if level(n) ≥ published(n − 1\) published(n) \= published(n − 1\) − 1,   if level(n) \< published(n − 1\) in two consecutive evaluations published(n) \= published(n − 1),   otherwise |  |
+| :---: | ----: |
+
+where,  
+published(n) \= advisory level shown to residents after evaluation n  
+level(n) \= level computed with Equation 9 at evaluation n  
+n \= hourly evaluation number  
+Because the forecast is re-issued every 6 hours, a single low reading after a new model run can fall below the previous run without the weather changing; with hourly polling, the two-evaluation rule delays lowering by about 2 hours. A reading older than 3 hours (3 polling intervals) is labelled stale and is never shown as current.
+
+### **F. Software Testing of the Rainfall Advisory with Injected Rainfall Values**
+
+The rainfall advisory is tested as software and not as a weather forecast: the study checks that the code turns a given rainfall value into the correct level on the screen, and it does not score how well Open-Meteo predicted past storms. The Historical Weather API (https\://archive-api.open-meteo.com/v1/archive), which returns hourly precipitation for past dates with the same preceding-hour convention (Zippenfenig, 2023), was analyzed only during development to see realistic hourly rainfall values for Ampid I, and it is never called by the app at run time. In each unit test, the Open-Meteo response is replaced by a saved test response into which fixed rainfall values are injected, for example 35 mm in the latest hour, and the test checks the level computed with Equation 9, the level published with Equation 10 and the warning line shown on the Centers screen. Table 9 lists the test cases.
+
+###### Table 9\. Unit test cases of the rainfall advisory with injected rainfall values
+
+| Test case | Injected values | Expected result |
+| ----- | ----- | ----- |
+| No rain | R1 \= 0 mm; F3 \= 0 mm | Level 0; no warning line |
+| Yellow band | R1 \= 8 mm | Level 1 (yellow) warning line |
+| Orange band | R1 \= 15 mm | Level 2 (orange) warning line |
+| Red band | R1 \= 35 mm | Level 3 (red) warning line |
+| Forecast only | R1 \= 2 mm; F3 \= 20 mm | Level 2 before the heavy hour arrives |
+| Falling rain | Level 3, then two readings of R1 \= 5 mm | Level falls to 2 only after the second lower reading (Equation 10\) |
+| Missing value | R1 \= null | Reading rejected and never stored as 0 mm; previous level kept |
+| Old reading | Last accepted reading 4 hours old | Card says that rainfall information is not current |
+| Route unchanged | Each level from 0 to 3 | Route lines, distances and center ranking stay the same |
+
+Test cases defined by this study with Equations 7 to 10 and the limits in Table 8 (PAGASA, 2019).  
+A test passes only when every case returns its expected level and warning line, and the tests are run again whenever the thresholds or the advisory code change. Rainfall estimates for Philippine typhoons are uncertain (Aryastana et al., 2022), so the advisory only says that heavy rain is estimated and never that a street is flooded.
+
+### **G. Display of the Rainfall Advisory beside the Dijkstra Route in the BARANGAYAN**
+
+#### Mobile App
+
+The rainfall advisory and the Dijkstra route are shown together but kept separate in computation. Open-Meteo returns one rainfall value for one grid cell that covers the whole barangay, so any penalty built from it would give every segment the same factor c. The weight would then become wm(e) \= (1 \+ 10c) × d(e) for every segment, which multiplies the cost of every path p by the same constant:  
+cost'(p) \= Σ (1 \+ 10c) · d(e) \= (1 \+ 10c) × cost(p),   so the path with the least cost'(p) is the same path as the one with the least cost(p)  
+Multiplying all costs by one constant cannot change which path is cheapest, so a rainfall penalty would leave the route unchanged and only inflate the displayed costs, and removing segments because of rainfall would remove all of them at once and leave every resident without a route. For this reason rain never changes a route in BARANGAYAN: the route is decided by Dijkstra, DRRM closures, center availability and the roads the resident marks as blocked, while rainfall is delivered as an advisory beside the route. Mannarini et al. (2024) gave the condition under which time-dependent Dijkstra over weather fields remains exact, and Xue and Chai (2021) added weather data to Dijkstra edge weights for routing along buoys; in both studies the weather fields vary across the network, which is what allows weather to change a route, while a single grid-cell value at barangay scale does not vary between streets.  
+In the BARANGAYAN mobile app, the server computes the level once for every accepted hourly reading, so every device shows the same level. The app reads the level through a public function that needs no sign-in, refreshes it every 5 minutes while the evacuation Centers screen is open, and shows the time of the reading with it. When the level is 1 to 3, one warning line appears in the routing status card of the Centers screen, for example: "Heavy rain estimated for Ampid I: level 2 for 14:00. Routes follow only the road closures DRRM has published." When the data is older than 3 hours or unavailable, the card states that rainfall information is not current and that this does not mean there is no rain. The route lines, walking times and center ranking stay the same at every level, and the attribution "Weather data by Open-Meteo.com (CC BY 4.0)" is shown with the card.
+
+### **Summary of the Final Parameters of the Novelty**
+
+The six final parameters of the novelty, three for the routing and three for the rainfall advisory, are summarized below with what each value means in numbers and the sources on which each is based. Other values described in Sections A to G, such as the walking speeds, the number of routes shown, the refresh and polling intervals and the level-change rule, are settings of the app and not parameters of the model.
+
+| Parameter | Final value and meaning | Basis |
+| :---- | :---- | :---- |
+| Flood penalty α | wm(e) \= d(e) × (1 \+ 10 × fm(e)); a fully flood-prone 100 m segment counts as 1,100 m, so a route accepts up to 10 m of extra travel for every flood-prone meter it avoids | Piamonte et al. (2026) set α \= 10 through testing; at α \= 10 the longest accepted detour (1,000 m per 100 m of flood-prone street) still fits inside Ampid I (about 1.83 km by 1.41 km) |
+| Flood-hazard score fm(e) | D(e) / Dmax,m, from 0 to 1, using the flood depth DRRM recorded on each street; 0 if no flood is recorded, so the route is then the shortest | Virtual-cost approach of Ogawa et al. (2023); Dias et al. (2021); Mamuyac et al. (2025) |
+| Passability limit Dmax,m | Walking 0.43 m, motorcycle or tricycle 0.25 m, car 0.33 m; deeper, closed or blocked segments get wm(e) \= ∞ and are never part of a route | Dias et al. (2021); Malasig (2024); Al-Qadami et al. (2022); Piamonte et al. (2026) |
+| Rainfall data source | Open-Meteo ecmwf\_ifs (9 km), hourly, for both the live forecast and the archive; one grid cell (14.6775, 121.1150) covers all of Ampid I | Zippenfenig (2023); Liu et al. (2024); Lavers et al. (2022) |
+| R1 limits | 7.5 / 15 / 30 mm of rain in the latest hour for Levels 1 / 2 / 3 | PAGASA hourly rainfall bands (PAGASA, 2019; Pesa & Urag, 2025\) |
+| F3 limits | 7.5 / 15 / 30 mm in the heaviest forecast hour of the next 3 hours for Levels 1 / 2 / 3 | PAGASA hourly rainfall bands (PAGASA, 2019; Pesa & Urag, 2025); Young et al. (2021, 2025\) for limits on forecast rainfall |
+
+### **Sustainable Development Goals Related to the Novelty**
+
+The evacuation routing novelty contributes to the following Sustainable Development Goals (SDGs) of the 2030 Agenda (United Nations Department of Economic and Social Affairs \[UN DESA\], 2023):
+
+* #### **SDG 11 –** Sustainable Cities and Communities. Target 11.5 aims to reduce the number of deaths and people affected by disasters, including water-related disasters, with a focus on people in vulnerable situations; the module gives every resident the safest route, on foot, by motorcycle or tricycle, or by car, to the available evacuation center with the lowest flood-weighted route cost, avoiding published road closures, blocked roads and streets recorded as too deep for the chosen mode. Target 11.b promotes holistic disaster risk management at all levels; the barangay's own DRRM closures and center availability drive every route.
+
+* #### **SDG 13 –** Climate Action. Target 13.1 aims to strengthen resilience and adaptive capacity to climate-related hazards and natural disasters; the rainfall advisory tells residents when heavy rain is estimated before or while they move to a center. Target 13.3 aims to improve awareness and institutional capacity on early warning; the advisory limits follow the PAGASA warning bands and are set by the barangay.
+
+* #### **SDG 9 –** Industry, Innovation and Infrastructure. Target 9\. aims to increase access to information and communication technology; the module delivers free, open weather data and a phone-based routing service that works without a paid map subscription.
+
+The other modules of BARANGAYAN support SDG 16 (Peace, Justice and Strong Institutions, Target 16.6) through effective and transparent barangay services, and SDG 3 (Good Health and Well-Being, Target 3.8) through the medical and vaccination drive module; these remain sub-features of the study.
+
+### **Electronic Governance and Digital Barangay Services** 
+
+E-governance is a term that refers to the practice of using technologies including computers, mobile applications, and the Internet in order to provide services and keep records for government organizations. E-governance makes it possible for government institutions to reach out to residents without requiring their presence at government offices. As an example, e-governance can be understood as a possibility of making a request in an electronic form, as opposed to a paper one; electronically managing documents; and even keeping track of the stage of the transaction with government organizations without having to come to the office in person.  
+Barangayan, which can help one receive three types of documents from local barangays, including good standing certification, certification of indigency, and proof of residency. Many years ago, residents had to visit the local barangay office to fill in documents, wait in a queue to submit their applications, and come back later to collect their documents. There were no ways of knowing whether the applications were processed or not, not before visiting the office in person. But now with the help of Barangayan, residents could apply with them knowing about their applications.  
+Dela Peña (2025) studied governance of a municipality in Paracale. He identified two problems: delayed processing of requests and software that was hard to change once it was built. Both problems matter for a barangay, where fees, requirements and processing targets change over time.  
+Barangayan addresses both of these issues. First, it introduces a tracking system which describes every step that a request goes through, namely submission, review, approval or denial as well as completion with a timestamp for each step. Both a resident and a barangay staff member can know the current status of the request without being given any updates by others. Second, the documents, fees and requirements of Barangay Ampid I are stored as data that the barangay administrator can change, so the staff can add a document type or update a fee on their own without a developer changing the code.  
+Gasmido et al. (2025) explained the details of a barangay management system for a specific barangay. The processing and language were done according to this barangay. Its document types, fees and procedures were built around that barangay, and it has no mobile application or disaster-response feature. Gasmido’s system allows setting up digitized records, and workflows for one barangay whereas Barangayan builds on this for Barangay Ampid I by letting the administrator change document types, fees and procedures without developer help, and by linking these services to the evacuation map and the safest-route routing of the novelty.  
+At the same time, all the studies focus on developing systems that improve how citizens access barangay services but they vary in many crucial aspects. In the case of Dela Peña (2025), it is evident that the study focused on a system implemented in a certain municipality and tested its efficiency concerning getting access to barangay services and understanding what precise aspects worked and what didn’t. Gasmido et al. (2025) researched a records and workflow system for one barangay that does not include a mobile application or disaster-response features.   
+Community Incident Reporting and Geographic Information Systems  
+Community incident reporting enables citizens to communicate local problems to authorities. The problems may vary from non-functional streetlight, inundated road, garbage which hasn’t been cleared or damaged pavement. Residents submit their complaint via direct input into the system, thus eliminating the need to visit barangay hall or use the mobile app to write a private message to the authorities. After entering the info into the system barangay staff have an opportunity to react to complaints quickly.  
+Geographic Information System, GIS, helps the authorities to enhance the system by pinpointing the problem locations. When reports come along with geographical data, it makes it possible for the authorities to see their problems on the map instead of going through hundreds of complaints. This, in its turn, enables the authorities to determine the troublesome area. For instance, when a number of complaints about flooding in the area appear , the officials understand that it is necessary to solve the flooding problem instead of trying to deal with random complaints.  
+Brillo and colleagues, in (2023), created an Android app called REPORTIT that has a web map paired with it. This app was produced to enable users to pass on incidents to the authorities. Despite its efforts in the area of crime, the study did not ascertain whether this procedure would be effective in other fields like road damage and pollution in the community. On its part, the Barangayan app allows for different applications to be conducted including infrastructure repairs, cleanliness activities and safety issues. All the reports are forwarded to a particular barangay of the user rather than disseminated to the whole city that covers several barangays.  
+Barredo et al. in (2023) created another app called LBigayAksyon to facilitate the operations of an office concerned in reducing the impact of disasters. The main aim of this application was in creating connection and helping in coordinating needs of the citizenry with the rescuers. The app was not able to perform the function of handling everyday issues like requests for documents and handling paperwork. In this light, it can be seen that both apps have various accounts in their operation concentrated on the issues of emergency management without handling non-emergency issues.  
+Inside the app a resident starts by filling out a form that asks for a title describing the issue, a category selected from a list the current GPS location, a written description (optional) and up to five photos. Before the report is accepted the system checks that all the details are correct. It verifies that the latitude and longitude values are within real-world limits and that no more than five pictures are attached. After validation the photos are uploaded to a storage service and the report is saved as a new entry. Staff in the barangay can then access the data later.  
+On the side barangay employees see all submitted reports displayed on an interactive map. They can update the status of each report. Marking it as "under review " "in progress ". Resolved”. As the problem gets worked on. This helps keep track of how fast issues are being addressed.  
+All three systems share an idea: turning a resident's observation into structured data so local officials can take action. What sets Barangayan apart is that it is built around the needs of Barangay Ampid I, where incident reports and blocked-road reports also feed the evacuation routing. Whether combining incident reporting with functions actually leads to faster or better-coordinated responses depends on real-world use. It cannot be decided by looking at the code. The true test will come when residents and staff start using the system after it is fully deployed.  
+Disaster Risk Reduction and Emergency Information   
+A disaster risk reduction and management system is expected to accomplish several things when disasters occur: warn people to take action; provide easy-to-understand visual information about disaster; maintain an updated list of available safe shelters; communicate with people to the safe shelters; and be aware of where people who may be affected by a disaster are. The needs are the foundation of the Barangayan emergency module. It has various messages, such as regular updates, important warnings, instructions for people to prepare for a disaster, a list of evacuation centres, how to scan a QR code on arriving at a centre, and a way to check on family members in an emergency. The concept of the module is to have the evacuation routing novelty from the beginning of this framework, which is a Dijkstra-calculated safest route to the available evacuation center with the lowest flood-weighted route cost for the chosen transportation mode, displayed alongside an Open-Meteo rainfall advisory.  
+This module shares similarities with LBigayAksyon (Barredo et al., 2023), as both are concerned with ensuring the effectiveness of Emergency Response and reaching and communicating to the people who need it. LBigayAksyon, however, coordinates reports between residents and rescuers, and does not direct residents to an evacuation center. The evacuation routing of Barangayan is similar to the map-based shelter guidance of Jeon et al. (2023) which routes a user to the nearest shelter, or if a road is blocked to the next nearest shelter, and to the evacuation operation management system of Jain et al. (2024) that assists residents in the Philippines in finding an available evacuation center.  
+Medical and Vaccination Drive   
+Vaccination and immunization management through digital means is an active priority in the Philippines, recognized by the government. DigiVacc, a child immunisation system based on the VaccTrace and VaccCheck Apps, was launched by the Department of Health, UNICEF Philippines and the Government of Japan (2023). It was rolled out in 13 local government units to link caregivers to health workers. Other factors that can impact uptake are self-registration and scheduling tools, as demonstrated by Agarwal et al. (2022). Vaccination uptake at a primary care clinic with a self-scheduling web and SMS platform was 51%, and 36-39% in the surrounding town, county, and state, respectively. These studies collectively justify a system registering residents and queuing them up, instead of one based on a purely walk-in basis.  
+To allocate COVID-19 vaccines to Philippine communities, Culaste et al. (2023) created a decision support system (DSS) that uses a weighted scoring based on an analytic hierarchy process (AHP) and integer programming. They were able to operate under limited vaccine supply and station capacity. If capacity was reached, it postponed the allocation of lower priorities for the following day. The study demonstrates that a limited, limited supply can be allocated in a workable manner through weighted prioritization.  
+BARANGAYAN differs from these studies in three ways. DigiVacc is a national immunization record system for children, and it is not used to share the limited stock among the registrants during a single drive. At one clinic, Agarwal et al. (2022) conducted a study on scheduling but did not assess the eligibility of registrants. Culaste et al. used weighted scoring at the community level, solved using integer programming at several sites and days. BARANGAYAN uses a resident-by-resident weighted scoring. It sorts residents by age, PWD and comorbidity and it only employs a priority queue rather than the linear programming solve. This is a lighter approach and is appropriate for a real time mobile environment within a single barangay. It also shuffles no-show registrants' slots to the next-highest waitlisted resident, and it keeps the numbers of remaining stock up-to-date.  
+Real-Time Information Management   
+	Real‑time information management means that a change made in one part of an application appears immediately in another part without the user having to refresh or reopen the app. For example when a barangay staff member confirms that a resident’s payment has gone through that resident should see the updated status on their phone away rather than only finding out the next time the resident opens the application. This capability is important in Barangayan because many kinds of information the status of a service request the status of a payment updates to an incident report information about a health drive and general barangay announcements all must stay synchronized between what barangay office staff see and what appears on a resident’s phone.  
+The technology behind this feature is Supabase Realtime. Supabase Realtime allows the application to subscribe to changes happening in parts of the database and push those changes out to connected devices automatically. In practice the part of the application that tracks payment status subscribes directly to changes on the underlying payments data so that a confirmed payment is reflected on a resident’s screen as soon as it happens. As a safeguard against situations where this live connection might be interrupted or delayed for instance because of a mobile network, the same feature also periodically checks payment status through a separate on‑demand request. This ensures that a resident is not left seeing information forever even if the real‑time connection drops temporarily.  
+The history of a service request’s status is kept through a shared tracking mechanism paired with rules built directly into the database. These database rules automatically record a status entry whenever a request changes state instead of relying only on the application’s front‑end code to remember to log the change. This database‑level enforcement helps ensure that the status history stays accurate and complete even if a particular screen or feature in the application has a bug. Both the original design goal and the current implementation agree that residents should see current status information at all times. What has not yet been established is how quickly and how reliably an update actually reaches a resident’s screen under real‑world conditions such as signal strength or high server load. That would need to be measured through performance testing rather than assumed from the presence of these technical components alone.
+
+### **Digital Payments and QR Ph** 
+
+Barangayans' way of collecting fees for barangay services depends on two parts: PayMongo, a third-party service that handles payments and QR Ph, the national standard for QR-code payments set by the Bangko Sentral ng Pilipinas. The BSP’s official memo on QR Ph matters because it creates one government-mandated QR format that all banks and e-wallets must support. Barangayan follows this standard of making its own custom QR code system.  
+Inside the code all payment actions happen through server-side Edge Functions. These functions run on the server not in the app itself. This means PayMongo’s private access key is never stored inside the app, which keeps it safe from people who might try to look into the app’s code. Five different Edge Functions manage payment tasks. One creates a payment when a resident starts paying. Another checks if an existing payment has been completed or still pending. A third cancels a payment if it’s no longer needed. A fourth issues refunds when required. The fifth function receives and processes webhook messages from PayMongo; these are notifications sent to confirm when a payment has actually gone through.  
+The webhook function also checks a signature attached to each message. This step makes sure only real messages from PayMongo are accepted. It stops someone from sending payment confirmed messages to trick the system. The function that checks payment status also verifies that the person asking for information is the owner of that payment. This prevents residents from seeing residents’ payment details.  
+The system’s environment settings make it clear that using QR Ph properly needs setup with a bank or licensed payment aggregator before any real money can move. Now the code works in PayMongo’s sandbox mode, a test environment. It shows a separation between the mobile app and PayMongo’s private keys, which is good security practice. Whether the payment feature is truly ready to handle live transactions, with real money hasn’t been confirmed. That would require finishing the settlement setup and testing everything in a production environment, not just in the sandbox.
+
+### **Privacy, Authentication, and Role-Based Access** 
+
+Barangayan handles data privacy using two main ideas. First role‑based access control means a user can only see or do what their role allows. Second Republic Act No. 10173 The Data Privacy Act of 2012 gives citizens clear rights over their own personal information. To meet these rules Barangayan protects accounts, lets residents recover passwords, lets a resident get a copy of their own stored data and lets a resident delete their account forever.  
+Supabase Auth takes care of user authentication. On the app that residents use, the resident’s session is saved on their own device. On the web‑based Admin Website a cookie keeps the resident signed in. To decide if a resident can use admin features the system looks at the resident’s role. Only a resident whose role is set to administrator can reach the parts. A regular resident account is blocked from those parts no matter how the resident tries to get in.  
+Two Edge Functions give residents the privacy rights that were mentioned. The first function lets a resident download a copy of their own information, including the resident’s profile, service requests, incident reports, health‑drive registrations evacuation‑center check‑in records and device tokens. The function is built so that it only returns data that belongs to the resident who asked for it. No one can pull another resident’s data. The second function deletes any files the resident uploaded, cleans up the resident’s records from the database and finally turns off the resident’s account using Supabase’s admin tools.   
+These two functions match the privacy rights residents should enjoy, but having code for export or deletion does not automatically make the whole system legal, under the Data Privacy Act. Real compliance also needs Barangayan’s data‑retention policy: the consent forms residents sign when they register and the internal steps Barangayan staff follow when they handle personal data. None of these can be confirmed by looking at the application’s code.
+
+## **Conceptual Framework** {#conceptual-framework}
+
+This part presents the model built for this study: how Barangayan’s own data flows through the running system, how the requirements were turned into the development build and how the system is structured. The model shows the flow of Barangayan data, the model shows the transformation of requirements into the development build and the model shows the architecture that structures the system.
+
+### **Input–Process–Output Framework**
+
+Barangayan's development uses an Input–Process–Output or IPO framework. The input, process and output described here are about how data flows through the application when it is running. This is different from the research approach shown in Figure 2.1, which outlines the steps taken during the development phase to build the system. That earlier part focuses on what was done not on the data the system handles.
+
+#### **Input**
+
+* Registration and login details.  
+* Resident profile and household-member information.  
+* Document types, requirements, fees and target processing times set by the barangay administrator.  
+* Service-request details and uploaded identification documents.  
+* Incident category, description, GPS location and photographs.  
+* Emergency announcements and preparedness content.  
+* Evacuation-center details and QR check-in records.  
+* Health-drive schedules, eligibility rules and stock counts.  
+* Payment requests and PayMongo responses.  
+* Administrative settings, staff accounts, FAQs and waste-collection schedules.  
+* Routing inputs are the road graph, recorded flood depths, approved closures, blocked-road marks, and center availability. Open-Meteo rainfall is a separate advisory input. Historical rainfall supports test preparation only. A local geographic layer must retain its source, issue date, scale, licence, and DRRM review status.
+
+Forms and server functions validate inputs before storage. For flood reports, the required record fields are report ID, reporter role, road-segment ID, coordinates, reported time, depth in metres or unknown, evidence, verification status, reviewer, review time, valid-until time, and closure status. Unknown depth is stored distinctly from measured zero. Access and retention follow the assigned role and approved policy.
+
+#### **System Process Flow**
+
+* Checking the user's login session and role before each protected screen or action.  
+* Validating form data on the client and against the shared schema helps keep data accurate.  
+* Applying scoping and Row‑Level Security rules protects sensitive information.  
+* Uploading photos and documents to Supabase Storage ensures that files are stored safely.  
+* Writing, updating and triggering changes in the PostgreSQL database keeps the data current.  
+* Sending real‑time updates to subscribed clients keeps everyone in sync.  
+* Flood-data flow: resident or field staff report → DRRM verification → approved road-segment update → shared conditions → Dijkstra recalculation. Unverified reports remain labelled and must not be described as confirmed flood depth. DRRM reviews closures and expiry times before clearing a restriction.  
+* Creating, checking and confirming PayMongo payments through Edge Functions secures the payment process.  
+* Calculating service‑request status against processing-time targets shows whether each request is on time.  
+* Recording administrative actions in an audit log provides accountability.  
+* Running the data‑export and account‑deletion workflows, on request completes the cleanup process.  
+* Computing the safest evacuation route for the chosen transportation mode with Dijkstra's algorithm (segment weight wm(e) \= d(e) × (1 \+ 10 × fm(e))) and the rainfall advisory level (0 to 3\) from the rain of the latest hour (R1) and the rain forecast for the next 3 hours (F3).
+
+#### **Output**
+
+* A catalog of the barangay services that residents can request.  
+* Submitted service requests with their current status and status history.  
+* Incident reports shown on a map for barangay staff and officials.  
+* Emergency announcements and preparedness information screens.  
+* Evacuation-center lists with occupancy status, and QR check-in records.  
+* Health-drive registrations with their priority placement and status.  
+* Payment confirmations, receipts and payment status updates.  
+* Administrative dashboards, management pages and summary tables.  
+* Notifications, error messages and loading or empty-state screens.  
+* A copy of a resident's personal data (JSON or PDF) when the resident requests it.  
+* The safest route to an available evacuation center for the chosen transportation mode, routes to up to three other centers with their distances (and walking times when walking), and one rainfall advisory line from Level 0 to Level 3\.
+
+## **Research Paradigm**	 {#research-paradigm}
+
+The developmental research paradigm shown below demonstrates how resident requirements and barangay requirements were turned into the Barangayan development build. The Process stage in this paradigm is not the same as the System Process Flow shown earlier. In this paradigm the Process stage describes the development activities, the steps taken to create the system, then the steps the running system performs on resident data.  
+![][image1]
+
+##### *Figure 2.1 Research paradigm of the Barangayan development build, following a developmental Input–Process–Output model.*
+
+## **Review of Related Literature**	 {#review-of-related-literature}
+
+The studies and works cited in support of this framework can be broadly categorized into five groups; the first two are for evacuation routing and rainfall advisory studies and they support the novelty of this study; the third is for incident and emergency reporting; the fourth is for digital payments; and the fifth is on privacy in public service systems. The first group is discussed at the highest level of detail since they provide formulas, parameters, algorithm and thresholds for the novelty. It summarizes the relationship of each group to Barangayan and the differences between Barangayan and each group.
+
+### **Evacuation Routing and Rainfall Advisory Studies**
+
+The search of papers since 2021 did not reveal any peer-reviewed papers which integrate Dijkstra routing with the Open-Meteo Forecast API and Historical Weather API, both Philippine and foreign. The studies below were thus selected because they are the best possible matches of one or more components of the novelty: Dijkstra evacuation routing to nearest shelter under flood conditions, using Open-Meteo weather data in flood and evacuation systems and rainfall-threshold early warning. Where studies have been conducted in the Philippines, they are presented first, then other studies in other countries that follow the same methodology.
+
+### **Dijkstra-Based Flood Evacuation Routing**
+
+Piamonte et al. (2026) created an algorithm called Project Bantay, a disaster response system available to communities in Metro Manila which integrates breadth-first search (BFS) to model how water floods spread and Dijkstra's algorithm to determine the path for the community's evacuation to the nearest shelters from water-level sensor data sourced from PAGASA. BARANGAYAN adopts its edge weight w(e) \= d(e) × (1 \+ 10f(e) \+ 0.5t(e)), where f(e) is a flood-risk factor and t(e) is a traffic factor, with α \= 10 and β \= 0.5 set through testing, but leaves out the traffic term because Ampid I has no traffic feed, which gives w(e) \= d(e) × (1 \+ 10f(e)). The same algorithm is used in the Dijkstra implementation over a road graph with a set of evacuation centers, which is based on the heap. It is the most recent study in the Philippines to the novelty. The difference is the hazard input: Project Bantay relies on water level readings, Barangay Ampid I does not have any water level source, thus BARANGAYAN provides only the Dijkstra core and provides an advisory based on rainfall provided by Open-Meteo.  
+In the Philippines, Jain et al. (2024) designed a mobile evacuation operation management system based on a web application that assigns residents to evacuation centers based on population and center capacity using a multi-objective artificial bee colony algorithm, with the accuracy of the algorithm being 88.75 to 93.75 percent in the trial. The study backs the necessity for a resident-accessible tool that identifies a readily available evacuation centre, but it is not able to do a walking route calculation, nor incorporate weather data – these are added by BARANGAYAN.  
+Ogawa et al. (2023) developed a route search system that uses Dijkstra to find the nearest shelter during the dynamic inundation of Obihiro City, Japan. They found that multiplying a virtual cost to each road based on the distance from the flood by the inundation speed from 2D flood simulation results resulted in an increase of up to 2.16 times in the number of successful evacuees. BARANGAYAN will do this for hazardous streets and will remove only the roads that DRRM has published as closed.  
+At three flood risk levels (20-, 50- and 100-year floods), Zhu et al. (2022) optimized a 3D Dijkstra algorithm for urban pedestrian evacuation, modifying the walking speed by road factors, and reduced evacuation time by 7.59 to 17.78 percent. The study validates the graded advisory levels of BARANGAYAN and the fixed pedestrian walking speeds on streets (1.2 m/s) and stairs (0.6 m/s).  
+An et al. (2025) combined a flood model with a road network for flooding from dam failure and re-planned Dijkstra evacuation routes for 10, 20, 30 and 50 minutes after the start of the flood, yielding 13 routes for 8 locations. This helps to recalculate routes as required when a closure occurs, or when a center or the resident's location is changed.  
+Jeon et al., (2023) proposed an outdoor evacuation route guidance system for forest and park flash floods by using map API to guide the user from the current location to the nearest shelter, and then, if the user reaches a blocked area, it will guide to the next nearest shelter. This is the most similar to the route display of BARANGAYAN: a best route to the nearest evacuation center with other centers as alternatives.  
+In a preprint from Hanoi, Vietnam, Tran et al. (2026) rerouted trips around the flooded roads, using a two-hour forecast for the flood depth that was refreshed every 15 minutes in a production routing server. Only some of these conditions would be met on a road having a flooded depth, and a router that monitored conditions only at departure had a 7.8% proportion of routes with flooded conditions on arrival, the authors say, added the fact that their depth cutoffs are "policy settings" not "measured thresholds. This helps to bring about refreshing conditions whilst a route is being displayed and thresholds are treated as set by the responsible office.  
+Alizadeh et al. (2021) implemented A\* (a special case of Dijkstra) on a flood-depth map constructed using crowd-sourced photos of traffic signs and found flood-avoiding shortest paths; Li et al. (2025) surveyed 211 flood evacuation studies and concluded that Dijkstra and A\* were among the classical algorithms used for evacuation routes. They agree that Dijkstra is a proven and viable algorithm to be used for pedestrian evacuation routing in a small urban area like Ampid I.
+
+### **Open-Meteo Weather Data in Flood and Evacuation Systems**
+
+Vhajage (2025) created Aqua Sentry, a local Android-based application to alert the population of river flood and sudden urban flooding in India by combining the GloFAS river discharge with rainfall amount from Open-Meteo, and triggering evacuation routes in Google Maps. The most similar application is the novelty application, which is the closest application that uses Open-Meteo rainfall in an Android application linked to evacuation routes. BARANGAYAN differs from Aqua Sentry in three ways: it uses its own road network of the barangay for walking, motorcycle or tricycle, and car travel; it computes the route itself with Dijkstra's algorithm instead of opening Google Maps; and the rainfall input does not change the route.  
+To address this, Nagisettygari et al. (2026) proposed a flood alert architecture for evacuation in Malaysia that leverages citizen images analysed by a vision-language model, river sensors and Open-Meteo GloFAS forecasts, and sends alerts only if the two out of three sources confirm the flood. It does not use Open-Meteo data as a measure of flooding, but rather as an input to a flood warning, and it was published as an open repository record, not as a peer-reviewed article, like BARANGAYAN.  
+In a preprint, Zhou et al. (2026) used the reanalysis-based, hourly precipitation (and rain from the nearest 9 to 25 km grid cell) from the Open-Meteo Historical Weather API to forecast flood peak depth 6 hours in advance in the USA, while de Lima et al. (2026) replayed precipitation for an IoT flood-monitoring system in São Paulo, Brazil using the same API but from ERA5 reanalysis. Both have the same Historical Weather API that BARANGAYAN used during development to choose realistic test rainfall and both work as modelled values for a grid cell with a skill that needs to be validated with local events.  
+Zippenfenig (2023) and Open-Meteo (2026) describe the Forecast API, the Historical Weather API and the Historical Forecast API, as well as their 9 km ECMWF IFS model, which is updated every 6 hours, and their data licence; and indicate that the values are modelled, and not measured. The range of five global AI weather models was found by Liu et al. (2024) for the performance of ECMWF IFS over East Asia and the Western Pacific, including typhoon rainfall, and by Lavers et al. (2022) for ERA5 precipitation in comparison to observations around the globe, the latter of which showed high variability of satellite rainfall estimates during typhoon events in the Philippines, suggesting ecmwf\_ifs as the model for Ampid I. These studies validate the rule given by the BARANGAYAN advisory which states only that, heavy rain is a possibility, but not a street is flooded.
+
+### **Rainfall Thresholds and Warning Verification**
+
+Young et al. (2021) suggested an early warning system for Alexandria, Egypt, a data-poor city, based on a rainfall threshold derived from the relationship between observed rainfall and flood events, along with an ensemble precipitation forecast and the assignment of warning colour-codes as the flood severity increases; 75% of the four severe events could have been forecasted 24 hours in advance. This is the same structure as the BARANGAYAN advisory except for the comparison of forecast rainfall with thresholds to publish levels 0 to 3\. Young et al. (2025) extended the approach using different numerical weather prediction (NWP) model set-ups, and concluded that the skill of the NWP forecast depends on the model set-up, meaning that one model can be pinpointed and the thresholds can then be considered as starting values.  
+Gambini et al. (2024) developed the empirical rainfall thresholds for the civil protection flood warning system of Milan based on 25 years of hourly rainfall and discharge data, and incorporated an antecedent-wetness term. BARANGAYAN follows its use of empirical rainfall limits but leaves out the antecedent-wetness term, because it uses only the hourly Open-Meteo values and does not build its own flood model. The rainfall-threshold equation used in urban flood warning were estimated by Dao et al. (2021) with 540 combinations of rainfall and watershed imperviousness, and found that rainfall thresholds vary from watershed to watershed, so that thresholds of BARANGAYAN would not be copied from another place, but validated locally by the administrator.
+
+### **Barangay E-Governance Studies** 
+
+	Dela Peña (2025) and Gasmido et al. (2025) Both look at transformation efforts at the barangay or municipal level of government. Dela Peña’s study focuses on governance in the municipality of Paracale. It shows that digitizing records and workflows led to a drop in the time it took to process resident requests. Still the study also found that slow response times and software that could not be reused were problems in that area. Gasmido et al. Described a web-based management and information system built for one barangay. Their work proves that digitizing a barangay’s records and daily administrative tasks is possible and can result in a working system. When read together both studies support the idea that switching from paper-based to processes at the barangay and municipal levels can reduce how long residents have to wait for services.  
+Barangayan is different in one important way. Dela Peña’s study looked at a governance system that was already fully built and in use in one municipality. Gasmido et al. 's system was created specifically for one barangay using that barangay’s processes, terms and administrative setup. Neither system connects its services to disaster response or evacuation routing.  
+Barangayan instead stores document types, fees and procedures in database tables that the administrator of Barangay Ampid I can change without developer help, and it connects these services to the evacuation map and the safest-route routing of the novelty, so the incident and blocked-road reports of residents are also used in disaster response.  
+A shared limitation in both studies is that their results come from one place. Dela Peña’s findings are based on what happened in Paracale. Gasmido et al. 's findings are limited to one barangay. Neither study tested the system in an independent locality. So we don’t know if the faster service times they both observed would hold in Barangay Ampid I. It is something that Barangayan’s own pilot deployment will need to test.  
+Incident Reporting and Emergency Response Studies   
+	Brillo et al. (2023) Who made REPORTIT and Barredo et al. (2023) Who made LBigayAksyon, both built apps that pull location‑based reports straight from residents. REPORTIT is for incidents and pairs with a web crime map. LBigayAksyon is for emergency and disaster coordination between residents and rescue personnel. Both studies show that in a setting pairing mobile reporting with location mapping works for local governments. It gives officials a way to see where problems cluster in reading through disconnected unmapped complaints.  
+Barangayan differs from those two systems in what it can do. REPORTIT was made for crime reports. LBigayAksyon was made for emergencies and disasters. Their design, data fields and admin workflow all focus on that purpose. Barangayan’s incident‑reporting module instead accepts kinds of reports in one form and one review step. It covers infrastructure damage, sanitation and cleanliness concerns and public‑safety issues together. Barangayan also connects those reports to the same platform residents already use for document requests and emergency information requiring a separate standalone app for reporting alone.  
+A limitation shared by both studies is that neither gives residents a route to an evacuation center that avoids flooded or closed roads. BARANGAYAN uses the blocked-road reports of residents and the road closures of the Barangay DRRM directly in its Dijkstra routing.
+
+### **Digital Payment Work** 
+
+The Bangko Sentral ng Pilipinas QR Ph memorandum (2023) is not a research study like the ones mentioned earlier; it is a government-issued standard that sets a single interoperable QR-code payment format that participating Philippine banks and e-wallet providers must support. The connection between QR Ph and Barangayan is therefore architectural of comparative: QR Ph establishes the technical and regulatory standard that a QR-based payment feature in the Philippines must follow, while PayMongo, as the licensed payment processor along, with Barangayans own Supabase Edge Functions provides the actual implementation that allows a resident to scan a QR Ph code and pay a barangay fee. No evidence found while preparing this framework shows that live PayMongo credentials or an actual bank settlement account have been set up for use which means the payment feature is currently working in a test or sandbox mode instead of handling real money.
+
+### **Framework/Design Concept**	
+
+	Republic Act No. 10173 (2012) The Data Privacy Act of 2012 is not a study. It is a piece of legislation. This law is the basis for the data-export and account-deletion features in Barangayan. These features were described earlier in this framework. The law gives residents rights over their own personal data. These rights include the right to get a copy of the data an organization has about them. They also include the right to have that data erased in the situations. Barangayans role-based access control, its database-level Row-Level Security policies and its two privacy Edge Functions are built to match these rights directly. It is true however that having this functionality in the code is not the same as being fully compliant with the law. Real legal compliance needs more. It requires supporting policies and procedures. These include a documented data-retention schedule, resident consent forms and internal staff procedures, for handling data. These things exist outside of the source code. They cannot be checked by looking at the code itself.
+
+### **Synthesis of Related Literature and Studies** 
+
+There are five main highlights of this review. The novelty of this study is the combination of Dijkstra-based evacuation routing with the Open-Meteo Forecast and Historical Weather APIs in a resident mobile application, a feature that has not been explored in other reviewed studies that have been applied to flood settings (Piamonte et al., 2026; Ogawa et al., 2023; Jeon et al., 2023; Young et al., 2021; Zhou et al., 2026). Secondly, barangay e-governance systems can be used to reduce delays stemming from paper based processes. The examples looked at here, Dela Peña (2025) and Gasmido et al. (2025), were each created for one locality. Neither of them connects barangay services to disaster response or evacuation routing.  
+Third incident-reporting and emergency-response apps. Brillo et al. (2023). Barredo et al. (2023). Show that using phones with location-based mapping works well in local government settings. Still each existing app focuses on one type of report. None handles multiple report types within a shared workflow. So while the idea works it’s limited in scope.  
+Fourth, accepting QR Ph payments in a way that's both legally compliant and production-ready requires more than just technical integration. It also needs a payment processor and a fully set up bank settlement account. Now neither of those has been confirmed as complete for Barangayan. Without them the system cannot support real-world transactions.  
+Fifth, protecting data privacy does not rely only on a login screen. Real protection comes from role-based access rules enforced at the database level. It also needs features that let residents actually export or permanently delete their personal information when they ask. Without these privacy remains weak even if users feel safe.  
+The novelty of Barangayan is that it combines the safest routes, for walking, motorcycle or tricycle, or car, to the nearest available ECs with the routes to other ECs, and a rainfall advisory from the Open-Meteo Forecast API, whose development used past hourly rainfall from the Historical Weather API, so that each person in Barangay Ampid I gets the safest route to the nearest available EC, the routes to other ECs and a rainfall advisory based on the PAGASA warning bands. The platform aggregates four supporting areas, namely: (1) configurable document services, (2) wide-categorized incident reporting, (3) emergency and disaster risk reduction and management (DRRM) information, and (4) secured digital payment, around this novelty, all designed for Barangay Ampid I. It's powered by a Resident Mobile app created with Expo Router and React Native, an Admin Website created with Next.js, and a shared Supabase backend. That backend is PostgreSQL, authentication, file storage, real-time sync and Edge Functions. This literature review provides affirmation of the direction of the design. It demonstrates that each component part, each evacuation route, each rainfall-threshold warning, each digitized governance, each mobile reporting, each QR payment, each data privacy based on rights are viable and have been proven in published studies some of which are in the Philippines. However, the review cannot determine if the result of the Barangayan system can actually guide residents safely, alert them in time, operate more quickly, be easier to use by residents, staff, or both, or work better in Barangay Ampid I than the systems it is being compared to. The chapters describe the testing and evaluation methods that can help answer those questions.
+
+## **System Architecture**	 {#system-architecture}
+
+Barangayan is organized into the three layers of a three-tier architecture: presentation, application logic and data. Data flows in both directions: requests, road closures and blocked-road reports go down from the apps to the database, and routes, advisory levels, statuses and Realtime updates flow back up to the apps.
+
+### **Presentation Tier**
+
+* The Resident Mobile application, built with Expo Router, under apps/resident-android-mobile/src/app.  
+* Reusable React Native components under apps/resident-android-mobile/src/components.  
+* The Admin Website, built with Next.js under apps/admin-web/src/app.  
+* Reusable web components under apps/admin-web/src/components.
+
+Presentation Tier displays forms and lists, handles navigation shows loading and error states and presents the results returned by the layers below it.
+
+### **Application Logic Tier**
+
+* Hooks under apps/resident-android-mobile/src/hooks.  
+* Mobile service functions under apps/resident-android-mobile/src/lib.  
+* Shared schemas and utility functions under packages/shared/src.  
+* Server Actions under apps/admin-web/src/actions.  
+* Route Handlers under apps/admin-web/src/app/api.  
+* Supabase Edge Functions (Deno) under supabase/functions.  
+* The Dijkstra evacuation-routing core under packages/shared/src/lib/evacuation-routing.ts and the scheduled rainfall-advisory function that reads the Open-Meteo Forecast API.  
+* PostgreSQL functions and triggers under supabase/migrations.
+
+Application Logic Tier validates data, applies business rules (for example checking a fee amount or a processing deadline) , manages login sessions, calls the database and PayMongo and updates a requests status.
+
+### **Data Tier**
+
+* Supabase Auth, for account credentials and sessions.  
+* PostgreSQL tables, for records.  
+* Row-Level Security policies, for access control.  
+* PostgreSQL functions and triggers for automated data rules.  
+* Supabase Storage buckets, for photos and documents.  
+* Supabase Realtime, for live updates.  
+* Seed data and migration history, for setup and version tracking.
+
+Data Tier is responsible for saving data, enforcing who can see or change which records, keeping related tables consistent, storing files and notifying the application when something changes.  
+![][image2]
+
+##### *Figure 2.2 Architectural data flow of the Barangayan development builds across the presentation, application logic, and data tiers.*
+
+Figure 2.2 is read with the flood-data flow above. The deployment design uses separate Next.js resident and staff websites on Vercel, a hosted Supabase database, authentication, storage and server functions, and an Android APK distributed for pilot use. Actual deployment URLs and release versions are recorded during verification. Current transactions, weather, maps, and synchronized updates require internet access; cached guides are the limited offline exception.
+
+## **Definition of terms** {#definition-of-terms}
+
+| Admin Website  | The Next.js web application that barangay administrators use, after logging in to manage residents, service requests, incident reports, emergency content, health drives, payments, staff accounts and settings. Its administrative routes are found under apps/admin-web/src/app/(admin).  |
+| :---- | :---- |
+| Barangay-scoped data  | Any database record tied to one barangay through a barangay\_id value, including profiles, service requests, documents, incidents and announcements.  |
+| Configurable document catalog  | The ability for an administrator to add or change document types, requirements, fees and processing targets by entering data without a developer changing the applications code. Implemented in the document-types-and-service-requests migration and the Admin Websites service-management pages.  |
+| Development build  | The application, web application, shared package, database and Edge Functions as they currently exist in the repository. It does not mean the system has already been fully tested, deployed or made production-ready.  |
+| Edge Function  | A small server-side program, written in Deno and run by Supabase used for tasks such as processing payments, checking payment status, deleting an account, exporting data and generating QR codes for households.  |
+| Incident report  | A record a resident submits to describe a problem containing a title, category, optional description, location, address, area details and up to five optional photographs. Its structure is defined in the shared incident-report schema.  |
+| Input–Process–Output framework  | The model used in this chapter to show how Barangayans requirements and data (input) were turned into development activities (process) and finally into features the resident or administrator can use (output).  |
+| Resident Mobile application  | The Expo Router application under apps/resident-android-mobile, used by residents to register request documents, report incidents, view emergency information, check evacuation-center maps, register for health drives, pay fees, manage their profile and exercise their data-privacy rights.  |
+| Row-Level Security (RLS)  | A PostgreSQL/Supabase feature that restricts which rows of a table a given user may read, add, change or delete based on that user's identity, role and barangay. |
+| Service tracking  | The display of a service requests progress. Its current status, its status history and its target processing time. Implemented in the shared service-tracking library and the related database migrations.  |
+| Supabase Realtime  | The subscription feature Barangayan uses to notify the application of database changes, such as a payment update, a new notification, an announcement or health-drive information.  |
+| Three-tier architecture  | The division of the system into three layers: presentation (what the user sees) application logic (what processes the request) and data (what stores the information).  |
+| QR Ph payment  | The QR-code payment method described in the paper and implemented through PayMongo and its related Edge Functions.  |
+| Advisory level  | The rainfall warning shown beside the evacuation route, from Level 0 (no advisory) to Level 3 (highest), computed every hour from Open-Meteo rainfall. It never changes the route. |
+| Dijkstra's algorithm  | The shortest-path method used to find the evacuation route with the lowest route cost from the resident's location to each evacuation center. |
+| Flood-hazard score  | The value fm(e) \= D(e) / Dmax,m, from 0 to 1, computed from the flood depth DRRM has recorded on a street and the passability limit of the chosen transportation mode; 0 means no recorded flooding. |
+| Grid cell  | The square area, about 9 km wide, for which Open-Meteo gives one rainfall value; one cell covers the whole of Ampid I. |
+| Rainfall metrics (R1, F3)  | The rain in the latest hour (R1) and the heaviest hourly rain forecast for the next 3 hours (F3), in millimeters, from which the advisory level is computed. |
+| Route cost  | The sum of the segment weights wm(e) of a route; the route with the lowest cost is shown as the recommended (safest) route. |
+| Injected-rainfall test  | A software unit test that feeds fixed rainfall values, such as 35 mm in one hour, to the rainfall advisory to check that the correct level and warning line appear on the screen. |
+
+# 
+
+# **Chapter 3** {#chapter-3}
+
+## **Research Design** {#research-design}
+
+	The study uses developmental research to design, implement, and evaluate BARANGAYAN. Functional tests assess specified workflows; task-based evaluation measures usability for the assigned user groups. Planned functions, implemented features, and passed tests are reported separately.  
+The research process is the amalgamation of system development and evaluation. Development involves requirements analysis, system and database design, application development, integration, technical testing, revision and documentation. The evaluation part gathers structured feedback from intended users; test results for the specified workflows and quality criteria are recorded.  
+Study setting and target usersThe study area is Barangay Ampid I, San Mateo. , Rizal. The site has been approved for the study by the Barangay Captain, Hon. Elmer B. Manahan. According to a report by the Philippine Statistics Authority (PSA), the population of Ampid I in the 2024 Census of Population is 26,953 (Philippine Statistics Authority, 2025).
+
+* #### Residents who can request barangay documents and services, submit incident reports, emergency information, register for health-related activities, and track transactions;
+
+* #### The 10 elected barangay officials who make and/or supervise service and emergency and administrative decisions;
+
+* #### Members of the Barangay DRRM Committee who publish road closures, recorded flood depths and evacuation-center status; and
+
+* #### Administrative and auxiliary support staff who process requests, maintain records, update content and assist with daily operations of the barangay. 
+
+### **Participants and sampling procedure**
+
+The population of Barangay Ampid I is 26,953 people (Philippine Statistics Authority, 2025). This study does not include population level testing but rather a small task-based usability evaluation. The number of participants is therefore not determined with Cochran's formula, but rather to find workflow issues, usability issues, and required revisions in the development build, and not to come up with statistically generalisable estimates of the population of residents as a whole.  
+The number of participants in the planned evaluation is 50: 25 adult residents, 10 elected barangay officials, 10 available Assigned staff and administrator and 5 members of the Barangay DRRM Committee. For an evaluation of a workflow, for a controlled development, this is a convenient number which allows each group of participants to test the workflows corresponding to their respective roles, and it lets the Barangay DRRM evaluate and test the evacuation routing novelty.  
+Purposive sampling will be used with the help of the authorized barangay personnel for the selection of the 25 resident participants. The resident should be at least 18 years old and enrolled from Barangay Ampid I, and able to follow an assigned mobile/ web activity following a standard orientation and able to provide informed consent. If possible, the selection will try to attract participants who are at different levels of knowledge about mobile or web applications. If a resident refuses to participate or is not eligible, he or she may be replaced by another eligible resident.  
+The total enumeration approach will be used for all the 10 elected barangay officials since the group is small and each role might require or supervise a different system workflow. The 5 members of the Barangay DRRM Committee designated by the Barangay Captain will also be included by total enumeration, because they own the flood, closure and center data and will test the evacuation routing and the rainfall advisory in a simulated flood scenario. A purposive selection of 10 administrative or auxiliary personnel will be made who are available during data collection to represent the request processing, records management, content updates and other pertinent administrative activities. The number of participants in each group will be reported when evaluating. 
+
+The participant groups are summarized below.
+
+###### Table 10\. *Participant Groups and Sampling Procedure*
+
+| Participant group | Population or frame | Sampling method | Planned number |
+| :---: | :---: | :---: | :---: |
+| Adult residents of Barangay Ampid I | 26,953 residents | Purposive sampling of eligible adult residents | 25 |
+| Elected barangay officials | 10 officials | Total enumeration | 10 |
+| Administrative and auxiliary support staff | Approximately 15 to 30 or more personnel | Purposive selection of available staff | 10 |
+| Barangay DRRM Committee members | Members designated by the Barangay Captain | Total enumeration of available members | 5 |
+
+### **Data-gathering methods**
+
+The study uses the following data-gathering methods:
+
+* The needs and documents are reviewed. The approved proposal, system specifications and implementation records will be reviewed in chapters 1 and 2 to ensure consistency between problem, objectives, features and evaluation tasks.  
+*  Development documentation. Requirements matrices, interface designs, database changes, application modules, test cases, defect records and revision records will be kept during development. Here you will find details of the implementation and verification of each of these requirements.  
+* Functional testing. The research team uses controlled test accounts and synthetic data to test the resident and administrative workflows. Task, expected result, observed result, environment, status, and corrective action (if required) are recorded on the test.  
+* Task-based user evaluation. Residents, officials and support staff perform role-specific functions, including making a service request, checking the status of a request, reporting an incident, reviewing an administrative request, and updating content. The study documents task completion and errors, along with any clarifications needed and participant feedback.  
+* Structured questionnaire. Once the participants have completed the assignments, they are asked a 5-point questionnaire covering some of the ISO/IEC 25010:2023 product-quality characteristics that are relevant. Questions are aimed at functional suitability, performance efficiency, compatibility, interaction capability, reliability and security, including the privacy functions.  
+* Open-ended feedback. The participants can suggest unclear steps, missing information, workflow barriers, and suggested improvements. The comments will be categorized into the common ones to inform revising.   
+* Rainfall, flood, and road records. Residents or authorized field staff submit geolocated reports through the incident form or an approved DRRM reporting channel. DRRM checks the location and evidence, confirms the depth or closure, and records the reviewer, time, and expiry before publishing a road update. Historical susceptibility is checked against government hazard information through HazardHunterPH and DRRM records (Philippine Institute of Volcanology and Seismology \[PHIVOLCS\], n.d.). A verified Ampid I map must distinguish mapped hazard classes and relative elevation; no street classification or elevation value is assumed before this review. Susceptibility provides context; verified segment depth and closure rules determine the implemented route weights.  
+* Routing tests use synthetic networks with known distances, depths, closures, and center status. Tests cover changed conditions, unknown depths, unavailable centers, and no-route cases. Hand calculations verify route cost. Results establish software correctness only; local geographic accuracy requires separate DRRM validation. 
+
+
+  
+
+
+  
+
+
+
+
+### **Unit of analysis and research variables**
+
+ 	The basic unit of analysis is a Barangayan user workflow. Each workflow is evaluated as a whole set of actions taken by a user and the actions taken by the system.  
+ The main workflows are:
+
+* registration, log-in, forgot password and user profile control;  
+* creation of their service and document requests, selection of their payments, information on picking up or scheduling their services and keeping track of their current status;  
+* all incidents reported with category, location, and (optional) photo;  
+* Emergency announcement, hotline information, evac-center info/count, default-map handoff;  
+* evacuation routing: choosing a transportation mode, viewing the recommended and alternative routes, marking a blocked road and reading the rainfall advisory, and the DRRM publishing road closures, flood depths and center status;  
+* health or vaccination-driving browsing and registration;  
+* administrative configuration, request processing, incident review, content management and dashboard review;  
+* requests to reduce the amount of information collected for export or deletion;
+
+ 	Access control and data separation on barangay level.
+
+* Algorithm verification. For each routing test network, the team calculates the Dijkstra path by hand, step by step as in Table 5, and compares it with the route and cost returned by the app. The test is repeated after a road on the route is marked as closed or flooded, to check that the app recalculates and returns the new least-cost route. 
+
+The independent development inputs are the approved requirements, application modules, database rules, interface designs, and configured services. The dependent measures are task completion, task errors, user ratings, technical test results and qualitative feedback. There will be no indication of good public service without supporting evaluation data.
+
+### **Data organization, processing, and analysis**
+
+The requirements traceability matrix is used to organize development records. Each requirement is linked to its related feature, user role, application module, database component, test case, result, defect record, and revision decision.  
+Data from quantitative questions and tasks are presented as frequency, percentage, and weighted mean. The weighted mean is given by:
+
+*Weighted Mean \= Sum of weighted responses / Total number of responses*
+
+The five-point response scale is interpreted as follows:
+
+###### Table 11\. *Interpretation of Weighted Mean Scores*
+
+| Mean range | Interpretation |
+| :---- | :---- |
+| 4.21-5.00 | Very high |
+| 3.41-4.20 | High |
+| 2.61-3.40 | Moderate |
+| 1.81-2.60 | Low |
+| 1.00-1.80 | Very low |
+
+Any criterion with a mean score of 3.41 or above is considered acceptable for the development build, unless there is any critical defect that has not been resolved. Task results will be reported as completed, completed with help, failed, or blocked. The results of the technical test will be shown as passed, failed, deferred or not applicable. The evacuation routing and the rainfall advisory are not scored with the questionnaire or with forecast-verification scores; they are accepted only through the manual Dijkstra comparison and the injected-rainfall tests (Tables 9 and 15).
+
+Open-ended responses are categorized in relation to a theme that appears in multiple responses, for example, navigation, instructions, difficulty in data entry, status visibility, performance, accessibility, and missing content. The research team consults the themes and associated workflow and defect records to determine whether a revision is needed. 
+
+Research ethics, privacy, and data protection
+
+ Participants will be informed of the purpose of the study, procedures, potential for inconvenience, privacy protections, right to withdraw without penalty before task based evaluation or administration of questionnaires. Prior to collection of data, informed consent will be obtained using writing or recording.
+
+Synthetic test accounts and test records are used whenever possible. It will not be sharing live payment details, real payment settlement, production resident records or superfluous sensitive data. For those workflows that demand identity, household, health, location and/or photograph data for demonstration purposes, then such data shall be utilized in the study using authorized sample data with limited access to the research team and authorized barangay personnel.
+
+The participants' responses will be coded instead of their names. Identifying information will be separated from the information in the questionnaires. Research records will only be kept for the purpose of the approved research, and will be destroyed according to institutional procedures and barangay data-protection protocol. Technical privacy features, such as authentication, role-based access control, Row-Level Security, and export and deletion functions, will facilitate privacy protection but will not be sufficient to achieve compliance with Republic Act No. 10173\. 
+
+## **Project Design** {#project-design}
+
+Barangayan is a barangay-scoped system that supports resident services and barangay administrative workflows. The project consists of a resident mobile application and a web portal for administrative and resident access, both connected to a shared Supabase backend.
+
+##### *![][image3]Figure 3.1 Three-tier system architecture of BARANGAYAN highlighting evacuation routing, rainfall advisory, and supporting barangay services.*
+
+## 
+
+### Architectural design
+
+* Presentation tier. The resident mobile application and web application provide registration, forms, service requests, incident reporting, maps, emergency information, dashboards, content-management pages, notifications, and status displays.  
+* Application-logic tier. Shared schemas, validation rules, mobile hooks, web server actions, route handlers, database functions, triggers, and Edge Functions process requests, apply workflow rules, and coordinate provider boundaries.  
+* Data tier. Supabase Auth, PostgreSQL tables, Row-Level Security policies, storage buckets, Realtime, migrations, and seed data store records and enforce role- and barangay-scoped access.
+
+The system applies a barangay identifier to the relevant data relationships. This design keeps the records of Barangay Ampid I protected through role checks and database policies.
+
+## 
+
+## 
+
+### Functional scope
+
+Table 12 summarizes the platform scope. Resident Android and web accounts access their own profiles, requests, reports, payments, health registrations, and emergency information. Staff use the website for assigned workflows; administrators manage configuration and access. Equivalent resident services share records across platforms, while camera, notification, and offline behavior are tested separately.
+
+###### Table 12\. *Functional Components of the Project*
+
+| Component | Main function | Expected user outcome |
+| :---- | :---- | :---- |
+| Evacuation routing (novelty) | Dijkstra safest-route computation for walking, motorcycle or tricycle, or car, using the flood depths recorded by DRRM, DRRM road closures, roads marked as blocked by residents and evacuation-center availability | Residents receive the safest route to the available evacuation center with the lowest flood-weighted route cost and up to three alternatives; DRRM changes the routes by publishing closures and center status |
+| Rainfall advisory (novelty) | Hourly reading of the Open-Meteo Forecast API, R1 and F3 metrics, and advisory Levels 0 to 3 based on the PAGASA hourly rainfall bands | Residents and officials see one warning line when heavy rain is estimated; the advisory never changes the route |
+| Digital service and document requests | Configurable document types, requirements, fees, request forms, and status information | Residents submit and monitor requests; staff process them |
+| Service tracking | Shared statuses, history, processing targets, and selected realtime updates | Residents and staff see the current request state |
+| Incident reporting and mapping | Category, description, location, optional photographs, and administrative map review | Residents report community concerns; staff review and update them |
+| Emergency and DRRM information | Announcements, preparedness content, contacts, evacuation centers, and QR check-in support | Residents access current emergency information |
+| Digital payment | PayMongo and QR Ph sandbox payment boundary | Residents select or initiate an approved payment option |
+| Administrative management and analytics | Requests, residents, incidents, content, staff, settings, and summaries | Administrators manage barangay workflows |
+| Account, security, and privacy operations | Authentication, role checks, access control, export, and deletion functions | Users access only authorized data and services |
+| Help and support | Frequently asked questions and barangay contact details | Residents obtain basic guidance and support information |
+| Medical and vaccination drives | Drive configuration, registration, priority rules, and administrative monitoring | Residents register for available health activities |
+
+### User roles and responsibilities
+
+###### Table 13\. *User Roles and Responsibilities*
+
+| Role | Platform and permitted actions | Evaluation focus |
+| :---- | :---- | :---- |
+| Resident | Android and resident web: manage own profile, household, requests, incidents, payments, registrations, and privacy requests; no staff administration | Clarity, task completion, navigation, and response visibility |
+| Elected barangay official | Staff web: review authorized summaries and oversight information; changes require an assigned operational permission | Workflow completeness, oversight, and information usefulness |
+| Assigned staff and administrator | Staff web permission matrix: Clerk/secretary—residency review, requests and print preview; health worker—drives and registrations; tanod/incident staff—incident review; treasurer—payment records; content staff—announcements and archives; administrator—accounts and configuration. Each assignment requires server and database enforcement; unassigned actions are denied. | Efficiency, accuracy, role access, and administrative usability |
+| Barangay DRRM personnel | Staff web: verify flood reports; publish depths, closures and center availability; review advisory status; retain reviewer and expiry records | Correctness of the routes after closures, usefulness of the advisory and the evacuation map |
+
+### Expected project outputs
+
+The study is expected to produce:
+
+* a well-documented development of the Barangay for the agreed project scope;  
+* mobile and web user experience for residents and administrative processes;  
+* Database records at barangay level, Access rules for roles, Technical privacy functions;  
+* technical test cases, test records, defect records and revision records;  
+* user-evaluation questionnaires, task records and summarized results;  
+* project documentation of setup, configuration, testing, limitations and controlled handoff; and  
+* a recommendation as to whether the development build evaluated is appropriate for the next controlled stage of development. 
+
+## **Project Development**  {#project-development}
+
+The development of the project follows a phased development process. The phases take a practical order from requirements through design through implementation through test results through revision. It is not assumed that the team used a specific commercial life-cycle model. 
+
+###### Table 14\. Project Development Phases
+
+| Phase | Main activities | Output |
+| :---- | :---- | :---- |
+| System and data design | Define the three-tier architecture, user roles, database entities, access rules, and workflows | Architecture, data-flow, and access-control documents |
+| Application development | Develop mobile and web interfaces, shared validation, database changes, and server-side functions | Development build and supporting modules |
+| Evacuation routing and rainfall advisory development | Build the Ampid I road network, implement the binary min-heap Dijkstra with the per-mode weights and passability limits, and build the scheduled Open-Meteo rainfall-advisory function | Routing core, road network pack and advisory function |
+| Integration | Connect interfaces to authentication, database, storage, Realtime, payment sandbox, maps, and other approved providers | Integrated development environment |
+| Technical testing | Run functional, integration, access-control, error-handling, and compatibility tests | Test records and defect log |
+| Novelty verification | Compare app routes with hand-calculated Dijkstra paths, run the injected-rainfall unit tests, and run the simulated flood scenario with the Barangay DRRM | Routing and advisory test records |
+| User evaluation | Conduct role-based tasks and administer the evaluation questionnaire | Task records and evaluation data |
+| Revision and documentation | Correct approved defects, repeat affected tests, and update documentation | Revised build and final project documentation |
+
+### **Requirements analysis and planning**
+
+Each requirement is linked to its platform, role, module, data fields, permission, and test ID. The SIA 2 list is treated as a dated defect baseline; a later screenshot or code change does not close a defect without a retest result. Payments remain in sandbox, and DRRM owns the approval of emergency content and local geographic data.  
+ Location verification is only a preliminary check and not a replacement for barangay verification of residency. Health-drive rules are only meant to assist in decision making and should not override the authority of the authorized barangay official or health official. Last but not least, privacy functions need to be supported by privacy notices, retention policies, access controls and privacy accountability. 
+
+### **Implementation and integration**
+
+The implementation uses React Native and Expo for Android, Next.js for the resident and staff websites, and Supabase for authentication, database policies, storage, real-time updates, and server functions. Vercel configuration is included for both websites. Verification records identify the deployed URL, build version, network conditions, and provider mode without exposing credentials. A hosted configuration is not proof of production readiness.   
+Documentation and revision control  
+Revision records identify the requirement, affected section, implemented change, test result, evidence, and remaining limitation. Completed, pending, provider-dependent, and excluded functions are labelled consistently. Appendix C records interface examples; it does not replace functional test evidence. 
+
+## **Testing and Operating procedure** {#testing-and-operating-procedure}
+
+Testing is done in a controlled development environment, with authorized accounts and synthetic data. The research team installs the required setup, imports the data and test data, verifies the correct user roles and checks that payment credentials and/or resident payment records are not utilized in a production environment.  
+Each test records its ID, platform, role, precondition, input, expected result, observed result, status, evidence, and corrective action. The SIA 2 acceptance checks below are requirements for retesting, not claims that defects are already resolved.  
+Testing levels and criteria
+
+###### Table 15\. *Testing Levels and Acceptance Criteria*
+
+| Test level | Procedure | Acceptance criterion |
+| :---- | :---- | :---- |
+| Unit and validation testing | Test schemas, field validation, status rules, calculations, and shared utilities | Valid data are accepted; invalid data are rejected with clear feedback |
+| Database and access-control testing | Test migrations, constraints, Row-Level Security, storage access, role checks, and barangay scoping | Users cannot access or change unauthorized records |
+| Functional testing | Perform each approved resident and administrative workflow | Expected result is reached without critical error |
+| Integration testing | Test interface, database, Edge Function, payment sandbox, map, and notification boundaries | Records and status changes remain consistent across connected components |
+| Evacuation routing testing | Run Dijkstra on test road networks with known answers and compare each app route with a Dijkstra path calculated by hand: a closed or blocked road, a nearer center on a flooded route versus a farther dry center, the example network of Tables 4 to 6, and a road that is closed or flooded while a route is shown | The app route and cost match the hand calculation; closed, blocked and too-deep roads are never used; the route is recalculated and changes when a road on it is closed or flooded |
+| Rainfall advisory testing | Inject fixed rainfall values into saved Open-Meteo test responses (Table 9), for example 35 mm in the latest hour | Each injected value gives the expected level and warning line (35 mm gives Level 3); missing data is never treated as zero; the route never changes with the level |
+| Payment-boundary testing | Test sandbox initiation, status checking, cancellation, refund, webhook, duplicate event, and error cases | No live-money transaction is used; invalid or duplicate events do not create incorrect payment status |
+| Reliability and error handling | Test unavailable network, failed upload, expired session, provider error, and interrupted update conditions | The system provides a safe error state and recovery path |
+| Compatibility and accessibility testing | Test approved device sizes, browsers, permissions, readable labels, keyboard access where applicable, and network conditions | Core tasks remain understandable and usable in the approved test matrix |
+| User acceptance testing | Assign role-based tasks and administer the evaluation questionnaire | Mean evaluation score is at least 3.41 and no unresolved critical defect remains |
+
+                                                                                                                                                                                                 
+
+### **Defect handling and validation of the testing strategy**
+
+Requirements traceability links each revision to a test and result. SIA 2 retesting must verify: QR scan validity and duplicate handling; separate name fields and relationship/spouse rules; announcement dates, banners and expiry; emergency sound under supported settings; conflicting event rejection; automatic request-status refresh; residency review; archive and restore; correct print preview; image format, size and relevance review; invitation delivery and activation; weather, map and network failures; and verified QR Ph or pay-at-pickup status. A defect closes only after the expected result is reproduced and evidence is recorded.
+
+### **Defects are classified as critical, high, medium, or low:**
+
+###### Table 16\. *Defect Severity Classification*
+
+| Severity | Meaning | Required action |
+| :---- | :---- | :---- |
+| Critical | Blocks a core workflow, exposes protected data, or produces an unsafe or incorrect result | Correct before evaluation or acceptance |
+| High | Seriously affects a major workflow but has a temporary workaround | Correct before final recommendation |
+| Medium | Affects usability, clarity, or a non-core function | Schedule correction and retest |
+| Low | Minor wording, layout, or cosmetic issue | Correct when practical and record the revision |
+
+## **Project Evaluation**  {#project-evaluation}
+
+Task based testing and a structured questionnaire are used for the project evaluation. The questionnaire is based on certain aspects of ISO/IEC 25010:2023, a product quality model for software and information systems. Only the features that are relevant to Barangayan and the position are listed.
+
+###### **Table 17\. *ISO/IEC 25010:2023 Quality Areas Used in the Evaluation***
+
+| Quality area | Evaluation focus |
+| :---- | :---- |
+| Functional suitability | Whether the system provides the required functions for the assigned task |
+| Interaction capability | Whether screens, labels, navigation, and instructions are understandable and manageable |
+| Performance efficiency | Whether the system responds within an acceptable time during normal test use |
+| Reliability | Whether the system remains stable and provides safe recovery from errors |
+| Compatibility | Whether core functions operate on the approved devices and browsers |
+| Security | Whether role access, authentication, and privacy-related functions behave as intended during the test |
+
+The questionnaire assesses participants' evaluation on the assigned workflows. The participant's opinion will not be the sole basis for technical checks on security, performance, and compatibility to be supported, but rather through the appropriate test records. 
+
+### **Evaluation procedure**
+
+Our group will secure the barangay's coordination and participant consent, then prepare test accounts, synthetic records, devices, and role-specific instructions. Each participant will be oriented on the purpose of the evaluation and assigned representative tasks based on their role. Our group will observe and record task completion, errors, clarifications, and system responses, then administer the five-point questionnaire after the tasks and collect open-ended feedback. Task and questionnaire results will then be summarized, along with a record of identified defects and approved revisions, before retesting corrected workflows and making the final project recommendation.
+
+### **Evaluation tasks**
+
+###### **Table 18\. *Evaluation Tasks per Participant Group***
+
+| Participant group | Representative tasks |
+| :---- | :---- |
+| Residents | Register or sign in; manage profile; submit a document or service request; view status; report an incident; view emergency information; register for an available health activity; use help or privacy functions |
+| Elected barangay officials | Review administrative information; assess request, incident, emergency, and dashboard workflows relevant to oversight |
+| Administrative and auxiliary support staff | Configure service information; process requests; update status; review incidents; manage content; review resident records and summary information within assigned permissions |
+| Barangay DRRM personnel | Publish a road closure and a center status; enter a recorded flood depth; check that a resident’s route changes; review the rainfall advisory during the simulated flood scenario |
+
+Authorized test accounts and synthetic records are used for all tasks. There are no real payment obligations, medical records, sensitive personal information or live incident reports required in the assessment.
+
+### **Verification of the Dijkstra algorithm**
+
+The questionnaire in Table 17 measures how participants judge the screens and workflows; it cannot show that the routing code computes the correct path. The correctness of the Dijkstra implementation is therefore verified separately by comparing the route produced by the app with a Dijkstra path calculated by hand on the same input. Dijkstra’s algorithm always returns the least-cost path when no segment weight is negative, and every wm(e) in Equation 1 is zero or positive, so a hand calculation that follows Equation 5 gives the correct answer that the code must reproduce.
+
+For each test case, the researchers (1) draw a small road network of four to ten nodes with known segment lengths, recorded depths, closures and evacuation centers; (2) compute every segment weight with Equations 1 and 2 and work out Dijkstra step by step in a table like Table 5, recording at every step the settled node, the tentative cost dist(v) of each node and the node it was reached from; (3) read the hand-calculated route by following these nodes back from the chosen center and compute its cost with Equation 4; (4) load the same network into the routing function of the app through an automated test and record the returned route, the cost to every center and the chosen center; and (5) compare the two results.
+
+The test cases cover each rule that can change a route: (a) the worked example of Tables 4 to 6 for walking, motorcycle or tricycle, and car, whose hand-calculated costs are already given in Table 6; (b) a segment on the recommended route that DRRM has closed; (c) a segment that a resident has marked as blocked; (d) a recorded depth above the passability limit of one mode but below the limit of another (Table 1), so the same network gives a different route for each mode; (e) a nearer center that can only be reached through a flooded segment and a farther center that can be reached through dry segments; (f) an evacuation center marked as unavailable; (g) a network in which no center can be reached, where the app must report that no route is available instead of drawing a path; and (h) two routes with exactly the same cost.
+
+A test case passes only when all of the following hold: the chosen evacuation center is the same as in the hand calculation; the sequence of nodes of the route is the same as the hand-calculated route; the cost to every center is equal to the hand-calculated cost when both are rounded to one decimal place, as in Table 5; the cost of the route is equal to the sum of the weights of its segments (Equation 4); and no closed, blocked or too-deep segment appears in the route. When two routes have exactly the same cost, as in case (h), either route is accepted as long as the cost matches. Each case is run again after a segment on the route is closed or flooded, and the recalculated route of the app must again match the new hand-calculated route. Any mismatch is recorded as a critical defect (Table 16), corrected, and the whole set of cases is run again.
+
+The results are reported per test case as the hand-calculated route and cost, the route and cost returned by the app, and pass or fail. The evacuation routing is accepted only when every case passes; the weighted mean of the questionnaire is not used for this decision.
+
+### Interpretation and decision rules
+
+The development build will be deemed as acceptable for the next controlled project phase when the following evaluation criteria are met with a weighted mean of 3.41 and core assigned tasks are finished without blocking issues for the participants' groups. Also, there is no critical access-control, privacy, data-integrity or workflow defect in existence, and payment, map, and other external dependencies are labelled correctly within their approved operating boundary. The study documentation should also indicate the un-met limitations and actions that are required. Evaluation results can only be interpreted for Barangay Ampid I and within the environment tested. 
+
+For the novelty, the evacuation routing is accepted when every routing test case in Table 15 returns the same route and cost as the Dijkstra path calculated by hand, a closed, blocked or too-deep road is never used, and the route is recalculated when a road on it is closed or flooded. The rainfall advisory is accepted when every injected-rainfall test case in Table 9 shows the expected level and warning line on the screen and the route stays the same at every level. The questionnaire is used only for the usability of these features and not as proof that the algorithm is correct. Because the routing tests use synthetic road networks and synthetic flood depths, passing them shows that the code computes the correct least-cost route; it does not show that the recorded flood depths of Ampid I are accurate.
+
+## **Work Plan**  {#work-plan}
+
+The project follows a six-month schedule from requirements analysis to the final defense. Table 19 shows the planned month of each activity, including the development and verification of the evacuation routing and rainfall advisory; the procedure for the user evaluation is described under Project Evaluation.
+
+###### **Table 19\. *Work Plan Schedule***
+
+| Activity | Month 1 | Month 2 | Month 3 | Month 4 | Month 5 | Month 6 |
+| :---- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Requirements analysis and planning | ■ |  |  |  |  |  |
+| System and data design | ■ | ■ |  |  |  |  |
+| Supporting module development |  | ■ | ■ | ■ |  |  |
+| Evacuation routing and rainfall advisory development |  | ■ | ■ | ■ |  |  |
+| Integration |  |  |  | ■ |  |  |
+| Technical testing, including routing and injected-rainfall tests |  |  |  | ■ | ■ |  |
+| User evaluation and DRRM simulated flood scenario |  |  |  |  | ■ |  |
+| Revision and documentation |  |  |  |  | ■ | ■ |
+| Final defense and handoff |  |  |  |  |  | ■ |
+
+### **Computing Standards and Modern Tools and Techniques**
+
+###### **Table 20\. *Computing Standards and Modern Tools and Techniques***
+
+| Tool, standard, or technique | Application to Barangayan |
+| :---- | :---- |
+| Dijkstra’s algorithm (own TypeScript implementation) | Compute the safest route with a binary min-heap Dijkstra written from scratch in the shared package (packages/shared/src/lib/evacuation-routing.ts); no graph library or pgRouting is used |
+| Open-Meteo Forecast API | Supply the hourly rainfall (R1 and F3) of the rainfall advisory through a scheduled server-side function |
+| Open-Meteo Historical Weather API | Show past hourly rainfall at Ampid I during development to choose realistic values for the injected-rainfall tests |
+| React Native and Expo SDK 57 | Develop the resident-facing mobile application for the approved mobile environment |
+| Expo Router | Organize resident mobile routes and protected navigation |
+| Next.js 16.3.0 | Develop web-based administrative and resident-access surfaces |
+| TypeScript | Define shared types and reduce data-contract inconsistency |
+| Zod schemas | Validate forms and shared request data |
+| Supabase PostgreSQL | Store barangay-scoped records, relationships, functions, triggers, and migrations |
+| Supabase Auth | Manage account authentication, sessions, and recovery flows |
+| Row-Level Security and role-based access control | Restrict data access according to user role, ownership, and barangay scope |
+| Supabase Storage | Store permitted incident photographs, identity documents, and content files |
+| Supabase Realtime | Support selected status, announcement, health, inventory, and payment updates |
+| Deno Edge Functions | Perform sensitive server-side operations for payment, privacy, and QR-related functions |
+| Vitest | Test shared schemas, status logic, the Dijkstra routing core and the rainfall-advisory levels |
+| Leaflet and OpenStreetMap | Display incident maps, evacuation-center maps and the recommended routes |
+| Haversine formula | Support straight-line distance ordering of evacuation centers and incident locations |
+| PayMongo and QR Ph | Provide the approved sandbox boundary for digital-payment workflows |
+| ISO/IEC 25010:2023 | Organize software-quality evaluation criteria |
+
+## **Potential for Commercialization** {#potential-for-commercialization}
+
+Barangayan may be utilized as a digital barangay management system for Barangay Ampid I. Its main benefit is that resident services, incident reports, emergency alerts and the safest-route evacuation map are found in one platform that the barangay and its DRRM can manage.  
+The commercialization of this system depends on the confirmation from the users on their acceptance of the product by providing service that is reliable, complying with privacy policy, capable of operating under any conditions and meeting procurement standards.
+
+### **Market Model**
+
+The market model of the study is limited to Barangay Ampid I and is organized in stages:
+
+###### **Table 21\. *Market Model of the Study***
+
+| Measure | Definition for this project | Current basis |
+| :---- | :---- | :---- |
+| Total Available Market | Residents and offices of Barangay Ampid I who need digital document services and evacuation information | 26,953 residents (Philippine Statistics Authority, 2025\) |
+| Serviceable Available Market | Residents of Barangay Ampid I with an Android phone and internet access, together with the barangay officials, staff and DRRM personnel | About 19,500 residents, an upper-bound estimate: 26,953 residents in the 2024 Census of Population (Philippine Statistics Authority, 2025\) × 83.8% internet users (Kemp, 2026\) × 86.3% Android share of mobile devices (StatCounter Global Stats, 2026); the actual count will be recorded during the pilot |
+| Initial Share of Market | The 50 pilot participants: 25 residents, 10 officials, 10 staff and 5 DRRM personnel | Participant plan in Table 10 |
+
+The market model is a planning tool only and strictly used for capstone purposes, and it does not establish purchasing intent, approved procurement, pricing, or revenue.  
+Measurable benefits
+
+###### **Table 22\. *Measurable Benefits per Period***
+
+| Period | Product position | Key work | Measurable target |
+| :---- | :---- | :---- | :---- |
+| Year 1 | Controlled development and evaluation build | Complete testing, correct critical issues, document configuration, and establish the pilot evidence base | Weighted mean of at least 3.41 in every quality area; 100% of routing and injected-rainfall test cases passed; no unresolved critical defect; 50 pilot participants evaluated |
+| Year 2 | Supported barangay implementation | Improve onboarding, staff training, reporting, content management, and operational support based on approved results | Share of document requests filed online and share of requests completed within their target processing time, both compared with the Year 1 pilot baseline; number of staff trained |
+| Year 3 | Maintained platform for Barangay Ampid I | Improve accessibility, localization, monitoring and provider resilience for Barangay Ampid I based on validated results | System availability, median request processing time and number of active resident accounts, reported each quarter and compared with Year 2 |
+
+# 
+
+### 
+
+### **Business Model**
+
+![][image4]
+
+##### ***Figure 3.2.** BARANGAYAN Business Model* 
+
+*The business model frames the market as three nested circles. The total addressable market (TAM) is all 26,953 residents of Barangay Ampid I, the potential beneficiaries of barangay services and evacuation information. The serviceable available market (SAM) is the residents who have an Android device and internet access. The serviceable obtainable market (SOM) is the residents the system can realistically reach through the barangay’s initial onboarding. That target will be set after the pilot validation.* 
+
+The platform supports barangay operations; it does not replace official decision-making, payment-provider responsibilities, or legally required government procedures.  
+Value proposition. Residents of Barangay Ampid I request documents, report incidents and receive the safest route to an available evacuation center in one app, while officials and the DRRM manage requests, road closures and center status from one website.  
+Target market. The target market is Barangay Ampid I only: its residents, elected officials, administrative staff and DRRM personnel (Table 10).  
+Cost structure. The main costs are development, hosting of the Supabase backend, the external providers, and the training and support of barangay staff, as detailed in the cost and expense model (Table 23). During the capstone the novelty adds no data cost, because the Open-Meteo Forecast API is free for non-commercial use and OpenStreetMap data is free to use. A commercial deployment would need a paid Open-Meteo API plan or a self-hosted Open-Meteo instance, because the free API may be used only for non-commercial purposes (Open-Meteo, n.d.), and a paid or self-hosted map tile service, because the public OpenStreetMap tile servers allow only light use (OpenStreetMap Foundation, n.d.).
+
+### Revenue-generation model 
+
+The project is not responsible for stating the price or claiming any income. In case Barangayan advances from the academic development phase, possible ways of funding or attaining income could consist of a transactional fee, based on some configuration or implementation cost, recurrent support, hosting, and platform fees, data preparation, and training activities and endorsement of customization or integration services. Prior to coming up with any model, one should determine who the payer, contracting company, ownership conditions, prices, obligations, and purchasing procedure are.
+
+### Cost and expense model 
+
+The costs and expenditures model comprises five aspects. Development costs involve requirement analysis, design, programming, verification, implementation, and documentation processes. Infrastructure expenses represent database, storage, real-time facilities, hostings, domain, backup, and surveillance activities. External supplier expenses include payment services,  and e-mail functions in addition to plenty of others. Operating costs consist of assistance, coaching, maintenance, updates, security checks, and incident recovery. Governing costs involve issues of privacy notifications, retention methods, access examinations, and training of employees.
+
+###### **Table 23\. *Cost and Expense Model***
+
+| Cost area | Examples |
+| :---- | :---- |
+| Development | Requirements analysis, design, programming, testing, devices, and documentation |
+| Infrastructure | Database, storage, realtime services, hosting, domain, backup, and monitoring |
+| External providers | Payment, messaging, push notifications, map tiles, routing, geocoding, email. |
+| Operations | Support, training, maintenance, updates, security reviews, incident response, and content management |
+| Governance | Privacy notices, retention procedures, access reviews, policies, and staff training |
+
+### Success metrics 
+
+There are six dimensions of success evaluation. Effectiveness from the user will be evaluated based on the weighted average rating, success with the task, errors encountered, and feedback types. Technical quality will be determined by the tests passed, outstanding defects, the regression results, and the critical failures. Service workflow will be evaluated based on the visibility of the status of the requests, administrative processing steps, and successful configuration. The reliability will be evaluated through the experience of failure and recovery, update history, and backup and recovery documentation. Privacy and access will be evaluated based on unauthorized-access testing results, access control results, and deletion/export documentation. The sustainability will be determined based on the costs, support efforts, providers’ time, and the license agreements made.
+
+###### **Table 24\. *Success Metrics***
+
+| Dimension | Metric |
+| :---- | :---- |
+| User evaluation | Weighted mean rating, task completion, errors, and feedback themes |
+| Technical quality | Passed tests, open defects, regression results, and critical-defect status |
+| Service workflow | Request-status visibility, administrative processing steps, and configuration success |
+| Reliability | Error handling, recovery records, update behavior, and backup or recovery evidence |
+| Privacy and access | Unauthorized-access test findings, access-control results, and export/deletion records |
+| Sustainability | Documented cost, support effort, provider use, and approved operating arrangement |
+
+### Risks and mitigation 
+
+There are various risks involved, along with appropriate measures of mitigation for each risk. To mitigate against unauthorized access to data, the project utilizes role checks, row-level security, storage policies, and access control testing. For payment or settlement yet to be put in place, sandbox status is maintained until the service provider is verified and approved. To resolve incomplete emergency information, the task of content review and updates is assigned to the authorized staff of the barangay. Regarding interruption of provider or network, the system provides error states, recovery methods, and alternative contact numbers of barangays. The approved matrix for compatibility and accessibility should be tested before acceptance to handle the limitations of devices, browsers, or accessibility. Geolocation is treated as a single check since it is under administrative verification to counteract inaccurate location data. To counter the unclear ownership, both parties must identify their responsible individuals. Finally, with regard to unsupported claims, there must be proof of demand, procurement, pricing, or support before any change to the scope of Barangay Ampid I.
+
+Break-even and sustainability 
+
+Break-even point can only be established with the recording of actual fixed costs, variable costs, services prices, anticipated number of users, employee expenses, and costs charged by the provider. The following formula is used for evaluation.
+
+	Break-even period (months) \= Total fixed costs / Monthly contribution margin for Barangay Ampid I
+
+Ongoing operation presumes the presence of a designated platform owner, manage configuration in a secure way, perform data backup and recovery, ensure privacy and content management, monitor providers, train specialists, offer technical help, and have an approved budget.
+
+# **References** {#references}
+
+Agarwal, R. N., Aggarwal, R., Nandarapu, P., Aggarwal, H., Verma, A., Haque, A., & Tripathi, M. K. (2022). COVID-19 vaccination drive in a low-volume primary care clinic: Challenges & lessons learned in using homegrown self-scheduling web-based mobile platforms. *Vaccines, 10*(7), 1072\. https\://doi.org/10.3390/vaccines10071072  
+Alizadeh, B., Li, D., Zhang, Z., & Behzadan, A. H. (2021). *Feasibility study of urban flood mapping using traffic signs for route optimization.* EG-ICE 2021 Workshop, 572-581. https\://arxiv.org/abs/2109.11712  
+Al-Qadami, E. H. H., Mustaffa, Z., Al-Atroush, M. E., Martinez-Gomariz, E., Teo, F. Y., & El-Husseini, Y. (2022). *A numerical approach to understand the responses of passenger vehicles moving through floodwaters.* Journal of Flood Risk Management, 15(4), e12828. https\://doi.org/10.1111/jfr3.12828  
+An, G., Wang, Z., Qu, M., & Hu, S. (2025). *Integrated optimization of emergency evacuation routing for dam failure-induced flooding: A coupled flood–road network modeling approach.* Applied Sciences, 15(8), 4518\. https\://doi.org/10.3390/app15084518  
+Aryastana, P., Liu, C.-Y., & Jou, B. J.-D. (2022). *Assessment of satellite precipitation data sets for high variability and rapid evolution of typhoon precipitation events in the Philippines.* Earth and Space Science. https\://doi.org/10.1029/2022EA002382  
+Bangko Sentral ng Pilipinas. (2023). Memorandum No. M-2023-005: *Adoption of the national QR code standard* (QR Ph). https\://www\.bsp.gov.ph/Regulations/Issuances/2023/M-2023-005.pdf  
+Barredo, A. M. D., Dimapilis, A., & Gamilla, K. (2023). LBigayAksyon: *An Android based emergency response application with web based emergency report generator. Ani: Letran Calamba Research Report, 19*(Version 1). https\://ejournals.ph/article.php?id=19650  
+Brillo, R. A., Montes, J. F., & Mabalot, M. A. (2023). REPORTIT: *An Android based crime incident reporter with web mapping in Calamba. Ani: Letran Calamba Research Report, 19*(Version 1). https\://ejournals.ph/article.php?id=19649  
+Culaste, H. F. C., Torres, N. J. D., Lachica, Z. P. T., Lorono, H. G. P., Inguillo, R. F., Mata, M. A. E., & Namoco, R. A. (2023). *A decision support system for the optimal allocation and distribution of COVID-19 vaccines using analytic hierarchy process (AHP) and integer programming (IP) model. Frontiers in Applied Mathematics and Statistics, 9*, 1140434\. https\://doi.org/10.3389/fams.2023.1140434  
+Dao, D. A., Kim, D., & Tran, D. H. H. (2021). *Estimation of rainfall threshold for flood warning for small urban watersheds based on the 1D–2D drainage model simulation.* Stochastic Environmental Research and Risk Assessment. https\://doi.org/10.1007/s00477-021-02049-2  
+de Lima, L. F. R. F., Ihara, Y. A., & de Almeida, I. C. (2026). *Intelligent flood monitoring and prevention system with Internet of Things (IoT) and prediction algorithm.* Research, Society and Development, 15(10), e127151051935. https\://doi.org/10.33448/rsd-v15i10.51935  
+Dela Peña, M. A. (2025). E-governance in Paracale: *A digital transformation for improved public service delivery and citizen engagement. JPAIR Multidisciplinary Research Journal, 61*(Version 3). https\://ejournals.ph/article.php?id=34489  
+Department of Health, UNICEF Philippines, & Government of Japan. (2023). *DigiVacc: Digital Immunization System for Children in the Philippines (VaccTrace and VaccCheck applications)*. https\://www\.unicef.org/philippines/press-releases/department-health-unicef-and-government-japan-launch-digital-immunization-system  
+Dias, C., Rahman, N. A., & Zaiter, A. (2021). Evacuation under flooded conditions: Experimental investigation of the influence of water depth on walking behaviors. *International Journal of Disaster Risk Reduction, 58*, 102192\. https\://doi.org/10.1016/j.ijdrr.2021.102192  
+Gambini, E., Ceppi, A., Ravazzani, G., Mancini, M., et al. (2024). *An empirical rainfall threshold approach for the civil protection flood warning system on the Milan urban area.* Journal of Hydrology, 628, 130513\. https\://doi.org/10.1016/j.jhydrol.2023.130513  
+Gasmido, W., Jr., De Guzman, J., Natividad, C. J., Sicuan, C. K. B., & Reyes, D. (2025). *Digital Barangay: Ayos Lomboy's web-based management and information system. Psychology and Education: A Multidisciplinary Journal, 37*(Version 5). https\://ejournals.ph/article.php?id=30193  
+ISO/IEC. (2023). ISO/IEC 25010:2023 *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model (2nd ed.).* International Organization for Standardization.  
+Jain, A. M., Vinluan, A. A., & Villegas, R. A. (2024). *Evacuation operation management system using multi-objective artificial bee colony.* ISU Linker: Journal of Engineering, Computing and Technology, 1(2), 27–39. https\://doi.org/10.65141/ject.v1i2.n3  
+Jeon, S., Jung, K., Kim, J., & Jung, H. (2023). *Map API-based evacuation route guidance system for floods.* Applied Sciences, 13(16), 9141\. https\://doi.org/10.3390/app13169141  
+Kemp, S. (2026). *Digital 2026: The Philippines*. DataReportal. https\://datareportal.com/reports/digital-2026-philippines  
+Lavers, D. A., Simmons, A. J., Vamborg, F. S. E., & Rodwell, M. J. (2022). *An evaluation of ERA5 precipitation for climate monitoring.* Quarterly Journal of the Royal Meteorological Society. https\://doi.org/10.1002/qj.4351  
+Li, C., Jiang, C., Chen, J., & Lam, M. Y. (2025). *An overview of flood evacuation planning: Models, methods, and future directions.* Journal of Hydrology. https\://doi.org/10.1016/j.jhydrol.2025.133026  
+Liu, C.-C., Hsu, K., Peng, M. S., Chen, D.-S., et al. (2024). *Evaluation of five global AI models for predicting weather in Eastern Asia and Western Pacific.* npj Climate and Atmospheric Science. https\://doi.org/10.1038/s41612-024-00769-0  
+Malasig, J. (2024, September 4). *Tire deep or gutter deep? MMDA's new system assigns acronyms to flood levels.* Interaksyon. https\://interaksyon.philstar.com/trends-spotlights/2024/09/04/282826/mmda-flood-gauge-system-travelers-motorists/  
+Mamuyac, L. K., Delos Reyes, J. R., Lumanglas, L. S., Rebotiaco, E. L., Fukuda, A., & Fillone, A. M. (2025). *Flood-induced effects on vehicular traffic in Metro Manila, Philippines.* Natural Hazards, 121(12), 14907–14933. https\://doi.org/10.1007/s11069-025-07382-1  
+Mannarini, G., Salinas, M. L., Carelli, L., Petacco, N., & Orovic, J. (2024). VISIR-2: *Ship weather routing in Python.* Geoscientific Model Development, 17(10), 4355-4382. https\://doi.org/10.5194/gmd-17-4355-2024  
+Nagisettygari, C. T., Azman, A., & Zainal Abidin, S. N. (2026). *MyEvac: A VLM-augmented multi-source flood alert architecture for Malaysian flood evacuation* (Version 1.0.0). Zenodo. https\://doi.org/10.5281/zenodo.21732752  
+Ogawa, K., Inoue, T., Hiramatsu, Y., & Mishra, J. (2023). *A route search system to avoid the danger to life in dynamic inundation.* Water, 15, 1417\. https\://doi.org/10.3390/w15071417  
+Open-Meteo. (n.d.). *Terms and conditions*. Retrieved November 5, 2026, from https\://open-meteo.com/en/terms  
+Open-Meteo. (2026). *Open-Meteo historical weather, forecast and historical forecast APIs* \[Dataset record\]. Climateverse. https\://doi.org/10.71646/xxobko  
+OpenStreetMap Foundation. (n.d.). *Tile usage policy*. Retrieved November 5, 2026, from https\://operations.osmfoundation.org/policies/tiles/  
+Pesa, M. F., & Urag, J. J. S. (2025, July 24). EXPLAINER: How do Pagasa's rainfall warnings and weather advisories work? *The Varsitarian*. https\://varsitarian.net/sci-tech/20250724/explainer-how-do-pagasas-rainfall-warnings-and-weather-advisories-work  
+Philippine Atmospheric, Geophysical and Astronomical Services Administration. (2019, January 16). *Official statement of DOST-PAGASA on the heavy rainfall event associated with Tropical Depression Usman*. https\://www\.pagasa.dost.gov.ph/article/38  
+Philippine Statistics Authority. (2024). *Philippine Standard Geographic Code (PSGC) first quarter 2024 updates* \[Press release\]. https\://psa.gov.ph/system/files/scd/Final-Press-Release-1Q2024PSGC.pdf  
+Philippine Statistics Authority. (2025, July 17). 2024 Census of Population (POPCEN) population counts declared official by the President. https\://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president  
+Piamonte, C. N., Curada, J. P. M., & Zaragoza, M. C. (2026). Project Bantay: Breadth-first search and Dijkstra implementation for community-accessible disaster response. In Proceedings of WCTP 2025 (Atlantis Highlights in Computer Sciences, Vol. 24, pp. 629–645). https\://doi.org/10.2991/978-94-6239-638-8\_33  
+Republic Act No. 10173\. (2012). Data Privacy Act of 2012\. https\://privacy.gov.ph/data-privacy-act/  
+StatCounter Global Stats. (2026). *Mobile operating system market share Philippines: October 2026*. https\://gs.statcounter.com/os-market-share/mobile/philippines  
+Tran, M. A., Nguyen, V., Nguyen, V., & Bui, M. H. (2026). *Time-aware urban flood routing with sticky edge closure on forecast depth: A Hanoi case study* \[Preprint\]. arXiv:2611.02479. https\://arxiv.org/abs/2611.02479  
+Tsai, Y.-L., Irvin, J., Chundi, S., Ng, A. Y., Field, C. B., Kitanidis, P. K., et al. (2022). *Improving debris flow evacuation alerts in Taiwan using machine learning.* arXiv:2208.13027. https\://arxiv.org/abs/2208.13027  
+United Nations Department of Economic and Social Affairs. (2023). *The Sustainable Development Goals report 2023: Special edition*. United Nations. https\://unstats.un.org/sdgs/report/2023/  
+Vhajage, S. S. (2025). *Aqua Sentry: A resilient flood intelligence system built on dual-modal risk fusion for urban disaster response.* Indian Journal of Computer Science and Technology, 4(3), 195–197. https\://doi.org/10.59256/indjcst.20250403031  
+Xue, H., & Chai, T. (2021). *Path optimization along buoys based on the shortest path tree with uncertain atmospheric and oceanographic data.* Computational Intelligence and Neuroscience, 2021, 6663446\. https\://doi.org/10.1155/2021/6663446  
+Young, A., Bhattacharya, B., & Daniels, E. (2025). *Integrating WRF forecasts at different scales for pluvial flood forecasting using a rainfall threshold approach and a real-time flood model.* Journal of Hydrology. https\://doi.org/10.1016/j.jhydrol.2025.132891  
+Young, A., Bhattacharya, B., & Zevenbergen, C. (2021). *A rainfall threshold-based approach to early warnings in urban data-scarce regions: A case study of pluvial flooding in Alexandria, Egypt.* Journal of Flood Risk Management. https\://doi.org/10.1111/jfr3.12702  
+Zhou, W., Wang, S., Lall, U., Merwade, V., & Ye, D. (2026). *Fusing Earth observation embeddings and spaceborne terrain with meteorological forcing for flood peak depth prediction from high-water marks* \[Preprint\]. arXiv:2611.05220. https\://arxiv.org/abs/2611.05220  
+Zhu, Y., Li, H., Wang, Z., Li, Q., Dou, Z., Xie, W., Zhang, Z., Wang, R., & Nie, W. (2022). *Optimal evacuation route planning of urban personnel at different risk levels of flood disasters based on the improved 3D Dijkstra's algorithm.* Sustainability, 14(16), 10250\. https\://doi.org/10.3390/su141610250  
+Zippenfenig, P. (2023). *Open-Meteo.com Weather API* \[Computer software\]. Zenodo. https\://doi.org/10.5281/zenodo.7970649
+
+# **Appendix A**
+
+Transcript of Interview
+
+| CAPSTONE 1 \- GROUP 1 BARANGAYAN: A Digital Barangay Management System Implementing DRRM, Medical Assistance, and Incident Reporting Interview Transcript Capstone Partnership Discussion. Interviewer: Gabriel Ellis P. Muega Interviewee/ Resource Person: Brgy. Captain Elmer Manahan Meeting conducted  at Ampid 1 Barangay Hall Captain’s Office around 9:30 AM until 10:30 AM July 30, 2026 Transcript of interview Gabriel Ellis P. Muega: Good morning, Kap. I am Gabriel Ellis Payumo from Group 1 of Our Capstone Project. And our project is named na Barangayan. And yung novelty of the project po namin is we added po yung first yung report it. And it focuses only on crime incident reporting po and mapping for the police developed for parang a single barangay po. And may pangalawa din po is yung LBGA action and it focuses on emergency and accident response coordination between residents and rescue personnels. And yung pangatlo naman po is parang paracale study evaluates general yung e-governance platform po from one LGU focusing on system quality and yung mismong functionality po ng buong project, yung mismong functionality po ng application and web. Tapos yung ano din po is merong digital barangay and it focuses on records management and administrative workflow automation for one barangay po through web-based system without mobile component. Bali Kap. doon po sa mga nasabi ko na panguna po dito, may mga ma-add ba po ba kayo na parang na hindi namin na-address as a problem po yung dito sa barangay? Brgy. Captain Elmer Manahan: So ngayon naman kasi barangay naman natin una-una depende yan sa status ng barangay. What I mean status depende yan sa funding. Kasi syempre lahat ng mga innovation o lahat ng development na gusto natin sabihin nating digital, kailangan ng corresponding budget yan. So hopefully sabi ko nga o sabi nga, dahil tutal luckily yung barangay natin is pwedeng kahit paano sumabay. So yun nga sabi ko kagaya nabanggit ko, ikaw kung sa iyo nabanggit yun o sa iba, meron tayong isang pagawaan ng budget. May nago-offer sa atin ng parang isang program kung saan ang lahat na mag-apply ng mga business clearance at kailangan nila ng indigency, makapag-apply na sila through computer. At syempre magbe-benefit yun yung mga may pasok pag sabaling o pag sabaling, pwede lang magpagawa, bukas ng 10 linggo, 24/7 tayo, pwede nga makuha yung mga gano'n. So yun ang nakaline-up na gawin natin kasi considering na sabi nga development ng barangay natin may sumasabay na tayo sa iba. As of now tayo may pinakamalaking barangay na tinatayo. Kailangan isabay na rin natin as well as mga rules, security, CCTV, flood control alarm system, monitoring. Tapos ang CCTV ang number 1 kasi yan ng kailangan, yung security at tsaka yung mga accident na nangyayari minsan sa atin na kailangan na momonitor, at yung quick response syempre. As of now din, sinasabay nga natin sa gano'ng bagay, yung pagdaragdag natin ng rescue personnel. As of now, nagdagdag tayo ng ambulance, parang dalawang ambulance magkakater. Despite pa yan sa mga may meron tayong reklamo sa LGU kung saan naka-align din sila. So yun ang pagbabago na ginagawa natin through digitalization na sabi natin na pwede mangyari. Pero as of now just starting kasi may trial and error kaya kung magiging effective sa kanila o hindi. Dahil nga sa ating operational barangay 24/7 na tayo para sa mga mapasok pag Sabado at Linggo may trabaho. So kahit ang mga hearing natin pagtawag at negation natin, ginagawa sa Linggo para ma-complete. So yun ang isang pagbabago na gagawin natin upon sa requirements na hinihingan nila rito o documentation na maging digitalize na, computerize na. Gabriel Ellis P. Muega: Bali Kap yung sa second naman po na feature sa project namin na we would like to add yung sa, is yung ano po yung sinabi ko po kanina na parang community incident reporting and mapping. So parang ano po siya Kap. We plan na implement let’s say may accident, may baha sa lugar na ito. And then yung other na resident is… Brgy. Captain Elmer Manahan: Actually yung isang ginawa ko muna sa ngayon dahil wala pa tayong ganoon, Unang una from our barangay we have a GC. Sa GC na iyon meron tayong GC na pang rescue na kung saan kung ano ang takbo nila at kung sino pinickup nila  from time to time naka record yun kaya na momonitor ko yun monitor yun, na momonitor ko kahit saan, kahit nasa bahay, kahit may nilakad ako, yung up and uno rescue. Kung saan diyan, lahat ng incident nakapasok dyan, pati all the details. Tapos ang kulang dito is nasa GC palang sigurong yung nasabi natin, minsan nila-live natin eto yung dito kung magagawa natin ng paraan eto alam na nila eto for information. Tapos meron tayong nilalagay ng contact number dyan sa lugar-lugar para madali sa kumontak. Yung isang dinagdagan ko is provide kami ng radio. Itong radio is SIM card, kahit nasa Mindanao pa kayang contactin ito. Eto yung last sinuggest ng dating kagawad na ginamit dati. So lahat ng HOA meron na para mas mabilis ang communication. So lahat nila, hindi lang kung ma-access nila, parang isang group lang ito na lahat ng HOA meron na, halos 90% ng HOA, president meron na. So from time to time kung anong insidente, kung may magnanakaw, merong nag-away, merong baliw. A yung a.. kapon si Sir Gabriel Go, tumawag lang may baliw sa may building nila at naita tawag nila. Tapos kung emergency, lahat. Tapos access din to sa police, from police bumbero tsaka  yung lahat ng kagawad, kaya Kontakin lahat ng nasa barangay tyaka yung bumbero kung meron tapos ambulansya sa BPSO. So ganoon ang communication na ginawa natin. Since hanggat wala pa yung sinasabi natin program na para sa digital platform na pwede natin mapasukan. Pero pag natin may baha, may area kami alam na may baha doon. Also wala pa tayong alarm system para sa flood control. Gumagawa tayong ng ano, ang plan is kabitan ng CCTV na kung saan na momonitor pero as of now, dahil nga, sabi nga magastos ang CCTV sa ang pag-maintain, ang ginagawa natin ay pagka umulan na nagpapaikot na kami ng BP-programa natin, meron tayong barangay disaster and risk management, ginagawa natin, iniikutan na nila, and then may GC din kami from duon narereport din tapos yung naka live din yung PIO  natin sa bagyo, naka live din sila para anytime yung mga tao pwede mag comment dun pwede mag message ganun ginagawa namin, Kaya lang wala pa talagang isang full na programa, yung program talaga, system para yan na lang. Pero hopefully ito may december item of the program may nag-offer sa amin ng ganyan. So naka-concentrate siya sa mga clearances at disaster. Pero hopefully makita pa natin kung saan pa pwede." Gabriel Ellis P. Muega: Yun nga po yun Kap yung sinasabi ninyo na parang instead na, kung baga, sa GC na lang, kunwari may ibang tao na nakakita ng ano pwede na ma click Brgy. Captain Elmer Manahan: Kaya nga as of now dahil wala pa tayo ang prinovide natin ay yung GC at tsaka yung Radio sa lahat ng mga HOA para from time to time yung communication namin mabilis, kaya minsan merong naaabala kasi, halimbawa hindi naghahakot yung truck ng basura sa lugar na iyon, sila mismo tatawag sa admin natin kasi admin natin nagpahawak ng schedule ng basura so malalaman nila ruon kung sira yung truck, bakit ndi nahakot,  kamukha ang isang driver namin namatay na kapatid, tumigil siya ng tatlong araw na biyahe. So nag-add kami ng… reliever. So nakakuha kami one day na siya hindi nakapag hakot or two days. Tapos nakaraan naman, sira ang truck, so apektado ang hakot. So yun, mabilis yung response ng tao dun, may reklamo. Ay wala naman truck, pero at least doon malalaman na ay sira kasi binabato namin sa HOA. At namu-monitor din ng HOA president, di lang naman HOA president gumawa nito. Ang HOA kasi pagkawala sa mga lugar nila iniiwan niya sa opisyales nila, pero from duon na momonitor nila, “ay sira yung truck ng barangay hindi pala makakapunta” so aside from dito may GC kami, may GC kami ng HOA federation na kung saan doon namin binabato lahat. Yun ang communication namin, through cellphone pa lang lahat. Naka align Gabriel Ellis P. Muega: Tapos Kap meron din po kami yung sa pang apat is yung digital payment module so instead na let’s say na para ng pwede po sila mag bayad na parang QR code na Brgy. Captain Elmer Manahan: Gcash.. Yung ginagawa sa police, police clearance, NBI clearance actually ano rin yan sa ngayon kasi munisipyo gumagawa pa satin.. One-stop shop nila para pinabilis na ipagkuhan ng mga permit mag-eradict siya.Ayun nga, nasama na rin yan sa isang plano natin, hindi ko lang alam kung kaya natin implement pa by next year. Pero sabi ko, kasi binabudgetan yan talaga. Kaya tulad sa nasabi ko siyo kanina binabanggit ko, lucky lang tayo. We are lucky dahil kasi malaking pondo. Pero pagdating sa duon sa barangay na talagang ang budget lang nila napakaliit, hindi na kaya yan. So atin kasi, normally pag gumawa tayo ng budget sa barangay, doon mo ilalagay ang plan mo for one year, for succeeding year. Hindi ka ngayon gagawa para sa kanyang taon na ito for succeeding year. So yan, may na-invite na kami para sa budget preparation namin, magde-demo sila kung paano nga ang digital platform na yun ang one-stream prang lagayan siya ng ibang ahensya na pag ikaw yung may transaction online ka na. Hindi na yung tipong pupunta ka at pipila ka para pag dating duon..  Ano ka nalang, pick-up ka nalang. So yun andun rin ang requirements na kailangan, yan ang pinag-aaralan namin para makasabay din tayo, yung barangay natin. Gabriel Ellis P. Muega: Tapos Kap. meron din kaming emergency module ang most likely ito po yung emergency module namin is let’s say may mga lugar naman na dito sa lugar natin na parang talagang pag umulan talagang binabaha and kailangan  ng evacuation, so kasi po, tulad po nung sinabi niyo po kanina yun po ang balak namin ilagay din sa application na gagawin namin. And also kapag let’s say umulan and wala namang internet or wifi, parang ang gagawin namin is yung algorithm. Kap, ano na naman po kayo. Com-sci naman po kayo. Yung may algorithm po kami na gagamitin na parang madadirect yung isang user doon sa pinakamalapit na evacuation center. So ano po ba yan, kung meron pa po kayo masasuggest or maa-add po doon sa module. Brgy. Captain Elmer Manahan: Actually ok yan, as of now kasi yung namin ano sa akin, nagpromo yung DITO SIM, ngayon nagbigay sila ng 2,000 ata or 1,000 SIM cards sa mga area  na kung saan nagkaroon kami ng parang ginagamit natin pag may disaster. Yan yung parang true text, yung mga text bust, yan nagganoon na kami about doon, tapos nga parang anti-mano alam niyo nila. Pero as of now nga ina-announce namin kung saan yung mga area na binabaha. And monitor din namin kasi may declare kami doon sa programa natin sa munisipyo risk reduction center nila, may declaration kami kung saan yung evacuation center na pinakamalapit. Like kung saan yung lugar na every time bumabaha meron silang multi-purpose. Kaya nga pinipursigi natin lahat ng lugar magkaroon ng multi-purpose para kung saan nilang dumating yung pagkakataon ganon, meron. Halimbawa kumukuha tayo banda malapit sa SM, yung SM na yung takbuhan na, kasi we are recommending and cooperating ng mga ano corporation ng SM management and personnel talagang sinabi naman nila na talagang sinabi naman nila napag may ganyan open ang SM, kaya ina-announce namin. Halimbawa “o may bagyo tayo,ganto, baka bumaha, libreng parking na sa SM lahat pumunta na duon”  So dito naman sa atin tulad nga ngayon, yung nasunugan three months na mahigit nandito pa, ito ang evacuation center natin. But sabi ko nga, paralyzed  na ang operation ng ampid uno, dahil sa paliga ng SK, mga programa dahil nandyan pa sila up to three months, na nag iisip kami na by next year siguro ang gagawin talaga natin sa court na yan is e-elevate na sa taas na yung court tapos sa baba na yung evacuation center, tapos may parang isang function hall na divided lang ng kunwari ng parang roll-up or accordion na type na division para pag may mga ganyan, pag naglagay tayo ng burulan diyan siguro, yun ang isang ang namin gusto namin magawa upon dun sa mga ganyan. Pero yung way of communication yun nga as of now andun parin tayo sa proseso ng information dissemination na ito, ito yung evacuation center, itong mga bumabahan ito, dito kayo tatakbo, ganoon pa rin sa akin. Tapos yun text-base na.  Gabriel Ellis P. Muega: Ah talagang ano lang po Kap. as of now most of the time through text lang po talaga wala pa po yung algorithm na… Brgy. Captain Elmer Manahan: Wala pa, wala pa ginagawa… Gabriel Ellis P. Muega: Ididirect po yung ano Brgy. Captain Elmer Manahan: Kaya as of now, anyway ano, ito kasi ng mga taga TIP rin may, nag gagawa sila ng proposal about sa, yun nga meron silang ginagawang proposal about, mag tayo ng ganito, kaya ako yung court yung binigay ko sa kanilang study, kaya ko sa kanila binigay yung study yung court na yan sabi ko ito yung sukat, ito yung plano ko dyan, ito, i-align nyo. Kasi baka sa kali yung mga ginagawa nyong thesis o proposal mai-adapt sa barangay. So akin ganun din ma encourage yung mga ginagawa nyong thesis ngayon bigyan nyo ako ng kopya kung may magawa kayo, malay mo one of the ano, pagka ano, nag improve tayo yan yung mga mai-adapt ko Gabriel Ellis P. Muega: Bali po Kap. if ever pag nasa ano po kami, user pilot testing po ng application, okay lang po ba yung testing dito? Brgy. Captain Elmer Manahan: Sige okay lang yan, kasi nga yung text bust nga ngayon, yung mangyayari sa barangay namin may text bust na almost 1,000 to 2,000 yung SIM na kinalat nila so pag may bagyo or may warning signal or may mga yellow warning duon na antimano, Parang sa NDRRMO diba nakaka tanggap tayo sa cellphone natin na pagka yellow warning, red warning, So ganoon din yung ginagawa dito. So yan, pwede natin i-adapt. Pwede natin i-pilot dito para Gabriel Ellis P. Muega: Bali Kap. bilang com-sci student, bali ano, can you take a look at the novelty of the project po namin? And if ever po may masasuggest pa kayo na pwede naming i-add o pwede naming gamitin?  Brgy. Captain Elmer Manahan: Sige tignan ko, pwede nating maano ko, pero sabi ko nga as of now kung ano yung mga plan nyo kasi syempre yung mga plan niyo na pwede din na medyo modern na ito… Moderno to kesa sa nangyayari ngayon, mas maano natin.. Kamuka nung sabi niyo na digital QR codes mas madaling gawin ito. So system lang naman yan.  So sabi ko nga may usap na kami dyan, anlaki ng hiningi, almost 1M ang hinihingi nila para dun sa whole system na yon na yung lahat ng kukuha, ano na sila, through ano lang register na sa ganon tapos bayad ganun tapo pick-up nalang, ganun ang offer nila. Pero complete package kasi yun, kasama yun sa mga disaster yung mga alarm, tapos yung mga monitoring, yan ang ino-offer nila. Kaya lang sabi ko nga they need to present it and council pa rin mag-decision. Upon approval yun na yon, babudgetan pa rin namin yon. Wala pa kasing budget yon. The budget of Barangay kasi ang ginagawa natin is divided yan ng iba-ibang programa ng gobyerno. And then again sabi ko kanina, yung budget ngayon for 2027 gagawin pa lang namin ngayon. Kung baga yung budget namin na 40 million di-divide namin tig  5% dun para sa pag papasahod tapos yung iba dun services, andyan ang gasolina, yun nga yung maintenance operating  yung MOOE yung mga kuryente, tubig, kamukha niyan. Itong nasunugan, yung tubig natin dyan dati is P12,000, yung nakaraan 47,000 almost ilan sila dyan 200\. Tapos ang kuryente natin from P49,000-P79,000 tapos hindi na umaalis sa  P79,000-P60,000. So definitely yung budget natin na naka-allocate doon, kakapusin. So kailangan pag-supplemental, matatamaan yung iba-ibang debt. Ganoon kasi dinidivide yung budget ng Barangay. Kaya itong mga proposal na ganito, will take it the proposal and pag gusto namin, saka namin babudgetan. Kamuka ngayon we have a plan last year na bumili ng lifter para dun sa mga puno matabas namin  Kasi ang hirap makapagsabayin sa munisipyo. Kung munisipyo lang meron, try to think na 15 barangay kami. Tapos syempre hindi naman isang araw dalawang araw gagawin ng bawat isang barangay. Minsan ang tagal na. Halimbawa bumagyo, bumagsak yung nakalay-lay na puno, hindi na namin para mahantay. So ngayon yung plano namin last year na bumili ng manlift, lifter so ngayon yun na plano namin last year.  2024 na plano namin na bili kami ng truck ng basura na bago. Kasi ganoon ang pag ano ng budget. Hindi pagka halimbawa ito naisipan ko mag lagay ng ganito, A kailangan palagay ng system na ganito. Hindi ko pwedeng implement ito kasi wala siya sa under-investment pa. Kailangan siya nasa planan mo yung ngayong taon na to budget na ito, make sure mo implement ganun yung ano, parang may time lagi hindi katulad sa pera ng pribado, pera natin Whatever, kung panggasos natin sa soft drinks, pwede natin ibili ng ano muna diba. Kung pambili natin ng damit pwede natin i-bili na muna ng gadget.  Dito hindi kung ano yung plinano mo, ano yung in-investan mo ng budget yon. Kaya normally sabi ko as of now wala pa kami request sa sa even per step sa ganito.  Gabriel Ellis P. Muega: Sa digital… Brgy. Captain Elmer Manahan: Oo wala pa. Pero nga this october we are preparing budget hearing, for samin budget preparation for 2027 budget. So yun may mag-present sa amin about sa digital payment mode na yan tsaka emergency level. Gabriel Ellis P. Muega: Pero Kap may mga ano pa po ba, kung baga may mga problem, like yung sa problem statement, may mga problems pa po ba na parang if ever na masasabi niyo po samin na pwede po namin gawan ng system or pwede po namin i-add po dun sa barangay application Brgy. Captain Elmer Manahan: Siguro dun lang naman normally naman wala ang mga budget problema as long as nandoon talaga ang requirements na kailangan. Kasi yung iba, ito ah, ang pinakamalaking problema kasi nga dito since nasa politics kami, pag nag-request sila ng halibawa certification na bigyan. Kamuka nung nakaraan may kaibigan ako meron siyang mga inorderan ng bigas marami siyang kaso sa barangay na, hindi naman kaso patawag sa barangay para magkaharap kasi ang barangay patawag nmn yan hindi naman kaso yan eh so nangyari hindi niya inatenan, binabali wala niya patawag ng barangay,  Ngayon nagkaroon ngayon na pagkuha ng certificate of action, hindi na siya makapag-counter kasi dineprived na ang rights niya. So ngayon meron siyang patawag na meron siya makapag-bypass, biglang nag-apply siya ng trabaho na kailangan siya ng no-dedictory records.  Kahit kaibigan ko siya hindi ko siya binigyan, kasi unang-una hindi ko pwedeng isapalaran yung barangay na bigyan kita ng may record ka, so yan na number 1 galit na  sa iyo, hindi ka naboboto. Yan kasi minsan. Marami rin dito halimbawa naglo-loan, syempre pag-loan kabila-kabila, walang nakukulong sa utang sa ganoon kaya kabila-kabila sila.  So yung yung minsan kailangan natin i-improve doon, halimbawa ano yung pagkuha ng mga barangay certification, barangay residency ano ba ang requirement dun ang ano… dun ang suggestion ko sa inyo na maging ano kayo, pag aralan natin, Kamukha ng 6 months residency kailangan nandito, required yun, ay hindi nmn requirement yung HOA kasi ang HOA ay  NGO, hindi siya prerequisite para sa clearance or certification residency. So doon lang natin pag-aaralan na. So huwag nilalagay ang kailangan may HOA clearance, hindi allowed yan, bawal yan. Medyo makakasuhan ng nag-implementan kasi walang batas na nagsasabi na kailangan pag kukuha ka ng barangay clearance, kumuha ka muna sa HOA. Walang ganoon. Kasi ang HOA ang NGO, non-governmental organization at hindi siya aligned sa barangay natin. So yon lang sa mga requirements ang kailangan natin tutukan. Gabriel Ellis P. Muega: How about naman po Kap. sa like sa emergency in…, emergency disaster risk and response naman po ano po yung pwedeng i-improve. Brgy. Captain Elmer Manahan: Ang pwedeng improvement ng siguro doon is from time to time aware sila. Kasi sometimes people din ang may problema. Unang-una, yung nagtapon ng basura diba. Kami, We’re…,  Actually apat na yung barangay Captain. na gumagana Pero still makita mo, ayun paglabas ka ng bahay namin may nakatumpok ng basura doon. Araw-araw panapahahakot ko yung tinatapon. The more na araw-araw ko pinapahakot yung basura, na dadaan ko duon, na nakatumpok. Sa araw wala, pero sa gabi meron kaya pag ano hahakutin. Tamo naman nag tatapon sila Tapos nagtatapon pa sa kanto, yung disiplina parin ng tao. So kahit improve natin, sabihin natin, digitalize na ang ginagawa natin para maging magandang services, still the first the people na hindi cooperative, hindi sila cooperative. Talagang ito rin ang problema natin." Gabriel Ellis P. Muega: Talang notification regarding sa mga ano… Brgy. Captain Elmer Manahan: Oo, kahit anong paalala mo sa kanila ganito, ganito, still yung ano nila, pagiging stubborn. Kaya ako, I always saying sa iba na hindi problema ang gobyerno, ang problema ang tao. Kamukha niyan yung mga flood natin. Nandun ako nung umuulan, grabi yung basura. Grabing basura na nandun sa tulay. Tapos hahakutin mo kung meron naman. Pag nakita mo, pinagbalatan ng ref. Yung ref na kinuha siguro yung mga tanso, talaga. Tapos makita mo, pampers, supot ng basura. Sometimes the problem hindi na yung serbisyo ng gobyerno. The problem is the people. Ang hindi sila kooperative at nagtatapon, parang wala sa pakialam. Yun ang wala, ang disiplina. So kahit na siguro magawa tayo ng ginto, ang susunod lang saatin yung ginitong programa natin, yung mga talagang makakatulong sa kanila, yung mga nagtatrabaho, walang oras sa barangay, sila.  Pero pagdating parin sa mga depress areas, I don't think kung applicable tong ginagawa natin.  Ang suggest ko nga ngayon, kagaya mg sabi ko sa disaster or emergency, magbigay tayo ng mga tarpaulin, Ilagay natin sa tarpaulin na ito yung mga dapat kontakin nila in case emergency, ito yung mga dapat puntahan nila in case na may bagyo na evacuation center, information dissemination lang. Siguro mga poster lang o tarpaulin. Pero yung dito  Kasi sila nga yung matigas ang ulo eh. Maglagay kayo ng bawal magparking dyan, mag papark, maglagay kayo ng bawal magtapon ng basura, dun sila magtatapon. Yan ang problema natin. Maganda yung naisip natin. Sabi ko maganda yung mga ginitong bagay na naisip natin or innovation ba. Innovation, makasabay tayo talaga sa takbo. Sabi ko nga, ito na yung barangay hall, ito na yung mga kalsada natin, yung mga raylings pinapalitan ng stainless, kakabita ng ilaw lahat yan ng meralco para may liwanag. Pero ano yung in return? Ano ba makukuha natin in return sa tao sa kanila? Ganoon pa rin. Pag hindi mo siya napagbigyan, galit, hindi ka boboto. Yun dapat ang ano, siguro ang, although hindi na ito part ng ano, siguro ang isang bagay to educate them and to let them know na magingcooperative sila. Hindi yung tipong bahala kayo dyan basta kami ito, bahala ka buboto kami ito. Ay napagalita mo, nasita mo, galit sa iyo. Ganoon ang problema natin. Kaya wala, kahit sinong iupo natin sa government, the problem is the people, diba, kamonga boboto mo nga si “” batas gumagawa nun yun ang problema natin kaya ito maganda siguro ito mai-align natin sa innovation ng isang barangay natin, sabihin “Ah digital na barangay sa baragay ampid 1 digital na” tapos, pag nag-endorse sila, mapupuri tayo siguro ng  DILG or mga LGU, sabi nga yung ibang mga government agency mapuri  tayo through this.  But the problem pagdating mo sa may laylayan makikita mo rin yung ilog lang natin sa broadway itong tinatapunan ng basura, pero samantalang twice a week pumapasok ang basura sa kalayaan, tapos pag dating ng gabi makikita mo ang kalsada yung tulay natin nakatambak basura duon gabi-gabi hindi mo alam kung san nangagaling lahat, so yun may mga ano parin. Pero at least may plano na tayo, makakasabay nga tayo sa maganda sa digital, ginagawa nato ng munisipyo eh. Kaya kita mo yung munisipyo, doon sa mga napupuri sila kasi ganoon. Pero binabanatin din sila sa mga ganyan, especially services yung mga humihingi ng tulong ang gusto ko sana hindi eh, Dito ang mga ginagawa naming mga kagawad, pag pumunta rito, right away tutulungan namin, hindi na namin siya pipila, hindi na para bumalik, diba. Sa iba nga, gagawin mo ngayon sa PCSO, DSWD, ganto style nila, mag-re-register ka, maghihintay ka ng tawag. E paano kung emergencing-emergency kailanan mo patay na pasyente? E paano kung lalabas ka na bukas tapos 3 days processing pa lang din bago maging ano? Paano nangyari doon? Hindi siya nakalabas, dadagdag na naman ang bill nila. Yan ang inaano natin na sana, okay ito ,okay yung ginito sa mga minor services na siguro documentation, pero pagdating sa iba, halimbawa kamuka dati kasing gawin natin, lahat ang hinihingi ng mga medical, financial assistance sa barangay, ang gagawin nyo ganito mag-register kayo, e paano pag kinakailangan na?  Hindi sya applicable, Applicable lang ito sa mga clearances, disaster para sa information. Tapos sa isa, kamuka niyan meron tayong programa sa lahat ng college student na meron silang P3,000 a year, 1,500 ng March, 1,500 nitong August 31, bibigyan namin ,magkakaroon ng.. Kung mag e-election magkakaroon ng ano, election ban sa August 31 magbibigay ulit kami another 1,500 to all college student, hindi sya, walang exemption..walang sabi nga basta college ka may registration, may ID ka, qualified ka, pa-submit ka ng medical requirements. Yan ang binibigyan namin 1 week po-post yun sa GC namin, yan ang information sa GC. Yung barangay ang tawag ay barangay scholar pero hindi scholar yan kasi ang scholar meron grades kasi regardless of grades importante, college student ka. Basta college ka meron lang matatanggap na 3,000 sa barangay. So marami rin ito nagpagraduate. Dito lang kami bumabase sa GC. Pero maganda yung disaster update, diyan na sila mag a-apply, marami. Tapos regardless of their grades, hindi kami nag aano sa grades natin. Ang inaano lang namin ay basta ano sila nag aaral. So last time nabasa ko yung GC kasi hindi ako mahilig sa GC, nabasa ko yung GC nila, nagpapasalamat sila kasi nagpapasalamat sila kasi bumabalik siya na may cum laude. bumabalik siya na cum laude, nagpapasalamat siya. Tapos nagle-leave siya ng GC. Tapos ako naman pag nag-pay payout, nasabi ko na sila na aral kayo mabuti. Kasi someday pag nag-trabaho, kamikita, yung taxi naman ang magpapatuloy sa programang yan. So at least na-re-return natin sa kanila. So gano'n, through GC pa rin. Yan pa rin ang way of communication. So dito mga sinasabi natin may mga improvement ganoon, ah hindi meron tayong mga certain na pwedeng i-implement dito  Pero mayroon tayong mga hindi na, kasi ganito halimbawa. Yung mga ibang programa natin sa barangay na pwedeng ipasok dito, like sabi nga pagapply ng clearance, but mayroon tayong hindi kayang i-apply lahat. Maganda nga kung systematic na lahat eh. Pati yung pag vaccination hindi na kailangan pumila diyan, first come first serve mayroon  tayong 100 kagaya nung nakaraan na, meron tayong 100 shots ng anti-flu. Isipin niyo 4,000 yung senior natin, so paano natin bibigay? So 100 lang, bigyan ng LGU. Di naman tayo pwedeng bumili kasi masyadong mahal yung flu. Hindi allow ng barangay, maintenance nga, hindi tayo pwede. So ngayon, first come, first served. So isipin mo 3:00, umuulan pa, so kawawa So from doon pwede natin gawin. Ok meron 100 shot 27 bukas po las 8 o'clock ng umaga, sisimulan po natin mag-register through online. Kasi ganoon, may first 100, ito ang unang qualified. So hindi na pumunta iba. So ganon din ang ano Yan kahapon yung anak ko nag kasi sya ngayon sa PGH 29 yung admission nya kahapon pero hindi kami pwede pumunta duon kasi walang kwarto so from 25, 8 o'clock ng umaga, nag-aabang kami, QR code tapos apply kami, sasagutin kami sa on process.  Yung ganon ganon, Siguro nuong 28 nagka bakante sa anin naman, response kami, Ok you’re qualified…, your registration is successful, you have a reserved room for animan.  Yum ma ang ginagawa para hindi na yung tipong admission ang dami niyo ruon eh iba ibang sakit  syempre pwede mag halo-halo So pwede natin gawin sa mga pag may programa yung ano natin, vaccination, parang ma-notify natin sila. Halimbawa operation Tule, “Oh 100 na kabataan lang.” So pagdating doon, stop na. Hindi pagdating ng araw, pagdating ng implementation, na ops, kilala ni ganito, GHW, kilala. Ako kasi eto to be honest, nung nagkaroon ng vaccination marami nagte-text saakin, pinilit ko nga pumunta kasi pagnakiusap sa akin yan at pinagbigyan ko isa, ang term na sa iba. May kapatid tatlo sa Atimila, pwede mong magpunta kayo roon. Kasi ayoko sabihin na nauna naman si Kapitan, nauna naman si kagawad, ayoko na ganoon. So eto sa programmang ito  na iniisip nating ito dun palang sa mga miniml mas maging successfull dun sa mga ano natin, kesa dun sa mga clearances sa mga apply ng residency, pag ano ng ID, kasi minsan duon nandadaya sila eh,  Sabihin nila, meron akong isang encounter,   I encounter one thing na tinext ko, may ID yung tao na huli namin ng AMPID-1, may ID sya ng AMPID-2, may ID sya ng GITNANG-1. Yung tao kaya tinext siya nuon eh, sabi ko Kap. Hill  kilala niyo tao na ito? Sabi niya, tinext ko siya kasi, nasa GC namin siguro, kasi tatlo ID niya. So it means kaya niya manloko. Pwede siya mag-loan dito sa iyo ng itong address niya sa AMPID-1, pwede siya umutang dito naman sa  AMPID-2, pwede siya umutang. So we will have strict implementation and requirements siguro. Pero sa itong mga proposal niyo, possible pa ito sa mga vaccination program, medical or financial assistance, mga possible pa yan para yung matanda, hindi nam pupunta sa aking paghahanda, para nangyayari. So dumating sa punto na ang budget natin sa medical assistance is P100,000 o P20,000 ang budget natin. Sa 500 mabibigyan natin siguro 100 lang, 101 siya, mga next time siya pwede. Di na siya para pumunta ng pagpunta. Tapos uuwi siya, wala na nakuha. Gabriel Ellis P. Muega: Regar… Kap. regarding po pala if kung mag re-request po ba kami ng dataset ng let’s say count lang po ng mga kumukuha ng barangay clearance, barangay agency okay lang po ba maa acquire kung mag rerequest lang po kami? Brgy. Captain Elmer Manahan: Pwede naman, wala naman problema, yun nga nag tataka nga ako sa pinipirmahan ko ang kakapal ng pinipirmahan ko please sign andito,kaya ganun minsan 50 isang araw nauubos Kasi minsan ginito, how you will count the indigency? Kasi ibang medya kung ano ang indigency, alam nila pag-proseso, iba-iba na. They can use 10 indigencies a day. Kasi alam nila ang pupuntahan, marunong na ang mga taro, punta kay Gov, punta kay mayor, punta kay cong, punta sa barangay, punta sa DSWD.  So duon ang tanong ko halimbawa kumuha saan ang punta ng kumuha pero nakapag labas kami ng 50 o up to 100 na indigency, how will it count? 100 or 10? Pero pwede naman, sabihin namin. Kasi nag-request yan, bakit ang dahil pinirmahan, na ubus ko agad ang pre-sign ko? Kapag ang dahil kumuha, malalaman ko, minsan gagawin ko, sige pag indigency, huwag niya muna bigyan, bigyan niya sa akin. Naubos kaagad yun pala kumukuha minsan 10 ganun kaya nga  kung.. Kaya nga kung i-count dati minsan, di ba ang kumuha, di ba ang daming naubos. Ngayong dahil siya kumuha, nasa 20, again may record na tao. Nag-record naman yan. Even sa collection namin everyday, ang collection natin everyday kasi inere-report ko yan para na-monitor ko. So mas maganda ito kung digital na rin. Tapos  mas transparent siya, pwede mo i-post diba. for transparency pwede mo i-post sa page niyo, ito po yung collection na makuha. So from duon makikita rin ng tao na, “ay kumuha ako ng ano bat wala yung pangalan ko diyan” So may anomalia sa baba diba, “ so ay 3,000 binayaran ko ah bakit nakalagay dito sa collection..” eh nangyayari before yun eh, kumukuha sila at 1,000 binabayaran o kaya 2,000 pero naka-record lang sa collection is 200\. So random hindi maano. Actually meron akong nalista diyan sa note ganon eh Ganon nangyari, may nalista ko yan. Kasi ganon nga, ang nangyari kumuha sa kanya ng ginto, parang hindi pumunta ang mga tao, parang kumpanya. So sya may hawak nuon inisyuhan nya isa-isa nung pag ano namin nakita ko iba yung resibo sa sa collection na pumasok sa barangay  So pag nag-nalista yun o nagka-problema yun, patay yung kapitan, hindi yung tao. Gano'n, ganon tama. Kaya magiging bentahe rin ah, Gabriel Ellis P. Muega: Eto rin po yung features din namin kasi po ito po yung features na una naming prinopose tapos yung dun po sa novelty naman po is yung parang hinahanapan is yung uniqueness ng project, capstone po namin, Kasi po Kap we’re planning na gawin nagawin is mobile and web.  Brgy. Captain Elmer Manahan: Mobile and web?? Gabriel Ellis P. Muega: Yes po, kaya po parang yung nga po if may mga tao na walang, let’s say may mga phones na outdated pwede na lang buksan through web. Or may mga tao din naman na meron lang computer, may cellphone pero outdated na hindi naka-supported ng browser, sa computer nalang din po sila.  Brgy. Captain Elmer Manahan: Oo wala naman problema sabi ko nga mas maganda yung plano niyo. Gabriel Ellis P. Muega: And mag i-implement din po pala kami ng admin na dashboard makikita po yung mga nag rerequest, makikita rin po yung parang ilang yung nag request magkano yung profit ng barangay tapos yung dun nga rin po sa reporting, sa report naman po kasi parang naka categorize naman po sya. Parang illegal dumping, flooding, uneven roads. So yun po yung plano din po namin na implement Brgy. Captain Elmer Manahan: Ano nalang if ever na medyo napag aralan niyo na  i-ano niyo malay nyo dito niyo maano yung first project niyo, Actually tulag nga nitong ano, meron dito taga UE mga babae binigay ko sa kanila ay parang ano nalang… Health center  So binigyan ko sila ng area, ng lote, yung thesis na gagawa sila ng building para doon. So ngayon sabi nila, maliit Kap. yung area na binigay mo para doon kasi kailangan. Siyempre sa health center meron yung pangbata, meron yung TB, hiwa-hiwalay yan kasi otherwise magkakahawa-hawa. So sabi ko sa kanya, maliit nga yan. Pero kaya binigyan ko sa inyo para pag-aralan nyo. To maximize the area, so ngayon nagtanong sila paano nga raw, nilagyan niyo ng third floor paano yung matatanda, edi gawan niyo ng design ng elevator exclusive para sa kanila edi kung ano… atleast diba, tapos sabi nila kasi kung pipilitin mo ipagkasya yung isang pitchel ng tubig sa baso, hindi mo parin mapag kakasya diba?  Sabi ko ang gagawin niyo talaga hahanapan, niyo ng solution. So magdagdag ka ng baso para magkasya yung isang pitchel ng tubig, so paano gagawin? Mag dagdag ka ng area, area ng third floor, second floor, Kagaya nung etong building na ito yung bagong gawa with elevator yan kasi naka propose yung clinic natin sa baba biglang ano halo halo itataas ko  So sabi nila, eh pag tinastan mo paano yung hagdan, kawawa yung matatanda. Hindi kasi may design na elevator toh. So pag natapos siya may elevator yan. Yung elevator exclusive sa senior, PWD at buntis, hindi pwede empleyado. Ako nga kahit ako ginawa ko ang sabi ko nga ang propose ko duon eh yung room ko lock yung ano elevator so hindi ako para yung makarating duon gusto ko rin mag ano. Yun ang maganda ganun yung sinabi ko sa kanila.  So dito  if ever may maganda kayo mga features na magagawa niyo sa thesis niyo, Try to ano ito sa akin. Kasi baka ma-implement. 								  Brgy. Captain Elmer Manahan  |
+| :---- |
+
+# **Appendix B**
+
+Cooperation Letter  
+![][image5]
+
+# **Appendix C**
+
+**System Prototype** 
+
+| A Digital Barangay Management System with Dijkstra-Based Safest-Path Evacuation Routing and an Open-Meteo Rainfall Advisory for Barangay Ampid I, San Mateo, Rizal |  |
+| ----- | :---- |
+| **Members:**Alcantara, Ian Darick S. Arrojado, Lorenzo Miguel P. Enzon, Alex Arthur P.,  Muega, Gabriel Ellis P. | Date: November 6, 2026 |
+|  | Adviser: Mr. Juvert Delos Reyes |
+| **Resident Mobile App** |  |
+| ![][image6]![][image7]![][image8] The barangayan’s splash screen upon opening the app,login module where residents sign in and the home screen after a successful sign in |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+| ![][image9]![][image10]![][image11] The documents screen displays the available documents to be requested, each available documents have an requirements & guidelines, and the request button navigates to the request screen which allows residents to review their verified personal information, select the purpose of their request, and submit a document application.  |  |
+| ![][image12]![][image13]![][image14] Submitting a request lets residents choose a payment method either pay at pickup or pay with qr ph. Online payment generates a QR that can be paid within the supported banks and e-wallet by QR PH.  |  |
+| ![][image15]![][image16] The request screen allows residents to monitor their document requests through different processing stages, from submission to completion.  ![][image17]![][image18]![][image19] The Emergency and DRRM screens provide preparedness guidelines, emergency hotlines, evacuation center details, and route options for the selected transportation mode. |  |
+| ![][image20] The Maps screen displays incident locations and category filters to help residents view reported community concerns. |  |
+| ![][image21]![][image22]![][image23] The QR check-in, Family, and Alerts screens allow residents to access check-in codes, manage household members, and view barangay emergency announcements. |  |
+| ![][image24]![][image25]![][image26] The Health screens allow residents to browse medical drives, review available slots, submit an application, and receive a registration reference number.  |  |
+| ![][image27]![][image28]![][image29] The Reports screens allow residents to review incident reports, describe a new concern, attach photos, and pin its location on the map.   |  |
+| ![][image30]![][image31]  The confirmation and report details screens show a successful incident submission, its location, and its status history through resolution.  |  |
+| **Resident Website** |  |
+| ![][image32] The Login page allows residents to sign in using their email and password or Google account.  ![][image33] The Home page introduces BARANGAYAN and provides quick access to resident services.  ![][image34] The website overview presents the main services available through the resident portal.  ![][image35] The document services section introduces online applications, requirements, payment options, and request tracking.  ![][image36] The health services section introduces medical drives, available slots, and registration tracking.  ![][image37] The Center Directory displays evacuation centers, their locations, and occupancy information. ![][image38] The Scan page explains how residents can use QR codes to check in at evacuation centers. ![][image39] The Show QR Code window displays the selected evacuation center QR code for check-in. ![][image40] The Family page prompts residents to complete their profile before accessing household information. ![][image41] The Document Catalog lists available barangay documents and their service details. ![][image42] The Requirements and Guidelines panel displays the requirements, fee, and processing information for the selected document. ![][image43] The Request Document panel allows residents to review their verified details and submit a document application. ![][image44] The Payment panel displays a QR Ph code that residents can use to pay for their document request.  ![][image45] The My Requests page displays submitted document applications and their current processing status. ![][image46] The Activity Log displays the history and status of residents’ document requests. ![][image47] The Maps page displays reported incidents and provides access to location-based community information. ![][image48] The Health page displays medical drive schedules, available slots, and registration options. ![][image49] The registration panel allows residents to review their details and provide the information required for a medical drive. ![][image50] The registration confirmation panel displays the submitted application and its assigned reference number. ![][image51] The My Registrations page displays medical drive applications and their current status. ![][image52] The registration cards show the schedule, venue, and status of each medical drive application. ![][image53] The registration status view allows residents to distinguish pending, confirmed, attended, and cancelled applications. ![][image54] The My Registrations list allows residents to review applications submitted for different health programs. ![][image55] The Reports page displays residents’ incident reports and their current status. ![][image56] The Active reports view displays incident reports that still require barangay action. ![][image57] The Resolved reports view displays incident reports marked as completed.  ![][image58] The Report an Incident panel allows residents to select a category, describe an issue, and attach photos. ![][image59] The location panel allows residents to mark the incident location and provide additional directions. ![][image60] The incident list allows residents to review report summaries and open individual report details. ![][image61] The Settings page allows residents to review and update their profile and account preferences.  |  |
+| **Admin Website** |  |
+| ![][image62] The Terms and Privacy screen allows administrators to review and update the policies displayed to residents. ![][image63] The FAQ Content screen allows administrators to create, edit, publish, and archive frequently asked questions. ![][image64] The Staff and Admin Accounts screen allows administrators to manage staff accounts, assigned roles, and account status. ![][image65] The Households and Residents screen displays family records and allows authorized staff to manage household members. ![][image66] The Emergency QR screen allows administrators to manage the check-in instructions and guidance shown to residents. ![][image67] The Evacuation Centers screen allows administrators to manage center details, capacity, occupancy, and availability. ![][image68] The Emergency Hub screen allows administrators to maintain emergency guidelines and hotline information. ![][image69] The Waste Management screen allows administrators to manage collection zones, schedules, and illegal dumping reports. ![][image70] The Health screen allows administrators to manage medical drives and review program schedules and registrations. ![][image71] The Resident Directory screen displays resident records, verification status, and account information. ![][image72] The Financial Transactions screen allows authorized staff to review payment records, transaction status, and collection totals. ![][image73] The Requests screen allows staff to review document applications and monitor their processing status. ![][image74] The Announcements screen allows administrators to create, edit, publish, and archive barangay announcements. ![][image75] The Services screen allows administrators to manage available barangay documents, service details, and availability. ![][image76] The Appearance screen allows administrators to customize the interface theme, accent colors, and typography. |  |

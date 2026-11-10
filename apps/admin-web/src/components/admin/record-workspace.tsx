@@ -7,9 +7,9 @@ import { RequestRecordReview } from './request-record-review';
 import { useCallback, useEffect, useId, useRef, useState, useTransition, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { Archive, Eye, Pencil, RotateCcw, Save, Trash2, X } from 'lucide-react';
+import { Archive, Eraser, Eye, Pencil, RotateCcw, Save, Trash2, X } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { loadAdminRecordOptions, mutateAdminRecord } from '@/actions/admin-record-actions';
+import { eraseResident, loadAdminRecordOptions, mutateAdminRecord } from '@/actions/admin-record-actions';
 import { changedRecordDraft, editableFields, fieldValue, recordDraft, recordFields, RECORD_CONFIG, recordLabel, validateRecordPatch, type RecordData, type RecordField } from '@/lib/admin-tables/record-config';
 import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
 import type { TableName } from '@/lib/admin-tables/table-configs';
@@ -32,24 +32,32 @@ import { ResidentIdReview } from '@/app/(admin)/residents/resident-id-review';
 import type { ResidentRow } from '@/app/(admin)/residents/types';
 
 const buttonClass = 'inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-zinc-200 px-2.5 text-xs font-medium hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800';
-const residentEditColumns = 'first_name,last_name,middle_name,suffix,sex,email,mobile_number,birth_date,house_no,street,city,employment_status,occupation,full_name,home_address,updated_at';
+const residentEditColumns = 'first_name,last_name,middle_name,suffix,sex,email,mobile_number,birth_date,house_no,street,city,employment_status,occupation,full_name,home_address,role,updated_at';
 
 export { RecordArchiveLink } from './record-archive-link';
+
+type RecordMode = 'details' | 'edit' | 'archive' | 'restore' | 'delete' | 'erase';
+/** Erase removes the account and everything it made; admin accounts are managed through Staff. */
+const canErase = (name: TableName, row: RecordData) => name === 'residents' && row.role !== 'admin';
 
 export function useRecordWorkspace<T extends { id: string }>(name: TableName, onChanged: () => void, settle: () => Promise<boolean>, options?: {
   currentUserId?: string; extra?: (row: T, close: () => void) => ReactNode; archived?: boolean;
   workflowActions?: (row: T) => ReactNode; actionsMinWidth?: number; editHandle?: RefObject<TableEditHandle | null>;
+  adminIds?: ReadonlySet<string>;
 }) {
-  const [selection, setSelection] = useState<{ id: string; mode: 'details' | 'edit' | 'archive' | 'restore' | 'delete' } | null>(null);
+  const [selection, setSelection] = useState<{ id: string; mode: RecordMode } | null>(null);
   const generation = useRef(0);
-  const open = useCallback(async (row: T, mode: 'details' | 'edit' | 'archive' | 'restore' | 'delete' = 'details') => {
+  const open = useCallback(async (row: T, mode: RecordMode = 'details') => {
     const current = ++generation.current;
     if (await settle() && current === generation.current) setSelection({ id: row.id, mode });
   }, [settle]);
   const close = () => { generation.current++; setSelection(null); };
-  const actionsWidth = (options?.actionsMinWidth ?? 180) + (options?.editHandle ? 48 : 0);
+  // Directory rows omit the role, so Erase is offered only where the page supplies the admin ids.
+  const adminIds = name === 'residents' ? options?.adminIds : undefined;
+  const actionsWidth = (options?.actionsMinWidth ?? 180) + (options?.editHandle ? 48 : 0) + (adminIds ? 48 : 0);
   const column: EditableDataTableColumn<T> = { id: 'actions', header: 'Actions', initialWidth: actionsWidth, minWidth: actionsWidth, wrap: 'nowrap', overflow: 'visible',
     render: row => <RecordRowActions onDetails={() => void open(row)} onArchive={() => void open(row, options?.archived ? 'restore' : 'archive')} onDelete={() => void open(row, 'delete')} archived={options?.archived}
+      onErase={adminIds ? () => void open(row, 'erase') : undefined} eraseDisabled={!!adminIds?.has(row.id) || !canErase(name, row as unknown as RecordData)}
       onEditTable={options?.editHandle ? () => { generation.current++; setSelection(null); void options.editHandle?.current?.editRow(row.id); } : undefined}
       onEditDetails={options?.editHandle ? () => void open(row, 'edit') : undefined}
       workflowActions={options?.workflowActions?.(row)} recordName={recordLabel(row as unknown as RecordData)}
@@ -59,8 +67,8 @@ export function useRecordWorkspace<T extends { id: string }>(name: TableName, on
     extra={options?.extra ? row => options.extra!(row as unknown as T, close) : undefined} /> };
 }
 
-export function RecordRowActions({ onDetails, onArchive, onDelete, onEditTable, onEditDetails, protectedRecord = false, archived = false, workflowActions, recordName }: {
-  onDetails: () => void; onArchive: () => void; onDelete: () => void; protectedRecord?: boolean; archived?: boolean;
+export function RecordRowActions({ onDetails, onArchive, onDelete, onErase, eraseDisabled = false, onEditTable, onEditDetails, protectedRecord = false, archived = false, workflowActions, recordName }: {
+  onDetails: () => void; onArchive: () => void; onDelete: () => void; onErase?: () => void; eraseDisabled?: boolean; protectedRecord?: boolean; archived?: boolean;
   workflowActions?: ReactNode; recordName?: string; onEditTable?: () => void; onEditDetails?: () => void;
 }) {
   const iconClass = 'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-900';
@@ -80,12 +88,15 @@ export function RecordRowActions({ onDetails, onArchive, onDelete, onEditTable, 
       <button type="button" aria-label="Delete" onClick={onDelete} disabled={protectedRecord}
         title={protectedRecord ? 'You cannot delete your own staff record.' : title('Permanently delete record')}
         className={`${iconClass} border-red-300 bg-red-50 text-red-700 hover:border-red-400 hover:bg-red-100 focus-visible:ring-red-600 dark:border-red-700 dark:bg-red-950 dark:text-red-200 dark:hover:bg-red-900`}><Trash2 size={20} strokeWidth={2} aria-hidden="true" /></button>
+      {onErase && <button type="button" aria-label="Erase" onClick={onErase} disabled={protectedRecord || eraseDisabled}
+        title={eraseDisabled ? 'Only resident accounts can be erased. Admin accounts are managed through Staff.' : title('Erase account and all records')}
+        className={`${iconClass} border-red-800 bg-red-700 text-white hover:border-red-900 hover:bg-red-800 focus-visible:ring-red-700 dark:border-red-500 dark:bg-red-700 dark:hover:bg-red-600`}><Eraser size={20} strokeWidth={2} aria-hidden="true" /></button>}
     </div>
   </div>;
 }
 
 export function RecordSheet({ name, id, initialMode = 'details', onClose, onChanged, currentUserId, extra }: {
-  name: TableName; id: string; initialMode?: 'details' | 'edit' | 'archive' | 'restore' | 'delete'; onClose: () => void;
+  name: TableName; id: string; initialMode?: RecordMode; onClose: () => void;
   onChanged: () => void; currentUserId?: string; extra?: (row: RecordData) => ReactNode;
 }) {
   const sheetId = useId();
@@ -100,7 +111,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const standaloneConfirmation = initialMode !== 'details' && initialMode !== 'edit';
-  const [confirmation, setConfirmation] = useState<'archive' | 'restore' | 'delete' | null>(standaloneConfirmation ? initialMode : null);
+  const [confirmation, setConfirmation] = useState<'archive' | 'restore' | 'delete' | 'erase' | null>(standaloneConfirmation ? initialMode : null);
   const [pending, startTransition] = useTransition();
   const busy = useRef(false);
   const idReviewBusy = useRef(false);
@@ -207,6 +218,21 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
       finally { busy.current = false; }
     });
   }
+  function erase() {
+    if (!row || busy.current || idReviewBusy.current || !canErase(name, row)) return;
+    busy.current = true; setError(null);
+    startTransition(async () => {
+      const toastAttempt = beginAttempt('admin-action');
+      try {
+        const result = await eraseResident(row.id);
+        if (result.error) { setError(result.error); toast.error(result.error, { id: toastAttempt }); return; }
+        if (result.storageFailed) toast.error('Resident erased, but some uploaded files could not be removed.', { id: toastAttempt });
+        else toast.success('Resident and all their records erased.', { id: toastAttempt });
+        onChanged(); onClose();
+      } catch { setError('The resident could not be erased. Please retry.'); toast.error('The resident could not be erased. Please retry.', { id: toastAttempt }); }
+      finally { busy.current = false; }
+    });
+  }
   const title = row ? recordLabel(row) : 'Record details';
   const operational = isOperationalRecord(name);
   const actionClass = `${styles.actions} ${operational ? detailStyles.recordActions : ''} ${sheetStyles.actions}`;
@@ -244,6 +270,8 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
             {!fields.length && <p className={operational ? detailStyles.hint : 'text-xs text-zinc-500'}>{name === 'requests' ? 'Use the review controls above to change workflow details.' : 'Completed payment amounts are kept as ledger records.'}</p>}
             <button type="button" className={`${styles.secondaryButton} ${sheetStyles.archive}`} disabled={pending || loadingOptions || protectedRecord} onClick={() => { setError(null); setConfirmation(row.deleted_at ? 'restore' : 'archive'); }}>{row.deleted_at ? <RotateCcw size={17} aria-hidden="true" /> : <Archive size={17} aria-hidden="true" />}{row.deleted_at ? 'Restore' : 'Archive'}</button>
             <button type="button" className={`${styles.secondaryButton} ${sheetStyles.delete}`} disabled={pending || loadingOptions || protectedRecord} onClick={() => { setError(null); setConfirmation('delete'); }}><Trash2 size={17} aria-hidden="true" />Delete</button>
+            {name === 'residents' && <button type="button" className={`${styles.secondaryButton} ${sheetStyles.erase}`} disabled={pending || loadingOptions || !canErase(name, row)}
+              title={canErase(name, row) ? undefined : 'Admin accounts are managed through Staff.'} onClick={() => { setError(null); setConfirmation('erase'); }}><Eraser size={17} aria-hidden="true" />Erase</button>}
           </div>
         </>}
       </>}
@@ -255,12 +283,13 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
     </TableDetailDialog>}
     {confirmation && row && !loadError && <TableDetailDialog label={`${confirmation} record`} preventClose={pending} onClose={() => { if (!busy.current) { if (standaloneConfirmation) onClose(); else setConfirmation(null); } }}>
       <div className={`rounded-xl bg-white p-6 shadow-xl dark:bg-zinc-900 ${operational ? detailStyles.confirmation : ''}`}>
-        <h2 className="text-lg font-semibold">{confirmation === 'delete' ? 'Permanently delete' : confirmation === 'restore' ? 'Restore' : 'Archive'} {recordLabel(row)}?</h2>
-        <p className="mt-3 text-sm">{confirmation === 'delete' ? 'This permanently removes the record from the database. This action cannot be undone. Related-record constraints may prevent deletion.'
+        <h2 className="text-lg font-semibold">{confirmation === 'erase' ? 'Erase' : confirmation === 'delete' ? 'Permanently delete' : confirmation === 'restore' ? 'Restore' : 'Archive'} {recordLabel(row)}?</h2>
+        <p className="mt-3 text-sm">{confirmation === 'erase' ? "This immediately deletes the resident's sign-in account and every record they made: document requests and their payments, incident reports, medical drive registrations, ID submissions, household members, evacuation check-ins, notifications and uploaded files. This cannot be undone."
+          : confirmation === 'delete' ? 'This permanently removes the record from the database. This action cannot be undone. Related-record constraints may prevent deletion.'
           : confirmation === 'archive' ? 'This record will leave the active list. You can restore it from the archive.' : 'This record will return to the active list.'}</p>
         {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
-        <div className="mt-5 flex gap-3"><button type="button" className={`${buttonClass} ${confirmation === 'delete' ? 'bg-red-600 text-white hover:bg-red-700' : ''}`}
-          disabled={pending || protectedRecord} aria-busy={name === 'incidents' ? pending : undefined} onClick={() => mutate(confirmation)}>{name === 'incidents' ? <LoadingButtonContent pending={pending} pendingLabel="Working…">{confirmation === 'delete' ? 'Delete permanently' : confirmation === 'restore' ? 'Restore record' : 'Archive record'}</LoadingButtonContent> : pending ? 'Working…' : confirmation === 'delete' ? 'Delete permanently' : confirmation === 'restore' ? 'Restore record' : 'Archive record'}</button>
+        <div className="mt-5 flex gap-3"><button type="button" className={`${buttonClass} ${confirmation === 'delete' || confirmation === 'erase' ? 'bg-red-600 text-white hover:bg-red-700' : ''}`}
+          disabled={pending || protectedRecord} aria-busy={name === 'incidents' ? pending : undefined} onClick={() => confirmation === 'erase' ? erase() : mutate(confirmation)}>{name === 'incidents' ? <LoadingButtonContent pending={pending} pendingLabel="Working…">{confirmation === 'delete' ? 'Delete permanently' : confirmation === 'restore' ? 'Restore record' : 'Archive record'}</LoadingButtonContent> : pending ? 'Working…' : confirmation === 'erase' ? 'Erase everything' : confirmation === 'delete' ? 'Delete permanently' : confirmation === 'restore' ? 'Restore record' : 'Archive record'}</button>
           <button type="button" className={buttonClass} disabled={pending} onClick={() => { if (standaloneConfirmation) onClose(); else { setConfirmation(null); setError(null); } }}>Cancel</button></div>
       </div>
     </TableDetailDialog>}

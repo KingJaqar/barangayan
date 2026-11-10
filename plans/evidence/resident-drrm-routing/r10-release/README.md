@@ -1,6 +1,6 @@
 # R10a: rollout flags, runbook and field protocol (closure routing)
 
-Recorded 2026-10-15 for `plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md`, phase R10, part **R10a** (closure-only release). Every result below came from a command run on that date. Findings are **automated** (unit tests) or **local runtime** (the real `evacuation-route` function in supabase-edge-runtime 1.76.2). There is **no field evidence yet**: no physical phone and no DRRM were available. **Nothing was deployed, no secret was set, no migration was added and no hosted write was made.** R10b (model health indicators, sensor-penalty and exclusion flags) is paused until the PAGASA data and R9b.
+Recorded 2026-10-15 for `plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md`, phase R10, part **R10a** (closure-only release). Every result below came from a command run on that date. Findings are **automated** (unit tests) or **local runtime** (the real `evacuation-route` function in supabase-edge-runtime 1.76.2). There is **no field evidence yet**: no physical phone and no DRRM were available. **Nothing was deployed, no secret was set, no migration was added and no hosted write was made.** R10b (model health indicators, sensor-penalty and exclusion flags) is paused until the model inputs and R9b/R9c (the weather source became Open-Meteo on 2026-10-31, modelled rainfall only; R10b is now the rainfall-feed health indicator and the stage-2 flag).
 
 ## What changed
 
