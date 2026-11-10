@@ -328,8 +328,8 @@
 
 .navLabel {
   display: grid;
-  grid-template-columns: 1fr;
-  opacity: 1;
+  grid-template-columns: 0fr;
+  opacity: 0;
   transition: grid-template-columns 240ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
 }
 
@@ -395,21 +395,14 @@
   outline-offset: 2px;
 }
 
-/* Keep labels discoverable on touch devices; only hover-capable pointers collapse them. */
-@media (hover: hover) and (pointer: fine) {
-  .navLabel {
-    grid-template-columns: 0fr;
-    opacity: 0;
-  }
-  .navLink:is([aria-current='page'], :hover, :focus) .navLabel {
-    grid-template-columns: 1fr;
-    opacity: 1;
-  }
+/* Keep inactive destinations compact across mouse, touch, and hybrid devices. */
+.navLink:is([aria-current='page'], :focus-visible) .navLabel {
+  grid-template-columns: 1fr;
+  opacity: 1;
 }
 
-/* Hybrid laptops can have a fine primary pointer and a touchscreen. */
-@media (any-pointer: coarse) {
-  .navLabel {
+@media (hover: hover) {
+  .navLink:hover .navLabel {
     grid-template-columns: 1fr;
     opacity: 1;
   }

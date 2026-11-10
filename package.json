@@ -13,6 +13,10 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "npm run start --workspace=@barangayan/mobile",
+    "android": "npm run android --workspace=@barangayan/mobile",
+    "ios": "npm run ios --workspace=@barangayan/mobile",
+    "mobile:web": "npm run web --workspace=@barangayan/mobile",
     "mobile": "npm run start --workspace=@barangayan/mobile",
     "web": "npm run dev --workspace=@barangayan/web",
     "lint": "expo lint"
